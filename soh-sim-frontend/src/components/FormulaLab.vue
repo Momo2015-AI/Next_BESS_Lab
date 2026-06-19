@@ -67,7 +67,7 @@
         <div class="my-1 p-1.5 bg-slate-950 rounded border border-slate-850 text-pink-300 text-[10px]">
           相对役龄跨度 (Age) = i - k；动态追溯对应状态：SOH<sub>target</sub> = SOH[Age]
         </div>
-        E<sub>aug_net</sub>(i) = Σ<sub>(k≤i)</sub> [ 标称能量 × 投入箱数 × SOH<sub>target</sub> × RTE(i) × DOD(i) × η<sub>ac</sub> - 投入箱数 × 单舱单次辅耗 ]
+        E<sub>aug_net</sub>(i) = SUM(k≤i) [ 标称能量 × 投入箱数 × SOH<sub>target</sub> × RTE(i) × DOD(i) × η<sub>ac</sub> - 投入箱数 × 单舱单次辅耗 ]
       </div>
     </div>
 
@@ -78,10 +78,122 @@
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px]">
         E<sub>net_total</sub>(i) = Max(0, E<sub>gross_init</sub> - Aux<sub>init</sub>) + E<sub>aug_net</sub>(i)
         <div class="mt-1 text-slate-400">
-          判定判据：E<sub>net_total</sub>(i) ≥
+          判定判据：E<sub>net_total</sub>(i) >=
           <input type="number" :value="params.requiredEnergy" step="1" class="formula-input w-14 text-amber-400"
             @input="$emit('update', 'requiredEnergy', Number($event.target.value))"> MWh
           ? <span class="text-emerald-400">"Yes"</span> : <span class="text-red-400">"No"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-800 pt-3">
+      <h2 class="text-sm font-bold text-amber-400 uppercase tracking-wider border-l-4 border-amber-500 pl-2 mb-3">财务投资算法引擎 Investment & Finance</h2>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-yellow-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-yellow-400">
+        算子 5 — 收入叠加模型 (Multi-Stack Revenue)
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        Revenue<sub>year</sub> = EnergyArbitrage + CapacityPayment + AncillaryService
+        <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
+          <div>EnergyArbitrage<sub>year</sub> = DischargedMWh × (PeakPrice - OffPeakPrice) × SpreadCaptureRate</div>
+          <div>CapacityPayment<sub>year</sub> = ContractedMW × CapacityPrice<sub>perMW</sub></div>
+          <div>AncillaryService<sub>year</sub> = AvailableMW × AncillaryPrice<sub>perMW</sub></div>
+          <div class="text-amber-400/80">所有收入项按 PriceEscalation 年涨幅递增</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-orange-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-orange-400">
+        算子 6 — CAPEX / OPEX 全成本结构
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        <div>CAPEX<sub>total</sub> = ContainerCost + PCSCost + BOP + DevelopmentFee</div>
+        <div class="pl-4 text-[10px] text-slate-400 mt-1">
+          ContainerCost = UnitCost<sub>perMWh</sub> × TotalMWh<br>
+          PCSCost = UnitCost<sub>perMW</sub> × TotalMW<br>
+          BOP = BOPCost<sub>perMWh</sub> × TotalMWh<br>
+          DevelopmentFee = DevCost<sub>perMW</sub> × TotalMW
+        </div>
+        <div class="mt-2">OPEX<sub>year</sub> = FixedO&M + VarO&M + Insurance + LandLease</div>
+        <div class="pl-4 text-[10px] text-slate-400 mt-1">
+          FixedO&M<sub>year</sub> = FixedRate<sub>perKW</sub> × TotalMW × 1000 × (1+escalation)<sup>year</sup><br>
+          VarO&M<sub>year</sub> = VarRate<sub>perMWh</sub> × AnnualThroughput × (1+escalation)<sup>year</sup><br>
+          Insurance<sub>year</sub> = CAPEX × InsuranceRate<br>
+          LandLease<sub>year</sub> = fixed annual fee
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-rose-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-rose-400">
+        算子 7 — LCOS (Levelized Cost of Storage) 平准化储能成本
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        LCOS = TotalDiscountedCosts / TotalDiscountedEnergy
+        <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
+          <div>TotalDiscountedCosts = CAPEX + SUM(OPEX<sub>t</sub>/(1+r)<sup>t</sup>) + SUM(Augmentation<sub>t</sub>/(1+r)<sup>t</sup>) - Residual/(1+r)<sup>T</sup></div>
+          <div>TotalDiscountedEnergy = SUM(AnnualDischargedMWh<sub>t</sub>/(1+r)<sup>t</sup>)</div>
+          <div class="text-rose-400/80">r = 折现率 (WACC); t = 年份; T = 项目寿命</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-indigo-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-indigo-400">
+        算子 8 — IRR (Internal Rate of Return) 牛顿迭代求解
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        NPV(r) = -CAPEX + SUM(CF<sub>t</sub>/(1+r)<sup>t</sup>) = 0
+        <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
+          <div>Newton-Raphson: r<sub>new</sub> = r - NPV(r)/NPV'(r)</div>
+          <div>Project IRR: 以上述全投资现金流迭代求解 (unlevered)</div>
+          <div>Equity IRR: 以自有资金投入替代初始 CAPEX, 扣除还本付息后迭代求解</div>
+          <div class="text-indigo-400/80">收敛条件: |NPV| &lt; 10<sup>-6</sup> 或 |Δr| &lt; 10<sup>-8</sup></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-cyan-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-cyan-400">
+        算子 9 — DSCR (Debt Service Coverage Ratio) 偿债覆盖
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        DSCR<sub>year</sub> = (EBITDA - Tax) / DebtService<sub>year</sub>
+        <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
+          <div>EBITDA = Revenue - OPEX</div>
+          <div>TaxableIncome = EBITDA - Depreciation - Interest</div>
+          <div>Tax = Max(0, TaxableIncome × TaxRate)</div>
+          <div>DebtService<sub>year</sub> = InterestPayment + PrincipalRepayment</div>
+          <div class="text-cyan-400/80">DSCR >= 1.3 为银行可接受的最低偿债覆盖倍率</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-lime-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-lime-400">
+        算子 10 — Payback Period 静态/动态回收期
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        累计净现金流首次转正的年份 = 回收期
+        <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
+          <div>静态回收期: CumulativeCashFlow(year) >= 0 的最小 year</div>
+          <div>动态回收期: DiscountedCumulativeCashFlow(year) >= 0 的最小 year</div>
+          <div class="text-lime-400/80">插值精确到 0.1 年</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-950 p-3 rounded-lg border border-violet-900/40 space-y-1.5">
+      <div class="text-[11px] font-bold text-violet-400">
+        算子 11 — 增容成本逐年递减学习效应
+      </div>
+      <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
+        AugCapex<sub>year</sub> = AugQty × RatedEnergy × ContainerCost<sub>base</sub> × (1 - CostDeclineRate)<sup>year</sup> + AugQty × InstallCost
+        <div class="pl-4 text-[10px] text-slate-400 mt-1">
+          CostDeclineRate: 设备成本年降幅 (学习率), 参考 BNEF 数据通常 5-8%/年
         </div>
       </div>
     </div>

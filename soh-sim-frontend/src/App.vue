@@ -22,6 +22,7 @@
       <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" />
       <RunningConditions v-if="activeTab === 'conditions'" @applyParams="onApplyConditions" />
       <ProductConfig v-if="activeTab === 'products'" @applyConfig="onApplyConfig" />
+      <FinancialDashboard v-if="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
       <MatrixTable v-if="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
         @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
       <DataInjection v-if="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
@@ -40,16 +41,18 @@ import FormulaLab from './components/FormulaLab.vue'
 import SohChart from './components/SohChart.vue'
 import RunningConditions from './components/RunningConditions.vue'
 import ProductConfig from './components/ProductConfig.vue'
+import FinancialDashboard from './components/FinancialDashboard.vue'
 
 const activeTab = ref('param')
 const tabs = [
   { id: 'param', label: '1. 参数配置面板' },
   { id: 'conditions', label: '2. 运行工况' },
   { id: 'products', label: '3. 产品与方案配置' },
-  { id: 'matrix', label: '4. 25年生命周期矩阵' },
-  { id: 'inject', label: '5. SOH/RTE 数据注入' },
-  { id: 'formula', label: '6. 算法公式实验舱' },
-  { id: 'chart', label: '7. 可视化图表' },
+  { id: 'financial', label: '4. 财务看板' },
+  { id: 'matrix', label: '5. 25年生命周期矩阵' },
+  { id: 'inject', label: '6. SOH/RTE 数据注入' },
+  { id: 'formula', label: '7. 算法公式实验舱' },
+  { id: 'chart', label: '8. 可视化图表' },
 ]
 
 const N = 26
