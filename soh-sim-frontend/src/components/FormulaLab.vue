@@ -94,13 +94,16 @@
       <div class="text-[11px] font-bold text-yellow-400">
         算子 5 — 收入叠加模型 (Multi-Stack Revenue)
       </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        大型储能电站通常叠加多个收入来源以提升项目 IRR。参考 Masdar 等中东项目，独立储能收益主要来源于电能量套利价差+容量市场费用+辅助服务费三项叠加。不同市场结构下，各收入占比差异显著（套利 40-70%、容量 20-40%、辅助服务 10-20%）。
+      </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         Revenue<sub>year</sub> = EnergyArbitrage + CapacityPayment + AncillaryService
         <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
           <div>EnergyArbitrage<sub>year</sub> = DischargedMWh × (PeakPrice - OffPeakPrice) × SpreadCaptureRate</div>
           <div>CapacityPayment<sub>year</sub> = ContractedMW × CapacityPrice<sub>perMW</sub></div>
           <div>AncillaryService<sub>year</sub> = AvailableMW × AncillaryPrice<sub>perMW</sub></div>
-          <div class="text-amber-400/80">所有收入项按 PriceEscalation 年涨幅递增</div>
+          <div class="text-amber-400/80">所有收入项按 PriceEscalation 年涨幅递增，价差捕获率反映实际交易中无法完全捕捉理论价差的折扣</div>
         </div>
       </div>
     </div>
@@ -109,20 +112,23 @@
       <div class="text-[11px] font-bold text-orange-400">
         算子 6 — CAPEX / OPEX 全成本结构
       </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        资本性支出包含储能集装箱采购+变流器采购+BOP辅助系统+项目开发费四部分。运营费用含固定运维（按装机容量计算，覆盖人力+例行维护）、可变运维（按吞吐电量计算，覆盖非计划检修）、保险费（按CAPEX比率）和土地租赁费四项。所有OPEX项按年涨幅递增以反映通胀和老化效应。
+      </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         <div>CAPEX<sub>total</sub> = ContainerCost + PCSCost + BOP + DevelopmentFee</div>
         <div class="pl-4 text-[10px] text-slate-400 mt-1">
           ContainerCost = UnitCost<sub>perMWh</sub> × TotalMWh<br>
           PCSCost = UnitCost<sub>perMW</sub> × TotalMW<br>
-          BOP = BOPCost<sub>perMWh</sub> × TotalMWh<br>
-          DevelopmentFee = DevCost<sub>perMW</sub> × TotalMW
+          BOP = BOPCost<sub>perMWh</sub> × TotalMWh (含变压器/开关柜/电缆/消防/暖通)<br>
+          DevelopmentFee = DevCost<sub>perMW</sub> × TotalMW (含可研/环评/接入/土地)
         </div>
         <div class="mt-2">OPEX<sub>year</sub> = FixedO&M + VarO&M + Insurance + LandLease</div>
         <div class="pl-4 text-[10px] text-slate-400 mt-1">
           FixedO&M<sub>year</sub> = FixedRate<sub>perKW</sub> × TotalMW × 1000 × (1+escalation)<sup>year</sup><br>
           VarO&M<sub>year</sub> = VarRate<sub>perMWh</sub> × AnnualThroughput × (1+escalation)<sup>year</sup><br>
           Insurance<sub>year</sub> = CAPEX × InsuranceRate<br>
-          LandLease<sub>year</sub> = fixed annual fee
+          LandLease<sub>year</sub> = 固定年费
         </div>
       </div>
     </div>
@@ -131,34 +137,43 @@
       <div class="text-[11px] font-bold text-rose-400">
         算子 7 — LCOS (Levelized Cost of Storage) 平准化储能成本
       </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        LCOS是储能项目经济性的核心对标指标，类比光伏LCOE。它计算全生命周期内每放出1度电的折现总成本，包含初始投资、运维支出、增容支出，扣除末期残值。项目盈利的前提是LCOS低于售电均价。Masdar 级项目通常要求 LCOS &lt; 0.06 美元/kWh (折合人民币约 0.40 元/kWh)。
+      </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         LCOS = TotalDiscountedCosts / TotalDiscountedEnergy
         <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
           <div>TotalDiscountedCosts = CAPEX + SUM(OPEX<sub>t</sub>/(1+r)<sup>t</sup>) + SUM(Augmentation<sub>t</sub>/(1+r)<sup>t</sup>) - Residual/(1+r)<sup>T</sup></div>
           <div>TotalDiscountedEnergy = SUM(AnnualDischargedMWh<sub>t</sub>/(1+r)<sup>t</sup>)</div>
-          <div class="text-rose-400/80">r = 折现率 (WACC); t = 年份; T = 项目寿命</div>
+          <div class="text-rose-400/80">r = WACC (加权平均资本成本), 中东项目通常 6-8%, 其他地区 7-10%; T = 25年项目寿命</div>
         </div>
       </div>
     </div>
 
     <div class="bg-slate-950 p-3 rounded-lg border border-indigo-900/40 space-y-1.5">
       <div class="text-[11px] font-bold text-indigo-400">
-        算子 8 — IRR (Internal Rate of Return) 牛顿迭代求解
+        算子 8 — IRR (Internal Rate of Return) 内部收益率, 牛顿迭代法数值求解
+      </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        IRR为净现值为零时的折现率，是投资者最关注的决策指标。全投资IRR (Project IRR) 不区分资金来源、反映项目本身的盈利能力；自有资金IRR (Equity IRR) 考虑了杠杆效应后股东的回报率。一般储能项目目标 Project IRR 为 6-10%、Equity IRR 为 10-15%。采用 Newton-Raphson 法迭代求解 f(r)=0 的根。
       </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         NPV(r) = -CAPEX + SUM(CF<sub>t</sub>/(1+r)<sup>t</sup>) = 0
         <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
-          <div>Newton-Raphson: r<sub>new</sub> = r - NPV(r)/NPV'(r)</div>
-          <div>Project IRR: 以上述全投资现金流迭代求解 (unlevered)</div>
-          <div>Equity IRR: 以自有资金投入替代初始 CAPEX, 扣除还本付息后迭代求解</div>
-          <div class="text-indigo-400/80">收敛条件: |NPV| &lt; 10<sup>-6</sup> 或 |Δr| &lt; 10<sup>-8</sup></div>
+          <div>Newton-Raphson 迭代: r<sub>k+1</sub> = r<sub>k</sub> - NPV(r<sub>k</sub>)/NPV'(r<sub>k</sub>)</div>
+          <div>Project IRR: 全投资现金流(不含融资成本)折现求解</div>
+          <div>Equity IRR: 自有资金投入替代初始CAPEX, 扣除年还本付息后折现求解</div>
+          <div class="text-indigo-400/80">收敛判别: |NPV| &lt; 10<sup>-6</sup> 或 |Δr| &lt; 10<sup>-8</sup>; 最多迭代 100 次; 边界保护 -99%~999%</div>
         </div>
       </div>
     </div>
 
     <div class="bg-slate-950 p-3 rounded-lg border border-cyan-900/40 space-y-1.5">
       <div class="text-[11px] font-bold text-cyan-400">
-        算子 9 — DSCR (Debt Service Coverage Ratio) 偿债覆盖
+        算子 9 — DSCR (Debt Service Coverage Ratio) 偿债覆盖倍率
+      </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        DSCR衡量项目每年可用于还本付息的现金是否充足，是银行和金融机构放贷的核心审批指标。分子为息税折旧前利润减所得税后的可偿债现金流，分母为当年应付本息。银行通常要求DSCR全程不低于1.2-1.3倍，若某年DSCR跌破1.0则意味着项目无法自行偿债。
       </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         DSCR<sub>year</sub> = (EBITDA - Tax) / DebtService<sub>year</sub>
@@ -167,33 +182,40 @@
           <div>TaxableIncome = EBITDA - Depreciation - Interest</div>
           <div>Tax = Max(0, TaxableIncome × TaxRate)</div>
           <div>DebtService<sub>year</sub> = InterestPayment + PrincipalRepayment</div>
-          <div class="text-cyan-400/80">DSCR >= 1.3 为银行可接受的最低偿债覆盖倍率</div>
+          <div class="text-cyan-400/80">等额本息还款法: 年还款额 = Debt × r × (1+r)<sup>n</sup> / ((1+r)<sup>n</sup> - 1); 银行最低要求 1.3, 优质项目通常 > 1.5</div>
         </div>
       </div>
     </div>
 
     <div class="bg-slate-950 p-3 rounded-lg border border-lime-900/40 space-y-1.5">
       <div class="text-[11px] font-bold text-lime-400">
-        算子 10 — Payback Period 静态/动态回收期
+        算子 10 — Payback Period 静态与动态投资回收期
+      </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        回收期是累计净现金流首次由负转正的时间点。静态回收期不考虑资金时间价值，直接累加名义现金流；动态回收期将所有现金流按WACC折现后再累加。储能项目静态回收期通常为8-12年，动态回收期为10-15年。回收期越短，项目抗风险能力越强。
       </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         累计净现金流首次转正的年份 = 回收期
         <div class="pl-4 text-[10px] text-slate-400 space-y-0.5 mt-1">
           <div>静态回收期: CumulativeCashFlow(year) >= 0 的最小 year</div>
           <div>动态回收期: DiscountedCumulativeCashFlow(year) >= 0 的最小 year</div>
-          <div class="text-lime-400/80">插值精确到 0.1 年</div>
+          <div class="text-lime-400/80">按累积现金流转正的前后两年线性插值, 精确到 0.1 年</div>
         </div>
       </div>
     </div>
 
     <div class="bg-slate-950 p-3 rounded-lg border border-violet-900/40 space-y-1.5">
       <div class="text-[11px] font-bold text-violet-400">
-        算子 11 — 增容成本逐年递减学习效应
+        算子 11 — 增容成本逐年递减学习曲线效应
+      </div>
+      <div class="text-[10px] text-slate-500 mb-1.5 leading-relaxed">
+        锂电池和储能系统遵循 Wright 定律，累计出货量翻倍时成本下降一定比例（学习率约18-20%）。在25年运营周期中后期增容的集装箱采购成本将因技术进步和规模效应而显著低于建设期。参考 BNEF 等机构数据，直流侧设备成本年均降幅约5-8%/年，AC侧约3-5%/年。
       </div>
       <div class="p-2.5 bg-slate-900/80 rounded font-mono overflow-x-auto border border-slate-850 text-slate-300 text-[11px] leading-relaxed">
         AugCapex<sub>year</sub> = AugQty × RatedEnergy × ContainerCost<sub>base</sub> × (1 - CostDeclineRate)<sup>year</sup> + AugQty × InstallCost
         <div class="pl-4 text-[10px] text-slate-400 mt-1">
-          CostDeclineRate: 设备成本年降幅 (学习率), 参考 BNEF 数据通常 5-8%/年
+          CostDeclineRate: 年化成本降幅, 参考 BNEF 数据通常 5-8%/年<br>
+          安装成本(InstallCost): 包括吊装/接线/调试等一次性费用, 假设不随学习曲线下降
         </div>
       </div>
     </div>

@@ -217,6 +217,230 @@
         <div class="flex items-center gap-2 mb-3">
           <span class="w-6 h-6 rounded bg-green-500/20 text-green-400 text-xs flex items-center justify-center font-bold">05</span>
           <div>
+            <h3 class="font-bold text-sm text-slate-200">电芯技术需求 <span class="text-[10px] text-slate-500 font-normal ml-1">Cell Requirements</span></h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯化学体系</label>
+            <select v-model="form.cellChemistry" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="LFP">LFP (磷酸铁锂)</option>
+              <option value="NMC">NMC (镍锰钴)</option>
+              <option value="LTO">LTO (钛酸锂)</option>
+              <option value="sodium-ion">钠离子 Na-ion</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">单电芯容量范围 Ah</label>
+            <input v-model="form.cellCapacityRange" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="280-700">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯循环寿命 @25°C</label>
+            <input v-model.number="form.cellCycleLife" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="6000">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">EOL 判定标准 %</label>
+            <input v-model.number="form.eolThreshold" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="70">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯工作温度范围 °C</label>
+            <input v-model="form.cellTempRange" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="-20 ~ +55">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯压差一致性要求 mV</label>
+            <input v-model.number="form.cellVoltageDiff" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="20">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯温差一致性要求 °C</label>
+            <input v-model.number="form.cellTempDiff" type="number" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="3">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">热失控蔓延防止</label>
+            <select v-model="form.thermalRunawayPrev" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="pack-level">Pack 级隔离 (标准)</option>
+              <option value="cluster-level">簇级隔离</option>
+              <option value="rack-level">Rack 级隔离 (MWh+标准)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded bg-cyan-500/20 text-cyan-400 text-xs flex items-center justify-center font-bold">06</span>
+          <div>
+            <h3 class="font-bold text-sm text-slate-200">PCS 变流器技术需求 <span class="text-[10px] text-slate-500 font-normal ml-1">PCS Requirements</span></h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">PCS 额定功率 MW</label>
+            <input v-model.number="form.pcsRatedPower" type="number" step="0.001" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="2.5">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">PCS 额定效率 %</label>
+            <input v-model.number="form.pcsEfficiency" type="number" step="0.01" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="98.5">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">过载能力</label>
+            <select v-model="form.pcsOverload" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="standard">110% 10min / 120% 1min</option>
+              <option value="enhanced">120% 10min / 150% 1min</option>
+              <option value="high">130% 30min / 150% 10min</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">THDi 要求 %</label>
+            <input v-model.number="form.pcsTHDi" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="3">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">功率因数范围</label>
+            <input v-model="form.pcsPF" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="-0.9 ~ +0.9">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">响应时间 ms</label>
+            <input v-model.number="form.pcsResponseTime" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="50">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">电网支撑功能</label>
+            <select v-model="form.pcsGridSupport" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="basic">基础: LVRT + HVRT</option>
+              <option value="advanced">高级: + 一次调频 + 惯量响应</option>
+              <option value="full">完整: + 黑启动 + 构网型 Grid-Forming</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">冷却方式</label>
+            <select v-model="form.pcsCooling" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="forced-air">强迫风冷 (标准)</option>
+              <option value="liquid">液冷 (50°C不降额)</option>
+              <option value="SiC-liquid">全液冷碳化硅 SiC (Masdar级)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded bg-rose-500/20 text-rose-400 text-xs flex items-center justify-center font-bold">07</span>
+          <div>
+            <h3 class="font-bold text-sm text-slate-200">认证与标准要求 <span class="text-[10px] text-slate-500 font-normal ml-1">Certification & Standards</span></h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 text-[10px]">
+          <div>
+            <span class="text-slate-400 text-[10px] block mb-1">电芯级认证 Cell Level</span>
+            <div class="bg-slate-800/60 rounded p-2 space-y-1.5">
+              <label v-for="opt in certOptions.cell" :key="opt" class="flex items-center gap-1.5 cursor-pointer hover:text-slate-200 text-slate-400">
+                <input type="checkbox" :value="opt" v-model="form.certCell" class="accent-teal-500">{{ opt }}
+              </label>
+            </div>
+          </div>
+          <div>
+            <span class="text-slate-400 text-[10px] block mb-1">系统级 / 模组级</span>
+            <div class="bg-slate-800/60 rounded p-2 space-y-1.5">
+              <label v-for="opt in certOptions.system" :key="opt" class="flex items-center gap-1.5 cursor-pointer hover:text-slate-200 text-slate-400">
+                <input type="checkbox" :value="opt" v-model="form.certSystem" class="accent-amber-500">{{ opt }}
+              </label>
+            </div>
+          </div>
+          <div>
+            <span class="text-slate-400 text-[10px] block mb-1">并网与环境 Grid & Env</span>
+            <div class="bg-slate-800/60 rounded p-2 space-y-1.5">
+              <label v-for="opt in certOptions.grid" :key="opt" class="flex items-center gap-1.5 cursor-pointer hover:text-slate-200 text-slate-400">
+                <input type="checkbox" :value="opt" v-model="form.certGrid" class="accent-blue-500">{{ opt }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="mt-2 grid grid-cols-2 gap-3 text-[10px]">
+          <div>
+            <span class="text-slate-400 block mb-1">其它特殊认证</span>
+            <div class="bg-slate-800/60 rounded p-2 space-y-1.5">
+              <label v-for="opt in certOptions.extra" :key="opt" class="flex items-center gap-1.5 cursor-pointer hover:text-slate-200 text-slate-400">
+                <input type="checkbox" :value="opt" v-model="form.certExtra" class="accent-purple-500">{{ opt }}
+              </label>
+            </div>
+          </div>
+          <div>
+            <span class="text-slate-400 block mb-1">目标市场电网规范</span>
+            <div class="bg-slate-800/60 rounded p-2 space-y-1.5">
+              <label v-for="opt in certOptions.gridCode" :key="opt" class="flex items-center gap-1.5 cursor-pointer hover:text-slate-200 text-slate-400">
+                <input type="checkbox" :value="opt" v-model="form.certGridCode" class="accent-emerald-500">{{ opt }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-bold">08</span>
+          <div>
+            <h3 class="font-bold text-sm text-slate-200">EPC 与运维范围 <span class="text-[10px] text-slate-500 font-normal ml-1">EPC & O&M Scope</span></h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">EPC 交付模式</label>
+            <select v-model="form.epcModel" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="turnkey">交钥匙 Turnkey EPC</option>
+              <option value="supply-only">纯供货 Supply Only</option>
+              <option value="supply-supervision">供货+督导 Supply+Supervision</option>
+              <option value="epcm">EPCM 管理承包</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">O&M 年限</label>
+            <input v-model.number="form.omYears" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="5">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">性能保证 (PR) 要求</label>
+            <select v-model="form.prRequirement" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="availability-guarantee">可用率保证 ≥97%</option>
+              <option value="rte-guarantee">RTE 保证 (含 LD 罚则)</option>
+              <option value="soh-guarantee">SOH 保证 (含容量衰减 LD)</option>
+              <option value="full-guarantee">全保证: 可用率+RTE+SOH</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">质保年限</label>
+            <input v-model.number="form.warrantyYears" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="5">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">远程监控/SCADA</label>
+            <select v-model="form.scadaReq" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="none">不需要</option>
+              <option value="basic">基础: Modbus TCP</option>
+              <option value="advanced">高级: IEC 61850 + DNP3</option>
+              <option value="full">完整: + 云平台 + AI诊断</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">备品备件策略</label>
+            <select v-model="form.sparePartsStrategy" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none">
+              <option value="">- -</option>
+              <option value="none">不含</option>
+              <option value="standard">标准: 2年运行备件</option>
+              <option value="enhanced">增强: 5年 + 关键部件</option>
+              <option value="full">全包: 全套更换件 + 现场仓储</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">09</span>
+          <div>
             <h3 class="font-bold text-sm text-slate-200">文档上传 <span class="text-[10px] text-slate-500 font-normal ml-1">Auto Extract Parameters</span></h3>
           </div>
         </div>
@@ -297,7 +521,42 @@ const form = reactive({
   cycleLife: null,
   auxConsumption: null,
   responseTime: null,
+  cellChemistry: '',
+  cellCapacityRange: '',
+  cellCycleLife: null,
+  eolThreshold: 70,
+  cellTempRange: '',
+  cellVoltageDiff: null,
+  cellTempDiff: null,
+  thermalRunawayPrev: '',
+  pcsRatedPower: null,
+  pcsEfficiency: null,
+  pcsOverload: '',
+  pcsTHDi: null,
+  pcsPF: '',
+  pcsResponseTime: null,
+  pcsGridSupport: '',
+  pcsCooling: '',
+  certCell: [],
+  certSystem: [],
+  certGrid: [],
+  certExtra: [],
+  certGridCode: [],
+  epcModel: '',
+  omYears: null,
+  prRequirement: '',
+  warrantyYears: null,
+  scadaReq: '',
+  sparePartsStrategy: '',
 })
+
+const certOptions = {
+  cell: ['IEC 62619 (锂电安全)', 'IEC 62620 (性能测试)', 'UL 1642 (电芯安全)', 'UN 38.3 (运输安全)', 'GB/T 36276 (中国国标)'],
+  system: ['UL 9540 (系统级安全)', 'UL 9540A (火烧蔓延测试)', 'UL 1973 (模组标准)', 'IEC 62933-5-2 (并网安全)', 'NFPA 855 (消防规范)', 'IEC 62477-1 (PCS安全)'],
+  grid: ['IEEE 1547 (并网互联)', 'IEC 61000-6-2/4 (EMC抗扰/发射)', 'UL 1741 (逆变器)', 'IEC 62933-4-2 (环境评估)', 'IEC 60730 (自动控制)'],
+  extra: ['ISO 14001 (环境管理)', 'ISO 45001 (职业健康)', 'ISO 9001 (质量管理)', 'CE Marking (欧盟)', 'UKCA (英国)', 'RCM (澳大利亚)'],
+  gridCode: ['UK G99 (英国)', 'VDE-AR-N 4110 (德国)', 'EN 50549-1 (欧盟)', 'IEEE 2800 (美国 BPS)', 'AEMO Grid Code (澳大利亚)', 'SASO/IEC (中东/沙特)'],
+}
 
 const fileInput = ref(null)
 const uploadHover = ref(false)
@@ -381,7 +640,8 @@ function exportCSV() {
 
 function clearAll() {
   for (const k of Object.keys(form)) {
-    form[k] = typeof form[k] === 'number' || form[k] === null ? null : ''
+    if (Array.isArray(form[k])) form[k] = []
+    else form[k] = typeof form[k] === 'number' || form[k] === null ? null : ''
   }
   uploadResult.value = null
 }
