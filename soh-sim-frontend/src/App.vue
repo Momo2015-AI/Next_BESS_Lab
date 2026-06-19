@@ -20,6 +20,8 @@
 
     <div class="flex-1 min-h-0 overflow-hidden">
       <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" />
+      <RunningConditions v-if="activeTab === 'conditions'" @applyParams="onApplyConditions" />
+      <ProductConfig v-if="activeTab === 'products'" @applyConfig="onApplyConfig" />
       <MatrixTable v-if="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
         @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
       <DataInjection v-if="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
@@ -36,14 +38,18 @@ import MatrixTable from './components/MatrixTable.vue'
 import DataInjection from './components/DataInjection.vue'
 import FormulaLab from './components/FormulaLab.vue'
 import SohChart from './components/SohChart.vue'
+import RunningConditions from './components/RunningConditions.vue'
+import ProductConfig from './components/ProductConfig.vue'
 
 const activeTab = ref('param')
 const tabs = [
   { id: 'param', label: '1. 参数配置面板' },
-  { id: 'matrix', label: '2. 25年生命周期矩阵' },
-  { id: 'inject', label: '3. SOH/RTE 数据注入' },
-  { id: 'formula', label: '4. 算法公式实验舱' },
-  { id: 'chart', label: '5. 可视化图表' },
+  { id: 'conditions', label: '2. 运行工况' },
+  { id: 'products', label: '3. 产品与方案配置' },
+  { id: 'matrix', label: '4. 25年生命周期矩阵' },
+  { id: 'inject', label: '5. SOH/RTE 数据注入' },
+  { id: 'formula', label: '6. 算法公式实验舱' },
+  { id: 'chart', label: '7. 可视化图表' },
 ]
 
 const N = 26
@@ -162,7 +168,22 @@ async function fetchCalculation() {
       Object.assign(results, data.results)
     }
   } catch {
-    calculate()
+calculate()
+
+function onApplyConditions(mapped) {
+  if (mapped.duration != null) params.duration = mapped.duration
+  if (mapped.cyclesPerDay != null) params.cyclesPerDay = mapped.cyclesPerDay
+  if (mapped.requiredEnergy != null) params.requiredEnergy = mapped.requiredEnergy
+}
+
+function onApplyConfig(payload) {
+  if (payload.duration != null) params.duration = payload.duration
+  if (payload.requiredEnergy != null) params.requiredEnergy = payload.requiredEnergy
+  if (payload.initContainerQty != null) params.initContainerQty = payload.initContainerQty
+  if (payload.initPcsQty != null) params.initPcsQty = payload.initPcsQty
+  if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
+  if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
+}
   }
   if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
 }

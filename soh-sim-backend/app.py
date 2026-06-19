@@ -1,4 +1,9 @@
 import math
+import os
+import re
+import csv
+import io
+import tempfile
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
@@ -7,6 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 N = 26
+UPLOAD_DIR = "/tmp/opencode/soh_uploads"
 
 
 def calculate(params, soh, rte, dod, aug_qty):
@@ -124,6 +130,104 @@ def soh_calculate_multi():
             all_results.append({"error": str(e)})
 
     return jsonify({"results": all_results})
+
+
+@app.route("/api/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"})
+
+@app.route("/api/upload/extract", methods=["POST"])
+def upload_extract():
+    if "file" not in request.files:
+        return jsonify({"error": "no file uploaded"}), 400
+
+    f = request.files["file"]
+    if f.filename == "":
+        return jsonify({"error": "empty filename"}), 400
+
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    ext = os.path.splitext(f.filename)[1].lower()
+    text = ""
+
+    try:
+        if ext == ".csv":
+            stream = io.StringIO(f.read().decode("utf-8", errors="replace"))
+            reader = csv.reader(stream)
+            rows = list(reader)
+            text = "\n".join([" | ".join(r) for r in rows[:200]])
+        elif ext in (".xlsx", ".xls"):
+            try:
+                import openpyxl
+                wb = openpyxl.load_workbook(io.BytesIO(f.read()), data_only=True)
+                ws = wb.active
+                rows_list = []
+                for row in ws.iter_rows(values_only=True):
+                    rows_list.append(" | ".join([str(c) if c is not None else "" for c in row]))
+                text = "\n".join(rows_list[:200])
+            except ImportError:
+                text = "xlsx_parsing_unavailable"
+        elif ext == ".txt":
+            text = f.read().decode("utf-8", errors="replace")[:5000]
+        elif ext == ".json":
+            import json
+            data = json.loads(f.read().decode("utf-8", errors="replace"))
+            text = json.dumps(data, indent=2, ensure_ascii=False)
+        elif ext == ".pdf":
+            text = f.read().decode("latin-1", errors="replace")[:5000]
+            text = "".join(c for c in text if c.isprintable() or c in "\n\r\t")
+        else:
+            raw = f.read()[:5000]
+            text = raw.decode("utf-8", errors="replace")
+    except Exception as e:
+        return jsonify({"error": f"file read failed: {str(e)}"}), 400
+
+    if not text or len(text) < 5:
+        return jsonify({"extracted": {}, "fieldsExtracted": 0})
+
+    extracted = extract_parameters(text)
+    return jsonify({"extracted": extracted, "rawPreview": text[:1000]})
+
+
+def extract_parameters(text):
+    patterns = [
+        (r"(?:project|项目)\s*(?:name|名称|名称)\s*[:：=]?\s*([^\n\r]{2,80})", "project_name"),
+        (r"(?:location|地点|位置)\s*[:：=]?\s*([^\n\r]{2,50})", "location"),
+        (r"(?:total|总|额定).*(?:power|功率|MW)\s*[:：=]?\s*(\d+\.?\d*)", "total_mw"),
+        (r"(?:total|总|额定).*(?:energy|能量|MWh|容量)\s*[:：=]?\s*(\d+\.?\d*)", "total_mwh"),
+        (r"(?:duration|时长|充放电).*(?:hour|小时|h)\s*[:：=]?\s*(\d+\.?\d*)", "duration_h"),
+        (r"(?:cycle|循环).*(?:day|天|日).*[:：=]?\s*(\d+\.?\d*)", "cycles_per_day"),
+        (r"(?:altitude|海拔|elevation)\s*[:：=]?\s*(\d+\.?\d*)", "altitude_m"),
+        (r"(?:max.*temp|最高.*温|极端.*高温)\s*[:：=]?\s*(\d+\.?\d*)", "temp_max_c"),
+        (r"(?:min.*temp|最低.*温|极端.*低温)\s*[:：=]?\s*(-?\d+\.?\d*)", "temp_min_c"),
+        (r"(?:avg.*temp|平均.*温)\s*[:：=]?\s*(\d+\.?\d*)", "temp_avg_c"),
+        (r"(?:humidity|湿度|RH)\s*[:：=]?\s*(\d+\.?\d*)", "humidity_pct"),
+        (r"(?:grid.*voltage|并网.*电压|电压等级)\s*[:：=]?\s*(\d+\.?\d*\s*kV)", "grid_voltage_kv"),
+        (r"(?:frequency|频率|Hz)\s*[:：=]?\s*(\d+\.?\d*\s*Hz)", "grid_freq_hz"),
+        (r"(?:RTE|round.?trip|充放电效率).*(?:target|目标|年).*[:：=]?\s*(\d+\.?\d*)", "rte_target_pct"),
+        (r"(?:SOH|健康状态).*(?:year.?1|1年|第一年).*[:：=]?\s*(\d+\.?\d*)", "soh_year1_pct"),
+        (r"(?:SOH|健康状态).*(?:year.?25|25年).*[:：=]?\s*(\d+\.?\d*)", "soh_year25_pct"),
+        (r"(?:calendar.*life|日历.*寿命|设计.*寿命).*[:：=]?\s*(\d+\.?\d*)", "calendar_life_y"),
+        (r"(?:cycle.*life|循环.*寿命).*[:：=]?\s*(\d+\.?\d*)", "cycle_life"),
+        (r"(?:aux|辅助|自耗).*(?:consumption|功耗|电耗).*[:：=]?\s*(\d+\.?\d*)", "aux_consumption_pct"),
+        (r"(?:response.*time|响应.*时间).*[:：=]?\s*(\d+\.?\d*)", "response_time_ms"),
+        (r"(?:DC.*voltage|直流.*电压|DC.*范围).*[:：=]?\s*(\d+\s*[-~]\s*\d+\s*V)", "dc_voltage_range"),
+        (r"(?:AC.*voltage|交流.*电压).*[:：=]?\s*(\d+\.?\d*\s*V)", "ac_voltage_v"),
+        (r"(?:THD|谐波).*[:：=]?\s*(\d+\.?\d*)\s*%?", "thdi_pct"),
+        (r"(?:availability|可用率|可用).*[:：=]?\s*(\d+\.?\d*)\s*%?", "availability_target_pct"),
+    ]
+
+    extracted = {}
+    for pattern, key in patterns:
+        m = re.search(pattern, text, re.IGNORECASE)
+        if m:
+            val = m.group(1).strip()
+            try:
+                val = float(re.sub(r"[^\d.\-]", "", val))
+            except ValueError:
+                pass
+            extracted[key] = val
+
+    return extracted
 
 
 if __name__ == "__main__":
