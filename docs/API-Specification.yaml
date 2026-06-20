@@ -1,0 +1,1025 @@
+openapi: 3.0.3
+info:
+  title: 储能电池健康状态（SOH）仿真系统 API
+  description: |
+    本API文档描述了储能电池健康状态（SOH）仿真系统的RESTful接口规范。
+    系统基于阿伦尼乌斯衰减模型，提供SOH计算、多场景对比、财务分析等功能。
+  version: 1.0.0
+  contact:
+    name: 开发团队
+    email: dev@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:5001/api
+    description: 本地开发环境
+  - url: https://api.example.com/api
+    description: 生产环境
+
+tags:
+  - name: SOH计算
+    description: SOH计算相关接口
+  - name: 财务分析
+    description: 财务分析相关接口
+  - name: 工程计算
+    description: 工程计算相关接口
+  - name: 文件处理
+    description: 文件上传和解析相关接口
+  - name: 系统
+    description: 系统健康检查和配置相关接口
+
+paths:
+  /soh/calculate:
+    post:
+      tags:
+        - SOH计算
+      summary: 计算单场景SOH衰减曲线
+      description: |
+        基于阿伦尼乌斯模型计算电池25年生命周期内的SOH衰减曲线。
+        接收系统参数和运行条件，返回SOH、RTE、容量、净可用能量等数据。
+      operationId: calculateSOH
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SOHCalculationRequest'
+            examples:
+              basic:
+                summary: 基础参数示例
+                value:
+                  energy: 1000
+                  containers: 10
+                  pcs: 50
+                  duration: 2
+                  acEfficiency: 97.03
+                  dcEfficiency: 97.5
+                  selfDischarge: 0.05
+                  selfConsumption: 0.5
+                  standbyConsumption: 0.1
+                  temperature: 25
+                  cyclesPerDay: 1
+                  dod: 0.8
+                  cRate: 0.5
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SOHCalculationResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /soh/calculate-multi:
+    post:
+      tags:
+        - SOH计算
+      summary: 计算多场景SOH衰减曲线
+      description: |
+        同时计算多个场景的SOH衰减曲线，用于对比分析。
+        接收多个参数配置，返回对应的计算结果数组。
+      operationId: calculateMultiSOH
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SOHCalculationRequest'
+              minItems: 1
+              maxItems: 10
+            examples:
+              twoScenarios:
+                summary: 两个场景对比
+                value:
+                  - energy: 1000
+                    containers: 10
+                    pcs: 50
+                    duration: 2
+                    acEfficiency: 97.03
+                    dcEfficiency: 97.5
+                    selfDischarge: 0.05
+                    selfConsumption: 0.5
+                    standbyConsumption: 0.1
+                    temperature: 25
+                    cyclesPerDay: 1
+                    dod: 0.8
+                    cRate: 0.5
+                  - energy: 1000
+                    containers: 10
+                    pcs: 50
+                    duration: 2
+                    acEfficiency: 97.03
+                    dcEfficiency: 97.5
+                    selfDischarge: 0.05
+                    selfConsumption: 0.5
+                    standbyConsumption: 0.1
+                    temperature: 35
+                    cyclesPerDay: 1.5
+                    dod: 0.9
+                    cRate: 0.8
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SOHCalculationResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /soh/algorithm/params:
+    get:
+      tags:
+        - SOH计算
+      summary: 获取算法参数配置
+      description: 获取当前阿伦尼乌斯模型的参数配置
+      operationId: getAlgorithmParams
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlgorithmParams'
+    put:
+      tags:
+        - SOH计算
+      summary: 更新算法参数配置
+      description: 更新阿伦尼乌斯模型的参数配置
+      operationId: updateAlgorithmParams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlgorithmParams'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlgorithmParams'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /financial/calculate:
+    post:
+      tags:
+        - 财务分析
+      summary: 计算财务指标
+      description: |
+        计算储能项目的财务指标，包括NPV、IRR、LCOE、ROI、DSCR等。
+        基于SOH计算结果和财务参数进行投资回报分析。
+      operationId: calculateFinancial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinancialCalculationRequest'
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialCalculationResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /financial/sensitivity:
+    post:
+      tags:
+        - 财务分析
+      summary: 敏感性分析
+      description: |
+        分析关键参数对财务指标的影响。
+        支持电价、通胀率、贴现率、CAPEX、OPEX等参数的敏感性分析。
+      operationId: sensitivityAnalysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SensitivityAnalysisRequest'
+      responses:
+        '200':
+          description: 分析成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensitivityAnalysisResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /engineering/site-area:
+    post:
+      tags:
+        - 工程计算
+      summary: 计算场地面积
+      description: 根据系统配置计算所需场地面积
+      operationId: calculateSiteArea
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteAreaRequest'
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteAreaResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /engineering/bom:
+    post:
+      tags:
+        - 工程计算
+      summary: 生成BOM清单
+      description: 根据系统配置生成设备材料清单
+      operationId: generateBOM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BOMRequest'
+      responses:
+        '200':
+          description: 生成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BOMResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /engineering/spare-parts:
+    post:
+      tags:
+        - 工程计算
+      summary: 计算备品备件
+      description: 根据系统配置和寿命周期计算备品备件数量
+      operationId: calculateSpareParts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SparePartsRequest'
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparePartsResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /upload/extract:
+    post:
+      tags:
+        - 文件处理
+      summary: 上传文件并提取参数
+      description: |
+        上传文件（CSV、XLSX、TXT、JSON、PDF）并自动提取参数。
+        系统会解析文件内容，提取出SOH计算所需的参数。
+      operationId: uploadAndExtract
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 上传的文件
+      responses:
+        '200':
+          description: 提取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileExtractResponse'
+        '400':
+          description: 文件格式不支持或解析失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      tags:
+        - 系统
+      summary: 健康检查
+      description: 检查后端服务状态
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+components:
+  schemas:
+    SOHCalculationRequest:
+      type: object
+      required:
+        - energy
+        - containers
+        - pcs
+        - duration
+        - acEfficiency
+        - dcEfficiency
+        - selfDischarge
+        - selfConsumption
+        - standbyConsumption
+        - temperature
+        - cyclesPerDay
+        - dod
+        - cRate
+      properties:
+        energy:
+          type: number
+          description: 系统能量 (MWh)
+          minimum: 100
+          maximum: 10000
+          example: 1000
+        containers:
+          type: integer
+          description: 集装箱数量
+          minimum: 1
+          maximum: 100
+          example: 10
+        pcs:
+          type: number
+          description: PCS容量 (MW)
+          minimum: 1
+          maximum: 500
+          example: 50
+        duration:
+          type: number
+          description: 时长 (小时)
+          minimum: 1
+          maximum: 8
+          example: 2
+        acEfficiency:
+          type: number
+          description: 交流效率 (%)
+          minimum: 80
+          maximum: 99.9
+          example: 97.03
+        dcEfficiency:
+          type: number
+          description: 直流效率 (%)
+          minimum: 80
+          maximum: 99.9
+          example: 97.5
+        selfDischarge:
+          type: number
+          description: 自放电率 (%/天)
+          minimum: 0
+          maximum: 1
+          example: 0.05
+        selfConsumption:
+          type: number
+          description: 自辅耗 (kWh/MWh/天)
+          minimum: 0
+          maximum: 10
+          example: 0.5
+        standbyConsumption:
+          type: number
+          description: 待机辅耗 (kWh/MWh/天)
+          minimum: 0
+          maximum: 5
+          example: 0.1
+        temperature:
+          type: number
+          description: 环境温度 (°C)
+          minimum: -20
+          maximum: 60
+          example: 25
+        cyclesPerDay:
+          type: number
+          description: 每日循环次数
+          minimum: 0.1
+          maximum: 5
+          example: 1
+        dod:
+          type: number
+          description: 放电深度 (0-1)
+          minimum: 0
+          maximum: 1
+          example: 0.8
+        cRate:
+          type: number
+          description: 充放电倍率 (C)
+          minimum: 0.1
+          maximum: 2
+          example: 0.5
+
+    SOHCalculationResponse:
+      type: object
+      properties:
+        years:
+          type: array
+          description: 年份数组
+          items:
+            type: integer
+          example: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+        soh:
+          type: array
+          description: SOH百分比数组
+          items:
+            type: number
+          example: [100, 98.5, 97.0, 95.5, 94.0, 92.5, 91.0, 89.5, 88.0, 86.5, 85.0, 83.5, 82.0, 80.5, 79.0, 77.5, 76.0, 74.5, 73.0, 71.5, 70.0, 68.5, 67.0, 65.5, 64.0, 62.5]
+        rte:
+          type: array
+          description: RTE百分比数组
+          items:
+            type: number
+          example: [97.03, 96.8, 96.5, 96.2, 95.9, 95.6, 95.3, 95.0, 94.7, 94.4, 94.1, 93.8, 93.5, 93.2, 92.9, 92.6, 92.3, 92.0, 91.7, 91.4, 91.1, 90.8, 90.5, 90.2, 89.9, 89.6]
+        capacity:
+          type: array
+          description: 容量数组 (MWh)
+          items:
+            type: number
+          example: [1000, 985, 970, 955, 940, 925, 910, 895, 880, 865, 850, 835, 820, 805, 790, 775, 760, 745, 730, 715, 700, 685, 670, 655, 640, 625]
+        netAvailable:
+          type: array
+          description: 净可用能量数组 (MWh)
+          items:
+            type: number
+          example: [950, 935, 920, 905, 890, 875, 860, 845, 830, 815, 800, 785, 770, 755, 740, 725, 710, 695, 680, 665, 650, 635, 620, 605, 590, 575]
+
+    AlgorithmParams:
+      type: object
+      properties:
+        A_cal:
+          type: number
+          description: 日历老化系数
+          example: 0.02
+        Ea_cal:
+          type: number
+          description: 日历老化活化能 (J/mol)
+          example: 20000
+        alpha:
+          type: number
+          description: 日历老化时间指数
+          example: 0.8
+        A_cyc:
+          type: number
+          description: 循环老化系数
+          example: 0.001
+        Ea_cyc:
+          type: number
+          description: 循环老化活化能 (J/mol)
+          example: 15000
+        beta:
+          type: number
+          description: 循环老化次数指数
+          example: 0.5
+
+    FinancialCalculationRequest:
+      type: object
+      required:
+        - sohResults
+        - financialParams
+      properties:
+        sohResults:
+          $ref: '#/components/schemas/SOHCalculationResponse'
+        financialParams:
+          $ref: '#/components/schemas/FinancialParams'
+
+    FinancialParams:
+      type: object
+      properties:
+        electricityPrice:
+          type: number
+          description: 电价 (元/kWh)
+          example: 0.8
+        inflationRate:
+          type: number
+          description: 通胀率 (%)
+          example: 2.5
+        discountRate:
+          type: number
+          description: 贴现率 (%)
+          example: 8.0
+        capex:
+          type: object
+          description: CAPEX成本
+          properties:
+            container:
+              type: number
+              description: 集装箱成本 (元/MWh)
+              example: 800000
+            pcs:
+              type: number
+              description: PCS成本 (元/MW)
+              example: 600000
+            bop:
+              type: number
+              description: BOP成本 (元/MWh)
+              example: 200000
+            development:
+              type: number
+              description: 开发费用 (元)
+              example: 5000000
+        opex:
+          type: object
+          description: OPEX成本
+          properties:
+            fixed:
+              type: number
+              description: 固定运维 (元/年)
+              example: 200000
+            variable:
+              type: number
+              description: 可变运维 (元/MWh)
+              example: 10
+            insurance:
+              type: number
+              description: 保险 (元/年)
+              example: 100000
+            land:
+              type: number
+              description: 土地租金 (元/年)
+              example: 50000
+
+    FinancialCalculationResponse:
+      type: object
+      properties:
+        npv:
+          type: number
+          description: 净现值 (元)
+          example: 15000000
+        irr:
+          type: number
+          description: 内部收益率 (%)
+          example: 12.5
+        lcoe:
+          type: number
+          description: 平准化度电成本 (元/kWh)
+          example: 0.45
+        roi:
+          type: number
+          description: 投资回报率 (%)
+          example: 15.0
+        dscr:
+          type: number
+          description: 偿债覆盖率
+          example: 1.5
+        paybackPeriod:
+          type: number
+          description: 投资回收期 (年)
+          example: 8.5
+        cashFlow:
+          type: array
+          description: 现金流数组
+          items:
+            $ref: '#/components/schemas/CashFlowItem'
+
+    CashFlowItem:
+      type: object
+      properties:
+        year:
+          type: integer
+          description: 年份
+          example: 0
+        investment:
+          type: number
+          description: 投资 (元)
+          example: -10000000
+        revenue:
+          type: number
+          description: 收入 (元)
+          example: 0
+        cost:
+          type: number
+          description: 成本 (元)
+          example: 0
+        netCashFlow:
+          type: number
+          description: 净现金流 (元)
+          example: -10000000
+        cumulativeCashFlow:
+          type: number
+          description: 累计现金流 (元)
+          example: -10000000
+
+    SensitivityAnalysisRequest:
+      type: object
+      required:
+        - baseParams
+        - sensitivityParams
+      properties:
+        baseParams:
+          $ref: '#/components/schemas/FinancialCalculationRequest'
+        sensitivityParams:
+          type: object
+          description: 敏感性参数
+          properties:
+            electricityPrice:
+              type: object
+              description: 电价敏感性
+              properties:
+                min:
+                  type: number
+                  example: 0.6
+                max:
+                  type: number
+                  example: 1.0
+                step:
+                  type: number
+                  example: 0.1
+            discountRate:
+              type: object
+              description: 贴现率敏感性
+              properties:
+                min:
+                  type: number
+                  example: 6.0
+                max:
+                  type: number
+                  example: 10.0
+                step:
+                  type: number
+                  example: 1.0
+
+    SensitivityAnalysisResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          description: 敏感性分析结果
+          items:
+            type: object
+            properties:
+              paramName:
+                type: string
+                description: 参数名称
+                example: electricityPrice
+              paramValue:
+                type: number
+                description: 参数值
+                example: 0.7
+              npv:
+                type: number
+                description: 净现值 (元)
+                example: 12000000
+              irr:
+                type: number
+                description: 内部收益率 (%)
+                example: 11.0
+
+    SiteAreaRequest:
+      type: object
+      required:
+        - containers
+        - containerSize
+      properties:
+        containers:
+          type: integer
+          description: 集装箱数量
+          example: 10
+        containerSize:
+          type: object
+          description: 集装箱尺寸
+          properties:
+            length:
+              type: number
+              description: 长度 (米)
+              example: 12
+            width:
+              type: number
+              description: 宽度 (米)
+              example: 2.5
+        safetyMargin:
+          type: number
+          description: 安全间距 (米)
+          example: 2
+        aisleWidth:
+          type: number
+          description: 通道宽度 (米)
+          example: 4
+
+    SiteAreaResponse:
+      type: object
+      properties:
+        totalArea:
+          type: number
+          description: 总面积 (平方米)
+          example: 500
+        containerArea:
+          type: number
+          description: 集装箱占地面积 (平方米)
+          example: 300
+        safetyArea:
+          type: number
+          description: 安全间距面积 (平方米)
+          example: 100
+        aisleArea:
+          type: number
+          description: 通道面积 (平方米)
+          example: 100
+
+    BOMRequest:
+      type: object
+      required:
+        - energy
+        - containers
+        - pcs
+      properties:
+        energy:
+          type: number
+          description: 系统能量 (MWh)
+          example: 1000
+        containers:
+          type: integer
+          description: 集装箱数量
+          example: 10
+        pcs:
+          type: number
+          description: PCS容量 (MW)
+          example: 50
+
+    BOMResponse:
+      type: object
+      properties:
+        cells:
+          type: array
+          description: 电芯清单
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "LFP-280Ah"
+              quantity:
+                type: integer
+                example: 10000
+              capacity:
+                type: number
+                example: 280
+        containers:
+          type: array
+          description: 集装箱清单
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "20ft-Container"
+              quantity:
+                type: integer
+                example: 10
+              capacity:
+                type: number
+                example: 100
+        pcs:
+          type: array
+          description: PCS清单
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "500kW-PCS"
+              quantity:
+                type: integer
+                example: 20
+              capacity:
+                type: number
+                example: 500
+        bop:
+          type: array
+          description: BOP清单
+          items:
+            type: object
+            properties:
+              item:
+                type: string
+                example: "BMS"
+              quantity:
+                type: integer
+                example: 10
+        cables:
+          type: array
+          description: 电缆清单
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "DC-Cable-185mm²"
+              length:
+                type: number
+                example: 500
+        accessories:
+          type: array
+          description: 辅材清单
+          items:
+            type: object
+            properties:
+              item:
+                type: string
+                example: "Connector"
+              quantity:
+                type: integer
+                example: 100
+
+    SparePartsRequest:
+      type: object
+      required:
+        - sohResults
+        - replacementStrategy
+      properties:
+        sohResults:
+          $ref: '#/components/schemas/SOHCalculationResponse'
+        replacementStrategy:
+          type: string
+          description: 更换策略
+          enum: [threshold, schedule, predictive]
+          example: threshold
+        replacementThreshold:
+          type: number
+          description: 更换阈值 (%)
+          example: 80
+
+    SparePartsResponse:
+      type: object
+      properties:
+        cells:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              description: 电芯备件数量
+              example: 1000
+            replacementYears:
+              type: array
+              description: 更换年份
+              items:
+                type: integer
+              example: [10, 20]
+        pcs:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              description: PCS备件数量
+              example: 2
+            replacementYears:
+              type: array
+              description: 更换年份
+              items:
+                type: integer
+              example: [15]
+        bms:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              description: BMS备件数量
+              example: 2
+            replacementYears:
+              type: array
+              description: 更换年份
+              items:
+                type: integer
+              example: [12]
+
+    FileExtractResponse:
+      type: object
+      properties:
+        params:
+          $ref: '#/components/schemas/SOHCalculationRequest'
+        source:
+          type: string
+          description: 文件来源
+          enum: [CSV, XLSX, TXT, JSON, PDF]
+          example: CSV
+        confidence:
+          type: number
+          description: 提取置信度 (0-1)
+          example: 0.95
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 错误信息
+          example: Invalid parameter value
+        code:
+          type: string
+          description: 错误代码
+          example: INVALID_PARAM
+        details:
+          type: object
+          description: 错误详情
+          additionalProperties: true
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 服务状态
+          example: ok
+        version:
+          type: string
+          description: 版本号
+          example: 1.0.0
+        timestamp:
+          type: string
+          format: date-time
+          description: 时间戳
+          example: 2026-06-20T12:00:00Z
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT认证
+
+security:
+  - BearerAuth: []
