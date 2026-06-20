@@ -1,5 +1,14 @@
 <template>
   <div class="h-screen flex flex-col bg-slate-950 text-slate-100 p-4 gap-3 text-xs overflow-hidden">
+    <!-- Toast提示 -->
+    <div v-if="toast.show" 
+      :class="['fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
+        toast.type === 'success' ? 'bg-emerald-500 text-white' : 
+        toast.type === 'error' ? 'bg-red-500 text-white' : 
+        toast.type === 'warning' ? 'bg-amber-500 text-white' : 'bg-slate-600 text-white']">
+      {{ toast.message }}
+    </div>
+
     <header class="flex justify-between items-center border-b border-slate-800 pb-2 flex-shrink-0">
       <div>
         <h1 class="text-lg font-bold bg-gradient-to-r from-teal-400 to-sky-400 bg-clip-text text-transparent">
@@ -13,14 +22,16 @@
       </button>
     </header>
 
-    <nav class="flex bg-slate-900/60 p-1 rounded-lg gap-1 border border-slate-800/80 flex-shrink-0">
+    <nav class="flex bg-slate-900/60 p-1 rounded-lg gap-1 border border-slate-800/80 flex-shrink-0 overflow-x-auto">
       <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
-        :class="['tab-btn', { active: activeTab === tab.id }]">{{ tab.label }}</button>
+        :class="['tab-btn whitespace-nowrap', { active: activeTab === tab.id }]">{{ tab.label }}</button>
     </nav>
 
     <div class="flex-1 min-h-0 overflow-hidden">
-      <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" />
+      <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
       <RunningConditions v-if="activeTab === 'conditions'" @applyParams="onApplyConditions" />
+      <BatteryPCSConfig v-if="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" />
+      <SimulationLab v-if="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" />
       <ProductConfig v-if="activeTab === 'products'" @applyConfig="onApplyConfig" />
       <FinancialDashboard v-if="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
       <MatrixTable v-if="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
@@ -42,17 +53,37 @@ import SohChart from './components/SohChart.vue'
 import RunningConditions from './components/RunningConditions.vue'
 import ProductConfig from './components/ProductConfig.vue'
 import FinancialDashboard from './components/FinancialDashboard.vue'
+import BatteryPCSConfig from './components/BatteryPCSConfig.vue'
+import SimulationLab from './components/SimulationLab.vue'
+
+// Toast提示
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'info',
+})
+
+const showToast = (message, type = 'info') => {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
+}
 
 const activeTab = ref('param')
 const tabs = [
   { id: 'param', label: '1. 参数配置面板' },
   { id: 'conditions', label: '2. 运行工况' },
-  { id: 'products', label: '3. 产品与方案配置' },
-  { id: 'financial', label: '4. 财务看板' },
-  { id: 'matrix', label: '5. 25年生命周期矩阵' },
-  { id: 'inject', label: '6. SOH/RTE 数据注入' },
-  { id: 'formula', label: '7. 算法公式实验舱' },
-  { id: 'chart', label: '8. 可视化图表' },
+  { id: 'batteryPCS', label: '3. 电池与PCS配对' },
+  { id: 'simulationLab', label: '4. 仿真实验室' },
+  { id: 'products', label: '5. 产品与方案配置' },
+  { id: 'financial', label: '6. 财务看板' },
+  { id: 'matrix', label: '7. 25年生命周期矩阵' },
+  { id: 'inject', label: '8. SOH/RTE 数据注入' },
+  { id: 'formula', label: '9. 算法公式实验舱' },
+  { id: 'chart', label: '10. 可视化图表' },
 ]
 
 const N = 26
@@ -170,8 +201,13 @@ async function fetchCalculation() {
     if (data.results) {
       Object.assign(results, data.results)
     }
-  } catch {
-calculate()
+    if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
+  } catch (error) {
+    console.error('API调用失败，使用本地计算:', error)
+    calculate()
+    if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
+  }
+}
 
 function onApplyConditions(mapped) {
   if (mapped.duration != null) params.duration = mapped.duration
@@ -186,9 +222,27 @@ function onApplyConfig(payload) {
   if (payload.initPcsQty != null) params.initPcsQty = payload.initPcsQty
   if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
   if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
+  showToast('配置已应用', 'success')
 }
-  }
-  if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
+
+function onApplyBatteryPCSConfig(payload) {
+  if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
+  if (payload.initContainerQty != null) params.initContainerQty = payload.initContainerQty
+  if (payload.initPcsQty != null) params.initPcsQty = payload.initPcsQty
+  if (payload.duration != null) params.duration = payload.duration
+  if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
+  showToast('电池与PCS配置已应用', 'success')
+  if (activeTab.value !== 'simulationLab') activeTab.value = 'simulationLab'
+}
+
+function onApplySimulationConfig(payload) {
+  // 仿真实验室的配置应用到主参数
+  Object.keys(payload).forEach(key => {
+    if (payload[key] != null && params[key] !== undefined) {
+      params[key] = payload[key]
+    }
+  })
+  showToast('仿真参数已应用', 'success')
 }
 
 calculate()

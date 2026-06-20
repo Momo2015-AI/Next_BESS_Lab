@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 N = 26
-UPLOAD_DIR = "/tmp/opencode/soh_uploads"
+UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")
 
 
 def calculate(params, soh, rte, dod, aug_qty):

@@ -5,39 +5,51 @@
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">标称单舱能量 (MWh)</label>
-          <input type="number" :value="params.ratedEnergy" step="0.1"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'ratedEnergy', Number($event.target.value))">
+          <input type="number" :value="params.ratedEnergy" step="0.1" min="0.1" max="20"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.ratedEnergy ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('ratedEnergy', Number($event.target.value), { min: 0.1, max: 20 })">
+          <p v-if="errors.ratedEnergy" class="text-[10px] text-red-400 mt-0.5">{{ errors.ratedEnergy }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">初始集装箱数量 (台)</label>
-          <input type="number" :value="params.initContainerQty" step="1"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'initContainerQty', Number($event.target.value))">
+          <input type="number" :value="params.initContainerQty" step="1" min="1" max="200"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.initContainerQty ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('initContainerQty', Number($event.target.value), { min: 1, max: 200 })">
+          <p v-if="errors.initContainerQty" class="text-[10px] text-red-400 mt-0.5">{{ errors.initContainerQty }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">PCS变流数量 (台)</label>
-          <input type="number" :value="params.initPcsQty" step="1"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'initPcsQty', Number($event.target.value))">
+          <input type="number" :value="params.initPcsQty" step="1" min="1" max="50"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.initPcsQty ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('initPcsQty', Number($event.target.value), { min: 1, max: 50 })">
+          <p v-if="errors.initPcsQty" class="text-[10px] text-red-400 mt-0.5">{{ errors.initPcsQty }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">单程充电时间 (h)</label>
-          <input type="number" :value="params.duration" step="0.5"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'duration', Number($event.target.value))">
+          <input type="number" :value="params.duration" step="0.5" min="0.5" max="12"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.duration ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('duration', Number($event.target.value), { min: 0.5, max: 12 })">
+          <p v-if="errors.duration" class="text-[10px] text-red-400 mt-0.5">{{ errors.duration }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">单日循环次数 (次)</label>
-          <input type="number" :value="params.cyclesPerDay" step="1"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'cyclesPerDay', Number($event.target.value))">
+          <input type="number" :value="params.cyclesPerDay" step="1" min="0.5" max="4"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.cyclesPerDay ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('cyclesPerDay', Number($event.target.value), { min: 0.5, max: 4 })">
+          <p v-if="errors.cyclesPerDay" class="text-[10px] text-red-400 mt-0.5">{{ errors.cyclesPerDay }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">网侧AC效率 (%)</label>
-          <input type="number" :value="params.acEfficiency" step="0.01"
-            class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none focus:border-teal-500"
-            @input="$emit('update', 'acEfficiency', Number($event.target.value))">
+          <input type="number" :value="params.acEfficiency" step="0.01" min="90" max="99"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
+              errors.acEfficiency ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
+            @input="validateAndUpdate('acEfficiency', Number($event.target.value), { min: 90, max: 99 })">
+          <p v-if="errors.acEfficiency" class="text-[10px] text-red-400 mt-0.5">{{ errors.acEfficiency }}</p>
         </div>
       </div>
     </div>
@@ -47,27 +59,35 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">集装箱运行功率 (kW)</label>
-          <input type="number" :value="params.bessAuxRun" step="0.001"
-            class="w-full bg-slate-950 border border-amber-900/60 rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none focus:border-amber-500"
-            @input="$emit('update', 'bessAuxRun', Number($event.target.value))">
+          <input type="number" :value="params.bessAuxRun" step="0.001" min="0" max="50"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
+              errors.bessAuxRun ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
+            @input="validateAndUpdate('bessAuxRun', Number($event.target.value), { min: 0, max: 50 })">
+          <p v-if="errors.bessAuxRun" class="text-[10px] text-red-400 mt-0.5">{{ errors.bessAuxRun }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">集装箱待机功率 (kW)</label>
-          <input type="number" :value="params.bessAuxStandby" step="0.1"
-            class="w-full bg-slate-950 border border-amber-900/60 rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none focus:border-amber-500"
-            @input="$emit('update', 'bessAuxStandby', Number($event.target.value))">
+          <input type="number" :value="params.bessAuxStandby" step="0.1" min="0" max="20"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
+              errors.bessAuxStandby ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
+            @input="validateAndUpdate('bessAuxStandby', Number($event.target.value), { min: 0, max: 20 })">
+          <p v-if="errors.bessAuxStandby" class="text-[10px] text-red-400 mt-0.5">{{ errors.bessAuxStandby }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">PCS运行功率 (kW)</label>
-          <input type="number" :value="params.pcsAuxRun" step="0.1"
-            class="w-full bg-slate-950 border border-amber-900/60 rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none focus:border-amber-500"
-            @input="$emit('update', 'pcsAuxRun', Number($event.target.value))">
+          <input type="number" :value="params.pcsAuxRun" step="0.1" min="0" max="30"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
+              errors.pcsAuxRun ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
+            @input="validateAndUpdate('pcsAuxRun', Number($event.target.value), { min: 0, max: 30 })">
+          <p v-if="errors.pcsAuxRun" class="text-[10px] text-red-400 mt-0.5">{{ errors.pcsAuxRun }}</p>
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">PCS待机功率 (kW)</label>
-          <input type="number" :value="params.pcsAuxStandby" step="0.1"
-            class="w-full bg-slate-950 border border-amber-900/60 rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none focus:border-amber-500"
-            @input="$emit('update', 'pcsAuxStandby', Number($event.target.value))">
+          <input type="number" :value="params.pcsAuxStandby" step="0.1" min="0" max="10"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
+              errors.pcsAuxStandby ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
+            @input="validateAndUpdate('pcsAuxStandby', Number($event.target.value), { min: 0, max: 10 })">
+          <p v-if="errors.pcsAuxStandby" class="text-[10px] text-red-400 mt-0.5">{{ errors.pcsAuxStandby }}</p>
         </div>
       </div>
 
@@ -113,9 +133,11 @@
         </div>
         <div>
           <label class="block text-[10px] text-slate-400 mb-0.5">承诺保障线 (MWh/次)</label>
-          <input type="number" :value="params.requiredEnergy" step="1"
-            class="w-full bg-slate-950 border border-emerald-900/60 rounded px-2 py-1.5 text-emerald-300 font-mono focus:outline-none focus:border-emerald-500"
-            @input="$emit('update', 'requiredEnergy', Number($event.target.value))">
+          <input type="number" :value="params.requiredEnergy" step="1" min="50" max="500"
+            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-emerald-300 font-mono focus:outline-none',
+              errors.requiredEnergy ? 'border-red-500 focus:border-red-500' : 'border-emerald-900/60 focus:border-emerald-500']"
+            @input="validateAndUpdate('requiredEnergy', Number($event.target.value), { min: 50, max: 500 })">
+          <p v-if="errors.requiredEnergy" class="text-[10px] text-red-400 mt-0.5">{{ errors.requiredEnergy }}</p>
         </div>
       </div>
     </div>
@@ -123,6 +145,63 @@
 </template>
 
 <script setup>
-defineProps({ params: Object })
-defineEmits(['update'])
+import { reactive } from 'vue'
+
+const props = defineProps({ params: Object })
+const emit = defineEmits(['update', 'error'])
+
+const errors = reactive({
+  ratedEnergy: '',
+  initContainerQty: '',
+  initPcsQty: '',
+  duration: '',
+  cyclesPerDay: '',
+  acEfficiency: '',
+  bessAuxRun: '',
+  bessAuxStandby: '',
+  pcsAuxRun: '',
+  pcsAuxStandby: '',
+  requiredEnergy: '',
+})
+
+const validationRules = {
+  ratedEnergy: { min: 0.1, max: 20, label: '标称单舱能量' },
+  initContainerQty: { min: 1, max: 200, label: '初始集装箱数量' },
+  initPcsQty: { min: 1, max: 50, label: 'PCS变流数量' },
+  duration: { min: 0.5, max: 12, label: '单程充电时间' },
+  cyclesPerDay: { min: 0.5, max: 4, label: '单日循环次数' },
+  acEfficiency: { min: 90, max: 99, label: '网侧AC效率' },
+  bessAuxRun: { min: 0, max: 50, label: '集装箱运行功率' },
+  bessAuxStandby: { min: 0, max: 20, label: '集装箱待机功率' },
+  pcsAuxRun: { min: 0, max: 30, label: 'PCS运行功率' },
+  pcsAuxStandby: { min: 0, max: 10, label: 'PCS待机功率' },
+  requiredEnergy: { min: 50, max: 500, label: '承诺保障线' },
+}
+
+const validateAndUpdate = (key, value, rule) => {
+  // 验证
+  if (value === '' || value === null || value === undefined) {
+    errors[key] = `${validationRules[key].label}不能为空`
+    emit('error', errors[key], 'error')
+    return
+  }
+  
+  if (value < rule.min) {
+    errors[key] = `${validationRules[key].label}不能小于${rule.min}`
+    emit('error', errors[key], 'error')
+    return
+  }
+  
+  if (value > rule.max) {
+    errors[key] = `${validationRules[key].label}不能大于${rule.max}`
+    emit('error', errors[key], 'error')
+    return
+  }
+  
+  // 验证通过，清除错误
+  errors[key] = ''
+  
+  // 更新参数
+  emit('update', key, value)
+}
 </script>
