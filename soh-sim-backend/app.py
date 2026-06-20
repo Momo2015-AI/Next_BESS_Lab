@@ -7,9 +7,21 @@ import tempfile
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
+from database import db, init_db, Survey, Project
+from routes.survey import survey_bp
 
 app = Flask(__name__)
 CORS(app)
+
+# 数据库配置
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(os.path.abspath(__file__)), 'soh_sim.db')}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# 初始化数据库
+init_db(app)
+
+# 注册路由
+app.register_blueprint(survey_bp)
 
 N = 26
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")
