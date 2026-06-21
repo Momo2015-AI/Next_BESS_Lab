@@ -306,9 +306,8 @@ async function exportSimulationCSV(simulationId) {
     const response = await fetch(`/api/simulation/${simulationId}`)
     const data = await response.json()
     
-    if (data.results) {
-      const results = data.results
-      const csvContent = generateCSV(results)
+    if (data) {
+      const csvContent = generateCSV(data)  // 传入完整data对象
       const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')

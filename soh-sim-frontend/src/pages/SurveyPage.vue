@@ -348,42 +348,80 @@ async function submitSurvey() {
   }
   
   try {
-    // 生成调研表ID
-    const surveyId = 'SURV' + Date.now()
-    
-    // 构建完整数据
+    // 构建符合后端API的数据结构
     const surveyData = {
-      id: surveyId,
-      ...formData,
-      submittedAt: new Date().toISOString(),
-      status: 'pending',
+      project_name: formData.projectName,  // 后端期望 project_name
+      location: formData.location,
+      contact: formData.contact,
+      phone: formData.phone,
       
-      // 计算字段
-      containerQty: Math.ceil(formData.ratedEnergy / 5),
-      pcsQty: Math.ceil(formData.ratedPower / 5),
-      totalEnergyMwh: formData.ratedEnergy,
-      totalPowerMw: formData.ratedPower,
+      // 储能需求
+      rated_energy: formData.ratedEnergy,  // 后端期望 rated_energy
+      rated_power: formData.ratedPower,
+      discharge_hours: formData.dischargeHours,  // 后端期望 discharge_hours
+      application: formData.application,
+      voltage_level: formData.voltageLevel,
+      
+      // 运行参数
+      cycles_per_day: formData.cyclesPerDay,
+      dod: formData.dod,
+      c_rate: formData.cRate,
+      temperature: formData.temperature,
+      guarantee_years: formData.guaranteeYears,
+      
+      // 电池选型
+      battery_type: formData.batteryType,
+      cell_capacity: formData.cellCapacity,
+      container_spec: formData.containerSpec,
+      
+      // 特殊需求
+      features: formData.features,
+      remarks: formData.remarks,
     }
     
-    // 保存到localStorage（生产环境应调用API）
-    const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
-    surveys.push(surveyData)
-    localStorage.setItem('surveys', JSON.stringify(surveys))
+    // 调用后端API
+    const response = await fetch('/api/survey/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(surveyData),
+    })
     
-    // 保存当前调研表ID
-    localStorage.setItem('currentSurveyId', surveyId)
-    localStorage.setItem('currentSurvey', JSON.stringify(surveyData))
+    const result = await response.json()
     
-    showToast('调研表提交成功！', 'success')
-    
-    // 跳转到系统主页
-    setTimeout(() => {
-      router.push('/')
-    }, 1500)
+    if (response.ok) {
+      // 保存到localStorage作为备份
+      localStorage.setItem('currentSurveyId', result.id || result.survey_id)
+      localStorage.setItem('currentSurvey', JSON.stringify({
+        id: result.id || result.survey_id,
+        ...formData,
+        submittedAt: new Date().toISOString(),
+      }))
+      
+      showToast('调研表提交成功！', 'success')
+      
+      // 跳转到系统主页
+      setTimeout(() => {
+        router.push('/')
+      }, 1500)
+    } else {
+      showToast(result.error || '提交失败', 'error')
+    }
     
   } catch (error) {
     console.error('提交失败:', error)
-    showToast('提交失败，请重试', 'error')
+    // 网络错误时保存到localStorage
+    const surveyId = 'SURV' + Date.now()
+    localStorage.setItem('currentSurveyId', surveyId)
+    localStorage.setItem('currentSurvey', JSON.stringify({
+      id: surveyId,
+      ...formData,
+      submittedAt: new Date().toISOString(),
+    }))
+    showToast('网络错误，已保存到本地', 'warning')
+    
+    setTimeout(() => {
+      router.push('/')
+    }, 1500)
   }
 }
 </script>

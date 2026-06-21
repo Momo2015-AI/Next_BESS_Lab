@@ -199,7 +199,7 @@
             <div class="text-[10px] text-slate-500">集装箱数量</div>
           </div>
           <div class="text-center bg-slate-700/50 rounded p-2">
-            <div class="text-lg font-bold text-emerald-400">{{ batteryConfig.totalStrings }}</div>
+            <div class="text-lg font-bold text-emerald-400">{{ totalStrings }}</div>
             <div class="text-[10px] text-slate-500">电池簇总数</div>
           </div>
           <div class="text-center bg-slate-700/50 rounded p-2">

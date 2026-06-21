@@ -292,8 +292,11 @@ def change_password():
     if not user:
         return jsonify({'error': '用户不存在'}), 404
     
-    # 验证旧密码
-    if old_password and not verify_password(old_password, user.password_hash):
+    # 验证旧密码（必须提供且正确）
+    if not old_password:
+        return jsonify({'error': '请输入原密码'}), 400
+    
+    if not verify_password(old_password, user.password_hash):
         return jsonify({'error': '原密码错误'}), 401
     
     # 更新密码
@@ -318,7 +321,12 @@ def token_required(f):
             return jsonify({'error': '未提供认证token'}), 401
         
         token = auth_header[7:]
-        secret_key = current_app.config.get('SECRET_KEY', 'your-secret-key-change-in-production')
+        secret_key = current_app.config.get('SECRET_KEY')
+        
+        if not secret_key:
+            current_app.logger.error('SECRET_KEY not configured!')
+            return jsonify({'error': '服务器配置错误'}), 500
+        
         payload = decode_token(token, secret_key)
         
         if not payload:
@@ -332,24 +340,13 @@ def token_required(f):
     return decorated
 
 
-# 角色权限检查装饰器
+# 角色权限检查装饰器（复用token_required）
 def role_required(*roles):
     """角色权限装饰器"""
     def decorator(f):
+        @token_required
         def decorated(*args, **kwargs):
-            auth_header = request.headers.get('Authorization', '')
-            
-            if not auth_header.startswith('Bearer '):
-                return jsonify({'error': '未提供认证token'}), 401
-            
-            token = auth_header[7:]
-            secret_key = current_app.config.get('SECRET_KEY', 'your-secret-key-change-in-production')
-            payload = decode_token(token, secret_key)
-            
-            if not payload:
-                return jsonify({'error': 'token已失效'}), 401
-            
-            user_id = payload.get('user_id')
+            user_id = request.user_id
             
             from database import User
             user = User.query.get(user_id)
@@ -360,7 +357,6 @@ def role_required(*roles):
             if user.role not in roles:
                 return jsonify({'error': '权限不足'}), 403
             
-            request.user_id = user_id
             request.user_role = user.role
             return f(*args, **kwargs)
         

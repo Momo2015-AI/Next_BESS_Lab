@@ -71,10 +71,10 @@ def export_csv():
         for i in range(N):
             writer.writerow([
                 i,
-                round(float(soh[i]) * 100, 2) if i < len(soh) and soh[i] else '',
-                round(float(rte[i]) * 100, 2) if i < len(rte) and rte[i] else '',
-                round(float(dod[i]), 2) if i < len(dod) and dod[i] else '',
-                int(aug_qty[i]) if i < len(aug_qty) and aug_qty[i] else 0
+                round(float(soh[i]) * 100, 2) if i < len(soh) and soh[i] is not None else 0.0,
+                round(float(rte[i]) * 100, 2) if i < len(rte) and rte[i] is not None else 0.0,
+                round(float(dod[i]), 2) if i < len(dod) and dod[i] is not None else 0.0,
+                int(aug_qty[i]) if i < len(aug_qty) and aug_qty[i] is not None else 0
             ])
     
     if export_type == 'params' or export_type == 'all':

@@ -347,8 +347,8 @@ function applyConfigRules() {
   // 计算需要的PCS功率
   const requiredPower = batteryEnergy / dischargeHours
   
-  // 计算功率配比
-  pcsConfig.powerRatio = (batteryEnergy / requiredPower).toFixed(1)
+  // 计算功率配比（保持为数字）
+  pcsConfig.powerRatio = parseFloat((batteryEnergy / requiredPower).toFixed(1))
   
   // 计算PCS数量
   pcsConfig.pcsQty = Math.ceil(requiredPower / pcsConfig.pcsPower)

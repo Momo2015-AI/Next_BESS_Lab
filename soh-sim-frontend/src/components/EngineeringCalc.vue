@@ -296,6 +296,7 @@ function calculateSiteArea() {
 const bomData = reactive({
   energy: 100,
   containerQty: 10,
+  pcsQty: 10,  // 新增pcsQty字段
   pcsCapacity: 50,
   transformerCapacity: 60,
 })
