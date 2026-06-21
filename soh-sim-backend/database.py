@@ -38,12 +38,16 @@ class User(db.Model):
     password_hash = db.Column(db.String(256))
     role = db.Column(db.String(20), default='user')  # admin/engineer/user
     status = db.Column(db.String(20), default='active')
+    is_active = db.Column(db.Boolean, default=True)  # 账号是否激活
+    login_count = db.Column(db.Integer, default=0)  # 登录次数
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = db.Column(db.DateTime)
     
     # 关联
     tenant = db.relationship('Tenant', back_populates='users')
     simulations = db.relationship('Simulation', back_populates='user')
+    formula_configs = db.relationship('FormulaConfig', back_populates='user')
 
 
 class Survey(db.Model):
@@ -364,6 +368,9 @@ class FormulaConfig(db.Model):
     # 时间
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    user = db.relationship('User', back_populates='formula_configs')
 
 
 def init_db(app):

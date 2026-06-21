@@ -16,10 +16,16 @@
         </h1>
         <p class="text-[10px] text-slate-400 mt-0.5">BESS SOH Simulation, Degradation Matrix & Augmentation Lifecycle Engine</p>
       </div>
-      <button @click="fetchCalculation"
-        class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-4 py-1.5 rounded-md shadow-md transition-all active:scale-95 border border-emerald-400/20">
-        执行仿真计算
-      </button>
+      <div class="flex gap-2">
+        <button @click="openSurveyPage"
+          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-3 py-1.5 rounded border border-slate-600 transition-all">
+          📋 调研表
+        </button>
+        <button @click="fetchCalculation"
+          class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-4 py-1.5 rounded-md shadow-md transition-all active:scale-95 border border-emerald-400/20">
+          执行仿真计算
+        </button>
+      </div>
     </header>
 
     <nav class="flex bg-slate-900/60 p-1 rounded-lg gap-1 border border-slate-800/80 flex-shrink-0 overflow-x-auto">
@@ -28,24 +34,46 @@
     </nav>
 
     <div class="flex-1 min-h-0 overflow-hidden overflow-y-auto">
-      <SurveyForm v-if="activeTab === 'survey'" />
+      <!-- 1. 参数配置面板 -->
       <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
+      <!-- 2. 运行工况（从调研表获取） -->
       <RunningConditions v-if="activeTab === 'conditions'" @applyParams="onApplyConditions" />
-      <BatteryPCSConfig v-if="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" />
-      <SimulationLab v-if="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" />
-      <ProductConfig v-if="activeTab === 'products'" @applyConfig="onApplyConfig" />
+      <!-- 3. 直流侧设计（电池） -->
+      <BatteryDCDesign v-if="activeTab === 'dc-design'" ref="batteryDC" @apply-config="onApplyBatteryConfig" />
+      <!-- 4. 交流侧设计（PCS） -->
+      <PcsACDesign v-if="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" />
+      <!-- 5. 仿真实验室 -->
+      <SimulationLab v-if="activeTab === 'simulationLab'" @apply-config="onApplySimulationConfig" />
+      <!-- 6. 产品与方案配置 -->
+      <ProductConfig v-if="activeTab === 'products'" @apply-config="onApplyConfig" />
+      <!-- 7. 财务看板 -->
       <FinancialDashboard v-if="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
+      <!-- 8. 25年生命周期矩阵 -->
       <MatrixTable v-if="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
         @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
+      <!-- 9. SOH/RTE 数据注入 -->
       <DataInjection v-if="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
+      <!-- 10. 算法公式实验舱 -->
       <FormulaLab v-if="activeTab === 'formula'" :params="params" @update="updateParam" />
+      <!-- 11. 可视化图表 -->
       <SohChart v-if="activeTab === 'chart'" :results="results" :soh="soh" :rte="rte" :required-energy="params.requiredEnergy" />
+      <!-- 12. 多场景对比 -->
+      <ScenarioCompare v-if="activeTab === 'scenario'" :base-params="params" />
+      <!-- 13. 敏感性分析 -->
+      <SensitivityAnalysis v-if="activeTab === 'sensitivity'" :params="params" :financial="financialData" />
+      <!-- 14. 工程计算 -->
+      <EngineeringCalc v-if="activeTab === 'engineering'" />
+      <!-- 15. 数据导出 -->
+      <DataExport v-if="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
+      <!-- 16. 用户认证 -->
+      <AuthPanel v-if="activeTab === 'auth'" @auth-success="onAuthSuccess" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import ParameterPanel from './components/ParameterPanel.vue'
 import MatrixTable from './components/MatrixTable.vue'
 import DataInjection from './components/DataInjection.vue'
@@ -54,9 +82,19 @@ import SohChart from './components/SohChart.vue'
 import RunningConditions from './components/RunningConditions.vue'
 import ProductConfig from './components/ProductConfig.vue'
 import FinancialDashboard from './components/FinancialDashboard.vue'
-import BatteryPCSConfig from './components/BatteryPCSConfig.vue'
+import BatteryDCDesign from './components/BatteryDCDesign.vue'
+import PcsACDesign from './components/PcsACDesign.vue'
 import SimulationLab from './components/SimulationLab.vue'
-import SurveyForm from './components/SurveyForm.vue'
+import DataExport from './components/DataExport.vue'
+import ScenarioCompare from './components/ScenarioCompare.vue'
+import SensitivityAnalysis from './components/SensitivityAnalysis.vue'
+import EngineeringCalc from './components/EngineeringCalc.vue'
+import AuthPanel from './components/AuthPanel.vue'
+
+// Refs
+const batteryDC = ref(null)
+const pcsAC = ref(null)
+const router = useRouter()
 
 // Toast提示
 const toast = reactive({
@@ -74,29 +112,41 @@ const showToast = (message, type = 'info') => {
   }, 3000)
 }
 
-const activeTab = ref('survey')
+// 打开调研表页面
+function openSurveyPage() {
+  router.push('/survey')
+}
+
+const activeTab = ref('param')
 const tabs = [
-  { id: 'survey', label: '0. 项目调研表' },
   { id: 'param', label: '1. 参数配置面板' },
   { id: 'conditions', label: '2. 运行工况' },
-  { id: 'batteryPCS', label: '3. 电池与PCS配对' },
-  { id: 'simulationLab', label: '4. 仿真实验室' },
-  { id: 'products', label: '5. 产品与方案配置' },
-  { id: 'financial', label: '6. 财务看板' },
-  { id: 'matrix', label: '7. 25年生命周期矩阵' },
-  { id: 'inject', label: '8. SOH/RTE 数据注入' },
-  { id: 'formula', label: '9. 算法公式实验舱' },
-  { id: 'chart', label: '10. 可视化图表' },
+  { id: 'dc-design', label: '3. 直流侧设计' },
+  { id: 'ac-design', label: '4. 交流侧设计' },
+  { id: 'simulationLab', label: '5. 仿真实验室' },
+  { id: 'products', label: '6. 产品与方案' },
+  { id: 'financial', label: '7. 财务看板' },
+  { id: 'matrix', label: '8. 生命周期矩阵' },
+  { id: 'inject', label: '9. SOH/RTE注入' },
+  { id: 'formula', label: '10. 算法实验舱' },
+  { id: 'chart', label: '11. 可视化图表' },
+  { id: 'scenario', label: '12. 多场景对比' },
+  { id: 'sensitivity', label: '13. 敏感性分析' },
+  { id: 'engineering', label: '14. 工程计算' },
+  { id: 'export', label: '15. 数据导出' },
+  { id: 'auth', label: '16. 用户认证' },
 ]
 
 const N = 26
 
 const params = reactive({
   ratedEnergy: 5,
-  initContainerQty: 62,
-  initPcsQty: 1,
+  initContainerQty: 10,
+  initPcsQty: 2,
+  pcsPower: 5,
   duration: 2,
   cyclesPerDay: 1,
+  temperature: 25,
   acEfficiency: 97.03,
   bessAuxRun: 18.124,
   bessAuxStandby: 3.5,
@@ -228,14 +278,31 @@ function onApplyConfig(payload) {
   showToast('配置已应用', 'success')
 }
 
-function onApplyBatteryPCSConfig(payload) {
+// 直流侧（电池）配置应用
+function onApplyBatteryConfig(payload) {
   if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
-  if (payload.initContainerQty != null) params.initContainerQty = payload.initContainerQty
-  if (payload.initPcsQty != null) params.initPcsQty = payload.initPcsQty
-  if (payload.duration != null) params.duration = payload.duration
+  if (payload.containerQty != null) params.initContainerQty = payload.containerQty
+  if (payload.dod != null) dod.value = new Array(N).fill(payload.dod)
+  if (payload.cyclesPerDay != null) params.cyclesPerDay = payload.cyclesPerDay
+  if (payload.temperature != null) params.temperature = payload.temperature
+  showToast('直流侧配置已应用', 'success')
+  // 同步到PCS配置
+  if (pcsAC.value) {
+    pcsAC.value.setBatteryConfig({
+      totalEnergy: params.ratedEnergy,
+      containerQty: params.initContainerQty,
+    })
+  }
+}
+
+// 交流侧（PCS）配置应用
+function onApplyPcsConfig(payload) {
+  if (payload.pcsQty != null) params.initPcsQty = payload.pcsQty
+  if (payload.totalPcsPower != null) params.pcsPower = payload.totalPcsPower
   if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
-  showToast('电池与PCS配置已应用', 'success')
-  if (activeTab.value !== 'simulationLab') activeTab.value = 'simulationLab'
+  if (payload.pcsAuxRun != null) params.pcsAuxRun = payload.pcsAuxRun
+  if (payload.pcsAuxStandby != null) params.pcsAuxStandby = payload.pcsAuxStandby
+  showToast('交流侧配置已应用', 'success')
 }
 
 function onApplySimulationConfig(payload) {
@@ -245,8 +312,56 @@ function onApplySimulationConfig(payload) {
       params[key] = payload[key]
     }
   })
+  // 更新SOH/RTE数据
+  if (payload.sohCurve) soh.value = payload.sohCurve
+  if (payload.rteCurve) rte.value = payload.rteCurve
   showToast('仿真参数已应用', 'success')
 }
 
-calculate()
+// 当前项目ID
+const currentProjectId = ref('')
+
+// 财务数据
+const financialData = reactive({
+  totalRevenue: 0,
+  totalCost: 0,
+  netCashflow: 0,
+  npv: 0,
+  irr: 0,
+  paybackYears: 0,
+  lcos: 0,
+})
+
+// 认证成功回调
+function onAuthSuccess(user) {
+  showToast(`欢迎 ${user.username}`, 'success')
+}
+
+// 从localStorage加载调研表数据
+function loadSurveyData() {
+  try {
+    const currentSurvey = localStorage.getItem('currentSurvey')
+    if (currentSurvey) {
+      const survey = JSON.parse(currentSurvey)
+      if (survey.ratedEnergy) params.ratedEnergy = survey.ratedEnergy
+      if (survey.containerQty) params.initContainerQty = survey.containerQty
+      if (survey.pcsQty) params.initPcsQty = survey.pcsQty
+      if (survey.dischargeHours) params.duration = survey.dischargeHours
+      if (survey.cyclesPerDay) params.cyclesPerDay = survey.cyclesPerDay
+      if (survey.dod) dod.value = new Array(N).fill(survey.dod)
+      if (survey.temperature) params.temperature = survey.temperature
+      if (survey.guaranteeYears) params.guaranteeYears = survey.guaranteeYears
+      currentProjectId.value = survey.id || ''
+      showToast(`已加载调研表: ${survey.projectName}`, 'info')
+    }
+  } catch (e) {
+    console.error('加载调研表失败:', e)
+  }
+}
+
+// 初始化
+onMounted(() => {
+  loadSurveyData()
+  calculate()
+})
 </script>
