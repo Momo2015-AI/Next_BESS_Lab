@@ -11,6 +11,9 @@ from database import db, init_db, Survey, Project
 from routes.survey import survey_bp
 from routes.export import export_bp
 from routes.auth import auth_bp
+from routes.library import library_bp
+from routes.project import project_bp
+from routes.simulation import simulation_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +32,9 @@ init_db(app)
 app.register_blueprint(survey_bp)
 app.register_blueprint(export_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(library_bp)
+app.register_blueprint(project_bp)
+app.register_blueprint(simulation_bp)
 
 N = 26
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")

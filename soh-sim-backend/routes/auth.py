@@ -54,6 +54,7 @@ def decode_token(token, secret_key):
 def register():
     """
     用户注册
+    支持角色: customer(客户) / engineer(工程师) / admin(管理员)
     """
     data = request.get_json()
     
@@ -63,6 +64,7 @@ def register():
     username = data.get('username', '').strip()
     email = data.get('email', '').strip()
     password = data.get('password', '')
+    role = data.get('role', 'customer')  # 默认客户角色
     tenant_id = data.get('tenant_id')  # 可选，关联租户
     
     # 验证必填字段
@@ -74,6 +76,11 @@ def register():
     
     if not password or len(password) < 6:
         return jsonify({'error': '密码至少需要6个字符'}), 400
+    
+    # 验证角色
+    valid_roles = ['customer', 'engineer', 'admin']
+    if role not in valid_roles:
+        return jsonify({'error': f'无效的角色，可选值: {", ".join(valid_roles)}'}), 400
     
     # 检查用户是否已存在
     from database import User
@@ -94,7 +101,7 @@ def register():
         email=email,
         password_hash=hash_password(password),
         tenant_id=tenant_id,
-        role='user',  # 默认角色
+        role=role,  # 用户选择的角色
         is_active=True,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
@@ -117,7 +124,7 @@ def register():
                 'id': user_id,
                 'username': username,
                 'email': email,
-                'role': 'user',
+                'role': role,
             }
         }), 201
         

@@ -15,11 +15,12 @@
           <div class="space-y-3">
             <div>
               <label class="text-[10px] text-slate-500 block mb-1">电芯类型</label>
-              <select v-model="batteryConfig.cellType" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs focus:border-teal-500 outline-none">
-                <option value="LFP280">LFP 280Ah (主流)</option>
-                <option value="LFP302">LFP 302Ah (新品)</option>
-                <option value="LFP314">LFP 314Ah (高容量)</option>
-                <option value="NCM">NCM (三元锂)</option>
+              <select v-model="batteryConfig.cellType" @change="onCellTypeChange"
+                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs focus:border-teal-500 outline-none">
+                <option value="">请选择电芯型号</option>
+                <option v-for="cell in cellLibrary" :key="cell.id" :value="cell.model">
+                  {{ cell.model }} - {{ cell.mfr }} ({{ cell.capacityAh }}Ah)
+                </option>
               </select>
             </div>
             
@@ -236,23 +237,77 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 
-const emit = defineEmits(['apply-config'])
+const emit = defineEmits(['apply-config', 'error'])
 
-// Toast
-const toast = reactive({ show: false, message: '', type: 'success' })
+// 电芯库数据
+const cellLibrary = ref([])
+const containerLibrary = ref([])
+
+// Toast提示
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success',
+})
+
 const showToast = (message, type = 'success') => {
   toast.message = message
   toast.type = type
   toast.show = true
-  setTimeout(() => { toast.show = false }, 3000)
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
+}
+
+// 加载电芯库数据
+async function loadCellLibrary() {
+  try {
+    const response = await fetch('/api/library/cells')
+    const data = await response.json()
+    if (data.success) {
+      cellLibrary.value = data.data || []
+      // 如果电芯库为空，尝试初始化
+      if (cellLibrary.value.length === 0) {
+        await seedLibrary()
+      }
+    }
+  } catch (error) {
+    console.error('加载电芯库失败:', error)
+    emit('error', '加载电芯库失败')
+  }
+}
+
+// 初始化产品库
+async function seedLibrary() {
+  try {
+    const response = await fetch('/api/library/seed', { method: 'POST' })
+    const data = await response.json()
+    if (data.success) {
+      await loadCellLibrary()
+      showToast('产品库初始化成功')
+    }
+  } catch (error) {
+    console.error('初始化产品库失败:', error)
+  }
+}
+
+// 电芯类型变更时自动填充参数
+function onCellTypeChange() {
+  const selectedCell = cellLibrary.value.find(c => c.model === batteryConfig.cellType)
+  if (selectedCell) {
+    batteryConfig.cellCapacity = selectedCell.capacityAh
+    batteryConfig.cellVoltage = selectedCell.voltageNominal
+    batteryConfig.cycleLife = selectedCell.cycleLife
+    batteryConfig.energyDensity = selectedCell.energyDensity || 160
+  }
 }
 
 // 电池配置
 const batteryConfig = reactive({
   // 电芯
-  cellType: 'LFP280',
+  cellType: '',
   cellCapacity: 280,
   cellVoltage: 3.2,
   energyDensity: 160,
@@ -374,6 +429,11 @@ function loadFromSurvey(surveyData) {
   if (surveyData.cyclesPerDay) batteryConfig.cyclesPerDay = surveyData.cyclesPerDay
   if (surveyData.dod) batteryConfig.dodSet = surveyData.dod * 100
 }
+
+// 组件挂载时加载电芯库
+onMounted(() => {
+  loadCellLibrary()
+})
 
 // 导出方法
 defineExpose({ loadFromSurvey })
