@@ -27,7 +27,8 @@
         :class="['tab-btn whitespace-nowrap', { active: activeTab === tab.id }]">{{ tab.label }}</button>
     </nav>
 
-    <div class="flex-1 min-h-0 overflow-hidden">
+    <div class="flex-1 min-h-0 overflow-hidden overflow-y-auto">
+      <SurveyForm v-if="activeTab === 'survey'" />
       <ParameterPanel v-if="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
       <RunningConditions v-if="activeTab === 'conditions'" @applyParams="onApplyConditions" />
       <BatteryPCSConfig v-if="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" />
@@ -55,6 +56,7 @@ import ProductConfig from './components/ProductConfig.vue'
 import FinancialDashboard from './components/FinancialDashboard.vue'
 import BatteryPCSConfig from './components/BatteryPCSConfig.vue'
 import SimulationLab from './components/SimulationLab.vue'
+import SurveyForm from './components/SurveyForm.vue'
 
 // Toast提示
 const toast = reactive({
@@ -72,8 +74,9 @@ const showToast = (message, type = 'info') => {
   }, 3000)
 }
 
-const activeTab = ref('param')
+const activeTab = ref('survey')
 const tabs = [
+  { id: 'survey', label: '0. 项目调研表' },
   { id: 'param', label: '1. 参数配置面板' },
   { id: 'conditions', label: '2. 运行工况' },
   { id: 'batteryPCS', label: '3. 电池与PCS配对' },
