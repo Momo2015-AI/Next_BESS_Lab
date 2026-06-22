@@ -40,6 +40,7 @@ export default {
     acDesign: '4. AC-Side Design (PCS)',
     batteryPCS: '5. Battery & PCS Pairing',
     simulationLab: '6. Simulation Lab',
+    algorithm: '6.5 Algorithm Lab',
     products: '7. Product Config',
     financial: '8. Financial Dashboard',
     matrix: '9. 25-Year Lifecycle Matrix',

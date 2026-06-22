@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col gap-4 h-full overflow-auto p-4">
-    <!-- 步骤指示器 -->
     <div class="flex items-center gap-2 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
       <div v-for="(step, idx) in steps" :key="idx" 
         :class="['flex items-center gap-1 px-3 py-1 rounded text-xs transition-all',
@@ -13,7 +12,6 @@
       </div>
     </div>
 
-    <!-- 步骤1: 调研表数据 -->
     <div v-show="currentStep === 0" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
       <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-teal-400"></span>
@@ -21,7 +19,6 @@
       </h3>
       
       <div class="grid grid-cols-2 gap-4">
-        <!-- 调研表ID输入 -->
         <div class="space-y-2">
           <label class="text-xs text-slate-400">调研表串码ID</label>
           <div class="flex gap-2">
@@ -34,7 +31,6 @@
           </div>
         </div>
 
-        <!-- 项目信息 -->
         <div class="space-y-2">
           <label class="text-xs text-slate-400">项目名称</label>
           <input v-model="surveyData.projectName" type="text" placeholder="自动填充或手动输入"
@@ -42,7 +38,6 @@
         </div>
       </div>
 
-      <!-- 调研表数据展示 -->
       <div class="mt-4 grid grid-cols-3 gap-3">
         <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
           <label class="text-[10px] text-slate-500 block mb-1">额定能量 (MWh)</label>
@@ -103,7 +98,6 @@
       </div>
     </div>
 
-    <!-- 步骤2: 仿真参数补全 -->
     <div v-show="currentStep === 1" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
       <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-teal-400"></span>
@@ -111,13 +105,12 @@
       </h3>
 
       <div class="grid grid-cols-4 gap-3">
-        <!-- 基础参数 -->
         <div class="col-span-4 bg-slate-800/30 rounded p-3 border border-slate-700">
           <h4 class="text-xs text-slate-300 mb-2 font-medium">基础配置</h4>
           <div class="grid grid-cols-4 gap-3">
             <div>
               <label class="text-[10px] text-slate-500 block mb-1">仿真年限 (年)</label>
-              <select v-model.number="simParams.simulationYears"
+              <select v-model.number="simParams.simulationYears" @change="initYearlyCorrections"
                 class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
                 <option value="10">10年</option>
                 <option value="15">15年</option>
@@ -149,7 +142,6 @@
           </div>
         </div>
 
-        <!-- 效率参数 -->
         <div class="col-span-2 bg-slate-800/30 rounded p-3 border border-slate-700">
           <h4 class="text-xs text-slate-300 mb-2 font-medium">效率参数</h4>
           <div class="grid grid-cols-2 gap-3">
@@ -176,7 +168,6 @@
           </div>
         </div>
 
-        <!-- 辅耗参数 -->
         <div class="col-span-2 bg-slate-800/30 rounded p-3 border border-slate-700">
           <h4 class="text-xs text-slate-300 mb-2 font-medium">辅耗参数</h4>
           <div class="grid grid-cols-2 gap-3">
@@ -216,7 +207,6 @@
       </div>
     </div>
 
-    <!-- 步骤3: 仿真算法选择 -->
     <div v-show="currentStep === 2" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
       <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-teal-400"></span>
@@ -224,9 +214,8 @@
       </h3>
 
       <div class="grid grid-cols-3 gap-3">
-        <!-- 算法选择卡片 -->
         <div v-for="algo in algorithms" :key="algo.id"
-          @click="selectedAlgorithm = algo.id"
+          @click="selectAlgorithm(algo)"
           :class="['bg-slate-800/50 rounded-lg p-4 border-2 cursor-pointer transition-all',
             selectedAlgorithm === algo.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-700 hover:border-slate-500']">
           <div class="flex items-center gap-2 mb-2">
@@ -240,41 +229,25 @@
             <span class="inline-block bg-slate-700 rounded px-1.5 py-0.5 mr-1">{{ algo.type }}</span>
             <span class="text-slate-400">精度: {{ algo.accuracy }}</span>
           </div>
+          <div class="mt-2 text-[10px] text-teal-400/80 font-mono truncate">
+            {{ algo.mathematical_form }}
+          </div>
         </div>
       </div>
 
-      <!-- 算法参数调整 -->
-      <div v-if="selectedAlgorithm === 'arrhenius'" class="mt-4 bg-slate-800/30 rounded p-3 border border-slate-700">
-        <h4 class="text-xs text-slate-300 mb-2 font-medium">阿伦尼乌斯模型参数</h4>
+      <div v-if="algorithms.length === 0" class="text-center py-8 text-slate-500">
+        <div>暂无算法模型，请先在算法公式试验舱中添加或初始化</div>
+      </div>
+
+      <div v-if="selectedAlgoDetail" class="mt-4 bg-slate-800/30 rounded p-3 border border-slate-700">
+        <h4 class="text-xs text-slate-300 mb-2 font-medium">{{ selectedAlgoDetail.name }} 参数</h4>
         <div class="grid grid-cols-4 gap-3">
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">A_cal (日历老化系数)</label>
-            <input v-model.number="algoParams.A_cal" type="number" step="0.001"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">Ea_cal (活化能 kJ/mol)</label>
-            <input v-model.number="algoParams.Ea_cal" type="number" step="1"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">alpha (时间指数)</label>
-            <input v-model.number="algoParams.alpha" type="number" step="0.01" min="0.3" max="0.7"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">A_cyc (循环老化系数)</label>
-            <input v-model.number="algoParams.A_cyc" type="number" step="0.0001"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">Ea_cyc (活化能 kJ/mol)</label>
-            <input v-model.number="algoParams.Ea_cyc" type="number" step="1"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block mb-1">beta (循环指数)</label>
-            <input v-model.number="algoParams.beta" type="number" step="0.01" min="0.5" max="1.0"
+          <div v-for="(param, key) in selectedAlgoDetail.parameters" :key="key">
+            <label class="text-[10px] text-slate-500 block mb-1">{{ param.label }} ({{ param.unit || '' }})</label>
+            <input v-model.number="algoParams[key]" type="number" 
+              :step="param.step || 0.01" 
+              :min="param.min" 
+              :max="param.max"
               class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
           </div>
         </div>
@@ -292,7 +265,6 @@
       </div>
     </div>
 
-    <!-- 步骤4: 手工校正因子 -->
     <div v-show="currentStep === 3" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
       <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-teal-400"></span>
@@ -300,7 +272,6 @@
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
-        <!-- 全局校正因子 -->
         <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
           <h4 class="text-xs text-slate-300 mb-2 font-medium">全局校正因子</h4>
           <div class="grid grid-cols-2 gap-3">
@@ -331,7 +302,6 @@
           </div>
         </div>
 
-        <!-- 年度校正表 -->
         <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
           <h4 class="text-xs text-slate-300 mb-2 font-medium">年度校正表（可选）</h4>
           <div class="overflow-auto max-h-40">
@@ -361,7 +331,6 @@
         </div>
       </div>
 
-      <!-- 校正说明 -->
       <div class="mt-3 bg-slate-800/20 rounded p-2 border border-slate-700 text-[10px] text-slate-400">
         <p><strong class="text-slate-300">校正因子说明：</strong></p>
         <ul class="list-disc list-inside mt-1 space-y-0.5">
@@ -377,21 +346,25 @@
           class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
           上一步
         </button>
-        <button @click="runSimulation" 
-          class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs px-6 py-2 rounded font-bold transition-all shadow-md">
+        <button @click="runSimulation" :disabled="!selectedAlgorithm"
+          class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-600 disabled:to-slate-700 text-white text-xs px-6 py-2 rounded font-bold transition-all shadow-md">
           执行仿真计算
         </button>
       </div>
     </div>
 
-    <!-- 步骤5: 仿真结果 -->
     <div v-show="currentStep === 4" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
-        仿真结果
-      </h3>
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-sm font-bold text-teal-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+          仿真结果
+        </h3>
+        <button @click="saveSimulationResult" 
+          class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1">
+          <span>💾</span> 保存结果
+        </button>
+      </div>
 
-      <!-- 结果摘要 -->
       <div class="grid grid-cols-4 gap-3 mb-4">
         <div class="bg-slate-800/50 rounded p-3 border border-slate-700 text-center">
           <p class="text-[10px] text-slate-500">初始SOH</p>
@@ -415,13 +388,11 @@
         </div>
       </div>
 
-      <!-- SOH曲线图 -->
       <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
         <h4 class="text-xs text-slate-300 mb-2 font-medium">SOH衰减曲线</h4>
         <div ref="chartContainer" class="h-48"></div>
       </div>
 
-      <!-- 数据表格 -->
       <div class="mt-3 bg-slate-800/30 rounded p-3 border border-slate-700 overflow-auto max-h-32">
         <table class="w-full text-[10px]">
           <thead class="text-slate-500">
@@ -459,11 +430,17 @@
         </button>
       </div>
     </div>
+
+    <div v-if="toast.show" 
+      :class="['fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
+        toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white']">
+      {{ toast.message }}
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 
 const emit = defineEmits(['applyConfig', 'error'])
@@ -478,9 +455,8 @@ const steps = [
 
 const currentStep = ref(0)
 const surveyId = ref('')
-const selectedAlgorithm = ref('arrhenius')
+const selectedAlgorithm = ref('')
 
-// 调研表数据
 const surveyData = reactive({
   projectName: '',
   ratedEnergy: 5,
@@ -494,7 +470,6 @@ const surveyData = reactive({
   location: '',
 })
 
-// 仿真参数
 const simParams = reactive({
   simulationYears: 25,
   guaranteeYears: 10,
@@ -510,24 +485,10 @@ const simParams = reactive({
   pcsAuxStandby: 1.0,
 })
 
-// 算法列表
-const algorithms = [
-  { id: 'arrhenius', name: '阿伦尼乌斯模型', description: '基于温度活化能的经典衰减模型', type: '物理模型', accuracy: '±5%' },
-  { id: 'empirical', name: '经验公式模型', description: '基于历史数据的统计回归模型', type: '统计模型', accuracy: '±8%' },
-  { id: 'ml', name: '机器学习模型', description: '基于神经网络的预测模型', type: 'AI模型', accuracy: '±3%' },
-]
+const algorithms = ref([])
+const algoParams = reactive({})
+const selectedAlgoDetail = ref(null)
 
-// 算法参数
-const algoParams = reactive({
-  A_cal: 0.003,
-  Ea_cal: 25,
-  alpha: 0.5,
-  A_cyc: 0.0002,
-  Ea_cyc: 20,
-  beta: 0.7,
-})
-
-// 校正因子
 const correctionFactors = reactive({
   sohFactor: 1.0,
   rteFactor: 1.0,
@@ -535,7 +496,6 @@ const correctionFactors = reactive({
   agingFactor: 1.0,
 })
 
-// 年度校正表
 const yearlyCorrections = ref([])
 const initYearlyCorrections = () => {
   yearlyCorrections.value = []
@@ -547,9 +507,7 @@ const initYearlyCorrections = () => {
     })
   }
 }
-initYearlyCorrections()
 
-// 仿真结果
 const simulationResults = reactive({
   initSoh: null,
   guaranteeEndSoh: null,
@@ -564,13 +522,13 @@ const simulationResults = reactive({
 const chartContainer = ref(null)
 let chartInstance = null
 
-// 加载调研表数据
+const toast = reactive({ show: false, message: '', type: 'success' })
+
 const loadSurveyData = async () => {
   if (!surveyId.value) {
     emit('error', '请输入调研表ID', 'warning')
     return
   }
-  // 模拟从后端加载数据
   try {
     const resp = await fetch(`/api/survey/${surveyId.value}`)
     if (resp.ok) {
@@ -584,7 +542,6 @@ const loadSurveyData = async () => {
   }
 }
 
-// 步骤导航
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
@@ -597,7 +554,107 @@ const prevStep = () => {
   }
 }
 
-// 执行仿真计算
+const fetchAlgorithms = async () => {
+  const token = localStorage.getItem('token')
+  if (!token) return
+  
+  try {
+    const resp = await fetch('http://localhost:5001/api/algorithms', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const data = await resp.json()
+    if (data.success && data.data.length > 0) {
+      algorithms.value = data.data.map(alg => ({
+        id: alg.id,
+        name: alg.name,
+        name_en: alg.name_en,
+        description: alg.description || '无描述',
+        type: alg.category === 'soh' ? 'SOH衰减' : alg.category === 'rte' ? 'RTE衰减' : '综合模型',
+        accuracy: alg.accuracy_desc || '未知',
+        model_type: alg.model_type,
+        parameters: alg.parameters,
+        mathematical_form: alg.mathematical_form,
+        formula_expression: alg.formula_expression,
+      }))
+      
+      if (!selectedAlgorithm.value && algorithms.value.length > 0) {
+        selectedAlgorithm.value = algorithms.value[0].id
+        selectAlgorithm(algorithms.value[0])
+      }
+    }
+  } catch (e) {
+    console.error('获取算法列表失败:', e)
+  }
+}
+
+const selectAlgorithm = (algo) => {
+  selectedAlgorithm.value = algo.id
+  selectedAlgoDetail.value = algo
+  algoParams.value = {}
+  if (algo.parameters) {
+    Object.keys(algo.parameters).forEach(key => {
+      algoParams[key] = algo.parameters[key].default || 0
+    })
+  }
+}
+
+watch(selectedAlgorithm, (newId) => {
+  if (newId) {
+    const algo = algorithms.value.find(a => a.id === newId)
+    if (algo) {
+      selectAlgorithm(algo)
+    }
+  }
+})
+
+const calculateSOH = (modelType, params, t) => {
+  const R = 8.314
+  const T = surveyData.temperature + 273.15
+  const N_cycles = surveyData.cyclesPerDay * 365 * t
+  const DOD_factor = Math.pow(surveyData.dod / 100, 0.5)
+  const C_rate_factor = Math.pow(surveyData.cRate, 0.3)
+
+  switch (modelType) {
+    case 'double_exponential':
+      return params.A * Math.exp(-params.k1 * t) + params.B * Math.exp(-params.k2 * t) + params.C
+
+    case 'linear_log':
+      return params.RTE0 - params.alpha * t - params.beta * Math.log(1 + params.gamma * t)
+
+    case 'arrhenius': {
+      const Q_cal = params.A * Math.exp(-params.Ea * 1000 / (R * T)) * Math.pow(t + 0.5, 0.5)
+      const Q_cyc = params.A * Math.exp(-params.Ea * 1000 / (R * T)) * Math.pow(N_cycles, 0.7) * DOD_factor * C_rate_factor
+      return Math.max(0.6, 1 - (Q_cal + Q_cyc))
+    }
+
+    case 'rainflow': {
+      const damage = Math.pow(N_cycles / params.cycle_life_ref, params.damage_exponent) * Math.pow(surveyData.dod / 100 / params.dod_ref, 1.5)
+      return Math.max(0.6, 1 - damage)
+    }
+
+    case 'semi_empirical': {
+      const temp_factor = 1 - params.temp_coeff * (surveyData.temperature - 25) / 100
+      const dod_factor = 1 - params.dod_coeff * (surveyData.dod / 100 - 0.5) / 100
+      const c_rate_factor = 1 - params.c_rate_coeff * (surveyData.cRate - 0.5)
+      const soc_factor = 0.98
+      return Math.max(0.6, 1 - (1 - temp_factor * dod_factor * c_rate_factor * soc_factor) * t / 25)
+    }
+
+    default: {
+      const A_cal = params.A_cal || 0.001
+      const Ea_cal = params.Ea_cal || 35
+      const alpha = params.alpha || 0.5
+      const A_cyc = params.A_cyc || 0.00001
+      const Ea_cyc = params.Ea_cyc || 25
+      const beta = params.beta || 0.7
+      
+      const Q_cal = A_cal * Math.exp(-Ea_cal * 1000 / (R * T)) * Math.pow(t + 0.5, alpha)
+      const Q_cyc = A_cyc * Math.exp(-Ea_cyc * 1000 / (R * T)) * Math.pow(N_cycles, beta) * DOD_factor * C_rate_factor
+      return Math.max(0.6, 1 - (Q_cal + Q_cyc))
+    }
+  }
+}
+
 const runSimulation = () => {
   currentStep.value = 4
   
@@ -606,48 +663,32 @@ const runSimulation = () => {
   const rteCurve = []
   const netAvailCurve = []
   
-  // 阿伦尼乌斯模型计算
-  const R = 8.314 // J/(mol·K)
-  const T = (surveyData.temperature + 273.15) // Kelvin
-  
+  const algo = algorithms.value.find(a => a.id === selectedAlgorithm.value)
+  const modelType = algo?.model_type || 'arrhenius'
+
   for (let i = 0; i < N; i++) {
-    const t = i // 年
-    const N_cycles = surveyData.cyclesPerDay * 365 * t // 总循环次数
+    const t = i
+    let soh = calculateSOH(modelType, algoParams, t)
     
-    // 日历老化
-    const Q_cal = algoParams.A_cal * Math.exp(-algoParams.Ea_cal * 1000 / (R * T)) * Math.pow(t + 0.5, algoParams.alpha)
-    
-    // 循环老化
-    const DOD_factor = Math.pow(surveyData.dod / 100, 0.5)
-    const C_rate_factor = Math.pow(surveyData.cRate, 0.3)
-    const Q_cyc = algoParams.A_cyc * Math.exp(-algoParams.Ea_cyc * 1000 / (R * T)) * Math.pow(N_cycles, algoParams.beta) * DOD_factor * C_rate_factor
-    
-    // 总衰减
-    let soh = 1 - (Q_cal + Q_cyc)
-    
-    // 应用校正因子
     soh = soh * correctionFactors.sohFactor
     if (yearlyCorrections.value[i]?.sohCorrection) {
       soh += yearlyCorrections.value[i].sohCorrection
     }
     
-    // RTE衰减
     let rte = simParams.initRte / 100 - 0.002 * i * correctionFactors.rteFactor
     if (yearlyCorrections.value[i]?.rteCorrection) {
       rte += yearlyCorrections.value[i].rteCorrection
     }
     
-    // 净可用能量
     const grossEnergy = surveyData.ratedEnergy * surveyData.containerQty * (surveyData.dod / 100) * rte * soh * (simParams.acEfficiency / 100)
     const auxEnergy = (simParams.bessAuxRun + simParams.pcsAuxRun) * simParams.simulationYears / 1000
     const netAvail = Math.max(0, grossEnergy - auxEnergy) * correctionFactors.capacityFactor
     
-    sohCurve.push(soh * 100)
-    rteCurve.push(rte * 100)
+    sohCurve.push(Math.min(100, Math.max(60, soh * 100)))
+    rteCurve.push(Math.min(100, Math.max(80, rte * 100)))
     netAvailCurve.push(netAvail)
   }
   
-  // 填充结果
   simulationResults.sohCurve = sohCurve
   simulationResults.rteCurve = rteCurve
   simulationResults.netAvailCurve = netAvailCurve
@@ -656,7 +697,6 @@ const runSimulation = () => {
   simulationResults.finalSoh = sohCurve[N - 1]
   simulationResults.meetsGuarantee = sohCurve[simParams.guaranteeYears] >= simParams.guaranteeSoh
   
-  // 表格数据
   simulationResults.tableData = []
   for (let i = 0; i < N; i++) {
     simulationResults.tableData.push({
@@ -668,9 +708,8 @@ const runSimulation = () => {
     })
   }
   
-  // 渲染图表
   nextTick(() => {
-    renderChart()
+    setTimeout(() => renderChart(), 100)
   })
 
   // 将仿真结果 emit 给父组件，打通仿真→容量对账的数据流
@@ -684,7 +723,6 @@ const runSimulation = () => {
   })
 }
 
-// 渲染图表
 const renderChart = () => {
   if (!chartContainer.value) return
   
@@ -710,7 +748,73 @@ const renderChart = () => {
   })
 }
 
-// 重置仿真
+const saveSimulationResult = async () => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    showToast('请先登录', 'error')
+    return
+  }
+
+  const projectName = surveyData.projectName || '未命名项目'
+  const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T:]/g, '')
+  const resultName = `${projectName}_${timestamp}`
+
+  const algo = algorithms.value.find(a => a.id === selectedAlgorithm.value)
+  
+  const data = {
+    name: resultName,
+    description: `使用${algo?.name || '未知算法'}进行仿真`,
+    simulation_type: algo?.category || 'comprehensive',
+    algorithm_model_id: selectedAlgorithm.value,
+    params: {
+      surveyData: surveyData,
+      simParams: simParams,
+      algoParams: { ...algoParams },
+      correctionFactors: { ...correctionFactors },
+      yearlyCorrections: yearlyCorrections.value,
+    },
+    results: {
+      sohCurve: simulationResults.sohCurve,
+      rteCurve: simulationResults.rteCurve,
+      netAvailCurve: simulationResults.netAvailCurve,
+      tableData: simulationResults.tableData,
+    },
+    summary: {
+      initSoh: simulationResults.initSoh,
+      guaranteeEndSoh: simulationResults.guaranteeEndSoh,
+      finalSoh: simulationResults.finalSoh,
+      meetsGuarantee: simulationResults.meetsGuarantee,
+    },
+    status: 'completed',
+  }
+
+  try {
+    const resp = await fetch('http://localhost:5001/api/versions/default/results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+    const respData = await resp.json()
+    if (respData.success) {
+      showToast('仿真结果保存成功')
+    } else {
+      showToast(respData.error || '保存失败', 'error')
+    }
+  } catch (e) {
+    showToast('保存失败: ' + e.message, 'error')
+  }
+}
+
+const showToast = (message, type = 'success') => {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+  setTimeout(() => { toast.show = false }, 3000)
+}
+
 const resetSimulation = () => {
   currentStep.value = 0
   simulationResults.initSoh = null
@@ -723,7 +827,6 @@ const resetSimulation = () => {
   simulationResults.tableData = []
 }
 
-// 导出结果
 const exportResults = () => {
   const csvContent = '年份,SOH(%),RTE(%),净可用(MWh),保障判定\n' +
     simulationResults.tableData.map(row => 
@@ -739,5 +842,6 @@ const exportResults = () => {
 
 onMounted(() => {
   initYearlyCorrections()
+  fetchAlgorithms()
 })
 </script>

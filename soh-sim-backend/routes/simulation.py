@@ -58,7 +58,7 @@ def create_simulation_result(version_id):
     user_id = request.user_id
     data = request.get_json()
     
-    from database import db, ProjectVersion, SimulationResult, User
+    from database import db, ProjectVersion, SimulationResult, User, Project
     
     user = User.query.get(user_id)
     if not user:
@@ -68,17 +68,76 @@ def create_simulation_result(version_id):
     if user.role == 'customer':
         return jsonify({'error': '权限不足'}), 403
     
-    version = ProjectVersion.query.get(version_id)
-    if not version:
-        return jsonify({'error': '版本不存在'}), 404
+    # 支持默认版本路径
+    actual_version_id = version_id
+    if version_id == 'default':
+        # 查找用户的第一个项目的活跃版本
+        project = Project.query.filter_by(tenant_id=user.tenant_id).first()
+        if project:
+            version = ProjectVersion.query.filter_by(project_id=project.id, is_active=True).first()
+            if version:
+                actual_version_id = version.id
+            else:
+                # 创建默认版本
+                actual_version_id = str(uuid.uuid4())
+                version = ProjectVersion(
+                    id=actual_version_id,
+                    project_id=project.id,
+                    version_num=1,
+                    name='默认版本',
+                    is_active=True,
+                    config_data='{}',
+                    created_by=user_id,
+                    status='in-use',
+                    created_at=datetime.utcnow(),
+                )
+                db.session.add(version)
+        else:
+            # 创建默认项目和版本
+            project_id = str(uuid.uuid4())
+            project = Project(
+                id=project_id,
+                tenant_id=user.tenant_id,
+                name='默认项目',
+                code=f'DEF-{user_id[:8]}',
+                status='draft',
+                stage='survey',
+                created_at=datetime.utcnow(),
+            )
+            db.session.add(project)
+            
+            actual_version_id = str(uuid.uuid4())
+            version = ProjectVersion(
+                id=actual_version_id,
+                project_id=project_id,
+                version_num=1,
+                name='默认版本',
+                is_active=True,
+                config_data='{}',
+                created_by=user_id,
+                status='in-use',
+                created_at=datetime.utcnow(),
+            )
+            db.session.add(version)
+    else:
+        version = ProjectVersion.query.get(version_id)
+        if not version:
+            return jsonify({'error': '版本不存在'}), 404
+    
+    # 生成名称（项目名称+时间戳）
+    project = Project.query.get(version.project_id)
+    project_name = project.name if project else '未命名项目'
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    default_name = f'{project_name}_{timestamp}'
     
     result_id = str(uuid.uuid4())
     result = SimulationResult(
         id=result_id,
-        version_id=version_id,
-        name=data.get('name', f'仿真_{datetime.now().strftime("%Y%m%d_%H%M%S")}'),
+        version_id=actual_version_id,
+        name=data.get('name', default_name),
         description=data.get('description'),
         simulation_type=data.get('simulation_type', 'comprehensive'),
+        algorithm_model_id=data.get('algorithm_model_id'),
         correction_template_id=data.get('correction_template_id'),
         params=json.dumps(data.get('params', {})) if isinstance(data.get('params'), dict) else data.get('params'),
         results=json.dumps(data.get('results', {})) if isinstance(data.get('results'), dict) else data.get('results'),
@@ -97,6 +156,7 @@ def create_simulation_result(version_id):
         return jsonify({
             'success': True,
             'id': result_id,
+            'name': result.name,
             'message': '仿真结果保存成功'
         }), 201
     except Exception as e:

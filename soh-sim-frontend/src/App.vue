@@ -48,6 +48,7 @@
       <PcsACDesign v-show="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" @error="showToast" />
       <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
       <SimulationLab v-show="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" @error="showToast" />
+      <AlgorithmLab v-show="activeTab === 'algorithm'" />
       <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
       <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
       <MatrixTable v-show="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
@@ -87,6 +88,7 @@ import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
+import AlgorithmLab from './views/AlgorithmLab.vue'
 
 const batteryDC = ref(null)
 const pcsAC = ref(null)
@@ -121,6 +123,7 @@ const tabs = ref([
   { id: 'ac-design', labelKey: 'tabs.acDesign' },
   { id: 'batteryPCS', labelKey: 'tabs.batteryPCS' },
   { id: 'simulationLab', labelKey: 'tabs.simulationLab' },
+  { id: 'algorithm', labelKey: 'tabs.algorithm' },
   { id: 'products', labelKey: 'tabs.products' },
   { id: 'financial', labelKey: 'tabs.financial' },
   { id: 'matrix', labelKey: 'tabs.matrix' },
