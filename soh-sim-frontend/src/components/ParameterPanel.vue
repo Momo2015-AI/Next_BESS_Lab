@@ -113,6 +113,56 @@
       </div>
     </div>
 
+    <!-- 配置规则区域 -->
+    <div>
+      <h2 class="text-sm font-bold text-sky-400 border-l-4 border-sky-500 pl-2 mb-3">⚡ 电池与PCS配置规则</h2>
+      <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div class="bg-slate-900/50 rounded p-3">
+            <div class="text-xs text-sky-400 mb-2 font-medium">功率配比规则</div>
+            <div class="text-[10px] text-slate-400 space-y-1">
+              <div>• 2h储能: <span class="text-sky-300">能量 = 2 × 功率</span></div>
+              <div>• 4h储能: <span class="text-sky-300">能量 = 4 × 功率</span></div>
+              <div>• 常用配比: <span class="text-sky-300">1:2 (功率:能量)</span></div>
+            </div>
+          </div>
+          <div class="bg-slate-900/50 rounded p-3">
+            <div class="text-xs text-teal-400 mb-2 font-medium">集装箱与PCS对应规则</div>
+            <div class="text-[10px] text-slate-400 space-y-1">
+              <div>• 5MWh + 0.5C放电 → <span class="text-teal-300">2台 2.5MW PCS</span></div>
+              <div>• 10MWh + 0.5C放电 → <span class="text-teal-300">2台 5MW PCS</span></div>
+              <div>• 20MWh + 0.5C放电 → <span class="text-teal-300">4台 5MW PCS</span></div>
+            </div>
+          </div>
+          <div class="bg-slate-900/50 rounded p-3">
+            <div class="text-xs text-amber-400 mb-2 font-medium">计算公式</div>
+            <div class="text-[10px] text-slate-400 space-y-1">
+              <div>PCS数量 = 能量 ÷ (放电时长 × 单台功率)</div>
+              <div>变压器 = PCS总量 ÷ 并机数 × 1.1</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 p-3 bg-sky-900/30 rounded border border-sky-800/50">
+          <div class="text-xs text-sky-300">
+            当前: <span class="font-bold">{{ params.initContainerQty }}</span>台 × <span class="font-bold">{{ params.ratedEnergy }}</span>MWh = <span class="font-bold text-sky-200">{{ (params.initContainerQty * params.ratedEnergy).toFixed(1) }}</span> MWh
+          </div>
+          <div class="text-slate-500">→</div>
+          <div class="text-xs text-teal-300">
+            建议PCS: <span class="font-bold">{{ Math.ceil((params.initContainerQty * params.ratedEnergy) / (params.duration * 5)) }}</span> 台 5MW
+          </div>
+          <div class="text-slate-500">→</div>
+          <div class="text-xs text-amber-300">
+            配比: <span class="font-bold">1:{{ ((params.initContainerQty * params.ratedEnergy) / (Math.ceil((params.initContainerQty * params.ratedEnergy) / (params.duration * 5)) * 5)).toFixed(1) }}</span>
+          </div>
+        </div>
+
+        <button @click="autoMatchPCS" class="mt-3 bg-sky-500 hover:bg-sky-600 text-white text-xs px-4 py-2 rounded transition-colors">
+          根据配置规则自动匹配PCS
+        </button>
+      </div>
+    </div>
+
     <div>
       <h2 class="text-sm font-bold text-pink-400 border-l-4 border-pink-500 pl-2 mb-3">仿真条件边界</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -200,8 +250,15 @@ const validateAndUpdate = (key, value, rule) => {
   
   // 验证通过，清除错误
   errors[key] = ''
-  
+
   // 更新参数
   emit('update', key, value)
+}
+
+// 自动匹配PCS
+const autoMatchPCS = () => {
+  const totalEnergy = props.params.initContainerQty * props.params.ratedEnergy
+  const pcsQty = Math.ceil(totalEnergy / (props.params.duration * 5))
+  emit('update', 'initPcsQty', pcsQty)
 }
 </script>

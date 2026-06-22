@@ -73,14 +73,22 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String(256))
-    role = db.Column(db.String(20), default='user')  # admin/engineer/user
+    
+    # 角色: customer(客户) / engineer(工程师) / admin(管理员)
+    role = db.Column(db.String(20), default='customer')
+    
     status = db.Column(db.String(20), default='active')
+    is_active = db.Column(db.Boolean, default=True)
+    login_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = db.Column(db.DateTime)
     
     # 关联
     tenant = db.relationship('Tenant', back_populates='users')
     simulations = db.relationship('Simulation', back_populates='user')
+    formula_configs = db.relationship('FormulaConfig', back_populates='user')
+    project_versions = db.relationship('ProjectVersion', back_populates='created_by_user')
 
 
 class Survey(db.Model):
@@ -153,6 +161,9 @@ class Project(db.Model):
     status = db.Column(db.String(20), default='draft')
     stage = db.Column(db.String(50), default='survey')
     
+    # 客户ID（关联到用户）
+    customer_id = db.Column(db.String(36), db.ForeignKey('users.id'))
+    
     # 项目配置
     config = db.Column(db.Text)
     
@@ -168,6 +179,41 @@ class Project(db.Model):
     soh_rte_data = db.relationship('SohRteData', back_populates='project')
     financial_data = db.relationship('FinancialData', back_populates='project')
     product_configs = db.relationship('ProductConfig', back_populates='project')
+    versions = db.relationship('ProjectVersion', back_populates='project', order_by='desc(ProjectVersion.version_num)')
+
+
+class ProjectVersion(db.Model):
+    """项目版本模型 - 支持同一项目多个方案版本"""
+    __tablename__ = 'project_versions'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
+    
+    # 版本信息
+    version_num = db.Column(db.Integer, default=1)  # 版本号
+    name = db.Column(db.String(200))  # 版本名称，如"方案v1"
+    description = db.Column(db.Text)  # 版本描述
+    
+    # 是否当前活跃版本
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # 版本配置数据（JSON格式存储完整的方案配置）
+    config_data = db.Column(db.Text)  # 完整的方案配置
+    
+    # 创建者
+    created_by = db.Column(db.String(36), db.ForeignKey('users.id'))
+    
+    # 状态
+    status = db.Column(db.String(20), default='draft')  # draft/in-use/archived
+    
+    # 时间信息
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    project = db.relationship('Project', back_populates='versions')
+    created_by_user = db.relationship('User', back_populates='project_versions')
+    simulation_results = db.relationship('SimulationResult', back_populates='version')
 
 
 class Simulation(db.Model):
@@ -208,6 +254,90 @@ class Simulation(db.Model):
     # 关联
     project = db.relationship('Project', back_populates='simulations')
     user = db.relationship('User', back_populates='simulations')
+
+
+class SimulationResult(db.Model):
+    """仿真结果模型 - 完整存储每次仿真结果，带日期戳便于对比"""
+    __tablename__ = 'simulation_results'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    version_id = db.Column(db.String(36), db.ForeignKey('project_versions.id'))
+    
+    # 结果名称
+    name = db.Column(db.String(200))
+    description = db.Column(db.Text)
+    
+    # 仿真类型
+    simulation_type = db.Column(db.String(50))  # soh/rte/comprehensive/financial
+    
+    # 使用的校正因子模板ID
+    correction_template_id = db.Column(db.String(36), db.ForeignKey('correction_templates.id'))
+    
+    # 仿真参数（输入参数快照）
+    params = db.Column(db.Text)  # JSON格式
+    
+    # 仿真结果数据（完整存储）
+    results = db.Column(db.Text)  # JSON格式，包含25年所有数据点
+    
+    # 关键指标摘要
+    summary = db.Column(db.Text)  # JSON格式，关键指标摘要
+    
+    # 状态
+    status = db.Column(db.String(20), default='completed')  # pending/completed/failed
+    
+    # 执行时间
+    executed_at = db.Column(db.DateTime, default=datetime.utcnow)  # 实际执行时间戳
+    execution_time_ms = db.Column(db.Integer)  # 执行耗时
+    
+    # 创建者
+    created_by = db.Column(db.String(36), db.ForeignKey('users.id'))
+    
+    # 时间信息
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # 关联
+    version = db.relationship('ProjectVersion', back_populates='simulation_results')
+    correction_template = db.relationship('CorrectionTemplate', back_populates='simulation_results')
+
+
+class CorrectionTemplate(db.Model):
+    """校正因子模板模型 - 支持保存多个校正因子模板"""
+    __tablename__ = 'correction_templates'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 模板名称
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    
+    # 模板类型
+    template_type = db.Column(db.String(50))  # soh/rte/comprehensive/custom
+    
+    # 全局校正因子
+    global_soh_factor = db.Column(db.Float, default=1.0)  # SOH全局校正系数
+    global_rte_factor = db.Column(db.Float, default=1.0)  # RTE全局校正系数
+    
+    # 年度校正表（JSON格式存储）
+    annual_corrections = db.Column(db.Text)  # JSON格式 {"year_1": 0.98, "year_5": 0.95, ...}
+    
+    # 是否默认模板
+    is_default = db.Column(db.Boolean, default=False)
+    
+    # 状态
+    status = db.Column(db.String(20), default='active')  # active/archived
+    
+    # 创建者
+    created_by = db.Column(db.String(36), db.ForeignKey('users.id'))
+    
+    # 时间信息
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    tenant = db.relationship('Tenant', back_populates='correction_templates')
+    created_by_user = db.relationship('User', back_populates='correction_templates')
+    simulation_results = db.relationship('SimulationResult', back_populates='correction_template')
 
 
 class BatteryPCSConfig(db.Model):
@@ -401,6 +531,166 @@ class FormulaConfig(db.Model):
     # 时间
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    user = db.relationship('User', back_populates='formula_configs')
+
+
+class CellLibrary(db.Model):
+    """电芯库模型 - 统一管理电芯产品"""
+    __tablename__ = 'cell_library'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 基本信息
+    model = db.Column(db.String(100), nullable=False)  # 型号
+    mfr = db.Column(db.String(100))  # 厂商
+    chemistry = db.Column(db.String(50))  # 化学体系 LFP/NCM
+    
+    # 电性能参数
+    capacity_ah = db.Column(db.Float)  # 额定容量 Ah
+    voltage_nominal = db.Column(db.Float)  # 标称电压 V
+    voltage_max = db.Column(db.Float)  # 最高电压 V
+    voltage_min = db.Column(db.Float)  # 最低电压 V
+    energy_wh = db.Column(db.Float)  # 能量 Wh
+    
+    # 寿命参数
+    cycle_life = db.Column(db.Integer)  # 循环寿命 次
+    calendar_life = db.Column(db.Integer)  # 日历寿命 年
+    
+    # 物理参数
+    dimensions = db.Column(db.String(100))  # 尺寸 L*W*H mm
+    weight = db.Column(db.Float)  # 重量 kg
+    energy_density = db.Column(db.Float)  # 能量密度 Wh/kg
+    
+    # 状态与认证
+    status = db.Column(db.String(50), default='mass-production')  # mass-production/pre-production
+    certifications = db.Column(db.Text)  # JSON数组 认证列表
+    
+    # 价格信息
+    unit_price = db.Column(db.Float)  # 单价 元/Wh
+    
+    # 备注
+    remarks = db.Column(db.Text)
+    
+    # 时间
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    tenant = db.relationship('Tenant', back_populates='cell_library')
+
+
+class ContainerLibrary(db.Model):
+    """集装箱库模型 - 统一管理集装箱产品"""
+    __tablename__ = 'container_library'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 基本信息
+    model = db.Column(db.String(100), nullable=False)  # 型号
+    mfr = db.Column(db.String(100))  # 厂商
+    spec = db.Column(db.String(50))  # 规格 20ft/40ft/20ft-H
+    
+    # 电气参数
+    rated_energy_mwh = db.Column(db.Float)  # 额定能量 MWh
+    rated_power_mw = db.Column(db.Float)  # 额定功率 MW
+    dc_voltage_range = db.Column(db.String(100))  # DC电压范围
+    max_dc_current = db.Column(db.Float)  # 最大直流电流 A
+    
+    # 电芯配置
+    cell_model = db.Column(db.String(100))  # 使用电芯型号
+    series_count = db.Column(db.Integer)  # 串联数量
+    parallel_count = db.Column(db.Integer)  # 并联数量
+    
+    # 物理参数
+    dimensions = db.Column(db.String(100))  # 尺寸 L*W*H mm
+    weight = db.Column(db.Float)  # 重量 t
+    cooling = db.Column(db.String(50))  # 散热方式
+    
+    # 效率参数
+    rte = db.Column(db.Float)  # 往返效率 %
+    
+    # 辅助功耗
+    aux_run = db.Column(db.Float)  # 运行功耗 kW
+    aux_standby = db.Column(db.Float)  # 待机功耗 kW
+    
+    # 状态与认证
+    status = db.Column(db.String(50), default='mass-production')
+    certifications = db.Column(db.Text)  # JSON数组
+    
+    # 价格信息
+    unit_price = db.Column(db.Float)  # 单价 万元/台
+    
+    # 备注
+    remarks = db.Column(db.Text)
+    
+    # 时间
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    tenant = db.relationship('Tenant', back_populates='container_library')
+
+
+class PCS_LIBRARY(db.Model):
+    """PCS库模型 - 统一管理PCS产品"""
+    __tablename__ = 'pcs_library'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 基本信息
+    model = db.Column(db.String(100), nullable=False)  # 型号
+    mfr = db.Column(db.String(100))  # 厂商
+    
+    # 电气参数
+    rated_power_mw = db.Column(db.Float)  # 额定功率 MW
+    efficiency = db.Column(db.Float)  # 效率 %
+    ac_voltage = db.Column(db.String(50))  # AC电压等级
+    dc_voltage_range = db.Column(db.String(100))  # DC电压范围
+    max_dc_current = db.Column(db.Float)  # 最大直流电流 A
+    
+    # 频率参数
+    frequency_range = db.Column(db.String(50))  # 频率范围 Hz
+    
+    # 物理参数
+    dimensions = db.Column(db.String(100))  # 尺寸
+    weight = db.Column(db.Float)  # 重量 kg
+    cooling = db.Column(db.String(50))  # 散热方式
+    
+    # 辅助功耗
+    aux_run = db.Column(db.Float)  # 运行功耗 kW
+    aux_standby = db.Column(db.Float)  # 待机功耗 kW
+    
+    # 状态与认证
+    status = db.Column(db.String(50), default='mass-production')
+    certifications = db.Column(db.Text)  # JSON数组
+    
+    # 价格信息
+    unit_price = db.Column(db.Float)  # 单价 万元/台
+    
+    # 备注
+    remarks = db.Column(db.Text)
+    
+    # 时间
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    tenant = db.relationship('Tenant', back_populates='pcs_library')
+
+
+# 添加租户关联
+Tenant.cell_library = db.relationship('CellLibrary', back_populates='tenant')
+Tenant.container_library = db.relationship('ContainerLibrary', back_populates='tenant')
+Tenant.pcs_library = db.relationship('PCS_LIBRARY', back_populates='tenant')
+Tenant.correction_templates = db.relationship('CorrectionTemplate', back_populates='tenant')
+
+# 添加用户关联
+User.correction_templates = db.relationship('CorrectionTemplate', back_populates='created_by_user')
 
 
 def init_db(app):

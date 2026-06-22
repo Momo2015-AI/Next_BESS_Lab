@@ -215,14 +215,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import baseProducts from '../data/products.json'
 
 const emit = defineEmits(['applyConfig'])
 
-const selectedCell = ref('eve-lf628k')
-const selectedContainer = ref('eve-5mwh-lf628k')
-const selectedPcs = ref('nari-2500kw')
+const selectedCell = ref('')
+const selectedContainer = ref('')
+const selectedPcs = ref('')
 const selectedScenario = ref(null)
 
 const cellFilter = ref('')
@@ -230,14 +230,143 @@ const containerFilter = ref('')
 const pcsFilter = ref('')
 const pcsPowerFilter = ref('0')
 
+// 从API加载的数据
+const cellLibrary = ref([])
+const containerLibrary = ref([])
+const pcsLibrary = ref([])
+
+// 兼容旧数据结构
 const localData = ref(JSON.parse(JSON.stringify(baseProducts)))
 
+// API加载产品库
+async function loadLibraryData() {
+  try {
+    // 并行加载三个库
+    const [cellsRes, containersRes, pcsRes] = await Promise.all([
+      fetch('/api/library/cells'),
+      fetch('/api/library/containers'),
+      fetch('/api/library/pcs')
+    ])
+    
+    const [cellsData, containersData, pcsData] = await Promise.all([
+      cellsRes.json(),
+      containersRes.json(),
+      pcsRes.json()
+    ])
+    
+    if (cellsData.success) cellLibrary.value = cellsData.data || []
+    if (containersData.success) containerLibrary.value = containersData.data || []
+    if (pcsData.success) pcsLibrary.value = pcsData.data || []
+    
+    // 如果数据库为空，初始化默认数据
+    if (cellLibrary.value.length === 0 && containerLibrary.value.length === 0 && pcsLibrary.value.length === 0) {
+      await seedLibrary()
+    }
+  } catch (error) {
+    console.error('加载产品库失败:', error)
+    // 降级使用本地数据
+    localData.value = JSON.parse(JSON.stringify(baseProducts))
+  }
+}
+
+// 初始化产品库
+async function seedLibrary() {
+  try {
+    const response = await fetch('/api/library/seed', { method: 'POST' })
+    const data = await response.json()
+    if (data.success) {
+      await loadLibraryData()
+    }
+  } catch (error) {
+    console.error('初始化产品库失败:', error)
+  }
+}
+
 function localMfrList(key) {
+  // 优先使用API数据，否则降级使用本地数据
+  const data = key === 'cells' ? cellLibrary.value : 
+               key === 'containers' ? containerLibrary.value : 
+               key === 'pcs' ? pcsLibrary.value : []
+  
+  if (data.length > 0) {
+    return [...new Set(data.map(c => c.mfr).filter(Boolean))]
+  }
   return [...new Set(localData.value[key]?.map(c => c.mfr) || [])]
 }
 
 function localFiltered(key, mfrFilter, powerFilter) {
-  let list = localData.value[key] || []
+  // 优先使用API数据
+  let list = []
+  if (key === 'cells' && cellLibrary.value.length > 0) {
+    list = cellLibrary.value.map(c => ({
+      id: c.id,
+      model: c.model,
+      mfr: c.mfr,
+      chemistry: c.chemistry,
+      capacityAh: c.capacityAh,
+      voltageNominal: c.voltageNominal,
+      voltageMax: c.voltageMax,
+      voltageMin: c.voltageMin,
+      energyWh: c.energyWh,
+      cycleLife: c.cycleLife,
+      calendarLife: c.calendarLife,
+      dimensions: c.dimensions,
+      weight: c.weight,
+      energyDensity: c.energyDensity,
+      status: c.status,
+      certifications: c.certifications,
+      unitPrice: c.unitPrice,
+      remarks: c.remarks,
+    }))
+  } else if (key === 'containers' && containerLibrary.value.length > 0) {
+    list = containerLibrary.value.map(c => ({
+      id: c.id,
+      model: c.model,
+      mfr: c.mfr,
+      spec: c.spec,
+      ratedEnergyMWh: c.ratedEnergyMWh,
+      ratedPowerMW: c.ratedPowerMW,
+      dcVoltageRange: c.dcVoltageRange,
+      maxDcCurrent: c.maxDcCurrent,
+      cellModel: c.cellModel,
+      seriesCount: c.seriesCount,
+      parallelCount: c.parallelCount,
+      dimensions: c.dimensions,
+      weight: c.weight,
+      cooling: c.cooling,
+      rte: c.rte,
+      auxRun: c.auxRun,
+      auxStandby: c.auxStandby,
+      status: c.status,
+      certifications: c.certifications,
+      unitPrice: c.unitPrice,
+      remarks: c.remarks,
+    }))
+  } else if (key === 'pcs' && pcsLibrary.value.length > 0) {
+    list = pcsLibrary.value.map(p => ({
+      id: p.id,
+      model: p.model,
+      mfr: p.mfr,
+      ratedPowerMW: p.ratedPowerMW,
+      efficiency: p.efficiency,
+      acVoltage: p.acVoltage,
+      dcVoltageRange: p.dcVoltageRange,
+      maxDcCurrent: p.maxDcCurrent,
+      frequencyRange: p.frequencyRange,
+      dimensions: p.dimensions,
+      weight: p.weight,
+      cooling: p.cooling,
+      auxRun: p.auxRun,
+      auxStandby: p.auxStandby,
+      status: p.status,
+      certifications: p.certifications,
+      unitPrice: p.unitPrice,
+      remarks: p.remarks,
+    }))
+  } else {
+    list = localData.value[key] || []
+  }
+  
   if (mfrFilter) list = list.filter(c => c.mfr === mfrFilter)
   if (key === 'pcs' && powerFilter && powerFilter !== '0') {
     list = list.filter(p => p.ratedPowerMW === Number(powerFilter))
@@ -245,7 +374,22 @@ function localFiltered(key, mfrFilter, powerFilter) {
   return list
 }
 
-function deleteItem(key, id) {
+async function deleteItem(key, id) {
+  // 如果有API数据，调用API删除
+  try {
+    const endpoint = key === 'cells' ? '/api/library/cells' : 
+                     key === 'containers' ? '/api/library/containers' : '/api/library/pcs'
+    const response = await fetch(`${endpoint}/${id}`, { method: 'DELETE' })
+    const data = await response.json()
+    if (data.success) {
+      // 重新加载数据
+      await loadLibraryData()
+      return
+    }
+  } catch (error) {
+    console.error('API删除失败:', error)
+  }
+  // 降级使用本地删除
   localData.value[key] = localData.value[key].filter(item => item.id !== id)
   saveLocal()
 }
@@ -270,9 +414,51 @@ function openAddModal(type) {
   }
 }
 
-function saveProduct() {
+async function saveProduct() {
   const type = modalType.value
   const f = modalForm.value
+  
+  // 构建API请求数据
+  let apiData = { ...f }
+  if (type === 'cell') {
+    apiData.capacityAh = f.capacityAh
+    apiData.voltageNominal = f.voltageNominal
+    apiData.energyWh = (f.capacityAh || 0) * (f.voltageNominal || 3.2)
+    apiData.cycleLife = f.cycleLife
+  } else if (type === 'container') {
+    apiData.ratedEnergyMWh = f.ratedEnergyMWh
+    apiData.ratedPowerMW = f.ratedPowerMW
+    apiData.cellModel = f.cellModel
+    apiData.cooling = f.cooling
+  } else if (type === 'pcs') {
+    apiData.ratedPowerMW = f.ratedPowerMW
+    apiData.efficiency = f.efficiency
+    apiData.acVoltage = f.acVoltage
+    apiData.dcVoltageRange = f.dcVoltageRange
+    apiData.cooling = f.cooling
+  }
+  
+  // 调用API保存
+  try {
+    const endpoint = type === 'cell' ? '/api/library/cells' : 
+                     type === 'container' ? '/api/library/containers' : '/api/library/pcs'
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(apiData)
+    })
+    const data = await response.json()
+    if (data.success) {
+      // 重新加载数据
+      await loadLibraryData()
+      showModal.value = false
+      return
+    }
+  } catch (error) {
+    console.error('API保存失败:', error)
+  }
+  
+  // 降级使用本地保存
   const id = type + '-' + f.model?.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36)
   let item = { id, ...f }
 
@@ -369,9 +555,26 @@ function applyScenario(s) {
 }
 
 function applyToSimulation() {
-  const cell = localData.value.cells?.find(c => c.id === selectedCell.value)
-  const container = localData.value.containers?.find(c => c.id === selectedContainer.value)
-  const pcs = localData.value.pcs?.find(p => p.id === selectedPcs.value)
+  // 优先使用API数据
+  let cell, container, pcs
+  if (cellLibrary.value.length > 0) {
+    cell = cellLibrary.value.find(c => c.id === selectedCell.value)
+  } else {
+    cell = localData.value.cells?.find(c => c.id === selectedCell.value)
+  }
+  
+  if (containerLibrary.value.length > 0) {
+    container = containerLibrary.value.find(c => c.id === selectedContainer.value)
+  } else {
+    container = localData.value.containers?.find(c => c.id === selectedContainer.value)
+  }
+  
+  if (pcsLibrary.value.length > 0) {
+    pcs = pcsLibrary.value.find(p => p.id === selectedPcs.value)
+  } else {
+    pcs = localData.value.pcs?.find(p => p.id === selectedPcs.value)
+  }
+  
   const payload = { cell, container, pcs }
   if (container) {
     payload.ratedEnergy = container.ratedEnergyMWh
@@ -379,4 +582,9 @@ function applyToSimulation() {
   }
   emit('applyConfig', payload)
 }
+
+// 组件挂载时加载产品库数据
+onMounted(() => {
+  loadLibraryData()
+})
 </script>
