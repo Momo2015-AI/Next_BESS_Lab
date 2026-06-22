@@ -15,6 +15,7 @@ from routes.products import products_bp, seed_products
 from routes.library import library_bp
 from routes.project import project_bp
 from routes.simulation import simulation_bp
+from routes.algorithm import algorithm_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +38,7 @@ app.register_blueprint(products_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(simulation_bp)
+app.register_blueprint(algorithm_bp)
 
 with app.app_context():
     seed_products()

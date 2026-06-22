@@ -263,12 +263,15 @@ class SimulationResult(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     version_id = db.Column(db.String(36), db.ForeignKey('project_versions.id'))
     
-    # 结果名称
+    # 结果名称（项目名称+时间戳）
     name = db.Column(db.String(200))
     description = db.Column(db.Text)
     
     # 仿真类型
     simulation_type = db.Column(db.String(50))  # soh/rte/comprehensive/financial
+    
+    # 使用的算法模型ID
+    algorithm_model_id = db.Column(db.String(36), db.ForeignKey('algorithm_models.id'))
     
     # 使用的校正因子模板ID
     correction_template_id = db.Column(db.String(36), db.ForeignKey('correction_templates.id'))
@@ -297,6 +300,7 @@ class SimulationResult(db.Model):
     
     # 关联
     version = db.relationship('ProjectVersion', back_populates='simulation_results')
+    algorithm_model = db.relationship('AlgorithmModel', back_populates='simulation_results')
     correction_template = db.relationship('CorrectionTemplate', back_populates='simulation_results')
 
 
@@ -748,14 +752,70 @@ class PCS_LIBRARY(db.Model):
     tenant = db.relationship('Tenant', back_populates='pcs_library')
 
 
+class AlgorithmModel(db.Model):
+    """算法模型库 - 支持添加和管理多种衰减模型"""
+    __tablename__ = 'algorithm_models'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 模型基本信息
+    name = db.Column(db.String(200), nullable=False)  # 模型名称
+    name_en = db.Column(db.String(200))  # 英文名称
+    model_type = db.Column(db.String(50))  # 模型类型: double_exponential/linear_log/arrhenius/rainflow/semi_empirical/custom
+    
+    # 适用场景
+    applicable_scenarios = db.Column(db.Text)  # JSON数组，如 ["LFP日历衰减", "循环衰减"]
+    
+    # 数学形式/公式表达式
+    mathematical_form = db.Column(db.Text)  # 数学形式描述
+    formula_expression = db.Column(db.Text)  # 可执行的公式表达式
+    
+    # 参数定义（JSON格式）
+    parameters = db.Column(db.Text)  # 参数定义 {"param_name": {"label": "", "default": 0.0, "min": 0, "max": 100}}
+    
+    # 精度等级
+    accuracy_level = db.Column(db.String(20))  # low/medium/high
+    accuracy_desc = db.Column(db.String(200))  # 精度描述，如 "R²>0.999"
+    
+    # 模型分类
+    category = db.Column(db.String(50))  # soh/rte/comprehensive
+    
+    # 是否内置模型（不可删除）
+    is_builtin = db.Column(db.Boolean, default=False)
+    
+    # 是否启用
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # 排序
+    sort_order = db.Column(db.Integer, default=0)
+    
+    # 描述
+    description = db.Column(db.Text)
+    
+    # 创建者
+    created_by = db.Column(db.String(36), db.ForeignKey('users.id'))
+    
+    # 时间
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    tenant = db.relationship('Tenant', back_populates='algorithm_models')
+    created_by_user = db.relationship('User', back_populates='algorithm_models')
+    simulation_results = db.relationship('SimulationResult', back_populates='algorithm_model')
+
+
 # 添加租户关联
 Tenant.cell_library = db.relationship('CellLibrary', back_populates='tenant')
 Tenant.container_library = db.relationship('ContainerLibrary', back_populates='tenant')
 Tenant.pcs_library = db.relationship('PCS_LIBRARY', back_populates='tenant')
 Tenant.correction_templates = db.relationship('CorrectionTemplate', back_populates='tenant')
+Tenant.algorithm_models = db.relationship('AlgorithmModel', back_populates='tenant')
 
 # 添加用户关联
 User.correction_templates = db.relationship('CorrectionTemplate', back_populates='created_by_user')
+User.algorithm_models = db.relationship('AlgorithmModel', back_populates='created_by_user')
 
 
 def init_db(app):

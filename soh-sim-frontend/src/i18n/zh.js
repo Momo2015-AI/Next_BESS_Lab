@@ -40,6 +40,7 @@ export default {
     acDesign: '4. 交流侧设计(PCS)',
     batteryPCS: '5. 电池与PCS配对',
     simulationLab: '6. 仿真实验室',
+    algorithm: '6.5 算法公式试验舱',
     products: '7. 产品与方案配置',
     financial: '8. 财务看板',
     matrix: '9. 25年生命周期矩阵',
