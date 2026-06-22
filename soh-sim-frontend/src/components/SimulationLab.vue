@@ -322,7 +322,12 @@
       </div>
 
       <div v-if="selectedAlgoDetail" class="mt-4 rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-        <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">{{ selectedAlgoDetail.name }} 参数</h4>
+        <div class="flex justify-between items-center mb-2">
+          <h4 class="text-xs font-medium" style="color: var(--color-text);">{{ selectedAlgoDetail.name }} 参数</h4>
+          <button @click="resetAlgoParams" class="text-[10px] rounded px-2 py-0.5 transition-colors" style="background-color: var(--color-card); color: var(--color-text-muted);">
+            恢复默认
+          </button>
+        </div>
         <div class="grid grid-cols-4 gap-3">
           <div v-for="(param, key) in selectedAlgoDetail.parameters" :key="key">
             <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">{{ param.label }} ({{ param.unit || '' }})</label>
@@ -443,8 +448,8 @@
       <div class="mt-3 rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
         <p style="color: var(--color-text-secondary); font-size: 10px;"><strong style="color: var(--color-text);">校正因子说明：</strong></p>
         <ul class="list-disc list-inside mt-1 space-y-0.5" style="font-size: 10px; color: var(--color-text-secondary);">
-          <li>校正系数 > 1 表示增加衰减（保守估计）</li>
-          <li>校正系数 < 1 表示减少衰减（乐观估计）</li>
+          <li>校正系数 &gt; 1 表示增加衰减（保守估计）</li>
+          <li>校正系数 &lt; 1 表示减少衰减（乐观估计）</li>
           <li>年度校正可针对特定年份进行精细调整</li>
           <li>校正结果将应用于最终仿真输出</li>
         </ul>
@@ -677,26 +682,21 @@ const prevStep = () => {
 }
 
 const fetchAlgorithms = async () => {
-  const token = localStorage.getItem('token')
-  if (!token) return
-  
   try {
-    const resp = await fetch('http://localhost:5001/api/algorithms', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const resp = await fetch('/api/algorithms/public?category=degradation')
     const data = await resp.json()
     if (data.success && data.data.length > 0) {
       algorithms.value = data.data.map(alg => ({
         id: alg.id,
         name: alg.name,
-        name_en: alg.name_en,
+        name_en: alg.name_en || '',
         description: alg.description || '无描述',
-        type: alg.category === 'soh' ? 'SOH衰减' : alg.category === 'rte' ? 'RTE衰减' : '综合模型',
+        type: getCategoryLabel(alg.category),
         accuracy: alg.accuracy_desc || '未知',
         model_type: alg.model_type,
         parameters: alg.parameters,
-        mathematical_form: alg.mathematical_form,
-        formula_expression: alg.formula_expression,
+        mathematical_form: alg.mathematical_form || '',
+        formula_expression: alg.formula_expression || '',
       }))
       
       if (!selectedAlgorithm.value && algorithms.value.length > 0) {
@@ -709,6 +709,16 @@ const fetchAlgorithms = async () => {
   }
 }
 
+function getCategoryLabel(category) {
+  const labels = {
+    degradation: '容量衰减',
+    financial: '财务模型',
+    engineering: '工程计算',
+    simulation: '仿真配置',
+  }
+  return labels[category] || category
+}
+
 const selectAlgorithm = (algo) => {
   selectedAlgorithm.value = algo.id
   selectedAlgoDetail.value = algo
@@ -718,6 +728,15 @@ const selectAlgorithm = (algo) => {
       algoParams[key] = algo.parameters[key].default || 0
     })
   }
+}
+
+const resetAlgoParams = () => {
+  const algo = selectedAlgoDetail.value
+  if (!algo || !algo.parameters) return
+  Object.keys(algo.parameters).forEach(key => {
+    algoParams[key] = algo.parameters[key].default || 0
+  })
+  showToast('参数已恢复为默认值')
 }
 
 watch(selectedAlgorithm, (newId) => {
