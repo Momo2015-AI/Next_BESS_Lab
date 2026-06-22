@@ -236,7 +236,7 @@
             <input v-model="form.cellCapacityRange" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="280-700">
           </div>
           <div>
-            <label class="text-[10px] text-slate-400 block mb-1">电芯循环寿命 @25°C</label>
+            <label class="text-[10px] text-slate-400 block mb-1">电芯循环寿命 &#64;25°C</label>
             <input v-model.number="form.cellCycleLife" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none" placeholder="6000">
           </div>
           <div>
