@@ -348,9 +348,22 @@ function onApplySimulationConfig(payload) {
       params[key] = payload[key]
     }
   })
-  if (payload.sohCurve) soh.value = payload.sohCurve
-  if (payload.rteCurve) rte.value = payload.rteCurve
-  showToast('仿真参数已应用', 'success')
+  // 接收 SimulationLab 的 SOH/RTE 曲线（支持两种 key 名）
+  const sohData = payload.sohCurve || payload.soh
+  const rteData = payload.rteCurve || payload.rte
+  if (sohData && Array.isArray(sohData)) {
+    soh.value = sohData
+    // 自动切换到数据注入 tab，让用户确认/微调（保留手动注入能力）
+    if (payload.source === 'simulation' && activeTab.value !== 'inject') {
+      activeTab.value = 'inject'
+    }
+  }
+  if (rteData && Array.isArray(rteData)) {
+    rte.value = rteData
+  }
+  showToast(payload.source === 'simulation'
+    ? '仿真结果已自动填入数据注入面板'
+    : '仿真参数已应用', 'success')
 }
 
 const currentProjectId = ref('')

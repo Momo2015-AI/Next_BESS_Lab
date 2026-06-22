@@ -743,23 +743,26 @@ const calculateSOH = (modelType, params, t) => {
     case 'linear_log':
       return params.RTE0 - params.alpha * t - params.beta * Math.log(1 + params.gamma * t)
 
-    case 'arrhenius':
+    case 'arrhenius': {
       const Q_cal = params.A * Math.exp(-params.Ea * 1000 / (R * T)) * Math.pow(t + 0.5, 0.5)
       const Q_cyc = params.A * Math.exp(-params.Ea * 1000 / (R * T)) * Math.pow(N_cycles, 0.7) * DOD_factor * C_rate_factor
       return Math.max(0.6, 1 - (Q_cal + Q_cyc))
+    }
 
-    case 'rainflow':
+    case 'rainflow': {
       const damage = Math.pow(N_cycles / params.cycle_life_ref, params.damage_exponent) * Math.pow(surveyData.dod / 100 / params.dod_ref, 1.5)
       return Math.max(0.6, 1 - damage)
+    }
 
-    case 'semi_empirical':
+    case 'semi_empirical': {
       const temp_factor = 1 - params.temp_coeff * (surveyData.temperature - 25) / 100
       const dod_factor = 1 - params.dod_coeff * (surveyData.dod / 100 - 0.5) / 100
       const c_rate_factor = 1 - params.c_rate_coeff * (surveyData.cRate - 0.5)
       const soc_factor = 0.98
       return Math.max(0.6, 1 - (1 - temp_factor * dod_factor * c_rate_factor * soc_factor) * t / 25)
+    }
 
-    default:
+    default: {
       const A_cal = params.A_cal || 0.001
       const Ea_cal = params.Ea_cal || 35
       const alpha = params.alpha || 0.5
@@ -770,6 +773,7 @@ const calculateSOH = (modelType, params, t) => {
       const Q_cal = A_cal * Math.exp(-Ea_cal * 1000 / (R * T)) * Math.pow(t + 0.5, alpha)
       const Q_cyc = A_cyc * Math.exp(-Ea_cyc * 1000 / (R * T)) * Math.pow(N_cycles, beta) * DOD_factor * C_rate_factor
       return Math.max(0.6, 1 - (Q_cal + Q_cyc))
+    }
   }
 }
 
@@ -828,6 +832,16 @@ const runSimulation = () => {
   
   nextTick(() => {
     setTimeout(() => renderChart(), 100)
+  })
+
+  // 将仿真结果 emit 给父组件，打通仿真→容量对账的数据流
+  emit('applyConfig', {
+    soh: simulationResults.sohCurve,
+    rte: simulationResults.rteCurve,
+    source: 'simulation',
+    algorithmType: simParams.algorithmType,
+    simulationYears: simParams.simulationYears,
+    guaranteeSoh: simParams.guaranteeSoh,
   })
 }
 

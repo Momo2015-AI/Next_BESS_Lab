@@ -6,7 +6,7 @@
         电池集装箱配置
       </h3>
 
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-4 gap-4">
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">储能集装箱型号</label>
           <select v-model="selectedContainer" @change="calculatePCS"
@@ -28,6 +28,16 @@
             style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
             onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
             onblur="this.style.borderColor='var(--color-input-border)';">
+        </div>
+
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">运行时长 (h)</label>
+          <input v-model.number="durationHours" @change="calculatePCS" type="number" min="0.5" max="8" step="0.5"
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
+          <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">C-rate = 1/时长, PCS功率 = 能量/时长</p>
         </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
@@ -286,6 +296,7 @@ onMounted(() => {
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
+const durationHours = ref(2)
 
 const totalEnergy = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
@@ -294,7 +305,10 @@ const totalEnergy = computed(() => {
 
 const totalPower = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
-  return container ? container.power * containerQty.value : 0
+  if (!container) return 0
+  const powerFromRating = container.power * containerQty.value
+  const powerFromDuration = totalEnergy.value / durationHours.value
+  return Math.max(powerFromRating, powerFromDuration)
 })
 
 const pcsQty = computed(() => {
@@ -661,3 +675,5 @@ onMounted(() => {
 
 watch([selectedContainer, containerQty, selectedPCS], () => {
   calculatePCS()
+})
+</script>

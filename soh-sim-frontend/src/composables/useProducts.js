@@ -4,6 +4,7 @@ import localProducts from '../data/products.json'
 const cells = ref([])
 const containers = ref([])
 const pcs = ref([])
+const cellPackMappings = ref([])
 const loading = ref(false)
 const loaded = ref(false)
 const source = ref('')
@@ -48,6 +49,7 @@ function loadFromLocalJson() {
   cells.value = localProducts.cells || []
   containers.value = localProducts.containers || []
   pcs.value = localProducts.pcs || []
+  cellPackMappings.value = localProducts.cellPackMappings || []
   source.value = 'local'
   loaded.value = true
 }
@@ -113,7 +115,7 @@ export function useProducts() {
   const pcsMfrs = computed(() => [...new Set(pcs.value.map(p => p.mfr).filter(Boolean))])
 
   return {
-    cells, containers, pcs,
+    cells, containers, pcs, cellPackMappings,
     loading, loaded, source,
     loadAll,
     getCellById, getContainerById, getPcsById,
