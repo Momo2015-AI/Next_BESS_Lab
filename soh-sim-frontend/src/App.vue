@@ -1,190 +1,98 @@
 <template>
-  <div class="h-screen flex flex-col bg-slate-950 text-slate-100">
-    <!-- Toast提示 -->
-    <div v-if="toast.show" 
+  <div class="h-screen flex flex-col bg-slate-950 text-slate-100 p-4 gap-3 text-xs overflow-hidden">
+    <div v-if="toast.show"
       :class="['fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
-        toast.type === 'success' ? 'bg-emerald-500 text-white' : 
-        toast.type === 'error' ? 'bg-red-500 text-white' : 
+        toast.type === 'success' ? 'bg-emerald-500 text-white' :
+        toast.type === 'error' ? 'bg-red-500 text-white' :
         toast.type === 'warning' ? 'bg-amber-500 text-white' : 'bg-slate-600 text-white']">
       {{ toast.message }}
     </div>
 
-    <!-- 顶部导航栏 -->
-    <header class="h-14 flex items-center justify-between px-4 border-b border-slate-800 bg-slate-900/80 flex-shrink-0">
-      <div class="flex items-center gap-4">
-        <h1 class="text-base font-bold bg-gradient-to-r from-teal-400 to-sky-400 bg-clip-text text-transparent whitespace-nowrap">
-          储能解决方案平台
+    <header class="flex justify-between items-center border-b border-slate-800 pb-2 flex-shrink-0">
+      <div>
+        <h1 class="text-lg font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+          {{ $t('app.title') }}
         </h1>
-        
-        <!-- 项目选择 -->
-        <div class="relative">
-          <select v-model="currentProjectId" @change="onProjectChange"
-            class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs focus:border-teal-500 outline-none appearance-none cursor-pointer pr-8">
-            <option value="">-- 选择项目 --</option>
-            <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
-          </select>
-          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">▼</span>
-        </div>
+        <p class="text-[10px] mt-0.5 text-slate-400">{{ $t('app.subtitle') }}</p>
       </div>
-      
       <div class="flex items-center gap-3">
-        <!-- 快捷操作 -->
-        <button v-if="currentProjectId && userRole !== 'customer'"
-          @click="executeSimulation"
-          class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-4 py-1.5 rounded-md shadow-md transition-all active:scale-95 border border-emerald-400/20">
-          执行仿真
+        <ThemeSwitcher />
+        <button @click="openSurveyPage"
+          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-3 py-1.5 rounded border border-slate-600 transition-all">
+          {{ $t('tabs.survey') }}
         </button>
-        
-        <!-- 用户信息 -->
-        <div class="flex items-center gap-2 pl-3 border-l border-slate-700">
-          <span class="text-xs text-slate-400">{{ userRoleLabel }}</span>
-          <span class="text-xs font-medium text-slate-200">{{ username }}</span>
-          <button v-if="isLoggedIn" @click="logout"
-            class="text-xs text-slate-500 hover:text-red-400 transition-colors ml-2">
-            退出
-          </button>
-        </div>
+        <button @click="fetchCalculation" class="btn-primary">
+          {{ $t('app.simulate') }}
+        </button>
       </div>
     </header>
 
-    <!-- 主体内容区 -->
-    <div class="flex-1 flex min-h-0">
-      <!-- 左侧导航 -->
-      <nav class="w-48 border-r border-slate-800 bg-slate-900/40 flex-shrink-0 flex flex-col">
-        <!-- 工作流 -->
-        <div class="p-3 border-b border-slate-800">
-          <h3 class="text-[10px] text-slate-500 uppercase tracking-wider mb-2">工作流 WorkFlow</h3>
-          <ul class="space-y-1">
-            <li v-for="item in workflowNav" :key="item.id">
-              <button @click="navigateTo(item.id)"
-                :class="['w-full text-left px-2 py-1.5 rounded text-xs transition-all flex items-center gap-2',
-                  currentView === item.id ? 'bg-teal-500/20 text-teal-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800']">
-                <span>{{ item.icon }}</span>
-                <span>{{ item.label }}</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-        
-        <!-- 配置管理 -->
-        <div class="p-3 flex-1 overflow-y-auto">
-          <h3 class="text-[10px] text-slate-500 uppercase tracking-wider mb-2">配置管理 Config</h3>
-          <ul class="space-y-1">
-            <li v-for="item in configNav" :key="item.id">
-              <button @click="navigateTo(item.id)"
-                :class="['w-full text-left px-2 py-1.5 rounded text-xs transition-all flex items-center gap-2',
-                  currentView === item.id ? 'bg-teal-500/20 text-teal-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800']">
-                <span>{{ item.icon }}</span>
-                <span>{{ item.label }}</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-        
-        <!-- 版本信息 -->
-        <div v-if="currentVersion" class="p-3 border-t border-slate-800">
-          <div class="text-[10px] text-slate-500 mb-1">当前版本</div>
-          <div class="text-xs text-teal-400 font-medium">{{ currentVersion.name }}</div>
-          <div class="text-[10px] text-slate-500 mt-0.5">{{ currentVersion.version_num }}.0</div>
-        </div>
-      </nav>
+    <nav class="flex bg-slate-900/60 p-1 rounded-lg gap-1 border border-slate-800/80 flex-shrink-0 overflow-x-auto">
+      <button v-for="(tab, idx) in tabs" :key="tab.id"
+        @click="activeTab = tab.id"
+        draggable="true"
+        @dragstart="onDragStart(idx, $event)"
+        @dragover.prevent="onDragOver(idx)"
+        @drop="onDrop(idx)"
+        @dragend="onDragEnd"
+        :class="['tab-btn whitespace-nowrap cursor-grab active:cursor-grabbing', { active: activeTab === tab.id, 'drag-over': dragOverIdx === idx, 'dragging': dragIdx === idx }]">
+        {{ $t(tab.labelKey) }}
+      </button>
+    </nav>
 
-      <!-- 右侧工作区 -->
-      <main class="flex-1 min-w-0 overflow-hidden flex flex-col">
-        <!-- 工作流视图 -->
-        <div v-if="isWorkflowView" class="flex-1 overflow-y-auto p-4">
-          <!-- 调研输入 -->
-          <SurveyView v-if="currentView === 'survey'" 
-            :project-id="currentProjectId"
-            @apply-params="onApplySurveyParams" />
-          
-          <!-- 方案配置 -->
-          <ConfigView v-if="currentView === 'config'" 
-            :project-id="currentProjectId"
-            :version-id="currentVersionId"
-            @save-config="onSaveConfig" />
-          
-          <!-- 仿真分析 -->
-          <SimulationView v-if="currentView === 'simulation'" 
-            :project-id="currentProjectId"
-            :version-id="currentVersionId"
-            :params="params"
-            @update-params="updateParam" />
-          
-          <!-- 报告输出 -->
-          <ReportView v-if="currentView === 'report'" 
-            :project-id="currentProjectId"
-            :version-id="currentVersionId"
-            :results="results" />
-        </div>
-
-        <!-- 配置管理视图 -->
-        <div v-else class="flex-1 overflow-y-auto p-4">
-          <!-- 产品库 -->
-          <ProductConfig v-if="currentView === 'products'" />
-          
-          <!-- 规则配置 -->
-          <RulesConfig v-if="currentView === 'rules'" />
-          
-          <!-- 模板管理 -->
-          <TemplatesConfig v-if="currentView === 'templates'" />
-          
-          <!-- 历史项目 -->
-          <ProjectHistory v-if="currentView === 'history'" 
-            :projects="projects"
-            @select-project="selectProject" />
-        </div>
-      </main>
-    </div>
-
-    <!-- 仿真参数面板（侧边抽屉） -->
-    <div v-if="showSimulationParams" 
-      class="fixed inset-0 bg-black/50 z-40 flex justify-end"
-      @click.self="showSimulationParams = false">
-      <div class="w-96 bg-slate-900 border-l border-slate-700 h-full overflow-y-auto p-4">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-sm font-bold text-teal-400">仿真参数</h3>
-          <button @click="showSimulationParams = false" class="text-slate-500 hover:text-slate-300">✕</button>
-        </div>
-        <ParameterPanel :params="params" @update="updateParam" @error="showToast" />
-      </div>
+    <div class="flex-1 min-h-0 overflow-hidden overflow-y-auto">
+      <SurveyForm v-show="activeTab === 'survey'" @error="showToast" />
+      <ParameterPanel v-show="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
+      <RunningConditions v-show="activeTab === 'conditions'" @applyParams="onApplyConditions" @error="showToast" />
+      <BatteryDCDesign v-show="activeTab === 'dc-design'" ref="batteryDC" @apply-config="onApplyBatteryConfig" @error="showToast" />
+      <PcsACDesign v-show="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" @error="showToast" />
+      <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
+      <SimulationLab v-show="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" @error="showToast" />
+      <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
+      <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
+      <MatrixTable v-show="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
+        @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
+      <DataInjection v-show="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
+      <FormulaLab v-show="activeTab === 'formula'" :params="params" @update="updateParam" />
+      <SohChart v-show="activeTab === 'chart'" :results="results" :soh="soh" :rte="rte" :required-energy="params.requiredEnergy" />
+      <ScenarioCompare v-show="activeTab === 'scenario'" :base-params="params" @error="showToast" />
+      <SensitivityAnalysis v-show="activeTab === 'sensitivity'" :params="params" :financial="financialData" @error="showToast" />
+      <EngineeringCalc v-show="activeTab === 'engineering'" @error="showToast" />
+      <DataExport v-show="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
+      <AuthPanel v-show="activeTab === 'auth'" @auth-success="onAuthSuccess" @error="showToast" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import SurveyView from './views/SurveyView.vue'
-import ConfigView from './views/ConfigView.vue'
-import SimulationView from './views/SimulationView.vue'
-import ReportView from './views/ReportView.vue'
-import RulesConfig from './views/RulesConfig.vue'
-import TemplatesConfig from './views/TemplatesConfig.vue'
-import ProjectHistory from './views/ProjectHistory.vue'
-import ProductConfig from './components/ProductConfig.vue'
+import { useI18n } from 'vue-i18n'
 import ParameterPanel from './components/ParameterPanel.vue'
+import MatrixTable from './components/MatrixTable.vue'
+import DataInjection from './components/DataInjection.vue'
+import FormulaLab from './components/FormulaLab.vue'
+import SohChart from './components/SohChart.vue'
+import RunningConditions from './components/RunningConditions.vue'
+import ProductConfig from './components/ProductConfig.vue'
+import FinancialDashboard from './components/FinancialDashboard.vue'
+import BatteryDCDesign from './components/BatteryDCDesign.vue'
+import PcsACDesign from './components/PcsACDesign.vue'
+import BatteryPCSConfig from './components/BatteryPCSConfig.vue'
+import SimulationLab from './components/SimulationLab.vue'
+import DataExport from './components/DataExport.vue'
+import ScenarioCompare from './components/ScenarioCompare.vue'
+import SensitivityAnalysis from './components/SensitivityAnalysis.vue'
+import EngineeringCalc from './components/EngineeringCalc.vue'
+import AuthPanel from './components/AuthPanel.vue'
+import SurveyForm from './components/SurveyForm.vue'
+import ThemeSwitcher from './components/ThemeSwitcher.vue'
 
-// 用户状态
-const isLoggedIn = ref(false)
-const username = ref('')
-const userRole = ref('customer')
-const userRoleLabel = computed(() => {
-  const labels = { customer: '客户', engineer: '工程师', admin: '管理员' }
-  return labels[userRole.value] || '访客'
-})
+const batteryDC = ref(null)
+const pcsAC = ref(null)
+const router = useRouter()
+const { t } = useI18n()
 
-// 项目状态
-const projects = ref([])
-const currentProjectId = ref('')
-const currentVersionId = ref('')
-const currentVersion = ref(null)
-
-// 视图状态
-const currentView = ref('survey')
-const showSimulationParams = ref(false)
-
-// Toast提示
 const toast = reactive({
   show: false,
   message: '',
@@ -200,125 +108,63 @@ const showToast = (message, type = 'info') => {
   }, 3000)
 }
 
-// 导航配置
-const workflowNav = [
-  { id: 'survey', label: '调研输入', icon: '📋' },
-  { id: 'config', label: '方案设计', icon: '⚙️' },
-  { id: 'simulation', label: '仿真分析', icon: '📊' },
-  { id: 'report', label: '报告输出', icon: '📄' },
-]
-
-const configNav = [
-  { id: 'products', label: '产品库', icon: '📦' },
-  { id: 'rules', label: '规则配置', icon: '📐' },
-  { id: 'templates', label: '模板管理', icon: '📑' },
-  { id: 'history', label: '历史项目', icon: '📁' },
-]
-
-const isWorkflowView = computed(() => ['survey', 'config', 'simulation', 'report'].includes(currentView.value))
-
-// 导航
-function navigateTo(viewId) {
-  currentView.value = viewId
+function openSurveyPage() {
+  router.push('/survey')
 }
 
-// 加载用户信息
-function loadUserInfo() {
-  const token = localStorage.getItem('token')
-  if (token) {
-    isLoggedIn.value = true
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
-    username.value = user.username || '用户'
-    userRole.value = user.role || 'customer'
-  }
+const activeTab = ref('param')
+const tabs = ref([
+  { id: 'survey', labelKey: 'tabs.survey' },
+  { id: 'param', labelKey: 'tabs.param' },
+  { id: 'conditions', labelKey: 'tabs.conditions' },
+  { id: 'dc-design', labelKey: 'tabs.dcDesign' },
+  { id: 'ac-design', labelKey: 'tabs.acDesign' },
+  { id: 'batteryPCS', labelKey: 'tabs.batteryPCS' },
+  { id: 'simulationLab', labelKey: 'tabs.simulationLab' },
+  { id: 'products', labelKey: 'tabs.products' },
+  { id: 'financial', labelKey: 'tabs.financial' },
+  { id: 'matrix', labelKey: 'tabs.matrix' },
+  { id: 'inject', labelKey: 'tabs.inject' },
+  { id: 'formula', labelKey: 'tabs.formula' },
+  { id: 'chart', labelKey: 'tabs.chart' },
+  { id: 'scenario', labelKey: 'tabs.scenario' },
+  { id: 'sensitivity', labelKey: 'tabs.sensitivity' },
+  { id: 'engineering', labelKey: 'tabs.engineering' },
+  { id: 'export', labelKey: 'tabs.export' },
+  { id: 'auth', labelKey: 'tabs.auth' },
+])
+
+const dragIdx = ref(-1)
+const dragOverIdx = ref(-1)
+
+function onDragStart(idx, e) {
+  dragIdx.value = idx
+  e.dataTransfer.effectAllowed = 'move'
 }
 
-// 加载项目列表
-async function loadProjects() {
-  try {
-    const token = localStorage.getItem('token')
-    if (!token) return
-    
-    const response = await fetch('/api/projects', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const data = await response.json()
-    if (data.success) {
-      projects.value = data.data || []
-    }
-  } catch (error) {
-    console.error('加载项目失败:', error)
-  }
+function onDragOver(idx) {
+  if (dragIdx.value === idx) return
+  dragOverIdx.value = idx
 }
 
-// 项目变更
-async function onProjectChange() {
-  if (currentProjectId.value) {
-    await loadProjectDetails()
-  } else {
-    currentVersionId.value = ''
-    currentVersion.value = null
-  }
+function onDrop(idx) {
+  if (dragIdx.value < 0 || dragIdx.value === idx) return
+  const list = [...tabs.value]
+  const [moved] = list.splice(dragIdx.value, 1)
+  list.splice(idx, 0, moved)
+  tabs.value = list
+  dragIdx.value = -1
+  dragOverIdx.value = -1
 }
 
-// 加载项目详情
-async function loadProjectDetails() {
-  try {
-    const token = localStorage.getItem('token')
-    const response = await fetch(`/api/projects/${currentProjectId.value}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const data = await response.json()
-    if (data.success && data.data.versions.length > 0) {
-      // 找到活跃版本
-      const activeVersion = data.data.versions.find(v => v.is_active) || data.data.versions[0]
-      currentVersionId.value = activeVersion.id
-      currentVersion.value = activeVersion
-    }
-  } catch (error) {
-    console.error('加载项目详情失败:', error)
-  }
+function onDragEnd() {
+  dragIdx.value = -1
+  dragOverIdx.value = -1
 }
 
-// 选择项目
-function selectProject(projectId) {
-  currentProjectId.value = projectId
-  onProjectChange()
-}
+const N = 26
 
-// 从调研表应用参数
-function onApplySurveyParams(params) {
-  Object.assign(simulationParams, params)
-  showToast('调研参数已应用')
-}
-
-// 保存配置
-function onSaveConfig(config) {
-  showToast('配置已保存')
-  loadProjectDetails()
-}
-
-// 更新参数
-function updateParam(key, value) {
-  simulationParams[key] = value
-}
-
-// 执行仿真
-function executeSimulation() {
-  showSimulationParams.value = true
-}
-
-// 登出
-function logout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  isLoggedIn.value = false
-  username.value = ''
-  userRole.value = 'customer'
-}
-
-// 仿真参数
-const simulationParams = reactive({
+const params = reactive({
   ratedEnergy: 5,
   initContainerQty: 10,
   initPcsQty: 2,
@@ -334,22 +180,224 @@ const simulationParams = reactive({
   requiredEnergy: 240,
 })
 
-// 结果数据
+const soh = ref([
+  0.9925, 0.9318, 0.9014, 0.877, 0.856, 0.8371, 0.8197, 0.8036, 0.7885, 0.7742,
+  0.7606, 0.7475, 0.735, 0.723, 0.7113, 0.7, 0.689, 0.678, 0.6672, 0.6564,
+  0.6458, 0.6354, 0.6252, 0.6152, 0.6074, 0.6008,
+])
+
+const rte = ref([
+  0.941, 0.9384, 0.9372, 0.9363, 0.9355, 0.9347, 0.934, 0.9333, 0.9326, 0.932,
+  0.9314, 0.9308, 0.9302, 0.9296, 0.929, 0.9285, 0.9279, 0.9273, 0.9268, 0.9262,
+  0.9256, 0.9251, 0.9245, 0.924, 0.9235, 0.923,
+])
+
+const dod = ref(new Array(N).fill(100))
+const augQty = ref(new Array(N).fill(0))
+augQty.value[6] = 6
+
 const results = reactive({
-  initGross: [],
-  initAux: [],
-  initAcUsable: [],
-  augGross: [],
-  augAux: [],
-  augAcUsable: [],
-  augAccumQty: [],
-  totalAcUsable: [],
-  meetsReq: [],
+  initGross: new Array(N).fill(0),
+  initAux: new Array(N).fill(0),
+  initAcUsable: new Array(N).fill(0),
+  augGross: new Array(N).fill(0),
+  augAux: new Array(N).fill(0),
+  augAcUsable: new Array(N).fill(0),
+  augAccumQty: new Array(N).fill(0),
+  totalAcUsable: new Array(N).fill(0),
+  meetsReq: new Array(N).fill(false),
 })
 
-// 生命周期
+function updateParam(key, value) {
+  params[key] = value
+}
+
+watch(params, () => calculate(), { deep: true })
+watch(soh, () => calculate(), { deep: true })
+watch(rte, () => calculate(), { deep: true })
+watch(dod, () => calculate(), { deep: true })
+watch(augQty, () => calculate(), { deep: true })
+
+function calculate() {
+  const p = params
+  const runHours = p.duration * p.cyclesPerDay
+  const standbyHours = Math.max(0, 24 - runHours)
+  const dailyContainerAuxPerUnit = (p.bessAuxRun * runHours + p.bessAuxStandby * standbyHours) / 1000
+  const dailyPcsAuxPerUnit = (p.pcsAuxRun * runHours + p.pcsAuxStandby * standbyHours) / 1000
+  const cycleContainerAuxPerUnit = dailyContainerAuxPerUnit / p.cyclesPerDay
+  const cyclePcsAuxPerUnit = dailyPcsAuxPerUnit / p.cyclesPerDay
+  const acEff = p.acEfficiency / 100
+
+  let accumAugQty = 0
+  for (let i = 0; i < N; i++) {
+    accumAugQty += Number(augQty.value[i]) || 0
+    results.augAccumQty[i] = accumAugQty
+
+    const cDod = (Number(dod.value[i]) || 0) / 100
+    const cRte = Number(rte.value[i]) || 0
+    const cSoh = Number(soh.value[i]) || 0
+
+    results.initGross[i] = p.ratedEnergy * p.initContainerQty * cDod * cRte * cSoh * acEff
+    results.initAux[i] = p.initContainerQty * cycleContainerAuxPerUnit + p.initPcsQty * cyclePcsAuxPerUnit
+    results.initAcUsable[i] = Math.max(0, results.initGross[i] - results.initAux[i])
+
+    let totalAugAc = 0
+    let totalAugAux = 0
+    for (let k = 0; k <= i; k++) {
+      const qtyK = Number(augQty.value[k]) || 0
+      if (qtyK > 0) {
+        const age = i - k
+        const assetSoh = Number(soh.value[Math.min(age, N - 1)]) || 0
+        const assetGross = p.ratedEnergy * qtyK * cDod * cRte * assetSoh * acEff
+        const assetAux = qtyK * cycleContainerAuxPerUnit
+        totalAugAc += Math.max(0, assetGross - assetAux)
+        totalAugAux += assetAux
+      }
+    }
+    results.augGross[i] = totalAugAc + totalAugAux
+    results.augAux[i] = totalAugAux
+    results.augAcUsable[i] = totalAugAc
+    results.totalAcUsable[i] = results.initAcUsable[i] + totalAugAc
+    results.meetsReq[i] = results.totalAcUsable[i] >= p.requiredEnergy
+  }
+}
+
+async function fetchCalculation() {
+  try {
+    const resp = await fetch('/api/soh/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        params: { ...params },
+        soh: soh.value,
+        rte: rte.value,
+        dod: dod.value,
+        augQty: augQty.value,
+      }),
+    })
+    const data = await resp.json()
+    if (data.results) {
+      Object.assign(results, data.results)
+    }
+    if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
+  } catch (error) {
+    console.error('API调用失败，使用本地计算:', error)
+    showToast('API 调用失败，已使用本地计算', 'warning')
+    calculate()
+    if (activeTab.value !== 'matrix') activeTab.value = 'matrix'
+  }
+}
+
+function onApplyConditions(mapped) {
+  if (mapped.duration != null) params.duration = mapped.duration
+  if (mapped.cyclesPerDay != null) params.cyclesPerDay = mapped.cyclesPerDay
+  if (mapped.requiredEnergy != null) params.requiredEnergy = mapped.requiredEnergy
+}
+
+function onApplyConfig(payload) {
+  if (payload.duration != null) params.duration = payload.duration
+  if (payload.requiredEnergy != null) params.requiredEnergy = payload.requiredEnergy
+  if (payload.initContainerQty != null) params.initContainerQty = payload.initContainerQty
+  if (payload.initPcsQty != null) params.initPcsQty = payload.initPcsQty
+  if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
+  if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
+  showToast('配置已应用', 'success')
+}
+
+function onApplyBatteryPCSConfig(payload) {
+  if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
+  if (payload.containerQty != null) params.initContainerQty = payload.containerQty
+  if (payload.pcsQty != null) params.initPcsQty = payload.pcsQty
+  if (payload.duration != null) params.duration = payload.duration
+  if (payload.cyclesPerDay != null) params.cyclesPerDay = payload.cyclesPerDay
+  showToast('电池PCS配置已应用', 'success')
+}
+
+function onApplyBatteryConfig(payload) {
+  if (payload.ratedEnergy != null) params.ratedEnergy = payload.ratedEnergy
+  if (payload.containerQty != null) params.initContainerQty = payload.containerQty
+  if (payload.dod != null) dod.value = new Array(N).fill(payload.dod)
+  if (payload.cyclesPerDay != null) params.cyclesPerDay = payload.cyclesPerDay
+  if (payload.temperature != null) params.temperature = payload.temperature
+  showToast('直流侧配置已应用', 'success')
+  if (pcsAC.value) {
+    pcsAC.value.setBatteryConfig({
+      totalEnergy: params.ratedEnergy,
+      containerQty: params.initContainerQty,
+    })
+  }
+}
+
+function onApplyPcsConfig(payload) {
+  if (payload.pcsQty != null) params.initPcsQty = payload.pcsQty
+  if (payload.totalPcsPower != null) params.pcsPower = payload.totalPcsPower
+  if (payload.acEfficiency != null) params.acEfficiency = payload.acEfficiency
+  if (payload.pcsAuxRun != null) params.pcsAuxRun = payload.pcsAuxRun
+  if (payload.pcsAuxStandby != null) params.pcsAuxStandby = payload.pcsAuxStandby
+  showToast('交流侧配置已应用', 'success')
+}
+
+function onApplySimulationConfig(payload) {
+  Object.keys(payload).forEach(key => {
+    if (payload[key] != null && params[key] !== undefined) {
+      params[key] = payload[key]
+    }
+  })
+  if (payload.sohCurve) soh.value = payload.sohCurve
+  if (payload.rteCurve) rte.value = payload.rteCurve
+  showToast('仿真参数已应用', 'success')
+}
+
+const currentProjectId = ref('')
+
+const financialData = reactive({
+  totalRevenue: 0,
+  totalCost: 0,
+  netCashflow: 0,
+  npv: 0,
+  irr: 0,
+  paybackYears: 0,
+  lcos: 0,
+})
+
+function onAuthSuccess(user) {
+  showToast(`欢迎 ${user.username}`, 'success')
+}
+
+function loadSurveyData() {
+  try {
+    const currentSurvey = localStorage.getItem('currentSurvey')
+    if (currentSurvey) {
+      const survey = JSON.parse(currentSurvey)
+      if (survey.ratedEnergy) params.ratedEnergy = survey.ratedEnergy
+      if (survey.containerQty) params.initContainerQty = survey.containerQty
+      if (survey.pcsQty) params.initPcsQty = survey.pcsQty
+      if (survey.dischargeHours) params.duration = survey.dischargeHours
+      if (survey.cyclesPerDay) params.cyclesPerDay = survey.cyclesPerDay
+      if (survey.dod) dod.value = new Array(N).fill(survey.dod)
+      if (survey.temperature) params.temperature = survey.temperature
+      if (survey.guaranteeYears) params.guaranteeYears = survey.guaranteeYears
+      currentProjectId.value = survey.id || ''
+      showToast(`已加载调研表: ${survey.projectName}`, 'info')
+    }
+  } catch (e) {
+    console.error('加载调研表失败:', e)
+  }
+}
+
 onMounted(() => {
-  loadUserInfo()
-  loadProjects()
+  loadSurveyData()
+  calculate()
 })
 </script>
+
+<style scoped>
+.tab-btn.dragging {
+  opacity: 0.4;
+}
+
+.tab-btn.drag-over {
+  border-left: 2px solid #2dd4bf;
+  margin-left: -2px;
+}
+</style>

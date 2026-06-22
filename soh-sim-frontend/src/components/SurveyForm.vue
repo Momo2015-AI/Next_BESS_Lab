@@ -168,6 +168,7 @@
       <!-- 提交按钮 -->
       <div class="form-actions">
         <button type="button" class="btn-secondary" @click="resetForm">重置</button>
+        <button type="button" class="btn-secondary" @click="fillTestData">填充测试数据</button>
         <button type="submit" class="btn-primary" :disabled="submitting">
           {{ submitting ? '提交中...' : '提交调研表' }}
         </button>
@@ -192,6 +193,8 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+
+const emit = defineEmits(['error'])
 
 const form = reactive({
   project_name: '',
@@ -230,7 +233,7 @@ const submittedData = ref({})
 
 async function submitForm() {
   if (!form.project_name) {
-    alert('请填写项目名称')
+    emit('error', '请填写项目名称', 'warning')
     return
   }
 
@@ -252,11 +255,11 @@ async function submitForm() {
       showSuccess.value = true
       resetForm()
     } else {
-      alert('提交失败: ' + (result.error || '未知错误'))
+      emit('error', '提交失败: ' + (result.error || '未知错误'), 'error')
     }
   } catch (error) {
     console.error('提交失败:', error)
-    alert('提交失败，请检查网络连接或稍后重试')
+    emit('error', '提交失败，请检查网络连接或稍后重试', 'error')
   } finally {
     submitting.value = false
   }
@@ -298,6 +301,39 @@ function resetForm() {
 function closeSuccess() {
   showSuccess.value = false
 }
+
+function fillTestData() {
+  Object.assign(form, {
+    project_name: '阿布扎比 200MW/400MWh 独立储能电站',
+    contact_person: '张伟',
+    contact_phone: '+86 138-0000-1234',
+    contact_email: 'zhangwei@energypro.com',
+    location: '阿联酋 阿布扎比 Al Dhafra 工业区',
+    altitude: 15,
+    total_mw: 200,
+    total_mwh: 400,
+    duration: 2,
+    cycles_per_day: 1,
+    temp_max: 50,
+    temp_min: 5,
+    temp_avg: 28,
+    humidity: 65,
+    grid_voltage: 132,
+    grid_frequency: 50,
+    rte_target: 92,
+    soh_year1: 97.5,
+    soh_year25: 70,
+    calendar_life: 25,
+    cycle_life: 8000,
+    availability_target: 97,
+    aux_consumption: 1.8,
+    response_time: 100,
+    dc_voltage_range: '1000-1500V',
+    ac_voltage: 380,
+    thdi: 3,
+    remarks: '项目位于沙漠气候区，要求集装箱具备C4以上防腐等级。PCS需满足Masdar级液冷碳化硅方案，支持构网型Grid-Forming功能。预期2027年Q1并网投运。'
+  })
+}
 </script>
 
 <style scoped>
@@ -305,7 +341,8 @@ function closeSuccess() {
   max-width: 900px;
   margin: 0 auto;
   padding: 24px;
-  background: #fff;
+  background: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
 }
 
@@ -313,18 +350,18 @@ function closeSuccess() {
   text-align: center;
   margin-bottom: 32px;
   padding-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--color-border);
 }
 
 .form-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--color-text);
   margin: 0 0 8px 0;
 }
 
 .subtitle {
-  color: #6b7280;
+  color: var(--color-text-muted);
   font-size: 14px;
   margin: 0;
 }
@@ -336,7 +373,7 @@ function closeSuccess() {
 }
 
 .form-section {
-  background: #f9fafb;
+  background: var(--color-bg-secondary);
   border-radius: 12px;
   padding: 24px;
 }
@@ -344,10 +381,10 @@ function closeSuccess() {
 .form-section h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text);
   margin: 0 0 16px 0;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .form-grid {
@@ -374,15 +411,17 @@ function closeSuccess() {
 .form-group label {
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--color-text-secondary);
 }
 
 .form-group input,
 .form-group textarea {
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 14px;
+  background: var(--color-bg);
+  color: var(--color-text);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 

@@ -466,6 +466,8 @@
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 
+const emit = defineEmits(['applyConfig', 'error'])
+
 const steps = [
   { label: '调研表数据' },
   { label: '参数补全' },
@@ -565,7 +567,7 @@ let chartInstance = null
 // 加载调研表数据
 const loadSurveyData = async () => {
   if (!surveyId.value) {
-    alert('请输入调研表ID')
+    emit('error', '请输入调研表ID', 'warning')
     return
   }
   // 模拟从后端加载数据
@@ -575,10 +577,10 @@ const loadSurveyData = async () => {
       const data = await resp.json()
       Object.assign(surveyData, data)
     } else {
-      alert('调研表ID不存在，请手动填写数据')
+      emit('error', '调研表ID不存在，请手动填写数据', 'warning')
     }
   } catch {
-    alert('网络错误，请手动填写数据')
+    emit('error', '网络错误，请手动填写数据', 'error')
   }
 }
 
@@ -729,16 +731,3 @@ onMounted(() => {
   initYearlyCorrections()
 })
 </script>
-
-<style scoped>
-.tab-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  transition: all 0.2s;
-}
-.tab-btn.active {
-  background: rgba(20, 184, 166, 0.2);
-  color: #14b8a6;
-  border: 1px solid rgba(20, 184, 166, 0.3);
-}
-</style>

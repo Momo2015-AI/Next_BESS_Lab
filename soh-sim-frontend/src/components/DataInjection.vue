@@ -1,40 +1,42 @@
 <template>
-  <div class="flex-1 overflow-auto bg-slate-900/80 rounded-xl p-4 border border-slate-800/80 space-y-4">
+  <div class="flex-1 overflow-auto rounded-xl p-4 space-y-4 card">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex flex-col">
-        <span class="text-xs font-bold text-yellow-400 mb-1">SOH 25年衰减序列 (逐行粘贴)</span>
-        <p class="text-[10px] text-slate-500 mb-2">格式：每行一个数值（支持逗号/分号/制表符分隔），不足26位用末位补全</p>
-        <textarea v-model="sohText" class="flex-1 w-full min-h-[200px] bg-slate-900 border border-slate-700 rounded p-2 text-xs font-mono text-yellow-300 focus:outline-none resize-none"
+      <div class="p-3 rounded-lg flex flex-col" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+        <span class="text-xs font-bold mb-1" style="color: #f59e0b;">{{ $t('dataInjection.sohTitle') }}</span>
+        <p class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ $t('dataInjection.sohFormat') }}</p>
+        <textarea v-model="sohText" class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none"
+          style="background: var(--color-input-bg); border: 1px solid var(--color-input-border); color: #f59e0b;"
           placeholder="0.9925&#10;0.9318&#10;0.9014..."></textarea>
         <div class="flex gap-2 mt-2">
-          <button @click="parseSoh" class="flex-1 bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-bold py-1.5 rounded text-xs transition-all">解析推入 SOH</button>
-          <button @click="resetSoh" class="px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 rounded text-xs transition-all">重置默认</button>
+          <button @click="parseSoh" class="flex-1 font-bold py-1.5 rounded text-xs transition-all" style="background: #d97706; color: white;">{{ $t('dataInjection.parseSoh') }}</button>
+          <button @click="resetSoh" class="px-3 py-1.5 rounded text-xs transition-all" style="background: var(--color-bg-secondary); color: var(--color-text-secondary); border: 1px solid var(--color-border);">{{ $t('dataInjection.resetDefault') }}</button>
         </div>
       </div>
-      <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex flex-col">
-        <span class="text-xs font-bold text-sky-400 mb-1">RTE 系统效率序列 (逐行粘贴)</span>
-        <p class="text-[10px] text-slate-500 mb-2">格式：每行一个数值（支持逗号/分号/制表符分隔），不足26位用末位补全</p>
-        <textarea v-model="rteText" class="flex-1 w-full min-h-[200px] bg-slate-900 border border-slate-700 rounded p-2 text-xs font-mono text-sky-300 focus:outline-none resize-none"
+      <div class="p-3 rounded-lg flex flex-col" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+        <span class="text-xs font-bold mb-1" style="color: var(--color-accent-secondary);">{{ $t('dataInjection.rteTitle') }}</span>
+        <p class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ $t('dataInjection.rteFormat') }}</p>
+        <textarea v-model="rteText" class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none"
+          style="background: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent-secondary);"
           placeholder="0.941&#10;0.9384&#10;0.9372..."></textarea>
         <div class="flex gap-2 mt-2">
-          <button @click="parseRte" class="flex-1 bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold py-1.5 rounded text-xs transition-all">解析推入 RTE</button>
-          <button @click="resetRte" class="px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 rounded text-xs transition-all">重置默认</button>
+          <button @click="parseRte" class="flex-1 font-bold py-1.5 rounded text-xs transition-all" style="background: var(--color-accent-secondary); color: white;">{{ $t('dataInjection.parseRte') }}</button>
+          <button @click="resetRte" class="px-3 py-1.5 rounded text-xs transition-all" style="background: var(--color-bg-secondary); color: var(--color-text-secondary); border: 1px solid var(--color-border);">{{ $t('dataInjection.resetDefault') }}</button>
         </div>
       </div>
     </div>
-    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-      <span class="text-xs font-bold text-slate-400">当前 SOH & RTE 序列预览 (Year 0-25)</span>
+    <div class="p-3 rounded-lg" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+      <span class="text-xs font-bold" style="color: var(--color-text-secondary);">{{ $t('dataInjection.currentPreview') }}</span>
       <div class="grid grid-cols-2 gap-4 mt-2 text-[11px] font-mono">
         <div class="overflow-auto max-h-32">
-          <div class="text-yellow-400 font-bold mb-1">SOH:</div>
+          <div class="font-bold mb-1" style="color: #f59e0b;">{{ $t('dataInjection.sohLabel') }}</div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in soh" :key="'s-'+i" class="text-yellow-300/70">{{ 'Y'+i }}:{{ (v*100).toFixed(1) }}%</div>
+            <div v-for="(v, i) in soh" :key="'s-'+i" style="color: #d97706;">{{ 'Y'+i }}:{{ (v*100).toFixed(1) }}%</div>
           </div>
         </div>
         <div class="overflow-auto max-h-32">
-          <div class="text-sky-400 font-bold mb-1">RTE:</div>
+          <div class="font-bold mb-1" style="color: var(--color-accent-secondary);">{{ $t('dataInjection.rteLabel') }}</div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in rte" :key="'r-'+i" class="text-sky-300/70">{{ 'Y'+i }}:{{ (v*100).toFixed(1) }}%</div>
+            <div v-for="(v, i) in rte" :key="'r-'+i" style="color: var(--color-accent-secondary);">{{ 'Y'+i }}:{{ (v*100).toFixed(1) }}%</div>
           </div>
         </div>
       </div>

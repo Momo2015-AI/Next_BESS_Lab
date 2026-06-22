@@ -234,7 +234,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
+
+const emit = defineEmits(['error'])
 
 const activeTab = ref('area')
 const tabs = [
@@ -299,7 +301,12 @@ const bomData = reactive({
   pcsQty: 10,  // 新增pcsQty字段
   pcsCapacity: 50,
   transformerCapacity: 60,
+  pcsQty: 10,
 })
+
+watch(() => bomData.pcsCapacity, (val) => {
+  bomData.pcsQty = Math.ceil(val / 5)
+}, { immediate: true })
 
 let bomResult = ref([])
 

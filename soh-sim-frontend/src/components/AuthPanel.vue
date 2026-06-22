@@ -101,7 +101,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
-const emit = defineEmits(['auth-success'])
+const emit = defineEmits(['auth-success', 'error'])
 
 const isLogin = ref(true)
 const showPassword = ref(false)

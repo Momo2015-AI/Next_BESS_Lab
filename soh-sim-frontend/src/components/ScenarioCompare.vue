@@ -228,6 +228,8 @@ const props = defineProps({
   baseParams: { type: Object, default: () => ({}) },
 })
 
+const emit = defineEmits(['error'])
+
 const scenarios = ref([])
 const selectedScenarioIdx = ref(-1)
 const editingScenario = ref(null)

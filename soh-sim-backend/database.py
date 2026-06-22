@@ -503,6 +503,71 @@ class ProductConfig(db.Model):
     project = db.relationship('Project', back_populates='product_configs')
 
 
+class CellProduct(db.Model):
+    """电芯产品库"""
+    __tablename__ = 'cell_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    chemistry = db.Column(db.String(50))
+    capacity_ah = db.Column(db.Float)
+    voltage_nominal = db.Column(db.Float)
+    voltage_range = db.Column(db.String(100))
+    energy_wh = db.Column(db.Float)
+    cycle_life = db.Column(db.Integer)
+    dimensions = db.Column(db.String(200))
+    weight = db.Column(db.String(100))
+    soh_curve = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class ContainerProduct(db.Model):
+    """集装箱产品库"""
+    __tablename__ = 'container_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    type = db.Column(db.String(100))
+    rated_energy_mwh = db.Column(db.Float)
+    rated_power_mw = db.Column(db.Float)
+    cell_model = db.Column(db.String(200))
+    cell_config = db.Column(db.String(200))
+    dimensions = db.Column(db.String(200))
+    cooling = db.Column(db.String(100))
+    weight = db.Column(db.String(100))
+    cycle_life = db.Column(db.Integer)
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class PcsProduct(db.Model):
+    """PCS变流器产品库"""
+    __tablename__ = 'pcs_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    rated_power_mw = db.Column(db.Float)
+    rated_power_kva = db.Column(db.Float)
+    ac_voltage = db.Column(db.String(100))
+    dc_voltage_range = db.Column(db.String(100))
+    efficiency = db.Column(db.Float)
+    cooling = db.Column(db.String(100))
+    topology = db.Column(db.String(100))
+    isolation = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
 class FormulaConfig(db.Model):
     """算法公式配置模型 - 支持自定义公式"""
     __tablename__ = 'formula_configs'
