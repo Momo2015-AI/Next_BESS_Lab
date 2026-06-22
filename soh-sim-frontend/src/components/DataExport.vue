@@ -1,43 +1,46 @@
 <template>
   <div class="export-panel p-4">
-    <div class="bg-slate-900/60 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         数据导出
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <!-- 导出类型选择 -->
         <div class="space-y-3">
-          <div class="text-xs text-slate-400 mb-2">选择导出内容</div>
+          <div class="text-xs mb-2" style="color: var(--color-text-muted);">选择导出内容</div>
           
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.matrix" class="accent-teal-500">
-            <span class="text-xs text-slate-300">25年生命周期矩阵</span>
+            <input type="checkbox" v-model="exportOptions.matrix" style="accent-color: var(--color-accent-secondary);">
+            <span class="text-xs" style="color: var(--color-text-secondary);">25年生命周期矩阵</span>
           </label>
           
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.soh" class="accent-teal-500">
-            <span class="text-xs text-slate-300">SOH/RTE数据序列</span>
+            <input type="checkbox" v-model="exportOptions.soh" style="accent-color: var(--color-accent-secondary);">
+            <span class="text-xs" style="color: var(--color-text-secondary);">SOH/RTE数据序列</span>
           </label>
           
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.params" class="accent-teal-500">
-            <span class="text-xs text-slate-300">参数配置</span>
+            <input type="checkbox" v-model="exportOptions.params" style="accent-color: var(--color-accent-secondary);">
+            <span class="text-xs" style="color: var(--color-text-secondary);">参数配置</span>
           </label>
           
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.financial" class="accent-teal-500">
-            <span class="text-xs text-slate-300">财务分析数据</span>
+            <input type="checkbox" v-model="exportOptions.financial" style="accent-color: var(--color-accent-secondary);">
+            <span class="text-xs" style="color: var(--color-text-secondary);">财务分析数据</span>
           </label>
         </div>
 
         <!-- 导出操作 -->
         <div class="space-y-3">
-          <div class="text-xs text-slate-400 mb-2">导出格式</div>
+          <div class="text-xs mb-2" style="color: var(--color-text-muted);">导出格式</div>
           
           <button @click="exportCSV" :disabled="exporting"
-            class="w-full bg-teal-500 hover:bg-teal-600 disabled:bg-slate-600 text-white text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }"
+            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
+            onmouseout="if(!this.disabled) this.style.opacity='1';">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
@@ -45,7 +48,10 @@
           </button>
           
           <button @click="exportPNG" :disabled="exporting"
-            class="w-full bg-sky-500 hover:bg-sky-600 disabled:bg-slate-600 text-white text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent)', color: 'white' }"
+            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
+            onmouseout="if(!this.disabled) this.style.opacity='1';">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
@@ -53,7 +59,10 @@
           </button>
           
           <button @click="saveSimulation" :disabled="saving"
-            class="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-slate-600 text-white text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            :style="saving ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
+            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
+            onmouseout="if(!this.disabled) this.style.opacity='1';">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
             </svg>
@@ -63,28 +72,28 @@
       </div>
 
       <!-- 历史仿真记录 -->
-      <div class="mt-4 pt-4 border-t border-slate-700">
+      <div class="mt-4 pt-4 border-t" style="border-color: var(--color-border);">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs text-slate-400">历史仿真记录</span>
-          <button @click="loadSimulations" class="text-xs text-teal-400 hover:text-teal-300">
+          <span class="text-xs" style="color: var(--color-text-muted);">历史仿真记录</span>
+          <button @click="loadSimulations" class="text-xs" style="color: var(--color-accent-secondary);" onmouseover="this.style.color='var(--color-accent)';" onmouseout="this.style.color='var(--color-accent-secondary)';">
             刷新
           </button>
         </div>
         
-        <div v-if="simulations.length === 0" class="text-xs text-slate-500 text-center py-2">
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2" style="color: var(--color-text-muted);">
           暂无保存的仿真记录
         </div>
         
         <div v-else class="space-y-2 max-h-40 overflow-y-auto">
           <div v-for="sim in simulations" :key="sim.id"
-            class="flex items-center justify-between bg-slate-800/50 rounded px-3 py-2 text-xs">
+            class="flex items-center justify-between rounded px-3 py-2 text-xs" style="background-color: var(--color-card-dark);">
             <div>
-              <span class="text-slate-300">{{ sim.name }}</span>
-              <span class="text-slate-500 ml-2">{{ sim.created_at }}</span>
+              <span style="color: var(--color-text-secondary);">{{ sim.name }}</span>
+              <span style="color: var(--color-text-muted);" class="ml-2">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
-              <button @click="loadSimulation(sim.id)" class="text-teal-400 hover:text-teal-300">加载</button>
-              <button @click="exportSimulationCSV(sim.id)" class="text-sky-400 hover:text-sky-300">导出</button>
+              <button @click="loadSimulation(sim.id)" style="color: var(--color-accent-secondary);" onmouseover="this.style.color='var(--color-accent)';" onmouseout="this.style.color='var(--color-accent-secondary)';">加载</button>
+              <button @click="exportSimulationCSV(sim.id)" style="color: var(--color-accent);" onmouseover="this.style.color='var(--color-accent-secondary)';" onmouseout="this.style.color='var(--color-accent)';">导出</button>
             </div>
           </div>
         </div>
@@ -92,9 +101,8 @@
     </div>
 
     <!-- Toast提示 -->
-    <div v-if="toast.show"
-      :class="['fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
-        toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white']">
+    <div v-if="toast.show" class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
+      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } : { backgroundColor: 'var(--color-danger)', color: 'white' }">
       {{ toast.message }}
     </div>
   </div>

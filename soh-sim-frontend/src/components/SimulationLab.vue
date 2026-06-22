@@ -1,117 +1,160 @@
 <template>
   <div class="flex flex-col gap-4 h-full overflow-auto p-4">
-    <div class="flex items-center gap-2 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+    <div class="flex items-center gap-2 p-2 rounded-lg" style="background-color: var(--color-step-bg); border: 1px solid var(--color-step-border);">
       <div v-for="(step, idx) in steps" :key="idx" 
         :class="['flex items-center gap-1 px-3 py-1 rounded text-xs transition-all',
-          currentStep >= idx ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'text-slate-500']">
+          currentStep >= idx ? 'text-teal-400' : 'text-slate-500']"
+        :style="currentStep >= idx ? { backgroundColor: 'var(--color-step-active)', border: '1px solid var(--color-accent)' } : {}">
         <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-          :class="currentStep >= idx ? 'bg-teal-500 text-white' : 'bg-slate-700 text-slate-400'">
+          :style="currentStep >= idx ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-text-muted)', color: 'var(--color-text-light)' }">
           {{ idx + 1 }}
         </span>
         {{ step.label }}
       </div>
     </div>
 
-    <div v-show="currentStep === 0" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div v-show="currentStep === 0" class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent);"></span>
         调研表数据获取
       </h3>
       
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-2">
-          <label class="text-xs text-slate-400">调研表串码ID</label>
+          <label class="text-xs" style="color: var(--color-text-secondary);">调研表串码ID</label>
           <div class="flex gap-2">
             <input v-model="surveyId" type="text" placeholder="输入调研表ID或扫描二维码"
-              class="flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs focus:border-teal-500 focus:outline-none">
+              class="flex-1 rounded px-3 py-1.5 text-xs" 
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
             <button @click="loadSurveyData" 
-              class="bg-teal-500 hover:bg-teal-600 text-white text-xs px-3 py-1.5 rounded transition-all">
+              class="text-xs px-3 py-1.5 rounded transition-all"
+              style="background-color: var(--color-accent); color: white;"
+              onmouseover="this.style.opacity='0.9';"
+              onmouseout="this.style.opacity='1';">
               加载
             </button>
           </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs text-slate-400">项目名称</label>
+          <label class="text-xs" style="color: var(--color-text-secondary);">项目名称</label>
           <input v-model="surveyData.projectName" type="text" placeholder="自动填充或手动输入"
-            class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-3 py-1.5 text-xs" 
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
       </div>
 
       <div class="mt-4 grid grid-cols-3 gap-3">
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">额定能量 (MWh)</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">额定能量 (MWh)</label>
           <input v-model.number="surveyData.ratedEnergy" type="number" step="0.1"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">集装箱数量</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">集装箱数量</label>
           <input v-model.number="surveyData.containerQty" type="number"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">PCS数量</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">PCS数量</label>
           <input v-model.number="surveyData.pcsQty" type="number"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">运行温度 (°C)</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">运行温度 (°C)</label>
           <input v-model.number="surveyData.temperature" type="number" step="0.5"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">每日循环次数</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">每日循环次数</label>
           <input v-model.number="surveyData.cyclesPerDay" type="number" step="0.5"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">DOD (%)</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">DOD (%)</label>
           <input v-model.number="surveyData.dod" type="number" step="1" min="0" max="100"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">倍率 (C)</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">倍率 (C)</label>
           <input v-model.number="surveyData.cRate" type="number" step="0.1" min="0.1" max="2"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">电池类型</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">电池类型</label>
           <select v-model="surveyData.batteryType"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
             <option value="LFP">LFP (磷酸铁锂)</option>
             <option value="NCM">NCM (三元锂)</option>
             <option value="LTO">LTO (钛酸锂)</option>
           </select>
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700">
-          <label class="text-[10px] text-slate-500 block mb-1">项目地点</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">项目地点</label>
           <input v-model="surveyData.location" type="text"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-teal-400 focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-2 py-1 text-xs" 
+            style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-accent);"
+            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
       </div>
 
       <div class="mt-4 flex justify-end">
         <button @click="nextStep" 
-          class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           下一步：补全仿真参数
         </button>
       </div>
     </div>
 
-    <div v-show="currentStep === 1" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div v-show="currentStep === 1" class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent);"></span>
         仿真参数补全
       </h3>
 
       <div class="grid grid-cols-4 gap-3">
-        <div class="col-span-4 bg-slate-800/30 rounded p-3 border border-slate-700">
-          <h4 class="text-xs text-slate-300 mb-2 font-medium">基础配置</h4>
+        <div class="col-span-4 rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">基础配置</h4>
           <div class="grid grid-cols-4 gap-3">
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">仿真年限 (年)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">仿真年限 (年)</label>
               <select v-model.number="simParams.simulationYears" @change="initYearlyCorrections"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="10">10年</option>
                 <option value="15">15年</option>
                 <option value="20">20年</option>
@@ -120,9 +163,12 @@
               </select>
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">最低保障年限 (年)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">最低保障年限 (年)</label>
               <select v-model.number="simParams.guaranteeYears"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="5">5年</option>
                 <option value="10">10年</option>
                 <option value="15">15年</option>
@@ -130,66 +176,96 @@
               </select>
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">保障SOH底线 (%)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">保障SOH底线 (%)</label>
               <input v-model.number="simParams.guaranteeSoh" type="number" step="1" min="60" max="90"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">承诺能量底线 (MWh)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">承诺能量底线 (MWh)</label>
               <input v-model.number="simParams.requiredEnergy" type="number" step="1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
           </div>
         </div>
 
-        <div class="col-span-2 bg-slate-800/30 rounded p-3 border border-slate-700">
-          <h4 class="text-xs text-slate-300 mb-2 font-medium">效率参数</h4>
+        <div class="col-span-2 rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">效率参数</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">初始RTE (%)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">初始RTE (%)</label>
               <input v-model.number="simParams.initRte" type="number" step="0.1" min="85" max="95"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">AC效率 (%)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">AC效率 (%)</label>
               <input v-model.number="simParams.acEfficiency" type="number" step="0.1" min="95" max="99"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">DC效率 (%)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">DC效率 (%)</label>
               <input v-model.number="simParams.dcEfficiency" type="number" step="0.1" min="95" max="99"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">自放电率 (%/月)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">自放电率 (%/月)</label>
               <input v-model.number="simParams.selfDischarge" type="number" step="0.1" min="0" max="5"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
           </div>
         </div>
 
-        <div class="col-span-2 bg-slate-800/30 rounded p-3 border border-slate-700">
-          <h4 class="text-xs text-slate-300 mb-2 font-medium">辅耗参数</h4>
+        <div class="col-span-2 rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">辅耗参数</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">BESS运行辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">BESS运行辅耗 (kW)</label>
               <input v-model.number="simParams.bessAuxRun" type="number" step="0.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">BESS待机辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">BESS待机辅耗 (kW)</label>
               <input v-model.number="simParams.bessAuxStandby" type="number" step="0.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">PCS运行辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">PCS运行辅耗 (kW)</label>
               <input v-model.number="simParams.pcsAuxRun" type="number" step="0.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">PCS待机辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">PCS待机辅耗 (kW)</label>
               <input v-model.number="simParams.pcsAuxStandby" type="number" step="0.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
           </div>
         </div>
@@ -197,132 +273,165 @@
 
       <div class="mt-4 flex justify-between">
         <button @click="prevStep" 
-          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background-color: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border);"
+          onmouseover="this.style.backgroundColor='var(--color-tab-hover)';"
+          onmouseout="this.style.backgroundColor='var(--color-card-dark)';">
           上一步
         </button>
         <button @click="nextStep" 
-          class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           下一步：选择仿真算法
         </button>
       </div>
     </div>
 
-    <div v-show="currentStep === 2" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div v-show="currentStep === 2" class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent);"></span>
         仿真算法选择
       </h3>
 
       <div class="grid grid-cols-3 gap-3">
         <div v-for="algo in algorithms" :key="algo.id"
           @click="selectAlgorithm(algo)"
-          :class="['bg-slate-800/50 rounded-lg p-4 border-2 cursor-pointer transition-all',
-            selectedAlgorithm === algo.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-700 hover:border-slate-500']">
+          class="rounded-lg p-4 border-2 cursor-pointer transition-all"
+          :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-step-active)', borderColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-card-dark)', borderColor: 'var(--color-border)' }">
           <div class="flex items-center gap-2 mb-2">
-            <span :class="['w-4 h-4 rounded-full', selectedAlgorithm === algo.id ? 'bg-teal-500' : 'bg-slate-600']"></span>
-            <h4 class="text-xs font-bold" :class="selectedAlgorithm === algo.id ? 'text-teal-400' : 'text-slate-300'">
+            <span class="w-4 h-4 rounded-full" :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-text-muted)' }"></span>
+            <h4 class="text-xs font-bold" :style="selectedAlgorithm === algo.id ? { color: 'var(--color-accent)' } : { color: 'var(--color-text)' }">
               {{ algo.name }}
             </h4>
           </div>
-          <p class="text-[10px] text-slate-400 mb-2">{{ algo.description }}</p>
-          <div class="text-[10px] text-slate-500">
-            <span class="inline-block bg-slate-700 rounded px-1.5 py-0.5 mr-1">{{ algo.type }}</span>
-            <span class="text-slate-400">精度: {{ algo.accuracy }}</span>
+          <p class="text-[10px] mb-2" style="color: var(--color-text-secondary);">{{ algo.description }}</p>
+          <div class="text-[10px]" style="color: var(--color-text-muted);">
+            <span class="inline-block rounded px-1.5 py-0.5 mr-1" style="background-color: var(--color-card);">{{ algo.type }}</span>
+            <span style="color: var(--color-text-secondary);">精度: {{ algo.accuracy }}</span>
           </div>
-          <div class="mt-2 text-[10px] text-teal-400/80 font-mono truncate">
+          <div class="mt-2 text-[10px] font-mono truncate" style="color: var(--color-accent); opacity: 0.8;">
             {{ algo.mathematical_form }}
           </div>
         </div>
       </div>
 
-      <div v-if="algorithms.length === 0" class="text-center py-8 text-slate-500">
+      <div v-if="algorithms.length === 0" class="text-center py-8" style="color: var(--color-text-muted);">
         <div>暂无算法模型，请先在算法公式试验舱中添加或初始化</div>
       </div>
 
-      <div v-if="selectedAlgoDetail" class="mt-4 bg-slate-800/30 rounded p-3 border border-slate-700">
-        <h4 class="text-xs text-slate-300 mb-2 font-medium">{{ selectedAlgoDetail.name }} 参数</h4>
+      <div v-if="selectedAlgoDetail" class="mt-4 rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+        <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">{{ selectedAlgoDetail.name }} 参数</h4>
         <div class="grid grid-cols-4 gap-3">
           <div v-for="(param, key) in selectedAlgoDetail.parameters" :key="key">
-            <label class="text-[10px] text-slate-500 block mb-1">{{ param.label }} ({{ param.unit || '' }})</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">{{ param.label }} ({{ param.unit || '' }})</label>
             <input v-model.number="algoParams[key]" type="number" 
               :step="param.step || 0.01" 
               :min="param.min" 
               :max="param.max"
-              class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
       </div>
 
       <div class="mt-4 flex justify-between">
         <button @click="prevStep" 
-          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background-color: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border);"
+          onmouseover="this.style.backgroundColor='var(--color-tab-hover)';"
+          onmouseout="this.style.backgroundColor='var(--color-card-dark)';">
           上一步
         </button>
         <button @click="nextStep" 
-          class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           下一步：校正因子设置
         </button>
       </div>
     </div>
 
-    <div v-show="currentStep === 3" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div v-show="currentStep === 3" class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent);"></span>
         手工校正因子设置
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-          <h4 class="text-xs text-slate-300 mb-2 font-medium">全局校正因子</h4>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">全局校正因子</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">SOH校正系数</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">SOH校正系数</label>
               <input v-model.number="correctionFactors.sohFactor" type="number" step="0.01" min="0.9" max="1.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-              <p class="text-[10px] text-slate-500 mt-1">范围: 0.9-1.1，默认1.0</p>
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
+              <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">范围: 0.9-1.1，默认1.0</p>
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">RTE校正系数</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">RTE校正系数</label>
               <input v-model.number="correctionFactors.rteFactor" type="number" step="0.01" min="0.9" max="1.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-              <p class="text-[10px] text-slate-500 mt-1">范围: 0.9-1.1，默认1.0</p>
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
+              <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">范围: 0.9-1.1，默认1.0</p>
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">容量校正系数</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">容量校正系数</label>
               <input v-model.number="correctionFactors.capacityFactor" type="number" step="0.01" min="0.9" max="1.1"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-              <p class="text-[10px] text-slate-500 mt-1">范围: 0.9-1.1，默认1.0</p>
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
+              <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">范围: 0.9-1.1，默认1.0</p>
             </div>
             <div>
-              <label class="text-[10px] text-slate-500 block mb-1">老化加速因子</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">老化加速因子</label>
               <input v-model.number="correctionFactors.agingFactor" type="number" step="0.01" min="1.0" max="1.5"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-teal-500 focus:outline-none">
-              <p class="text-[10px] text-slate-500 mt-1">范围: 1.0-1.5，默认1.0</p>
+                class="w-full rounded px-2 py-1 text-xs" 
+                style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
+              <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">范围: 1.0-1.5，默认1.0</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-          <h4 class="text-xs text-slate-300 mb-2 font-medium">年度校正表（可选）</h4>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">年度校正表（可选）</h4>
           <div class="overflow-auto max-h-40">
             <table class="w-full text-[10px]">
-              <thead class="text-slate-500">
-                <tr>
+              <thead>
+                <tr style="color: var(--color-text-muted);">
                   <th class="py-1 px-2 text-left">年份</th>
                   <th class="py-1 px-2 text-left">SOH校正</th>
                   <th class="py-1 px-2 text-left">RTE校正</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(row, idx) in yearlyCorrections" :key="idx" class="border-t border-slate-700">
-                  <td class="py-1 px-2 text-slate-400">{{ row.year }}</td>
+                <tr v-for="(row, idx) in yearlyCorrections" :key="idx" style="border-top: 1px solid var(--color-border);">
+                  <td class="py-1 px-2" style="color: var(--color-text-secondary);">{{ row.year }}</td>
                   <td class="py-1 px-2">
                     <input v-model.number="row.sohCorrection" type="number" step="0.001"
-                      class="w-16 bg-slate-900 border border-slate-600 rounded px-1 py-0.5 text-xs focus:border-teal-500 focus:outline-none">
+                      class="w-16 rounded px-1 py-0.5 text-xs" 
+                      style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                      onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                      onblur="this.style.borderColor='var(--color-input-border)';">
                   </td>
                   <td class="py-1 px-2">
                     <input v-model.number="row.rteCorrection" type="number" step="0.001"
-                      class="w-16 bg-slate-900 border border-slate-600 rounded px-1 py-0.5 text-xs focus:border-teal-500 focus:outline-none">
+                      class="w-16 rounded px-1 py-0.5 text-xs" 
+                      style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+                      onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+                      onblur="this.style.borderColor='var(--color-input-border)';">
                   </td>
                 </tr>
               </tbody>
@@ -331,9 +440,9 @@
         </div>
       </div>
 
-      <div class="mt-3 bg-slate-800/20 rounded p-2 border border-slate-700 text-[10px] text-slate-400">
-        <p><strong class="text-slate-300">校正因子说明：</strong></p>
-        <ul class="list-disc list-inside mt-1 space-y-0.5">
+      <div class="mt-3 rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+        <p style="color: var(--color-text-secondary); font-size: 10px;"><strong style="color: var(--color-text);">校正因子说明：</strong></p>
+        <ul class="list-disc list-inside mt-1 space-y-0.5" style="font-size: 10px; color: var(--color-text-secondary);">
           <li>校正系数 > 1 表示增加衰减（保守估计）</li>
           <li>校正系数 < 1 表示减少衰减（乐观估计）</li>
           <li>年度校正可针对特定年份进行精细调整</li>
@@ -343,60 +452,67 @@
 
       <div class="mt-4 flex justify-between">
         <button @click="prevStep" 
-          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background-color: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border);"
+          onmouseover="this.style.backgroundColor='var(--color-tab-hover)';"
+          onmouseout="this.style.backgroundColor='var(--color-card-dark)';">
           上一步
         </button>
         <button @click="runSimulation" :disabled="!selectedAlgorithm"
-          class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-600 disabled:to-slate-700 text-white text-xs px-6 py-2 rounded font-bold transition-all shadow-md">
+          class="text-xs px-6 py-2 rounded font-bold transition-all"
+          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }">
           执行仿真计算
         </button>
       </div>
     </div>
 
-    <div v-show="currentStep === 4" class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
+    <div v-show="currentStep === 4" class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
       <div class="flex justify-between items-center mb-3">
-        <h3 class="text-sm font-bold text-teal-400 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+        <h3 class="text-sm font-bold flex items-center gap-2" style="color: var(--color-accent);">
+          <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent);"></span>
           仿真结果
         </h3>
         <button @click="saveSimulationResult" 
-          class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1">
+          class="text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1"
+          style="background-color: var(--color-info); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           <span>💾</span> 保存结果
         </button>
       </div>
 
       <div class="grid grid-cols-4 gap-3 mb-4">
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700 text-center">
-          <p class="text-[10px] text-slate-500">初始SOH</p>
-          <p class="text-lg font-bold text-teal-400">{{ simulationResults.initSoh?.toFixed(2) || '--' }}%</p>
+        <div class="rounded p-3 text-center" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p class="text-[10px]" style="color: var(--color-text-muted);">初始SOH</p>
+          <p class="text-lg font-bold" style="color: var(--color-accent);">{{ simulationResults.initSoh?.toFixed(2) || '--' }}%</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700 text-center">
-          <p class="text-[10px] text-slate-500">保障年限末SOH</p>
-          <p class="text-lg font-bold" :class="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? 'text-emerald-400' : 'text-red-400'">
+        <div class="rounded p-3 text-center" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p class="text-[10px]" style="color: var(--color-text-muted);">保障年限末SOH</p>
+          <p class="text-lg font-bold" :style="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }">
             {{ simulationResults.guaranteeEndSoh?.toFixed(2) || '--' }}%
           </p>
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700 text-center">
-          <p class="text-[10px] text-slate-500">仿真年限末SOH</p>
-          <p class="text-lg font-bold text-sky-400">{{ simulationResults.finalSoh?.toFixed(2) || '--' }}%</p>
+        <div class="rounded p-3 text-center" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p class="text-[10px]" style="color: var(--color-text-muted);">仿真年限末SOH</p>
+          <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ simulationResults.finalSoh?.toFixed(2) || '--' }}%</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-3 border border-slate-700 text-center">
-          <p class="text-[10px] text-slate-500">保障判定</p>
-          <p class="text-lg font-bold" :class="simulationResults.meetsGuarantee ? 'text-emerald-400' : 'text-red-400'">
+        <div class="rounded p-3 text-center" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p class="text-[10px]" style="color: var(--color-text-muted);">保障判定</p>
+          <p class="text-lg font-bold" :style="simulationResults.meetsGuarantee ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }">
             {{ simulationResults.meetsGuarantee ? '达标' : '未达标' }}
           </p>
         </div>
       </div>
 
-      <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-        <h4 class="text-xs text-slate-300 mb-2 font-medium">SOH衰减曲线</h4>
+      <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+        <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text);">SOH衰减曲线</h4>
         <div ref="chartContainer" class="h-48"></div>
       </div>
 
-      <div class="mt-3 bg-slate-800/30 rounded p-3 border border-slate-700 overflow-auto max-h-32">
+      <div class="mt-3 rounded p-3 overflow-auto max-h-32" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
         <table class="w-full text-[10px]">
-          <thead class="text-slate-500">
-            <tr>
+          <thead>
+            <tr style="color: var(--color-text-muted);">
               <th class="py-1 px-2 text-left">年份</th>
               <th class="py-1 px-2 text-left">SOH (%)</th>
               <th class="py-1 px-2 text-left">RTE (%)</th>
@@ -406,12 +522,12 @@
           </thead>
           <tbody>
             <tr v-for="(row, idx) in simulationResults.tableData" :key="idx" 
-              :class="['border-t border-slate-700', row.meetsReq ? '' : 'bg-red-500/10']">
-              <td class="py-1 px-2 text-slate-400">{{ row.year }}</td>
-              <td class="py-1 px-2 text-teal-400">{{ row.soh.toFixed(2) }}</td>
-              <td class="py-1 px-2 text-sky-400">{{ row.rte.toFixed(2) }}</td>
-              <td class="py-1 px-2 text-emerald-400">{{ row.netAvail.toFixed(1) }}</td>
-              <td class="py-1 px-2" :class="row.meetsReq ? 'text-emerald-400' : 'text-red-400'">
+              :style="[{ borderTop: '1px solid var(--color-border)' }, row.meetsReq ? {} : { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]">
+              <td class="py-1 px-2" style="color: var(--color-text-secondary);">{{ row.year }}</td>
+              <td class="py-1 px-2" style="color: var(--color-accent);">{{ row.soh.toFixed(2) }}</td>
+              <td class="py-1 px-2" style="color: var(--color-accent-secondary);">{{ row.rte.toFixed(2) }}</td>
+              <td class="py-1 px-2" style="color: var(--color-success);">{{ row.netAvail.toFixed(1) }}</td>
+              <td class="py-1 px-2" :style="row.meetsReq ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }">
                 {{ row.meetsReq ? '达标' : '未达标' }}
               </td>
             </tr>
@@ -421,11 +537,17 @@
 
       <div class="mt-4 flex justify-between">
         <button @click="resetSimulation" 
-          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background-color: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border);"
+          onmouseover="this.style.backgroundColor='var(--color-tab-hover)';"
+          onmouseout="this.style.backgroundColor='var(--color-card-dark)';">
           重新仿真
         </button>
         <button @click="exportResults" 
-          class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs px-4 py-2 rounded transition-all">
+          class="text-xs px-4 py-2 rounded transition-all"
+          style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           导出结果
         </button>
       </div>
@@ -719,17 +841,22 @@ const renderChart = () => {
   chartInstance = echarts.init(chartContainer.value)
   
   const years = Array.from({ length: simulationResults.sohCurve.length }, (_, i) => i)
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+  const textColor = isDark ? '#94a3b8' : '#64748b'
+  const accentColor = isDark ? '#2dd4bf' : '#3b82f6'
+  const secondaryColor = isDark ? '#38bdf8' : '#06b6d4'
+  const warningColor = '#f59e0b'
   
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { data: ['SOH', 'RTE', '保障线'], top: 0, textStyle: { color: '#94a3b8', fontSize: 10 } },
+    legend: { data: ['SOH', 'RTE', '保障线'], top: 0, textStyle: { color: textColor, fontSize: 10 } },
     grid: { left: 40, right: 20, top: 30, bottom: 20 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: '#64748b', fontSize: 10 } },
-    yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: '#64748b', fontSize: 10 } },
+    xAxis: { type: 'category', data: years, axisLabel: { color: textColor, fontSize: 10 } },
+    yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: textColor, fontSize: 10 } },
     series: [
-      { name: 'SOH', type: 'line', data: simulationResults.sohCurve, smooth: true, lineStyle: { color: '#14b8a6' }, itemStyle: { color: '#14b8a6' } },
-      { name: 'RTE', type: 'line', data: simulationResults.rteCurve, smooth: true, lineStyle: { color: '#0ea5e9' }, itemStyle: { color: '#0ea5e9' } },
-      { name: '保障线', type: 'line', data: Array.from({ length: years.length }, () => simParams.guaranteeSoh), lineStyle: { color: '#f59e0b', type: 'dashed' }, itemStyle: { color: '#f59e0b' } },
+      { name: 'SOH', type: 'line', data: simulationResults.sohCurve, smooth: true, lineStyle: { color: accentColor }, itemStyle: { color: accentColor } },
+      { name: 'RTE', type: 'line', data: simulationResults.rteCurve, smooth: true, lineStyle: { color: secondaryColor }, itemStyle: { color: secondaryColor } },
+      { name: '保障线', type: 'line', data: Array.from({ length: years.length }, () => simParams.guaranteeSoh), lineStyle: { color: warningColor, type: 'dashed' }, itemStyle: { color: warningColor } },
     ],
   })
 }
@@ -827,7 +954,4 @@ const exportResults = () => {
 }
 
 onMounted(() => {
-  initYearlyCorrections()
-  fetchAlgorithms()
-})
-</script>
+  initYearly

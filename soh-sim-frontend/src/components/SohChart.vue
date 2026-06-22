@@ -16,46 +16,46 @@
     </template>
 
     <template v-if="activeChart === 'soh'">
-      <div ref="sohChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
-    </template>
+    <div ref="sohChartRef" class="flex-1 min-h-0 w-full rounded-xl" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);"></div>
+  </template>
 
-    <template v-if="activeChart === 'rte'">
-      <div ref="rteChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
-    </template>
+  <template v-if="activeChart === 'rte'">
+    <div ref="rteChartRef" class="flex-1 min-h-0 w-full rounded-xl" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);"></div>
+  </template>
 
-    <template v-if="activeChart === 'acusable'">
-      <div ref="acChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
-      <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-teal-500 rounded-sm"></span> 存量净可用</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-pink-500 rounded-sm"></span> 补容净可用</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-amber-500 rounded-sm"></span> 承诺底线</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-sky-500 rounded-sm"></span> 总输出</div>
-      </div>
-    </template>
+  <template v-if="activeChart === 'acusable'">
+    <div ref="acChartRef" class="flex-1 min-h-0 w-full rounded-xl" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);"></div>
+    <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent);"></span> 存量净可用</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: #f472b6;"></span> 补容净可用</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-warning);"></span> 承诺底线</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent-secondary);"></span> 总输出</div>
+    </div>
+  </template>
 
-    <template v-if="activeChart === 'stacked'">
-      <div ref="stackedChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
-      <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-teal-500 rounded-sm"></span> 存量净可用</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-pink-500 rounded-sm"></span> 补容净可用</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-rose-500 rounded-sm"></span> 存量自辅耗</div>
-        <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-orange-500 rounded-sm"></span> 补容自辅耗</div>
-      </div>
-    </template>
+  <template v-if="activeChart === 'stacked'">
+    <div ref="stackedChartRef" class="flex-1 min-h-0 w-full rounded-xl" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);"></div>
+    <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent);"></span> 存量净可用</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: #ec4899;"></span> 补容净可用</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-danger);"></span> 存量自辅耗</div>
+      <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary);"><span class="inline-block w-3 h-3 rounded-sm" style="background-color: #ea580c;"></span> 补容自辅耗</div>
+    </div>
+  </template>
 
-    <template v-if="activeChart === 'degradation'">
-      <div ref="degradationChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
-    </template>
+  <template v-if="activeChart === 'degradation'">
+    <div ref="degradationChartRef" class="flex-1 min-h-0 w-full rounded-xl" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);"></div>
+  </template>
 
-    <template v-if="activeChart === 'dashboard'">
-      <div class="flex-1 min-h-0 overflow-auto">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-          <div v-for="m in metrics" :key="m.label" class="bg-slate-900/80 rounded-xl p-3 border border-slate-800/80 text-center">
-            <div class="text-[10px] text-slate-400 mb-1">{{ m.label }}</div>
-            <div :class="['text-lg font-bold font-mono', m.color]">{{ m.value }}</div>
-            <div class="text-[10px] text-slate-500 mt-0.5">{{ m.sub }}</div>
-          </div>
+  <template v-if="activeChart === 'dashboard'">
+    <div class="flex-1 min-h-0 overflow-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+        <div v-for="m in metrics" :key="m.label" class="rounded-xl p-3 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <div class="text-[10px] mb-1" style="color: var(--color-text-muted);">{{ m.label }}</div>
+          <div :class="['text-lg font-bold font-mono', m.color]">{{ m.value }}</div>
+          <div class="text-[10px] mt-0.5" style="color: var(--color-text-muted);">{{ m.sub }}</div>
         </div>
+      </div>
         <div ref="dashChartRef" class="w-full" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); height:300px"></div>
       </div>
     </template>
@@ -94,11 +94,29 @@ let stackedChart = null
 let degradationChart = null
 let dashChart = null
 
-const darkTheme = computed(() => {
+const chartColors = computed(() => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   return {
     textStyle: { color: isDark ? '#94a3b8' : '#64748b' },
     backgroundColor: 'transparent',
+    axisLabel: isDark ? '#64748b' : '#64748b',
+    legendText: isDark ? '#94a3b8' : '#64748b',
+    titleText: isDark ? '#facc15' : '#f59e0b',
+    sohLine: isDark ? '#facc15' : '#f59e0b',
+    rteLine: isDark ? '#38bdf8' : '#0ea5e9',
+    acLine: isDark ? '#2dd4bf' : '#14b8a6',
+    augLine: isDark ? '#f472b6' : '#ec4899',
+    totalLine: isDark ? '#38bdf8' : '#0ea5e9',
+    reqLine: isDark ? '#f59e0b' : '#f59e0b',
+    initAux: isDark ? '#e11d48' : '#dc2626',
+    augAux: isDark ? '#ea580c' : '#f97316',
+    initAc: isDark ? '#14b8a6' : '#14b8a6',
+    augAc: isDark ? '#ec4899' : '#ec4899',
+    degradation: isDark ? '#fb923c' : '#f97316',
+    dashboard: isDark ? '#c084fc' : '#8b5cf6',
+    success: isDark ? '#10b981' : '#10b981',
+    danger: isDark ? '#ef4444' : '#ef4444',
+    warning: isDark ? '#f59e0b' : '#f59e0b',
   }
 })
 
@@ -129,21 +147,22 @@ function disposeAll() {
 function createSohChart() {
   if (!sohChartRef.value) return
   if (sohChart) sohChart.dispose()
-  sohChart = echarts.init(sohChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  sohChart = echarts.init(sohChartRef.value, colors)
   const sohPercent = (props.soh || []).map(v => (v * 100).toFixed(2))
   sohChart.setOption({
-    title: { text: t('sohChart.sohCurve'), left: 'center', textStyle: { color: '#facc15', fontSize: 12 } },
+    title: { text: t('sohChart.sohCurve'), left: 'center', textStyle: { color: colors.titleText, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
     grid: { top: 35, right: 20, bottom: 30, left: 55 },
-    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: '#64748b', fontSize: 10 } },
-    yAxis: { type: 'value', min: 50, max: 105, axisLabel: { color: '#64748b', fontSize: 10, formatter: v => v.toFixed(0) + '%' } },
+    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+    yAxis: { type: 'value', min: 50, max: 105, axisLabel: { color: colors.axisLabel, fontSize: 10, formatter: v => v.toFixed(0) + '%' } },
     series: [{
       type: 'line', data: sohPercent, smooth: true, symbol: 'circle', symbolSize: 5,
-      lineStyle: { color: '#facc15', width: 2 }, itemStyle: { color: '#facc15' },
+      lineStyle: { color: colors.sohLine, width: 2 }, itemStyle: { color: colors.sohLine },
       areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: 'rgba(250,204,21,0.3)' }, { offset: 1, color: 'rgba(250,204,21,0)' }
+        { offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(250,204,21,0.3)' : 'rgba(245,158,11,0.2)' }, { offset: 1, color: 'transparent' }
       ])},
-      markLine: { silent: true, symbol: 'none', data: [{ yAxis: 70, label: { formatter: 'EOL=70%', color: '#ef4444', fontSize: 10 }, lineStyle: { color: '#ef4444', type: 'dashed' } }] },
+      markLine: { silent: true, symbol: 'none', data: [{ yAxis: 70, label: { formatter: 'EOL=70%', color: colors.danger, fontSize: 10 }, lineStyle: { color: colors.danger, type: 'dashed' } }] },
     }],
   })
   sohChart.resize()
@@ -152,19 +171,20 @@ function createSohChart() {
 function createRteChart() {
   if (!rteChartRef.value) return
   if (rteChart) rteChart.dispose()
-  rteChart = echarts.init(rteChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  rteChart = echarts.init(rteChartRef.value, colors)
   const rtePercent = (props.rte || []).map(v => (v * 100).toFixed(2))
   rteChart.setOption({
-    title: { text: t('sohChart.rteCurve'), left: 'center', textStyle: { color: '#38bdf8', fontSize: 12 } },
+    title: { text: t('sohChart.rteCurve'), left: 'center', textStyle: { color: colors.rteLine, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
     grid: { top: 35, right: 20, bottom: 30, left: 55 },
-    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: '#64748b', fontSize: 10 } },
-    yAxis: { type: 'value', axisLabel: { color: '#64748b', fontSize: 10, formatter: v => v.toFixed(1) + '%' } },
+    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+    yAxis: { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 10, formatter: v => v.toFixed(1) + '%' } },
     series: [{
       type: 'line', data: rtePercent, smooth: true, symbol: 'circle', symbolSize: 5,
-      lineStyle: { color: '#38bdf8', width: 2 }, itemStyle: { color: '#38bdf8' },
+      lineStyle: { color: colors.rteLine, width: 2 }, itemStyle: { color: colors.rteLine },
       areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: 'rgba(56,189,248,0.3)' }, { offset: 1, color: 'rgba(56,189,248,0)' }
+        { offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(56,189,248,0.3)' : 'rgba(14,165,233,0.2)' }, { offset: 1, color: 'transparent' }
       ])},
     }],
   })
@@ -174,37 +194,38 @@ function createRteChart() {
 function createAcChart() {
   if (!acChartRef.value) return
   if (acChart) acChart.dispose()
-  acChart = echarts.init(acChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  acChart = echarts.init(acChartRef.value, colors)
   const required = new Array(26).fill(props.requiredEnergy || 240)
   acChart.setOption({
-    title: { text: t('sohChart.acUsable'), left: 10, textStyle: { color: '#2dd4bf', fontSize: 12 } },
+    title: { text: t('sohChart.acUsable'), left: 10, textStyle: { color: colors.acLine, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
-    legend: { data: [t('sohChart.initNetAc'), t('sohChart.augNetAc'), t('sohChart.totalOutput'), t('sohChart.reqThreshold')], top: 2, right: 10, textStyle: { color: '#94a3b8', fontSize: 10 } },
+    legend: { data: [t('sohChart.initNetAc'), t('sohChart.augNetAc'), t('sohChart.totalOutput'), t('sohChart.reqThreshold')], top: 2, right: 10, textStyle: { color: colors.legendText, fontSize: 10 } },
     grid: { top: 40, right: 20, bottom: 30, left: 65 },
-    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: '#64748b', fontSize: 10 } },
-    yAxis: { type: 'value', axisLabel: { color: '#64748b', fontSize: 10, formatter: v => v.toFixed(0) } },
+    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+    yAxis: { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 10, formatter: v => v.toFixed(0) } },
     series: [
       {
         name: t('sohChart.initNetAc'), type: 'line', data: props.results.initAcUsable, smooth: true,
-        symbol: 'circle', symbolSize: 5, lineStyle: { color: '#2dd4bf', width: 2 }, itemStyle: { color: '#2dd4bf' },
+        symbol: 'circle', symbolSize: 5, lineStyle: { color: colors.acLine, width: 2 }, itemStyle: { color: colors.acLine },
         areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(45,212,191,0.25)' }, { offset: 1, color: 'rgba(45,212,191,0)' }
+          { offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(45,212,191,0.25)' : 'rgba(20,184,166,0.2)' }, { offset: 1, color: 'transparent' }
         ])},
       },
       {
         name: t('sohChart.augNetAc'), type: 'line', data: props.results.augAcUsable, smooth: true,
-        symbol: 'diamond', symbolSize: 5, lineStyle: { color: '#f472b6', width: 2 }, itemStyle: { color: '#f472b6' },
+        symbol: 'diamond', symbolSize: 5, lineStyle: { color: colors.augLine, width: 2 }, itemStyle: { color: colors.augLine },
         areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(244,114,182,0.2)' }, { offset: 1, color: 'rgba(244,114,182,0)' }
+          { offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(244,114,182,0.2)' : 'rgba(236,72,153,0.15)' }, { offset: 1, color: 'transparent' }
         ])},
       },
       {
         name: t('sohChart.totalOutput'), type: 'line', data: props.results.totalAcUsable, smooth: true,
-        symbol: 'triangle', symbolSize: 6, lineStyle: { color: '#38bdf8', width: 2.5 }, itemStyle: { color: '#38bdf8' },
+        symbol: 'triangle', symbolSize: 6, lineStyle: { color: colors.totalLine, width: 2.5 }, itemStyle: { color: colors.totalLine },
       },
       {
         name: t('sohChart.reqThreshold'), type: 'line', data: required, step: 'start',
-        symbol: 'none', lineStyle: { color: '#f59e0b', width: 1.5, type: 'dashed' },
+        symbol: 'none', lineStyle: { color: colors.reqLine, width: 1.5, type: 'dashed' },
       },
     ],
   })
@@ -214,30 +235,31 @@ function createAcChart() {
 function createStackedChart() {
   if (!stackedChartRef.value) return
   if (stackedChart) stackedChart.dispose()
-  stackedChart = echarts.init(stackedChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  stackedChart = echarts.init(stackedChartRef.value, colors)
   stackedChart.setOption({
-    title: { text: t('sohChart.stacked'), left: 10, textStyle: { color: '#c084fc', fontSize: 12 } },
+    title: { text: t('sohChart.stacked'), left: 10, textStyle: { color: colors.dashboard, fontSize: 12 } },
     tooltip: { trigger: 'axis', valueFormatter: v => v?.toFixed(2) + ' MWh' },
-    legend: { data: [t('sohChart.initNetAc'), t('sohChart.augNetAc'), t('sohChart.initAux'), t('sohChart.augAux')], top: 2, right: 10, textStyle: { color: '#94a3b8', fontSize: 10 } },
+    legend: { data: [t('sohChart.initNetAc'), t('sohChart.augNetAc'), t('sohChart.initAux'), t('sohChart.augAux')], top: 2, right: 10, textStyle: { color: colors.legendText, fontSize: 10 } },
     grid: { top: 40, right: 20, bottom: 30, left: 65 },
-    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: '#64748b', fontSize: 10 } },
-    yAxis: { type: 'value', axisLabel: { color: '#64748b', fontSize: 10, formatter: v => v.toFixed(0) } },
+    xAxis: { type: 'category', data: years, name: t('matrixTable.year'), axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+    yAxis: { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 10, formatter: v => v.toFixed(0) } },
     series: [
       {
         name: t('sohChart.initAux'), type: 'bar', stack: 'total', data: props.results.initAux,
-        itemStyle: { color: '#e11d48', borderRadius: [0, 0, 0, 0] }, barWidth: '60%',
+        itemStyle: { color: colors.initAux, borderRadius: [0, 0, 0, 0] }, barWidth: '60%',
       },
       {
         name: t('sohChart.augAux'), type: 'bar', stack: 'total', data: props.results.augAux,
-        itemStyle: { color: '#ea580c', borderRadius: [0, 0, 0, 0] },
+        itemStyle: { color: colors.augAux, borderRadius: [0, 0, 0, 0] },
       },
       {
         name: t('sohChart.initNetAc'), type: 'bar', stack: 'total', data: props.results.initAcUsable,
-        itemStyle: { color: '#14b8a6', borderRadius: [0, 0, 0, 0] },
+        itemStyle: { color: colors.initAc, borderRadius: [0, 0, 0, 0] },
       },
       {
         name: t('sohChart.augNetAc'), type: 'bar', stack: 'total', data: props.results.augAcUsable,
-        itemStyle: { color: '#ec4899', borderRadius: [3, 3, 0, 0] },
+        itemStyle: { color: colors.augAc, borderRadius: [3, 3, 0, 0] },
       },
     ],
   })
@@ -247,32 +269,34 @@ function createStackedChart() {
 function createDegradationChart() {
   if (!degradationChartRef.value) return
   if (degradationChart) degradationChart.dispose()
-  degradationChart = echarts.init(degradationChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  degradationChart = echarts.init(degradationChartRef.value, colors)
   const s = props.soh || []
   const r = props.rte || []
   const sohDelta = s.map((v, i) => i === 0 ? 0 : ((s[i-1] - v) * 100).toFixed(2))
   const rteDelta = r.map((v, i) => i === 0 ? 0 : ((r[i-1] - v) * 100).toFixed(4))
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   degradationChart.setOption({
-    title: { text: t('sohChart.degradation'), left: 10, textStyle: { color: '#fb923c', fontSize: 12 } },
+    title: { text: t('sohChart.degradation'), left: 10, textStyle: { color: colors.degradation, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
-    legend: { data: [t('matrixTable.soh'), t('matrixTable.rte')], top: 2, right: 10, textStyle: { color: '#94a3b8', fontSize: 10 } },
+    legend: { data: [t('matrixTable.soh'), t('matrixTable.rte')], top: 2, right: 10, textStyle: { color: colors.legendText, fontSize: 10 } },
     grid: { top: 40, right: 20, bottom: 30, left: 55 },
-    xAxis: { type: 'category', data: years, name: 'Year', axisLabel: { color: '#64748b', fontSize: 10 } },
+    xAxis: { type: 'category', data: years, name: 'Year', axisLabel: { color: colors.axisLabel, fontSize: 10 } },
     yAxis: [
-      { type: 'value', name: 'SOH Δ%', nameTextStyle: { color: '#facc15', fontSize: 10 }, axisLabel: { color: '#64748b', fontSize: 10 } },
-      { type: 'value', name: 'RTE Δ%', nameTextStyle: { color: '#38bdf8', fontSize: 10 }, axisLabel: { color: '#64748b', fontSize: 10 } },
+      { type: 'value', name: 'SOH Δ%', nameTextStyle: { color: colors.sohLine, fontSize: 10 }, axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+      { type: 'value', name: 'RTE Δ%', nameTextStyle: { color: colors.rteLine, fontSize: 10 }, axisLabel: { color: colors.axisLabel, fontSize: 10 } },
     ],
     series: [
       {
         name: t('matrixTable.soh'), type: 'bar', data: sohDelta, yAxisIndex: 0,
         itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: '#facc15' }, { offset: 1, color: '#b45309' }
+          { offset: 0, color: colors.sohLine }, { offset: 1, color: isDark ? '#b45309' : '#d97706' }
         ])}, barWidth: '50%',
-        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 2, label: { formatter: '2%/yr', color: '#f59e0b' }, lineStyle: { color: '#f59e0b', type: 'dashed' } }] },
+        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 2, label: { formatter: '2%/yr', color: colors.warning }, lineStyle: { color: colors.warning, type: 'dashed' } }] },
       },
       {
         name: t('matrixTable.rte'), type: 'line', data: rteDelta, yAxisIndex: 1, smooth: true,
-        symbol: 'circle', symbolSize: 5, lineStyle: { color: '#38bdf8', width: 2 }, itemStyle: { color: '#38bdf8' },
+        symbol: 'circle', symbolSize: 5, lineStyle: { color: colors.rteLine, width: 2 }, itemStyle: { color: colors.rteLine },
       },
     ],
   })
@@ -282,34 +306,35 @@ function createDegradationChart() {
 function createDashboardChart() {
   if (!dashChartRef.value) return
   if (dashChart) dashChart.dispose()
-  dashChart = echarts.init(dashChartRef.value, darkTheme.value)
+  const colors = chartColors.value
+  dashChart = echarts.init(dashChartRef.value, colors)
   const s = (props.soh || []).map(v => v * 100)
   const total = props.results.totalAcUsable || []
   const req = props.requiredEnergy || 240
   const statusData = (props.results.meetsReq || []).map((v, i) => ({
     value: [i, v ? 1 : 0],
-    itemStyle: { color: v ? '#10b981' : '#ef4444' }
+    itemStyle: { color: v ? colors.success : colors.danger }
   }))
   dashChart.setOption({
-    title: { text: t('sohChart.dashboard'), left: 10, textStyle: { color: '#c084fc', fontSize: 12 } },
+    title: { text: t('sohChart.dashboard'), left: 10, textStyle: { color: colors.dashboard, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
-    legend: { data: [t('matrixTable.soh'), t('matrixTable.totalNetAc'), t('matrixTable.meetsReq')], top: 2, right: 10, textStyle: { color: '#94a3b8', fontSize: 10 } },
+    legend: { data: [t('matrixTable.soh'), t('matrixTable.totalNetAc'), t('matrixTable.meetsReq')], top: 2, right: 10, textStyle: { color: colors.legendText, fontSize: 10 } },
     grid: { top: 40, right: 20, bottom: 30, left: 55 },
-    xAxis: { type: 'category', data: years, name: 'Year', axisLabel: { color: '#64748b', fontSize: 10 } },
+    xAxis: { type: 'category', data: years, name: 'Year', axisLabel: { color: colors.axisLabel, fontSize: 10 } },
     yAxis: [
-      { type: 'value', name: 'SOH%', min: 50, max: 105, nameTextStyle: { color: '#facc15', fontSize: 10 }, axisLabel: { color: '#64748b', fontSize: 10 } },
-      { type: 'value', name: 'MWh', nameTextStyle: { color: '#38bdf8', fontSize: 10 }, axisLabel: { color: '#64748b', fontSize: 10 } },
+      { type: 'value', name: 'SOH%', min: 50, max: 105, nameTextStyle: { color: colors.sohLine, fontSize: 10 }, axisLabel: { color: colors.axisLabel, fontSize: 10 } },
+      { type: 'value', name: 'MWh', nameTextStyle: { color: colors.rteLine, fontSize: 10 }, axisLabel: { color: colors.axisLabel, fontSize: 10 } },
     ],
     series: [
       {
         name: t('matrixTable.soh'), type: 'line', data: s, smooth: true, yAxisIndex: 0,
-        symbol: 'circle', symbolSize: 4, lineStyle: { color: '#facc15', width: 1.5 }, itemStyle: { color: '#facc15' },
-        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 70, label: { formatter: 'EOL', color: '#ef4444', fontSize: 10 }, lineStyle: { color: '#ef4444', type: 'dashed' } }] },
+        symbol: 'circle', symbolSize: 4, lineStyle: { color: colors.sohLine, width: 1.5 }, itemStyle: { color: colors.sohLine },
+        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 70, label: { formatter: 'EOL', color: colors.danger, fontSize: 10 }, lineStyle: { color: colors.danger, type: 'dashed' } }] },
       },
       {
         name: t('matrixTable.totalNetAc'), type: 'line', data: total, smooth: true, yAxisIndex: 1,
-        symbol: 'diamond', symbolSize: 5, lineStyle: { color: '#38bdf8', width: 2 }, itemStyle: { color: '#38bdf8' },
-        markLine: { silent: true, symbol: 'none', data: [{ yAxis: req, label: { formatter: t('sohChart.reqThreshold') + '=' + req, color: '#f59e0b', fontSize: 10 }, lineStyle: { color: '#f59e0b', type: 'dashed' } }] },
+        symbol: 'diamond', symbolSize: 5, lineStyle: { color: colors.rteLine, width: 2 }, itemStyle: { color: colors.rteLine },
+        markLine: { silent: true, symbol: 'none', data: [{ yAxis: req, label: { formatter: t('sohChart.reqThreshold') + '=' + req, color: colors.warning, fontSize: 10 }, lineStyle: { color: colors.warning, type: 'dashed' } }] },
       },
       {
         name: t('matrixTable.meetsReq'), type: 'scatter', data: statusData, yAxisIndex: 1,

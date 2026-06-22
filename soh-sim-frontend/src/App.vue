@@ -1,24 +1,26 @@
 <template>
-  <div class="h-screen flex flex-col bg-slate-950 text-slate-100 p-4 gap-3 text-xs overflow-hidden">
-    <div v-if="toast.show"
-      :class="['fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
-        toast.type === 'success' ? 'bg-emerald-500 text-white' :
-        toast.type === 'error' ? 'bg-red-500 text-white' :
-        toast.type === 'warning' ? 'bg-amber-500 text-white' : 'bg-slate-600 text-white']">
+  <div class="h-screen flex flex-col p-4 gap-3 text-xs overflow-hidden" style="background: var(--color-bg); color: var(--color-text);">
+    <div v-if="toast.show" class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
+      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } :
+              toast.type === 'error' ? { backgroundColor: 'var(--color-danger)', color: 'white' } :
+              toast.type === 'warning' ? { backgroundColor: 'var(--color-warning)', color: 'white' } :
+              { backgroundColor: 'var(--color-text-secondary)', color: 'white' }">
       {{ toast.message }}
     </div>
 
-    <header class="flex justify-between items-center border-b border-slate-800 pb-2 flex-shrink-0">
+    <header class="flex justify-between items-center pb-2 flex-shrink-0" style="border-bottom: 1px solid var(--color-header-border); background-color: var(--color-header-bg); padding: 8px 12px; border-radius: var(--radius-md);">
       <div>
-        <h1 class="text-lg font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+        <h1 class="text-lg font-bold" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
           {{ $t('app.title') }}
         </h1>
-        <p class="text-[10px] mt-0.5 text-slate-400">{{ $t('app.subtitle') }}</p>
+        <p class="text-[10px] mt-0.5" style="color: var(--color-text-secondary);">{{ $t('app.subtitle') }}</p>
       </div>
       <div class="flex items-center gap-3">
         <ThemeSwitcher />
         <button @click="openSurveyPage"
-          class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-3 py-1.5 rounded border border-slate-600 transition-all">
+          style="background-color: var(--color-card-dark); color: var(--color-text); text-xs; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); transition: all 0.15s;"
+          onmouseover="this.style.backgroundColor='var(--color-tab-hover)'; this.style.borderColor='var(--color-accent)';"
+          onmouseout="this.style.backgroundColor='var(--color-card-dark)'; this.style.borderColor='var(--color-border)';">
           {{ $t('tabs.survey') }}
         </button>
         <button @click="fetchCalculation" class="btn-primary">
@@ -27,7 +29,7 @@
       </div>
     </header>
 
-    <nav class="flex bg-slate-900/60 p-1 rounded-lg gap-1 border border-slate-800/80 flex-shrink-0 overflow-x-auto">
+    <nav class="flex p-1 rounded-lg gap-1 flex-shrink-0 overflow-x-auto" style="background-color: var(--color-nav-bg); border: 1px solid var(--color-nav-border);">
       <button v-for="(tab, idx) in tabs" :key="tab.id"
         @click="activeTab = tab.id"
         draggable="true"

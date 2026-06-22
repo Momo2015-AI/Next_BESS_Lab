@@ -1,16 +1,18 @@
 <template>
   <div class="engineering-calc h-full overflow-auto p-4">
-    <div class="bg-slate-900/60 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         工程计算模块
       </h3>
 
       <!-- Tab导航 -->
       <div class="flex gap-2 mb-4">
         <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
-          :class="['px-3 py-1.5 rounded text-xs transition-all',
-            activeTab === tab.id ? 'bg-teal-500 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600']">
+          class="px-3 py-1.5 rounded text-xs transition-all"
+          :style="activeTab === tab.id ? { backgroundColor: 'var(--color-accent-secondary)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           {{ tab.label }}
         </button>
       </div>
@@ -19,66 +21,89 @@
       <div v-if="activeTab === 'area'" class="space-y-4">
         <div class="grid grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">集装箱数量</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">集装箱数量</label>
             <input v-model.number="siteData.containerQty" type="number" min="1"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">PCS数量</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">PCS数量</label>
             <input v-model.number="siteData.pcsQty" type="number" min="1"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">变压器数量</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">变压器数量</label>
             <input v-model.number="siteData.transformerQty" type="number" min="1"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">集装箱尺寸 (长×宽×高 m)</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">集装箱尺寸 (长×宽×高 m)</label>
             <div class="flex gap-2">
               <input v-model.number="siteData.containerLength" type="number" placeholder="长"
-                class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+                class="w-full rounded px-3 py-2 text-sm"
+                style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+                onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
               <input v-model.number="siteData.containerWidth" type="number" placeholder="宽"
-                class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+                class="w-full rounded px-3 py-2 text-sm"
+                style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+                onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
               <input v-model.number="siteData.containerHeight" type="number" placeholder="高"
-                class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+                class="w-full rounded px-3 py-2 text-sm"
+                style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+                onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+                onblur="this.style.borderColor='var(--color-input-border)';">
             </div>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">间距和通道系数</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">间距和通道系数</label>
             <input v-model.number="siteData.spacingFactor" type="number" step="0.1" min="1.2"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
 
-        <button @click="calculateSiteArea"
-          class="bg-teal-500 hover:bg-teal-600 text-white text-xs px-4 py-2 rounded-lg">
+        <button @click="calculateSiteArea" class="text-xs px-4 py-2 rounded transition-colors"
+          style="background-color: var(--color-accent-secondary); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           计算场地面积
         </button>
 
         <!-- 计算结果 -->
-        <div v-if="siteAreaResult" class="mt-4 p-4 bg-slate-800/50 rounded-lg">
-          <div class="text-xs text-slate-400 mb-3">场地面积计算结果</div>
+        <div v-if="siteAreaResult" class="mt-4 p-4 rounded-lg" style="background-color: var(--color-card-dark);">
+          <div class="text-xs mb-3" style="color: var(--color-text-muted);">场地面积计算结果</div>
           <div class="grid grid-cols-3 gap-4 text-sm">
             <div class="text-center">
-              <div class="text-2xl font-bold text-teal-400">{{ siteAreaResult.containerArea }}</div>
-              <div class="text-xs text-slate-400">集装箱占地面积 (m²)</div>
+              <div class="text-2xl font-bold" style="color: var(--color-accent-secondary);">{{ siteAreaResult.containerArea }}</div>
+              <div class="text-xs" style="color: var(--color-text-muted);">集装箱占地面积 (m²)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-sky-400">{{ siteAreaResult.pcsArea }}</div>
-              <div class="text-xs text-slate-400">PCS占地面积 (m²)</div>
+              <div class="text-2xl font-bold" style="color: var(--color-accent);">{{ siteAreaResult.pcsArea }}</div>
+              <div class="text-xs" style="color: var(--color-text-muted);">PCS占地面积 (m²)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-amber-400">{{ siteAreaResult.totalArea }}</div>
-              <div class="text-xs text-slate-400">总占地面积 (m²)</div>
+              <div class="text-2xl font-bold" style="color: var(--color-warning);">{{ siteAreaResult.totalArea }}</div>
+              <div class="text-xs" style="color: var(--color-text-muted);">总占地面积 (m²)</div>
             </div>
           </div>
-          <div class="mt-3 pt-3 border-t border-slate-700 text-xs text-slate-400">
-            <div>考虑间距和通道后的实际占地面积: <span class="text-white">{{ siteAreaResult.actualArea }}</span> m²</div>
-            <div>约等于 <span class="text-white">{{ siteAreaResult.landAcres }}</span> 亩</div>
+          <div class="mt-3 pt-3 border-t border-slate-700 text-xs" style="border-color: var(--color-border); color: var(--color-text-muted);">
+            <div>考虑间距和通道后的实际占地面积: <span style="color: var(--color-text);">{{ siteAreaResult.actualArea }}</span> m²</div>
+            <div>约等于 <span style="color: var(--color-text);">{{ siteAreaResult.landAcres }}</span> 亩</div>
           </div>
         </div>
       </div>
@@ -87,29 +112,43 @@
       <div v-if="activeTab === 'bom'" class="space-y-4">
         <div class="grid grid-cols-4 gap-4">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">系统能量 (MWh)</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">系统能量 (MWh)</label>
             <input v-model.number="bomData.energy" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">集装箱数量</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">集装箱数量</label>
             <input v-model.number="bomData.containerQty" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">PCS总容量 (MW)</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">PCS总容量 (MW)</label>
             <input v-model.number="bomData.pcsCapacity" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">变压器容量 (MVA)</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">变压器容量 (MVA)</label>
             <input v-model.number="bomData.transformerCapacity" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
 
-        <button @click="generateBOM"
-          class="bg-teal-500 hover:bg-teal-600 text-white text-xs px-4 py-2 rounded-lg">
+        <button @click="generateBOM" class="text-xs px-4 py-2 rounded transition-colors"
+          style="background-color: var(--color-accent-secondary); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           生成BOM清单
         </button>
 
@@ -117,7 +156,7 @@
         <div v-if="bomResult.length > 0" class="mt-4 overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr class="text-slate-400 border-b border-slate-700">
+              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">
                 <th class="text-left py-2 px-2">序号</th>
                 <th class="text-left py-2 px-2">设备名称</th>
                 <th class="text-left py-2 px-2">规格型号</th>
@@ -127,19 +166,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, idx) in bomResult" :key="idx" class="text-slate-300 border-b border-slate-800">
+              <tr v-for="(item, idx) in bomResult" :key="idx" style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border);">
                 <td class="py-2 px-2">{{ idx + 1 }}</td>
                 <td class="py-2 px-2">{{ item.name }}</td>
                 <td class="py-2 px-2">{{ item.spec }}</td>
                 <td class="text-right py-2 px-2">{{ item.unit }}</td>
                 <td class="text-right py-2 px-2">{{ item.qty }}</td>
-                <td class="py-2 px-2 text-slate-500">{{ item.note }}</td>
+                <td class="py-2 px-2" style="color: var(--color-text-muted);">{{ item.note }}</td>
               </tr>
             </tbody>
           </table>
           
           <div class="mt-3 flex gap-2">
-            <button @click="exportBOM" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-1.5 rounded">
+            <button @click="exportBOM" class="text-xs px-3 py-1.5 rounded transition-colors"
+              style="background-color: var(--color-accent); color: white;"
+              onmouseover="this.style.opacity='0.9';"
+              onmouseout="this.style.opacity='1';">
               导出BOM
             </button>
           </div>
@@ -150,73 +192,90 @@
       <div v-if="activeTab === 'spare'" class="space-y-4">
         <div class="grid grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">电池容量 (MWh)</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">电池容量 (MWh)</label>
             <input v-model.number="spareData.batteryCapacity" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">PCS数量</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">PCS数量</label>
             <input v-model.number="spareData.pcsQty" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">运行年限</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">运行年限</label>
             <input v-model.number="spareData.years" type="number"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">电池更换策略</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">电池更换策略</label>
             <select v-model="spareData.batteryStrategy"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
               <option value="aggressive">激进型 (SOH<80%即换)</option>
               <option value="moderate">均衡型 (SOH<75%换)</option>
               <option value="conservative">保守型 (SOH<70%换)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">PCS备件系数</label>
+            <label class="block text-xs mb-1" style="color: var(--color-text-muted);">PCS备件系数</label>
             <input v-model.number="spareData.pcsSpareFactor" type="number" step="0.01" min="0.02"
-              class="w-full bg-slate-800 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-teal-500 outline-none text-sm">
+              class="w-full rounded px-3 py-2 text-sm"
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+              onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
           </div>
         </div>
 
-        <button @click="calculateSpare"
-          class="bg-teal-500 hover:bg-teal-600 text-white text-xs px-4 py-2 rounded-lg">
+        <button @click="calculateSpare" class="text-xs px-4 py-2 rounded transition-colors"
+          style="background-color: var(--color-accent-secondary); color: white;"
+          onmouseover="this.style.opacity='0.9';"
+          onmouseout="this.style.opacity='1';">
           计算备品备件
         </button>
 
         <!-- 备品备件结果 -->
         <div v-if="spareResult.length > 0" class="mt-4">
-          <div class="text-xs text-slate-400 mb-3">备品备件清单</div>
+          <div class="text-xs mb-3" style="color: var(--color-text-muted);">备品备件清单</div>
           
           <div class="grid grid-cols-2 gap-4">
             <!-- 电池备件 -->
-            <div class="bg-slate-800/50 rounded-lg p-3">
-              <div class="text-xs text-amber-400 mb-2">电池系统备件</div>
+            <div class="rounded-lg p-3" style="background-color: var(--color-card-dark);">
+              <div class="text-xs mb-2" style="color: var(--color-warning);">电池系统备件</div>
               <div v-for="(item, idx) in spareResult.filter(i => i.type === 'battery')" :key="idx"
-                class="flex justify-between text-xs py-1 border-b border-slate-700 last:border-0">
-                <span class="text-slate-300">{{ item.name }}</span>
-                <span class="text-white">{{ item.qty }} {{ item.unit }}</span>
+                class="flex justify-between text-xs py-1" style="border-bottom: 1px solid var(--color-border);">
+                <span style="color: var(--color-text-secondary);">{{ item.name }}</span>
+                <span style="color: var(--color-text);">{{ item.qty }} {{ item.unit }}</span>
               </div>
             </div>
             
             <!-- PCS备件 -->
-            <div class="bg-slate-800/50 rounded-lg p-3">
-              <div class="text-xs text-sky-400 mb-2">PCS系统备件</div>
+            <div class="rounded-lg p-3" style="background-color: var(--color-card-dark);">
+              <div class="text-xs mb-2" style="color: var(--color-accent);">PCS系统备件</div>
               <div v-for="(item, idx) in spareResult.filter(i => i.type === 'pcs')" :key="idx"
-                class="flex justify-between text-xs py-1 border-b border-slate-700 last:border-0">
-                <span class="text-slate-300">{{ item.name }}</span>
-                <span class="text-white">{{ item.qty }} {{ item.unit }}</span>
+                class="flex justify-between text-xs py-1" style="border-bottom: 1px solid var(--color-border);">
+                <span style="color: var(--color-text-secondary);">{{ item.name }}</span>
+                <span style="color: var(--color-text);">{{ item.qty }} {{ item.unit }}</span>
               </div>
             </div>
           </div>
 
-          <div class="mt-4 p-3 bg-teal-500/10 border border-teal-500/30 rounded-lg">
-            <div class="text-xs text-teal-400">预计备件库存总价值</div>
-            <div class="text-xl font-bold text-teal-400 mt-1">
+          <div class="mt-4 p-3 rounded-lg" style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark);">
+            <div class="text-xs" style="color: var(--color-accent-secondary);">预计备件库存总价值</div>
+            <div class="text-xl font-bold mt-1" style="color: var(--color-accent-secondary);">
               ¥ {{ spareTotalValue.toLocaleString() }}
             </div>
           </div>
@@ -225,9 +284,8 @@
     </div>
 
     <!-- Toast提示 -->
-    <div v-if="toast.show"
-      :class="['fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all',
-        toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white']">
+    <div v-if="toast.show" class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
+      :style="{ backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)', color: 'white' }">
       {{ toast.message }}
     </div>
   </div>
@@ -260,7 +318,6 @@ const showToast = (message, type = 'success') => {
   }, 3000)
 }
 
-// 场地面积数据
 const siteData = reactive({
   containerQty: 10,
   pcsQty: 5,
@@ -273,11 +330,10 @@ const siteData = reactive({
 
 let siteAreaResult = ref(null)
 
-// 场地面积计算
 function calculateSiteArea() {
   const containerArea = siteData.containerQty * siteData.containerLength * siteData.containerWidth
-  const pcsArea = siteData.pcsQty * 5 * 3 // 假设每个PCS单元 5m x 3m
-  const transformerArea = siteData.transformerQty * 10 // 假设每个变压器箱 10m²
+  const pcsArea = siteData.pcsQty * 5 * 3
+  const transformerArea = siteData.transformerQty * 10
   
   const subtotal = containerArea + pcsArea + transformerArea
   const actualArea = subtotal * siteData.spacingFactor
@@ -294,14 +350,11 @@ function calculateSiteArea() {
   showToast('场地面积计算完成')
 }
 
-// BOM数据
 const bomData = reactive({
   energy: 100,
   containerQty: 10,
-  pcsQty: 10,  // 新增pcsQty字段
   pcsCapacity: 50,
   transformerCapacity: 60,
-  pcsQty: 10,
 })
 
 watch(() => bomData.pcsCapacity, (val) => {
@@ -310,12 +363,10 @@ watch(() => bomData.pcsCapacity, (val) => {
 
 let bomResult = ref([])
 
-// 生成BOM清单
 function generateBOM() {
   const bom = []
   let seq = 1
   
-  // 电池系统
   const batteryPerContainer = bomData.energy / bomData.containerQty
   bom.push({
     seq: seq++,
@@ -353,7 +404,6 @@ function generateBOM() {
     note: ''
   })
   
-  // PCS系统
   const pcsPerUnit = bomData.pcsCapacity / bomData.pcsQty
   bom.push({
     seq: seq++,
@@ -373,7 +423,6 @@ function generateBOM() {
     note: ''
   })
   
-  // 变压器
   bom.push({
     seq: seq++,
     name: '主变压器',
@@ -383,7 +432,6 @@ function generateBOM() {
     note: '一用一备'
   })
   
-  // 电缆
   bom.push({
     seq: seq++,
     name: '直流电缆',
@@ -402,7 +450,6 @@ function generateBOM() {
     note: ''
   })
   
-  // 其他
   bom.push({
     seq: seq++,
     name: 'EMS能量管理系统',
@@ -434,7 +481,6 @@ function generateBOM() {
   showToast('BOM清单已生成')
 }
 
-// 导出BOM
 function exportBOM() {
   if (bomResult.value.length === 0) return
   
@@ -456,7 +502,6 @@ function exportBOM() {
   showToast('BOM已导出')
 }
 
-// 备品备件数据
 const spareData = reactive({
   batteryCapacity: 100,
   pcsQty: 5,
@@ -467,19 +512,16 @@ const spareData = reactive({
 
 let spareResult = ref([])
 
-// 计算备品备件
 function calculateSpare() {
   const result = []
   
-  // 电池备件策略
   const sohThreshold = {
     aggressive: 0.80,
     moderate: 0.75,
     conservative: 0.70,
   }[spareData.batteryStrategy]
   
-  // 预计电池更换次数（基于25年衰减曲线估算）
-  const expectedReplacements = Math.floor(spareData.years / 10) // 约每10年换一次
+  const expectedReplacements = Math.floor(spareData.years / 10)
   
   result.push({
     type: 'battery',
@@ -509,7 +551,6 @@ function calculateSpare() {
     unit: '个',
   })
   
-  // PCS备件
   result.push({
     type: 'pcs',
     name: '功率模块IGBT',
@@ -526,7 +567,7 @@ function calculateSpare() {
   
   result.push({
     type: 'pcs',
-    name: ' PCS滤波器',
+    name: 'PCS滤波器',
     qty: Math.ceil(spareData.pcsQty * 0.2),
     unit: '个',
   })
@@ -549,15 +590,13 @@ function calculateSpare() {
   showToast('备品备件计算完成')
 }
 
-// 备件总价值估算
 const spareTotalValue = computed(() => {
   let total = 0
   spareResult.value.forEach(item => {
-    // 简单估算单价
     if (item.type === 'battery') {
-      total += item.qty * 2000 // 电芯约2000元/kWh
+      total += item.qty * 2000
     } else {
-      total += item.qty * 5000 // PCS备件约5000元/个
+      total += item.qty * 5000
     }
   })
   return total

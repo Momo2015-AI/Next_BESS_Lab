@@ -1,18 +1,19 @@
 <template>
   <div class="flex flex-col gap-4 h-full overflow-auto p-4">
-    <!-- 配置面板 -->
-    <div class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         电池集装箱配置
       </h3>
 
       <div class="grid grid-cols-3 gap-4">
-        <!-- 集装箱选择 -->
-        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-          <label class="text-xs text-slate-400 block mb-2">储能集装箱型号</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">储能集装箱型号</label>
           <select v-model="selectedContainer" @change="calculatePCS"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-xs focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
             <option value="">请选择集装箱型号</option>
             <option v-for="container in containers" :key="container.id" :value="container.id">
               {{ container.name }} - {{ container.energy }}MWh / {{ container.power }}MW
@@ -20,18 +21,22 @@
           </select>
         </div>
 
-        <!-- 集装箱数量 -->
-        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-          <label class="text-xs text-slate-400 block mb-2">集装箱数量</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量</label>
           <input v-model.number="containerQty" @change="calculatePCS" type="number" min="1" max="100"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-xs focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
         </div>
 
-        <!-- PCS型号选择 -->
-        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
-          <label class="text-xs text-slate-400 block mb-2">PCS型号</label>
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">PCS型号</label>
           <select v-model="selectedPCS" @change="calculatePCS"
-            class="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-xs focus:border-teal-500 focus:outline-none">
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
             <option value="">请选择PCS型号</option>
             <option v-for="pcs in pcsList" :key="pcs.id" :value="pcs.id">
               {{ pcs.name }} - {{ pcs.power }}MW / {{ pcs.voltage }}V
@@ -40,117 +45,110 @@
         </div>
       </div>
 
-      <!-- 自动计算结果 -->
-      <div class="mt-4 bg-teal-500/10 rounded-lg border border-teal-500/30 p-4">
-        <h4 class="text-xs font-bold text-teal-400 mb-3">自动计算结果</h4>
+      <div class="mt-4 p-4 rounded-lg" style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark);">
+        <h4 class="text-xs font-bold mb-3" style="color: var(--color-accent-secondary);">自动计算结果</h4>
         <div class="grid grid-cols-4 gap-3">
           <div class="text-center">
-            <p class="text-[10px] text-slate-500">总能量</p>
-            <p class="text-lg font-bold text-teal-400">{{ totalEnergy.toFixed(1) }} MWh</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">总能量</p>
+            <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ totalEnergy.toFixed(1) }} MWh</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-slate-500">总功率</p>
-            <p class="text-lg font-bold text-sky-400">{{ totalPower.toFixed(1) }} MW</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">总功率</p>
+            <p class="text-lg font-bold" style="color: var(--color-accent);">{{ totalPower.toFixed(1) }} MW</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-slate-500">PCS数量</p>
-            <p class="text-lg font-bold text-emerald-400">{{ pcsQty }} 台</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">PCS数量</p>
+            <p class="text-lg font-bold" style="color: var(--color-success);">{{ pcsQty }} 台</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-slate-500">配比方式</p>
-            <p class="text-lg font-bold text-amber-400">{{ pairingMode }}</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">配比方式</p>
+            <p class="text-lg font-bold" style="color: var(--color-warning);">{{ pairingMode }}</p>
           </div>
         </div>
 
-        <!-- 配比详情 -->
-        <div class="mt-3 text-[10px] text-slate-400">
-          <p><strong class="text-slate-300">配比说明：</strong>{{ pairingDescription }}</p>
+        <div class="mt-3 text-[10px]" style="color: var(--color-text-muted);">
+          <p><strong style="color: var(--color-text-secondary);">配比说明：</strong>{{ pairingDescription }}</p>
         </div>
       </div>
     </div>
 
-    <!-- 连接图展示 -->
-    <div class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         系统连接图
       </h3>
 
-      <div ref="connectionDiagram" class="h-64 bg-slate-800/30 rounded border border-slate-700"></div>
+      <div ref="connectionDiagram" class="h-64 rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
 
-      <!-- 图例说明 -->
       <div class="mt-3 flex gap-4 text-[10px]">
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded bg-teal-500"></span>
-          <span class="text-slate-400">电池集装箱</span>
+          <span class="w-3 h-3 rounded" style="background-color: var(--color-accent-secondary);"></span>
+          <span style="color: var(--color-text-muted);">电池集装箱</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded bg-sky-500"></span>
-          <span class="text-slate-400">PCS</span>
+          <span class="w-3 h-3 rounded" style="background-color: var(--color-accent);"></span>
+          <span style="color: var(--color-text-muted);">PCS</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded bg-amber-500"></span>
-          <span class="text-slate-400">变压器</span>
+          <span class="w-3 h-3 rounded" style="background-color: var(--color-warning);"></span>
+          <span style="color: var(--color-text-muted);">变压器</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded bg-emerald-500"></span>
-          <span class="text-slate-400">电网</span>
+          <span class="w-3 h-3 rounded" style="background-color: var(--color-success);"></span>
+          <span style="color: var(--color-text-muted);">电网</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-2 h-0.5 bg-slate-400"></span>
-          <span class="text-slate-400">DC连接</span>
+          <span class="w-2 h-0.5" style="background-color: var(--color-text-muted);"></span>
+          <span style="color: var(--color-text-muted);">DC连接</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-2 h-0.5 bg-amber-400"></span>
-          <span class="text-slate-400">AC连接</span>
+          <span class="w-2 h-0.5" style="background-color: var(--color-warning);"></span>
+          <span style="color: var(--color-text-muted);">AC连接</span>
         </div>
       </div>
     </div>
 
-    <!-- 单线图展示 -->
-    <div class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         电气单线图
       </h3>
 
-      <div ref="singleLineDiagram" class="h-80 bg-slate-800/30 rounded border border-slate-700"></div>
+      <div ref="singleLineDiagram" class="h-80 rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
 
-      <!-- 电气参数 -->
       <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
-        <div class="bg-slate-800/50 rounded p-2 border border-slate-700">
-          <p class="text-slate-500">DC电压范围</p>
-          <p class="text-teal-400 font-bold">{{ dcVoltageRange }}</p>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted);">DC电压范围</p>
+          <p class="font-bold" style="color: var(--color-accent-secondary);">{{ dcVoltageRange }}</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-2 border border-slate-700">
-          <p class="text-slate-500">AC输出电压</p>
-          <p class="text-sky-400 font-bold">{{ acVoltage }}</p>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted);">AC输出电压</p>
+          <p class="font-bold" style="color: var(--color-accent);">{{ acVoltage }}</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-2 border border-slate-700">
-          <p class="text-slate-500">额定频率</p>
-          <p class="text-amber-400 font-bold">50 Hz</p>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted);">额定频率</p>
+          <p class="font-bold" style="color: var(--color-warning);">50 Hz</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-2 border border-slate-700">
-          <p class="text-slate-500">短路容量</p>
-          <p class="text-emerald-400 font-bold">{{ shortCircuitCapacity }}</p>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted);">短路容量</p>
+          <p class="font-bold" style="color: var(--color-success);">{{ shortCircuitCapacity }}</p>
         </div>
-        <div class="bg-slate-800/50 rounded p-2 border border-slate-700">
-          <p class="text-slate-500">接地方式</p>
-          <p class="text-purple-400 font-bold">TN-S</p>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted);">接地方式</p>
+          <p class="font-bold" style="color: var(--color-accent-secondary);">TN-S</p>
         </div>
       </div>
     </div>
 
-    <!-- 配对方案列表 -->
-    <div class="bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-      <h3 class="text-sm font-bold text-teal-400 mb-3 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary);">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
         推荐配对方案
       </h3>
 
       <div class="overflow-auto">
         <table class="w-full text-xs">
-          <thead class="text-slate-500 border-b border-slate-700">
+          <thead style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">
             <tr>
               <th class="py-2 px-3 text-left">方案编号</th>
               <th class="py-2 px-3 text-left">集装箱配置</th>
@@ -163,16 +161,21 @@
           </thead>
           <tbody>
             <tr v-for="(scheme, idx) in recommendedSchemes" :key="idx" 
-              class="border-b border-slate-700 hover:bg-slate-800/50">
-              <td class="py-2 px-3 text-slate-400">{{ scheme.id }}</td>
-              <td class="py-2 px-3 text-teal-400">{{ scheme.containerConfig }}</td>
-              <td class="py-2 px-3 text-sky-400">{{ scheme.pcsConfig }}</td>
-              <td class="py-2 px-3 text-amber-400">{{ scheme.pairingMode }}</td>
-              <td class="py-2 px-3 text-emerald-400">{{ scheme.energyPowerRatio }}</td>
-              <td class="py-2 px-3 text-purple-400">{{ scheme.efficiency }}%</td>
+              style="border-bottom: 1px solid var(--color-border);"
+              onmouseover="this.style.backgroundColor='var(--color-card-dark)';"
+              onmouseout="this.style.backgroundColor='transparent';">
+              <td class="py-2 px-3" style="color: var(--color-text-muted);">{{ scheme.id }}</td>
+              <td class="py-2 px-3" style="color: var(--color-accent-secondary);">{{ scheme.containerConfig }}</td>
+              <td class="py-2 px-3" style="color: var(--color-accent);">{{ scheme.pcsConfig }}</td>
+              <td class="py-2 px-3" style="color: var(--color-warning);">{{ scheme.pairingMode }}</td>
+              <td class="py-2 px-3" style="color: var(--color-success);">{{ scheme.energyPowerRatio }}</td>
+              <td class="py-2 px-3" style="color: var(--color-accent-secondary);">{{ scheme.efficiency }}%</td>
               <td class="py-2 px-3">
                 <button @click="applyScheme(scheme)"
-                  class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-400 px-2 py-1 rounded text-[10px] transition-all">
+                  class="text-[10px] px-2 py-1 rounded transition-all"
+                  style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary);"
+                  onmouseover="this.style.backgroundColor='var(--color-accent-dark)';"
+                  onmouseout="this.style.backgroundColor='var(--color-accent-glow)';">
                   应用
                 </button>
               </td>
@@ -182,14 +185,17 @@
       </div>
     </div>
 
-    <!-- 应用配置按钮 -->
     <div class="flex justify-end gap-3">
-      <button @click="resetConfig"
-        class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded transition-all">
+      <button @click="resetConfig" class="text-xs px-4 py-2 rounded transition-colors"
+        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border); color: var(--color-text-secondary);"
+        onmouseover="this.style.borderColor='var(--color-accent)';"
+        onmouseout="this.style.borderColor='var(--color-border)';">
         重置配置
       </button>
-      <button @click="applyConfig"
-        class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs px-6 py-2 rounded font-bold transition-all shadow-md">
+      <button @click="applyConfig" class="text-xs px-6 py-2 rounded font-bold transition-colors"
+        style="background-color: var(--color-accent-secondary); color: white;"
+        onmouseover="this.style.opacity='0.9';"
+        onmouseout="this.style.opacity='1';">
         应用到仿真参数
       </button>
     </div>
@@ -202,11 +208,9 @@ import * as echarts from 'echarts'
 
 const emit = defineEmits(['applyConfig', 'error'])
 
-// 集装箱列表 - 从API加载
 const containers = ref([])
 const pcsList = ref([])
 
-// 加载产品库数据
 async function loadLibraryData() {
   try {
     const [containersRes, pcsRes] = await Promise.all([
@@ -243,13 +247,11 @@ async function loadLibraryData() {
       }))
     }
     
-    // 如果数据为空，初始化默认数据
     if (containers.value.length === 0 || pcsList.value.length === 0) {
       await seedLibrary()
     }
   } catch (error) {
     console.error('加载产品库失败:', error)
-    // 降级使用硬编码数据
     containers.value = [
       { id: 'container-5mwh', name: '5MWh标准舱', energy: 5, power: 2.5, voltage: 600, cells: 120 },
       { id: 'container-3mwh', name: '3MWh紧凑舱', energy: 3, power: 1.5, voltage: 600, cells: 72 },
@@ -265,7 +267,6 @@ async function loadLibraryData() {
   }
 }
 
-// 初始化产品库
 async function seedLibrary() {
   try {
     const response = await fetch('/api/library/seed', { method: 'POST' })
@@ -278,17 +279,14 @@ async function seedLibrary() {
   }
 }
 
-// 组件挂载时加载数据
 onMounted(() => {
   loadLibraryData()
 })
 
-// 配置状态
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
 
-// 计算结果
 const totalEnergy = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
   return container ? container.energy * containerQty.value : 0
@@ -333,7 +331,6 @@ const pairingDescription = computed(() => {
   }
 })
 
-// 电气参数
 const dcVoltageRange = computed(() => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
   return pcs ? pcs.dcVoltage : '--'
@@ -350,24 +347,21 @@ const shortCircuitCapacity = computed(() => {
   return `${pcs.power * 10} MVA`
 })
 
-// 推荐方案
 const recommendedSchemes = computed(() => {
   if (!selectedContainer.value) return []
   
   const schemes = []
   const container = containers.value.find(c => c.id === selectedContainer.value)
   
-  // 生成推荐方案
   for (let qty = 1; qty <= Math.min(containerQty.value + 2, 10); qty++) {
     const energy = container.energy * qty
     const power = container.power * qty
     
-    // 找最佳PCS配对
     for (const pcs of pcsList.value) {
       const pcsCount = Math.ceil(power / pcs.power)
       if (pcsCount <= 10 && pcsCount >= 1) {
         const ratio = power / (pcsCount * pcs.power)
-        const efficiency = pcs.efficiency - Math.abs(ratio - 1) * 0.5 // 偏离1:1时效率下降
+        const efficiency = pcs.efficiency - Math.abs(ratio - 1) * 0.5
         
         schemes.push({
           id: `方案${schemes.length + 1}`,
@@ -385,17 +379,14 @@ const recommendedSchemes = computed(() => {
     }
   }
   
-  // 按效率排序，取前5
   return schemes.sort((a, b) => b.efficiency - a.efficiency).slice(0, 5)
 })
 
-// 图表实例
 const connectionDiagram = ref(null)
 const singleLineDiagram = ref(null)
 let connectionChart = null
 let singleLineChart = null
 
-// 计算PCS配对
 const calculatePCS = () => {
   nextTick(() => {
     renderConnectionDiagram()
@@ -403,7 +394,6 @@ const calculatePCS = () => {
   })
 }
 
-// 渲染连接图
 const renderConnectionDiagram = () => {
   if (!connectionDiagram.value) return
   
@@ -418,58 +408,66 @@ const renderConnectionDiagram = () => {
   
   if (!container || !pcs) {
     connectionChart.setOption({
-      title: { text: '请选择集装箱和PCS型号', left: 'center', top: 'center', textStyle: { color: '#64748b', fontSize: 14 } },
+      title: { text: '请选择集装箱和PCS型号', left: 'center', top: 'center', textStyle: { color: 'var(--color-text-muted)', fontSize: 14 } },
     })
     return
   }
   
-  // 构建节点和连接数据
   const nodes = []
   const links = []
   
-  // 电网节点
-  nodes.push({ name: '电网', x: 500, y: 50, symbolSize: 40, category: 0, itemStyle: { color: '#10b981' } })
+  const style = getComputedStyle(document.documentElement)
+  const colors = {
+    grid: style.getPropertyValue('--color-border').trim(),
+    teal: style.getPropertyValue('--color-accent-secondary').trim(),
+    sky: style.getPropertyValue('--color-accent').trim(),
+    amber: style.getPropertyValue('--color-warning').trim(),
+    emerald: style.getPropertyValue('--color-success').trim(),
+    slate: style.getPropertyValue('--color-text-muted').trim(),
+    text: style.getPropertyValue('--color-text').trim(),
+  }
   
-  // 变压器节点
-  nodes.push({ name: '变压器', x: 500, y: 120, symbolSize: 30, category: 3, itemStyle: { color: '#f59e0b' } })
-  links.push({ source: '电网', target: '变压器', lineStyle: { color: '#f59e0b', width: 3 } })
+  nodes.push({ name: '电网', x: 500, y: 50, symbolSize: 40, category: 0, itemStyle: { color: colors.emerald } })
   
-  // PCS节点
+  nodes.push({ name: '变压器', x: 500, y: 120, symbolSize: 30, category: 3, itemStyle: { color: colors.amber } })
+  links.push({ source: '电网', target: '变压器', lineStyle: { color: colors.amber, width: 3 } })
+  
   for (let i = 0; i < pcsQty.value; i++) {
     const pcsName = `PCS${i + 1}`
     const pcsX = 100 + (i * 400 / Math.max(pcsQty.value - 1, 1))
-    nodes.push({ name: pcsName, x: pcsX, y: 180, symbolSize: 25, category: 1, itemStyle: { color: '#0ea5e9' }, label: { show: true, position: 'inside', formatter: pcsName, fontSize: 10 } })
-    links.push({ source: '变压器', target: pcsName, lineStyle: { color: '#f59e0b', width: 2 } })
+    nodes.push({ name: pcsName, x: pcsX, y: 180, symbolSize: 25, category: 1, itemStyle: { color: colors.sky }, label: { show: true, position: 'inside', formatter: pcsName, fontSize: 10, color: '#fff' } })
+    links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2 } })
   }
   
-  // 集装箱节点
   for (let i = 0; i < containerQty.value; i++) {
     const containerName = `电池舱${i + 1}`
     const containerX = 100 + (i * 400 / Math.max(containerQty.value - 1, 1))
-    nodes.push({ name: containerName, x: containerX, y: 260, symbolSize: 35, category: 2, itemStyle: { color: '#14b8a6' }, label: { show: true, position: 'inside', formatter: `${i + 1}`, fontSize: 12 } })
+    nodes.push({ name: containerName, x: containerX, y: 260, symbolSize: 35, category: 2, itemStyle: { color: colors.teal }, label: { show: true, position: 'inside', formatter: `${i + 1}`, fontSize: 12, color: '#fff' } })
     
-    // 连接到PCS（根据配比方式）
     const ratio = container.power / pcs.power
     if (ratio <= 1) {
-      // 多舱并联到单PCS
       const pcsIndex = Math.floor(i * pcsQty.value / containerQty.value)
       const pcsName = `PCS${Math.min(pcsIndex + 1, pcsQty.value)}`
-      links.push({ source: containerName, target: pcsName, lineStyle: { color: '#64748b', width: 2 } })
+      links.push({ source: containerName, target: pcsName, lineStyle: { color: colors.slate, width: 2 } })
     } else {
-      // 单舱多PCS
       const pcsPerContainer = Math.ceil(ratio)
       for (let j = 0; j < pcsPerContainer; j++) {
         const pcsIndex = i * pcsPerContainer + j
         if (pcsIndex < pcsQty.value) {
           const pcsName = `PCS${pcsIndex + 1}`
-          links.push({ source: containerName, target: pcsName, lineStyle: { color: '#64748b', width: 2 } })
+          links.push({ source: containerName, target: pcsName, lineStyle: { color: colors.slate, width: 2 } })
         }
       }
     }
   }
   
   connectionChart.setOption({
-    tooltip: {},
+    backgroundColor: 'transparent',
+    tooltip: {
+      backgroundColor: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
+      borderColor: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
+      textStyle: { color: isDark ? '#e2e8f0' : '#1e293b', fontSize: 11 },
+    },
     series: [{
       type: 'graph',
       layout: 'none',
@@ -491,7 +489,6 @@ const renderConnectionDiagram = () => {
   })
 }
 
-// 渲染单线图
 const renderSingleLineDiagram = () => {
   if (!singleLineDiagram.value) return
   
@@ -506,116 +503,113 @@ const renderSingleLineDiagram = () => {
   
   if (!container || !pcs) {
     singleLineChart.setOption({
-      title: { text: '请选择集装箱和PCS型号', left: 'center', top: 'center', textStyle: { color: '#64748b', fontSize: 14 } },
+      title: { text: '请选择集装箱和PCS型号', left: 'center', top: 'center', textStyle: { color: 'var(--color-text-muted)', fontSize: 14 } },
     })
     return
   }
   
-  // 构建单线图数据
+  const style = getComputedStyle(document.documentElement)
+  const colors = {
+    emerald: style.getPropertyValue('--color-success').trim(),
+    amber: style.getPropertyValue('--color-warning').trim(),
+    sky: style.getPropertyValue('--color-accent').trim(),
+    teal: style.getPropertyValue('--color-accent-secondary').trim(),
+    slate: style.getPropertyValue('--color-text-muted').trim(),
+    text: style.getPropertyValue('--color-text').trim(),
+  }
+  
   const graphicElements = []
   
-  // 电网侧
   graphicElements.push({
     type: 'rect',
     shape: { x: 450, y: 20, width: 100, height: 40 },
-    style: { fill: '#10b981', stroke: '#059669', lineWidth: 2 },
+    style: { fill: colors.emerald, stroke: colors.emerald, lineWidth: 2 },
   })
   graphicElements.push({
     type: 'text',
     style: { text: '电网 10kV', x: 500, y: 45, fill: '#fff', fontSize: 12, textAlign: 'center' },
   })
   
-  // 主母线
   graphicElements.push({
     type: 'line',
     shape: { x1: 500, y1: 60, x2: 500, y2: 100 },
-    style: { stroke: '#f59e0b', lineWidth: 4 },
+    style: { stroke: colors.amber, lineWidth: 4 },
   })
   
-  // 变压器
   graphicElements.push({
     type: 'circle',
     shape: { cx: 500, cy: 120, r: 20 },
-    style: { fill: '#f59e0b', stroke: '#d97706', lineWidth: 2 },
+    style: { fill: colors.amber, stroke: colors.amber, lineWidth: 2 },
   })
   graphicElements.push({
     type: 'text',
     style: { text: 'T', x: 500, y: 125, fill: '#fff', fontSize: 14, textAlign: 'center' },
   })
   
-  // AC母线
   graphicElements.push({
     type: 'line',
     shape: { x1: 500, y1: 140, x2: 500, y2: 180 },
-    style: { stroke: '#f59e0b', lineWidth: 4 },
+    style: { stroke: colors.amber, lineWidth: 4 },
   })
   graphicElements.push({
     type: 'line',
     shape: { x1: 100, y1: 180, x2: 900, y2: 180 },
-    style: { stroke: '#f59e0b', lineWidth: 3 },
+    style: { stroke: colors.amber, lineWidth: 3 },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 170, fill: '#f59e0b', fontSize: 10, textAlign: 'center' },
+    style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 170, fill: colors.amber, fontSize: 10, textAlign: 'center' },
   })
   
-  // PCS单元
   for (let i = 0; i < pcsQty.value; i++) {
     const x = 100 + (i * 800 / Math.max(pcsQty.value - 1, 1))
     
-    // AC连接线
     graphicElements.push({
       type: 'line',
       shape: { x1: x, y1: 180, x2: x, y2: 220 },
-      style: { stroke: '#f59e0b', lineWidth: 2 },
+      style: { stroke: colors.amber, lineWidth: 2 },
     })
     
-    // PCS矩形
     graphicElements.push({
       type: 'rect',
       shape: { x: x - 30, y: 220, width: 60, height: 40 },
-      style: { fill: '#0ea5e9', stroke: '#0284c7', lineWidth: 2 },
+      style: { fill: colors.sky, stroke: colors.sky, lineWidth: 2 },
     })
     graphicElements.push({
       type: 'text',
       style: { text: `PCS${i + 1}\n${pcs.power}MW`, x: x, y: 245, fill: '#fff', fontSize: 10, textAlign: 'center' },
     })
     
-    // DC连接线
     graphicElements.push({
       type: 'line',
       shape: { x1: x, y1: 260, x2: x, y2: 300 },
-      style: { stroke: '#64748b', lineWidth: 2 },
+      style: { stroke: colors.slate, lineWidth: 2 },
     })
   }
   
-  // DC母线
   graphicElements.push({
     type: 'line',
     shape: { x1: 100, y1: 300, x2: 900, y2: 300 },
-    style: { stroke: '#64748b', lineWidth: 3 },
+    style: { stroke: colors.slate, lineWidth: 3 },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 290, fill: '#64748b', fontSize: 10, textAlign: 'center' },
+    style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 290, fill: colors.slate, fontSize: 10, textAlign: 'center' },
   })
   
-  // 电池集装箱
   for (let i = 0; i < containerQty.value; i++) {
     const x = 100 + (i * 800 / Math.max(containerQty.value - 1, 1))
     
-    // DC连接线
     graphicElements.push({
       type: 'line',
       shape: { x1: x, y1: 300, x2: x, y2: 340 },
-      style: { stroke: '#64748b', lineWidth: 2 },
+      style: { stroke: colors.slate, lineWidth: 2 },
     })
     
-    // 集装箱矩形
     graphicElements.push({
       type: 'rect',
       shape: { x: x - 40, y: 340, width: 80, height: 60 },
-      style: { fill: '#14b8a6', stroke: '#0d9488', lineWidth: 2 },
+      style: { fill: colors.teal, stroke: colors.teal, lineWidth: 2 },
     })
     graphicElements.push({
       type: 'text',
@@ -624,11 +618,11 @@ const renderSingleLineDiagram = () => {
   }
   
   singleLineChart.setOption({
+    backgroundColor: 'transparent',
     graphic: { elements: graphicElements },
   })
 }
 
-// 应用方案
 const applyScheme = (scheme) => {
   selectedContainer.value = scheme.containerId
   containerQty.value = scheme.containerQty
@@ -636,7 +630,6 @@ const applyScheme = (scheme) => {
   calculatePCS()
 }
 
-// 重置配置
 const resetConfig = () => {
   selectedContainer.value = ''
   containerQty.value = 1
@@ -644,7 +637,6 @@ const resetConfig = () => {
   calculatePCS()
 }
 
-// 应用到仿真参数
 const applyConfig = () => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
@@ -658,7 +650,7 @@ const applyConfig = () => {
     ratedEnergy: container.energy,
     initContainerQty: containerQty.value,
     initPcsQty: pcsQty.value,
-    duration: container.energy / container.power, // 时长 = 能量/功率
+    duration: container.energy / container.power,
     acEfficiency: pcs.efficiency,
   })
 }
@@ -669,5 +661,3 @@ onMounted(() => {
 
 watch([selectedContainer, containerQty, selectedPCS], () => {
   calculatePCS()
-})
-</script>

@@ -4,146 +4,145 @@
 
       <div class="grid grid-cols-6 gap-2">
         <div v-for="m in metrics" :key="m.label"
-          :class="['border rounded-lg p-3 text-center', m.color]">
-          <div class="text-[10px] text-slate-400 uppercase tracking-wider">{{ m.label }}</div>
+          class="border rounded-lg p-3 text-center" style="background-color: var(--color-card); border-color: var(--color-border);">
+          <div class="text-[10px] uppercase tracking-wider" style="color: var(--color-text-muted);">{{ m.label }}</div>
           <div class="text-lg font-bold font-mono mt-0.5" :class="m.textColor">{{ m.value }}</div>
-          <div class="text-[9px] text-slate-600 mt-0.5">{{ m.unit }}</div>
+          <div class="text-[9px] mt-0.5" style="color: var(--color-text-muted);">{{ m.unit }}</div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3" style="min-height:300px">
-          <h3 class="font-bold text-xs text-slate-200 mb-2">现金流曲线与回收期 Cash Flow & Payback</h3>
+        <div class="rounded-lg p-3" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text);">现金流曲线与回收期 Cash Flow & Payback</h3>
           <div ref="cashFlowChartRef" class="w-full" style="height:280px"></div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3" style="min-height:300px">
-          <h3 class="font-bold text-xs text-slate-200 mb-2">收入结构堆叠 Revenue Breakdown</h3>
+        <div class="rounded-lg p-3" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text);">收入结构堆叠 Revenue Breakdown</h3>
           <div ref="revenueChartRef" class="w-full" style="height:280px"></div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3" style="min-height:300px">
-          <h3 class="font-bold text-xs text-slate-200 mb-2">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
+        <div class="rounded-lg p-3" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text);">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
           <div ref="dscrChartRef" class="w-full" style="height:280px"></div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3" style="min-height:300px">
-          <h3 class="font-bold text-xs text-slate-200 mb-2">CAPEX 成本结构与敏感性 Tornado</h3>
+        <div class="rounded-lg p-3" style="min-height:300px; background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text);">CAPEX 成本结构与敏感性 Tornado</h3>
           <div ref="capexChartRef" class="w-full" style="height:280px"></div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
-          <h3 class="font-bold text-xs text-slate-200 mb-2 flex items-center gap-2">
-            <span class="w-5 h-5 rounded bg-teal-500/20 text-teal-400 text-[10px] flex items-center justify-center font-bold">I</span>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: var(--color-accent-glow); color: var(--color-accent);">I</span>
             收入模型 Revenue Stack
           </h3>
-          <div class="grid grid-cols-2 gap-2 text-[10px]">
-            <div><label class="text-slate-500 block mb-0.5">低谷购电价 $/MWh</label><input v-model.number="f.offPeakPrice" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">高峰售电价 $/MWh</label><input v-model.number="f.peakPrice" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">价差捕获率 %</label><input v-model.number="f.spreadCapture" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">日历日可用天数</label><input v-model.number="f.operatingDays" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">容量市场单价 $/MW-yr</label><input v-model.number="f.capacityPrice" type="number" step="100" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">辅助服务单价 $/MW-yr</label><input v-model.number="f.ancillaryPrice" type="number" step="100" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">电价年涨幅 %</label><input v-model.number="f.priceEscalation" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">充放电效率扣减 %</label><input v-model.number="f.efficiencyLossPct" type="number" step="0.01" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
+          <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary);">
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">低谷购电价 $/MWh</label><input v-model.number="f.offPeakPrice" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">高峰售电价 $/MWh</label><input v-model.number="f.peakPrice" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">价差捕获率 %</label><input v-model.number="f.spreadCapture" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">日历日可用天数</label><input v-model.number="f.operatingDays" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">容量市场单价 $/MW-yr</label><input v-model.number="f.capacityPrice" type="number" step="100" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">辅助服务单价 $/MW-yr</label><input v-model.number="f.ancillaryPrice" type="number" step="100" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">电价年涨幅 %</label><input v-model.number="f.priceEscalation" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">充放电效率扣减 %</label><input v-model.number="f.efficiencyLossPct" type="number" step="0.01" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
-          <h3 class="font-bold text-xs text-slate-200 mb-2 flex items-center gap-2">
-            <span class="w-5 h-5 rounded bg-amber-500/20 text-amber-400 text-[10px] flex items-center justify-center font-bold">II</span>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: rgba(245, 158, 11, 0.2); color: var(--color-warning);">II</span>
             CAPEX & OPEX 成本结构
           </h3>
-          <div class="grid grid-cols-2 gap-2 text-[10px]">
-            <div><label class="text-slate-500 block mb-0.5">集装箱单价 万元/MWh</label><input v-model.number="f.containerCostPerMWh" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">PCS 单价 万元/MW</label><input v-model.number="f.pcsCostPerMW" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">BOP 配套 万元/MWh</label><input v-model.number="f.bopCostPerMWh" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">开发费 万元/MW</label><input v-model.number="f.developmentCostPerMW" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">固定 O&M 元/kW-年</label><input v-model.number="f.fixedOpexPerKW" type="number" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">可变 O&M 元/MWh</label><input v-model.number="f.varOpexPerMWh" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">保险费率 % of CAPEX</label><input v-model.number="f.insuranceRate" type="number" step="0.01" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">O&M 年涨幅 %</label><input v-model.number="f.opexEscalation" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
+          <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary);">
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">集装箱单价 万元/MWh</label><input v-model.number="f.containerCostPerMWh" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">PCS 单价 万元/MW</label><input v-model.number="f.pcsCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">BOP 配套 万元/MWh</label><input v-model.number="f.bopCostPerMWh" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">开发费 万元/MW</label><input v-model.number="f.developmentCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">固定 O&M 元/kW-年</label><input v-model.number="f.fixedOpexPerKW" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">可变 O&M 元/MWh</label><input v-model.number="f.varOpexPerMWh" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">保险费率 % of CAPEX</label><input v-model.number="f.insuranceRate" type="number" step="0.01" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">O&M 年涨幅 %</label><input v-model.number="f.opexEscalation" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-3">
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
-          <h3 class="font-bold text-xs text-slate-200 mb-2 flex items-center gap-2">
-            <span class="w-5 h-5 rounded bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center font-bold">III</span>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: rgba(59, 130, 246, 0.2); color: var(--color-accent-secondary);">III</span>
             融资与税务 Financing & Tax
           </h3>
-          <div class="grid grid-cols-1 gap-2 text-[10px]">
-            <div><label class="text-slate-500 block mb-0.5">折现率 WACC %</label><input v-model.number="f.discountRate" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">债务融资比例 %</label><input v-model.number="f.debtRatio" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">贷款利率 %</label><input v-model.number="f.interestRate" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">贷款年限</label><input v-model.number="f.loanTenure" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">所得税率 %</label><input v-model.number="f.taxRate" type="number" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">折旧年限</label><input v-model.number="f.depreciationYears" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">残值率 %</label><input v-model.number="f.residualRate" type="number" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
+          <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary);">
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">折现率 WACC %</label><input v-model.number="f.discountRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">债务融资比例 %</label><input v-model.number="f.debtRatio" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">贷款利率 %</label><input v-model.number="f.interestRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">贷款年限</label><input v-model.number="f.loanTenure" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">所得税率 %</label><input v-model.number="f.taxRate" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">折旧年限</label><input v-model.number="f.depreciationYears" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">残值率 %</label><input v-model.number="f.residualRate" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
-          <h3 class="font-bold text-xs text-slate-200 mb-2 flex items-center gap-2">
-            <span class="w-5 h-5 rounded bg-purple-500/20 text-purple-400 text-[10px] flex items-center justify-center font-bold">IV</span>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">IV</span>
             增容与设备成本递减
           </h3>
-          <div class="grid grid-cols-1 gap-2 text-[10px]">
-            <div><label class="text-slate-500 block mb-0.5">增容集装箱单价 万元/MWh</label><input v-model.number="f.augContainerCostPerMWh" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">设备成本年降幅 (学习率) %</label><input v-model.number="f.costDeclineRate" type="number" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">增容安装费 万元/台</label><input v-model.number="f.augInstallCost" type="number" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
-            <div><label class="text-slate-500 block mb-0.5">退役成本 万元/MWh</label><input v-model.number="f.decommissioningCost" type="number" step="1" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
+          <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary);">
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">增容集装箱单价 万元/MWh</label><input v-model.number="f.augContainerCostPerMWh" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">设备成本年降幅 (学习率) %</label><input v-model.number="f.costDeclineRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">增容安装费 万元/台</label><input v-model.number="f.augInstallCost" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">退役成本 万元/MWh</label><input v-model.number="f.decommissioningCost" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
-        <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
-          <h3 class="font-bold text-xs text-slate-200 mb-2 flex items-center gap-2">
-            <span class="w-5 h-5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">V</span>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: rgba(16, 185, 129, 0.2); color: var(--color-success);">V</span>
             敏感性分析范围
           </h3>
-          <div class="text-[10px] text-slate-500 space-y-1.5">
-            <div class="flex justify-between"><span>售电价波动范围</span><span class="text-slate-300">+/-{{ f.sensPct }}%</span></div>
-            <div class="flex justify-between"><span>衰减率波动范围</span><span class="text-slate-300">+/-{{ f.sensPct }}%</span></div>
-            <div class="flex justify-between"><span>融资利率波动</span><span class="text-slate-300">+/-{{ f.sensPct }}%</span></div>
-            <div class="flex justify-between"><span>CAPEX 波动</span><span class="text-slate-300">+/-{{ f.sensPct }}%</span></div>
-            <div><label class="text-slate-500 block mb-0.5">波动幅度 %</label><input v-model.number="f.sensPct" type="number" step="5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:border-teal-500 focus:outline-none text-xs"></div>
+          <div class="text-[10px] space-y-1.5" style="color: var(--color-text-muted);">
+            <div class="flex justify-between"><span>售电价波动范围</span><span style="color: var(--color-text-secondary);">+/-{{ f.sensPct }}%</span></div>
+            <div class="flex justify-between"><span>衰减率波动范围</span><span style="color: var(--color-text-secondary);">+/-{{ f.sensPct }}%</span></div>
+            <div class="flex justify-between"><span>融资利率波动</span><span style="color: var(--color-text-secondary);">+/-{{ f.sensPct }}%</span></div>
+            <div class="flex justify-between"><span>CAPEX 波动</span><span style="color: var(--color-text-secondary);">+/-{{ f.sensPct }}%</span></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">波动幅度 %</label><input v-model.number="f.sensPct" type="number" step="5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
       </div>
 
-      <div class="bg-slate-900/70 border border-slate-800 rounded-lg p-3">
+      <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
         <div class="flex justify-between items-center mb-2">
-          <h3 class="font-bold text-xs text-slate-200">年度现金流明细表 Annual Cash Flow</h3>
-          <button @click="recalc" class="text-[10px] bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded transition-colors">重新计算 Recalculate</button>
+          <h3 class="font-bold text-xs" style="color: var(--color-text);">年度现金流明细表 Annual Cash Flow</h3>
+          <button @click="recalc" class="text-[10px] px-3 py-1 rounded transition-colors" style="background-color: var(--color-accent); color: white;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">重新计算 Recalculate</button>
         </div>
         <div class="overflow-x-auto custom-scrollbar max-h-[300px]">
           <table class="w-full text-[10px] border-collapse">
             <thead>
-              <tr class="text-slate-400 border-b border-slate-800 sticky top-0 bg-slate-900/70 z-10">
-                <th class="text-left py-1 px-2 sticky left-0 bg-slate-900/70 z-20">年份</th>
-                <th class="text-right py-1 px-2">发电量 MWh</th>
-                <th class="text-right py-1 px-2">套利收入</th>
-                <th class="text-right py-1 px-2">容量收入</th>
-                <th class="text-right py-1 px-2">辅助服务</th>
-                <th class="text-right py-1 px-2">总收入</th>
-                <th class="text-right py-1 px-2">OPEX</th>
-                <th class="text-right py-1 px-2">EBITDA</th>
-                <th class="text-right py-1 px-2">净现金流</th>
-                <th class="text-right py-1 px-2">累计现金流</th>
-                <th class="text-right py-1 px-2" v-if="f.debtRatio > 0">DSCR</th>
+              <tr class="sticky top-0 z-10" style="background-color: var(--color-card);">
+                <th class="text-left py-1 px-2 sticky left-0 z-20" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">年份</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">发电量 MWh</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">套利收入</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">容量收入</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">辅助服务</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">总收入</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">OPEX</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">EBITDA</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">净现金流</th>
+                <th class="text-right py-1 px-2" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">累计现金流</th>
+                <th class="text-right py-1 px-2" v-if="f.debtRatio > 0" style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border);">DSCR</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in cashFlowTable" :key="'yr'+row.year"
-                :class="['border-b border-slate-800/50', row.year === 0 ? 'text-amber-400 font-bold' : 'text-slate-300']">
-                <td class="py-1 px-2 sticky left-0 bg-slate-900/70">{{ row.year === 0 ? '建设期' : row.year }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.energy) }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.arbitrage) }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.capacity) }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.ancillary) }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.revenue) }}</td>
-                <td class="text-right py-1 px-2 font-mono">{{ fmtNum(row.opex) }}</td>
-                <td class="text-right py-1 px-2 font-mono" :class="row.ebitda < 0 ? 'text-red-400' : ''">{{ fmtNum(row.ebitda) }}</td>
-                <td class="text-right py-1 px-2 font-mono font-bold" :class="row.cashFlow < 0 ? 'text-red-400' : 'text-emerald-400'">{{ fmtNum(row.cashFlow) }}</td>
-                <td class="text-right py-1 px-2 font-mono" :class="row.cumCashFlow < 0 ? 'text-red-400' : ''">{{ fmtNum(row.cumCashFlow) }}</td>
-                <td class="text-right py-1 px-2 font-mono" v-if="f.debtRatio > 0">{{ row.dscr ? row.dscr.toFixed(2) : '-' }}</td>
+              <tr v-for="row in cashFlowTable" :key="'yr'+row.year" style="border-bottom: 1px solid var(--color-border);">
+                <td class="py-1 px-2 sticky left-0 font-bold" :style="row.year === 0 ? { backgroundColor: 'var(--color-card)', color: 'var(--color-warning)' } : { backgroundColor: 'var(--color-card)', color: 'var(--color-text-secondary)' }">{{ row.year === 0 ? '建设期' : row.year }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.energy) }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.arbitrage) }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.capacity) }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.ancillary) }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.revenue) }}</td>
+                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary);">{{ fmtNum(row.opex) }}</td>
+                <td class="text-right py-1 px-2 font-mono" :style="row.ebitda < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-text-secondary)' }">{{ fmtNum(row.ebitda) }}</td>
+                <td class="text-right py-1 px-2 font-mono font-bold" :style="row.cashFlow < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-success)' }">{{ fmtNum(row.cashFlow) }}</td>
+                <td class="text-right py-1 px-2 font-mono" :style="row.cumCashFlow < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-text-secondary)' }">{{ fmtNum(row.cumCashFlow) }}</td>
+                <td class="text-right py-1 px-2 font-mono" v-if="f.debtRatio > 0" style="color: var(--color-text-secondary);">{{ row.dscr ? row.dscr.toFixed(2) : '-' }}</td>
               </tr>
             </tbody>
           </table>
@@ -160,10 +159,26 @@ import * as echarts from 'echarts'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })
 
-const darkTheme = {
-  backgroundColor: 'transparent',
-  textStyle: { color: '#94a3b8', fontSize: 10 },
-}
+const chartColors = computed(() => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+  return {
+    backgroundColor: 'transparent',
+    textStyle: { color: isDark ? '#94a3b8' : '#64748b', fontSize: 10 },
+    axisLabel: isDark ? '#64748b' : '#64748b',
+    legendText: isDark ? '#94a3b8' : '#64748b',
+    gridLine: isDark ? '#1e293b' : '#e2e8f0',
+    success: isDark ? '#10b981' : '#10b981',
+    danger: isDark ? '#ef4444' : '#ef4444',
+    warning: isDark ? '#f59e0b' : '#f59e0b',
+    info: isDark ? '#0ea5e9' : '#0ea5e9',
+    acLine: isDark ? '#14b8a6' : '#14b8a6',
+    purple: isDark ? '#a855f7' : '#8b5cf6',
+    orange: isDark ? '#f97316' : '#f97316',
+    cyan: isDark ? '#22d3ee' : '#06b6d4',
+    redLight: isDark ? '#f87171' : '#f87171',
+    muted: isDark ? '#94a3b8' : '#94a3b8',
+  }
+})
 
 const f = reactive({
   offPeakPrice: 200, peakPrice: 600, spreadCapture: 85, operatingDays: 330,
@@ -177,12 +192,12 @@ const f = reactive({
 })
 
 const metrics = ref([
-  { label: 'Project IRR', value: '-', unit: '%', color: 'bg-slate-900/80 border-teal-500/30', textColor: 'text-teal-400' },
-  { label: 'Equity IRR', value: '-', unit: '%', color: 'bg-slate-900/80 border-emerald-500/30', textColor: 'text-emerald-400' },
-  { label: 'NPV (7%)', value: '-', unit: '万元', color: 'bg-slate-900/80 border-blue-500/30', textColor: 'text-blue-400' },
-  { label: 'LCOS', value: '-', unit: '元/kWh', color: 'bg-slate-900/80 border-purple-500/30', textColor: 'text-purple-400' },
-  { label: 'Payback', value: '-', unit: '年', color: 'bg-slate-900/80 border-amber-500/30', textColor: 'text-amber-400' },
-  { label: 'Total CAPEX', value: '-', unit: '万元', color: 'bg-slate-900/80 border-rose-500/30', textColor: 'text-rose-400' },
+  { label: 'Project IRR', value: '-', unit: '%', color: '', textColor: 'var(--color-accent-secondary)' },
+  { label: 'Equity IRR', value: '-', unit: '%', color: '', textColor: 'var(--color-success)' },
+  { label: 'NPV (7%)', value: '-', unit: '万元', color: '', textColor: 'var(--color-accent)' },
+  { label: 'LCOS', value: '-', unit: '元/kWh', color: '', textColor: 'var(--color-info)' },
+  { label: 'Payback', value: '-', unit: '年', color: '', textColor: 'var(--color-warning)' },
+  { label: 'Total CAPEX', value: '-', unit: '万元', color: '', textColor: 'var(--color-danger)' },
 ])
 
 const cashFlowTable = ref([])
@@ -348,7 +363,8 @@ function renderCharts() {
 function renderCashFlowChart() {
   if (!cashFlowChartRef.value) return
   if (cashFlowChart) cashFlowChart.dispose()
-  cashFlowChart = echarts.init(cashFlowChartRef.value, darkTheme)
+  const colors = chartColors.value
+  cashFlowChart = echarts.init(cashFlowChartRef.value, colors)
 
   const rows = cachedRows
   const years = rows.map(r => r.year)
@@ -358,23 +374,23 @@ function renderCashFlowChart() {
 
   cashFlowChart.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { top: 0, textStyle: { color: '#94a3b8', fontSize: 10 }, data: ['累计现金流', '年净现金流'] },
+    legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['累计现金流', '年净现金流'] },
     grid: { top: 30, right: 20, bottom: 25, left: 65 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: '#64748b', fontSize: 9 }, name: '年份', nameTextStyle: { color: '#64748b', fontSize: 9 } },
+    xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 }, name: '年份', nameTextStyle: { color: colors.axisLabel, fontSize: 9 } },
     yAxis: [
-      { type: 'value', axisLabel: { color: '#64748b', fontSize: 9, formatter: v => (v / 10000).toFixed(1) + '亿' }, splitLine: { lineStyle: { color: '#1e293b' } } },
+      { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: v => (v / 10000).toFixed(1) + '亿' }, splitLine: { lineStyle: { color: colors.gridLine } } },
     ],
     series: [
       {
         name: '累计现金流', type: 'line', data: cumCF, smooth: true, symbol: 'none',
-        lineStyle: { color: '#0ea5e9', width: 2.5 },
-        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(14,165,233,0.25)' }, { offset: 1, color: 'rgba(14,165,233,0)' }]) },
-        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 0, lineStyle: { color: '#ef4444', type: 'dashed', width: 1.5 }, label: { formatter: '盈亏平衡线', color: '#ef4444', fontSize: 9 } }] },
-        markPoint: paybackYear > 0 && paybackYear < 26 ? { silent: true, symbol: 'pin', symbolSize: 24, data: [{ coord: [paybackYear, 0], value: '回收 ' + paybackYear + '年', itemStyle: { color: '#f59e0b' } }] } : undefined,
+        lineStyle: { color: colors.info, width: 2.5 },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(14,165,233,0.25)' : 'rgba(59,130,246,0.15)' }, { offset: 1, color: 'transparent' }]) },
+        markLine: { silent: true, symbol: 'none', data: [{ yAxis: 0, lineStyle: { color: colors.danger, type: 'dashed', width: 1.5 }, label: { formatter: '盈亏平衡线', color: colors.danger, fontSize: 9 } }] },
+        markPoint: paybackYear > 0 && paybackYear < 26 ? { silent: true, symbol: 'pin', symbolSize: 24, data: [{ coord: [paybackYear, 0], value: '回收 ' + paybackYear + '年', itemStyle: { color: colors.warning } }] } : undefined,
       },
       {
         name: '年净现金流', type: 'bar', data: netCF,
-        itemStyle: { color: params => params.value >= 0 ? '#10b981' : '#ef4444', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: params => params.value >= 0 ? colors.success : colors.danger, borderRadius: [2, 2, 0, 0] },
         barWidth: 8,
       },
     ],
@@ -385,21 +401,22 @@ function renderCashFlowChart() {
 function renderRevenueChart() {
   if (!revenueChartRef.value) return
   if (revenueChart) revenueChart.dispose()
-  revenueChart = echarts.init(revenueChartRef.value, darkTheme)
+  const colors = chartColors.value
+  revenueChart = echarts.init(revenueChartRef.value, colors)
 
   const rows = cachedRows.filter(r => r.year > 0)
   const years = rows.map(r => r.year)
 
   revenueChart.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { top: 0, textStyle: { color: '#94a3b8', fontSize: 10 }, data: ['套利收入', '容量收入', '辅助服务'] },
+    legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['套利收入', '容量收入', '辅助服务'] },
     grid: { top: 30, right: 20, bottom: 25, left: 55 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: '#64748b', fontSize: 9 } },
-    yAxis: { type: 'value', axisLabel: { color: '#64748b', fontSize: 9, formatter: v => fmtNum(v) }, splitLine: { lineStyle: { color: '#1e293b' } } },
+    xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
+    yAxis: { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: v => fmtNum(v) }, splitLine: { lineStyle: { color: colors.gridLine } } },
     series: [
-      { name: '套利收入', type: 'bar', stack: 'revenue', data: rows.map(r => r.arbitrage), itemStyle: { color: '#14b8a6' }, barWidth: 18 },
-      { name: '容量收入', type: 'bar', stack: 'revenue', data: rows.map(r => r.capacity), itemStyle: { color: '#a855f7' }, barWidth: 18 },
-      { name: '辅助服务', type: 'bar', stack: 'revenue', data: rows.map(r => r.ancillary), itemStyle: { color: '#f97316' }, barWidth: 18 },
+      { name: '套利收入', type: 'bar', stack: 'revenue', data: rows.map(r => r.arbitrage), itemStyle: { color: colors.acLine }, barWidth: 18 },
+      { name: '容量收入', type: 'bar', stack: 'revenue', data: rows.map(r => r.capacity), itemStyle: { color: colors.purple }, barWidth: 18 },
+      { name: '辅助服务', type: 'bar', stack: 'revenue', data: rows.map(r => r.ancillary), itemStyle: { color: colors.orange }, barWidth: 18 },
     ],
   })
   revenueChart.resize()
@@ -408,7 +425,8 @@ function renderRevenueChart() {
 function renderDscrChart() {
   if (!dscrChartRef.value) return
   if (dscrChart) dscrChart.dispose()
-  dscrChart = echarts.init(dscrChartRef.value, darkTheme)
+  const colors = chartColors.value
+  dscrChart = echarts.init(dscrChartRef.value, colors)
 
   const rows = cachedRows.filter(r => r.year > 0)
   const years = rows.map(r => r.year)
@@ -416,20 +434,20 @@ function renderDscrChart() {
 
   dscrChart.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { top: 0, textStyle: { color: '#94a3b8', fontSize: 10 }, data: ['EBITDA', '还本付息', 'DSCR'] },
+    legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['EBITDA', '还本付息', 'DSCR'] },
     grid: { top: 30, right: 45, bottom: 25, left: 55 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: '#64748b', fontSize: 9 } },
+    xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
     yAxis: [
-      { type: 'value', axisLabel: { color: '#64748b', fontSize: 9, formatter: v => fmtNum(v) }, splitLine: { lineStyle: { color: '#1e293b' } }, name: '万元' },
-      { type: 'value', min: 0, max: 3, axisLabel: { color: '#64748b', fontSize: 9 }, splitLine: { show: false }, name: '倍率' },
+      { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: v => fmtNum(v) }, splitLine: { lineStyle: { color: colors.gridLine } }, name: '万元' },
+      { type: 'value', min: 0, max: 3, axisLabel: { color: colors.axisLabel, fontSize: 9 }, splitLine: { show: false }, name: '倍率' },
     ],
     series: [
-      { name: 'EBITDA', type: 'bar', data: rows.map(r => r.ebitda), itemStyle: { color: '#22d3ee', borderRadius: [2, 2, 0, 0] }, barWidth: 10, barGap: '30%' },
-      { name: '还本付息', type: 'bar', data: rows.map(r => r.debtService), itemStyle: { color: '#f87171', borderRadius: [2, 2, 0, 0] }, barWidth: 10 },
+      { name: 'EBITDA', type: 'bar', data: rows.map(r => r.ebitda), itemStyle: { color: colors.cyan, borderRadius: [2, 2, 0, 0] }, barWidth: 10, barGap: '30%' },
+      { name: '还本付息', type: 'bar', data: rows.map(r => r.debtService), itemStyle: { color: colors.redLight, borderRadius: [2, 2, 0, 0] }, barWidth: 10 },
       {
         name: 'DSCR', type: 'line', yAxisIndex: 1, data: dscrData, smooth: true, symbol: 'circle', symbolSize: 4,
-        lineStyle: { color: '#facc15', width: 2.5 },
-        markLine: { silent: true, symbol: 'none', yAxisIndex: 1, data: [{ yAxis: 1.3, lineStyle: { color: '#ef4444', type: 'dashed' }, label: { formatter: '银行底线 1.3x', color: '#ef4444', fontSize: 9 } }] },
+        lineStyle: { color: colors.warning, width: 2.5 },
+        markLine: { silent: true, symbol: 'none', yAxisIndex: 1, data: [{ yAxis: 1.3, lineStyle: { color: colors.danger, type: 'dashed' }, label: { formatter: '银行底线 1.3x', color: colors.danger, fontSize: 9 } }] },
       },
     ],
   })
@@ -439,24 +457,25 @@ function renderDscrChart() {
 function renderCapexChart() {
   if (!capexChartRef.value) return
   if (capexChart) capexChart.dispose()
-  capexChart = echarts.init(capexChartRef.value, darkTheme)
+  const colors = chartColors.value
+  capexChart = echarts.init(capexChartRef.value, colors)
 
   if (!cachedCapexData) return
   const { containerCost, pcsCost, bopCost, devCost, totalCapMW, totalCapMWh } = cachedCapexData
 
   capexChart.setOption({
     tooltip: { trigger: 'item', formatter: '{b}: {c} 万元 ({d}%)' },
-    legend: { bottom: 0, textStyle: { color: '#94a3b8', fontSize: 9 }, data: ['集装箱', 'PCS', 'BOP配套', '开发费'] },
+    legend: { bottom: 0, textStyle: { color: colors.legendText, fontSize: 9 }, data: ['集装箱', 'PCS', 'BOP配套', '开发费'] },
     series: [
       {
         type: 'pie', radius: ['45%', '65%'], center: ['35%', '48%'], avoidLabelOverlap: false,
-        label: { show: true, position: 'outside', formatter: '{b}\n{d}%', fontSize: 9, color: '#94a3b8' },
+        label: { show: true, position: 'outside', formatter: '{b}\n{d}%', fontSize: 9, color: colors.legendText },
         emphasis: { label: { show: true, fontSize: 11, fontWeight: 'bold' } },
         data: [
-          { value: containerCost, name: '集装箱', itemStyle: { color: '#0ea5e9' } },
-          { value: pcsCost, name: 'PCS', itemStyle: { color: '#8b5cf6' } },
-          { value: bopCost, name: 'BOP配套', itemStyle: { color: '#f59e0b' } },
-          { value: devCost, name: '开发费', itemStyle: { color: '#94a3b8' } },
+          { value: containerCost, name: '集装箱', itemStyle: { color: colors.info } },
+          { value: pcsCost, name: 'PCS', itemStyle: { color: colors.purple } },
+          { value: bopCost, name: 'BOP配套', itemStyle: { color: colors.warning } },
+          { value: devCost, name: '开发费', itemStyle: { color: colors.muted } },
         ],
       },
     ],
