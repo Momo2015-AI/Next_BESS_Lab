@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full overflow-y-auto custom-scrollbar">
-    <div class="max-w-7xl mx-auto space-y-3 py-2">
+  <div class="h-full overflow-y-auto custom-scrollbar flex flex-col">
+    <div class="flex-1 overflow-y-auto space-y-3 py-2 px-4">
 
       <div class="grid grid-cols-6 gap-2">
         <div v-for="m in metrics" :key="m.label"
@@ -313,7 +313,9 @@ function computeAll() {
   cashFlowTable.value = rows
   cachedRows = rows
 
-  nextTick(() => renderCharts())
+  nextTick(() => {
+    setTimeout(() => renderCharts(), 300)
+  })
 }
 
 function calcIRR(flows, years) {

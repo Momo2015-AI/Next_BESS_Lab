@@ -10,21 +10,21 @@
 
     <template v-if="activeChart === 'combined'">
       <div class="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div ref="sohChartRef" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 100%; height: 100%; min-height: 200px;"></div>
-        <div ref="rteChartRef" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 100%; height: 100%; min-height: 200px;"></div>
+        <div ref="sohChartRef" class="w-full min-h-0" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); min-height: 250px;"></div>
+        <div ref="rteChartRef" class="w-full min-h-0" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); min-height: 250px;"></div>
       </div>
     </template>
 
     <template v-if="activeChart === 'soh'">
-      <div ref="sohChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:200px"></div>
+      <div ref="sohChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
     </template>
 
     <template v-if="activeChart === 'rte'">
-      <div ref="rteChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:200px"></div>
+      <div ref="rteChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
     </template>
 
     <template v-if="activeChart === 'acusable'">
-      <div ref="acChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:200px"></div>
+      <div ref="acChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-teal-500 rounded-sm"></span> 存量净可用</div>
         <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-pink-500 rounded-sm"></span> 补容净可用</div>
@@ -34,7 +34,7 @@
     </template>
 
     <template v-if="activeChart === 'stacked'">
-      <div ref="stackedChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:200px"></div>
+      <div ref="stackedChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-teal-500 rounded-sm"></span> 存量净可用</div>
         <div class="flex items-center gap-1 text-[10px]"><span class="inline-block w-3 h-3 bg-pink-500 rounded-sm"></span> 补容净可用</div>
@@ -44,7 +44,7 @@
     </template>
 
     <template v-if="activeChart === 'degradation'">
-      <div ref="degradationChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:200px"></div>
+      <div ref="degradationChartRef" class="flex-1 min-h-0 bg-slate-900/80 rounded-xl border border-slate-800/80 w-full" style="min-height:300px"></div>
     </template>
 
     <template v-if="activeChart === 'dashboard'">
@@ -56,7 +56,7 @@
             <div class="text-[10px] text-slate-500 mt-0.5">{{ m.sub }}</div>
           </div>
         </div>
-        <div ref="dashChartRef" class="w-full" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); height:260px"></div>
+        <div ref="dashChartRef" class="w-full" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); height:300px"></div>
       </div>
     </template>
   </div>
@@ -331,7 +331,7 @@ function renderAll() {
       if (id === 'stacked') createStackedChart()
       if (id === 'degradation') createDegradationChart()
       if (id === 'dashboard') createDashboardChart()
-    }, 150)
+    }, 300)
   })
 }
 
