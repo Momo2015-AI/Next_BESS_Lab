@@ -396,10 +396,10 @@ def seed_library():
         
         # 初始化电芯数据
         default_cells = [
-            {'model': 'LFP280', 'mfr': '宁德时代', 'chemistry': 'LFP', 'capacityAh': 280, 'voltageNominal': 3.2, 'voltageMax': 3.65, 'voltageMin': 2.5, 'energyWh': 896, 'cycleLife': 6000, 'calendarLife': 20, 'status': 'mass-production'},
-            {'model': 'LFP302', 'mfr': '比亚迪', 'chemistry': 'LFP', 'capacityAh': 302, 'voltageNominal': 3.2, 'voltageMax': 3.65, 'voltageMin': 2.5, 'energyWh': 966, 'cycleLife': 6000, 'calendarLife': 20, 'status': 'mass-production'},
-            {'model': 'LFP314', 'mfr': '亿纬锂能', 'chemistry': 'LFP', 'capacityAh': 314, 'voltageNominal': 3.2, 'voltageMax': 3.65, 'voltageMin': 2.5, 'energyWh': 1005, 'cycleLife': 5000, 'calendarLife': 20, 'status': 'mass-production'},
-            {'model': 'NCM523', 'mfr': 'LG新能源', 'chemistry': 'NCM', 'capacityAh': 150, 'voltageNominal': 3.65, 'voltageMax': 4.2, 'voltageMin': 2.8, 'energyWh': 548, 'cycleLife': 3000, 'calendarLife': 15, 'status': 'mass-production'},
+            {'model': 'LFP280', 'mfr': '宁德时代', 'chemistry': 'LFP', 'capacity_ah': 280, 'voltage_nominal': 3.2, 'voltage_max': 3.65, 'voltage_min': 2.5, 'energy_wh': 896, 'cycle_life': 6000, 'calendar_life': 20, 'status': 'mass-production'},
+            {'model': 'LFP302', 'mfr': '比亚迪', 'chemistry': 'LFP', 'capacity_ah': 302, 'voltage_nominal': 3.2, 'voltage_max': 3.65, 'voltage_min': 2.5, 'energy_wh': 966, 'cycle_life': 6000, 'calendar_life': 20, 'status': 'mass-production'},
+            {'model': 'LFP314', 'mfr': '亿纬锂能', 'chemistry': 'LFP', 'capacity_ah': 314, 'voltage_nominal': 3.2, 'voltage_max': 3.65, 'voltage_min': 2.5, 'energy_wh': 1005, 'cycle_life': 5000, 'calendar_life': 20, 'status': 'mass-production'},
+            {'model': 'NCM523', 'mfr': 'LG新能源', 'chemistry': 'NCM', 'capacity_ah': 150, 'voltage_nominal': 3.65, 'voltage_max': 4.2, 'voltage_min': 2.8, 'energy_wh': 548, 'cycle_life': 3000, 'calendar_life': 15, 'status': 'mass-production'},
         ]
         
         for cell_data in default_cells:
@@ -408,9 +408,9 @@ def seed_library():
         
         # 初始化集装箱数据
         default_containers = [
-            {'model': 'C20-5MWh', 'mfr': '宁德时代', 'spec': '20ft', 'ratedEnergyMWh': 5.0, 'ratedPowerMW': 2.5, 'dcVoltageRange': '1000-1500V', 'maxDcCurrent': 2500, 'cooling': '液冷', 'rte': 95, 'auxRun': 15, 'auxStandby': 5, 'status': 'mass-production'},
-            {'model': 'C20-3.44MWh', 'mfr': '比亚迪', 'spec': '20ft', 'ratedEnergyMWh': 3.44, 'ratedPowerMW': 1.72, 'dcVoltageRange': '1000-1500V', 'maxDcCurrent': 1720, 'cooling': '液冷', 'rte': 95, 'auxRun': 12, 'auxStandby': 4, 'status': 'mass-production'},
-            {'model': 'C40-10MWh', 'mfr': '亿纬锂能', 'spec': '40ft', 'ratedEnergyMWh': 10.0, 'ratedPowerMW': 5.0, 'dcVoltageRange': '1000-1500V', 'maxDcCurrent': 5000, 'cooling': '液冷', 'rte': 95, 'auxRun': 25, 'auxStandby': 8, 'status': 'mass-production'},
+            {'model': 'C20-5MWh', 'mfr': '宁德时代', 'spec': '20ft', 'rated_energy_mwh': 5.0, 'rated_power_mw': 2.5, 'dc_voltage_range': '1000-1500V', 'max_dc_current': 2500, 'cooling': '液冷', 'rte': 95, 'aux_run': 15, 'aux_standby': 5, 'status': 'mass-production'},
+            {'model': 'C20-3.44MWh', 'mfr': '比亚迪', 'spec': '20ft', 'rated_energy_mwh': 3.44, 'rated_power_mw': 1.72, 'dc_voltage_range': '1000-1500V', 'max_dc_current': 1720, 'cooling': '液冷', 'rte': 95, 'aux_run': 12, 'aux_standby': 4, 'status': 'mass-production'},
+            {'model': 'C40-10MWh', 'mfr': '亿纬锂能', 'spec': '40ft', 'rated_energy_mwh': 10.0, 'rated_power_mw': 5.0, 'dc_voltage_range': '1000-1500V', 'max_dc_current': 5000, 'cooling': '液冷', 'rte': 95, 'aux_run': 25, 'aux_standby': 8, 'status': 'mass-production'},
         ]
         
         for container_data in default_containers:
@@ -419,10 +419,10 @@ def seed_library():
         
         # 初始化PCS数据
         default_pcs = [
-            {'model': 'PCS1.25MW', 'mfr': '阳光电源', 'ratedPowerMW': 1.25, 'efficiency': 99, 'acVoltage': '400V', 'dcVoltageRange': '900-1500V', 'cooling': '风冷', 'auxRun': 2, 'auxStandby': 0.5, 'status': 'mass-production'},
-            {'model': 'PCS1.725MW', 'mfr': '华为', 'ratedPowerMW': 1.725, 'efficiency': 99, 'acVoltage': '400V', 'dcVoltageRange': '900-1500V', 'cooling': '风冷', 'auxRun': 2.5, 'auxStandby': 0.5, 'status': 'mass-production'},
-            {'model': 'PCS2.5MW', 'mfr': '阳光电源', 'ratedPowerMW': 2.5, 'efficiency': 99, 'acVoltage': '690V', 'dcVoltageRange': '1000-1500V', 'cooling': '液冷', 'auxRun': 3, 'auxStandby': 1, 'status': 'mass-production'},
-            {'model': 'PCS3.45MW', 'mfr': '上能电气', 'ratedPowerMW': 3.45, 'efficiency': 99, 'acVoltage': '690V', 'dcVoltageRange': '1000-1500V', 'cooling': '液冷', 'auxRun': 4, 'auxStandby': 1, 'status': 'mass-production'},
+            {'model': 'PCS1.25MW', 'mfr': '阳光电源', 'rated_power_mw': 1.25, 'efficiency': 99, 'ac_voltage': '400V', 'dc_voltage_range': '900-1500V', 'cooling': '风冷', 'aux_run': 2, 'aux_standby': 0.5, 'status': 'mass-production'},
+            {'model': 'PCS1.725MW', 'mfr': '华为', 'rated_power_mw': 1.725, 'efficiency': 99, 'ac_voltage': '400V', 'dc_voltage_range': '900-1500V', 'cooling': '风冷', 'aux_run': 2.5, 'aux_standby': 0.5, 'status': 'mass-production'},
+            {'model': 'PCS2.5MW', 'mfr': '阳光电源', 'rated_power_mw': 2.5, 'efficiency': 99, 'ac_voltage': '690V', 'dc_voltage_range': '1000-1500V', 'cooling': '液冷', 'aux_run': 3, 'aux_standby': 1, 'status': 'mass-production'},
+            {'model': 'PCS3.45MW', 'mfr': '上能电气', 'rated_power_mw': 3.45, 'efficiency': 99, 'ac_voltage': '690V', 'dc_voltage_range': '1000-1500V', 'cooling': '液冷', 'aux_run': 4, 'aux_standby': 1, 'status': 'mass-production'},
         ]
         
         for pcs_data in default_pcs:

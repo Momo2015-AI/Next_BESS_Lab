@@ -262,6 +262,8 @@ const showToast = (message, type = 'info') => {
   setTimeout(() => { toast.show = false }, 3000)
 }
 
+const submitting = ref(false)
+
 // 返回主页
 function goHome() {
   router.push('/')
@@ -337,91 +339,79 @@ function resetForm() {
 
 // 提交表单
 async function submitSurvey() {
-  // 验证必填项
   if (!formData.projectName) {
     showToast('请填写项目名称', 'error')
     return
   }
-  if (!formData.ratedEnergy) {
+  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
     showToast('请填写额定能量', 'error')
     return
   }
-  
+
+  submitting.value = true
+
   try {
-    // 构建符合后端API的数据结构
-    const surveyData = {
-      project_name: formData.projectName,  // 后端期望 project_name
-      location: formData.location,
-      contact: formData.contact,
-      phone: formData.phone,
-      
-      // 储能需求
-      rated_energy: formData.ratedEnergy,  // 后端期望 rated_energy
-      rated_power: formData.ratedPower,
-      discharge_hours: formData.dischargeHours,  // 后端期望 discharge_hours
-      application: formData.application,
-      voltage_level: formData.voltageLevel,
-      
-      // 运行参数
-      cycles_per_day: formData.cyclesPerDay,
-      dod: formData.dod,
-      c_rate: formData.cRate,
-      temperature: formData.temperature,
-      guarantee_years: formData.guaranteeYears,
-      
-      // 电池选型
-      battery_type: formData.batteryType,
-      cell_capacity: formData.cellCapacity,
-      container_spec: formData.containerSpec,
-      
-      // 特殊需求
-      features: formData.features,
-      remarks: formData.remarks,
+    const mappedData = {
+      project_name: formData.projectName,
+      contact_person: formData.contact || '',
+      contact_phone: formData.phone || '',
+      location: formData.location || '',
+      total_mwh: formData.ratedEnergy,
+      total_mw: formData.ratedPower || null,
+      duration: formData.dischargeHours || null,
+      grid_voltage: formData.voltageLevel || null,
+      cycles_per_day: formData.cyclesPerDay || 1,
+      temp_avg: formData.temperature || null,
+      remarks: formData.remarks || '',
     }
-    
-    // 调用后端API
-    const response = await fetch('/api/survey/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(surveyData),
-    })
-    
-    const result = await response.json()
-    
-    if (response.ok) {
-      // 保存到localStorage作为备份
-      localStorage.setItem('currentSurveyId', result.id || result.survey_id)
-      localStorage.setItem('currentSurvey', JSON.stringify({
-        id: result.id || result.survey_id,
-        ...formData,
-        submittedAt: new Date().toISOString(),
-      }))
-      
-      showToast('调研表提交成功！', 'success')
-      
-      // 跳转到系统主页
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
-    } else {
-      showToast(result.error || '提交失败', 'error')
-    }
-    
-  } catch (error) {
-    console.error('提交失败:', error)
-    // 网络错误时保存到localStorage
+
     const surveyId = 'SURV' + Date.now()
-    localStorage.setItem('currentSurveyId', surveyId)
-    localStorage.setItem('currentSurvey', JSON.stringify({
+    const surveyData = {
       id: surveyId,
       ...formData,
       submittedAt: new Date().toISOString(),
-    }))
-    showToast('网络错误，已保存到本地', 'warning')
-    
+      status: 'pending',
+      containerQty: Math.ceil(formData.ratedEnergy / 5),
+      pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
+      totalEnergyMwh: formData.ratedEnergy,
+      totalPowerMw: formData.ratedPower,
+    }
+
+    let apiSuccess = false
+    try {
+      const response = await fetch('/api/survey/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mappedData),
+      })
+      const result = await response.json()
+      if (result.success) {
+        apiSuccess = true
+        surveyData.id = result.data?.survey_id || surveyId
+      }
+    } catch (e) {
+      console.error('API 提交失败，使用本地存储:', e)
+    }
+
+    const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
+    surveys.push(surveyData)
+    localStorage.setItem('surveys', JSON.stringify(surveys))
+
+    localStorage.setItem('currentSurveyId', surveyData.id)
+    localStorage.setItem('currentSurvey', JSON.stringify(surveyData))
+
+    const msg = apiSuccess ? '调研表已提交至服务器' : '调研表已保存在本地'
+    showToast(msg + '！', 'success')
+
     setTimeout(() => {
       router.push('/')
     }, 1500)
+
+  } catch (error) {
+    console.error('提交失败:', error)
+    showToast('提交失败，请重试', 'error')
+  } finally {
+    submitting.value = false
   }
 }
 </script>

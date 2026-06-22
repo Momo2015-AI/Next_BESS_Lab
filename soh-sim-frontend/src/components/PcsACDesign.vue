@@ -14,26 +14,10 @@
           <div class="space-y-3">
             <div>
               <label class="text-[10px] text-slate-500 block mb-1">PCS型号</label>
-              <select v-model="pcsConfig.pcsModel" @change="onPcsModelChange"
-                class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs focus:border-sky-500 outline-none">
-                <option value="">请选择PCS型号</option>
-                <option v-for="pcs in pcsLibrary" :key="pcs.id" :value="pcs.model">
-                  {{ pcs.model }} - {{ pcs.mfr }} ({{ pcs.ratedPowerMW }}MW)
-                </option>
+              <select v-model="selectedPcsId" @change="onPcsChange" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs focus:border-sky-500 outline-none">
+                <option value="">-- 请选择PCS --</option>
+                <option v-for="p in products.pcs" :key="p.id" :value="p.id">{{ p.mfr }} {{ p.model }} ({{ p.ratedPowerMW }}MW)</option>
               </select>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="text-[10px] text-slate-500 block mb-1">PCS单机功率 (MW)</label>
-                <input v-model.number="pcsConfig.pcsPower" type="number" step="0.001"
-                  class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none">
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-500 block mb-1">效率 (%)</label>
-                <input v-model.number="pcsConfig.efficiency" type="number" step="0.1"
-                  class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none">
-              </div>
             </div>
             
             <div class="grid grid-cols-2 gap-2">
@@ -288,11 +272,32 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { useProducts } from '../composables/useProducts'
 
-const emit = defineEmits(['apply-config'])
+const emit = defineEmits(['apply-config', 'error'])
 
-// PCS库数据
-const pcsLibrary = ref([])
+const products = useProducts()
+const selectedPcsId = ref('')
+
+function onPcsChange() {
+  const pcs = products.getPcsById(selectedPcsId.value)
+  if (pcs) {
+    pcsConfig.pcsPower = pcs.ratedPowerMW || 2.5
+    pcsConfig.dcVoltageRange = pcs.dcVoltageRange || '800-1500V'
+    pcsConfig.acRatedPower = (pcs.ratedPowerKVA || pcs.ratedPowerMW * 1040)
+    pcsConfig.efficiency = pcs.efficiency || 98.5
+    pcsConfig.cooling = pcs.cooling || 'Forced Air'
+  }
+}
+
+onMounted(() => {
+  products.loadAll().then(() => {
+    if (products.pcs.value.length > 0 && !selectedPcsId.value) {
+      selectedPcsId.value = products.pcs.value[0].id
+      onPcsChange()
+    }
+  })
+})
 
 // Toast
 const toast = reactive({ show: false, message: '', type: 'success' })
@@ -303,54 +308,10 @@ const showToast = (message, type = 'success') => {
   setTimeout(() => { toast.show = false }, 3000)
 }
 
-// 加载PCS库数据
-async function loadPcsLibrary() {
-  try {
-    const response = await fetch('/api/library/pcs')
-    const data = await response.json()
-    if (data.success) {
-      pcsLibrary.value = data.data || []
-      // 如果PCS库为空，尝试初始化
-      if (pcsLibrary.value.length === 0) {
-        await seedLibrary()
-      }
-    }
-  } catch (error) {
-    console.error('加载PCS库失败:', error)
-  }
-}
-
-// 初始化产品库
-async function seedLibrary() {
-  try {
-    const response = await fetch('/api/library/seed', { method: 'POST' })
-    const data = await response.json()
-    if (data.success) {
-      await loadPcsLibrary()
-      showToast('产品库初始化成功')
-    }
-  } catch (error) {
-    console.error('初始化产品库失败:', error)
-  }
-}
-
-// PCS型号变更时自动填充参数
-function onPcsModelChange() {
-  const selectedPcs = pcsLibrary.value.find(p => p.model === pcsConfig.pcsModel)
-  if (selectedPcs) {
-    pcsConfig.pcsPower = selectedPcs.ratedPowerMW
-    pcsConfig.efficiency = selectedPcs.efficiency
-    pcsConfig.dcVoltageRange = selectedPcs.dcVoltageRange
-    pcsConfig.maxDcCurrent = selectedPcs.maxDcCurrent
-  }
-}
-
 // PCS配置
 const pcsConfig = reactive({
   // PCS选型
-  pcsModel: '',
   pcsPower: 5,
-  efficiency: 99,
   dcVoltageRange: '672-864V',
   maxDcCurrent: 1500,
   acRatedPower: 5000,
@@ -407,8 +368,8 @@ function applyConfigRules() {
   // 计算需要的PCS功率
   const requiredPower = batteryEnergy / dischargeHours
   
-  // 计算功率配比（保持为数字）
-  pcsConfig.powerRatio = parseFloat((batteryEnergy / requiredPower).toFixed(1))
+  // 计算功率配比
+  pcsConfig.powerRatio = Number((batteryEnergy / requiredPower).toFixed(1))
   
   // 计算PCS数量
   pcsConfig.pcsQty = Math.ceil(requiredPower / pcsConfig.pcsPower)
@@ -474,11 +435,6 @@ function setBatteryConfig(config) {
   externalBatteryConfig.containerQty = config.containerQty || 10
   externalBatteryConfig.containerEnergy = config.containerEnergy || 5
 }
-
-// 组件挂载时加载PCS库
-onMounted(() => {
-  loadPcsLibrary()
-})
 
 // 导出方法
 defineExpose({ setBatteryConfig, applyConfigRules })

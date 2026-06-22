@@ -11,6 +11,7 @@ from database import db, init_db, Survey, Project
 from routes.survey import survey_bp
 from routes.export import export_bp
 from routes.auth import auth_bp
+from routes.products import products_bp, seed_products
 from routes.library import library_bp
 from routes.project import project_bp
 from routes.simulation import simulation_bp
@@ -33,10 +34,14 @@ init_db(app)
 app.register_blueprint(survey_bp)
 app.register_blueprint(export_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(products_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(simulation_bp)
 app.register_blueprint(report_bp)
+
+with app.app_context():
+    seed_products()
 
 N = 26
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")

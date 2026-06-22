@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import App from './App.vue'
-import SurveyPage from './pages/SurveyPage.vue'
+import App from '../App.vue'
+import SurveyPage from '../pages/SurveyPage.vue'
 
 const routes = [
   {
