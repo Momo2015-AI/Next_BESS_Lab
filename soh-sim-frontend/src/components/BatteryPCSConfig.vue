@@ -199,9 +199,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
-import { products } from '../data/products.json'
 
-const emit = defineEmits(['applyConfig'])
+const emit = defineEmits(['applyConfig', 'error'])
 
 // 集装箱列表 - 从API加载
 const containers = ref([])
@@ -651,7 +650,7 @@ const applyConfig = () => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
   
   if (!container || !pcs) {
-    alert('请先选择集装箱和PCS型号')
+    emit('error', '请先选择集装箱和PCS型号', 'warning')
     return
   }
   
@@ -672,6 +671,3 @@ watch([selectedContainer, containerQty, selectedPCS], () => {
   calculatePCS()
 })
 </script>
-
-<style scoped>
-</style>

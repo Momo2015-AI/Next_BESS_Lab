@@ -1,113 +1,113 @@
 <template>
-  <div class="flex-1 overflow-auto bg-slate-900/80 rounded-xl p-4 border border-slate-800/80 space-y-4">
+  <div class="flex-1 overflow-auto rounded-xl p-4 space-y-4 card">
     <div>
-      <h2 class="text-sm font-bold text-teal-400 border-l-4 border-teal-500 pl-2 mb-3">系统参数配置</h2>
+      <h2 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('paramPanel.systemParams') }}</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">标称单舱能量 (MWh)</label>
-          <input type="number" :value="params.ratedEnergy" step="0.1" min="0.1" max="20"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.ratedEnergy ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('ratedEnergy', Number($event.target.value), { min: 0.1, max: 20 })">
+          <label class="label-text">{{ $t('paramPanel.ratedEnergy') }}</label>
+          <input type="number" :value="params.ratedEnergy" step="0.1"
+            :class="['input-field',
+              errors.ratedEnergy ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('ratedEnergy', Number($event.target.value), validationRules.ratedEnergy)">
           <p v-if="errors.ratedEnergy" class="text-[10px] text-red-400 mt-0.5">{{ errors.ratedEnergy }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">初始集装箱数量 (台)</label>
-          <input type="number" :value="params.initContainerQty" step="1" min="1" max="200"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.initContainerQty ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('initContainerQty', Number($event.target.value), { min: 1, max: 200 })">
+          <label class="label-text">{{ $t('paramPanel.initContainerQty') }}</label>
+          <input type="number" :value="params.initContainerQty" step="1"
+            :class="['input-field',
+              errors.initContainerQty ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('initContainerQty', Number($event.target.value), validationRules.initContainerQty)">
           <p v-if="errors.initContainerQty" class="text-[10px] text-red-400 mt-0.5">{{ errors.initContainerQty }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">PCS变流数量 (台)</label>
-          <input type="number" :value="params.initPcsQty" step="1" min="1" max="50"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.initPcsQty ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('initPcsQty', Number($event.target.value), { min: 1, max: 50 })">
+          <label class="label-text">{{ $t('paramPanel.initPcsQty') }}</label>
+          <input type="number" :value="params.initPcsQty" step="1"
+            :class="['input-field',
+              errors.initPcsQty ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('initPcsQty', Number($event.target.value), validationRules.initPcsQty)">
           <p v-if="errors.initPcsQty" class="text-[10px] text-red-400 mt-0.5">{{ errors.initPcsQty }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">单程充电时间 (h)</label>
-          <input type="number" :value="params.duration" step="0.5" min="0.5" max="12"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.duration ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('duration', Number($event.target.value), { min: 0.5, max: 12 })">
+          <label class="label-text">{{ $t('paramPanel.duration') }}</label>
+          <input type="number" :value="params.duration" step="0.5"
+            :class="['input-field',
+              errors.duration ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('duration', Number($event.target.value), validationRules.duration)">
           <p v-if="errors.duration" class="text-[10px] text-red-400 mt-0.5">{{ errors.duration }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">单日循环次数 (次)</label>
-          <input type="number" :value="params.cyclesPerDay" step="1" min="0.5" max="4"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.cyclesPerDay ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('cyclesPerDay', Number($event.target.value), { min: 0.5, max: 4 })">
+          <label class="label-text">{{ $t('paramPanel.cyclesPerDay') }}</label>
+          <input type="number" :value="params.cyclesPerDay" step="1"
+            :class="['input-field',
+              errors.cyclesPerDay ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('cyclesPerDay', Number($event.target.value), validationRules.cyclesPerDay)">
           <p v-if="errors.cyclesPerDay" class="text-[10px] text-red-400 mt-0.5">{{ errors.cyclesPerDay }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">网侧AC效率 (%)</label>
-          <input type="number" :value="params.acEfficiency" step="0.01" min="90" max="99"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-teal-300 font-mono focus:outline-none',
-              errors.acEfficiency ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal-500']"
-            @input="validateAndUpdate('acEfficiency', Number($event.target.value), { min: 90, max: 99 })">
+          <label class="label-text">{{ $t('paramPanel.acEfficiency') }}</label>
+          <input type="number" :value="params.acEfficiency" step="0.01"
+            :class="['input-field',
+              errors.acEfficiency ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('acEfficiency', Number($event.target.value), validationRules.acEfficiency)">
           <p v-if="errors.acEfficiency" class="text-[10px] text-red-400 mt-0.5">{{ errors.acEfficiency }}</p>
         </div>
       </div>
     </div>
 
     <div>
-      <h2 class="text-sm font-bold text-amber-400 border-l-4 border-amber-500 pl-2 mb-3">自辅耗功率设定</h2>
+      <h2 class="section-title" style="color: #f59e0b; border-color: #f59e0b;">{{ $t('paramPanel.auxPower') }}</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">集装箱运行功率 (kW)</label>
-          <input type="number" :value="params.bessAuxRun" step="0.001" min="0" max="50"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
-              errors.bessAuxRun ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
-            @input="validateAndUpdate('bessAuxRun', Number($event.target.value), { min: 0, max: 50 })">
+          <label class="label-text">{{ $t('paramPanel.bessAuxRun') }}</label>
+          <input type="number" :value="params.bessAuxRun" step="0.001"
+            :class="['input-field', inputAuxStyle,
+              errors.bessAuxRun ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('bessAuxRun', Number($event.target.value), validationRules.bessAuxRun)">
           <p v-if="errors.bessAuxRun" class="text-[10px] text-red-400 mt-0.5">{{ errors.bessAuxRun }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">集装箱待机功率 (kW)</label>
-          <input type="number" :value="params.bessAuxStandby" step="0.1" min="0" max="20"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
-              errors.bessAuxStandby ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
-            @input="validateAndUpdate('bessAuxStandby', Number($event.target.value), { min: 0, max: 20 })">
+          <label class="label-text">{{ $t('paramPanel.bessAuxStandby') }}</label>
+          <input type="number" :value="params.bessAuxStandby" step="0.1"
+            :class="['input-field', inputAuxStyle,
+              errors.bessAuxStandby ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('bessAuxStandby', Number($event.target.value), validationRules.bessAuxStandby)">
           <p v-if="errors.bessAuxStandby" class="text-[10px] text-red-400 mt-0.5">{{ errors.bessAuxStandby }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">PCS运行功率 (kW)</label>
-          <input type="number" :value="params.pcsAuxRun" step="0.1" min="0" max="30"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
-              errors.pcsAuxRun ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
-            @input="validateAndUpdate('pcsAuxRun', Number($event.target.value), { min: 0, max: 30 })">
+          <label class="label-text">{{ $t('paramPanel.pcsAuxRun') }}</label>
+          <input type="number" :value="params.pcsAuxRun" step="0.1"
+            :class="['input-field', inputAuxStyle,
+              errors.pcsAuxRun ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('pcsAuxRun', Number($event.target.value), validationRules.pcsAuxRun)">
           <p v-if="errors.pcsAuxRun" class="text-[10px] text-red-400 mt-0.5">{{ errors.pcsAuxRun }}</p>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">PCS待机功率 (kW)</label>
-          <input type="number" :value="params.pcsAuxStandby" step="0.1" min="0" max="10"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-amber-300 font-mono focus:outline-none',
-              errors.pcsAuxStandby ? 'border-red-500 focus:border-red-500' : 'border-amber-900/60 focus:border-amber-500']"
-            @input="validateAndUpdate('pcsAuxStandby', Number($event.target.value), { min: 0, max: 10 })">
+          <label class="label-text">{{ $t('paramPanel.pcsAuxStandby') }}</label>
+          <input type="number" :value="params.pcsAuxStandby" step="0.1"
+            :class="['input-field', inputAuxStyle,
+              errors.pcsAuxStandby ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('pcsAuxStandby', Number($event.target.value), validationRules.pcsAuxStandby)">
           <p v-if="errors.pcsAuxStandby" class="text-[10px] text-red-400 mt-0.5">{{ errors.pcsAuxStandby }}</p>
         </div>
       </div>
 
-      <div class="mt-3 p-3 bg-slate-950 border border-slate-800 rounded-lg font-mono text-[11px] text-slate-300 space-y-1">
-        <div class="text-amber-400 font-bold text-[10px]">自辅耗时轴计算推导：</div>
+      <div class="mt-3 p-3 rounded-lg font-mono text-[11px] space-y-1" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border); color: var(--color-text-secondary);">
+        <div class="font-bold text-[10px]" style="color: #f59e0b;">{{ $t('paramPanel.auxDerivation') }}</div>
         <div>
-          日运行总时长 = {{ params.duration }}h × {{ params.cyclesPerDay }}次 = <span class="text-sky-300 font-bold">{{ (params.duration * params.cyclesPerDay).toFixed(1) }}h</span>
-          &nbsp;日待机时长 = Max(0, 24 - {{ (params.duration * params.cyclesPerDay).toFixed(1) }}) = <span class="text-sky-300 font-bold">{{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h</span>
+          {{ $t('paramPanel.dailyRunTotal') }} = {{ params.duration }}h x {{ params.cyclesPerDay }}{{ $t('paramPanel.times') }} = <span style="color: var(--color-accent-secondary); font-weight: bold;">{{ (params.duration * params.cyclesPerDay).toFixed(1) }}h</span>
+          &nbsp;{{ $t('paramPanel.dailyStandby') }} = Max(0, 24 - {{ (params.duration * params.cyclesPerDay).toFixed(1) }}) = <span style="color: var(--color-accent-secondary); font-weight: bold;">{{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h</span>
         </div>
         <div>
-          单舱日辅耗 = ({{ params.bessAuxRun }}kW × {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.bessAuxStandby }}kW × {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000
-          = <span class="text-amber-300 font-bold">{{ ((params.bessAuxRun * params.duration * params.cyclesPerDay + params.bessAuxStandby * Math.max(0, 24 - params.duration * params.cyclesPerDay)) / 1000).toFixed(3) }} MWh/天</span>
+          {{ $t('paramPanel.singleContainerDaily') }} = ({{ params.bessAuxRun }}kW x {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.bessAuxStandby }}kW x {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000
+          = <span style="color: #f59e0b; font-weight: bold;">{{ ((params.bessAuxRun * params.duration * params.cyclesPerDay + params.bessAuxStandby * Math.max(0, 24 - params.duration * params.cyclesPerDay)) / 1000).toFixed(3) }} {{ $t('paramPanel.mwhPerDay') }}</span>
         </div>
         <div>
-          单PCS日辅耗 = ({{ params.pcsAuxRun }}kW × {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.pcsAuxStandby }}kW × {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000
-          = <span class="text-amber-300 font-bold">{{ ((params.pcsAuxRun * params.duration * params.cyclesPerDay + params.pcsAuxStandby * Math.max(0, 24 - params.duration * params.cyclesPerDay)) / 1000).toFixed(3) }} MWh/天</span>
+          {{ $t('paramPanel.singlePcsDaily') }} = ({{ params.pcsAuxRun }}kW x {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.pcsAuxStandby }}kW x {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000
+          = <span style="color: #f59e0b; font-weight: bold;">{{ ((params.pcsAuxRun * params.duration * params.cyclesPerDay + params.pcsAuxStandby * Math.max(0, 24 - params.duration * params.cyclesPerDay)) / 1000).toFixed(3) }} {{ $t('paramPanel.mwhPerDay') }}</span>
         </div>
-        <div class="pt-1 border-t border-slate-800">
-          单次循环总自辅耗 = <span class="text-emerald-300 font-bold">
-            ({{ params.initContainerQty }}台 × 单舱日辅耗 + {{ params.initPcsQty }}台 × 单PCS日辅耗) / {{ params.cyclesPerDay }}次
+        <div class="pt-1" style="border-top: 1px solid var(--color-border);">
+          {{ $t('paramPanel.singleCycleAux') }} = <span style="color: var(--color-success); font-weight: bold;">
+            ({{ params.initContainerQty }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singleContainerDaily') }} + {{ params.initPcsQty }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singlePcsDaily') }}) / {{ params.cyclesPerDay }}{{ $t('paramPanel.times') }}
           </span>
         </div>
       </div>
@@ -164,29 +164,26 @@
     </div>
 
     <div>
-      <h2 class="text-sm font-bold text-pink-400 border-l-4 border-pink-500 pl-2 mb-3">仿真条件边界</h2>
+      <h2 class="section-title" style="color: #ec4899; border-color: #ec4899;">{{ $t('paramPanel.boundaryConditions') }}</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">运行平均温度 (°C)</label>
-          <input type="number" value="25" step="1" disabled
-            class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-slate-500 font-mono cursor-not-allowed">
+          <label class="label-text">{{ $t('paramPanel.avgTemp') }}</label>
+          <input type="number" value="25" step="1" disabled class="input-field" style="opacity: 0.5; cursor: not-allowed;">
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">平均放电倍率</label>
-          <input type="number" value="0.5" step="0.1" disabled
-            class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-slate-500 font-mono cursor-not-allowed">
+          <label class="label-text">{{ $t('paramPanel.avgDischargeRate') }}</label>
+          <input type="number" value="0.5" step="0.1" disabled class="input-field" style="opacity: 0.5; cursor: not-allowed;">
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">SOH/RTE起始年份</label>
-          <input type="text" value="FOB + 6个月" disabled
-            class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-slate-500 font-mono cursor-not-allowed">
+          <label class="label-text">{{ $t('paramPanel.sohStartYear') }}</label>
+          <input type="text" value="FOB + 6个月" disabled class="input-field" style="opacity: 0.5; cursor: not-allowed;">
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-0.5">承诺保障线 (MWh/次)</label>
-          <input type="number" :value="params.requiredEnergy" step="1" min="50" max="500"
-            :class="['w-full bg-slate-950 border rounded px-2 py-1.5 text-emerald-300 font-mono focus:outline-none',
-              errors.requiredEnergy ? 'border-red-500 focus:border-red-500' : 'border-emerald-900/60 focus:border-emerald-500']"
-            @input="validateAndUpdate('requiredEnergy', Number($event.target.value), { min: 50, max: 500 })">
+          <label class="label-text">{{ $t('paramPanel.requiredEnergy') }}</label>
+          <input type="number" :value="params.requiredEnergy" step="1"
+            :class="['input-field',
+              errors.requiredEnergy ? 'border-red-500 focus:border-red-500' : '']"
+            @input="validateAndUpdate('requiredEnergy', Number($event.target.value), validationRules.requiredEnergy)">
           <p v-if="errors.requiredEnergy" class="text-[10px] text-red-400 mt-0.5">{{ errors.requiredEnergy }}</p>
         </div>
       </div>
@@ -215,45 +212,45 @@ const errors = reactive({
 })
 
 const validationRules = {
-  ratedEnergy: { min: 0.1, max: 20, label: '标称单舱能量' },
-  initContainerQty: { min: 1, max: 200, label: '初始集装箱数量' },
-  initPcsQty: { min: 1, max: 50, label: 'PCS变流数量' },
-  duration: { min: 0.5, max: 12, label: '单程充电时间' },
-  cyclesPerDay: { min: 0.5, max: 4, label: '单日循环次数' },
-  acEfficiency: { min: 90, max: 99, label: '网侧AC效率' },
-  bessAuxRun: { min: 0, max: 50, label: '集装箱运行功率' },
-  bessAuxStandby: { min: 0, max: 20, label: '集装箱待机功率' },
-  pcsAuxRun: { min: 0, max: 30, label: 'PCS运行功率' },
-  pcsAuxStandby: { min: 0, max: 10, label: 'PCS待机功率' },
-  requiredEnergy: { min: 50, max: 500, label: '承诺保障线' },
+  ratedEnergy: { min: 0.1, max: 20 },
+  initContainerQty: { min: 1, max: 200 },
+  initPcsQty: { min: 1, max: 50 },
+  duration: { min: 0.5, max: 12 },
+  cyclesPerDay: { min: 0.5, max: 4 },
+  acEfficiency: { min: 90, max: 99 },
+  bessAuxRun: { min: 0, max: 50 },
+  bessAuxStandby: { min: 0, max: 20 },
+  pcsAuxRun: { min: 0, max: 30 },
+  pcsAuxStandby: { min: 0, max: 10 },
+  requiredEnergy: { min: 50, max: 500 },
 }
 
 const validateAndUpdate = (key, value, rule) => {
-  // 验证
   if (value === '' || value === null || value === undefined) {
-    errors[key] = `${validationRules[key].label}不能为空`
+    errors[key] = `该字段不能为空`
     emit('error', errors[key], 'error')
     return
   }
   
   if (value < rule.min) {
-    errors[key] = `${validationRules[key].label}不能小于${rule.min}`
+    errors[key] = `该值不能小于 ${rule.min}`
     emit('error', errors[key], 'error')
     return
   }
   
   if (value > rule.max) {
-    errors[key] = `${validationRules[key].label}不能大于${rule.max}`
+    errors[key] = `该值不能大于 ${rule.max}`
     emit('error', errors[key], 'error')
     return
   }
   
-  // 验证通过，清除错误
   errors[key] = ''
 
   // 更新参数
   emit('update', key, value)
 }
+
+const inputAuxStyle = 'text-amber-300 border-amber-900/60 focus:border-amber-500'
 
 // 自动匹配PCS
 const autoMatchPCS = () => {

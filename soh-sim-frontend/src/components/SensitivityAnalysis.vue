@@ -145,6 +145,8 @@ const props = defineProps({
   financial: { type: Object, default: () => ({}) },
 })
 
+const emit = defineEmits(['error'])
+
 const sensitivityParams = reactive([
   { key: 'electricityPrice', label: '电价', enabled: true, min: 0.3, max: 0.8, current: 0.5, unit: '元/kWh' },
   { key: 'inflationRate', label: '通货膨胀率', enabled: true, min: 0.01, max: 0.05, current: 0.03, unit: '' },

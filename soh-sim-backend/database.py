@@ -11,6 +11,43 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
+# 这些列存储 JSON 字符串，序列化时需要解析回对象
+_JSON_COLUMNS = {
+    'Survey': {'attachments'},
+    'Project': {'config'},
+    'Simulation': {'input_params', 'results', 'manual_corrections'},
+    'BatteryPCSConfig': {'connection_diagram', 'single_line_diagram'},
+    'SohRteData': {'soh_values', 'rte_values', 'dod_values', 'aug_qty_values'},
+    'FinancialData': {'cashflow_data'},
+    'ProductConfig': {'certifications'},
+    'FormulaConfig': {'parameters'},
+}
+
+
+def _serialize_value(model_name, column_name, value):
+    """序列化单个字段值：datetime→ISO 字符串，JSON 列→解析回对象"""
+    if value is None:
+        return None
+    if model_name in _JSON_COLUMNS and column_name in _JSON_COLUMNS[model_name]:
+        if isinstance(value, str):
+            try:
+                return json.loads(value)
+            except (json.JSONDecodeError, ValueError):
+                return value
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
+def _model_to_dict(self):
+    """通用 to_dict：遍历所有列，按需序列化"""
+    model_name = type(self).__name__
+    return {
+        column.name: _serialize_value(model_name, column.name, getattr(self, column.name))
+        for column in self.__table__.columns
+    }
+
 
 class Tenant(db.Model):
     """租户模型 - 支持多租户数据隔离"""
@@ -466,6 +503,71 @@ class ProductConfig(db.Model):
     project = db.relationship('Project', back_populates='product_configs')
 
 
+class CellProduct(db.Model):
+    """电芯产品库"""
+    __tablename__ = 'cell_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    chemistry = db.Column(db.String(50))
+    capacity_ah = db.Column(db.Float)
+    voltage_nominal = db.Column(db.Float)
+    voltage_range = db.Column(db.String(100))
+    energy_wh = db.Column(db.Float)
+    cycle_life = db.Column(db.Integer)
+    dimensions = db.Column(db.String(200))
+    weight = db.Column(db.String(100))
+    soh_curve = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class ContainerProduct(db.Model):
+    """集装箱产品库"""
+    __tablename__ = 'container_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    type = db.Column(db.String(100))
+    rated_energy_mwh = db.Column(db.Float)
+    rated_power_mw = db.Column(db.Float)
+    cell_model = db.Column(db.String(200))
+    cell_config = db.Column(db.String(200))
+    dimensions = db.Column(db.String(200))
+    cooling = db.Column(db.String(100))
+    weight = db.Column(db.String(100))
+    cycle_life = db.Column(db.Integer)
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class PcsProduct(db.Model):
+    """PCS变流器产品库"""
+    __tablename__ = 'pcs_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    rated_power_mw = db.Column(db.Float)
+    rated_power_kva = db.Column(db.Float)
+    ac_voltage = db.Column(db.String(100))
+    dc_voltage_range = db.Column(db.String(100))
+    efficiency = db.Column(db.Float)
+    cooling = db.Column(db.String(100))
+    topology = db.Column(db.String(100))
+    isolation = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
 class FormulaConfig(db.Model):
     """算法公式配置模型 - 支持自定义公式"""
     __tablename__ = 'formula_configs'
@@ -661,6 +763,13 @@ def init_db(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+
+    # 给所有模型挂上 to_dict 方法（一次性，避免每类重复定义）
+    for model_cls in [Tenant, User, Survey, Project, Simulation,
+                      BatteryPCSConfig, SohRteData, FinancialData,
+                      ProductConfig, FormulaConfig]:
+        model_cls.to_dict = _model_to_dict
+
     return db
 
 

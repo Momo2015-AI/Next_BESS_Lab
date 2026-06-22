@@ -22,8 +22,30 @@ def submit_survey():
     
     # 生成UUID
     survey_id = str(uuid.uuid4())
-    
-    # 创建调研表记录
+    project_id = str(uuid.uuid4())
+    project_code = f"PRJ-{datetime.now().strftime('%Y%m%d')}-{project_id[:8].upper()}"
+
+    # 先创建项目（被调研表外键引用，需先存在）
+    project = Project(
+        id=project_id,
+        name=data.get('project_name', '未命名项目'),
+        code=project_code,
+        status='draft',
+        stage='survey',
+        config=json.dumps({
+            'survey_id': survey_id,
+            'created_from': 'survey',
+            'basic_params': {
+                'total_mw': data.get('total_mw'),
+                'total_mwh': data.get('total_mwh'),
+                'duration': data.get('duration'),
+                'location': data.get('location')
+            }
+        })
+    )
+    db.session.add(project)
+
+    # 再创建调研表并直接绑定项目（project_id 始终有效）
     survey = Survey(
         id=survey_id,
         project_name=data.get('project_name'),
@@ -55,38 +77,11 @@ def submit_survey():
         thdi=data.get('thdi'),
         remarks=data.get('remarks'),
         attachments=json.dumps(data.get('attachments', [])),
-        status='pending'
+        status='pending',
+        project_id=project_id
     )
-    
     db.session.add(survey)
-    
-    # 自动创建项目
-    project_id = str(uuid.uuid4())
-    project_code = f"PRJ-{datetime.now().strftime('%Y%m%d')}-{project_id[:8].upper()}"
-    
-    project = Project(
-        id=project_id,
-        name=data.get('project_name', '未命名项目'),
-        code=project_code,
-        status='draft',
-        stage='survey',
-        config=json.dumps({
-            'survey_id': survey_id,
-            'created_from': 'survey',
-            'basic_params': {
-                'total_mw': data.get('total_mw'),
-                'total_mwh': data.get('total_mwh'),
-                'duration': data.get('duration'),
-                'location': data.get('location')
-            }
-        })
-    )
-    
-    db.session.add(project)
-    
-    # 关联调研表和项目
-    survey.project_id = project_id
-    
+
     try:
         db.session.commit()
         return jsonify({
@@ -243,11 +238,11 @@ def update_project(project_id):
     project = Project.query.get(project_id)
     if not project:
         return jsonify({'error': '项目不存在'}), 404
-    
+
     data = request.get_json()
     if not data:
         return jsonify({'error': '无效的请求数据'}), 400
-    
+
     if 'name' in data:
         project.name = data['name']
     if 'status' in data:
@@ -256,9 +251,9 @@ def update_project(project_id):
         project.stage = data['stage']
     if 'config' in data:
         project.config = json.dumps(data['config'])
-    
+
     project.updated_at = datetime.utcnow()
-    
+
     try:
         db.session.commit()
         return jsonify({
@@ -269,3 +264,28 @@ def update_project(project_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'更新失败: {str(e)}'}), 500
+
+
+@survey_bp.route('/api/project/<project_id>', methods=['DELETE'])
+def delete_project(project_id):
+    """删除项目（级联删除关联调研表）
+
+    仅级联 Survey，其他关联实体（Simulation/FinancialData 等）暂不级联，
+    避免误删大量历史数据。如需清理，单独调用各自删除接口。
+    """
+    project = Project.query.get(project_id)
+    if not project:
+        return jsonify({'error': '项目不存在'}), 404
+
+    try:
+        # 级联删除关联调研表
+        Survey.query.filter_by(project_id=project_id).delete()
+        db.session.delete(project)
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': '项目及关联调研表已删除'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'删除失败: {str(e)}'}), 500
