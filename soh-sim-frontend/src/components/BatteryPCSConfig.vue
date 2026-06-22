@@ -7,7 +7,7 @@
         电池集装箱配置
       </h3>
 
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-4 gap-4">
         <!-- 集装箱选择 -->
         <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
           <label class="text-xs text-slate-400 block mb-2">储能集装箱型号</label>
@@ -25,6 +25,14 @@
           <label class="text-xs text-slate-400 block mb-2">集装箱数量</label>
           <input v-model.number="containerQty" @change="calculatePCS" type="number" min="1" max="100"
             class="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-xs focus:border-teal-500 focus:outline-none">
+        </div>
+
+        <!-- 运行时长 -->
+        <div class="bg-slate-800/30 rounded p-3 border border-slate-700">
+          <label class="text-xs text-slate-400 block mb-2">运行时长 (h)</label>
+          <input v-model.number="durationHours" @change="calculatePCS" type="number" min="0.5" max="8" step="0.5"
+            class="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-xs focus:border-teal-500 focus:outline-none">
+          <p class="text-[10px] text-slate-500 mt-1">C-rate = 1/时长, PCS功率 = 能量/时长</p>
         </div>
 
         <!-- PCS型号选择 -->
@@ -287,6 +295,7 @@ onMounted(() => {
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
+const durationHours = ref(2) // 运行时长(h)，默认2h
 
 // 计算结果
 const totalEnergy = computed(() => {
@@ -294,9 +303,15 @@ const totalEnergy = computed(() => {
   return container ? container.energy * containerQty.value : 0
 })
 
+// 所需总功率 = max(集装箱额定功率之和, 总能量/运行时长)
+// 即同时满足：①PCS覆盖集装箱额定功率  ②PCS满足运行倍率要求
 const totalPower = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
-  return container ? container.power * containerQty.value : 0
+  if (!container) return 0
+  const powerFromRating = container.power * containerQty.value  // 额定功率之和
+  const powerFromDuration = totalEnergy.value / durationHours.value  // 运行倍率要求
+  return Math.max(powerFromRating, powerFromDuration)
+})
 })
 
 const pcsQty = computed(() => {

@@ -672,6 +672,16 @@ const runSimulation = () => {
   nextTick(() => {
     renderChart()
   })
+
+  // 将仿真结果 emit 给父组件，打通仿真→容量对账的数据流
+  emit('applyConfig', {
+    soh: simulationResults.sohCurve,
+    rte: simulationResults.rteCurve,
+    source: 'simulation',
+    algorithmType: simParams.algorithmType,
+    simulationYears: simParams.simulationYears,
+    guaranteeSoh: simParams.guaranteeSoh,
+  })
 }
 
 // 渲染图表

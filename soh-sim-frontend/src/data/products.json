@@ -567,5 +567,150 @@
       "initPcsQty": 20,
       "ratedEnergy": 5
     }
+  ],
+  "cellPackMappings": [
+    {
+      "cellId": "eve-lf280k",
+      "cellAh": 280,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 280, "clusterEnergyKWh": 46.592 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.44, "containerPowerMW": 1.725, "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.016, "containerPowerMW": 2.5, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "eve-lf314k",
+      "cellAh": 314,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 314, "clusterEnergyKWh": 52.25 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.896, "containerPowerMW": 2.0, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.824, "containerPowerMW": 2.9, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "eve-lf628k",
+      "cellAh": 628,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 628, "clusterEnergyKWh": 104.499 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 5.015, "containerPowerMW": 2.5, "compatibleContainerIds": ["eve-5mwh-lf628k"] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 7.523, "containerPowerMW": 3.75, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "eve-lf560k",
+      "cellAh": 560,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 560, "clusterEnergyKWh": 93.184 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 4.473, "containerPowerMW": 2.25, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 6.709, "containerPowerMW": 3.35, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "catl-280ah",
+      "cellAh": 280,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 280, "clusterEnergyKWh": 46.592 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.44, "containerPowerMW": 1.725, "compatibleContainerIds": ["catl-enerone-vanadium", "eve-3.44mwh-lf280k"] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.016, "containerPowerMW": 2.5, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "catl-306ah",
+      "cellAh": 306,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 306, "clusterEnergyKWh": 50.918 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.779, "containerPowerMW": 1.9, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.669, "containerPowerMW": 2.8, "compatibleContainerIds": ["catl-enerone"] }
+      ]
+    },
+    {
+      "cellId": "catl-314ah",
+      "cellAh": 314,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 314, "clusterEnergyKWh": 52.25 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.896, "containerPowerMW": 2.0, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.824, "containerPowerMW": 2.9, "compatibleContainerIds": ["catl-enerone", "sungrow-powertitan", "hyperstrong-5mwh", "envision-5mwh"] }
+      ]
+    },
+    {
+      "cellId": "byd-blade202",
+      "cellAh": 202,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 202, "clusterEnergyKWh": 33.613 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 2.504, "containerPowerMW": 1.25, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 3.756, "containerPowerMW": 1.9, "compatibleContainerIds": ["byd-mc-cube"] }
+      ]
+    },
+    {
+      "cellId": "repthium-280ah",
+      "cellAh": 280,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 280, "clusterEnergyKWh": 46.592 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.44, "containerPowerMW": 1.725, "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.016, "containerPowerMW": 2.5, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "repthium-320ah",
+      "cellAh": 320,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 320, "clusterEnergyKWh": 53.248 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.972, "containerPowerMW": 2.0, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.958, "containerPowerMW": 3.0, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "gotion-230ah",
+      "cellAh": 230,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 230, "clusterEnergyKWh": 38.272 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 2.835, "containerPowerMW": 1.4, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 4.252, "containerPowerMW": 2.1, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "calb-l173f280",
+      "cellAh": 280,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 280, "clusterEnergyKWh": 46.592 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.44, "containerPowerMW": 1.725, "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.016, "containerPowerMW": 2.5, "compatibleContainerIds": [] }
+      ]
+    },
+    {
+      "cellId": "calb-l173f314",
+      "cellAh": 314,
+      "cellV": 3.2,
+      "packConfig": { "seriesPerPack": 52, "parallelPerPack": 1, "packsPerCluster": 1 },
+      "clusterConfig": { "clusterVoltage": 166.4, "clusterCapacityAh": 314, "clusterEnergyKWh": 52.25 },
+      "containerConfigs": [
+        { "containerType": "20ft", "clustersPerContainer": 8, "containerEnergyMWh": 3.896, "containerPowerMW": 2.0, "compatibleContainerIds": [] },
+        { "containerType": "20ft-H", "clustersPerContainer": 12, "containerEnergyMWh": 5.824, "containerPowerMW": 2.9, "compatibleContainerIds": ["sungrow-powertitan", "hyperstrong-5mwh"] }
+      ]
+    }
   ]
 }

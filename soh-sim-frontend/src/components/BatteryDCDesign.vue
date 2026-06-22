@@ -242,9 +242,73 @@ const emit = defineEmits(['apply-config', 'error'])
 const products = useProducts()
 const selectedCellId = ref('eve-lf280k')
 
+// 根据电芯ID查找映射规则，自动带出 pack/cluster/container 配置
+function getCellMapping(cellId) {
+  const mappings = products.cellPackMappings?.value || []
+  return mappings.find(m => m.cellId === cellId) || null
+}
+
+// 根据映射规则和选中的集装箱规格，自动填充所有配置
+function applyCellMapping(mapping) {
+  if (!mapping) return
+
+  const pack = mapping.packConfig
+  const cluster = mapping.clusterConfig
+
+  // 电芯参数
+  batteryConfig.cellType = mapping.cellId
+  batteryConfig.cellCapacity = mapping.cellAh
+  batteryConfig.cellVoltage = mapping.cellV
+  const cell = products.getCellById(mapping.cellId)
+  batteryConfig.energyDensity = cell ? Math.round((cell.energyWh || mapping.cellAh * mapping.cellV) / (parseFloat(cell.weight) || 5.4)) : 160
+  batteryConfig.cycleLife = cell?.cycleLife || 6000
+
+  // Pack 参数
+  batteryConfig.seriesPerPack = pack.seriesPerPack
+  batteryConfig.parallelPerPack = pack.parallelPerPack
+
+  // 簇参数
+  batteryConfig.seriesCount = pack.seriesPerPack * (pack.packsPerCluster || 1)
+  batteryConfig.parallelCount = pack.parallelPerPack
+  batteryConfig.stringVoltage = cluster.clusterVoltage
+  batteryConfig.stringCapacity = cluster.clusterCapacityAh
+  batteryConfig.stringEnergy = cluster.clusterEnergyKWh
+
+  // 集装箱：默认选第一个 containerConfig
+  const containerCfg = mapping.containerConfigs?.[0]
+  if (containerCfg) {
+    batteryConfig.containerSpec = containerCfg.containerType === '20ft-H' ? '20ft-H' : containerCfg.containerType === '20ft' ? '20ft' : '20ft'
+    batteryConfig.clustersPerContainer = containerCfg.clustersPerContainer
+    batteryConfig.containerEnergy = containerCfg.containerEnergyMWh
+    // 根据映射的集装箱能量和当前集装箱数量计算总能量
+    batteryConfig.totalDcEnergy = batteryConfig.containerQty * containerCfg.containerEnergyMWh
+
+    // 自动匹配兼容的集装箱产品
+    if (containerCfg.compatibleContainerIds?.length > 0) {
+      batteryConfig.matchedContainerId = containerCfg.compatibleContainerIds[0]
+    } else {
+      batteryConfig.matchedContainerId = ''
+    }
+  }
+
+  // 计算电压范围
+  const minV = batteryConfig.seriesCount * 3.0
+  const maxV = batteryConfig.seriesCount * 3.65
+  batteryConfig.dcVoltageRange = `${minV.toFixed(0)}-${maxV.toFixed(0)}V`
+
+  showToast(`已自动配置: ${mapping.cellAh}Ah × ${batteryConfig.seriesCount}S = ${batteryConfig.stringVoltage}V / ${batteryConfig.stringEnergy.toFixed(1)}kWh/簇`)
+}
+
 function onCellChange() {
   const cell = products.getCellById(selectedCellId.value)
-  if (cell) {
+  if (!cell) return
+
+  // 优先从映射表自动配置
+  const mapping = getCellMapping(selectedCellId.value)
+  if (mapping) {
+    applyCellMapping(mapping)
+  } else {
+    // 回退：手动填入基础参数
     batteryConfig.cellType = cell.id
     batteryConfig.cellCapacity = cell.capacityAh || 280
     batteryConfig.cellVoltage = cell.voltageNominal || 3.2
@@ -281,7 +345,11 @@ const batteryConfig = reactive({
   cellVoltage: 3.2,
   energyDensity: 160,
   cycleLife: 6000,
-  
+
+  // Pack
+  seriesPerPack: 52,
+  parallelPerPack: 1,
+
   // 电池簇
   seriesCount: 240,
   parallelCount: 1,
@@ -289,19 +357,20 @@ const batteryConfig = reactive({
   stringCapacity: 280,
   stringEnergy: 215,
   stringQty: 24,
-  
+
   // 集装箱
   containerSpec: '20ft-H',
   clustersPerContainer: 4,
   containerEnergy: 5,
   containerQty: 10,
-  
+  matchedContainerId: '',
+
   // 总计
   totalDcEnergy: 50,
   dcVoltageRange: '672-864V',
   maxDcCurrent: 1500,
   dcBreaker: 2000,
-  
+
   // 运行参数
   operatingTemp: 25,
   dodSet: 90,
