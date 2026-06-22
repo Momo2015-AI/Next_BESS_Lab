@@ -14,6 +14,7 @@ from routes.auth import auth_bp
 from routes.library import library_bp
 from routes.project import project_bp
 from routes.simulation import simulation_bp
+from routes.report import report_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +36,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(simulation_bp)
+app.register_blueprint(report_bp)
 
 N = 26
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")
