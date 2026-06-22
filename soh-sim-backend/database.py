@@ -11,6 +11,43 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
+# 这些列存储 JSON 字符串，序列化时需要解析回对象
+_JSON_COLUMNS = {
+    'Survey': {'attachments'},
+    'Project': {'config'},
+    'Simulation': {'input_params', 'results', 'manual_corrections'},
+    'BatteryPCSConfig': {'connection_diagram', 'single_line_diagram'},
+    'SohRteData': {'soh_values', 'rte_values', 'dod_values', 'aug_qty_values'},
+    'FinancialData': {'cashflow_data'},
+    'ProductConfig': {'certifications'},
+    'FormulaConfig': {'parameters'},
+}
+
+
+def _serialize_value(model_name, column_name, value):
+    """序列化单个字段值：datetime→ISO 字符串，JSON 列→解析回对象"""
+    if value is None:
+        return None
+    if model_name in _JSON_COLUMNS and column_name in _JSON_COLUMNS[model_name]:
+        if isinstance(value, str):
+            try:
+                return json.loads(value)
+            except (json.JSONDecodeError, ValueError):
+                return value
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
+def _model_to_dict(self):
+    """通用 to_dict：遍历所有列，按需序列化"""
+    model_name = type(self).__name__
+    return {
+        column.name: _serialize_value(model_name, column.name, getattr(self, column.name))
+        for column in self.__table__.columns
+    }
+
 
 class Tenant(db.Model):
     """租户模型 - 支持多租户数据隔离"""
@@ -371,6 +408,13 @@ def init_db(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+
+    # 给所有模型挂上 to_dict 方法（一次性，避免每类重复定义）
+    for model_cls in [Tenant, User, Survey, Project, Simulation,
+                      BatteryPCSConfig, SohRteData, FinancialData,
+                      ProductConfig, FormulaConfig]:
+        model_cls.to_dict = _model_to_dict
+
     return db
 
 
