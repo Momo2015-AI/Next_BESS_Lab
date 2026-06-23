@@ -11,7 +11,7 @@ from database import db, CellProduct, PackProduct, RackProduct, ClusterProduct, 
 
 products_bp = Blueprint('products', __name__)
 
-PRODUCTS_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)), 'data', 'products.json'))
+PRODUCTS_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'products.json')
 
 _MODELS = {
     'cells': CellProduct,
