@@ -116,10 +116,13 @@ def list_surveys():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 20, type=int)
     status = request.args.get('status')
+    keyword = request.args.get('keyword')
     
     query = Survey.query
     if status:
         query = query.filter(Survey.status == status)
+    if keyword:
+        query = query.filter(Survey.project_name.ilike(f'%{keyword}%'))
     
     pagination = query.order_by(Survey.created_at.desc()).paginate(
         page=page, per_page=per_page, error_out=False
@@ -131,6 +134,22 @@ def list_surveys():
         'page': page,
         'per_page': per_page,
         'pages': pagination.pages
+    }), 200
+
+
+@survey_bp.route('/api/survey/search', methods=['GET'])
+def search_survey():
+    """通过项目名称搜索调研表"""
+    keyword = request.args.get('keyword', '')
+    
+    if not keyword:
+        return jsonify({'error': '请输入搜索关键词'}), 400
+    
+    surveys = Survey.query.filter(Survey.project_name.ilike(f'%{keyword}%')).limit(10).all()
+    
+    return jsonify({
+        'success': True,
+        'surveys': [s.to_dict() for s in surveys]
     }), 200
 
 
