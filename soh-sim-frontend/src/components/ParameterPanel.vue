@@ -285,3 +285,4 @@ const autoMatchPCS = () => {
   const pcsQty = Math.ceil(totalEnergy / (props.params.duration * 5))
   emit('update', 'initPcsQty', pcsQty)
 }
+</script>
