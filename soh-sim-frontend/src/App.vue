@@ -33,9 +33,6 @@
         </nav>
       </div>
       <div class="flex items-center gap-3">
-        <button @click="fetchCalculation" class="oracle-btn-primary text-sm">
-          {{ $t('app.simulate') }}
-        </button>
       </div>
     </header>
 
@@ -55,7 +52,7 @@
           <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
           <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
           <MatrixTable v-show="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
-            @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
+            @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" @recalculate="fetchCalculation" />
           <DataInjection v-show="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
           <FormulaLab v-show="activeTab === 'formula'" :params="params" @update="updateParam" />
           <SohChart v-show="activeTab === 'chart'" :results="results" :soh="soh" :rte="rte" :required-energy="params.requiredEnergy" />

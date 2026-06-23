@@ -420,6 +420,8 @@ export default {
     reqThreshold: '承诺底线',
     meetsYes: 'Yes',
     meetsNo: 'No',
+    recalculate: '🔄 实时计算',
+    calculating: '计算中...',
   },
   dataInjection: {
     sohTitle: 'SOH 25年衰减序列 (逐行粘贴)',

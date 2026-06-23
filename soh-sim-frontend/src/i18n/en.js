@@ -420,6 +420,8 @@ export default {
     reqThreshold: 'Req Threshold',
     meetsYes: 'Yes',
     meetsNo: 'No',
+    recalculate: '🔄 Recalculate',
+    calculating: 'Calculating...',
   },
   dataInjection: {
     sohTitle: 'SOH 25-Year Degradation Sequence (Paste per row)',

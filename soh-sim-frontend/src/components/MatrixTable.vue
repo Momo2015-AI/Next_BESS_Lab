@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 min-h-0 flex flex-col">
     <div class="rounded-xl p-3 flex-shrink-0 mb-3 card">
-      <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-3">
         <div>
           <label class="label-text">{{ $t('paramPanel.ratedEnergy') }}</label>
           <input type="number" :value="params.ratedEnergy" step="0.1" disabled class="input-field" style="opacity:0.6">
@@ -26,6 +26,14 @@
           <label class="label-text">{{ $t('paramPanel.acEfficiency') }}</label>
           <input type="number" :value="params.acEfficiency" step="0.01" disabled class="input-field" style="opacity:0.6">
         </div>
+      </div>
+      <div class="flex justify-end">
+        <button 
+          @click="$emit('recalculate')"
+          class="oracle-btn-primary text-sm"
+          :disabled="isCalculating">
+          {{ isCalculating ? $t('matrixTable.calculating') : $t('matrixTable.recalculate') }}
+        </button>
       </div>
     </div>
 
@@ -113,8 +121,12 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, dod: Array, augQty: Array })
-const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty'])
+const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty', 'recalculate'])
+
+const isCalculating = ref(false)
 
 function updateDod(idx, val) {
   const newArr = [...props.dod]
