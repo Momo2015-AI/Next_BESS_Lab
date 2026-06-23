@@ -39,12 +39,39 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs" style="color: var(--color-text-secondary);">项目名称</label>
-          <input v-model="surveyData.projectName" type="text" placeholder="自动填充或手动输入"
-            class="w-full rounded px-3 py-1.5 text-xs" 
-            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border);"
-            onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-input-border)';">
+          <label class="text-xs" style="color: var(--color-text-secondary);">项目名称搜索</label>
+          <div class="flex gap-2">
+            <input v-model="searchKeyword" type="text" placeholder="输入项目名称搜索"
+              class="flex-1 rounded px-3 py-1.5 text-xs" 
+              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+            <button @click="searchByProjectName" 
+              class="text-xs px-3 py-1.5 rounded transition-all"
+              style="background-color: var(--color-info); color: white;"
+              onmouseover="this.style.opacity='0.9';"
+              onmouseout="this.style.opacity='1';">
+              搜索
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="searchResults.length > 0" class="mt-4 rounded-lg p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+        <h4 class="text-xs font-medium mb-2" style="color: var(--color-text);">搜索结果</h4>
+        <div class="max-h-40 overflow-auto">
+          <div v-for="item in searchResults" :key="item.id"
+            @click="selectSurvey(item)"
+            class="flex justify-between items-center p-2 rounded cursor-pointer transition-all mb-1"
+            style="background-color: var(--color-card); border: 1px solid var(--color-border);"
+            onmouseover="this.style.backgroundColor='var(--color-step-active)'; this.style.borderColor='var(--color-accent)';"
+            onmouseout="this.style.backgroundColor='var(--color-card)'; this.style.borderColor='var(--color-border)';">
+            <div>
+              <p class="text-xs" style="color: var(--color-accent);">{{ item.project_name }}</p>
+              <p class="text-[10px]" style="color: var(--color-text-muted);">{{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh</p>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded" style="background-color: var(--color-accent); color: white;">选择</span>
+          </div>
         </div>
       </div>
 
@@ -582,6 +609,8 @@ const steps = [
 
 const currentStep = ref(0)
 const surveyId = ref('')
+const searchKeyword = ref('')
+const searchResults = ref([])
 const selectedAlgorithm = ref('')
 
 const surveyData = reactive({
@@ -660,13 +689,58 @@ const loadSurveyData = async () => {
     const resp = await fetch(`/api/survey/${surveyId.value}`)
     if (resp.ok) {
       const data = await resp.json()
-      Object.assign(surveyData, data)
+      mapSurveyData(data)
     } else {
       emit('error', '调研表ID不存在，请手动填写数据', 'warning')
     }
   } catch {
     emit('error', '网络错误，请手动填写数据', 'error')
   }
+}
+
+const searchByProjectName = async () => {
+  if (!searchKeyword.value.trim()) {
+    emit('error', '请输入项目名称关键词', 'warning')
+    return
+  }
+  try {
+    const resp = await fetch(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
+    const data = await resp.json()
+    if (data.success) {
+      searchResults.value = data.surveys
+      if (data.surveys.length === 0) {
+        emit('error', '未找到匹配的项目', 'warning')
+      }
+    } else {
+      emit('error', data.error || '搜索失败', 'error')
+    }
+  } catch {
+    emit('error', '网络错误，搜索失败', 'error')
+  }
+}
+
+const selectSurvey = (survey) => {
+  searchResults.value = []
+  searchKeyword.value = survey.project_name
+  surveyId.value = survey.id
+  mapSurveyData(survey)
+}
+
+const mapSurveyData = (data) => {
+  surveyData.projectName = data.project_name || ''
+  surveyData.ratedEnergy = data.total_mwh || 5
+  surveyData.containerQty = data.container_qty || 1
+  surveyData.pcsQty = data.pcs_qty || 1
+  surveyData.temperature = data.temp_avg || 25
+  surveyData.cyclesPerDay = data.cycles_per_day || 1
+  surveyData.dod = data.dod || 100
+  surveyData.cRate = data.c_rate || 0.5
+  surveyData.batteryType = data.battery_type || 'LFP'
+  surveyData.location = data.location || ''
+  
+  simParams.requiredEnergy = data.total_mwh || 240
+  simParams.duration = data.duration || 2
+  simParams.cyclesPerDay = data.cycles_per_day || 1
 }
 
 const nextStep = () => {
