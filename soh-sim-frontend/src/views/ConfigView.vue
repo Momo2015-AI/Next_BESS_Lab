@@ -36,53 +36,168 @@
 
     <!-- 直流侧设计 -->
     <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-      <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+      <h3 class="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
         <span class="w-1 h-4 bg-teal-500 rounded"></span>
-        直流侧设计
+        直流侧设计（电池系统）
       </h3>
       
-      <div class="space-y-4">
-        <!-- 电芯选型 -->
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">电芯选型</label>
-          <select v-model="config.dc.cellId" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200">
-            <option value="">-- 从电芯库选择 --</option>
-            <option v-for="cell in cellLibrary" :key="cell.id" :value="cell.id">
-              {{ cell.model }} ({{ cell.capacity }}Ah / {{ cell.voltage }}V)
-            </option>
-          </select>
-        </div>
-        
-        <!-- 集装箱配置 -->
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">集装箱型号</label>
-            <select v-model="config.dc.containerId" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200">
-              <option value="">-- 从集装箱库选择 --</option>
-              <option v-for="c in containerLibrary" :key="c.id" :value="c.id">
-                {{ c.model }} ({{ c.capacity }}MWh)
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- 左侧：电芯选型 -->
+        <div class="space-y-4">
+          <!-- 电芯选型 -->
+          <div class="bg-slate-700/30 rounded-lg p-4">
+            <h4 class="text-xs font-medium text-slate-300 mb-3">电芯型号</h4>
+            <select v-model="config.dc.cellId" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200 mb-4">
+              <option value="">-- 选择电芯型号 --</option>
+              <option v-for="cell in cellLibrary" :key="cell.id" :value="cell.id">
+                {{ cell.mfr }} - {{ cell.model }}
               </option>
             </select>
+            
+            <!-- 电芯参数表单（支持手动修改） -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">额定容量 (Ah)</label>
+                <input v-model.number="config.dc.cellCapacity" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">额定电压 (V)</label>
+                <input v-model.number="config.dc.cellVoltage" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">能量密度 (Wh/kg)</label>
+                <input v-model.number="config.dc.cellEnergyDensity" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">循环寿命 (次)</label>
+                <input v-model.number="config.dc.cellCycleLife" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">标称能量 (Wh)</label>
+                <input v-model.number="config.dc.cellEnergyWh" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">重量 (kg)</label>
+                <input v-model.number="config.dc.cellWeight" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">最小电压 (V)</label>
+                <input v-model.number="config.dc.cellVoltageMin" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">最大电压 (V)</label>
+                <input v-model.number="config.dc.cellVoltageMax" type="number" step="0.1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">集装箱数量</label>
-            <input v-model.number="config.dc.containerQty" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+
+          <!-- Pack配置 -->
+          <div class="bg-slate-700/30 rounded-lg p-4">
+            <h4 class="text-xs font-medium text-slate-300 mb-3">Pack配置</h4>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">串联数量 (S)</label>
+                <input v-model.number="config.dc.packSeries" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">并联数量 (P)</label>
+                <input v-model.number="config.dc.packParallel" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+            </div>
+            
+            <!-- Pack参数计算结果 -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">Pack电压</span>
+                <p class="text-teal-400 font-medium">{{ packParams.voltage }} V</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">Pack容量</span>
+                <p class="text-teal-400 font-medium">{{ packParams.capacity }} Ah</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2 col-span-2">
+                <span class="text-slate-400">Pack能量</span>
+                <p class="text-teal-400 font-medium">{{ packParams.energy }} kWh</p>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <!-- 簇数和模组配置 -->
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">簇数/集装箱</label>
-            <input v-model.number="config.dc.clusterPerContainer" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+
+        <!-- 右侧：电池簇配置 -->
+        <div class="space-y-4">
+          <!-- 电池簇配置 -->
+          <div class="bg-slate-700/30 rounded-lg p-4">
+            <h4 class="text-xs font-medium text-slate-300 mb-3">电池簇配置</h4>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Pack串联数量 (S)</label>
+                <input v-model.number="config.dc.clusterSeries" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Pack并联数量 (P)</label>
+                <input v-model.number="config.dc.clusterParallel" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+            </div>
+            
+            <!-- 簇参数计算结果 -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">簇电压</span>
+                <p class="text-teal-400 font-medium">{{ clusterParams.voltage }} V</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">簇容量</span>
+                <p class="text-teal-400 font-medium">{{ clusterParams.capacity }} Ah</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">簇能量</span>
+                <p class="text-teal-400 font-medium">{{ clusterParams.energy }} kWh</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">簇数量</span>
+                <p class="text-teal-400 font-medium">{{ config.dc.clusterCount }}</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">模组数/簇</label>
-            <input v-model.number="config.dc.modulePerCluster" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">电芯数/模组</label>
-            <input v-model.number="config.dc.cellPerModule" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+
+          <!-- 集装箱配置 -->
+          <div class="bg-slate-700/30 rounded-lg p-4">
+            <h4 class="text-xs font-medium text-slate-300 mb-3">集装箱配置</h4>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">集装箱型号</label>
+                <select v-model="config.dc.containerId" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200">
+                  <option value="">-- 选择集装箱 --</option>
+                  <option v-for="c in containerLibrary" :key="c.id" :value="c.id">
+                    {{ c.mfr }} - {{ c.model }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">集装箱数量</label>
+                <input v-model.number="config.dc.containerQty" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+              </div>
+            </div>
+            
+            <!-- 集装箱参数计算结果 -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">单箱能量</span>
+                <p class="text-teal-400 font-medium">{{ containerParams.singleEnergy }} kWh</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">总能量</span>
+                <p class="text-teal-400 font-medium">{{ containerParams.totalEnergy }} MWh</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">总电压</span>
+                <p class="text-teal-400 font-medium">{{ containerParams.totalVoltage }} V</p>
+              </div>
+              <div class="bg-slate-600/30 rounded p-2">
+                <span class="text-slate-400">总容量</span>
+                <p class="text-teal-400 font-medium">{{ containerParams.totalCapacity }} kAh</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -102,7 +217,7 @@
           <select v-model="config.ac.pcsId" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200">
             <option value="">-- 从PCS库选择 --</option>
             <option v-for="pcs in pcsLibrary" :key="pcs.id" :value="pcs.id">
-              {{ pcs.model }} ({{ pcs.power }}MW)
+              {{ pcs.mfr }} - {{ pcs.model }} ({{ pcs.ratedPowerMW }}MW)
             </option>
           </select>
         </div>
@@ -111,7 +226,7 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-xs text-slate-400 mb-1">PCS数量</label>
-            <input v-model.number="config.ac.pcsQty" type="number" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
+            <input v-model.number="config.ac.pcsQty" type="number" min="1" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-xs text-slate-200" />
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">PCS总功率 (MW)</label>
@@ -178,24 +293,92 @@ const currentVersion = ref(null)
 const showSaveAsDialog = ref(false)
 const newVersionName = ref('')
 
+// 配置数据
 const config = reactive({
   dc: {
     cellId: '',
+    cellCapacity: 280,      // 额定容量 (Ah)
+    cellVoltage: 3.2,       // 额定电压 (V)
+    cellEnergyDensity: 165, // 能量密度 (Wh/kg)
+    cellCycleLife: 6000,    // 循环寿命 (次)
+    cellEnergyWh: 896,      // 标称能量 (Wh)
+    cellWeight: 5.4,        // 重量 (kg)
+    cellVoltageMin: 2.5,    // 最小电压 (V)
+    cellVoltageMax: 3.65,   // 最大电压 (V)
+    packSeries: 12,         // Pack内电芯串联数
+    packParallel: 10,       // Pack内电芯并联数
+    clusterSeries: 20,      // 簇内Pack串联数
+    clusterParallel: 1,     // 簇内Pack并联数
+    clusterCount: 24,       // 簇数量
     containerId: '',
-    containerQty: 10,
-    clusterPerContainer: 1,
-    modulePerCluster: 10,
-    cellPerModule: 20,
+    containerQty: 1,
   },
   ac: {
     pcsId: '',
     pcsQty: 2,
-    totalPower: 10,
+    totalPower: 0,
     transformerType: 'dry',
     transformerCapacity: 10,
   },
 })
 
+// 当前选中的电芯
+const selectedCell = computed(() => {
+  return cellLibrary.value.find(cell => cell.id === config.dc.cellId)
+})
+
+// 监听电芯选择变化，自动带出参数
+watch(() => config.dc.cellId, (newCellId) => {
+  const cell = cellLibrary.value.find(c => c.id === newCellId)
+  if (cell) {
+    config.dc.cellCapacity = cell.capacityAh || 280
+    config.dc.cellVoltage = cell.voltageNominal || 3.2
+    config.dc.cellEnergyDensity = cell.energyDensity || 165
+    config.dc.cellCycleLife = cell.cycleLife || 6000
+    config.dc.cellEnergyWh = cell.energyWh || 896
+    config.dc.cellWeight = cell.weight || 5.4
+    config.dc.cellVoltageMin = cell.voltageMin || 2.5
+    config.dc.cellVoltageMax = cell.voltageMax || 3.65
+  }
+})
+
+// Pack参数计算
+const packParams = computed(() => {
+  return {
+    voltage: (config.dc.cellVoltage * config.dc.packSeries).toFixed(1),
+    capacity: (config.dc.cellCapacity * config.dc.packParallel).toFixed(1),
+    energy: ((config.dc.cellVoltage * config.dc.packSeries * config.dc.cellCapacity * config.dc.packParallel) / 1000).toFixed(2),
+  }
+})
+
+// 簇参数计算
+const clusterParams = computed(() => {
+  const packVoltage = parseFloat(packParams.value.voltage)
+  const packCapacity = parseFloat(packParams.value.capacity)
+  const packEnergy = parseFloat(packParams.value.energy)
+  
+  return {
+    voltage: (packVoltage * config.dc.clusterSeries).toFixed(1),
+    capacity: (packCapacity * config.dc.clusterParallel).toFixed(1),
+    energy: (packEnergy * config.dc.clusterSeries * config.dc.clusterParallel).toFixed(2),
+  }
+})
+
+// 集装箱参数计算
+const containerParams = computed(() => {
+  const clusterEnergy = parseFloat(clusterParams.value.energy)
+  const clusterVoltage = parseFloat(clusterParams.value.voltage)
+  const clusterCapacity = parseFloat(clusterParams.value.capacity)
+  
+  return {
+    singleEnergy: (clusterEnergy * config.dc.clusterCount).toFixed(2),
+    totalEnergy: ((clusterEnergy * config.dc.clusterCount * config.dc.containerQty) / 1000).toFixed(3),
+    totalVoltage: clusterVoltage.toFixed(1),
+    totalCapacity: ((clusterCapacity * config.dc.clusterCount * config.dc.containerQty) / 1000).toFixed(3),
+  }
+})
+
+// 规则匹配状态
 const ruleMatchStatus = computed(() => {
   if (!config.dc.containerId || !config.ac.pcsId) return null
   
@@ -204,16 +387,15 @@ const ruleMatchStatus = computed(() => {
   
   if (!container || !pcs) return null
   
-  // 简单规则检查：功率配比
-  const totalCapacity = container.capacity * config.dc.containerQty
+  const totalCapacity = container.ratedEnergyMWh * config.dc.containerQty
   const expectedPcsPower = totalCapacity * 0.5 // 0.5C 运行
   
-  if (Math.abs(pcs.power * config.ac.pcsQty - expectedPcsPower) < 1) {
+  if (Math.abs(pcs.ratedPowerMW * config.ac.pcsQty - expectedPcsPower) < 1) {
     return { isValid: true, message: '配置符合规则' }
   } else {
     return { 
       isValid: false, 
-      message: `功率配比异常：期望约${expectedPcsPower}MW PCS，实际${pcs.power * config.ac.pcsQty}MW` 
+      message: `功率配比异常：期望约${expectedPcsPower.toFixed(1)}MW PCS，实际${(pcs.ratedPowerMW * config.ac.pcsQty).toFixed(1)}MW` 
     }
   }
 })
@@ -363,7 +545,7 @@ async function confirmSaveAs() {
 watch(() => config.ac.pcsQty, (newQty) => {
   const pcs = pcsLibrary.value.find(p => p.id === config.ac.pcsId)
   if (pcs) {
-    config.ac.totalPower = pcs.power * newQty
+    config.ac.totalPower = (pcs.ratedPowerMW * newQty).toFixed(2)
   }
 })
 </script>

@@ -1,14 +1,5 @@
 <template>
   <aside class="sidebar w-64 flex-shrink-0 overflow-hidden flex flex-col" style="background-color: #FFFFFF; border-right: 1px solid #E0E0E0;">
-    <div class="p-4 border-b" style="border-color: #E0E0E0;">
-      <button @click="$emit('navigate', 'home')" class="flex items-center gap-2 cursor-pointer">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #2F5496; color: white;">
-          <span class="text-sm font-bold">S</span>
-        </div>
-        <span class="font-bold text-sm" style="color: #2F5496;">SOH-SIM</span>
-      </button>
-    </div>
-
     <nav class="flex-1 overflow-y-auto p-3">
       <div class="mb-6">
         <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">{{ $t('sidebar.home') }}</div>

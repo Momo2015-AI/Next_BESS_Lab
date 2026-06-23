@@ -20,7 +20,7 @@
                 onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
                 onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="">-- 请选择PCS --</option>
-                <option v-for="p in products.pcs" :key="p.id" :value="p.id">{{ p.mfr }} {{ p.model }} ({{ p.ratedPowerMW }}MW)</option>
+                <option v-for="p in pcsLibrary" :key="p.id" :value="p.id">{{ p.mfr }} {{ p.model }}</option>
               </select>
             </div>
             
@@ -347,31 +347,53 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue'
-import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['apply-config', 'error'])
 
-const products = useProducts()
+// PCS库数据源（与运行工况库一致：/api/library/pcs）
+const pcsLibrary = ref([])
+
+async function loadPcsLibrary() {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await fetch('/api/library/pcs', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    const data = await res.json()
+    if (data.success) {
+      pcsLibrary.value = data.data || []
+      // 默认选中第一个
+      if (pcsLibrary.value.length > 0 && !selectedPcsId.value) {
+        selectedPcsId.value = pcsLibrary.value[0].id
+        onPcsChange()
+      }
+    }
+  } catch (e) {
+    console.error('加载PCS库失败:', e)
+  }
+}
+
 const selectedPcsId = ref('')
 
 function onPcsChange() {
-  const pcs = products.getPcsById(selectedPcsId.value)
+  const pcs = pcsLibrary.value.find(p => p.id === selectedPcsId.value)
   if (pcs) {
     pcsConfig.pcsPower = pcs.ratedPowerMW || 2.5
     pcsConfig.dcVoltageRange = pcs.dcVoltageRange || '800-1500V'
-    pcsConfig.acRatedPower = (pcs.ratedPowerKVA || pcs.ratedPowerMW * 1040)
+    pcsConfig.maxDcCurrent = pcs.maxDcCurrent || 1500
+    pcsConfig.acRatedPower = (pcs.ratedPowerMW || 2.5) * 1000
+    pcsConfig.acVoltage = pcs.acVoltage || 800
     pcsConfig.efficiency = pcs.efficiency || 98.5
-    pcsConfig.cooling = pcs.cooling || 'Forced Air'
+    pcsConfig.cooling = pcs.cooling || '风冷'
+    pcsConfig.frequencyRange = pcs.frequencyRange || '47-63Hz'
+    pcsConfig.weight = pcs.weight || 1200
+    pcsConfig.auxRun = pcs.auxRun || 4.5
+    pcsConfig.auxStandby = pcs.auxStandby || 1.2
   }
 }
 
 onMounted(() => {
-  products.loadAll().then(() => {
-    if (products.pcs.value.length > 0 && !selectedPcsId.value) {
-      selectedPcsId.value = products.pcs.value[0].id
-      onPcsChange()
-    }
-  })
+  loadPcsLibrary()
 })
 
 const toast = reactive({ show: false, message: '', type: 'success' })
