@@ -273,6 +273,77 @@
           <div>
             <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section06') }}</h3>
           </div>
+          <div class="ml-auto">
+            <label class="flex items-center gap-2 text-xs cursor-pointer" style="color: var(--color-text-secondary);">
+              <input type="checkbox" v-model="autoMatchEnabled" class="accent-teal-500">
+              {{ $t('runningConditions.autoMatch') }}
+            </label>
+          </div>
+        </div>
+        <div class="grid grid-cols-5 gap-3">
+          <div>
+            <label class="label-text">{{ $t('runningConditions.cellModel') }}</label>
+            <select v-model="selectedCellModel" class="input-field" @change="onCellChange">
+              <option value="">{{ $t('common.select') }}</option>
+              <option v-for="cell in cells" :key="cell.id" :value="cell.model">
+                {{ cell.mfr }} - {{ cell.model }} ({{ cell.capacityAh }}Ah)
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.packModel') }}</label>
+            <select v-model="selectedPackModel" class="input-field" @change="onPackChange">
+              <option value="">{{ $t('common.select') }}</option>
+              <option v-for="pack in availablePacks" :key="pack.id" :value="pack.model">
+                {{ pack.model }} ({{ pack.nominalEnergyKwh }}kWh)
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.rackModel') }}</label>
+            <select v-model="selectedRackModel" class="input-field" @change="onRackChange">
+              <option value="">{{ $t('common.select') }}</option>
+              <option v-for="rack in availableRacks" :key="rack.id" :value="rack.model">
+                {{ rack.model }} ({{ rack.nominalEnergyKwh }}kWh)
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.clusterModel') }}</label>
+            <select v-model="selectedClusterModel" class="input-field" @change="onClusterChange">
+              <option value="">{{ $t('common.select') }}</option>
+              <option v-for="cluster in availableClusters" :key="cluster.id" :value="cluster.model">
+                {{ cluster.model }} ({{ cluster.nominalEnergyMwh }}MWh)
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.containerModel') }}</label>
+            <select v-model="selectedContainerModel" class="input-field">
+              <option value="">{{ $t('common.select') }}</option>
+              <option v-for="container in availableContainers" :key="container.id" :value="container.model">
+                {{ container.model }} ({{ container.ratedEnergyMwh }}MWh)
+              </option>
+            </select>
+          </div>
+        </div>
+        <div v-if="matchedConfig" class="mt-3 p-3 rounded" style="background: var(--color-accent-glow);">
+          <div class="text-xs font-bold mb-1" style="color: var(--color-accent);">{{ $t('runningConditions.matchedConfig') }}: {{ matchedConfig.name }}</div>
+          <div class="text-[10px] space-y-0.5" style="color: var(--color-text-secondary);">
+            <div>{{ $t('runningConditions.packEnergy') }}: {{ matchedConfig.packNominalEnergyKwh }} kWh</div>
+            <div>{{ $t('runningConditions.rackEnergy') }}: {{ (matchedConfig.rackNominalEnergyKwh / 1000).toFixed(2) }} MWh</div>
+            <div>{{ $t('runningConditions.clusterEnergy') }}: {{ matchedConfig.clusterNominalEnergyMwh }} MWh</div>
+            <div>{{ $t('runningConditions.containerEnergy') }}: {{ matchedConfig.containerNominalEnergyMwh }} MWh</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">07</span>
+          <div>
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section06') }}</h3>
+          </div>
         </div>
         <div class="grid grid-cols-4 gap-3">
           <div>
@@ -484,11 +555,29 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProducts } from '../composables/useProducts'
 
 const { t } = useI18n()
 const emit = defineEmits(['applyParams'])
+
+const {
+  cells, packs, racks, clusters, containers,
+  cellModels, cellMfrs,
+  getPackByCellModel, getRackByPackModel, getClusterByRackModel,
+  getContainerByCellModel, getContainerByClusterModel,
+  matchConfigRule, loadAll,
+} = useProducts()
+
+const selectedCellModel = ref('')
+const selectedPackModel = ref('')
+const selectedRackModel = ref('')
+const selectedClusterModel = ref('')
+const selectedContainerModel = ref('')
+
+const matchedConfig = ref(null)
+const autoMatchEnabled = ref(true)
 
 const form = reactive({
   projectName: '',
@@ -645,7 +734,149 @@ function clearAll() {
     else form[k] = typeof form[k] === 'number' || form[k] === null ? null : ''
   }
   uploadResult.value = null
+  selectedCellModel.value = ''
+  selectedPackModel.value = ''
+  selectedRackModel.value = ''
+  selectedClusterModel.value = ''
+  selectedContainerModel.value = ''
+  matchedConfig.value = null
 }
+
+const availablePacks = computed(() => {
+  if (!selectedCellModel.value) return packs.value
+  return getPackByCellModel(selectedCellModel.value)
+})
+
+const availableRacks = computed(() => {
+  if (!selectedPackModel.value) return racks.value
+  return getRackByPackModel(selectedPackModel.value)
+})
+
+const availableClusters = computed(() => {
+  if (!selectedRackModel.value) return clusters.value
+  return getClusterByRackModel(selectedRackModel.value)
+})
+
+const availableContainers = computed(() => {
+  if (!selectedClusterModel.value && !selectedCellModel.value) return containers.value
+  if (selectedClusterModel.value) {
+    const byCluster = getContainerByClusterModel(selectedClusterModel.value)
+    if (byCluster.length > 0) return byCluster
+  }
+  if (selectedCellModel.value) {
+    const byCell = getContainerByCellModel(selectedCellModel.value)
+    if (byCell.length > 0) return byCell
+  }
+  return containers.value
+})
+
+async function onCellChange() {
+  if (!autoMatchEnabled.value) return
+  
+  selectedPackModel.value = ''
+  selectedRackModel.value = ''
+  selectedClusterModel.value = ''
+  selectedContainerModel.value = ''
+  matchedConfig.value = null
+  
+  if (!selectedCellModel.value) return
+  
+  const packList = getPackByCellModel(selectedCellModel.value)
+  if (packList.length > 0) {
+    selectedPackModel.value = packList[0].model
+  }
+  
+  const result = await matchConfigRule({ cellModel: selectedCellModel.value })
+  if (result.success && result.matched && result.rule) {
+    matchedConfig.value = result.rule
+    selectedPackModel.value = result.rule.packModel || selectedPackModel.value
+    selectedRackModel.value = result.rule.rackModel || ''
+    selectedClusterModel.value = result.rule.clusterModel || ''
+    selectedContainerModel.value = result.rule.containerModel || ''
+  }
+}
+
+async function onPackChange() {
+  if (!autoMatchEnabled.value) return
+  
+  selectedRackModel.value = ''
+  selectedClusterModel.value = ''
+  selectedContainerModel.value = ''
+  
+  if (!selectedPackModel.value) return
+  
+  const rackList = getRackByPackModel(selectedPackModel.value)
+  if (rackList.length > 0) {
+    selectedRackModel.value = rackList[0].model
+  }
+  
+  if (selectedCellModel.value) {
+    const result = await matchConfigRule({ cellModel: selectedCellModel.value, packModel: selectedPackModel.value })
+    if (result.success && result.matched && result.rule) {
+      matchedConfig.value = result.rule
+      selectedRackModel.value = result.rule.rackModel || selectedRackModel.value
+      selectedClusterModel.value = result.rule.clusterModel || ''
+      selectedContainerModel.value = result.rule.containerModel || ''
+    }
+  }
+}
+
+async function onRackChange() {
+  if (!autoMatchEnabled.value) return
+  
+  selectedClusterModel.value = ''
+  selectedContainerModel.value = ''
+  
+  if (!selectedRackModel.value) return
+  
+  const clusterList = getClusterByRackModel(selectedRackModel.value)
+  if (clusterList.length > 0) {
+    selectedClusterModel.value = clusterList[0].model
+  }
+  
+  if (selectedCellModel.value && selectedPackModel.value) {
+    const result = await matchConfigRule({ 
+      cellModel: selectedCellModel.value, 
+      packModel: selectedPackModel.value,
+      rackModel: selectedRackModel.value 
+    })
+    if (result.success && result.matched && result.rule) {
+      matchedConfig.value = result.rule
+      selectedClusterModel.value = result.rule.clusterModel || selectedClusterModel.value
+      selectedContainerModel.value = result.rule.containerModel || ''
+    }
+  }
+}
+
+async function onClusterChange() {
+  if (!autoMatchEnabled.value) return
+  
+  selectedContainerModel.value = ''
+  
+  if (!selectedClusterModel.value) return
+  
+  const containerList = getContainerByClusterModel(selectedClusterModel.value)
+  if (containerList.length > 0) {
+    selectedContainerModel.value = containerList[0].model
+  }
+  
+  if (selectedCellModel.value && selectedPackModel.value && selectedRackModel.value) {
+    const result = await matchConfigRule({ 
+      cellModel: selectedCellModel.value, 
+      packModel: selectedPackModel.value,
+      rackModel: selectedRackModel.value,
+      clusterModel: selectedClusterModel.value
+    })
+    if (result.success && result.matched && result.rule) {
+      matchedConfig.value = result.rule
+      selectedContainerModel.value = result.rule.containerModel || selectedContainerModel.value
+    }
+  }
+}
+
+onMounted(() => {
+  loadAll()
+})
 
 function applyToSimulation() {
   const mapped = {

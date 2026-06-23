@@ -103,6 +103,15 @@
         <h2>性能要求</h2>
         <div class="form-grid">
           <div class="form-group">
+            <label>电芯型号</label>
+            <select v-model="form.cell_model" class="input-field">
+              <option value="">请选择电芯型号</option>
+              <option v-for="cell in cells" :key="cell.id" :value="cell.model">
+                {{ cell.mfr }} - {{ cell.model }} ({{ cell.capacityAh }}Ah)
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>RTE目标 (%)</label>
             <input v-model.number="form.rte_target" type="number" min="0" max="100" placeholder="如：90" />
           </div>
@@ -192,9 +201,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['error'])
+
+const { cells, loadAll } = useProducts()
 
 const form = reactive({
   project_name: '',
@@ -213,6 +225,7 @@ const form = reactive({
   humidity: null,
   grid_voltage: null,
   grid_frequency: null,
+  cell_model: '',
   rte_target: null,
   soh_year1: null,
   soh_year25: null,
@@ -230,6 +243,10 @@ const form = reactive({
 const submitting = ref(false)
 const showSuccess = ref(false)
 const submittedData = ref({})
+
+onMounted(() => {
+  loadAll()
+})
 
 async function submitForm() {
   if (!form.project_name) {
@@ -283,6 +300,7 @@ function resetForm() {
     humidity: null,
     grid_voltage: null,
     grid_frequency: null,
+    cell_model: '',
     rte_target: null,
     soh_year1: null,
     soh_year25: null,

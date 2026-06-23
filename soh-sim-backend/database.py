@@ -529,6 +529,80 @@ class CellProduct(db.Model):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
+class PackProduct(db.Model):
+    """电池包产品库"""
+    __tablename__ = 'pack_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    chemistry = db.Column(db.String(50))
+    cell_model = db.Column(db.String(200))
+    cells_per_pack = db.Column(db.Integer)
+    series_count = db.Column(db.Integer)
+    parallel_count = db.Column(db.Integer)
+    nominal_voltage = db.Column(db.Float)
+    nominal_capacity_ah = db.Column(db.Float)
+    nominal_energy_kwh = db.Column(db.Float)
+    max_charge_current = db.Column(db.Float)
+    max_discharge_current = db.Column(db.Float)
+    dimensions = db.Column(db.String(200))
+    weight = db.Column(db.String(100))
+    bms_type = db.Column(db.String(100))
+    cycle_life = db.Column(db.Integer)
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class RackProduct(db.Model):
+    """电池架产品库"""
+    __tablename__ = 'rack_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    pack_model = db.Column(db.String(200))
+    packs_per_rack = db.Column(db.Integer)
+    series_count = db.Column(db.Integer)
+    parallel_count = db.Column(db.Integer)
+    nominal_voltage = db.Column(db.Float)
+    nominal_capacity_ah = db.Column(db.Float)
+    nominal_energy_kwh = db.Column(db.Float)
+    dimensions = db.Column(db.String(200))
+    weight = db.Column(db.String(100))
+    cooling = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class ClusterProduct(db.Model):
+    """电池簇产品库"""
+    __tablename__ = 'cluster_products'
+
+    id = db.Column(db.String(100), primary_key=True)
+    mfr = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    rack_model = db.Column(db.String(200))
+    racks_per_cluster = db.Column(db.Integer)
+    series_count = db.Column(db.Integer)
+    parallel_count = db.Column(db.Integer)
+    nominal_voltage = db.Column(db.Float)
+    nominal_capacity_ah = db.Column(db.Float)
+    nominal_energy_mwh = db.Column(db.Float)
+    nominal_power_mw = db.Column(db.Float)
+    dimensions = db.Column(db.String(200))
+    weight = db.Column(db.String(100))
+    bmu_type = db.Column(db.String(100))
+    status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
 class ContainerProduct(db.Model):
     """集装箱产品库"""
     __tablename__ = 'container_products'
@@ -539,6 +613,8 @@ class ContainerProduct(db.Model):
     type = db.Column(db.String(100))
     rated_energy_mwh = db.Column(db.Float)
     rated_power_mw = db.Column(db.Float)
+    cluster_model = db.Column(db.String(200))
+    clusters_per_container = db.Column(db.Integer)
     cell_model = db.Column(db.String(200))
     cell_config = db.Column(db.String(200))
     dimensions = db.Column(db.String(200))
@@ -567,6 +643,57 @@ class PcsProduct(db.Model):
     topology = db.Column(db.String(100))
     isolation = db.Column(db.String(100))
     status = db.Column(db.String(50), default='mass-production')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class BatteryConfigRule(db.Model):
+    """电池层级配置规则模型"""
+    __tablename__ = 'battery_config_rules'
+
+    id = db.Column(db.String(36), primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    
+    cell_model = db.Column(db.String(100))
+    pack_model = db.Column(db.String(100))
+    rack_model = db.Column(db.String(100))
+    cluster_model = db.Column(db.String(100))
+    container_model = db.Column(db.String(100))
+    
+    cells_per_pack = db.Column(db.Integer)
+    packs_per_rack = db.Column(db.Integer)
+    racks_per_cluster = db.Column(db.Integer)
+    clusters_per_container = db.Column(db.Integer)
+    
+    series_per_pack = db.Column(db.Integer)
+    parallel_per_pack = db.Column(db.Integer)
+    series_per_rack = db.Column(db.Integer)
+    parallel_per_rack = db.Column(db.Integer)
+    series_per_cluster = db.Column(db.Integer)
+    parallel_per_cluster = db.Column(db.Integer)
+    
+    pack_nominal_voltage = db.Column(db.Float)
+    pack_nominal_capacity_ah = db.Column(db.Float)
+    pack_nominal_energy_kwh = db.Column(db.Float)
+    
+    rack_nominal_voltage = db.Column(db.Float)
+    rack_nominal_capacity_ah = db.Column(db.Float)
+    rack_nominal_energy_kwh = db.Column(db.Float)
+    
+    cluster_nominal_voltage = db.Column(db.Float)
+    cluster_nominal_capacity_ah = db.Column(db.Float)
+    cluster_nominal_energy_mwh = db.Column(db.Float)
+    cluster_nominal_power_mw = db.Column(db.Float)
+    
+    container_nominal_energy_mwh = db.Column(db.Float)
+    container_nominal_power_mw = db.Column(db.Float)
+    
+    is_default = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(50), default='active')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
