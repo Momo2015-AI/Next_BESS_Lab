@@ -214,10 +214,35 @@
         </div>
       </div>
     </div>
+
+    <div class="mt-4">
+      <div 
+        class="algorithm-panel-header flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all"
+        style="background-color: var(--color-accent);"
+        @click="showAlgorithmPanel = !showAlgorithmPanel">
+        <div class="flex items-center gap-2">
+          <span class="text-white text-xs font-medium">⚙️ 算法模型管理</span>
+          <span class="text-white/70 text-[10px]">(点击展开/收起)</span>
+        </div>
+        <span class="text-white/90 text-lg transition-transform" :style="{ transform: showAlgorithmPanel ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
+      </div>
+      
+      <div 
+        v-show="showAlgorithmPanel" 
+        class="algorithm-panel-body mt-2 rounded-lg border transition-all"
+        style="background-color: var(--color-bg); border-color: var(--color-accent-glow);">
+        <AlgorithmLab />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import AlgorithmLab from '../views/AlgorithmLab.vue'
+
 defineProps({ params: Object })
 defineEmits(['update'])
+
+const showAlgorithmPanel = ref(false)
 </script>
