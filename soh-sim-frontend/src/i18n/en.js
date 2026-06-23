@@ -31,6 +31,32 @@ export default {
     title: 'BESS SOH Simulation & Capacity Configuration Matrix',
     subtitle: 'BESS SOH Simulation, Degradation Matrix & Augmentation Lifecycle Engine',
     simulate: 'Run Simulation',
+    foundation: 'Foundation',
+    solution: 'Solution',
+  },
+  home: {
+    title: 'SOH-SIM Energy Storage Simulation Platform',
+    subtitle: 'One-stop energy storage power station simulation solution, complete workflow from survey to design',
+    learnMore: 'Learn More',
+    survey: {
+      title: 'Survey Form',
+      desc: 'Customer survey data entry, collect basic project information',
+    },
+    foundation: {
+      title: 'Foundation',
+      desc: 'Parameter configuration, product library management, algorithm definition',
+    },
+    solution: {
+      title: 'Solution',
+      desc: 'DC-side design, AC-side design, simulation, financial analysis',
+    },
+  },
+  sidebar: {
+    home: 'Home',
+    foundation: 'Foundation',
+    solution: 'Solution',
+    tools: 'Tools',
+    auth: 'Authentication',
   },
   tabs: {
     survey: '0. Survey Form',

@@ -1,76 +1,81 @@
 <template>
-  <div class="h-screen flex flex-col p-4 gap-3 text-xs overflow-hidden" style="background: var(--color-bg); color: var(--color-text);">
+  <div class="h-screen flex flex-col overflow-hidden" style="background-color: #F5F7FA;">
     <div v-if="toast.show" class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } :
-              toast.type === 'error' ? { backgroundColor: 'var(--color-danger)', color: 'white' } :
-              toast.type === 'warning' ? { backgroundColor: 'var(--color-warning)', color: 'white' } :
-              { backgroundColor: 'var(--color-text-secondary)', color: 'white' }">
+      :style="toast.type === 'success' ? { backgroundColor: '#10b981', color: 'white' } :
+              toast.type === 'error' ? { backgroundColor: '#ef4444', color: 'white' } :
+              toast.type === 'warning' ? { backgroundColor: '#f59e0b', color: 'white' } :
+              { backgroundColor: '#666666', color: 'white' }">
       {{ toast.message }}
     </div>
 
-    <header class="flex justify-between items-center pb-2 flex-shrink-0" style="border-bottom: 1px solid var(--color-header-border); background-color: var(--color-header-bg); padding: 8px 12px; border-radius: var(--radius-md);">
-      <div>
-        <h1 class="text-lg font-bold" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-          {{ $t('app.title') }}
-        </h1>
-        <p class="text-[10px] mt-0.5" style="color: var(--color-text-secondary);">{{ $t('app.subtitle') }}</p>
+    <header class="flex justify-between items-center flex-shrink-0 z-10" 
+      style="background-color: #FFFFFF; border-bottom: 1px solid #E0E0E0; padding: 10px 20px;">
+      <div class="flex items-center gap-4">
+        <button @click="navigateTo('home')" class="flex items-center gap-2 cursor-pointer">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #2F5496; color: white;">
+            <span class="text-sm font-bold">S</span>
+          </div>
+          <span class="font-bold text-sm hidden sm:block" style="color: #2F5496;">SOH-SIM</span>
+        </button>
+        <nav class="hidden md:flex items-center gap-1 ml-4">
+          <button 
+            @click="navigateTo('foundation')"
+            class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+            :class="isFoundationTab ? 'nav-active' : 'nav-item'">
+            {{ $t('app.foundation') }}
+          </button>
+          <button 
+            @click="navigateTo('solution')"
+            class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+            :class="isSolutionTab ? 'nav-active' : 'nav-item'">
+            {{ $t('app.solution') }}
+          </button>
+        </nav>
       </div>
       <div class="flex items-center gap-3">
-        <ThemeSwitcher />
-        <button @click="openSurveyPage"
-          style="background-color: var(--color-card-dark); color: var(--color-text); text-xs; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); transition: all 0.15s;"
-          onmouseover="this.style.backgroundColor='var(--color-tab-hover)'; this.style.borderColor='var(--color-accent)';"
-          onmouseout="this.style.backgroundColor='var(--color-card-dark)'; this.style.borderColor='var(--color-border)';">
-          {{ $t('tabs.survey') }}
-        </button>
-        <button @click="fetchCalculation" class="btn-primary">
+        <button @click="fetchCalculation" class="oracle-btn-primary text-sm">
           {{ $t('app.simulate') }}
         </button>
       </div>
     </header>
 
-    <nav class="flex p-1 rounded-lg gap-1 flex-shrink-0 overflow-x-auto" style="background-color: var(--color-nav-bg); border: 1px solid var(--color-nav-border);">
-      <button v-for="(tab, idx) in tabs" :key="tab.id"
-        @click="activeTab = tab.id"
-        draggable="true"
-        @dragstart="onDragStart(idx, $event)"
-        @dragover.prevent="onDragOver(idx)"
-        @drop="onDrop(idx)"
-        @dragend="onDragEnd"
-        :class="['tab-btn whitespace-nowrap cursor-grab active:cursor-grabbing', { active: activeTab === tab.id, 'drag-over': dragOverIdx === idx, 'dragging': dragIdx === idx }]">
-        {{ $t(tab.labelKey) }}
-      </button>
-    </nav>
+    <div class="flex flex-1 overflow-hidden">
+      <Sidebar :active-tab="activeTab" @navigate="navigateTo" />
 
-    <div class="flex-1 min-h-0 overflow-hidden overflow-y-auto">
-      <SurveyForm v-show="activeTab === 'survey'" @error="showToast" />
-      <ParameterPanel v-show="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
-      <RunningConditions v-show="activeTab === 'conditions'" @applyParams="onApplyConditions" @error="showToast" />
-      <BatteryDCDesign v-show="activeTab === 'dc-design'" ref="batteryDC" @apply-config="onApplyBatteryConfig" @error="showToast" />
-      <PcsACDesign v-show="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" @error="showToast" />
-      <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
-      <SimulationLab v-show="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" @error="showToast" />
-      <AlgorithmLab v-show="activeTab === 'algorithm'" />
-      <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
-      <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
-      <MatrixTable v-show="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
-        @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
-      <DataInjection v-show="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
-      <FormulaLab v-show="activeTab === 'formula'" :params="params" @update="updateParam" />
-      <SohChart v-show="activeTab === 'chart'" :results="results" :soh="soh" :rte="rte" :required-energy="params.requiredEnergy" />
-      <ScenarioCompare v-show="activeTab === 'scenario'" :base-params="params" @error="showToast" />
-      <SensitivityAnalysis v-show="activeTab === 'sensitivity'" :params="params" :financial="financialData" @error="showToast" />
-      <EngineeringCalc v-show="activeTab === 'engineering'" @error="showToast" />
-      <DataExport v-show="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
-      <AuthPanel v-show="activeTab === 'auth'" @auth-success="onAuthSuccess" @error="showToast" />
+      <main class="flex-1 overflow-auto">
+        <div class="min-h-full p-6">
+          <HomePage v-show="activeTab === 'home'" @navigate="navigateTo" />
+          <SurveyForm v-show="activeTab === 'survey'" @error="showToast" />
+          <ParameterPanel v-show="activeTab === 'param'" :params="params" @update="updateParam" @error="showToast" />
+          <RunningConditions v-show="activeTab === 'conditions'" @applyParams="onApplyConditions" @error="showToast" />
+          <BatteryDCDesign v-show="activeTab === 'dc-design'" ref="batteryDC" @apply-config="onApplyBatteryConfig" @error="showToast" />
+          <PcsACDesign v-show="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" @error="showToast" />
+          <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
+          <SimulationLab v-show="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" @error="showToast" />
+          <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
+          <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
+          <MatrixTable v-show="activeTab === 'matrix'" :results="results" :params="params" :soh="soh" :rte="rte" :dod="dod" :augQty="augQty"
+            @update:soh="soh = $event" @update:rte="rte = $event" @update:dod="dod = $event" @update:augQty="augQty = $event" />
+          <DataInjection v-show="activeTab === 'inject'" :soh="soh" :rte="rte" @update:soh="soh = $event" @update:rte="rte = $event" />
+          <FormulaLab v-show="activeTab === 'formula'" :params="params" @update="updateParam" />
+          <SohChart v-show="activeTab === 'chart'" :results="results" :soh="soh" :rte="rte" :required-energy="params.requiredEnergy" />
+          <ScenarioCompare v-show="activeTab === 'scenario'" :base-params="params" @error="showToast" />
+          <SensitivityAnalysis v-show="activeTab === 'sensitivity'" :params="params" :financial="financialData" @error="showToast" />
+          <EngineeringCalc v-show="activeTab === 'engineering'" @error="showToast" />
+          <DataExport v-show="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
+          <AuthPanel v-show="activeTab === 'auth'" @auth-success="onAuthSuccess" @error="showToast" />
+        </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import Sidebar from './components/Sidebar.vue'
+import HomePage from './components/HomePage.vue'
 import ParameterPanel from './components/ParameterPanel.vue'
 import MatrixTable from './components/MatrixTable.vue'
 import DataInjection from './components/DataInjection.vue'
@@ -89,8 +94,6 @@ import SensitivityAnalysis from './components/SensitivityAnalysis.vue'
 import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
-import ThemeSwitcher from './components/ThemeSwitcher.vue'
-import AlgorithmLab from './views/AlgorithmLab.vue'
 
 const batteryDC = ref(null)
 const pcsAC = ref(null)
@@ -112,58 +115,22 @@ const showToast = (message, type = 'info') => {
   }, 3000)
 }
 
-function openSurveyPage() {
-  router.push('/survey')
-}
+const activeTab = ref('home')
 
-const activeTab = ref('param')
-const tabs = ref([
-  { id: 'survey', labelKey: 'tabs.survey' },
-  { id: 'param', labelKey: 'tabs.param' },
-  { id: 'conditions', labelKey: 'tabs.conditions' },
-  { id: 'dc-design', labelKey: 'tabs.dcDesign' },
-  { id: 'ac-design', labelKey: 'tabs.acDesign' },
-  { id: 'batteryPCS', labelKey: 'tabs.batteryPCS' },
-  { id: 'simulationLab', labelKey: 'tabs.simulationLab' },
-  { id: 'products', labelKey: 'tabs.products' },
-  { id: 'financial', labelKey: 'tabs.financial' },
-  { id: 'matrix', labelKey: 'tabs.matrix' },
-  { id: 'inject', labelKey: 'tabs.inject' },
-  { id: 'formula', labelKey: 'tabs.algorithmAndFormula' },
-  { id: 'chart', labelKey: 'tabs.chart' },
-  { id: 'scenario', labelKey: 'tabs.scenario' },
-  { id: 'sensitivity', labelKey: 'tabs.sensitivity' },
-  { id: 'engineering', labelKey: 'tabs.engineering' },
-  { id: 'export', labelKey: 'tabs.export' },
-  { id: 'auth', labelKey: 'tabs.auth' },
-])
+const foundationTabs = ['survey', 'param', 'conditions', 'products', 'batteryPCS', 'formula']
+const solutionTabs = ['dc-design', 'ac-design', 'simulationLab', 'financial', 'matrix', 'inject', 'chart', 'scenario', 'sensitivity', 'engineering', 'export']
 
-const dragIdx = ref(-1)
-const dragOverIdx = ref(-1)
+const isFoundationTab = computed(() => foundationTabs.includes(activeTab.value))
+const isSolutionTab = computed(() => solutionTabs.includes(activeTab.value))
 
-function onDragStart(idx, e) {
-  dragIdx.value = idx
-  e.dataTransfer.effectAllowed = 'move'
-}
-
-function onDragOver(idx) {
-  if (dragIdx.value === idx) return
-  dragOverIdx.value = idx
-}
-
-function onDrop(idx) {
-  if (dragIdx.value < 0 || dragIdx.value === idx) return
-  const list = [...tabs.value]
-  const [moved] = list.splice(dragIdx.value, 1)
-  list.splice(idx, 0, moved)
-  tabs.value = list
-  dragIdx.value = -1
-  dragOverIdx.value = -1
-}
-
-function onDragEnd() {
-  dragIdx.value = -1
-  dragOverIdx.value = -1
+function navigateTo(tab) {
+  if (tab === 'foundation') {
+    activeTab.value = 'param'
+  } else if (tab === 'solution') {
+    activeTab.value = 'dc-design'
+  } else {
+    activeTab.value = tab
+  }
 }
 
 const N = 26
@@ -347,12 +314,10 @@ function onApplySimulationConfig(payload) {
       params[key] = payload[key]
     }
   })
-  // 接收 SimulationLab 的 SOH/RTE 曲线（支持两种 key 名）
   const sohData = payload.sohCurve || payload.soh
   const rteData = payload.rteCurve || payload.rte
   if (sohData && Array.isArray(sohData)) {
     soh.value = sohData
-    // 自动切换到数据注入 tab，让用户确认/微调（保留手动注入能力）
     if (payload.source === 'simulation' && activeTab.value !== 'inject') {
       activeTab.value = 'inject'
     }
@@ -409,12 +374,33 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.tab-btn.dragging {
-  opacity: 0.4;
+.nav-item {
+  color: #666666;
 }
 
-.tab-btn.drag-over {
-  border-left: 2px solid #2dd4bf;
-  margin-left: -2px;
+.nav-item:hover {
+  background-color: #F5F7FA;
+  color: #2F5496;
+}
+
+.nav-active {
+  background-color: #E8EEF5;
+  color: #2F5496;
+}
+
+.oracle-btn-primary {
+  background-color: #2F5496;
+  color: white;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.oracle-btn-primary:hover {
+  background-color: #4A7BC4;
+  box-shadow: 0 2px 8px rgba(47, 84, 150, 0.3);
 }
 </style>

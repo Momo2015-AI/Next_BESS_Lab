@@ -31,6 +31,32 @@ export default {
     title: '储能电站 SOH 仿真计算与容量配置矩阵',
     subtitle: 'BESS SOH Simulation, Degradation Matrix & Augmentation Lifecycle Engine',
     simulate: '执行仿真计算',
+    foundation: '基础配置',
+    solution: '方案开发',
+  },
+  home: {
+    title: 'SOH-SIM 储能仿真平台',
+    subtitle: '一站式储能电站仿真解决方案，从调研到方案设计的完整流程',
+    learnMore: '了解更多',
+    survey: {
+      title: '项目调研表',
+      desc: '客户调研数据录入，收集项目基础信息',
+    },
+    foundation: {
+      title: '基础配置',
+      desc: '参数配置、产品库管理、算法定义等基础设置',
+    },
+    solution: {
+      title: '方案开发',
+      desc: '直流侧设计、交流侧设计、仿真计算、财务分析等方案开发功能',
+    },
+  },
+  sidebar: {
+    home: '首页',
+    foundation: '基础配置',
+    solution: '方案开发',
+    tools: '工具',
+    auth: '用户认证',
   },
   tabs: {
     survey: '0. 项目调研表',
