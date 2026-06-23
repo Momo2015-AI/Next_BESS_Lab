@@ -448,3 +448,64 @@ def activate_version(version_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'激活失败: {str(e)}'}), 500
+
+
+# ==================== 参数同步API ====================
+
+@project_bp.route('/api/project/sync-params', methods=['POST'])
+def sync_params():
+    """同步参数到数据库"""
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': '无效的请求数据'}), 400
+    
+    project_id = data.get('project_id')
+    params_data = data.get('params')
+    soh_data = data.get('soh')
+    rte_data = data.get('rte')
+    dod_data = data.get('dod')
+    aug_qty_data = data.get('augQty')
+    
+    from database import db, Project, ProjectVersion, SohRteData
+    
+    try:
+        if project_id:
+            project = Project.query.get(project_id)
+            if project:
+                config = json.loads(project.config) if project.config else {}
+                config['params'] = params_data
+                config['soh'] = soh_data
+                config['rte'] = rte_data
+                config['dod'] = dod_data
+                config['augQty'] = aug_qty_data
+                project.config = json.dumps(config)
+                project.updated_at = datetime.utcnow()
+                db.session.commit()
+        
+        soh_rte_record = SohRteData.query.first()
+        if soh_rte_record:
+            soh_rte_record.soh_values = json.dumps(soh_data) if soh_data else None
+            soh_rte_record.rte_values = json.dumps(rte_data) if rte_data else None
+            soh_rte_record.dod_values = json.dumps(dod_data) if dod_data else None
+            soh_rte_record.aug_qty_values = json.dumps(aug_qty_data) if aug_qty_data else None
+            soh_rte_record.updated_at = datetime.utcnow()
+        else:
+            soh_rte_record = SohRteData(
+                id=str(uuid.uuid4()),
+                soh_values=json.dumps(soh_data) if soh_data else None,
+                rte_values=json.dumps(rte_data) if rte_data else None,
+                dod_values=json.dumps(dod_data) if dod_data else None,
+                aug_qty_values=json.dumps(aug_qty_data) if aug_qty_data else None,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
+            db.session.add(soh_rte_record)
+        
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': '参数同步成功'})
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'同步失败: {str(e)}'}), 500
