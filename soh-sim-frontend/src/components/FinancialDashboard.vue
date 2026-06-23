@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
 import * as echarts from 'echarts'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })

@@ -987,4 +987,7 @@ const exportResults = () => {
 }
 
 onMounted(() => {
-  initYearly
+  initYearlyCorrections()
+  fetchAlgorithms()
+})
+</script>
