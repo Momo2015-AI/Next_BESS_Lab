@@ -260,25 +260,27 @@ async function loadLibraryData() {
     await loadAll()
     
     // 转换数据格式以匹配组件需求
-    containers.value = containersFromProducts.value.map(c => ({
-      id: c.id,
-      name: c.model,
-      energy: c.ratedEnergyMWh,
-      power: c.ratedPowerMW,
-      voltage: 600,
-      cells: c.seriesCount * c.parallelCount || 120,
-      ...c
-    }))
+    containers.value = containersFromProducts.value.map(c => {
+      const mapped = { ...c }
+      mapped.id = c.id
+      mapped.name = c.model
+      mapped.energy = c.ratedEnergyMWh ?? c.ratedEnergyMwh ?? 0
+      mapped.power = c.ratedPowerMW ?? c.ratedPowerMw ?? 0
+      mapped.voltage = 600
+      mapped.cells = (c.seriesCount || 0) * (c.parallelCount || 0) || 120
+      return mapped
+    })
     
-    pcsList.value = pcsFromProducts.value.map(p => ({
-      id: p.id,
-      name: p.model,
-      power: p.ratedPowerMW,
-      voltage: 380,
-      dcVoltage: p.dcVoltageRange,
-      efficiency: p.efficiency,
-      ...p
-    }))
+    pcsList.value = pcsFromProducts.value.map(p => {
+      const mapped = { ...p }
+      mapped.id = p.id
+      mapped.name = p.model
+      mapped.power = p.ratedPowerMW ?? p.ratedPowerMw ?? 0
+      mapped.voltage = p.acVoltage || 380
+      mapped.dcVoltage = p.dcVoltageRange || '--'
+      mapped.efficiency = p.efficiency || 97
+      return mapped
+    })
     
     // 如果没有数据，使用默认值
     if (containers.value.length === 0 || pcsList.value.length === 0) {
@@ -317,17 +319,12 @@ watch(() => props.active, (isActive) => {
   if (isActive) {
     nextTick(() => {
       if (connectionChart) {
-        connectionChart.resize()
-        connectionChart.setOption(connectionChart.getOption(), true)
+        try { connectionChart.resize() } catch {}
       }
       if (singleLineChart) {
-        singleLineChart.resize()
-        singleLineChart.setOption(singleLineChart.getOption(), true)
+        try { singleLineChart.resize() } catch {}
       }
-      // If charts were never initialized, render them now
-      if (!connectionChart || !singleLineChart) {
-        calculatePCS()
-      }
+      calculatePCS()
     })
   }
 })
@@ -397,6 +394,7 @@ const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  if (!container || !pcs || !pcs.power) return '--'
   
   if (container.power === pcs.power) return '1:1配对'
   if (container.power < pcs.power) return '多舱并联'
@@ -408,6 +406,7 @@ const pairingDescription = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '请选择集装箱和PCS型号'
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  if (!container || !pcs || !pcs.power) return '请选择集装箱和PCS型号'
   
   const ratio = container.power / pcs.power
   if (ratio === 1) {
@@ -439,27 +438,29 @@ const shortCircuitCapacity = computed(() => {
 
 const recommendedSchemes = computed(() => {
   if (!selectedContainer.value) return []
+  const container = containers.value.find(c => c.id === selectedContainer.value)
+  if (!container || !container.energy || !container.power) return []
   
   const schemes = []
-  const container = containers.value.find(c => c.id === selectedContainer.value)
   
   for (let qty = 1; qty <= Math.min(containerQty.value + 2, 10); qty++) {
     const energy = container.energy * qty
     const power = container.power * qty
     
     for (const pcs of pcsList.value) {
+      if (!pcs.power || pcs.power <= 0) continue
       const pcsCount = Math.ceil(power / pcs.power)
       if (pcsCount <= 10 && pcsCount >= 1) {
         const ratio = power / (pcsCount * pcs.power)
-        const efficiency = pcs.efficiency - Math.abs(ratio - 1) * 0.5
+        const eff = (pcs.efficiency || 97) - Math.abs(ratio - 1) * 0.5
         
         schemes.push({
           id: `方案${schemes.length + 1}`,
           containerConfig: `${qty}×${container.name}`,
           pcsConfig: `${pcsCount}×${pcs.name}`,
           pairingMode: ratio === 1 ? '1:1' : ratio < 1 ? '多舱并联' : '单舱多PCS',
-          energyPowerRatio: `${energy}/${pcsCount * pcs.power}`,
-          efficiency: efficiency.toFixed(1),
+          energyPowerRatio: `${energy}/${(pcsCount * pcs.power).toFixed(1)}`,
+          efficiency: eff.toFixed(1),
           containerQty: qty,
           pcsQty: pcsCount,
           containerId: container.id,
@@ -478,7 +479,6 @@ let connectionChart = null
 let singleLineChart = null
 
 const calculatePCS = () => {
-  if (!props.active) return
   nextTick(() => {
     renderConnectionDiagram()
     renderSingleLineDiagram()
@@ -590,7 +590,7 @@ const renderConnectionDiagram = () => {
       label: { show: true, position: 'inside', formatter: `舱${i + 1}\n${container.energy}MWh`, fontSize: 9, color: '#fff' },
     })
     
-    const ratio = container.power / pcs.power
+    const ratio = container.power / Math.max(pcs.power, 0.01)
     if (ratio <= 1) {
       const pcsIndex = Math.floor(i * pn / ctn)
       const targetPcs = `PCS${Math.min(pcsIndex + 1, pn)}`
@@ -824,8 +824,8 @@ const applyConfig = () => {
     ratedEnergy: container.energy,
     initContainerQty: containerQty.value,
     initPcsQty: pcsQty.value,
-    duration: container.energy / container.power,
-    acEfficiency: pcs.efficiency,
+    duration: container.energy / Math.max(container.power, 0.01),
+    acEfficiency: (pcs.efficiency || 97) / 100,
   })
 }
 </script>
