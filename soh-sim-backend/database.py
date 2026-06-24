@@ -512,6 +512,8 @@ class CellProduct(db.Model):
     __tablename__ = 'cell_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))  # 企业隔离
+    is_builtin = db.Column(db.Boolean, default=False)  # 是否系统内置（对所有企业可见）
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     chemistry = db.Column(db.String(50))
@@ -534,6 +536,8 @@ class PackProduct(db.Model):
     __tablename__ = 'pack_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     chemistry = db.Column(db.String(50))
@@ -561,6 +565,8 @@ class RackProduct(db.Model):
     __tablename__ = 'rack_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     pack_model = db.Column(db.String(200))
@@ -584,6 +590,8 @@ class ClusterProduct(db.Model):
     __tablename__ = 'cluster_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     rack_model = db.Column(db.String(200))
@@ -608,6 +616,8 @@ class ContainerProduct(db.Model):
     __tablename__ = 'container_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     type = db.Column(db.String(100))
@@ -632,6 +642,8 @@ class PcsProduct(db.Model):
     __tablename__ = 'pcs_products'
 
     id = db.Column(db.String(100), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     rated_power_mw = db.Column(db.Float)
@@ -653,6 +665,8 @@ class BatteryConfigRule(db.Model):
     __tablename__ = 'battery_config_rules'
 
     id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    is_builtin = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     

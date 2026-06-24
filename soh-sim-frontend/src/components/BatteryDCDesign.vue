@@ -21,7 +21,7 @@
                 onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
                 onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="">-- 请选择电芯 --</option>
-                <option v-for="c in cellLibrary" :key="c.id" :value="c.id">{{ c.mfr }} {{ c.model }}</option>
+                <option v-for="c in cells" :key="c.id" :value="c.id">{{ c.mfr }} - {{ c.model }} ({{ c.capacityAh }}Ah)</option>
               </select>
             </div>
             
@@ -308,37 +308,28 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['apply-config', 'error'])
 
-// 电芯库数据（与运行工况页面一致，从 /api/library/cells 获取）
-const cellLibrary = ref([])
+const { cells, loadAll } = useProducts()
+
+// 电芯库数据（从统一产品库获取）
 const selectedCellId = ref('')
 
 // 加载电芯库数据
 async function loadCellLibrary() {
-  try {
-    const token = localStorage.getItem('token')
-    const res = await fetch('/api/library/cells', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const data = await res.json()
-    if (data.success) {
-      cellLibrary.value = data.data || []
-      // 如果有数据，默认选择第一个
-      if (cellLibrary.value.length > 0 && !selectedCellId.value) {
-        selectedCellId.value = cellLibrary.value[0].id
-        onCellChange()
-      }
-    }
-  } catch (error) {
-    console.error('加载电芯库失败:', error)
+  await loadAll()
+  // 如果有数据，默认选择第一个
+  if (cells.value.length > 0 && !selectedCellId.value) {
+    selectedCellId.value = cells.value[0].id
+    onCellChange()
   }
 }
 
 // 获取选中的电芯
 function getSelectedCell() {
-  return cellLibrary.value.find(c => c.id === selectedCellId.value)
+  return cells.value.find(c => c.id === selectedCellId.value)
 }
 
 // 电芯变化时自动带出参数

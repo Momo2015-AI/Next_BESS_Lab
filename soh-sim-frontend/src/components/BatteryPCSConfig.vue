@@ -215,50 +215,54 @@
 <script setup>
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
+import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['applyConfig', 'error'])
+
+const { containers: containersFromProducts, pcs: pcsFromProducts, loadAll } = useProducts()
 
 const containers = ref([])
 const pcsList = ref([])
 
 async function loadLibraryData() {
   try {
-    const [containersRes, pcsRes] = await Promise.all([
-      fetch('/api/library/containers'),
-      fetch('/api/library/pcs')
-    ])
+    await loadAll()
     
-    const [containersData, pcsData] = await Promise.all([
-      containersRes.json(),
-      pcsRes.json()
-    ])
+    // 转换数据格式以匹配组件需求
+    containers.value = containersFromProducts.value.map(c => ({
+      id: c.id,
+      name: c.model,
+      energy: c.ratedEnergyMWh,
+      power: c.ratedPowerMW,
+      voltage: 600,
+      cells: c.seriesCount * c.parallelCount || 120,
+      ...c
+    }))
     
-    if (containersData.success) {
-      containers.value = containersData.data.map(c => ({
-        id: c.id,
-        name: c.model,
-        energy: c.ratedEnergyMWh,
-        power: c.ratedPowerMW,
-        voltage: 600,
-        cells: c.seriesCount * c.parallelCount || 120,
-        ...c
-      }))
-    }
+    pcsList.value = pcsFromProducts.value.map(p => ({
+      id: p.id,
+      name: p.model,
+      power: p.ratedPowerMW,
+      voltage: 380,
+      dcVoltage: p.dcVoltageRange,
+      efficiency: p.efficiency,
+      ...p
+    }))
     
-    if (pcsData.success) {
-      pcsList.value = pcsData.data.map(p => ({
-        id: p.id,
-        name: p.model,
-        power: p.ratedPowerMW,
-        voltage: 380,
-        dcVoltage: p.dcVoltageRange,
-        efficiency: p.efficiency,
-        ...p
-      }))
-    }
-    
+    // 如果没有数据，使用默认值
     if (containers.value.length === 0 || pcsList.value.length === 0) {
-      await seedLibrary()
+      containers.value = [
+        { id: 'container-5mwh', name: '5MWh标准舱', energy: 5, power: 2.5, voltage: 600, cells: 120 },
+        { id: 'container-3mwh', name: '3MWh紧凑舱', energy: 3, power: 1.5, voltage: 600, cells: 72 },
+        { id: 'container-10mwh', name: '10MWh大容量舱', energy: 10, power: 5, voltage: 800, cells: 240 },
+        { id: 'container-2mwh', name: '2MWh小型舱', energy: 2, power: 1, voltage: 400, cells: 48 },
+      ]
+      pcsList.value = [
+        { id: 'pcs-2mw', name: '2MW PCS', power: 2, voltage: 380, dcVoltage: '600-900V', efficiency: 98 },
+        { id: 'pcs-1mw', name: '1MW PCS', power: 1, voltage: 380, dcVoltage: '400-600V', efficiency: 97 },
+        { id: 'pcs-5mw', name: '5MW PCS', power: 5, voltage: 380, dcVoltage: '800-1200V', efficiency: 98.5 },
+        { id: 'pcs-500kw', name: '500kW PCS', power: 0.5, voltage: 380, dcVoltage: '300-500V', efficiency: 96 },
+      ]
     }
   } catch (error) {
     console.error('加载产品库失败:', error)
@@ -274,18 +278,6 @@ async function loadLibraryData() {
       { id: 'pcs-5mw', name: '5MW PCS', power: 5, voltage: 380, dcVoltage: '800-1200V', efficiency: 98.5 },
       { id: 'pcs-500kw', name: '500kW PCS', power: 0.5, voltage: 380, dcVoltage: '300-500V', efficiency: 96 },
     ]
-  }
-}
-
-async function seedLibrary() {
-  try {
-    const response = await fetch('/api/library/seed', { method: 'POST' })
-    const data = await response.json()
-    if (data.success) {
-      await loadLibraryData()
-    }
-  } catch (error) {
-    console.error('初始化产品库失败:', error)
   }
 }
 

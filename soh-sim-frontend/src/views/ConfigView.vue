@@ -277,6 +277,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useProducts } from '../composables/useProducts'
 
 const props = defineProps({
   projectId: String,
@@ -286,9 +287,7 @@ const props = defineProps({
 const emit = defineEmits(['save-config'])
 
 const userRole = ref('customer')
-const cellLibrary = ref([])
-const containerLibrary = ref([])
-const pcsLibrary = ref([])
+const { cells: cellLibrary, containers: containerLibrary, pcs: pcsLibrary, loadAll } = useProducts()
 const currentVersion = ref(null)
 const showSaveAsDialog = ref(false)
 const newVersionName = ref('')
@@ -414,28 +413,7 @@ function loadUserInfo() {
 // 加载产品库
 async function loadProductLibrary() {
   try {
-    const token = localStorage.getItem('token')
-    
-    // 加载电芯库
-    const cellRes = await fetch('/api/library/cells', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const cellData = await cellRes.json()
-    if (cellData.success) cellLibrary.value = cellData.data || []
-    
-    // 加载集装箱库
-    const containerRes = await fetch('/api/library/containers', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const containerData = await containerRes.json()
-    if (containerData.success) containerLibrary.value = containerData.data || []
-    
-    // 加载PCS库
-    const pcsRes = await fetch('/api/library/pcs', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const pcsData = await pcsRes.json()
-    if (pcsData.success) pcsLibrary.value = pcsData.data || []
+    await loadAll()
     
     // 加载当前版本配置
     if (props.versionId) {

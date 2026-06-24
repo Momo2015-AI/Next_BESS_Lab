@@ -2,12 +2,18 @@
 产品库 API 路由
 支持电芯、Pack、Rack、Cluster、集装箱、PCS 的 CRUD 操作和种子数据初始化
 支持电池层级配置规则自动匹配
+支持企业隔离（多租户）：超级管理员可见全部，普通用户仅可见自己企业
 """
 import uuid
 import json
 import os
 from flask import Blueprint, request, jsonify, current_app
-from database import db, CellProduct, PackProduct, RackProduct, ClusterProduct, ContainerProduct, PcsProduct, BatteryConfigRule
+from sqlalchemy import or_
+from database import (
+    db, CellProduct, PackProduct, RackProduct, ClusterProduct,
+    ContainerProduct, PcsProduct, BatteryConfigRule, User
+)
+from routes.auth import _get_user_from_token
 
 products_bp = Blueprint('products', __name__)
 
@@ -126,8 +132,39 @@ def _json_to_model(item, category):
     return model_cls(**kwargs)
 
 
+def _get_current_user():
+    """从请求中获取当前用户（如未认证则返回 None）"""
+    user, _ = _get_user_from_token()
+    return user
+
+
+def _is_super_admin(user):
+    """判断是否为超级管理员：role == 'admin'"""
+    return user is not None and getattr(user, 'role', None) == 'admin'
+
+
+def _apply_tenant_filter(query, model_cls, user, include_builtin=True):
+    """
+    应用企业隔离过滤：
+    - 超级管理员：可见全部数据
+    - 普通用户：仅可见自己企业数据 + 系统内置数据
+    """
+    if _is_super_admin(user):
+        return query
+    if user is None:
+        # 未登录用户仅看系统内置数据
+        if include_builtin and hasattr(model_cls, 'is_builtin'):
+            return query.filter(model_cls.is_builtin == True)
+        return query.filter(False)  # 不可见
+    if hasattr(model_cls, 'tenant_id') and hasattr(model_cls, 'is_builtin'):
+        if include_builtin:
+            return query.filter(or_(model_cls.tenant_id == user.tenant_id, model_cls.is_builtin == True))
+        return query.filter(model_cls.tenant_id == user.tenant_id)
+    return query
+
+
 def seed_products():
-    """从 products.json 种子数据初始化产品库"""
+    """从 products.json 种子数据初始化产品库（标记为系统内置，所有企业可见）"""
     if not os.path.exists(PRODUCTS_DATA_PATH):
         return
 
@@ -141,6 +178,11 @@ def seed_products():
         for item in items:
             existing = model_cls.query.get(item.get('id'))
             if not existing:
+                # 种子数据：标记为系统内置（对所有企业可见）
+                if 'is_builtin' not in item:
+                    item['is_builtin'] = True
+                if 'tenant_id' not in item:
+                    item['tenant_id'] = None
                 obj = _json_to_model(item, category)
                 db.session.add(obj)
 
@@ -163,7 +205,11 @@ def refresh_products():
     """刷新产品库：清空现有数据并重新导入种子数据"""
     try:
         for category, model_cls in _MODELS.items():
-            model_cls.query.delete()
+            # 仅清空系统内置数据
+            if hasattr(model_cls, 'is_builtin'):
+                model_cls.query.filter(model_cls.is_builtin == True).delete()
+            else:
+                model_cls.query.delete()
         db.session.commit()
         seed_products()
         return jsonify({'success': True, 'message': '产品库已刷新'})
@@ -174,20 +220,35 @@ def refresh_products():
 
 @products_bp.route('/api/products/<category>', methods=['GET'])
 def list_products(category):
-    """获取产品列表"""
+    """获取产品列表（支持企业隔离）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
 
+    user = _get_current_user()
     model_cls = _MODELS[category]
     mfr = request.args.get('mfr')
-    model = request.args.get('model')
+    model_name = request.args.get('model')
     chemistry = request.args.get('chemistry')
+    scope = request.args.get('scope', 'all')  # all / mine / builtin
 
     query = model_cls.query
+
+    # 应用企业隔离
+    if scope == 'builtin':
+        if hasattr(model_cls, 'is_builtin'):
+            query = query.filter(model_cls.is_builtin == True)
+    elif scope == 'mine':
+        if user and hasattr(model_cls, 'tenant_id'):
+            query = query.filter(model_cls.tenant_id == user.tenant_id)
+        else:
+            query = query.filter(False)
+    else:
+        query = _apply_tenant_filter(query, model_cls, user)
+
     if mfr:
         query = query.filter(model_cls.mfr == mfr)
-    if model:
-        query = query.filter(model_cls.model == model)
+    if model_name:
+        query = query.filter(model_cls.model == model_name)
     if chemistry and hasattr(model_cls, 'chemistry'):
         query = query.filter(model_cls.chemistry == chemistry)
 
@@ -204,29 +265,49 @@ def get_product(category, item_id):
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
 
+    user = _get_current_user()
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
         return jsonify({'error': '产品不存在'}), 404
+
+    # 权限检查
+    if not _is_super_admin(user):
+        if hasattr(item, 'tenant_id') and hasattr(item, 'is_builtin'):
+            if not item.is_builtin and (not user or item.tenant_id != user.tenant_id):
+                return jsonify({'error': '无权访问'}), 403
+
     return jsonify(item.to_dict())
 
 
 @products_bp.route('/api/products/<category>', methods=['POST'])
 def create_product(category):
-    """新增产品"""
+    """新增产品（自动归属到当前用户的企业）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
+
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
 
     data = request.get_json()
     if not data:
         return jsonify({'error': '无效请求数据'}), 400
+
+    # 自动设置 tenant_id 与 is_builtin
+    data['tenant_id'] = user.tenant_id
+    data['is_builtin'] = False  # 用户新增的产品不是系统内置
+
+    # 若未提供 id，自动生成
+    if 'id' not in data or not data['id']:
+        data['id'] = str(uuid.uuid4())
 
     obj = _json_to_model(data, category)
     db.session.add(obj)
 
     try:
         db.session.commit()
-        return jsonify({'success': True, 'id': obj.id}), 201
+        return jsonify({'success': True, 'id': obj.id, 'item': obj.to_dict()}), 201
     except Exception:
         db.session.rollback()
         return jsonify({'error': '创建失败，ID可能已存在'}), 500
@@ -234,14 +315,25 @@ def create_product(category):
 
 @products_bp.route('/api/products/<category>/<item_id>', methods=['PUT'])
 def update_product(category, item_id):
-    """更新产品"""
+    """更新产品（仅能修改自己企业的非系统内置数据）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
+
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
 
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
         return jsonify({'error': '产品不存在'}), 404
+
+    # 权限检查：仅超级管理员可改系统内置数据；普通用户仅能改自己企业数据
+    if not _is_super_admin(user):
+        if hasattr(item, 'is_builtin') and item.is_builtin:
+            return jsonify({'error': '无权修改系统内置数据'}), 403
+        if hasattr(item, 'tenant_id') and item.tenant_id != user.tenant_id:
+            return jsonify({'error': '无权修改其他企业的数据'}), 403
 
     data = request.get_json()
     if not data:
@@ -249,7 +341,7 @@ def update_product(category, item_id):
 
     for k, v in data.items():
         key = _camel_to_snake(k, category)
-        if hasattr(item, key) and key != 'id':
+        if hasattr(item, key) and key not in ('id', 'tenant_id', 'is_builtin'):
             setattr(item, key, v)
 
     try:
@@ -262,14 +354,25 @@ def update_product(category, item_id):
 
 @products_bp.route('/api/products/<category>/<item_id>', methods=['DELETE'])
 def delete_product(category, item_id):
-    """删除产品"""
+    """删除产品（仅能删除自己企业的非系统内置数据）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
+
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
 
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
         return jsonify({'error': '产品不存在'}), 404
+
+    # 权限检查
+    if not _is_super_admin(user):
+        if hasattr(item, 'is_builtin') and item.is_builtin:
+            return jsonify({'error': '无权删除系统内置数据'}), 403
+        if hasattr(item, 'tenant_id') and item.tenant_id != user.tenant_id:
+            return jsonify({'error': '无权删除其他企业的数据'}), 403
 
     db.session.delete(item)
     try:
@@ -282,46 +385,51 @@ def delete_product(category, item_id):
 
 @products_bp.route('/api/products/mfrs/<category>', methods=['GET'])
 def list_manufacturers(category):
-    """获取某类产品的厂商列表"""
+    """获取某类产品的厂商列表（受企业隔离影响）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
 
+    user = _get_current_user()
     model_cls = _MODELS[category]
-    mfrs = db.session.query(model_cls.mfr).distinct().all()
+    query = _apply_tenant_filter(db.session.query(model_cls.mfr), model_cls, user)
+    mfrs = query.distinct().all()
     return jsonify({'mfrs': [m[0] for m in mfrs if m[0]]})
 
 
 @products_bp.route('/api/products/models/<category>', methods=['GET'])
 def list_models(category):
-    """获取某类产品的型号列表"""
+    """获取某类产品的型号列表（受企业隔离影响）"""
     if category not in _MODELS:
         return jsonify({'error': f'未知产品类别: {category}'}), 400
 
+    user = _get_current_user()
     model_cls = _MODELS[category]
     mfr = request.args.get('mfr')
-    
-    query = db.session.query(model_cls.model).distinct()
+
+    query = _apply_tenant_filter(db.session.query(model_cls.model), model_cls, user)
     if mfr:
         query = query.filter(model_cls.mfr == mfr)
-    
-    models = query.all()
+
+    models = query.distinct().all()
     return jsonify({'models': [m[0] for m in models if m[0]]})
 
 
 @products_bp.route('/api/products/match-config', methods=['POST'])
 def match_config_rule():
-    """根据电芯/电池型号自动匹配配置规则"""
+    """根据电芯/电池型号自动匹配配置规则（受企业隔离影响）"""
     data = request.get_json()
     if not data:
         return jsonify({'error': '无效请求数据'}), 400
 
+    user = _get_current_user()
     cell_model = data.get('cellModel')
     pack_model = data.get('packModel')
     rack_model = data.get('rackModel')
     cluster_model = data.get('clusterModel')
     container_model = data.get('containerModel')
 
-    query = BatteryConfigRule.query.filter(BatteryConfigRule.status == 'active')
+    query = _apply_tenant_filter(BatteryConfigRule.query.filter(BatteryConfigRule.status == 'active'),
+                                 BatteryConfigRule, user)
 
     if cell_model:
         query = query.filter(BatteryConfigRule.cell_model == cell_model)
@@ -335,7 +443,7 @@ def match_config_rule():
         query = query.filter(BatteryConfigRule.container_model == container_model)
 
     rules = query.all()
-    
+
     if rules:
         default_rule = next((r for r in rules if r.is_default), rules[0])
         return jsonify({
@@ -356,13 +464,14 @@ def match_config_rule():
 
 @products_bp.route('/api/products/config-rules', methods=['GET'])
 def list_config_rules():
-    """获取所有配置规则列表"""
+    """获取所有配置规则列表（受企业隔离影响）"""
     status = request.args.get('status', 'active')
-    query = BatteryConfigRule.query
-    
+    user = _get_current_user()
+    query = _apply_tenant_filter(BatteryConfigRule.query, BatteryConfigRule, user)
+
     if status:
         query = query.filter(BatteryConfigRule.status == status)
-    
+
     rules = query.all()
     return jsonify({
         'items': [r.to_dict() for r in rules],
@@ -373,22 +482,36 @@ def list_config_rules():
 @products_bp.route('/api/products/config-rules/<rule_id>', methods=['GET'])
 def get_config_rule(rule_id):
     """获取单个配置规则详情"""
+    user = _get_current_user()
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
         return jsonify({'error': '配置规则不存在'}), 404
+
+    if not _is_super_admin(user):
+        if hasattr(rule, 'is_builtin') and hasattr(rule, 'tenant_id'):
+            if not rule.is_builtin and (not user or rule.tenant_id != user.tenant_id):
+                return jsonify({'error': '无权访问'}), 403
+
     return jsonify(rule.to_dict())
 
 
 @products_bp.route('/api/products/config-rules', methods=['POST'])
 def create_config_rule():
-    """创建配置规则"""
+    """创建配置规则（归属当前用户企业）"""
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
+
     data = request.get_json()
     if not data:
         return jsonify({'error': '无效请求数据'}), 400
 
     if 'id' not in data:
         data['id'] = str(uuid.uuid4())
-    
+
+    data['tenant_id'] = user.tenant_id
+    data['is_builtin'] = False
+
     rule = _json_to_model(data, 'config_rules')
     db.session.add(rule)
 
@@ -403,9 +526,19 @@ def create_config_rule():
 @products_bp.route('/api/products/config-rules/<rule_id>', methods=['PUT'])
 def update_config_rule(rule_id):
     """更新配置规则"""
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
+
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
         return jsonify({'error': '配置规则不存在'}), 404
+
+    if not _is_super_admin(user):
+        if hasattr(rule, 'is_builtin') and rule.is_builtin:
+            return jsonify({'error': '无权修改系统内置数据'}), 403
+        if hasattr(rule, 'tenant_id') and rule.tenant_id != user.tenant_id:
+            return jsonify({'error': '无权修改其他企业的数据'}), 403
 
     data = request.get_json()
     if not data:
@@ -413,7 +546,7 @@ def update_config_rule(rule_id):
 
     for k, v in data.items():
         key = _camel_to_snake(k, 'config_rules')
-        if hasattr(rule, key) and key != 'id':
+        if hasattr(rule, key) and key not in ('id', 'tenant_id', 'is_builtin'):
             setattr(rule, key, v)
 
     try:
@@ -427,9 +560,19 @@ def update_config_rule(rule_id):
 @products_bp.route('/api/products/config-rules/<rule_id>', methods=['DELETE'])
 def delete_config_rule(rule_id):
     """删除配置规则"""
+    user = _get_current_user()
+    if not user:
+        return jsonify({'error': '请先登录'}), 401
+
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
         return jsonify({'error': '配置规则不存在'}), 404
+
+    if not _is_super_admin(user):
+        if hasattr(rule, 'is_builtin') and rule.is_builtin:
+            return jsonify({'error': '无权删除系统内置数据'}), 403
+        if hasattr(rule, 'tenant_id') and rule.tenant_id != user.tenant_id:
+            return jsonify({'error': '无权删除其他企业的数据'}), 403
 
     db.session.delete(rule)
     try:
@@ -442,7 +585,8 @@ def delete_config_rule(rule_id):
 
 @products_bp.route('/api/products/hierarchy', methods=['POST'])
 def get_hierarchy():
-    """获取完整的电池层级配置信息"""
+    """获取完整的电池层级配置信息（受企业隔离影响）"""
+    user = _get_current_user()
     data = request.get_json()
     if not data:
         return jsonify({'error': '无效请求数据'}), 400
@@ -460,52 +604,89 @@ def get_hierarchy():
     }
 
     if cell_model:
-        cell = CellProduct.query.filter(CellProduct.model == cell_model).first()
+        cell_query = _apply_tenant_filter(
+            CellProduct.query.filter(CellProduct.model == cell_model), CellProduct, user
+        )
+        cell = cell_query.first()
         if cell:
             result['cell'] = cell.to_dict()
-            packs = PackProduct.query.filter(PackProduct.cell_model == cell_model).all()
+            packs_query = _apply_tenant_filter(
+                PackProduct.query.filter(PackProduct.cell_model == cell_model), PackProduct, user
+            )
+            packs = packs_query.all()
             if packs:
                 result['pack'] = packs[0].to_dict()
                 pack_model = packs[0].model
-                racks = RackProduct.query.filter(RackProduct.pack_model == pack_model).all()
+                racks_query = _apply_tenant_filter(
+                    RackProduct.query.filter(RackProduct.pack_model == pack_model), RackProduct, user
+                )
+                racks = racks_query.all()
                 if racks:
                     result['rack'] = racks[0].to_dict()
                     rack_model = racks[0].model
-                    clusters = ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model).all()
+                    clusters_query = _apply_tenant_filter(
+                        ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model),
+                        ClusterProduct, user
+                    )
+                    clusters = clusters_query.all()
                     if clusters:
                         result['cluster'] = clusters[0].to_dict()
                         cluster_model = clusters[0].model
-                        containers = ContainerProduct.query.filter(
-                            (ContainerProduct.cluster_model == cluster_model) |
-                            (ContainerProduct.cell_model == cell_model)
-                        ).all()
+                        containers_query = _apply_tenant_filter(
+                            ContainerProduct.query.filter(
+                                or_(
+                                    ContainerProduct.cluster_model == cluster_model,
+                                    ContainerProduct.cell_model == cell_model,
+                                )
+                            ),
+                            ContainerProduct, user
+                        )
+                        containers = containers_query.all()
                         if containers:
                             result['container'] = containers[0].to_dict()
 
     elif pack_model:
-        pack = PackProduct.query.filter(PackProduct.model == pack_model).first()
+        pack_query = _apply_tenant_filter(
+            PackProduct.query.filter(PackProduct.model == pack_model), PackProduct, user
+        )
+        pack = pack_query.first()
         if pack:
             result['pack'] = pack.to_dict()
-            racks = RackProduct.query.filter(RackProduct.pack_model == pack_model).all()
+            racks_query = _apply_tenant_filter(
+                RackProduct.query.filter(RackProduct.pack_model == pack_model), RackProduct, user
+            )
+            racks = racks_query.all()
             if racks:
                 result['rack'] = racks[0].to_dict()
                 rack_model = racks[0].model
-                clusters = ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model).all()
+                clusters_query = _apply_tenant_filter(
+                    ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model),
+                    ClusterProduct, user
+                )
+                clusters = clusters_query.all()
                 if clusters:
                     result['cluster'] = clusters[0].to_dict()
                     cluster_model = clusters[0].model
-                    containers = ContainerProduct.query.filter(
-                        ContainerProduct.cluster_model == cluster_model
-                    ).all()
+                    containers_query = _apply_tenant_filter(
+                        ContainerProduct.query.filter(ContainerProduct.cluster_model == cluster_model),
+                        ContainerProduct, user
+                    )
+                    containers = containers_query.all()
                     if containers:
                         result['container'] = containers[0].to_dict()
 
-    rule_match = BatteryConfigRule.query.filter(
-        BatteryConfigRule.status == 'active',
-        ((BatteryConfigRule.cell_model == cell_model) if cell_model else True),
-        ((BatteryConfigRule.pack_model == pack_model) if pack_model else True),
-    ).first()
+    rule_query = _apply_tenant_filter(
+        BatteryConfigRule.query.filter(
+            BatteryConfigRule.status == 'active',
+        ),
+        BatteryConfigRule, user
+    )
+    if cell_model:
+        rule_query = rule_query.filter(BatteryConfigRule.cell_model == cell_model)
+    if pack_model:
+        rule_query = rule_query.filter(BatteryConfigRule.pack_model == pack_model)
 
+    rule_match = rule_query.first()
     if rule_match:
         result['config_rule'] = rule_match.to_dict()
 

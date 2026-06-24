@@ -271,6 +271,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useProducts } from '../composables/useProducts'
 import baseProducts from '../data/products.json'
 
 const emit = defineEmits(['applyConfig'])
@@ -285,36 +286,19 @@ const containerFilter = ref('')
 const pcsFilter = ref('')
 const pcsPowerFilter = ref('0')
 
-// 从API加载的数据
-const cellLibrary = ref([])
-const containerLibrary = ref([])
-const pcsLibrary = ref([])
+// 从useProducts加载的数据
+const { cells: cellsFromProducts, containers: containersFromProducts, pcs: pcsFromProducts, loadAll, createProduct, deleteProduct } = useProducts()
 
-// 兼容旧数据结构
+// 本地数据（用于降级）
 const localData = ref(JSON.parse(JSON.stringify(baseProducts)))
 
 // API加载产品库
 async function loadLibraryData() {
   try {
-    // 并行加载三个库
-    const [cellsRes, containersRes, pcsRes] = await Promise.all([
-      fetch('/api/library/cells'),
-      fetch('/api/library/containers'),
-      fetch('/api/library/pcs')
-    ])
-    
-    const [cellsData, containersData, pcsData] = await Promise.all([
-      cellsRes.json(),
-      containersRes.json(),
-      pcsRes.json()
-    ])
-    
-    if (cellsData.success) cellLibrary.value = cellsData.data || []
-    if (containersData.success) containerLibrary.value = containersData.data || []
-    if (pcsData.success) pcsLibrary.value = pcsData.data || []
+    await loadAll()
     
     // 如果数据库为空，初始化默认数据
-    if (cellLibrary.value.length === 0 && containerLibrary.value.length === 0 && pcsLibrary.value.length === 0) {
+    if (cellsFromProducts.value.length === 0 && containersFromProducts.value.length === 0 && pcsFromProducts.value.length === 0) {
       await seedLibrary()
     }
   } catch (error) {
@@ -327,7 +311,7 @@ async function loadLibraryData() {
 // 初始化产品库
 async function seedLibrary() {
   try {
-    const response = await fetch('/api/library/seed', { method: 'POST' })
+    const response = await fetch('/api/products/seed', { method: 'POST' })
     const data = await response.json()
     if (data.success) {
       await loadLibraryData()
@@ -338,10 +322,10 @@ async function seedLibrary() {
 }
 
 function localMfrList(key) {
-  // 优先使用API数据，否则降级使用本地数据
-  const data = key === 'cells' ? cellLibrary.value : 
-               key === 'containers' ? containerLibrary.value : 
-               key === 'pcs' ? pcsLibrary.value : []
+  // 优先使用useProducts数据，否则降级使用本地数据
+  const data = key === 'cells' ? cellsFromProducts.value : 
+               key === 'containers' ? containersFromProducts.value : 
+               key === 'pcs' ? pcsFromProducts.value : []
   
   if (data.length > 0) {
     return [...new Set(data.map(c => c.mfr).filter(Boolean))]
@@ -350,10 +334,10 @@ function localMfrList(key) {
 }
 
 function localFiltered(key, mfrFilter, powerFilter) {
-  // 优先使用API数据
+  // 优先使用useProducts数据
   let list = []
-  if (key === 'cells' && cellLibrary.value.length > 0) {
-    list = cellLibrary.value.map(c => ({
+  if (key === 'cells' && cellsFromProducts.value.length > 0) {
+    list = cellsFromProducts.value.map(c => ({
       id: c.id,
       model: c.model,
       mfr: c.mfr,
@@ -373,8 +357,8 @@ function localFiltered(key, mfrFilter, powerFilter) {
       unitPrice: c.unitPrice,
       remarks: c.remarks,
     }))
-  } else if (key === 'containers' && containerLibrary.value.length > 0) {
-    list = containerLibrary.value.map(c => ({
+  } else if (key === 'containers' && containersFromProducts.value.length > 0) {
+    list = containersFromProducts.value.map(c => ({
       id: c.id,
       model: c.model,
       mfr: c.mfr,
@@ -397,8 +381,8 @@ function localFiltered(key, mfrFilter, powerFilter) {
       unitPrice: c.unitPrice,
       remarks: c.remarks,
     }))
-  } else if (key === 'pcs' && pcsLibrary.value.length > 0) {
-    list = pcsLibrary.value.map(p => ({
+  } else if (key === 'pcs' && pcsFromProducts.value.length > 0) {
+    list = pcsFromProducts.value.map(p => ({
       id: p.id,
       model: p.model,
       mfr: p.mfr,
@@ -430,17 +414,11 @@ function localFiltered(key, mfrFilter, powerFilter) {
 }
 
 async function deleteItem(key, id) {
-  // 如果有API数据，调用API删除
+  // 调用 Products API 删除（统一产品库）
   try {
-    const endpoint = key === 'cells' ? '/api/library/cells' : 
-                     key === 'containers' ? '/api/library/containers' : '/api/library/pcs'
-    const response = await fetch(`${endpoint}/${id}`, { method: 'DELETE' })
-    const data = await response.json()
-    if (data.success) {
-      // 重新加载数据
-      await loadLibraryData()
-      return
-    }
+    await deleteProduct(key, id)
+    // 重新加载数据（useProducts 内部已自动 loadAll(true)）
+    return
   } catch (error) {
     console.error('API删除失败:', error)
   }
@@ -475,6 +453,9 @@ async function saveProduct() {
   
   // 构建API请求数据
   let apiData = { ...f }
+  // 单数转复数
+  const category = type === 'cell' ? 'cells' : type === 'container' ? 'containers' : 'pcs'
+  
   if (type === 'cell') {
     apiData.capacityAh = f.capacityAh
     apiData.voltageNominal = f.voltageNominal
@@ -493,24 +474,14 @@ async function saveProduct() {
     apiData.cooling = f.cooling
   }
   
-  // 调用API保存
+  // 调用 Products API 保存（统一产品库，自动归属当前企业 + 刷新下拉框）
   try {
-    const endpoint = type === 'cell' ? '/api/library/cells' : 
-                     type === 'container' ? '/api/library/containers' : '/api/library/pcs'
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(apiData)
-    })
-    const data = await response.json()
-    if (data.success) {
-      // 重新加载数据
-      await loadLibraryData()
-      showModal.value = false
-      return
-    }
+    await createProduct(category, apiData)
+    showModal.value = false
+    return
   } catch (error) {
     console.error('API保存失败:', error)
+    alert('保存失败：' + (error.message || '未知错误'))
   }
   
   // 降级使用本地保存
@@ -610,22 +581,22 @@ function applyScenario(s) {
 }
 
 function applyToSimulation() {
-  // 优先使用API数据
+  // 优先使用useProducts数据
   let cell, container, pcs
-  if (cellLibrary.value.length > 0) {
-    cell = cellLibrary.value.find(c => c.id === selectedCell.value)
+  if (cellsFromProducts.value.length > 0) {
+    cell = cellsFromProducts.value.find(c => c.id === selectedCell.value)
   } else {
     cell = localData.value.cells?.find(c => c.id === selectedCell.value)
   }
   
-  if (containerLibrary.value.length > 0) {
-    container = containerLibrary.value.find(c => c.id === selectedContainer.value)
+  if (containersFromProducts.value.length > 0) {
+    container = containersFromProducts.value.find(c => c.id === selectedContainer.value)
   } else {
     container = localData.value.containers?.find(c => c.id === selectedContainer.value)
   }
   
-  if (pcsLibrary.value.length > 0) {
-    pcs = pcsLibrary.value.find(p => p.id === selectedPcs.value)
+  if (pcsFromProducts.value.length > 0) {
+    pcs = pcsFromProducts.value.find(p => p.id === selectedPcs.value)
   } else {
     pcs = localData.value.pcs?.find(p => p.id === selectedPcs.value)
   }

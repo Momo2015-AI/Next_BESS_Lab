@@ -9,7 +9,6 @@ const containers = ref([])
 const pcs = ref([])
 const configRules = ref([])
 const loading = ref(false)
-const loaded = ref(false)
 const source = ref('')
 
 const CAMEL_MAP = {
@@ -63,6 +62,8 @@ const CAMEL_MAP = {
   parallel_per_rack: 'parallelPerRack',
   series_per_cluster: 'seriesPerCluster',
   parallel_per_cluster: 'parallelPerCluster',
+  is_builtin: 'isBuiltin',
+  tenant_id: 'tenantId',
 }
 
 function toCamel(obj) {
@@ -74,9 +75,17 @@ function toCamel(obj) {
   return result
 }
 
-async function fetchCategory(category) {
+function getAuthHeaders() {
+  const token = localStorage.getItem('token')
+  return token ? { 'Authorization': `Bearer ${token}` } : {}
+}
+
+async function fetchCategory(category, force = false) {
   try {
-    const resp = await fetch(`/api/products/${category}`)
+    const resp = await fetch(`/api/products/${category}`, {
+      headers: getAuthHeaders(),
+      cache: force ? 'no-store' : 'default',
+    })
     if (!resp.ok) return []
     const data = await resp.json()
     return (data.items || []).map(toCamel)
@@ -85,9 +94,12 @@ async function fetchCategory(category) {
   }
 }
 
-async function fetchConfigRules() {
+async function fetchConfigRules(force = false) {
   try {
-    const resp = await fetch('/api/products/config-rules')
+    const resp = await fetch('/api/products/config-rules', {
+      headers: getAuthHeaders(),
+      cache: force ? 'no-store' : 'default',
+    })
     if (!resp.ok) return []
     const data = await resp.json()
     return (data.items || []).map(toCamel)
@@ -105,35 +117,36 @@ function loadFromLocalJson() {
   pcs.value = localProducts.pcs || []
   configRules.value = localProducts.config_rules || []
   source.value = 'local'
-  loaded.value = true
 }
 
 export function useProducts() {
-  async function loadAll() {
-    if (loaded.value) return
+  /**
+   * 强制重新加载（用于新增/删除/修改产品后刷新下拉框）
+   */
+  async function loadAll(force = false) {
     loading.value = true
     try {
       const [c, p, r, cl, ct, pc, rules] = await Promise.all([
-        fetchCategory('cells'),
-        fetchCategory('packs'),
-        fetchCategory('racks'),
-        fetchCategory('clusters'),
-        fetchCategory('containers'),
-        fetchCategory('pcs'),
-        fetchConfigRules(),
+        fetchCategory('cells', force),
+        fetchCategory('packs', force),
+        fetchCategory('racks', force),
+        fetchCategory('clusters', force),
+        fetchCategory('containers', force),
+        fetchCategory('pcs', force),
+        fetchConfigRules(force),
       ])
       const totalFromApi = c.length + p.length + r.length + cl.length + ct.length + pc.length
       if (totalFromApi === 0) {
         try {
-          await fetch('/api/products/seed', { method: 'POST' })
+          await fetch('/api/products/seed', { method: 'POST', headers: getAuthHeaders() })
           const [c2, p2, r2, cl2, ct2, pc2, rules2] = await Promise.all([
-            fetchCategory('cells'),
-            fetchCategory('packs'),
-            fetchCategory('racks'),
-            fetchCategory('clusters'),
-            fetchCategory('containers'),
-            fetchCategory('pcs'),
-            fetchConfigRules(),
+            fetchCategory('cells', true),
+            fetchCategory('packs', true),
+            fetchCategory('racks', true),
+            fetchCategory('clusters', true),
+            fetchCategory('containers', true),
+            fetchCategory('pcs', true),
+            fetchConfigRules(true),
           ])
           if (c2.length + p2.length + r2.length + cl2.length + ct2.length + pc2.length > 0) {
             cells.value = c2
@@ -144,7 +157,6 @@ export function useProducts() {
             pcs.value = pc2
             configRules.value = rules2
             source.value = 'api'
-            loaded.value = true
             return
           }
         } catch {
@@ -160,7 +172,6 @@ export function useProducts() {
       pcs.value = pc
       configRules.value = rules
       source.value = 'api'
-      loaded.value = true
     } catch (e) {
       console.error('加载产品库失败，使用本地数据:', e)
       loadFromLocalJson()
@@ -169,23 +180,69 @@ export function useProducts() {
     }
   }
 
+  /**
+   * 强制刷新所有产品（用于产品变更后立即生效）
+   */
   async function refreshProducts() {
-    loading.value = true
-    try {
-      await fetch('/api/products/refresh', { method: 'POST' })
-      await loadAll()
-    } catch (e) {
-      console.error('刷新产品库失败:', e)
-    } finally {
-      loading.value = false
+    await loadAll(true)
+  }
+
+  /**
+   * 新增产品
+   */
+  async function createProduct(category, data) {
+    const resp = await fetch(`/api/products/${category}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data),
+    })
+    const result = await resp.json()
+    if (!resp.ok) {
+      throw new Error(result.error || '创建失败')
     }
+    // 强制刷新下拉框
+    await loadAll(true)
+    return result
+  }
+
+  /**
+   * 更新产品
+   */
+  async function updateProduct(category, itemId, data) {
+    const resp = await fetch(`/api/products/${category}/${itemId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data),
+    })
+    const result = await resp.json()
+    if (!resp.ok) {
+      throw new Error(result.error || '更新失败')
+    }
+    await loadAll(true)
+    return result
+  }
+
+  /**
+   * 删除产品
+   */
+  async function deleteProduct(category, itemId) {
+    const resp = await fetch(`/api/products/${category}/${itemId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    })
+    const result = await resp.json()
+    if (!resp.ok) {
+      throw new Error(result.error || '删除失败')
+    }
+    await loadAll(true)
+    return result
   }
 
   async function matchConfigRule(params) {
     try {
       const resp = await fetch('/api/products/match-config', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify(params),
       })
       const data = await resp.json()
@@ -199,7 +256,7 @@ export function useProducts() {
     try {
       const resp = await fetch('/api/products/hierarchy', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify(params),
       })
       const data = await resp.json()
@@ -292,8 +349,9 @@ export function useProducts() {
 
   return {
     cells, packs, racks, clusters, containers, pcs, configRules,
-    loading, loaded, source,
+    loading, source,
     loadAll, refreshProducts,
+    createProduct, updateProduct, deleteProduct,
     matchConfigRule, getHierarchy,
     getCellById, getCellByModel,
     getPackById, getPackByModel, getPackByCellModel,
