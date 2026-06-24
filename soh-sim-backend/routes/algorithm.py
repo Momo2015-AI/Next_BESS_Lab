@@ -297,6 +297,25 @@ def get_builtin_algorithms():
             'is_builtin': True,
             'description': '动态扩容资产流役龄位移追踪模型。核心原理：每年新增的补容资产作为独立资产流，各自以安装年份为t=0开始独立的SOH衰减曲线。增容策略可选择"逐年补容"或"阈值触发"。目标维持SOH=90%意味着当系统总可用容量降至初始的90%以下时触发增容。成本年降幅5%基于Wright定律（学习率18%），反映锂电池成本随累计出货量翻倍而下降的趋势。',
         },
+        {
+            'name': '充放电时间计算',
+            'name_en': 'Charge/Discharge Time Calculation',
+            'model_type': 'charge_discharge_time',
+            'applicable_scenarios': ['运行时长计算', '功率配置', '效率评估'],
+            'mathematical_form': 't_discharge = (E_dc × η_pcs) / (P_poc + P_aux_run)',
+            'formula_expression': '(dcEnergy * pcsEfficiency) / (pocPower + auxRunPower)',
+            'parameters': {
+                'dc_energy': {'label': 'DC可用能量', 'default': 5, 'min': 0.1, 'max': 100, 'unit': 'MWh'},
+                'pcs_efficiency': {'label': 'PCS放电效率', 'default': 96, 'min': 90, 'max': 99, 'unit': '%'},
+                'poc_power': {'label': 'PoC功率', 'default': 1.25, 'min': 0.1, 'max': 50, 'unit': 'MW'},
+                'aux_run_power': {'label': '运行辅助功率', 'default': 0.025, 'min': 0, 'max': 1, 'unit': 'MW'},
+            },
+            'accuracy_level': 'high',
+            'accuracy_desc': '精确工程计算',
+            'category': 'engineering',
+            'is_builtin': True,
+            'description': '充放电时间计算公式。放电时间 = (DC能量 × PCS放电效率) / (PoC功率 + 运行辅助功率)。DC能量为直流侧可用能量（考虑DOD和SOH衰减后）；PCS放电效率通常96%左右（AC-DC转换损耗）；PoC功率为交流侧连接点额定功率；运行辅助功率包含BESS运行辅耗和PCS运行辅耗。5MWh/1.25MW系统典型放电时间约3.8小时。充电时间计算类似，只需替换PCS充电效率（通常略高于放电效率）。',
+        },
         
         # ========== 仿真配置类 (simulation) ==========
         {
