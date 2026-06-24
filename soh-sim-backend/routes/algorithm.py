@@ -302,11 +302,13 @@ def get_builtin_algorithms():
             'name_en': 'Charge/Discharge Time Calculation',
             'model_type': 'charge_discharge_time',
             'applicable_scenarios': ['运行时长计算', '功率配置', '效率评估'],
-            'mathematical_form': 't_discharge = (E_dc × η_pcs) / (P_poc + P_aux_run)',
-            'formula_expression': '(dcEnergy * pcsEfficiency) / (pocPower + auxRunPower)',
+            'mathematical_form': 't_discharge = (E_dc × η_pcs_discharge) / (P_poc + P_aux_run)\nt_charge = (E_dc / DC-RTE) / ((P_poc - P_aux_run) × η_pcs_charge)',
+            'formula_expression': 'discharge: (dcEnergy * pcsDischargeEff) / (pocPower + auxRunPower)\ncharge: (dcEnergy / dcRte) / ((pocPower - auxRunPower) * pcsChargeEff)',
             'parameters': {
                 'dc_energy': {'label': 'DC可用能量', 'default': 5, 'min': 0.1, 'max': 100, 'unit': 'MWh'},
-                'pcs_efficiency': {'label': 'PCS放电效率', 'default': 96, 'min': 90, 'max': 99, 'unit': '%'},
+                'dc_rte': {'label': 'DC往返效率', 'default': 0.94, 'min': 0.85, 'max': 0.99, 'unit': ''},
+                'pcs_discharge_eff': {'label': 'PCS放电效率', 'default': 96, 'min': 90, 'max': 99, 'unit': '%'},
+                'pcs_charge_eff': {'label': 'PCS充电效率', 'default': 97, 'min': 90, 'max': 99, 'unit': '%'},
                 'poc_power': {'label': 'PoC功率', 'default': 1.25, 'min': 0.1, 'max': 50, 'unit': 'MW'},
                 'aux_run_power': {'label': '运行辅助功率', 'default': 0.025, 'min': 0, 'max': 1, 'unit': 'MW'},
             },
@@ -314,7 +316,7 @@ def get_builtin_algorithms():
             'accuracy_desc': '精确工程计算',
             'category': 'engineering',
             'is_builtin': True,
-            'description': '充放电时间计算公式。放电时间 = (DC能量 × PCS放电效率) / (PoC功率 + 运行辅助功率)。DC能量为直流侧可用能量（考虑DOD和SOH衰减后）；PCS放电效率通常96%左右（AC-DC转换损耗）；PoC功率为交流侧连接点额定功率；运行辅助功率包含BESS运行辅耗和PCS运行辅耗。5MWh/1.25MW系统典型放电时间约3.8小时。充电时间计算类似，只需替换PCS充电效率（通常略高于放电效率）。',
+            'description': '充放电时间计算公式。放电时间 = (DC能量 × PCS放电效率) / (PoC功率 + 运行辅助功率)。充电时间 = (DC能量 / DC-RTE) / ((PoC功率 - 运行辅助功率) × PCS充电效率)。DC能量为直流侧可用能量（考虑DOD和SOH衰减后）；DC-RTE为直流侧往返效率（充电时的能量损耗）；PCS放电效率通常96%左右，充电效率略高约97%；PoC功率为交流侧连接点额定功率；运行辅助功率包含BESS运行辅耗和PCS运行辅耗。充电时辅助功率从PoC功率中扣除（电网提供辅助功率），放电时辅助功率叠加到PoC功率上（电池提供辅助功率）。',
         },
         
         # ========== 仿真配置类 (simulation) ==========
