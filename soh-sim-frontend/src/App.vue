@@ -195,8 +195,9 @@ function calculate() {
   const standbyHours = Math.max(0, 24 - runHours)
   const dailyContainerAuxPerUnit = (p.bessAuxRun * runHours + p.bessAuxStandby * standbyHours) / 1000
   const dailyPcsAuxPerUnit = (p.pcsAuxRun * runHours + p.pcsAuxStandby * standbyHours) / 1000
-  const cycleContainerAuxPerUnit = dailyContainerAuxPerUnit / p.cyclesPerDay
-  const cyclePcsAuxPerUnit = dailyPcsAuxPerUnit / p.cyclesPerDay
+  const safeCycles = Math.max(p.cyclesPerDay, 0.001)
+  const cycleContainerAuxPerUnit = dailyContainerAuxPerUnit / safeCycles
+  const cyclePcsAuxPerUnit = dailyPcsAuxPerUnit / safeCycles
   const acEff = p.acEfficiency / 100
 
   let accumAugQty = 0

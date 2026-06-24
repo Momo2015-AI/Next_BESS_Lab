@@ -342,7 +342,7 @@
         <div class="flex items-center gap-2 mb-3">
           <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">07</span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section06') }}</h3>
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section07') }}</h3>
           </div>
         </div>
         <div class="grid grid-cols-4 gap-3">

@@ -408,6 +408,7 @@ const renderConnectionDiagram = () => {
   }
   
   connectionChart = echarts.init(connectionDiagram.value)
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)

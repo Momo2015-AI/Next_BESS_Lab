@@ -391,8 +391,9 @@ function fillTestData() {
 }
 
 .form-section {
-  background: var(--color-bg-secondary);
-  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
   padding: 24px;
 }
 
@@ -446,8 +447,8 @@ function fillTestData() {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #2F5496;
+  box-shadow: 0 0 0 3px rgba(47, 84, 150, 0.1);
 }
 
 .form-group input::placeholder,
@@ -473,7 +474,7 @@ function fillTestData() {
 }
 
 .btn-primary {
-  background: #3b82f6;
+  background: #2F5496;
   color: white;
   border: none;
 }
@@ -494,7 +495,7 @@ function fillTestData() {
 }
 
 .btn-secondary:hover {
-  background: #f3f4f6;
+  background: #F5F7FA;
 }
 
 .success-modal {
@@ -544,7 +545,7 @@ function fillTestData() {
 }
 
 .info-box {
-  background: #f3f4f6;
+  background: #F5F7FA;
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 20px;

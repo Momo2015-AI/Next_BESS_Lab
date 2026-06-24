@@ -162,7 +162,38 @@
 
       <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary);">D</span>
+          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent);">D</span>
+          <div>
+            <h3 class="font-bold text-sm" style="color: var(--color-text);">工商业储能柜 C&I Cabinet <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Commercial & Industrial</span></h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <div v-for="c in cabinets" :key="c.id"
+            class="border rounded-lg p-3 cursor-pointer transition-all group relative"
+            :style="selectedCabinet === c.id ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
+            onmouseover="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-input-border)';"
+            onmouseout="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-border)';">
+            <div class="flex justify-between items-start mb-1">
+              <span class="text-xs font-bold" style="color: var(--color-text);">{{ c.model }}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background-color: var(--color-success-glow); color: var(--color-success);">{{ c.status === 'mass-production' ? '量产' : '在研' }}</span>
+            </div>
+            <div class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ c.mfr }}</div>
+            <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
+              <div style="color: var(--color-text-muted);">容量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedEnergyKwh }} kWh</div>
+              <div style="color: var(--color-text-muted);">功率</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedPowerKw }} kW</div>
+              <div style="color: var(--color-text-muted);">AC电压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.acVoltage }}</div>
+              <div style="color: var(--color-text-muted);">散热</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.cooling }}</div>
+            </div>
+            <div class="mt-2">
+              <span class="text-[9px] px-1.5 py-0.5 rounded" style="background-color: var(--color-accent-glow); color: var(--color-accent);">{{ c.scenario }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary);">E</span>
           <div>
             <h3 class="font-bold text-sm" style="color: var(--color-text);">典型场景方案 Template <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Scenario Templates</span></h3>
           </div>
@@ -279,6 +310,7 @@ const emit = defineEmits(['applyConfig'])
 const selectedCell = ref('')
 const selectedContainer = ref('')
 const selectedPcs = ref('')
+const selectedCabinet = ref('')
 const selectedScenario = ref(null)
 
 const cellFilter = ref('')
@@ -555,6 +587,7 @@ const mfrList = computed(() => ({
 }))
 
 const scenarios = baseProducts.scenarios
+const cabinets = baseProducts.cabinets || []
 
 const filteredCells = computed(() => localFiltered('cells', cellFilter.value))
 const filteredContainers = computed(() => localFiltered('containers', containerFilter.value))
