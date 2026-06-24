@@ -217,6 +217,107 @@
 
     <div class="mt-4">
       <div 
+        class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all"
+        style="background: linear-gradient(135deg, #1e3a5f, #2F5496);"
+        @click="showAuxPanel = !showAuxPanel">
+        <div class="flex items-center gap-2">
+          <span class="text-white text-xs font-bold">BESS 辅助功耗计算器</span>
+          <span class="text-white/70 text-[10px]">(点击展开/收起 -- 与辅耗计算页面实时同步)</span>
+        </div>
+        <span class="text-white/90 text-lg transition-transform" :style="{ transform: showAuxPanel ? 'rotate(180deg)' : 'rotate(0deg)' }">&#9660;</span>
+      </div>
+      
+      <div 
+        v-show="showAuxPanel" 
+        class="mt-2 rounded-lg p-3 space-y-3 border transition-all"
+        style="background-color: var(--color-card); border-color: rgba(47,84,150,0.3);">
+
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold" style="color: var(--color-accent-secondary);">1. 直流侧总能耗 (DC Total Aux)</span>
+            <span class="text-xs px-2 py-0.5 rounded font-bold" style="background-color: var(--color-accent-secondary); color: white;">{{ auxResults.dcTotalAux.toFixed(2) }} MWh</span>
+          </div>
+          <div class="text-[10px] font-mono rounded p-2 leading-relaxed" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
+            DC_Aux = [(
+            <input type="number" v-model.number="auxState.days" class="formula-input w-12" />天 × 
+            <input type="number" v-model.number="auxState.cycles" step="0.5" class="formula-input w-8" />次 × 
+            <input type="number" v-model.number="auxState.hours" step="0.5" class="formula-input w-8" />h × 
+            <span style="color: var(--color-text-muted);">2</span> × 
+            <input type="number" v-model.number="auxState.bRun" class="formula-input w-8" />kW) + 
+            (<span style="color: var(--color-text-muted);">24</span>h - 
+            <input type="number" v-model.number="auxState.cycles" step="0.5" class="formula-input w-8" />次 × 
+            <input type="number" v-model.number="auxState.hours" step="0.5" class="formula-input w-8" />h × 
+            <span style="color: var(--color-text-muted);">2</span>) × 
+            <input type="number" v-model.number="auxState.days" class="formula-input w-8" />天 × 
+            <input type="number" v-model.number="auxState.bStd" step="0.5" class="formula-input w-8" />kW] × 
+            <input type="number" v-model.number="auxState.units" class="formula-input w-8" />台 / 1000
+          </div>
+          <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
+            tRun = days × cycles × hours × 2; tStd = days × 24 - tRun; DC_Aux = (tRun × bRun + tStd × bStd) × units / 1000
+          </div>
+        </div>
+
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold" style="color: var(--color-accent-secondary);">2. 交流侧总能耗 (AC Total Aux)</span>
+            <span class="text-xs px-2 py-0.5 rounded font-bold" style="background-color: var(--color-accent-secondary); color: white;">{{ auxResults.acTotalAux.toFixed(2) }} MWh</span>
+          </div>
+          <div class="text-[10px] font-mono rounded p-2 leading-relaxed" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
+            AC_Aux = [(
+            <input type="number" v-model.number="auxState.days" class="formula-input w-12" />天 × 
+            <input type="number" v-model.number="auxState.cycles" step="0.5" class="formula-input w-8" />次 × 
+            <input type="number" v-model.number="auxState.hours" step="0.5" class="formula-input w-8" />h × 
+            <span style="color: var(--color-text-muted);">2</span> × 
+            <input type="number" v-model.number="auxState.pRun" step="0.5" class="formula-input w-8" />kW) + 
+            (<span style="color: var(--color-text-muted);">24</span>h - 
+            <input type="number" v-model.number="auxState.cycles" step="0.5" class="formula-input w-8" />次 × 
+            <input type="number" v-model.number="auxState.hours" step="0.5" class="formula-input w-8" />h × 
+            <span style="color: var(--color-text-muted);">2</span>) × 
+            <input type="number" v-model.number="auxState.days" class="formula-input w-8" />天 × 
+            <input type="number" v-model.number="auxState.pStd" step="0.5" class="formula-input w-8" />kW + 
+            <input type="number" v-model.number="auxState.days" class="formula-input w-8" />天 × 
+            <span style="color: var(--color-text-muted);">24</span>h × 
+            <input type="number" v-model.number="auxState.pStation" step="0.5" class="formula-input w-8" />kW] / 1000
+          </div>
+          <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
+            AC_Aux = (tRun × pRun + tStd × pStd + days × 24 × pStation) / 1000
+          </div>
+        </div>
+
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold" style="color: var(--color-accent-secondary);">3. 全系统总辅助能耗 (Total System Aux)</span>
+            <span class="text-xs px-2 py-0.5 rounded font-bold" style="background-color: var(--color-accent-secondary); color: white;">{{ auxResults.totalSystemAux.toFixed(2) }} MWh</span>
+          </div>
+          <div class="text-[10px] font-mono rounded p-2" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
+            Total_Aux = {{ auxResults.dcTotalAux.toFixed(2) }} MWh + {{ auxResults.acTotalAux.toFixed(2) }} MWh
+          </div>
+        </div>
+
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold" style="color: var(--color-accent-secondary);">4. POI并网点期末净可用电量 (POI Net Delivery)</span>
+            <span class="text-xs px-2 py-0.5 rounded font-bold" style="background-color: var(--color-accent-secondary); color: white;">{{ auxResults.annualNetDischarge.toFixed(2) }} MWh</span>
+          </div>
+          <div class="text-[10px] font-mono rounded p-2 leading-relaxed" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
+            POI_Net = (<input type="number" v-model.number="auxState.cap" class="formula-input w-8" />MWh × 
+            <input type="number" v-model.number="auxState.units" class="formula-input w-8" />台 × 
+            {{ auxResults.sqrtRte.toFixed(4) }} × 
+            <input type="number" v-model.number="auxState.cycles" step="0.5" class="formula-input w-8" />次 × 
+            <input type="number" v-model.number="auxState.days" class="formula-input w-8" />天 × 
+            <input type="number" v-model.number="auxState.acEff" step="0.002" class="formula-input w-10" /> × 
+            <input type="number" v-model.number="auxState.pcsEff" step="0.002" class="formula-input w-10" />) - 
+            {{ auxResults.totalSystemAux.toFixed(2) }} MWh
+          </div>
+          <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
+            Gross = cap × units × sqrt(dcRte) × cycles × days × acEff × pcsEff; Net = Gross - Total_Aux
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div 
         class="algorithm-panel-header flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all"
         style="background-color: var(--color-accent);"
         @click="showAlgorithmPanel = !showAlgorithmPanel">
@@ -240,9 +341,13 @@
 <script setup>
 import { ref } from 'vue'
 import AlgorithmLab from '../views/AlgorithmLab.vue'
+import { useAuxPower } from '../composables/useAuxPower.js'
 
 defineProps({ params: Object })
 defineEmits(['update'])
 
 const showAlgorithmPanel = ref(false)
+const showAuxPanel = ref(false)
+
+const { state: auxState, results: auxResults } = useAuxPower()
 </script>

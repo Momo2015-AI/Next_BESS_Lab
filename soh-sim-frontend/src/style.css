@@ -361,4 +361,37 @@
   .theme-border-step { border-color: var(--color-step-border); }
 
   .theme-accent-glow { background-color: var(--color-step-active); }
+
+  .slider-track {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  }
+  .slider-track::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent-secondary);
+    border: 2px solid var(--color-accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .slider-track::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent-secondary);
+    border: 2px solid var(--color-accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .slider-track::-moz-range-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  }
 }
