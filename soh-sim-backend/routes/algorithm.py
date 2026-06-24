@@ -320,6 +320,35 @@ def get_builtin_algorithms():
             'description': '储能系统充放电时间物理闭环精确计算公式，基于能量守恒定律推导。\n\n【充电时间】= 标称容量 / ((PoC功率 × 交流效率 - 运行辅助功率) × PCS充电效率 × √RTE)\n物理原理：充电是"自外而内"过程。为了让标称容量的电池充满，需从外部超额灌入：实际灌入量 = 标称容量 / √RTE。分母为实际到达电池直流端的净充电功率。\n\n【放电时间】= 标称容量 × √RTE / (PoC功率 / (交流效率 × PCS放电效率) + 运行辅助功率)\n物理原理：放电是"自内而外"过程。标称容量的满电电池实际能放出的能量 = 标称容量 × √RTE（单程电化学损耗）。分母为电池直流端背负的总功率惩罚。\n\n关键修正：√RTE在充电时放分母拉长时间，在放电时放分子缩短时间，完美符合能量守恒。辅耗在交流侧独立减去，不参与PCS效率计算。',
         },
         
+        {
+            'name': 'BESS辅助功耗计算',
+            'name_en': 'BESS Auxiliary Power Calculation',
+            'model_type': 'aux_power',
+            'applicable_scenarios': ['辅助功耗评估', '能耗解耦', 'POI交割电量计算'],
+            'mathematical_form': 'DC_Aux = [(days×cycles×hours×2×bRun)+((days×24−tRun)×bStd)]×units/1000\nAC_Aux = [(days×cycles×hours×2×pRun)+((days×24−tRun)×pStd)+(days×24×pStation)]/1000\nPOI_Net = (cap×units×√RTE×cycles×days×acEff×pcsEff) - Total_Aux',
+            'formula_expression': 'dc_aux: ((t_run * b_run) + (t_std * b_std)) * units / 1000\nac_aux: ((t_run * p_run) + (t_std * p_std) + (days * 24 * p_station)) / 1000\ntotal_aux: dc_aux + ac_aux\npoi_net: (cap * units * sqrt(rte) * cycles * days * ac_eff * pcs_eff) - total_aux',
+            'parameters': {
+                'days': {'label': '计算天数', 'default': 365, 'min': 1, 'max': 365, 'unit': '天'},
+                'cycles': {'label': '每天充放电循环次数', 'default': 2, 'min': 0.5, 'max': 3, 'unit': '次'},
+                'hours': {'label': '单次放电时长', 'default': 2, 'min': 1, 'max': 6, 'unit': 'h'},
+                'cap': {'label': '单舱标称铭牌容量', 'default': 5, 'min': 0.1, 'max': 100, 'unit': 'MWh'},
+                'units': {'label': '当前运行总台数', 'default': 62, 'min': 1, 'max': 1000, 'unit': '台'},
+                'dc_rte': {'label': 'DC-RTE', 'default': 0.941, 'min': 0.85, 'max': 0.98, 'unit': ''},
+                'pcs_eff': {'label': 'PCS充/放电效率', 'default': 0.987, 'min': 0.95, 'max': 0.995, 'unit': ''},
+                'ac_eff': {'label': '交流侧综合效率', 'default': 0.975, 'min': 0.95, 'max': 0.995, 'unit': ''},
+                'b_run': {'label': '电池舱运行温控功率', 'default': 20, 'min': 5, 'max': 40, 'unit': 'kW'},
+                'b_std': {'label': '电池舱待机温控功率', 'default': 4, 'min': 1, 'max': 15, 'unit': 'kW'},
+                'p_run': {'label': 'PCS运行损耗', 'default': 5, 'min': 1, 'max': 20, 'unit': 'kW'},
+                'p_std': {'label': 'PCS待机损耗', 'default': 1.5, 'min': 0.5, 'max': 10, 'unit': 'kW'},
+                'p_station': {'label': '站宇及主变固定自耗', 'default': 7.2, 'min': 1, 'max': 30, 'unit': 'kW'},
+            },
+            'accuracy_level': 'high',
+            'accuracy_desc': '动静态辅助功率全解析',
+            'category': 'engineering',
+            'is_builtin': True,
+            'description': 'BESS储能系统辅助功耗精确计算模型，支持任意天数/单天能耗解耦仿真。\n\n【直流侧能耗】= [(天数×循环×时长×2×舱运行功率)+((天数×24−运行时间)×舱待机功率)]×台数/1000\n物理原理：运行态能耗按往返次数计算，待机态能耗按总时间减去运行时间计算。\n\n【交流侧能耗】= [(天数×循环×时长×2×PCS运行功率)+((天数×24−运行时间)×PCS待机功率)+(天数×24×站宇固定功率)]/1000\n物理原理：PCS动静态耗电口径与直流侧时间序列对齐，站宇主变自耗全天候固定拉满。\n\n【POI净交割电量】= (标称容量×台数×√RTE×循环×天数×AC效率×PCS效率) - 总能耗\n物理原理：扣除全场所有动静态总耗电后，作为电网POI交割结算前的净可用电量。',
+        },
+        
         # ========== 仿真配置类 (simulation) ==========
         {
             'name': 'SOH曲线参数配置',

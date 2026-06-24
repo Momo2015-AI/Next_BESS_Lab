@@ -60,6 +60,7 @@
           <ScenarioCompare v-show="activeTab === 'scenario'" :base-params="params" @error="showToast" />
           <SensitivityAnalysis v-show="activeTab === 'sensitivity'" :params="params" :financial="financialData" @error="showToast" />
           <EngineeringCalc v-show="activeTab === 'engineering'" @error="showToast" />
+          <AuxPowerCalculator v-show="activeTab === 'auxPower'" @error="showToast" />
           <DataExport v-show="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
           <AuthPanel v-show="activeTab === 'auth'" @auth-success="onAuthSuccess" @error="showToast" />
         </div>
@@ -92,6 +93,7 @@ import SensitivityAnalysis from './components/SensitivityAnalysis.vue'
 import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
+import AuxPowerCalculator from './components/AuxPowerCalculator.vue'
 
 const batteryDC = ref(null)
 const pcsAC = ref(null)

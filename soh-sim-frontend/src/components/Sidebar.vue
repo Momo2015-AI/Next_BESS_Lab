@@ -96,6 +96,7 @@ const solutionItems = ref([
   { id: 'scenario', label: '多场景对比', icon: '🔄' },
   { id: 'sensitivity', label: '敏感性分析', icon: '🎯' },
   { id: 'engineering', label: '工程计算', icon: '📐' },
+  { id: 'auxPower', label: '辅助功耗计算', icon: '⚙️' },
   { id: 'export', label: '数据导出', icon: '📥' },
 ])
 
