@@ -121,14 +121,18 @@
             </div>
             <div class="text-xs font-mono rounded p-2" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
               DC_Aux = [(
-              <input type="number" v-model.number="state.days" class="w-12 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />天 × 
-              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />次 × 
-              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />h × 
+              <input type="number" v-model.number="state.days" class="w-12 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />次 × 
+              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />h × 
               <span style="color: var(--color-text-muted);">2</span> × 
-              <input type="number" v-model.number="state.bRun" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />kW) + 
-              ((<input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />×24 - {{ results.tRun.toFixed(1) }}h) × 
-              <input type="number" v-model.number="state.bStd" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />kW)] × 
-              <input type="number" v-model.number="state.units" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />台 / 1000
+              <input type="number" v-model.number="state.bRun" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />kW) + 
+              (<span style="color: var(--color-text-muted);">24</span>h - 
+              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />次 × 
+              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />h × 
+              <span style="color: var(--color-text-muted);">2</span>) × 
+              <input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <input type="number" v-model.number="state.bStd" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />kW] × 
+              <input type="number" v-model.number="state.units" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />台 / 1000
             </div>
             <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
               📖 <strong style="color: var(--color-text-secondary);">物理解析：</strong>运行态能耗按往返次数计算，待机态能耗按总时间减去运行时间计算，两者相加乘以台数折算为MWh。
@@ -142,15 +146,20 @@
             </div>
             <div class="text-xs font-mono rounded p-2" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
               AC_Aux = [(
-              <input type="number" v-model.number="state.days" class="w-12 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />天 × 
-              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />次 × 
-              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />h × 
+              <input type="number" v-model.number="state.days" class="w-12 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />次 × 
+              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />h × 
               <span style="color: var(--color-text-muted);">2</span> × 
-              <input type="number" v-model.number="state.pRun" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />kW) + 
-              ((<input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />×24 - {{ results.tRun.toFixed(1) }}h) × 
-              <input type="number" v-model.number="state.pStd" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />kW) + 
-              (<input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />天 × 24h × 
-              <input type="number" v-model.number="state.pStation" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />kW)] / 1000
+              <input type="number" v-model.number="state.pRun" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />kW) + 
+              (<span style="color: var(--color-text-muted);">24</span>h - 
+              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />次 × 
+              <input type="number" v-model.number="state.hours" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />h × 
+              <span style="color: var(--color-text-muted);">2</span>) × 
+              <input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <input type="number" v-model.number="state.pStd" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />kW + 
+              <input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <span style="color: var(--color-text-muted);">24</span>h × 
+              <input type="number" v-model.number="state.pStation" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />kW] / 1000
             </div>
             <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
               📖 <strong style="color: var(--color-text-secondary);">物理解析：</strong>PCS动静态耗电口径与直流侧时间序列对齐，站宇主变自耗全天候固定拉满。
@@ -176,13 +185,13 @@
               <span class="text-xs px-2 py-0.5 rounded font-bold" style="background-color: var(--color-accent-secondary); color: white;">{{ results.annualNetDischarge.toFixed(2) }} MWh</span>
             </div>
             <div class="text-xs font-mono rounded p-2" style="background-color: var(--color-input-bg-dark); color: var(--color-text);">
-              POI_Net = (<input type="number" v-model.number="state.cap" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />MWh × 
-              <input type="number" v-model.number="state.units" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />台 × 
+              POI_Net = (<input type="number" v-model.number="state.cap" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />MWh × 
+              <input type="number" v-model.number="state.units" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />台 × 
               {{ results.sqrtRte.toFixed(4) }} × 
-              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />次 × 
-              <input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />天 × 
-              <input type="number" v-model.number="state.acEff" step="0.002" class="w-12 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" /> × 
-              <input type="number" v-model.number="state.pcsEff" step="0.002" class="w-12 text-center bg-transparent border-b border-dashed border-current focus:border-solid focus:border-current outline-none" />) - 
+              <input type="number" v-model.number="state.cycles" step="0.5" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />次 × 
+              <input type="number" v-model.number="state.days" class="w-10 text-center bg-transparent border border-current outline-none rounded px-1" />天 × 
+              <input type="number" v-model.number="state.acEff" step="0.002" class="w-12 text-center bg-transparent border border-current outline-none rounded px-1" /> × 
+              <input type="number" v-model.number="state.pcsEff" step="0.002" class="w-12 text-center bg-transparent border border-current outline-none rounded px-1" />) - 
               {{ results.totalSystemAux.toFixed(2) }} MWh
             </div>
             <div class="text-[10px] mt-2" style="color: var(--color-text-muted);">
