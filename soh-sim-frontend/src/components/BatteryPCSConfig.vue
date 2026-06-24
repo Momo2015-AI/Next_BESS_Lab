@@ -9,7 +9,7 @@
       <div class="grid grid-cols-4 gap-4">
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">储能集装箱型号</label>
-          <select v-model="selectedContainer" @change="calculatePCS"
+          <select v-model="selectedContainer" @change="onContainerChange"
             class="w-full rounded px-3 py-2 text-xs"
             style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
             onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
@@ -22,12 +22,23 @@
         </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量</label>
-          <input v-model.number="containerQty" @change="calculatePCS" type="number" min="1" max="100"
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">目标总能量 (MWh)</label>
+          <input v-model.number="targetEnergy" @change="autoCalcQty" type="number" min="1" step="1"
             class="w-full rounded px-3 py-2 text-xs"
             style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
             onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-input-border)';">
+            onblur="this.style.borderColor='var(--color-input-border)';"
+            placeholder="输入目标总能量">
+        </div>
+
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">目标总功率 (MW)</label>
+          <input v-model.number="targetPower" @change="autoCalcQty" type="number" min="0.1" step="0.1"
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';"
+            placeholder="输入目标总功率">
         </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
@@ -39,10 +50,21 @@
             onblur="this.style.borderColor='var(--color-input-border)';">
           <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">C-rate = 1/时长, PCS功率 = 能量/时长</p>
         </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量 (自动计算)</label>
+          <input v-model.number="containerQty" type="number" min="1" max="100"
+            class="w-full rounded px-3 py-2 text-xs font-bold"
+            style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark); color: var(--color-accent-secondary);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-accent-dark)';">
+        </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">PCS型号</label>
-          <select v-model="selectedPCS" @change="calculatePCS"
+          <select v-model="selectedPCS" @change="onPCSChange"
             class="w-full rounded px-3 py-2 text-xs"
             style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
             onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
@@ -57,18 +79,26 @@
 
       <div class="mt-4 p-4 rounded-lg" style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark);">
         <h4 class="text-xs font-bold mb-3" style="color: var(--color-accent-secondary);">自动计算结果</h4>
-        <div class="grid grid-cols-4 gap-3">
+        <div class="grid grid-cols-6 gap-3">
+          <div class="text-center">
+            <p class="text-[10px]" style="color: var(--color-text-muted);">集装箱数</p>
+            <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ containerQty }} 台</p>
+          </div>
           <div class="text-center">
             <p class="text-[10px]" style="color: var(--color-text-muted);">总能量</p>
             <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ totalEnergy.toFixed(1) }} MWh</p>
+          </div>
+          <div class="text-center">
+            <p class="text-[10px]" style="color: var(--color-text-muted);">PCS数</p>
+            <p class="text-lg font-bold" style="color: var(--color-success);">{{ pcsQty }} 台</p>
           </div>
           <div class="text-center">
             <p class="text-[10px]" style="color: var(--color-text-muted);">总功率</p>
             <p class="text-lg font-bold" style="color: var(--color-accent);">{{ totalPower.toFixed(1) }} MW</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted);">PCS数量</p>
-            <p class="text-lg font-bold" style="color: var(--color-success);">{{ pcsQty }} 台</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">能量/功率比</p>
+            <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ energyPowerRatio }}</p>
           </div>
           <div class="text-center">
             <p class="text-[10px]" style="color: var(--color-text-muted);">配比方式</p>
@@ -88,7 +118,7 @@
         系统连接图
       </h3>
 
-      <div ref="connectionDiagram" class="h-64 rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
+      <div ref="connectionDiagram" class="h-96 rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
 
       <div class="mt-3 flex gap-4 text-[10px]">
         <div class="flex items-center gap-1">
@@ -124,7 +154,7 @@
         电气单线图
       </h3>
 
-      <div ref="singleLineDiagram" class="h-80 rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
+      <div ref="singleLineDiagram" class="h-[500px] rounded" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);"></div>
 
       <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
         <div class="rounded p-2" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
@@ -217,6 +247,7 @@ import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useProducts } from '../composables/useProducts'
 
+const props = defineProps({ active: Boolean })
 const emit = defineEmits(['applyConfig', 'error'])
 
 const { containers: containersFromProducts, pcs: pcsFromProducts, loadAll } = useProducts()
@@ -281,14 +312,63 @@ async function loadLibraryData() {
   }
 }
 
+// Watch for tab activation - re-render charts when tab becomes visible
+watch(() => props.active, (isActive) => {
+  if (isActive) {
+    nextTick(() => {
+      if (connectionChart) {
+        connectionChart.resize()
+        connectionChart.setOption(connectionChart.getOption(), true)
+      }
+      if (singleLineChart) {
+        singleLineChart.resize()
+        singleLineChart.setOption(singleLineChart.getOption(), true)
+      }
+      // If charts were never initialized, render them now
+      if (!connectionChart || !singleLineChart) {
+        calculatePCS()
+      }
+    })
+  }
+})
+
 onMounted(() => {
-  loadLibraryData()
+  loadLibraryData().then(() => {
+    calculatePCS()
+  })
 })
 
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
 const durationHours = ref(2)
+const targetEnergy = ref(null)
+const targetPower = ref(null)
+
+const energyPowerRatio = computed(() => {
+  const e = totalEnergy.value
+  const tp = (targetPower.value != null && targetPower.value > 0 && !isNaN(targetPower.value)) ? targetPower.value : totalPower.value
+  if (tp === 0 || e === 0) return '--'
+  return (e / tp).toFixed(1) + 'h'
+})
+
+const autoCalcQty = () => {
+  const container = containers.value.find(c => c.id === selectedContainer.value)
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  
+  if (container && targetEnergy.value != null && targetEnergy.value > 0 && !isNaN(targetEnergy.value)) {
+    containerQty.value = Math.ceil(targetEnergy.value / container.energy)
+  }
+  calculatePCS()
+}
+
+const onContainerChange = () => {
+  autoCalcQty()
+}
+
+const onPCSChange = () => {
+  autoCalcQty()
+}
 
 const totalEnergy = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
@@ -305,7 +385,11 @@ const totalPower = computed(() => {
 
 const pcsQty = computed(() => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!pcs || totalPower.value === 0) return 0
+  if (!pcs) return 0
+  if (targetPower.value != null && targetPower.value > 0 && !isNaN(targetPower.value)) {
+    return Math.ceil(targetPower.value / pcs.power)
+  }
+  if (totalPower.value === 0) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
 
@@ -327,7 +411,7 @@ const pairingDescription = computed(() => {
   
   const ratio = container.power / pcs.power
   if (ratio === 1) {
-    return `每个${container.name}配置1台${pcs.name}，共${containerQty.value}台PCS，独立运行。`
+    return `每个${container.name}配置1台${pcs.name}，共${pcsQty.value}台PCS，独立运行。`
   } else if (ratio < 1) {
     const containersPerPCS = Math.ceil(1 / ratio)
     return `每${containersPerPCS}个${container.name}并联后接入1台${pcs.name}，共${pcsQty.value}台PCS。`
@@ -394,6 +478,7 @@ let connectionChart = null
 let singleLineChart = null
 
 const calculatePCS = () => {
+  if (!props.active) return
   nextTick(() => {
     renderConnectionDiagram()
     renderSingleLineDiagram()
@@ -408,7 +493,6 @@ const renderConnectionDiagram = () => {
   }
   
   connectionChart = echarts.init(connectionDiagram.value)
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
@@ -425,44 +509,99 @@ const renderConnectionDiagram = () => {
   
   const style = getComputedStyle(document.documentElement)
   const colors = {
-    grid: style.getPropertyValue('--color-border').trim(),
-    teal: style.getPropertyValue('--color-accent-secondary').trim(),
-    sky: style.getPropertyValue('--color-accent').trim(),
-    amber: style.getPropertyValue('--color-warning').trim(),
     emerald: style.getPropertyValue('--color-success').trim(),
+    amber: style.getPropertyValue('--color-warning').trim(),
+    sky: style.getPropertyValue('--color-accent').trim(),
+    teal: style.getPropertyValue('--color-accent-secondary').trim(),
     slate: style.getPropertyValue('--color-text-muted').trim(),
     text: style.getPropertyValue('--color-text').trim(),
   }
+
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  const maxItems = Math.max(ctn, pn, 4)
+  const span = Math.min(800, maxItems * 100)
+  const startX = (1000 - span) / 2
+
+  nodes.push({
+    name: '电网',
+    x: 500, y: 30,
+    symbol: 'circle',
+    symbolSize: 42,
+    category: 0,
+    itemStyle: { color: colors.emerald, shadowBlur: 4, shadowColor: 'rgba(0,0,0,0.3)' },
+    label: { show: true, position: 'inside', formatter: '电网', fontSize: 10, color: '#fff' },
+  })
   
-  nodes.push({ name: '电网', x: 500, y: 50, symbolSize: 40, category: 0, itemStyle: { color: colors.emerald } })
-  
-  nodes.push({ name: '变压器', x: 500, y: 120, symbolSize: 30, category: 3, itemStyle: { color: colors.amber } })
-  links.push({ source: '电网', target: '变压器', lineStyle: { color: colors.amber, width: 3 } })
-  
-  for (let i = 0; i < pcsQty.value; i++) {
+  nodes.push({
+    name: '变压器',
+    x: 500, y: 110,
+    symbol: 'diamond',
+    symbolSize: 34,
+    category: 3,
+    itemStyle: { color: colors.amber, shadowBlur: 3, shadowOffsetX: 2, shadowOffsetY: 2, shadowColor: 'rgba(0,0,0,0.25)' },
+    label: { show: true, position: 'inside', formatter: 'T', fontSize: 12, color: '#fff', fontWeight: 'bold' },
+  })
+  links.push({ source: '电网', target: '变压器', lineStyle: { color: colors.amber, width: 3, type: 'solid' } })
+
+  const pcsUnitWidth = Math.min(80, span / Math.max(pn, 1))
+  for (let i = 0; i < pn; i++) {
     const pcsName = `PCS${i + 1}`
-    const pcsX = 100 + (i * 400 / Math.max(pcsQty.value - 1, 1))
-    nodes.push({ name: pcsName, x: pcsX, y: 180, symbolSize: 25, category: 1, itemStyle: { color: colors.sky }, label: { show: true, position: 'inside', formatter: pcsName, fontSize: 10, color: '#fff' } })
-    links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2 } })
+    const pcsX = startX + (i * span / Math.max(pn - 1, 1)) + (pcsUnitWidth / 2)
+    nodes.push({
+      name: pcsName,
+      x: pcsX, y: 200,
+      symbol: 'rect',
+      symbolSize: [pcsUnitWidth - 8, 44],
+      category: 1,
+      itemStyle: {
+        color: colors.sky,
+        shadowBlur: 4,
+        shadowOffsetX: 2,
+        shadowOffsetY: 2,
+        shadowColor: 'rgba(0,0,0,0.25)',
+        borderColor: style.getPropertyValue('--color-accent').trim() + '99',
+        borderWidth: 1,
+      },
+      label: { show: true, position: 'inside', formatter: `PCS${i + 1}\n${pcs.power}MW`, fontSize: 9, color: '#fff' },
+    })
+    links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
   }
-  
-  for (let i = 0; i < containerQty.value; i++) {
+
+  const containerUnitWidth = Math.min(90, span / Math.max(ctn, 1))
+  for (let i = 0; i < ctn; i++) {
     const containerName = `电池舱${i + 1}`
-    const containerX = 100 + (i * 400 / Math.max(containerQty.value - 1, 1))
-    nodes.push({ name: containerName, x: containerX, y: 260, symbolSize: 35, category: 2, itemStyle: { color: colors.teal }, label: { show: true, position: 'inside', formatter: `${i + 1}`, fontSize: 12, color: '#fff' } })
+    const containerX = startX + (i * span / Math.max(ctn - 1, 1)) + (containerUnitWidth / 2)
+    nodes.push({
+      name: containerName,
+      x: containerX, y: 290,
+      symbol: 'rect',
+      symbolSize: [containerUnitWidth - 10, 56],
+      category: 2,
+      itemStyle: {
+        color: colors.teal,
+        shadowBlur: 8,
+        shadowOffsetX: 4,
+        shadowOffsetY: 4,
+        shadowColor: 'rgba(0,0,0,0.35)',
+        borderColor: style.getPropertyValue('--color-accent-secondary').trim() + '99',
+        borderWidth: 2,
+      },
+      label: { show: true, position: 'inside', formatter: `舱${i + 1}\n${container.energy}MWh`, fontSize: 9, color: '#fff' },
+    })
     
     const ratio = container.power / pcs.power
     if (ratio <= 1) {
-      const pcsIndex = Math.floor(i * pcsQty.value / containerQty.value)
-      const pcsName = `PCS${Math.min(pcsIndex + 1, pcsQty.value)}`
-      links.push({ source: containerName, target: pcsName, lineStyle: { color: colors.slate, width: 2 } })
+      const pcsIndex = Math.floor(i * pn / ctn)
+      const targetPcs = `PCS${Math.min(pcsIndex + 1, pn)}`
+      links.push({ source: targetPcs, target: containerName, lineStyle: { color: colors.slate, width: 2, type: 'solid' } })
     } else {
       const pcsPerContainer = Math.ceil(ratio)
       for (let j = 0; j < pcsPerContainer; j++) {
         const pcsIndex = i * pcsPerContainer + j
-        if (pcsIndex < pcsQty.value) {
-          const pcsName = `PCS${pcsIndex + 1}`
-          links.push({ source: containerName, target: pcsName, lineStyle: { color: colors.slate, width: 2 } })
+        if (pcsIndex < pn) {
+          const targetPcs = `PCS${pcsIndex + 1}`
+          links.push({ source: targetPcs, target: containerName, lineStyle: { color: colors.slate, width: 2, type: 'solid' } })
         }
       }
     }
@@ -471,18 +610,25 @@ const renderConnectionDiagram = () => {
   connectionChart.setOption({
     backgroundColor: 'transparent',
     tooltip: {
-      backgroundColor: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-      borderColor: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
-      textStyle: { color: isDark ? '#e2e8f0' : '#1e293b', fontSize: 11 },
+      trigger: 'item',
+      backgroundColor: 'rgba(30, 41, 59, 0.9)',
+      borderColor: 'rgba(100, 116, 139, 0.3)',
+      textStyle: { color: '#e2e8f0', fontSize: 11 },
+      formatter: (p) => {
+        if (!p.data || !p.data.name) return ''
+        const name = p.data.name
+        const info = nodes.find(n => n.name === name)
+        if (!info) return name
+        return `<b>${name}</b><br/>类型: ${['电网', 'PCS', '电池舱', '变压器'][info.category || 0]}`
+      },
     },
     series: [{
       type: 'graph',
       layout: 'none',
-      symbolSize: 30,
       roam: true,
       label: { show: true, fontSize: 10, color: '#fff' },
-      edgeSymbol: ['circle', 'arrow'],
-      edgeSymbolSize: [4, 8],
+      edgeSymbol: ['none', 'none'],
+      edgeSymbolSize: [6, 8],
       data: nodes,
       links: links,
       categories: [
@@ -491,7 +637,7 @@ const renderConnectionDiagram = () => {
         { name: '电池舱' },
         { name: '变压器' },
       ],
-      lineStyle: { opacity: 0.9, curveness: 0 },
+      lineStyle: { opacity: 0.9, curveness: 0, width: 2 },
     }],
   })
 }
@@ -524,103 +670,120 @@ const renderSingleLineDiagram = () => {
     slate: style.getPropertyValue('--color-text-muted').trim(),
     text: style.getPropertyValue('--color-text').trim(),
   }
-  
+
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  const maxItems = Math.max(ctn, pn, 4)
+  const span = Math.min(880, maxItems * 110)
+  const startX = (1000 - span) / 2
+
   const graphicElements = []
   
   graphicElements.push({
     type: 'rect',
-    shape: { x: 450, y: 20, width: 100, height: 40 },
-    style: { fill: colors.emerald, stroke: colors.emerald, lineWidth: 2 },
+    shape: { x: 450, y: 10, width: 100, height: 38 },
+    style: { fill: colors.emerald, stroke: colors.emerald, lineWidth: 2, shadowBlur: 4, shadowColor: 'rgba(0,0,0,0.3)' },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: '电网 10kV', x: 500, y: 45, fill: '#fff', fontSize: 12, textAlign: 'center' },
+    style: { text: '电网 10kV', x: 500, y: 34, fill: '#fff', fontSize: 12, textAlign: 'center', fontWeight: 'bold' },
   })
   
   graphicElements.push({
     type: 'line',
-    shape: { x1: 500, y1: 60, x2: 500, y2: 100 },
-    style: { stroke: colors.amber, lineWidth: 4 },
+    shape: { x1: 500, y1: 48, x2: 500, y2: 85 },
+    style: { stroke: colors.amber, lineWidth: 3 },
   })
   
   graphicElements.push({
     type: 'circle',
-    shape: { cx: 500, cy: 120, r: 20 },
-    style: { fill: colors.amber, stroke: colors.amber, lineWidth: 2 },
+    shape: { cx: 500, cy: 105, r: 20 },
+    style: { fill: colors.amber, stroke: colors.amber, lineWidth: 2, shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, shadowColor: 'rgba(0,0,0,0.25)' },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: 'T', x: 500, y: 125, fill: '#fff', fontSize: 14, textAlign: 'center' },
+    style: { text: 'T', x: 500, y: 110, fill: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 'bold' },
   })
   
   graphicElements.push({
     type: 'line',
-    shape: { x1: 500, y1: 140, x2: 500, y2: 180 },
-    style: { stroke: colors.amber, lineWidth: 4 },
+    shape: { x1: 500, y1: 125, x2: 500, y2: 165 },
+    style: { stroke: colors.amber, lineWidth: 3 },
   })
+  
   graphicElements.push({
     type: 'line',
-    shape: { x1: 100, y1: 180, x2: 900, y2: 180 },
+    shape: { x1: startX, y1: 165, x2: startX + span, y2: 165 },
     style: { stroke: colors.amber, lineWidth: 3 },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 170, fill: colors.amber, fontSize: 10, textAlign: 'center' },
+    style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 155, fill: colors.amber, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
   })
   
-  for (let i = 0; i < pcsQty.value; i++) {
-    const x = 100 + (i * 800 / Math.max(pcsQty.value - 1, 1))
+  const pcsUnitWidth = Math.min(74, span / Math.max(pn, 1))
+  for (let i = 0; i < pn; i++) {
+    const x = startX + (i * span / Math.max(pn - 1, 1)) + (pcsUnitWidth / 2)
     
     graphicElements.push({
       type: 'line',
-      shape: { x1: x, y1: 180, x2: x, y2: 220 },
+      shape: { x1: x, y1: 165, x2: x, y2: 205 },
       style: { stroke: colors.amber, lineWidth: 2 },
     })
     
     graphicElements.push({
       type: 'rect',
-      shape: { x: x - 30, y: 220, width: 60, height: 40 },
-      style: { fill: colors.sky, stroke: colors.sky, lineWidth: 2 },
+      shape: { x: x - pcsUnitWidth / 2 + 4, y: 205, width: pcsUnitWidth - 8, height: 44 },
+      style: { fill: colors.sky, stroke: colors.sky, lineWidth: 2, shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, shadowColor: 'rgba(0,0,0,0.2)' },
     })
     graphicElements.push({
       type: 'text',
-      style: { text: `PCS${i + 1}\n${pcs.power}MW`, x: x, y: 245, fill: '#fff', fontSize: 10, textAlign: 'center' },
+      style: { text: `PCS${i + 1}\n${pcs.power}MW`, x: x, y: 230, fill: '#fff', fontSize: 9, textAlign: 'center' },
     })
     
     graphicElements.push({
       type: 'line',
-      shape: { x1: x, y1: 260, x2: x, y2: 300 },
+      shape: { x1: x, y1: 249, x2: x, y2: 285 },
       style: { stroke: colors.slate, lineWidth: 2 },
     })
   }
   
   graphicElements.push({
     type: 'line',
-    shape: { x1: 100, y1: 300, x2: 900, y2: 300 },
+    shape: { x1: startX, y1: 285, x2: startX + span, y2: 285 },
     style: { stroke: colors.slate, lineWidth: 3 },
   })
   graphicElements.push({
     type: 'text',
-    style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 290, fill: colors.slate, fontSize: 10, textAlign: 'center' },
+    style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 275, fill: colors.slate, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
   })
   
-  for (let i = 0; i < containerQty.value; i++) {
-    const x = 100 + (i * 800 / Math.max(containerQty.value - 1, 1))
+  const containerUnitWidth = Math.min(88, span / Math.max(ctn, 1))
+  for (let i = 0; i < ctn; i++) {
+    const x = startX + (i * span / Math.max(ctn - 1, 1)) + (containerUnitWidth / 2)
     
     graphicElements.push({
       type: 'line',
-      shape: { x1: x, y1: 300, x2: x, y2: 340 },
+      shape: { x1: x, y1: 285, x2: x, y2: 325 },
       style: { stroke: colors.slate, lineWidth: 2 },
     })
     
     graphicElements.push({
       type: 'rect',
-      shape: { x: x - 40, y: 340, width: 80, height: 60 },
-      style: { fill: colors.teal, stroke: colors.teal, lineWidth: 2 },
+      shape: { x: x - containerUnitWidth / 2 + 4, y: 325, width: containerUnitWidth - 8, height: 58 },
+      style: {
+        fill: colors.teal,
+        stroke: style.getPropertyValue('--color-accent-secondary').trim() + '99',
+        lineWidth: 2,
+        shadowBlur: 8,
+        shadowOffsetX: 4,
+        shadowOffsetY: 4,
+        shadowColor: 'rgba(0,0,0,0.35)',
+      },
     })
     graphicElements.push({
       type: 'text',
-      style: { text: `电池舱${i + 1}\n${container.energy}MWh`, x: x, y: 375, fill: '#fff', fontSize: 10, textAlign: 'center' },
+      style: { text: `电池舱${i + 1}\n${container.energy}MWh`, x: x, y: 358, fill: '#fff', fontSize: 9, textAlign: 'center' },
     })
   }
   
@@ -644,6 +807,10 @@ const resetConfig = () => {
   calculatePCS()
 }
 
+watch([selectedContainer, containerQty, selectedPCS], () => {
+  calculatePCS()
+})
+
 const applyConfig = () => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
@@ -661,12 +828,4 @@ const applyConfig = () => {
     acEfficiency: pcs.efficiency,
   })
 }
-
-onMounted(() => {
-  calculatePCS()
-})
-
-watch([selectedContainer, containerQty, selectedPCS], () => {
-  calculatePCS()
-})
 </script>
