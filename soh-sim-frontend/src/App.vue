@@ -202,9 +202,9 @@ function calculate() {
     accumAugQty += Number(augQty.value[i]) || 0
     results.augAccumQty[i] = accumAugQty
 
-    const cDod = (Number(dod.value[i]) || 0) / 100
-    const cRte = Number(rte.value[i]) || 0
-    const cSoh = Number(soh.value[i]) || 0
+    const cDod = ((Number(dod.value[i]) || 0) / 100) || 1.0
+    const cRte = Number.isFinite(Number(rte.value[i])) ? Number(rte.value[i]) : 0.94
+    const cSoh = Number.isFinite(Number(soh.value[i])) ? Number(soh.value[i]) : 1.0
 
     results.initGross[i] = p.ratedEnergy * p.initContainerQty * cDod * cRte * cSoh * acEff
     results.initAux[i] = p.initContainerQty * cycleContainerAuxPerUnit + p.initPcsQty * cyclePcsAuxPerUnit
@@ -216,7 +216,7 @@ function calculate() {
       const qtyK = Number(augQty.value[k]) || 0
       if (qtyK > 0) {
         const age = i - k
-        const assetSoh = Number(soh.value[Math.min(age, N - 1)]) || 0
+        const assetSoh = Number.isFinite(Number(soh.value[Math.min(age, N - 1)])) ? Number(soh.value[Math.min(age, N - 1)]) : 1.0
         const assetGross = p.ratedEnergy * qtyK * cDod * cRte * assetSoh * acEff
         const assetAux = qtyK * cycleContainerAuxPerUnit
         totalAugAc += Math.max(0, assetGross - assetAux)

@@ -82,12 +82,35 @@ def calculate(params, soh, rte, dod, aug_qty):
 
     accum = 0
     for i in range(N):
-        accum += int(aug_qty[i]) if i < len(aug_qty) else 0
+        accum += int(aug_qty[i]) if (i < len(aug_qty) and aug_qty[i] is not None) else 0
         aug_accum_qty[i] = accum
 
-        c_dod = (float(dod[i]) if i < len(dod) else (float(dod[-1]) if dod else 100)) / 100
-        c_rte = float(rte[i]) if i < len(rte) else (float(rte[-1]) if rte else 0)
-        c_soh = float(soh[i]) if i < len(soh) else (float(soh[-1]) if soh else 0)
+        # 安全获取DOD值（容错处理，避免NaN）
+        if i < len(dod) and dod[i] is not None:
+            try:
+                c_dod = float(dod[i]) / 100
+            except (ValueError, TypeError):
+                c_dod = 1.0
+        else:
+            c_dod = float(dod[-1]) / 100 if (dod and dod[-1] is not None) else 1.0
+
+        # 安全获取RTE值（容错处理，避免NaN）
+        if i < len(rte) and rte[i] is not None:
+            try:
+                c_rte = float(rte[i])
+            except (ValueError, TypeError):
+                c_rte = 0.94
+        else:
+            c_rte = float(rte[-1]) if (rte and rte[-1] is not None) else 0.94
+
+        # 安全获取SOH值（容错处理，避免NaN）
+        if i < len(soh) and soh[i] is not None:
+            try:
+                c_soh = float(soh[i])
+            except (ValueError, TypeError):
+                c_soh = 1.0
+        else:
+            c_soh = float(soh[-1]) if (soh and soh[-1] is not None) else 1.0
 
         init_gross[i] = rated_energy * init_container_qty * c_dod * c_rte * c_soh * ac_efficiency
         init_aux[i] = init_container_qty * cycle_container_aux_per_unit + init_pcs_qty * cycle_pcs_aux_per_unit
@@ -96,10 +119,14 @@ def calculate(params, soh, rte, dod, aug_qty):
         total_aug_ac = 0.0
         total_aug_aux = 0.0
         for k in range(i + 1):
-            qty_k = int(aug_qty[k]) if k < len(aug_qty) else 0
+            qty_k = int(aug_qty[k]) if (k < len(aug_qty) and aug_qty[k] is not None) else 0
             if qty_k > 0:
                 age = i - k
-                asset_soh = float(soh[min(age, N - 1)])
+                # 安全获取资产SOH值
+                try:
+                    asset_soh = float(soh[min(age, N - 1)])
+                except (ValueError, TypeError, IndexError):
+                    asset_soh = 1.0
                 asset_gross = rated_energy * qty_k * c_dod * c_rte * asset_soh * ac_efficiency
                 asset_aux = qty_k * cycle_container_aux_per_unit
                 total_aug_ac += max(0, asset_gross - asset_aux)
