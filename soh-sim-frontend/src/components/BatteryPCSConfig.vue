@@ -238,7 +238,7 @@ import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useProducts } from '../composables/useProducts'
 
-const props = defineProps({ active: Boolean })
+const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])
 
 const { containers: containersFromProducts, pcs: pcsFromProducts, loadAll } = useProducts()
@@ -322,6 +322,17 @@ watch(() => props.active, (isActive) => {
 
 onMounted(() => {
   loadLibraryData().then(() => {
+    const p = props.params || {}
+    if (p.ratedEnergy && p.initContainerQty) {
+      targetEnergy.value = p.ratedEnergy * p.initContainerQty
+    }
+    if (p.ratedEnergy && p.initContainerQty && p.duration) {
+      targetPower.value = p.ratedEnergy * p.initContainerQty / p.duration
+    }
+    if (p.initContainerQty) {
+      containerQty.value = p.initContainerQty
+    }
+    autoCalcQty()
     calculatePCS()
   })
 })
@@ -762,7 +773,7 @@ const applyConfig = () => {
     ratedEnergy: container.energy,
     initContainerQty: containerQty.value,
     initPcsQty: pcsQty.value,
-    duration: container.energy / Math.max(container.power, 0.01),
+    duration: totalEnergy.value > 0 && totalPower.value > 0 ? totalEnergy.value / totalPower.value : container.energy / Math.max(container.power, 0.01),
     acEfficiency: (pcs.efficiency || 97) / 100,
   })
 }

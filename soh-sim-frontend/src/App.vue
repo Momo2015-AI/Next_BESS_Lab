@@ -47,7 +47,7 @@
           <RunningConditions v-show="activeTab === 'conditions'" @applyParams="onApplyConditions" @error="showToast" />
           <BatteryDCDesign v-show="activeTab === 'dc-design'" ref="batteryDC" @apply-config="onApplyBatteryConfig" @error="showToast" />
           <PcsACDesign v-show="activeTab === 'ac-design'" ref="pcsAC" @apply-config="onApplyPcsConfig" @error="showToast" />
-          <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" :active="activeTab === 'batteryPCS'" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
+          <BatteryPCSConfig v-show="activeTab === 'batteryPCS'" :active="activeTab === 'batteryPCS'" :params="params" @applyConfig="onApplyBatteryPCSConfig" @error="showToast" />
           <SimulationLab v-show="activeTab === 'simulationLab'" @applyConfig="onApplySimulationConfig" @error="showToast" />
           <ProductConfig v-show="activeTab === 'products'" @applyConfig="onApplyConfig" @error="showToast" />
           <FinancialDashboard v-show="activeTab === 'financial'" :params="params" :results="results" :soh="soh" :augQty="augQty" />
