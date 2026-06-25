@@ -6,7 +6,7 @@
         电池集装箱配置
       </h3>
 
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid grid-cols-3 gap-4">
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">储能集装箱型号</label>
           <select v-model="selectedContainer" @change="onContainerChange"
@@ -32,6 +32,31 @@
         </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量 (自动计算)</label>
+          <input v-model.number="containerQty" type="number" min="1" max="100"
+            class="w-full rounded px-3 py-2 text-xs font-bold"
+            style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark); color: var(--color-accent-secondary);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-accent-dark)';">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mt-4">
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">PCS型号</label>
+          <select v-model="selectedPCS" @change="onPCSChange"
+            class="w-full rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
+            onblur="this.style.borderColor='var(--color-input-border)';">
+            <option value="">请选择PCS型号</option>
+            <option v-for="pcs in pcsList" :key="pcs.id" :value="pcs.id">
+              {{ pcs.name }} - {{ pcs.power }}MW / {{ pcs.voltage }}V
+            </option>
+          </select>
+        </div>
+
+        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">目标总功率 (MW)</label>
           <input v-model.number="targetPower" @change="autoCalcQty" type="number" min="0.1" step="0.1"
             class="w-full rounded px-3 py-2 text-xs"
@@ -49,31 +74,6 @@
             onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
             onblur="this.style.borderColor='var(--color-input-border)';">
           <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">C-rate = 1/时长, PCS功率 = 能量/时长</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量 (自动计算)</label>
-          <input v-model.number="containerQty" type="number" min="1" max="100"
-            class="w-full rounded px-3 py-2 text-xs font-bold"
-            style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark); color: var(--color-accent-secondary);"
-            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-accent-dark)';">
-        </div>
-
-        <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">PCS型号</label>
-          <select v-model="selectedPCS" @change="onPCSChange"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-input-border)';">
-            <option value="">请选择PCS型号</option>
-            <option v-for="pcs in pcsList" :key="pcs.id" :value="pcs.id">
-              {{ pcs.name }} - {{ pcs.power }}MW / {{ pcs.voltage }}V
-            </option>
-          </select>
         </div>
       </div>
 
@@ -351,10 +351,17 @@ const energyPowerRatio = computed(() => {
 
 const autoCalcQty = () => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
+  if (!container || !(container.energy > 0 && container.power > 0)) return
   
-  if (container && container.energy > 0 && targetEnergy.value != null && targetEnergy.value > 0 && !isNaN(targetEnergy.value)) {
-    containerQty.value = Math.ceil(targetEnergy.value / container.energy)
-  }
+  const te = (targetEnergy.value != null && targetEnergy.value > 0 && !isNaN(targetEnergy.value)) ? targetEnergy.value : null
+  const tp = (targetPower.value != null && targetPower.value > 0 && !isNaN(targetPower.value)) ? targetPower.value : null
+  
+  if (!te && !tp) return
+  
+  let qty = 1
+  if (te) qty = Math.max(qty, Math.ceil(te / container.energy))
+  if (tp) qty = Math.max(qty, Math.ceil(tp / container.power))
+  containerQty.value = qty
 }
 
 const onContainerChange = () => {
