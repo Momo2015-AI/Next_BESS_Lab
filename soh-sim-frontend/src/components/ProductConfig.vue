@@ -44,8 +44,10 @@
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
               <div style="color: var(--color-text-muted);">容量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.capacityAh }} Ah</div>
               <div style="color: var(--color-text-muted);">标压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.voltageNominal }} V</div>
+              <div style="color: var(--color-text-muted);">电压范围</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.voltageMin }}~{{ cell.voltageMax }}V</div>
               <div style="color: var(--color-text-muted);">能量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.ratedEnergyMWh }} MWh</div>
-              <div style="color: var(--color-text-muted);">循环</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.cycleLife }}+</div>
+              <div style="color: var(--color-text-muted);">密度</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.energyDensity ?? '--' }} Wh/kg</div>
+              <div style="color: var(--color-text-muted);">循环/日历</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.cycleLife }}/{{ cell.calendarLife }}y</div>
             </div>
           </div>
         </div>
@@ -257,12 +259,14 @@
               <div class="grid grid-cols-2 gap-2 text-[10px]">
                 <div><label class="block mb-0.5" style="color: var(--color-text-muted);">厂商</label><input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
                 <div><label class="block mb-0.5" style="color: var(--color-text-muted);">型号</label><input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">额定能量 MWh</label><input v-model.number="modalForm.ratedEnergyMWh" type="number" step="0.001" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">额定功率 MW</label><input v-model.number="modalForm.ratedPowerMW" type="number" step="0.001" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">电芯型号</label><input v-model="modalForm.cellModel" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">散热方式</label><input v-model="modalForm.cooling" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">容量 Ah</label><input v-model.number="modalForm.capacityAh" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">标称电压 V</label><input v-model.number="modalForm.voltageNominal" type="number" step="0.1" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">最高电压 V</label><input v-model.number="modalForm.voltageMax" type="number" step="0.05" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">最低电压 V</label><input v-model.number="modalForm.voltageMin" type="number" step="0.05" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">循环寿命</label><input v-model.number="modalForm.cycleLife" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">日历寿命 年</label><input v-model.number="modalForm.calendarLife" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
                 <div><label class="block mb-0.5" style="color: var(--color-text-muted);">尺寸</label><input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">重量 t</label><input v-model="modalForm.weight" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">重量 kg</label><input v-model.number="modalForm.weight" type="number" step="0.01" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
               </div>
             </template>
             <template v-else-if="modalType === 'pcs'">
@@ -471,7 +475,7 @@ function openAddModal(type) {
   showModal.value = true
   specResult.value = ''
   if (type === 'cell') {
-    modalForm.value = { mfr: '', model: '', chemistry: 'LFP', capacityAh: '', voltageNominal: 3.2, cycleLife: '', dimensions: '', weight: '', status: 'mass-production' }
+    modalForm.value = { mfr: '', model: '', chemistry: 'LFP', capacityAh: '', voltageNominal: 3.2, voltageMax: '', voltageMin: '', cycleLife: '', calendarLife: 20, dimensions: '', weight: '', status: 'mass-production' }
   } else if (type === 'container') {
     modalForm.value = { mfr: '', model: '', ratedEnergyMWh: '', ratedPowerMW: '', cellModel: '', cooling: '', dimensions: '', weight: '', status: 'mass-production' }
   } else {
@@ -491,8 +495,14 @@ async function saveProduct() {
   if (type === 'cell') {
     apiData.capacityAh = f.capacityAh
     apiData.voltageNominal = f.voltageNominal
+    apiData.voltageMax = f.voltageMax || null
+    apiData.voltageMin = f.voltageMin || null
     apiData.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     apiData.cycleLife = f.cycleLife
+    apiData.calendarLife = f.calendarLife || 20
+    apiData.energyDensity = f.energyDensity || (f.weight > 0 ? Math.round((apiData.ratedEnergyMwh * 1e6) / f.weight) : null)
+    apiData.dimensions = f.dimensions
+    apiData.weight = f.weight ? parseFloat(f.weight) : null
   } else if (type === 'container') {
     apiData.ratedEnergyMWh = f.ratedEnergyMWh
     apiData.ratedPowerMW = f.ratedPowerMW
@@ -522,7 +532,11 @@ async function saveProduct() {
 
   if (type === 'cell') {
     item.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
-    item.voltageRange = '2.5-3.65'
+    item.voltageMax = f.voltageMax || null
+    item.voltageMin = f.voltageMin || null
+    item.voltageRange = (f.voltageMin && f.voltageMax) ? `${f.voltageMin}-${f.voltageMax}` : '2.5-3.65'
+    item.calendarLife = f.calendarLife || 20
+    item.energyDensity = f.weight > 0 ? Math.round((item.ratedEnergyMwh * 1e6) / f.weight) : null
     item.sohCurve = 'default'
   } else if (type === 'container') {
     item.type = '20ft Standard'

@@ -14,6 +14,8 @@ const source = ref('')
 const CAMEL_MAP = {
   capacity_ah: 'capacityAh',
   voltage_nominal: 'voltageNominal',
+  voltage_max: 'voltageMax',
+  voltage_min: 'voltageMin',
   voltage_range: 'voltageRange',
   // 统一能量字段：
   rated_energy_mwh: 'ratedEnergyMWh',  // 容器/簇/电芯统一
@@ -24,7 +26,12 @@ const CAMEL_MAP = {
   rated_power_mw: 'ratedPowerMW',      // 所有设备统一
   nominal_power_mw: 'ratedPowerMW',    // 兼容旧簇字段
   cycle_life: 'cycleLife',
+  calendar_life: 'calendarLife',
+  energy_density: 'energyDensity',
   soh_curve: 'sohCurve',
+  certifications: 'certifications',
+  unit_price: 'unitPrice',
+  remarks: 'remarks',
   cell_model: 'cellModel',
   cell_config: 'cellConfig',
   rated_power_kva: 'ratedPowerKVA',

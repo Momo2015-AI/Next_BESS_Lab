@@ -519,13 +519,22 @@ class CellProduct(db.Model):
     chemistry = db.Column(db.String(50))
     capacity_ah = db.Column(db.Float)
     voltage_nominal = db.Column(db.Float)
+    voltage_max = db.Column(db.Float)
+    voltage_min = db.Column(db.Float)
     voltage_range = db.Column(db.String(100))
-    rated_energy_mwh = db.Column(db.Float)  # MWh, was energy_wh
+    rated_energy_mwh = db.Column(db.Float)  # MWh
     cycle_life = db.Column(db.Integer)
+    calendar_life = db.Column(db.Integer)  # 日历寿命 年
+    energy_density = db.Column(db.Float)  # Wh/kg
     dimensions = db.Column(db.String(200))
-    weight = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # kg
     soh_curve = db.Column(db.String(100))
+    certifications = db.Column(db.Text)  # JSON
+    unit_price = db.Column(db.Float)  # 元/Wh
+    remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default='mass-production')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -551,7 +560,7 @@ class PackProduct(db.Model):
     max_charge_current = db.Column(db.Float)
     max_discharge_current = db.Column(db.Float)
     dimensions = db.Column(db.String(200))
-    weight = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # kg
     bms_type = db.Column(db.String(100))
     cycle_life = db.Column(db.Integer)
     status = db.Column(db.String(50), default='mass-production')
@@ -577,7 +586,7 @@ class RackProduct(db.Model):
     nominal_capacity_ah = db.Column(db.Float)
     rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_kwh
     dimensions = db.Column(db.String(200))
-    weight = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # kg
     cooling = db.Column(db.String(100))
     status = db.Column(db.String(50), default='mass-production')
 
@@ -603,7 +612,7 @@ class ClusterProduct(db.Model):
     rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_mwh (统一命名)
     rated_power_mw = db.Column(db.Float)  # MW, was nominal_power_mw (统一命名)
     dimensions = db.Column(db.String(200))
-    weight = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # kg
     bmu_type = db.Column(db.String(100))
     status = db.Column(db.String(50), default='mass-production')
 
@@ -769,153 +778,6 @@ class FormulaConfig(db.Model):
     user = db.relationship('User', back_populates='formula_configs')
 
 
-class CellLibrary(db.Model):
-    """电芯库模型 - 统一管理电芯产品"""
-    __tablename__ = 'cell_library'
-    
-    id = db.Column(db.String(36), primary_key=True)
-    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
-    
-    # 基本信息
-    model = db.Column(db.String(100), nullable=False)  # 型号
-    mfr = db.Column(db.String(100))  # 厂商
-    chemistry = db.Column(db.String(50))  # 化学体系 LFP/NCM
-    
-    # 电性能参数
-    capacity_ah = db.Column(db.Float)  # 额定容量 Ah
-    voltage_nominal = db.Column(db.Float)  # 标称电压 V
-    voltage_max = db.Column(db.Float)  # 最高电压 V
-    voltage_min = db.Column(db.Float)  # 最低电压 V
-    energy_wh = db.Column(db.Float)  # 能量 Wh
-    
-    # 寿命参数
-    cycle_life = db.Column(db.Integer)  # 循环寿命 次
-    calendar_life = db.Column(db.Integer)  # 日历寿命 年
-    
-    # 物理参数
-    dimensions = db.Column(db.String(100))  # 尺寸 L*W*H mm
-    weight = db.Column(db.Float)  # 重量 kg
-    energy_density = db.Column(db.Float)  # 能量密度 Wh/kg
-    
-    # 状态与认证
-    status = db.Column(db.String(50), default='mass-production')  # mass-production/pre-production
-    certifications = db.Column(db.Text)  # JSON数组 认证列表
-    
-    # 价格信息
-    unit_price = db.Column(db.Float)  # 单价 元/Wh
-    
-    # 备注
-    remarks = db.Column(db.Text)
-    
-    # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # 关联
-    tenant = db.relationship('Tenant', back_populates='cell_library')
-
-
-class ContainerLibrary(db.Model):
-    """集装箱库模型 - 统一管理集装箱产品"""
-    __tablename__ = 'container_library'
-    
-    id = db.Column(db.String(36), primary_key=True)
-    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
-    
-    # 基本信息
-    model = db.Column(db.String(100), nullable=False)  # 型号
-    mfr = db.Column(db.String(100))  # 厂商
-    spec = db.Column(db.String(50))  # 规格 20ft/40ft/20ft-H
-    
-    # 电气参数
-    rated_energy_mwh = db.Column(db.Float)  # 额定能量 MWh
-    rated_power_mw = db.Column(db.Float)  # 额定功率 MW
-    dc_voltage_range = db.Column(db.String(100))  # DC电压范围
-    max_dc_current = db.Column(db.Float)  # 最大直流电流 A
-    
-    # 电芯配置
-    cell_model = db.Column(db.String(100))  # 使用电芯型号
-    series_count = db.Column(db.Integer)  # 串联数量
-    parallel_count = db.Column(db.Integer)  # 并联数量
-    
-    # 物理参数
-    dimensions = db.Column(db.String(100))  # 尺寸 L*W*H mm
-    weight = db.Column(db.Float)  # 重量 t
-    cooling = db.Column(db.String(50))  # 散热方式
-    
-    # 效率参数
-    rte = db.Column(db.Float)  # 往返效率 %
-    
-    # 辅助功耗
-    aux_run = db.Column(db.Float)  # 运行功耗 kW
-    aux_standby = db.Column(db.Float)  # 待机功耗 kW
-    
-    # 状态与认证
-    status = db.Column(db.String(50), default='mass-production')
-    certifications = db.Column(db.Text)  # JSON数组
-    
-    # 价格信息
-    unit_price = db.Column(db.Float)  # 单价 万元/台
-    
-    # 备注
-    remarks = db.Column(db.Text)
-    
-    # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # 关联
-    tenant = db.relationship('Tenant', back_populates='container_library')
-
-
-class PCS_LIBRARY(db.Model):
-    """PCS库模型 - 统一管理PCS产品"""
-    __tablename__ = 'pcs_library'
-    
-    id = db.Column(db.String(36), primary_key=True)
-    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
-    
-    # 基本信息
-    model = db.Column(db.String(100), nullable=False)  # 型号
-    mfr = db.Column(db.String(100))  # 厂商
-    
-    # 电气参数
-    rated_power_mw = db.Column(db.Float)  # 额定功率 MW
-    efficiency = db.Column(db.Float)  # 效率 %
-    ac_voltage = db.Column(db.String(50))  # AC电压等级
-    dc_voltage_range = db.Column(db.String(100))  # DC电压范围
-    max_dc_current = db.Column(db.Float)  # 最大直流电流 A
-    
-    # 频率参数
-    frequency_range = db.Column(db.String(50))  # 频率范围 Hz
-    
-    # 物理参数
-    dimensions = db.Column(db.String(100))  # 尺寸
-    weight = db.Column(db.Float)  # 重量 kg
-    cooling = db.Column(db.String(50))  # 散热方式
-    
-    # 辅助功耗
-    aux_run = db.Column(db.Float)  # 运行功耗 kW
-    aux_standby = db.Column(db.Float)  # 待机功耗 kW
-    
-    # 状态与认证
-    status = db.Column(db.String(50), default='mass-production')
-    certifications = db.Column(db.Text)  # JSON数组
-    
-    # 价格信息
-    unit_price = db.Column(db.Float)  # 单价 万元/台
-    
-    # 备注
-    remarks = db.Column(db.Text)
-    
-    # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # 关联
-    tenant = db.relationship('Tenant', back_populates='pcs_library')
-
-
 class AlgorithmModel(db.Model):
     """算法模型库 - 支持添加和管理多种衰减模型"""
     __tablename__ = 'algorithm_models'
@@ -971,9 +833,6 @@ class AlgorithmModel(db.Model):
 
 
 # 添加租户关联
-Tenant.cell_library = db.relationship('CellLibrary', back_populates='tenant')
-Tenant.container_library = db.relationship('ContainerLibrary', back_populates='tenant')
-Tenant.pcs_library = db.relationship('PCS_LIBRARY', back_populates='tenant')
 Tenant.correction_templates = db.relationship('CorrectionTemplate', back_populates='tenant')
 Tenant.algorithm_models = db.relationship('AlgorithmModel', back_populates='tenant')
 

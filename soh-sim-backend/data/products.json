@@ -13,7 +13,14 @@
       "weight": 5.42,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000896
+      "ratedEnergyMwh": 0.000896,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 165,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "eve-lf314k",
@@ -28,7 +35,14 @@
       "weight": 5.48,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001005
+      "ratedEnergyMwh": 0.001005,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 183,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "eve-lf628k",
@@ -43,7 +57,14 @@
       "weight": 11.2,
       "sohCurve": "lf628k",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.00201
+      "ratedEnergyMwh": 0.00201,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 179,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "eve-lf560k",
@@ -58,7 +79,14 @@
       "weight": 10.5,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001792
+      "ratedEnergyMwh": 0.001792,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 171,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-280ah",
@@ -70,10 +98,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 6000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.40 kg",
+      "weight": 5.4,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000896
+      "ratedEnergyMwh": 0.000896,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 166,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-306ah",
@@ -85,10 +120,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 10000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.55 kg",
+      "weight": 5.55,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000979
+      "ratedEnergyMwh": 0.000979,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 176,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-314ah",
@@ -100,10 +142,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 10000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.60 kg",
+      "weight": 5.6,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001005
+      "ratedEnergyMwh": 0.001005,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 179,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "byd-blade-lfp",
@@ -115,10 +164,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 6000,
       "dimensions": "960×90×13.5 mm",
-      "weight": "3.80 kg",
+      "weight": 3.8,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000646
+      "ratedEnergyMwh": 0.000646,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 170,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "repthium-280ah",
@@ -130,10 +186,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 6000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.40 kg",
+      "weight": 5.4,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000896
+      "ratedEnergyMwh": 0.000896,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 166,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "repthium-320ah",
@@ -145,10 +208,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 8000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.60 kg",
+      "weight": 5.6,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001024
+      "ratedEnergyMwh": 0.001024,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 183,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "gotion-230ah",
@@ -160,10 +230,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 4000,
       "dimensions": "174×71.5×205 mm",
-      "weight": "4.30 kg",
+      "weight": 4.3,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000736
+      "ratedEnergyMwh": 0.000736,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 171,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "calb-l173f280",
@@ -175,10 +252,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 6000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.40 kg",
+      "weight": 5.4,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000896
+      "ratedEnergyMwh": 0.000896,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 166,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "calb-l173f314",
@@ -190,10 +274,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 8000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.58 kg",
+      "weight": 5.58,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001005
+      "ratedEnergyMwh": 0.001005,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 180,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "envision-315ah",
@@ -205,10 +296,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 8000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.62 kg",
+      "weight": 5.62,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001008
+      "ratedEnergyMwh": 0.001008,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 179,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "liyang-280ah",
@@ -220,10 +318,17 @@
       "voltageRange": "2.5-3.65",
       "cycleLife": 6000,
       "dimensions": "174×71.5×207 mm",
-      "weight": "5.40 kg",
+      "weight": 5.4,
       "sohCurve": "default",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000896
+      "ratedEnergyMwh": 0.000896,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 166,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-ncm523-21700",
@@ -235,10 +340,17 @@
       "voltageRange": "2.5-4.2",
       "cycleLife": 2000,
       "dimensions": "21×70 mm",
-      "weight": "0.07 kg",
+      "weight": 0.07,
       "sohCurve": "ncm",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000018
+      "ratedEnergyMwh": 0.000018,
+      "voltageMin": 2.5,
+      "voltageMax": 4.2,
+      "calendarLife": 20,
+      "energyDensity": 257,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "panasonic-nca-21700",
@@ -250,10 +362,17 @@
       "voltageRange": "2.5-4.2",
       "cycleLife": 2500,
       "dimensions": "21×70 mm",
-      "weight": "0.072 kg",
+      "weight": 0.072,
       "sohCurve": "nca",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000018
+      "ratedEnergyMwh": 0.000018,
+      "voltageMin": 2.5,
+      "voltageMax": 4.2,
+      "calendarLife": 20,
+      "energyDensity": 250,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "lg-ncm622-21700",
@@ -265,10 +384,17 @@
       "voltageRange": "2.5-4.2",
       "cycleLife": 2500,
       "dimensions": "21×70 mm",
-      "weight": "0.07 kg",
+      "weight": 0.07,
       "sohCurve": "ncm",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.000017
+      "ratedEnergyMwh": 0.000017,
+      "voltageMin": 2.5,
+      "voltageMax": 4.2,
+      "calendarLife": 20,
+      "energyDensity": 243,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-587ah",
@@ -283,7 +409,14 @@
       "weight": 11.8,
       "sohCurve": "catl-587",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001878
+      "ratedEnergyMwh": 0.001878,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 159,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "catl-565ah",
@@ -298,7 +431,14 @@
       "weight": 11.3,
       "sohCurve": "catl-tener",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001808
+      "ratedEnergyMwh": 0.001808,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 160,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "hithium-314ah",
@@ -313,7 +453,14 @@
       "weight": 5.5,
       "sohCurve": "hithium-314",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001005
+      "ratedEnergyMwh": 0.001005,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 183,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "hithium-350ah",
@@ -328,7 +475,14 @@
       "weight": 5.9,
       "sohCurve": "hithium-350",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.00112
+      "ratedEnergyMwh": 0.00112,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 190,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "gotion-320ah",
@@ -343,7 +497,14 @@
       "weight": 5.55,
       "sohCurve": "gotion-320",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001024
+      "ratedEnergyMwh": 0.001024,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 185,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "sunwoda-314ah",
@@ -358,7 +519,14 @@
       "weight": 5.45,
       "sohCurve": "sunwoda-314",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.001005
+      "ratedEnergyMwh": 0.001005,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 184,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "svolt-325ah",
@@ -373,7 +541,14 @@
       "weight": 5.6,
       "sohCurve": "svolt-325",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.00104
+      "ratedEnergyMwh": 0.00104,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 186,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     },
     {
       "id": "byd-blade-cluster",
@@ -388,7 +563,14 @@
       "weight": 55,
       "sohCurve": "byd-blade",
       "status": "mass-production",
-      "ratedEnergyMwh": 0.008672
+      "ratedEnergyMwh": 0.008672,
+      "voltageMin": 2.5,
+      "voltageMax": 3.65,
+      "calendarLife": 20,
+      "energyDensity": 158,
+      "certifications": null,
+      "unitPrice": null,
+      "remarks": null
     }
   ],
   "packs": [
@@ -406,7 +588,7 @@
       "maxChargeCurrent": 280,
       "maxDischargeCurrent": 560,
       "dimensions": "450×350×150 mm",
-      "weight": "280 kg",
+      "weight": 280,
       "bmsType": "EVE BMS v3.0",
       "cycleLife": 6000,
       "status": "mass-production",
@@ -426,7 +608,7 @@
       "maxChargeCurrent": 628,
       "maxDischargeCurrent": 1256,
       "dimensions": "500×400×180 mm",
-      "weight": "560 kg",
+      "weight": 560,
       "bmsType": "EVE BMS v3.0",
       "cycleLife": 8000,
       "status": "mass-production",
@@ -446,7 +628,7 @@
       "maxChargeCurrent": 314,
       "maxDischargeCurrent": 628,
       "dimensions": "460×360×160 mm",
-      "weight": "310 kg",
+      "weight": 310,
       "bmsType": "CATL BMS",
       "cycleLife": 10000,
       "status": "mass-production",
@@ -466,7 +648,7 @@
       "maxChargeCurrent": 202,
       "maxDischargeCurrent": 404,
       "dimensions": "1200×400×150 mm",
-      "weight": "280 kg",
+      "weight": 280,
       "bmsType": "BYD BMS",
       "cycleLife": 6000,
       "status": "mass-production",
@@ -486,7 +668,7 @@
       "maxChargeCurrent": 320,
       "maxDischargeCurrent": 640,
       "dimensions": "460×360×160 mm",
-      "weight": "320 kg",
+      "weight": 320,
       "bmsType": "REPT BMS",
       "cycleLife": 8000,
       "status": "mass-production",
@@ -506,7 +688,7 @@
       "maxChargeCurrent": 314,
       "maxDischargeCurrent": 628,
       "dimensions": "460×360×160 mm",
-      "weight": "310 kg",
+      "weight": 310,
       "bmsType": "CALB BMS",
       "cycleLife": 8000,
       "status": "mass-production",
@@ -526,7 +708,7 @@
       "maxChargeCurrent": 315,
       "maxDischargeCurrent": 630,
       "dimensions": "460×360×160 mm",
-      "weight": "315 kg",
+      "weight": 315,
       "bmsType": "Envision BMS",
       "cycleLife": 8000,
       "status": "mass-production",
@@ -605,7 +787,7 @@
       "nominalVoltage": 163.2,
       "nominalCapacityAh": 5600,
       "dimensions": "600×1200×2200 mm",
-      "weight": "5600 kg",
+      "weight": 5600,
       "cooling": "Air Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 0.91392
@@ -621,7 +803,7 @@
       "nominalVoltage": 163.2,
       "nominalCapacityAh": 5024,
       "dimensions": "600×1200×2200 mm",
-      "weight": "4480 kg",
+      "weight": 4480,
       "cooling": "Liquid Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 0.82
@@ -637,7 +819,7 @@
       "nominalVoltage": 163.2,
       "nominalCapacityAh": 6280,
       "dimensions": "600×1200×2200 mm",
-      "weight": "6200 kg",
+      "weight": 6200,
       "cooling": "Liquid Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 1.0249
@@ -653,7 +835,7 @@
       "nominalVoltage": 320,
       "nominalCapacityAh": 2424,
       "dimensions": "600×1200×2200 mm",
-      "weight": "3360 kg",
+      "weight": 3360,
       "cooling": "Air Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 0.77568
@@ -669,7 +851,7 @@
       "nominalVoltage": 163.2,
       "nominalCapacityAh": 6400,
       "dimensions": "600×1200×2200 mm",
-      "weight": "6400 kg",
+      "weight": 6400,
       "cooling": "Liquid Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 1.04448
@@ -685,7 +867,7 @@
       "nominalVoltage": 163.2,
       "nominalCapacityAh": 6300,
       "dimensions": "600×1200×2200 mm",
-      "weight": "6300 kg",
+      "weight": 6300,
       "cooling": "Liquid Cooling",
       "status": "mass-production",
       "ratedEnergyMwh": 1.02816
@@ -731,7 +913,7 @@
       "nominalVoltage": 848.64,
       "nominalCapacityAh": 5024,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "4480 kg",
+      "weight": 4480,
       "bmuType": "EVE BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 4.264,
@@ -748,7 +930,7 @@
       "nominalVoltage": 848.64,
       "nominalCapacityAh": 5600,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "5600 kg",
+      "weight": 5600,
       "bmuType": "EVE BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 4.752,
@@ -765,7 +947,7 @@
       "nominalVoltage": 848.64,
       "nominalCapacityAh": 6280,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "6200 kg",
+      "weight": 6200,
       "bmuType": "CATL BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 5.33,
@@ -782,7 +964,7 @@
       "nominalVoltage": 1280,
       "nominalCapacityAh": 2424,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "3360 kg",
+      "weight": 3360,
       "bmuType": "BYD BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 3.103,
@@ -799,7 +981,7 @@
       "nominalVoltage": 848.64,
       "nominalCapacityAh": 6400,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "6400 kg",
+      "weight": 6400,
       "bmuType": "REPT BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 5.431,
@@ -816,7 +998,7 @@
       "nominalVoltage": 848.64,
       "nominalCapacityAh": 6300,
       "dimensions": "2400×1200×2200 mm",
-      "weight": "6300 kg",
+      "weight": 6300,
       "bmuType": "Envision BMU",
       "status": "mass-production",
       "ratedEnergyMwh": 5.346,

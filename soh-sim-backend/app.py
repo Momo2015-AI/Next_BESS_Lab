@@ -12,7 +12,6 @@ from routes.survey import survey_bp
 from routes.export import export_bp
 from routes.auth import auth_bp
 from routes.products import products_bp, seed_products
-from routes.library import library_bp
 from routes.project import project_bp
 from routes.simulation import simulation_bp
 from routes.algorithm import algorithm_bp
@@ -37,7 +36,6 @@ app.register_blueprint(survey_bp)
 app.register_blueprint(export_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(products_bp)
-app.register_blueprint(library_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(simulation_bp)
 app.register_blueprint(algorithm_bp)

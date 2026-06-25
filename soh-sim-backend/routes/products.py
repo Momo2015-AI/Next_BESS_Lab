@@ -37,6 +37,13 @@ _FIELD_MAP = {
         'ratedEnergyMwh': 'rated_energy_mwh',
         'ratedEnergyMWh': 'rated_energy_mwh',
         'energyWh': 'rated_energy_mwh',  # 兼容旧字段
+        'voltageMax': 'voltage_max',
+        'voltageMin': 'voltage_min',
+        'calendarLife': 'calendar_life',
+        'energyDensity': 'energy_density',
+        'certifications': 'certifications',
+        'unitPrice': 'unit_price',
+        'remarks': 'remarks',
         'cycleLife': 'cycle_life',
         'sohCurve': 'soh_curve',
     },
