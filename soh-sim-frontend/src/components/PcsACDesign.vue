@@ -20,7 +20,7 @@
                 onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
                 onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="">-- 请选择PCS --</option>
-                <option v-for="p in products.pcs" :key="p.id" :value="p.id">{{ p.mfr }} {{ p.model }} ({{ p.ratedPowerMW }}MW)</option>
+                <option v-for="p in pcs" :key="p.id" :value="p.id">{{ p.mfr }} - {{ p.model }} ({{ p.ratedPowerMW }}MW)</option>
               </select>
             </div>
             
@@ -351,27 +351,39 @@ import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['apply-config', 'error'])
 
-const products = useProducts()
+const { pcs, loadAll } = useProducts()
+
+// PCS库数据源（从统一产品库获取）
 const selectedPcsId = ref('')
 
+async function loadPcsLibrary() {
+  await loadAll()
+  // 默认选中第一个
+  if (pcs.value.length > 0 && !selectedPcsId.value) {
+    selectedPcsId.value = pcs.value[0].id
+    onPcsChange()
+  }
+}
+
 function onPcsChange() {
-  const pcs = products.getPcsById(selectedPcsId.value)
-  if (pcs) {
-    pcsConfig.pcsPower = pcs.ratedPowerMW || 2.5
-    pcsConfig.dcVoltageRange = pcs.dcVoltageRange || '800-1500V'
-    pcsConfig.acRatedPower = (pcs.ratedPowerKVA || pcs.ratedPowerMW * 1040)
-    pcsConfig.efficiency = pcs.efficiency || 98.5
-    pcsConfig.cooling = pcs.cooling || 'Forced Air'
+  const pcsItem = pcs.value.find(p => p.id === selectedPcsId.value)
+  if (pcsItem) {
+    pcsConfig.pcsPower = pcsItem.ratedPowerMW || 2.5
+    pcsConfig.dcVoltageRange = pcsItem.dcVoltageRange || '800-1500V'
+    pcsConfig.maxDcCurrent = pcsItem.maxDcCurrent || 1500
+    pcsConfig.acRatedPower = (pcsItem.ratedPowerMW || 2.5) * 1000
+    pcsConfig.acVoltage = pcsItem.acVoltage || 800
+    pcsConfig.efficiency = pcsItem.efficiency || 98.5
+    pcsConfig.cooling = pcsItem.cooling || '风冷'
+    pcsConfig.frequencyRange = pcsItem.frequencyRange || '47-63Hz'
+    pcsConfig.weight = pcsItem.weight || 1200
+    pcsConfig.auxRun = pcsItem.auxRun || 4.5
+    pcsConfig.auxStandby = pcsItem.auxStandby || 1.2
   }
 }
 
 onMounted(() => {
-  products.loadAll().then(() => {
-    if (products.pcs.value.length > 0 && !selectedPcsId.value) {
-      selectedPcsId.value = products.pcs.value[0].id
-      onPcsChange()
-    }
-  })
+  loadPcsLibrary()
 })
 
 const toast = reactive({ show: false, message: '', type: 'success' })

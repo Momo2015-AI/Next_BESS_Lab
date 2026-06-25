@@ -4,53 +4,53 @@
   * { box-sizing: border-box; }
 
   :root {
-    --color-bg: #f8fafc;
-    --color-bg-secondary: #f1f5f9;
-    --color-bg-tertiary: #e2e8f0;
-    --color-card: #ffffff;
-    --color-card-hover: #f8fafc;
-    --color-card-dark: #f1f5f9;
-    --color-border: #e2e8f0;
-    --color-border-light: #f1f5f9;
-    --color-text: #1e293b;
-    --color-text-secondary: #64748b;
-    --color-text-muted: #94a3b8;
-    --color-text-light: #cbd5e1;
-    --color-accent: #3b82f6;
-    --color-accent-secondary: #06b6d4;
-    --color-accent-glow: rgba(59, 130, 246, 0.1);
-    --color-accent-dark: rgba(59, 130, 246, 0.2);
+    --color-bg: #F5F7FA;
+    --color-bg-secondary: #E8EEF5;
+    --color-bg-tertiary: #DCE4EC;
+    --color-card: #FFFFFF;
+    --color-card-hover: #F5F7FA;
+    --color-card-dark: #E8EEF5;
+    --color-border: #E0E0E0;
+    --color-border-light: #E8EEF5;
+    --color-text: #333333;
+    --color-text-secondary: #666666;
+    --color-text-muted: #999999;
+    --color-text-light: #CCCCCC;
+    --color-accent: #2F5496;
+    --color-accent-secondary: #4A7BC4;
+    --color-accent-glow: rgba(47, 84, 150, 0.15);
+    --color-accent-dark: rgba(47, 84, 150, 0.2);
     --color-success: #10b981;
-    --color-warning: #f59e0b;
+    --color-warning: #F7931E;
     --color-danger: #ef4444;
     --color-info: #8b5cf6;
-    --color-input-bg: #f8fafc;
-    --color-input-bg-dark: #ffffff;
-    --color-input-border: #cbd5e1;
-    --color-input-focus: #3b82f6;
-    --color-header-bg: #ffffff;
-    --color-header-border: #e2e8f0;
-    --color-nav-bg: #f1f5f9;
-    --color-nav-border: #e2e8f0;
-    --color-tab-bg: #f1f5f9;
-    --color-tab-hover: #e2e8f0;
-    --color-step-bg: #f8fafc;
-    --color-step-border: #e2e8f0;
-    --color-step-active: rgba(59, 130, 246, 0.1);
-    --color-step-num: #64748b;
-    --color-step-num-active: #3b82f6;
-    --color-table-header: #f1f5f9;
-    --color-table-row: #ffffff;
-    --color-table-row-alt: #f8fafc;
-    --color-modal-bg: #ffffff;
+    --color-input-bg: #F5F7FA;
+    --color-input-bg-dark: #FFFFFF;
+    --color-input-border: #E0E0E0;
+    --color-input-focus: #2F5496;
+    --color-header-bg: #FFFFFF;
+    --color-header-border: #E0E0E0;
+    --color-nav-bg: #FFFFFF;
+    --color-nav-border: #E0E0E0;
+    --color-tab-bg: #F5F7FA;
+    --color-tab-hover: #E8EEF5;
+    --color-step-bg: #F5F7FA;
+    --color-step-border: #E0E0E0;
+    --color-step-active: rgba(47, 84, 150, 0.15);
+    --color-step-num: #666666;
+    --color-step-num-active: #2F5496;
+    --color-table-header: #F5F7FA;
+    --color-table-row: #FFFFFF;
+    --color-table-row-alt: #F5F7FA;
+    --color-modal-bg: #FFFFFF;
     --color-modal-overlay: rgba(0, 0, 0, 0.5);
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
     --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
     --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
     --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   }
 
@@ -361,4 +361,37 @@
   .theme-border-step { border-color: var(--color-step-border); }
 
   .theme-accent-glow { background-color: var(--color-step-active); }
+
+  .slider-track {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  }
+  .slider-track::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent-secondary);
+    border: 2px solid var(--color-accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .slider-track::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent-secondary);
+    border: 2px solid var(--color-accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .slider-track::-moz-range-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  }
 }

@@ -10,7 +10,7 @@
       <div class="grid grid-cols-2 gap-4 mb-4">
         <!-- 电芯选型 -->
         <div class="rounded-lg p-4" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary);">电芯选型</h4>
+          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary);">电芯型号</h4>
           
           <div class="space-y-3">
             <div>
@@ -21,7 +21,7 @@
                 onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
                 onblur="this.style.borderColor='var(--color-input-border)';">
                 <option value="">-- 请选择电芯 --</option>
-                <option v-for="c in products.cells" :key="c.id" :value="c.id">{{ c.mfr }} {{ c.model }} ({{ c.capacityAh }}Ah)</option>
+                <option v-for="c in cells" :key="c.id" :value="c.id">{{ c.mfr }} - {{ c.model }} ({{ c.capacityAh }}Ah)</option>
               </select>
             </div>
             
@@ -274,7 +274,7 @@
             <div class="text-[10px]" style="color: var(--color-text-muted);">最大电流 (A)</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
-            <div class="text-lg font-bold" style="color: var(--color-accent);">{{ (batteryConfig.totalDcEnergy * 1000 / batteryConfig.containerEnergy).toFixed(0) }}</div>
+            <div class="text-lg font-bold" style="color: var(--color-accent);">{{ batteryConfig.clustersPerContainer }}</div>
             <div class="text-[10px]" style="color: var(--color-text-muted);">簇/集装箱</div>
           </div>
         </div>
@@ -312,93 +312,41 @@ import { useProducts } from '../composables/useProducts'
 
 const emit = defineEmits(['apply-config', 'error'])
 
-const products = useProducts()
-const selectedCellId = ref('eve-lf280k')
+const { cells, loadAll } = useProducts()
 
-// 根据电芯ID查找映射规则，自动带出 pack/cluster/container 配置
-function getCellMapping(cellId) {
-  const mappings = products.cellPackMappings?.value || []
-  return mappings.find(m => m.cellId === cellId) || null
-}
+// 电芯库数据（从统一产品库获取）
+const selectedCellId = ref('')
 
-// 根据映射规则和选中的集装箱规格，自动填充所有配置
-function applyCellMapping(mapping) {
-  if (!mapping) return
-
-  const pack = mapping.packConfig
-  const cluster = mapping.clusterConfig
-
-  // 电芯参数
-  batteryConfig.cellType = mapping.cellId
-  batteryConfig.cellCapacity = mapping.cellAh
-  batteryConfig.cellVoltage = mapping.cellV
-  const cell = products.getCellById(mapping.cellId)
-  batteryConfig.energyDensity = cell ? Math.round((cell.energyWh || mapping.cellAh * mapping.cellV) / (parseFloat(cell.weight) || 5.4)) : 160
-  batteryConfig.cycleLife = cell?.cycleLife || 6000
-
-  // Pack 参数
-  batteryConfig.seriesPerPack = pack.seriesPerPack
-  batteryConfig.parallelPerPack = pack.parallelPerPack
-
-  // 簇参数
-  batteryConfig.seriesCount = pack.seriesPerPack * (pack.packsPerCluster || 1)
-  batteryConfig.parallelCount = pack.parallelPerPack
-  batteryConfig.stringVoltage = cluster.clusterVoltage
-  batteryConfig.stringCapacity = cluster.clusterCapacityAh
-  batteryConfig.stringEnergy = cluster.clusterEnergyKWh
-
-  // 集装箱：默认选第一个 containerConfig
-  const containerCfg = mapping.containerConfigs?.[0]
-  if (containerCfg) {
-    batteryConfig.containerSpec = containerCfg.containerType === '20ft-H' ? '20ft-H' : containerCfg.containerType === '20ft' ? '20ft' : '20ft'
-    batteryConfig.clustersPerContainer = containerCfg.clustersPerContainer
-    batteryConfig.containerEnergy = containerCfg.containerEnergyMWh
-    // 根据映射的集装箱能量和当前集装箱数量计算总能量
-    batteryConfig.totalDcEnergy = batteryConfig.containerQty * containerCfg.containerEnergyMWh
-
-    // 自动匹配兼容的集装箱产品
-    if (containerCfg.compatibleContainerIds?.length > 0) {
-      batteryConfig.matchedContainerId = containerCfg.compatibleContainerIds[0]
-    } else {
-      batteryConfig.matchedContainerId = ''
-    }
+// 加载电芯库数据
+async function loadCellLibrary() {
+  await loadAll()
+  // 如果有数据，默认选择第一个
+  if (cells.value.length > 0 && !selectedCellId.value) {
+    selectedCellId.value = cells.value[0].id
+    onCellChange()
   }
-
-  // 计算电压范围
-  const minV = batteryConfig.seriesCount * 3.0
-  const maxV = batteryConfig.seriesCount * 3.65
-  batteryConfig.dcVoltageRange = `${minV.toFixed(0)}-${maxV.toFixed(0)}V`
-
-  showToast(`已自动配置: ${mapping.cellAh}Ah × ${batteryConfig.seriesCount}S = ${batteryConfig.stringVoltage}V / ${batteryConfig.stringEnergy.toFixed(1)}kWh/簇`)
 }
 
+// 获取选中的电芯
+function getSelectedCell() {
+  return cells.value.find(c => c.id === selectedCellId.value)
+}
+
+// 电芯变化时自动带出参数
 function onCellChange() {
-  const cell = products.getCellById(selectedCellId.value)
+  const cell = getSelectedCell()
   if (!cell) return
 
-  // 优先从映射表自动配置
-  const mapping = getCellMapping(selectedCellId.value)
-  if (mapping) {
-    applyCellMapping(mapping)
-  } else {
-    // 回退：手动填入基础参数
-    batteryConfig.cellType = cell.id
-    batteryConfig.cellCapacity = cell.capacityAh || 280
-    batteryConfig.cellVoltage = cell.voltageNominal || 3.2
-    batteryConfig.energyDensity = Math.round((cell.energyWh || 896) / (parseFloat(cell.weight) || 5.4))
-    batteryConfig.cycleLife = cell.cycleLife || 6000
-  }
+  // 填入基础参数
+  batteryConfig.cellType = cell.id
+  batteryConfig.cellCapacity = cell.capacityAh || 280
+  batteryConfig.cellVoltage = cell.voltageNominal || 3.2
+  batteryConfig.energyDensity = cell.energyDensity || Math.round((((cell.ratedEnergyMWh || 0.000896) * 1e6) / (parseFloat(cell.weight) || 5.4)))
+  batteryConfig.cycleLife = cell.cycleLife || 6000
 }
 
 onMounted(() => {
-  products.loadAll().then(() => {
-    if (products.cells.value.length > 0 && !selectedCellId.value) {
-      selectedCellId.value = products.cells.value[0].id
-      onCellChange()
-    } else if (selectedCellId.value) {
-      onCellChange()
-    }
-  })
+  loadCellLibrary()
 })
 
 // Toast
@@ -476,21 +424,29 @@ function calculateBatteryConfig() {
     return
   }
   
-  // 计算簇数量（根据集装箱能量和簇能量）
-  const clustersNeeded = Math.ceil((batteryConfig.containerEnergy * 1000) / batteryConfig.stringEnergy)
-  batteryConfig.clustersPerContainer = clustersNeeded
+  // 根据用户输入的簇数量和集装箱数量，推算每箱簇数（不覆盖用户的簇数量输入）
+  if (batteryConfig.stringQty > 0 && batteryConfig.containerQty > 0) {
+    batteryConfig.clustersPerContainer = Math.ceil(batteryConfig.stringQty / batteryConfig.containerQty)
+  } else {
+    // 回退：使用能量公式估算
+    const clustersNeeded = Math.ceil((batteryConfig.containerEnergy * 1000) / batteryConfig.stringEnergy)
+    batteryConfig.clustersPerContainer = clustersNeeded
+    batteryConfig.stringQty = batteryConfig.containerQty * clustersNeeded
+  }
   
-  // 计算总簇数
-  const total = batteryConfig.containerQty * clustersNeeded
-  batteryConfig.stringQty = total
+  // 计算总直流能量
+  batteryConfig.totalDcEnergy = batteryConfig.containerQty * batteryConfig.containerEnergy
   
-  // 计算电压范围 (假设单体3.2V, 240串)
-  const minVoltage = 240 * 3.0  // SOC低时
-  const maxVoltage = 240 * 3.65 // SOC高时
+  // 计算电压范围
+  const minVoltage = batteryConfig.seriesCount * 3.0  // SOC低时
+  const maxVoltage = batteryConfig.seriesCount * 3.65 // SOC高时
   batteryConfig.dcVoltageRange = `${minVoltage.toFixed(0)}-${maxVoltage.toFixed(0)}V`
   
   // 计算最大直流电流 (假设0.5C放电)
-  const maxDischargeCurrent = (batteryConfig.containerEnergy * 1000) / (batteryConfig.dcVoltageRange.split('-')[0] / 2) * 0.5
+  // 公式: I = (E × 10^6 / V) × 0.5C  (E单位MWh，V单位V，结果A)
+  const avgVoltage = (minVoltage + maxVoltage) / 2
+  const capacityAh = (batteryConfig.containerEnergy * 1000000) / avgVoltage
+  const maxDischargeCurrent = capacityAh * 0.5
   batteryConfig.maxDcCurrent = Math.round(maxDischargeCurrent)
   
   // DC断路器选择 (1.2倍过载)

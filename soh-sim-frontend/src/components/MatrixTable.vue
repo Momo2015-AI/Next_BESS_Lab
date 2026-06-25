@@ -1,31 +1,57 @@
 <template>
   <div class="flex-1 min-h-0 flex flex-col">
     <div class="rounded-xl p-3 flex-shrink-0 mb-3 card">
-      <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-3">
         <div>
           <label class="label-text">{{ $t('paramPanel.ratedEnergy') }}</label>
-          <input type="number" :value="params.ratedEnergy" step="0.1" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.ratedEnergy" step="0.1"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'ratedEnergy', Number($event.target.value))">
         </div>
         <div>
           <label class="label-text">{{ $t('matrixTable.initContainerCount') }}</label>
-          <input type="number" :value="params.initContainerQty" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.initContainerQty" step="1"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'initContainerQty', Number($event.target.value))">
         </div>
         <div>
           <label class="label-text">{{ $t('paramPanel.initPcsQty') }}</label>
-          <input type="number" :value="params.initPcsQty" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.initPcsQty" step="1"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'initPcsQty', Number($event.target.value))">
         </div>
         <div>
           <label class="label-text">{{ $t('paramPanel.duration') }}</label>
-          <input type="number" :value="params.duration" step="0.5" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.duration" step="0.5"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'duration', Number($event.target.value))">
         </div>
         <div>
           <label class="label-text">{{ $t('paramPanel.cyclesPerDay') }}</label>
-          <input type="number" :value="params.cyclesPerDay" step="1" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.cyclesPerDay" step="1"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'cyclesPerDay', Number($event.target.value))">
         </div>
         <div>
           <label class="label-text">{{ $t('paramPanel.acEfficiency') }}</label>
-          <input type="number" :value="params.acEfficiency" step="0.01" disabled class="input-field" style="opacity:0.6">
+          <input type="number" :value="params.acEfficiency" step="0.01"
+            class="w-full rounded px-2 py-1 text-xs"
+            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
+            @input="$emit('update:param', 'acEfficiency', Number($event.target.value))">
         </div>
+      </div>
+      <div class="flex justify-end">
+        <button 
+          @click="$emit('recalculate')"
+          class="oracle-btn-primary text-sm"
+          :disabled="isCalculating">
+          {{ isCalculating ? $t('matrixTable.calculating') : $t('matrixTable.recalculate') }}
+        </button>
       </div>
     </div>
 
@@ -113,8 +139,12 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, dod: Array, augQty: Array })
-const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty'])
+const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty', 'update:param', 'recalculate'])
+
+const isCalculating = ref(false)
 
 function updateDod(idx, val) {
   const newArr = [...props.dod]
