@@ -15,7 +15,6 @@ from routes.products import products_bp, seed_products
 from routes.algorithm import algorithm_bp, seed_algorithms
 from routes.project import project_bp
 from routes.simulation import simulation_bp
-from routes.algorithm import algorithm_bp
 from routes.report import report_bp
 from routes.aux_power import aux_power_bp
 

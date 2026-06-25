@@ -203,10 +203,17 @@ const f = reactive({
   discountRate: 7, debtRatio: 70, interestRate: 4.5, loanTenure: 15,
   costOfEquity: 12, equityRatio: 30,
   taxRate: 25, depreciationYears: 20, residualRate: 5, depreciationMethod: 'straight-line',
-  vatRate: 5,
+  vatRate: 5, gracePeriod: 2,
   augContainerCostPerMWh: 90, costDeclineRate: 5, augInstallCost: 5, decommissioningCost: 10,
   sensPct: 20,
 })
+
+// 融资比例校验：确保债务+权益=100%
+watch([() => f.debtRatio, () => f.equityRatio], () => {
+  if (f.debtRatio + f.equityRatio !== 100) {
+    f.equityRatio = 100 - f.debtRatio
+  }
+}, { immediate: true })
 
 const metrics = ref([
   { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)', borderColor: 'var(--color-accent-secondary)' },
@@ -312,17 +319,32 @@ function computeAll() {
     if (f.depreciationMethod === 'straight-line') {
       dep = i <= f.depreciationYears ? annualDepreciation : 0
     } else if (f.depreciationMethod === 'double-declining') {
-      const rate = 2 / f.depreciationYears
-      const bookValue = totalCapex * (1 - f.residualRate / 100) * Math.pow(1 - rate, i - 1)
-      dep = i <= f.depreciationYears ? bookValue * rate : 0
+      // 修正：正确的双倍余额递减法，在最后两年切换直线折旧
+      const depreciableAmount = totalCapex - residualValue
+      if (i <= f.depreciationYears - 2) {
+        // 前N-2年使用双倍余额递减
+        const rate = 2 / f.depreciationYears
+        const bookValueStart = totalCapex - rows.slice(1, i).reduce((s, r) => s + r.depreciation, 0)
+        dep = Math.min(bookValueStart * rate, bookValueStart - residualValue)
+      } else if (i <= f.depreciationYears) {
+        // 最后两年使用直线折旧（将剩余可折旧金额平均分配）
+        const bookValueStart = totalCapex - rows.slice(1, i).reduce((s, r) => s + r.depreciation, 0)
+        dep = Math.max(0, (bookValueStart - residualValue) / (f.depreciationYears - i + 1))
+      }
     }
 
     let interestPaid = 0, principalPaid = 0, debtServiceYear = 0
     if (remainingDebt > 0 && i <= f.loanTenure) {
       interestPaid = remainingDebt * f.interestRate / 100
-      principalPaid = Math.min(annualDebtService - interestPaid, remainingDebt)
-      debtServiceYear = interestPaid + principalPaid
-      remainingDebt = Math.max(0, remainingDebt - principalPaid)
+      // 修正：添加宽限期处理（中东标准：宽限期内只还利息不还本金）
+      if (i <= f.gracePeriod) {
+        principalPaid = 0
+        debtServiceYear = interestPaid
+      } else {
+        principalPaid = Math.min(annualDebtService - interestPaid, remainingDebt)
+        debtServiceYear = interestPaid + principalPaid
+        remainingDebt = Math.max(0, remainingDebt - principalPaid)
+      }
     }
 
     const taxableIncome = ebitda - dep - interestPaid
@@ -346,19 +368,31 @@ function computeAll() {
     rows.push({ year: i, energy: yearEnergy, arbitrage: arbitrageRev, capacity: capacityRev, ancillary: ancillaryRev, revenue: totalRevenue, opex: totalOpex, ebitda, depreciation: dep, interest: interestPaid, taxableIncome, tax, augCapex: augCapexYear, debtService: debtServiceYear, cashFlow, cumCashFlow: cumCash, dscr })
   }
 
+  // 修正BUG4：LCOS退役成本应为支出（加到成本而非减去），残值为收入（减去成本）
   totalDiscountedCost -= residualValue / Math.pow(1 + f.discountRate / 100, 25)
-  if (f.decommissioningCost > 0) totalDiscountedCost += (f.decommissioningCost * totalCapMWh) / Math.pow(1 + f.discountRate / 100, 25)
+  const decommissioningCostAmount = f.decommissioningCost * totalCapMWh
+  totalDiscountedCost += decommissioningCostAmount / Math.pow(1 + f.discountRate / 100, 25)
+  // 在第25年现金流中添加退役成本支出
+  if (rows.length > 25 && f.decommissioningCost > 0) {
+    rows[25].cashFlow -= decommissioningCostAmount
+    rows[25].cumCashFlow -= decommissioningCostAmount
+  }
 
   const lcos = totalDiscountedEnergy > 0 ? totalDiscountedCost / totalDiscountedEnergy * 10000 : 0
   const npv = rows.reduce((s, r) => s + r.cashFlow / (r.year === 0 ? 1 : Math.pow(1 + f.discountRate / 100, r.year)), 0)
   const irr = calcIRR(rows.map(r => r.cashFlow), rows.map(r => r.year))
-  const equityIrr = calcIRR(rows.map((r, i) => i === 0 ? -equityAmount : r.cashFlow), rows.map(r => r.year))
+  // 修正BUG3：Equity IRR应使用权益现金流序列（第0年为权益出资，后续为项目现金流）
+  const equityFlows = [-equityAmount, ...rows.slice(1).map(r => r.cashFlow)]
+  const equityYears = [0, ...rows.slice(1).map(r => r.year)]
+  const equityIrr = calcIRR(equityFlows, equityYears)
 
+  // 修正BUG2：Payback回收期公式错误，prevCum应为上一年的累计现金流
   let payback = '-'
-  let accum = -totalCapex
   for (let i = 1; i < rows.length; i++) {
-    accum += rows[i].cashFlow
-    if (accum >= 0) { const prevCum = accum - rows[i].cashFlow; payback = ((i - 1) + (-prevCum) / rows[i].cashFlow).toFixed(1); break }
+    if (rows[i].cumCashFlow >= 0 && rows[i-1].cumCashFlow < 0) {
+      payback = ((i - 1) + Math.abs(rows[i-1].cumCashFlow) / rows[i].cashFlow).toFixed(1)
+      break
+    }
   }
 
   metrics.value[0].value = irr + '%'

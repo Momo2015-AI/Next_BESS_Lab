@@ -389,13 +389,60 @@ const pcsQty = computed(() => {
   if (totalPower.value === 0) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
+
 const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
-const ctn = containerQty.value
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn === pn) return '1:1配对'
+  if (ctn > pn) return `${Math.ceil(ctn / pn)}:1配对`
+  return `1:${Math.ceil(pn / ctn)}配对`
+})
+
+const calculatePCS = () => {
+  if (!connectionChartRef.value) return
+  
+  if (connectionChart) {
+    try { connectionChart.dispose() } catch {}
+    connectionChart = null
+  }
+  
+  try {
+    connectionChart = echarts.init(connectionChartRef.value)
+  } catch (e) {
+    console.error('初始化连接图echarts失败:', e)
+    return
+  }
+  if (!connectionChart) return
+  
+  const container = containers.value.find(c => c.id === selectedContainer.value)
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  
+  if (!container || !pcs) {
+    connectionChart.setOption({
+      title: { text: '请选择集装箱和PCS型号', left: 'center', top: 'center', textStyle: { color: 'var(--color-text-muted)', fontSize: 14 } },
+    })
+    return
+  }
+  
+  const style = getComputedStyle(document.documentElement)
+  const colors = {
+    emerald: style.getPropertyValue('--color-success').trim(),
+    amber: style.getPropertyValue('--color-warning').trim(),
+    sky: style.getPropertyValue('--color-accent').trim(),
+    teal: style.getPropertyValue('--color-accent-secondary').trim(),
+    slate: style.getPropertyValue('--color-text-muted').trim(),
+    text: style.getPropertyValue('--color-text').trim(),
+  }
+
+  const ctn = containerQty.value
   const pn = pcsQty.value
   const maxItems = Math.max(ctn, pn, 4)
   const span = Math.min(800, maxItems * 100)
   const startX = (1000 - span) / 2
+
+  const nodes = []
+  const links = []
 
   nodes.push({
     name: '电网',
