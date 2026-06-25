@@ -399,7 +399,6 @@ const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
 const ctn = containerQty.value
   const pn = pcsQty.value
-  console.log('[BatteryPCSConfig] renderConnectionDiagram:', { ctn, pn, containersPerPCS: Math.ceil(ctn / Math.max(pn, 1)) })
   const maxItems = Math.max(ctn, pn, 4)
   const span = Math.min(800, maxItems * 100)
   const startX = (1000 - span) / 2
