@@ -342,7 +342,7 @@
         <div class="flex items-center gap-2 mb-3">
           <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">07</span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section07') }}</h3>
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">PCS 变流器参数</h3>
           </div>
         </div>
         <div class="grid grid-cols-4 gap-3">
@@ -398,7 +398,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">07</span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">08</span>
           <div>
             <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section07') }}</h3>
           </div>
@@ -451,7 +451,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">08</span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">09</span>
           <div>
             <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section08') }}</h3>
           </div>
@@ -510,7 +510,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">09</span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold" style="background: var(--color-accent-glow); color: var(--color-accent);">10</span>
           <div>
             <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent);">{{ $t('runningConditions.section09') }}</h3>
           </div>

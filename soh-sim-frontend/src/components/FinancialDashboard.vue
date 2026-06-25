@@ -2,12 +2,13 @@
   <div class="h-full overflow-y-auto custom-scrollbar flex flex-col">
     <div class="flex-1 overflow-y-auto space-y-3 py-2 px-4">
 
-      <div class="grid grid-cols-6 gap-2">
-        <div v-for="m in metrics" :key="m.label"
-          class="border rounded-lg p-3 text-center" style="background-color: var(--color-card); border-color: var(--color-border);">
-          <div class="text-[10px] uppercase tracking-wider" style="color: var(--color-text-muted);">{{ m.label }}</div>
-          <div class="text-lg font-bold font-mono mt-0.5" :class="m.textColor">{{ m.value }}</div>
-          <div class="text-[9px] mt-0.5" style="color: var(--color-text-muted);">{{ m.unit }}</div>
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-3">
+        <div v-for="(m, idx) in metrics" :key="m.label"
+          class="rounded-lg p-3 text-center transition-all hover:shadow-md" 
+          :style="{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderTop: '3px solid ' + (metrics[idx]?.borderColor || 'var(--color-accent)') }">
+          <div class="text-[9px] uppercase tracking-wider truncate" style="color: var(--color-text-muted);">{{ m.label }}</div>
+          <div class="text-base md:text-lg font-bold font-mono mt-1" :style="{ color: m.textColor }">{{ m.value }}</div>
+          <div class="text-[8px] mt-0.5" style="color: var(--color-text-muted);">{{ m.unit }}</div>
         </div>
       </div>
 
@@ -192,12 +193,12 @@ const f = reactive({
 })
 
 const metrics = ref([
-  { label: 'Project IRR', value: '-', unit: '%', color: '', textColor: 'var(--color-accent-secondary)' },
-  { label: 'Equity IRR', value: '-', unit: '%', color: '', textColor: 'var(--color-success)' },
-  { label: 'NPV (7%)', value: '-', unit: '万元', color: '', textColor: 'var(--color-accent)' },
-  { label: 'LCOS', value: '-', unit: '元/kWh', color: '', textColor: 'var(--color-info)' },
-  { label: 'Payback', value: '-', unit: '年', color: '', textColor: 'var(--color-warning)' },
-  { label: 'Total CAPEX', value: '-', unit: '万元', color: '', textColor: 'var(--color-danger)' },
+  { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)', borderColor: 'var(--color-accent-secondary)' },
+  { label: 'Equity IRR', value: '-', unit: '%', textColor: 'var(--color-success)', borderColor: 'var(--color-success)' },
+  { label: 'NPV (7%)', value: '-', unit: '万元', textColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' },
+  { label: 'LCOS', value: '-', unit: '元/kWh', textColor: 'var(--color-info)', borderColor: 'var(--color-info)' },
+  { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)', borderColor: 'var(--color-warning)' },
+  { label: 'Total CAPEX', value: '-', unit: '万元', textColor: 'var(--color-danger)', borderColor: 'var(--color-danger)' },
 ])
 
 const cashFlowTable = ref([])

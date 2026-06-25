@@ -924,7 +924,13 @@ const runSimulation = () => {
   }
   
   nextTick(() => {
-    setTimeout(() => renderChart(), 100)
+    setTimeout(() => {
+      const container = chartContainer.value
+      if (container) {
+        container.style.height = '12rem'
+        renderChart()
+      }
+    }, 300)
   })
 
   // 将仿真结果 emit 给父组件，打通仿真→容量对账的数据流
@@ -966,6 +972,14 @@ const renderChart = () => {
       { name: '保障线', type: 'line', data: Array.from({ length: years.length }, () => simParams.guaranteeSoh), lineStyle: { color: warningColor, type: 'dashed' }, itemStyle: { color: warningColor } },
     ],
   })
+  
+  chartInstance.resize()
+}
+
+const handleResize = () => {
+  if (chartInstance) {
+    chartInstance.resize()
+  }
 }
 
 const saveSimulationResult = async () => {
@@ -1063,5 +1077,6 @@ const exportResults = () => {
 onMounted(() => {
   initYearlyCorrections()
   fetchAlgorithms()
+  window.addEventListener('resize', handleResize)
 })
 </script>

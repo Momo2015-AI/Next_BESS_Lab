@@ -33,11 +33,7 @@
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
           <label class="text-xs block mb-2" style="color: var(--color-text-muted);">集装箱数量 (自动计算)</label>
-          <input v-model.number="containerQty" type="number" min="1" max="100"
-            class="w-full rounded px-3 py-2 text-xs font-bold"
-            style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark); color: var(--color-accent-secondary);"
-            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-accent-dark)';">
+          <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ containerQty }} 台</p>
         </div>
       </div>
 
