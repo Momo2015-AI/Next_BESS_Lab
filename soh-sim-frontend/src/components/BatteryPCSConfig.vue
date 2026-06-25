@@ -67,13 +67,8 @@
         </div>
 
         <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border);">
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">运行时长 (h)</label>
-          <input v-model.number="durationHours" @change="calculatePCS" type="number" min="0.5" max="8" step="0.5"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-            onfocus="this.style.borderColor='var(--color-accent-secondary)'; this.style.outline='none';"
-            onblur="this.style.borderColor='var(--color-input-border)';">
-          <p class="text-[10px] mt-1" style="color: var(--color-text-muted);">C-rate = 1/时长, PCS功率 = 能量/时长</p>
+          <label class="text-xs block mb-2" style="color: var(--color-text-muted);">PCS 数量 (自动)</label>
+          <p class="text-lg font-bold" style="color: var(--color-success);">{{ pcsQty }} 台</p>
         </div>
       </div>
 
@@ -97,7 +92,7 @@
             <p class="text-lg font-bold" style="color: var(--color-accent);">{{ totalPower.toFixed(1) }} MW</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted);">能量/功率比</p>
+            <p class="text-[10px]" style="color: var(--color-text-muted);">运行时长</p>
             <p class="text-lg font-bold" style="color: var(--color-accent-secondary);">{{ energyPowerRatio }}</p>
           </div>
           <div class="text-center">
@@ -338,7 +333,6 @@ onMounted(() => {
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
-const durationHours = ref(2)
 const targetEnergy = ref(null)
 const targetPower = ref(null)
 
