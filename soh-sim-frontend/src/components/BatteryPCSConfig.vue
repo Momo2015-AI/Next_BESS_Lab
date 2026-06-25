@@ -344,10 +344,7 @@ const autoCalcQty = () => {
   
   let qty = 1
   if (te) qty = Math.max(qty, Math.ceil(te / container.energy))
-  if (tp) {
-    const containersForPower = Math.ceil(tp / container.power)
-    qty = Math.max(qty, containersForPower)
-  }
+  if (tp) qty = Math.max(qty, Math.ceil(tp / container.power))
   containerQty.value = qty
 }
 
@@ -389,18 +386,109 @@ const pcsQty = computed(() => {
   if (totalPower.value === 0) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
-
 const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
   const ctn = containerQty.value
   const pn = pcsQty.value
-  if (ctn === pn) return '1:1配对'
-  if (ctn > pn) return `${Math.ceil(ctn / pn)}:1配对`
-  return `1:${Math.ceil(pn / ctn)}配对`
+  if (ctn === 0 || pn === 0) return '--'
+  if (ctn === pn) return '1:1 配对'
+  if (ctn > pn) return '多舱并联'
+  return '单舱多PCS'
 })
 
+const containersPerPCS = computed(() => {
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (pn === 0) return 0
+  return Math.ceil(ctn / pn)
+})
+
+const pairingDescription = computed(() => {
+  if (!selectedContainer.value || !selectedPCS.value) return '请选择集装箱和PCS型号'
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn === 0 || pn === 0) return '请选择集装箱和PCS型号'
+  const container = containers.value.find(c => c.id === selectedContainer.value)
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  if (!container || !pcs) return '请选择集装箱和PCS型号'
+
+  if (ctn === pn) {
+    return `每个${container.name}配置1台${pcs.name}，共${pn}台PCS，独立运行。`
+  } else if (ctn > pn) {
+    return `每${containersPerPCS.value}个${container.name}并联后接入1台${pcs.name}，共${pn}台PCS。`
+  } else {
+    const pcsPerContainer = Math.ceil(pn / ctn)
+    return `每个${container.name}配置${pcsPerContainer}台${pcs.name}，共${pn}台PCS，并联输出。`
+  }
+})
+
+const dcVoltageRange = computed(() => {
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  return pcs ? pcs.dcVoltage : '--'
+})
+
+const acVoltage = computed(() => {
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  return pcs ? `${pcs.voltage}V` : '--'
+})
+
+const shortCircuitCapacity = computed(() => {
+  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
+  if (!pcs) return '--'
+  return `${pcs.power * 10} MVA`
+})
+
+const recommendedSchemes = computed(() => {
+  if (!selectedContainer.value) return []
+  const container = containers.value.find(c => c.id === selectedContainer.value)
+  if (!container || !container.energy || !container.power) return []
+  
+  const schemes = []
+  
+  for (let qty = 1; qty <= Math.min(containerQty.value + 2, 10); qty++) {
+    const energy = container.energy * qty
+    const power = container.power * qty
+    
+    for (const pcs of pcsList.value) {
+      if (!pcs.power || pcs.power <= 0) continue
+      const pcsCount = Math.ceil(power / pcs.power)
+      if (pcsCount <= 10 && pcsCount >= 1) {
+        const ratio = power / (pcsCount * pcs.power)
+        const eff = (pcs.efficiency || 97) - Math.abs(ratio - 1) * 0.5
+        
+        schemes.push({
+          id: `方案${schemes.length + 1}`,
+          containerConfig: `${qty}×${container.name}`,
+          pcsConfig: `${pcsCount}×${pcs.name}`,
+          pairingMode: qty === pcsCount ? '1:1' : qty > pcsCount ? '多舱并联' : '单舱多PCS',
+          energyPowerRatio: `${energy}/${(pcsCount * pcs.power).toFixed(1)}`,
+          efficiency: eff.toFixed(1),
+          containerQty: qty,
+          pcsQty: pcsCount,
+          containerId: container.id,
+          pcsId: pcs.id,
+        })
+      }
+    }
+  }
+  
+  return schemes.sort((a, b) => b.efficiency - a.efficiency).slice(0, 5)
+})
+
+const connectionDiagram = ref(null)
+const singleLineDiagram = ref(null)
+let connectionChart = null
+let singleLineChart = null
+
 const calculatePCS = () => {
-  if (!connectionChartRef.value) return
+  nextTick(() => {
+    try { renderConnectionDiagram() } catch (e) { console.error('连接图渲染失败:', e) }
+    try { renderSingleLineDiagram() } catch (e) { console.error('单线图渲染失败:', e) }
+  })
+}
+
+const renderConnectionDiagram = () => {
+  if (!connectionDiagram.value) return
   
   if (connectionChart) {
     try { connectionChart.dispose() } catch {}
@@ -408,7 +496,7 @@ const calculatePCS = () => {
   }
   
   try {
-    connectionChart = echarts.init(connectionChartRef.value)
+    connectionChart = echarts.init(connectionDiagram.value)
   } catch (e) {
     console.error('初始化连接图echarts失败:', e)
     return
@@ -425,6 +513,9 @@ const calculatePCS = () => {
     return
   }
   
+  const nodes = []
+  const links = []
+  
   const style = getComputedStyle(document.documentElement)
   const colors = {
     emerald: style.getPropertyValue('--color-success').trim(),
@@ -440,9 +531,6 @@ const calculatePCS = () => {
   const maxItems = Math.max(ctn, pn, 4)
   const span = Math.min(800, maxItems * 100)
   const startX = (1000 - span) / 2
-
-  const nodes = []
-  const links = []
 
   nodes.push({
     name: '电网',
