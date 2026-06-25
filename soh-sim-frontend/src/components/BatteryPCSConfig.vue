@@ -320,23 +320,6 @@ watch(() => props.active, (isActive) => {
   }
 })
 
-onMounted(() => {
-  loadLibraryData().then(() => {
-    const p = props.params || {}
-    if (p.ratedEnergy && p.initContainerQty) {
-      targetEnergy.value = p.ratedEnergy * p.initContainerQty
-    }
-    if (p.ratedEnergy && p.initContainerQty && p.duration) {
-      targetPower.value = p.ratedEnergy * p.initContainerQty / p.duration
-    }
-    if (p.initContainerQty) {
-      containerQty.value = p.initContainerQty
-    }
-    autoCalcQty()
-    calculatePCS()
-  })
-})
-
 const selectedContainer = ref('')
 const containerQty = ref(1)
 const selectedPCS = ref('')
@@ -777,4 +760,21 @@ const applyConfig = () => {
     acEfficiency: (pcs.efficiency || 97) / 100,
   })
 }
+
+onMounted(() => {
+  loadLibraryData().then(() => {
+    const p = props.params || {}
+    if (p.ratedEnergy && p.initContainerQty) {
+      targetEnergy.value = p.ratedEnergy * p.initContainerQty
+    }
+    if (p.ratedEnergy && p.initContainerQty && p.duration) {
+      targetPower.value = p.ratedEnergy * p.initContainerQty / p.duration
+    }
+    if (p.initContainerQty) {
+      containerQty.value = p.initContainerQty
+    }
+    autoCalcQty()
+    calculatePCS()
+  })
+})
 </script>
