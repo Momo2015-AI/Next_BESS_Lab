@@ -22,8 +22,7 @@
 
     <div v-if="filteredAlgorithms.length === 0" class="text-center py-16 text-slate-500">
       <div class="text-4xl mb-3">&#9312;</div>
-      <div>暂无算法模型</div>
-      <button @click="initializeBuiltin" class="mt-4 text-teal-400 hover:text-teal-300 text-sm underline">初始化内置算法</button>
+      <div>正在加载算法模型...</div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -369,11 +368,22 @@ function showToast(message, type = 'success') {
 }
 
 async function fetchAlgorithms() {
+  try {
+    const res = await fetch('/api/algorithms/public')
+    const data = await res.json()
+    if (data.success) {
+      algorithms.value = data.data
+      return
+    }
+  } catch (e) {
+    console.error('公开API获取失败:', e)
+  }
+
   const token = localStorage.getItem('token')
   if (!token) return
-  
+
   try {
-    const res = await fetch('http://localhost:5001/api/algorithms', {
+    const res = await fetch('/api/algorithms', {
       headers: { Authorization: `Bearer ${token}` },
     })
     const data = await res.json()
@@ -395,13 +405,8 @@ async function createAlgorithm() {
   if (!token) return
   
   try {
-    const res = await fetch('http://localhost:5001/api/algorithms', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(newAlg),
+    const res = await fetch('/api/algorithms', {
+      headers: { Authorization: `Bearer ${token}` },
     })
     const data = await res.json()
     if (data.success) {
@@ -428,7 +433,7 @@ async function deleteAlgorithm(id) {
   if (!token) return
   
   try {
-    const res = await fetch(`http://localhost:5001/api/algorithms/${id}`, {
+    const res = await fetch(`/api/algorithms/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -449,7 +454,7 @@ async function initializeBuiltin() {
   if (!token) return
   
   try {
-    const res = await fetch('http://localhost:5001/api/algorithms/initialize', {
+    const res = await fetch('/api/algorithms/initialize', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
     })

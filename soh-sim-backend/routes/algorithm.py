@@ -410,6 +410,62 @@ def get_builtin_algorithms():
     ]
 
 
+def seed_algorithms():
+    """启动时自动初始化内置算法模型（upsert）"""
+    builtin_algs = get_builtin_algorithms()
+    count = 0
+    for i, alg_data in enumerate(builtin_algs):
+        existing = AlgorithmModel.query.filter_by(
+            is_builtin=True,
+            model_type=alg_data['model_type'],
+        ).first()
+
+        if existing:
+            existing.name = alg_data['name']
+            existing.name_en = alg_data['name_en']
+            existing.applicable_scenarios = json.dumps(alg_data['applicable_scenarios'])
+            existing.mathematical_form = alg_data['mathematical_form']
+            existing.formula_expression = alg_data['formula_expression']
+            existing.parameters = json.dumps(alg_data['parameters'])
+            existing.accuracy_level = alg_data['accuracy_level']
+            existing.accuracy_desc = alg_data['accuracy_desc']
+            existing.category = alg_data['category']
+            existing.description = alg_data['description']
+            existing.sort_order = i
+            existing.updated_at = datetime.utcnow()
+        else:
+            alg_id = f"builtin-{alg_data['model_type']}"
+            algorithm = AlgorithmModel(
+                id=alg_id,
+                tenant_id=None,
+                name=alg_data['name'],
+                name_en=alg_data['name_en'],
+                model_type=alg_data['model_type'],
+                applicable_scenarios=json.dumps(alg_data['applicable_scenarios']),
+                mathematical_form=alg_data['mathematical_form'],
+                formula_expression=alg_data['formula_expression'],
+                parameters=json.dumps(alg_data['parameters']),
+                accuracy_level=alg_data['accuracy_level'],
+                accuracy_desc=alg_data['accuracy_desc'],
+                category=alg_data['category'],
+                is_builtin=True,
+                is_active=True,
+                sort_order=i,
+                description=alg_data['description'],
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
+            db.session.add(algorithm)
+        count += 1
+
+    try:
+        db.session.commit()
+        print(f"  算法模型初始化完成: {count} 个内置算法")
+    except Exception as e:
+        db.session.rollback()
+        print(f"  算法模型初始化失败: {e}")
+
+
 @algorithm_bp.route('/api/algorithms/public', methods=['GET'])
 def get_public_algorithms():
     """公开接口：获取算法模型列表（无需认证，供仿真实验室使用）"""
@@ -423,13 +479,21 @@ def get_public_algorithms():
     
     result = []
     for alg in algorithms:
+        params = json.loads(alg.parameters) if alg.parameters else {}
+        scenarios = json.loads(alg.applicable_scenarios) if alg.applicable_scenarios else []
         result.append({
             'id': alg.id,
             'name': alg.name,
+            'name_en': alg.name_en,
             'model_type': alg.model_type,
-            'parameters': json.loads(alg.parameters) if alg.parameters else {},
+            'parameters': params,
             'category': alg.category,
             'formula_expression': alg.formula_expression,
+            'mathematical_form': alg.mathematical_form,
+            'applicable_scenarios': scenarios,
+            'accuracy_level': alg.accuracy_level,
+            'accuracy_desc': alg.accuracy_desc,
+            'is_builtin': alg.is_builtin,
             'description': alg.description,
         })
     

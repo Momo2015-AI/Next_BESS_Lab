@@ -12,6 +12,7 @@ from routes.survey import survey_bp
 from routes.export import export_bp
 from routes.auth import auth_bp
 from routes.products import products_bp, seed_products
+from routes.algorithm import algorithm_bp, seed_algorithms
 from routes.project import project_bp
 from routes.simulation import simulation_bp
 from routes.algorithm import algorithm_bp
@@ -44,6 +45,7 @@ app.register_blueprint(aux_power_bp)
 
 with app.app_context():
     seed_products()
+    seed_algorithms()
 
 N = 26
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "soh_uploads")
