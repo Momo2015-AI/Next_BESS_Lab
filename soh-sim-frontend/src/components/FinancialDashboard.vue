@@ -2,7 +2,7 @@
   <div class="h-full overflow-y-auto custom-scrollbar flex flex-col">
     <div class="flex-1 overflow-y-auto space-y-3 py-2 px-4">
 
-      <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-3">
+      <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mb-3">
         <div v-for="(m, idx) in metrics" :key="m.label"
           class="rounded-lg p-3 text-center transition-all hover:shadow-md" 
           :style="{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderTop: '3px solid ' + (metrics[idx]?.borderColor || 'var(--color-accent)') }">
@@ -57,11 +57,15 @@
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">集装箱单价 万元/MWh</label><input v-model.number="f.containerCostPerMWh" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">PCS 单价 万元/MW</label><input v-model.number="f.pcsCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">BOP 配套 万元/MWh</label><input v-model.number="f.bopCostPerMWh" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">变电站 万元/MW</label><input v-model.number="f.substationCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">输电线路 万元/MW</label><input v-model.number="f.transmissionCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">土地成本 万元/MW</label><input v-model.number="f.landCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">开发费 万元/MW</label><input v-model.number="f.developmentCostPerMW" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">固定 O&M 元/kW-年</label><input v-model.number="f.fixedOpexPerKW" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">可变 O&M 元/MWh</label><input v-model.number="f.varOpexPerMWh" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">保险费率 % of CAPEX</label><input v-model.number="f.insuranceRate" type="number" step="0.01" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">O&M 年涨幅 %</label><input v-model.number="f.opexEscalation" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">VAT 税率 %</label><input v-model.number="f.vatRate" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
           </div>
         </div>
       </div>
@@ -73,13 +77,22 @@
             融资与税务 Financing & Tax
           </h3>
           <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary);">
-            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">折现率 WACC %</label><input v-model.number="f.discountRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">折现率 %</label><input v-model.number="f.discountRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">债务融资比例 %</label><input v-model.number="f.debtRatio" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">权益融资比例 %</label><input v-model.number="f.equityRatio" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">贷款利率 %</label><input v-model.number="f.interestRate" type="number" step="0.1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div><label class="block mb-0.5" style="color: var(--color-text-muted);">权益成本 %</label><input v-model.number="f.costOfEquity" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">贷款年限</label><input v-model.number="f.loanTenure" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">所得税率 %</label><input v-model.number="f.taxRate" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">折旧年限</label><input v-model.number="f.depreciationYears" type="number" step="1" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
             <div><label class="block mb-0.5" style="color: var(--color-text-muted);">残值率 %</label><input v-model.number="f.residualRate" type="number" step="0.5" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';" /></div>
+            <div>
+              <label class="block mb-0.5" style="color: var(--color-text-muted);">折旧方法</label>
+              <select v-model="f.depreciationMethod" class="w-full rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);">
+                <option value="straight-line">直线折旧</option>
+                <option value="double-declining">双倍余额递减</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
@@ -185,9 +198,12 @@ const f = reactive({
   offPeakPrice: 200, peakPrice: 600, spreadCapture: 85, operatingDays: 330,
   capacityPrice: 50000, ancillaryPrice: 30000, priceEscalation: 1.5, efficiencyLossPct: 5,
   containerCostPerMWh: 100, pcsCostPerMW: 25, bopCostPerMWh: 30, developmentCostPerMW: 20,
+  landCostPerMW: 8, substationCostPerMW: 15, transmissionCostPerMW: 10,
   fixedOpexPerKW: 35, varOpexPerMWh: 3, insuranceRate: 0.4, opexEscalation: 2.0,
   discountRate: 7, debtRatio: 70, interestRate: 4.5, loanTenure: 15,
-  taxRate: 25, depreciationYears: 20, residualRate: 5,
+  costOfEquity: 12, equityRatio: 30,
+  taxRate: 25, depreciationYears: 20, residualRate: 5, depreciationMethod: 'straight-line',
+  vatRate: 5,
   augContainerCostPerMWh: 90, costDeclineRate: 5, augInstallCost: 5, decommissioningCost: 10,
   sensPct: 20,
 })
@@ -195,10 +211,12 @@ const f = reactive({
 const metrics = ref([
   { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)', borderColor: 'var(--color-accent-secondary)' },
   { label: 'Equity IRR', value: '-', unit: '%', textColor: 'var(--color-success)', borderColor: 'var(--color-success)' },
-  { label: 'NPV (7%)', value: '-', unit: '万元', textColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' },
+  { label: 'WACC', value: '-', unit: '%', textColor: '#0ea5e9', borderColor: '#0ea5e9' },
+  { label: 'NPV', value: '-', unit: '万元', textColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' },
   { label: 'LCOS', value: '-', unit: '元/kWh', textColor: 'var(--color-info)', borderColor: 'var(--color-info)' },
   { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)', borderColor: 'var(--color-warning)' },
   { label: 'Total CAPEX', value: '-', unit: '万元', textColor: 'var(--color-danger)', borderColor: 'var(--color-danger)' },
+  { label: 'Min DSCR', value: '-', unit: 'x', textColor: '#f97316', borderColor: '#f97316' },
 ])
 
 const cashFlowTable = ref([])
@@ -234,19 +252,33 @@ function computeAll() {
   const pcsCost = f.pcsCostPerMW * totalCapMW
   const bopCost = f.bopCostPerMWh * totalCapMWh
   const devCost = f.developmentCostPerMW * totalCapMW
-  const totalCapex = containerCost + pcsCost + bopCost + devCost
+  const landCost = f.landCostPerMW * totalCapMW
+  const substationCost = f.substationCostPerMW * totalCapMW
+  const transmissionCost = f.transmissionCostPerMW * totalCapMW
+  const baseCapex = containerCost + pcsCost + bopCost + devCost + landCost + substationCost + transmissionCost
+  const vatAmount = baseCapex * f.vatRate / 100
+  const totalCapex = baseCapex + vatAmount
 
-  cachedCapexData = { containerCost, pcsCost, bopCost, devCost, totalCapex, totalCapMW, totalCapMWh }
+  cachedCapexData = { containerCost, pcsCost, bopCost, devCost, landCost, substationCost, transmissionCost, totalCapex, totalCapMW, totalCapMWh }
 
+  const wacc = (f.costOfEquity * f.equityRatio / 100) + (f.interestRate * (1 - f.taxRate / 100) * f.debtRatio / 100)
   const debtAmount = totalCapex * f.debtRatio / 100
   const equityAmount = totalCapex - debtAmount
   const annualDebtService = f.interestRate > 0 && f.loanTenure > 0
     ? debtAmount * (f.interestRate / 100) * Math.pow(1 + f.interestRate / 100, f.loanTenure) / (Math.pow(1 + f.interestRate / 100, f.loanTenure) - 1)
     : 0
-  const annualDepreciation = f.depreciationYears > 0
-    ? totalCapex * (1 - f.residualRate / 100) / f.depreciationYears : 0
   const residualValue = totalCapex * f.residualRate / 100
   const spread = (f.peakPrice - f.offPeakPrice) * f.spreadCapture / 100
+
+  let annualDepreciation = 0
+  if (f.depreciationYears > 0) {
+    if (f.depreciationMethod === 'straight-line') {
+      annualDepreciation = totalCapex * (1 - f.residualRate / 100) / f.depreciationYears
+    } else if (f.depreciationMethod === 'double-declining') {
+      const rate = 2 / f.depreciationYears
+      annualDepreciation = totalCapex * rate * (1 - f.residualRate / 100)
+    }
+  }
 
   const rows = []
   rows.push({ year: 0, energy: 0, arbitrage: 0, capacity: 0, ancillary: 0, revenue: 0, opex: 0, ebitda: 0, depreciation: 0, interest: 0, taxableIncome: 0, tax: 0, augCapex: -totalCapex, debtService: 0, cashFlow: -totalCapex, cumCashFlow: -totalCapex, dscr: null })
@@ -255,6 +287,7 @@ function computeAll() {
   let remainingDebt = debtAmount
   let totalDiscountedCost = totalCapex
   let totalDiscountedEnergy = 0
+  let minDscr = Infinity
 
   for (let i = 1; i <= 25; i++) {
     const idx = i
@@ -274,7 +307,15 @@ function computeAll() {
     const landLease = totalCapMW * 2 / 10000
     const totalOpex = fixedOpex + varOpex + insurance + landLease
     const ebitda = totalRevenue - totalOpex
-    const dep = i <= f.depreciationYears ? annualDepreciation : 0
+
+    let dep = 0
+    if (f.depreciationMethod === 'straight-line') {
+      dep = i <= f.depreciationYears ? annualDepreciation : 0
+    } else if (f.depreciationMethod === 'double-declining') {
+      const rate = 2 / f.depreciationYears
+      const bookValue = totalCapex * (1 - f.residualRate / 100) * Math.pow(1 - rate, i - 1)
+      dep = i <= f.depreciationYears ? bookValue * rate : 0
+    }
 
     let interestPaid = 0, principalPaid = 0, debtServiceYear = 0
     if (remainingDebt > 0 && i <= f.loanTenure) {
@@ -300,6 +341,7 @@ function computeAll() {
     totalDiscountedEnergy += yearEnergy / discFactor
 
     let dscr = debtServiceYear > 0 ? (ebitda - tax) / debtServiceYear : null
+    if (dscr !== null && dscr < minDscr) minDscr = dscr
 
     rows.push({ year: i, energy: yearEnergy, arbitrage: arbitrageRev, capacity: capacityRev, ancillary: ancillaryRev, revenue: totalRevenue, opex: totalOpex, ebitda, depreciation: dep, interest: interestPaid, taxableIncome, tax, augCapex: augCapexYear, debtService: debtServiceYear, cashFlow, cumCashFlow: cumCash, dscr })
   }
@@ -321,10 +363,12 @@ function computeAll() {
 
   metrics.value[0].value = irr + '%'
   metrics.value[1].value = equityIrr + '%'
-  metrics.value[2].value = npv.toFixed(0)
-  metrics.value[3].value = lcos.toFixed(3)
-  metrics.value[4].value = payback
-  metrics.value[5].value = totalCapex.toFixed(0)
+  metrics.value[2].value = wacc.toFixed(2) + '%'
+  metrics.value[3].value = npv.toFixed(0)
+  metrics.value[4].value = lcos.toFixed(3)
+  metrics.value[5].value = payback
+  metrics.value[6].value = totalCapex.toFixed(0)
+  metrics.value[7].value = minDscr !== Infinity ? minDscr.toFixed(2) : '-'
 
   cashFlowTable.value = rows
   cachedRows = rows
@@ -374,7 +418,32 @@ function renderCashFlowChart() {
   const paybackYear = parseFloat(metrics.value[4].value)
 
   cashFlowChart.setOption({
-    tooltip: { trigger: 'axis' },
+    tooltip: { 
+      trigger: 'axis',
+      formatter: (params) => {
+        const year = params[0].axisValue
+        const row = rows.find(r => r.year === parseInt(year))
+        if (!row) return ''
+        let html = `<div style="font-weight:bold;margin-bottom:8px;">年份 ${year === 0 ? '建设期' : year + '年'}</div>`
+        html += `<div>年净现金流: <span style="color:${row.cashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cashFlow >= 0 ? '+' : ''}${row.cashFlow.toFixed(0)} 万元</span></div>`
+        html += `<div>累计现金流: <span style="color:${row.cumCashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cumCashFlow >= 0 ? '+' : ''}${row.cumCashFlow.toFixed(0)} 万元</span></div>`
+        if (row.year > 0) {
+          html += `<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">`
+          html += `<div>总收入: ${row.revenue.toFixed(0)} 万元</div>`
+          html += `<div>OPEX: ${row.opex.toFixed(0)} 万元</div>`
+          html += `<div>EBITDA: ${row.ebitda.toFixed(0)} 万元</div>`
+          html += `<div>折旧: ${row.depreciation.toFixed(0)} 万元</div>`
+          html += `<div>利息: ${row.interest.toFixed(0)} 万元</div>`
+          html += `<div>所得税: ${row.tax.toFixed(0)} 万元</div>`
+          if (row.debtService > 0) {
+            html += `<div>还本付息: ${row.debtService.toFixed(0)} 万元</div>`
+            html += `<div>DSCR: ${row.dscr ? row.dscr.toFixed(2) : '-'}x</div>`
+          }
+          html += `</div>`
+        }
+        return html
+      }
+    },
     legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['累计现金流', '年净现金流'] },
     grid: { top: 30, right: 20, bottom: 25, left: 65 },
     xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 }, name: '年份', nameTextStyle: { color: colors.axisLabel, fontSize: 9 } },
@@ -383,8 +452,9 @@ function renderCashFlowChart() {
     ],
     series: [
       {
-        name: '累计现金流', type: 'line', data: cumCF, smooth: true, symbol: 'none',
+        name: '累计现金流', type: 'line', data: cumCF, smooth: true, symbol: 'circle', symbolSize: 4,
         lineStyle: { color: colors.info, width: 2.5 },
+        itemStyle: { color: colors.info, borderWidth: 1, borderColor: '#fff' },
         areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(14,165,233,0.25)' : 'rgba(59,130,246,0.15)' }, { offset: 1, color: 'transparent' }]) },
         markLine: { silent: true, symbol: 'none', data: [{ yAxis: 0, lineStyle: { color: colors.danger, type: 'dashed', width: 1.5 }, label: { formatter: '盈亏平衡线', color: colors.danger, fontSize: 9 } }] },
         markPoint: paybackYear > 0 && paybackYear < 26 ? { silent: true, symbol: 'pin', symbolSize: 24, data: [{ coord: [paybackYear, 0], value: '回收 ' + paybackYear + '年', itemStyle: { color: colors.warning } }] } : undefined,
@@ -409,7 +479,27 @@ function renderRevenueChart() {
   const years = rows.map(r => r.year)
 
   revenueChart.setOption({
-    tooltip: { trigger: 'axis' },
+    tooltip: { 
+      trigger: 'axis',
+      formatter: (params) => {
+        const year = params[0].axisValue
+        const row = rows.find(r => r.year === parseInt(year))
+        if (!row) return ''
+        let html = `<div style="font-weight:bold;margin-bottom:8px;">第 ${year} 年</div>`
+        html += `<div>套利收入: <span style="color:${colors.acLine};font-weight:bold;">${row.arbitrage.toFixed(0)} 万元</span></div>`
+        html += `<div>容量收入: <span style="color:${colors.purple};font-weight:bold;">${row.capacity.toFixed(0)} 万元</span></div>`
+        html += `<div>辅助服务: <span style="color:${colors.orange};font-weight:bold;">${row.ancillary.toFixed(0)} 万元</span></div>`
+        html += `<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">`
+        html += `<div>总收入: <span style="font-weight:bold;">${row.revenue.toFixed(0)} 万元</span></div>`
+        const arbitragePct = row.revenue > 0 ? (row.arbitrage / row.revenue * 100).toFixed(1) : 0
+        const capacityPct = row.revenue > 0 ? (row.capacity / row.revenue * 100).toFixed(1) : 0
+        const ancillaryPct = row.revenue > 0 ? (row.ancillary / row.revenue * 100).toFixed(1) : 0
+        html += `<div>收入结构: 套利${arbitragePct}% + 容量${capacityPct}% + 辅助${ancillaryPct}%</div>`
+        html += `<div>发电量: ${row.energy.toFixed(0)} MWh</div>`
+        html += `</div>`
+        return html
+      }
+    },
     legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['套利收入', '容量收入', '辅助服务'] },
     grid: { top: 30, right: 20, bottom: 25, left: 55 },
     xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
@@ -434,21 +524,55 @@ function renderDscrChart() {
   const dscrData = rows.map(r => r.dscr || 0)
 
   dscrChart.setOption({
-    tooltip: { trigger: 'axis' },
+    tooltip: { 
+      trigger: 'axis',
+      formatter: (params) => {
+        const year = params[0].axisValue
+        const row = rows.find(r => r.year === parseInt(year))
+        if (!row) return ''
+        let html = `<div style="font-weight:bold;margin-bottom:8px;">第 ${year} 年</div>`
+        html += `<div>EBITDA: <span style="color:${colors.cyan};font-weight:bold;">${row.ebitda.toFixed(0)} 万元</span></div>`
+        html += `<div>还本付息: <span style="color:${colors.redLight};font-weight:bold;">${row.debtService.toFixed(0)} 万元</span></div>`
+        if (row.debtService > 0) {
+          html += `<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">`
+          html += `<div>DSCR: <span style="font-weight:bold;font-size:16px;color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr.toFixed(2)}x</span></div>`
+          html += `<div style="color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr >= 1.3 ? '✓ 满足银行要求' : '✗ 低于银行底线 1.3x'}</div>`
+          html += `<div>利息支出: ${row.interest.toFixed(0)} 万元</div>`
+          html += `<div>本金偿还: ${(row.debtService - row.interest).toFixed(0)} 万元</div>`
+          html += `</div>`
+        } else {
+          html += `<div>DSCR: 无债务偿还</div>`
+        }
+        return html
+      }
+    },
     legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: ['EBITDA', '还本付息', 'DSCR'] },
     grid: { top: 30, right: 45, bottom: 25, left: 55 },
     xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
     yAxis: [
       { type: 'value', axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: v => fmtNum(v) }, splitLine: { lineStyle: { color: colors.gridLine } }, name: '万元' },
-      { type: 'value', min: 0, max: 3, axisLabel: { color: colors.axisLabel, fontSize: 9 }, splitLine: { show: false }, name: '倍率' },
+      { type: 'value', min: 0, max: 4, axisLabel: { color: colors.axisLabel, fontSize: 9 }, splitLine: { show: false }, name: '倍率' },
     ],
     series: [
       { name: 'EBITDA', type: 'bar', data: rows.map(r => r.ebitda), itemStyle: { color: colors.cyan, borderRadius: [2, 2, 0, 0] }, barWidth: 10, barGap: '30%' },
       { name: '还本付息', type: 'bar', data: rows.map(r => r.debtService), itemStyle: { color: colors.redLight, borderRadius: [2, 2, 0, 0] }, barWidth: 10 },
       {
-        name: 'DSCR', type: 'line', yAxisIndex: 1, data: dscrData, smooth: true, symbol: 'circle', symbolSize: 4,
+        name: 'DSCR', type: 'line', yAxisIndex: 1, data: dscrData, smooth: true, symbol: 'circle', symbolSize: 6,
         lineStyle: { color: colors.warning, width: 2.5 },
-        markLine: { silent: true, symbol: 'none', yAxisIndex: 1, data: [{ yAxis: 1.3, lineStyle: { color: colors.danger, type: 'dashed' }, label: { formatter: '银行底线 1.3x', color: colors.danger, fontSize: 9 } }] },
+        itemStyle: { 
+          color: params => params.value >= 1.3 ? colors.success : colors.danger,
+          borderWidth: 2,
+          borderColor: '#fff'
+        },
+        markLine: { 
+          silent: true, 
+          symbol: 'none', 
+          yAxisIndex: 1, 
+          data: [
+            { yAxis: 1.3, lineStyle: { color: colors.danger, type: 'dashed', width: 1.5 }, label: { formatter: '银行底线 1.3x', color: colors.danger, fontSize: 9 } },
+            { yAxis: 1.5, lineStyle: { color: colors.warning, type: 'dashed', width: 1 }, label: { formatter: '理想值 1.5x', color: colors.warning, fontSize: 8 } },
+          ] 
+        },
       },
     ],
   })
@@ -462,22 +586,61 @@ function renderCapexChart() {
   capexChart = echarts.init(capexChartRef.value, colors)
 
   if (!cachedCapexData) return
-  const { containerCost, pcsCost, bopCost, devCost, totalCapMW, totalCapMWh } = cachedCapexData
+  const { containerCost, pcsCost, bopCost, devCost, landCost, substationCost, transmissionCost, totalCapMW, totalCapMWh } = cachedCapexData
+
+  const capexItems = [
+    { value: containerCost, name: '集装箱', color: colors.info },
+    { value: pcsCost, name: 'PCS', color: colors.purple },
+    { value: bopCost, name: 'BOP配套', color: colors.warning },
+    { value: substationCost, name: '变电站', color: '#06b6d4' },
+    { value: transmissionCost, name: '输电线路', color: '#f97316' },
+    { value: landCost, name: '土地', color: '#10b981' },
+    { value: devCost, name: '开发费', color: colors.muted },
+  ].filter(item => item.value > 0)
+
+  const total = capexItems.reduce((sum, item) => sum + item.value, 0)
 
   capexChart.setOption({
-    tooltip: { trigger: 'item', formatter: '{b}: {c} 万元 ({d}%)' },
-    legend: { bottom: 0, textStyle: { color: colors.legendText, fontSize: 9 }, data: ['集装箱', 'PCS', 'BOP配套', '开发费'] },
+    tooltip: { 
+      trigger: 'item', 
+      formatter: (params) => {
+        const perMWh = params.value / totalCapMWh
+        const perMW = params.value / totalCapMW
+        return `${params.name}<br/>金额: ${params.value.toFixed(0)} 万元 (${params.percent.toFixed(1)}%)<br/>单价: ${perMWh.toFixed(1)} 万元/MWh = ${perMW.toFixed(1)} 万元/MW`
+      }
+    },
+    legend: { 
+      bottom: 0, 
+      textStyle: { color: colors.legendText, fontSize: 9 }, 
+      data: capexItems.map(item => item.name),
+      orient: 'horizontal',
+      itemWidth: 10,
+      itemHeight: 10,
+    },
     series: [
       {
-        type: 'pie', radius: ['45%', '65%'], center: ['35%', '48%'], avoidLabelOverlap: false,
-        label: { show: true, position: 'outside', formatter: '{b}\n{d}%', fontSize: 9, color: colors.legendText },
-        emphasis: { label: { show: true, fontSize: 11, fontWeight: 'bold' } },
-        data: [
-          { value: containerCost, name: '集装箱', itemStyle: { color: colors.info } },
-          { value: pcsCost, name: 'PCS', itemStyle: { color: colors.purple } },
-          { value: bopCost, name: 'BOP配套', itemStyle: { color: colors.warning } },
-          { value: devCost, name: '开发费', itemStyle: { color: colors.muted } },
-        ],
+        type: 'pie', 
+        radius: ['40%', '65%'], 
+        center: ['50%', '45%'], 
+        avoidLabelOverlap: false,
+        label: { 
+          show: true, 
+          position: 'outside', 
+          formatter: (params) => `${params.name}\n${params.value.toFixed(0)}万`, 
+          fontSize: 8, 
+          color: colors.legendText,
+          lineHeight: 12,
+        },
+        labelLine: { show: true, length: 8, length2: 8 },
+        emphasis: { 
+          label: { show: true, fontSize: 10, fontWeight: 'bold' },
+          itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.3)' }
+        },
+        data: capexItems.map(item => ({
+          value: item.value,
+          name: item.name,
+          itemStyle: { color: item.color },
+        })),
       },
     ],
   })
