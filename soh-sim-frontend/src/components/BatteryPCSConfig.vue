@@ -394,31 +394,37 @@ const pcsQty = computed(() => {
 })
 const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
-  const container = containers.value.find(c => c.id === selectedContainer.value)
-  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!container || !pcs || !pcs.power) return '--'
-  
-  if (container.power === pcs.power) return '1:1配对'
-  if (container.power < pcs.power) return '多舱并联'
-  if (container.power > pcs.power) return '单舱多PCS'
-  return '混合配对'
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn === 0 || pn === 0) return '--'
+  if (ctn === pn) return '1:1 配对'
+  if (ctn > pn) return '多舱并联'
+  return '单舱多PCS'
+})
+
+const containersPerPCS = computed(() => {
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (pn === 0) return 0
+  return Math.ceil(ctn / pn)
 })
 
 const pairingDescription = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '请选择集装箱和PCS型号'
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn === 0 || pn === 0) return '请选择集装箱和PCS型号'
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!container || !pcs || !pcs.power) return '请选择集装箱和PCS型号'
-  
-  const ratio = container.power / pcs.power
-  if (ratio === 1) {
-    return `每个${container.name}配置1台${pcs.name}，共${pcsQty.value}台PCS，独立运行。`
-  } else if (ratio < 1) {
-    const containersPerPCS = Math.ceil(1 / ratio)
-    return `每${containersPerPCS}个${container.name}并联后接入1台${pcs.name}，共${pcsQty.value}台PCS。`
+  if (!container || !pcs) return '请选择集装箱和PCS型号'
+
+  if (ctn === pn) {
+    return `每个${container.name}配置1台${pcs.name}，共${pn}台PCS，独立运行。`
+  } else if (ctn > pn) {
+    return `每${containersPerPCS.value}个${container.name}并联后接入1台${pcs.name}，共${pn}台PCS。`
   } else {
-    const pcsPerContainer = Math.ceil(ratio)
-    return `每个${container.name}配置${pcsPerContainer}台${pcs.name}，共${pcsQty.value}台PCS，并联输出。`
+    const pcsPerContainer = Math.ceil(pn / ctn)
+    return `每个${container.name}配置${pcsPerContainer}台${pcs.name}，共${pn}台PCS，并联输出。`
   }
 })
 
@@ -460,7 +466,7 @@ const recommendedSchemes = computed(() => {
           id: `方案${schemes.length + 1}`,
           containerConfig: `${qty}×${container.name}`,
           pcsConfig: `${pcsCount}×${pcs.name}`,
-          pairingMode: ratio === 1 ? '1:1' : ratio < 1 ? '多舱并联' : '单舱多PCS',
+          pairingMode: qty === pcsCount ? '1:1' : qty > pcsCount ? '多舱并联' : '单舱多PCS',
           energyPowerRatio: `${energy}/${(pcsCount * pcs.power).toFixed(1)}`,
           efficiency: eff.toFixed(1),
           containerQty: qty,
@@ -557,6 +563,7 @@ const renderConnectionDiagram = () => {
   for (let i = 0; i < pn; i++) {
     const pcsName = `PCS${i + 1}`
     const pcsX = startX + (i * span / Math.max(pn - 1, 1)) + (pcsUnitWidth / 2)
+    const pcsHalfSpan = pn > 1 ? span / Math.max(pn - 1, 1) / 2 : span / 2
     nodes.push({
       name: pcsName,
       x: pcsX, y: 200,
@@ -577,10 +584,16 @@ const renderConnectionDiagram = () => {
     links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
   }
 
-  const containerUnitWidth = Math.min(90, span / Math.max(ctn, 1))
+  const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
+  const containerUnitWidth = Math.min(80, span / Math.max(containersPerPCSVal, 1) / Math.max(pn, 1) * 0.9)
   for (let i = 0; i < ctn; i++) {
     const containerName = `电池舱${i + 1}`
-    const containerX = startX + (i * span / Math.max(ctn - 1, 1)) + (containerUnitWidth / 2)
+    const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
+    const pcsX = startX + (pcsGroupIdx * span / Math.max(pn - 1, 1)) + (pcsUnitWidth / 2)
+    const containerInGroup = i % containersPerPCSVal
+    const groupWidth = pn > 1 ? span / Math.max(pn - 1, 1) : span
+    const containerOffset = (containerInGroup - (containersPerPCSVal - 1) / 2) * (containerUnitWidth + 4)
+    const containerX = pcsX + containerOffset
     nodes.push({
       name: containerName,
       x: containerX, y: 290,
@@ -599,21 +612,9 @@ const renderConnectionDiagram = () => {
       label: { show: true, position: 'inside', formatter: `舱${i + 1}\n${container.energy}MWh`, fontSize: 9, color: '#fff' },
     })
     
-    const ratio = container.power / Math.max(pcs.power, 0.01)
-    if (ratio <= 1) {
-      const pcsIndex = Math.floor(i * pn / ctn)
-      const targetPcs = `PCS${Math.min(pcsIndex + 1, pn)}`
-      links.push({ source: targetPcs, target: containerName, lineStyle: { color: colors.slate, width: 2, type: 'solid' } })
-    } else {
-      const pcsPerContainer = Math.ceil(ratio)
-      for (let j = 0; j < pcsPerContainer; j++) {
-        const pcsIndex = i * pcsPerContainer + j
-        if (pcsIndex < pn) {
-          const targetPcs = `PCS${pcsIndex + 1}`
-          links.push({ source: targetPcs, target: containerName, lineStyle: { color: colors.slate, width: 2, type: 'solid' } })
-        }
-      }
-    }
+    const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
+    const targetPcs = `PCS${pcsGroupIdx + 1}`
+    links.push({ source: targetPcs, target: containerName, lineStyle: { color: colors.slate, width: 2, type: 'solid' } })
   }
   
   connectionChart.setOption({
@@ -737,9 +738,12 @@ const renderSingleLineDiagram = () => {
     style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 155, fill: colors.amber, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
   })
   
+  const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
   const pcsUnitWidth = Math.min(74, span / Math.max(pn, 1))
+  const pcsPositions = []
   for (let i = 0; i < pn; i++) {
     const x = startX + (i * span / Math.max(pn - 1, 1)) + (pcsUnitWidth / 2)
+    pcsPositions.push(x)
     
     graphicElements.push({
       type: 'line',
@@ -774,16 +778,19 @@ const renderSingleLineDiagram = () => {
     style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 275, fill: colors.slate, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
   })
   
-  const containerUnitWidth = Math.min(88, span / Math.max(ctn, 1))
+  const containerUnitWidth = Math.min(76, span / Math.max(containersPerPCSVal, 1) / Math.max(pn, 1) * 0.85)
   const containerHeight = 50
-  const depth = 12  // 3D深度
+  const depth = 12
   
   for (let i = 0; i < ctn; i++) {
-    const x = startX + (i * span / Math.max(ctn - 1, 1)) + (containerUnitWidth / 2)
+    const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
+    const pcsX = pcsPositions[pcsGroupIdx] || 500
+    const containerInGroup = i % containersPerPCSVal
+    const offset = (containerInGroup - (containersPerPCSVal - 1) / 2) * (containerUnitWidth + 4)
+    const x = pcsX + offset
     const boxX = x - containerUnitWidth / 2 + 4
     const boxY = 325
     
-    // 连接线：DC母线到集装箱顶部（实线）
     graphicElements.push({
       type: 'line',
       shape: { x1: x, y1: 285, x2: x, y2: boxY },
