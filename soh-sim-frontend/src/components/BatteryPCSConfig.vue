@@ -351,12 +351,10 @@ const energyPowerRatio = computed(() => {
 
 const autoCalcQty = () => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
-  const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
   
-  if (container && targetEnergy.value != null && targetEnergy.value > 0 && !isNaN(targetEnergy.value)) {
+  if (container && container.energy > 0 && targetEnergy.value != null && targetEnergy.value > 0 && !isNaN(targetEnergy.value)) {
     containerQty.value = Math.ceil(targetEnergy.value / container.energy)
   }
-  calculatePCS()
 }
 
 const onContainerChange = () => {
@@ -372,15 +370,29 @@ const totalEnergy = computed(() => {
   return container ? container.energy * containerQty.value : 0
 })
 
+const effectiveTargetPower = computed(() => {
+  return (targetPower.value != null && targetPower.value > 0 && !isNaN(targetPower.value))
+    ? targetPower.value
+    : null
+})
+
 const totalPower = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
   if (!container) return 0
-  return container.power * containerQty.value
+  const ratedPower = container.power * containerQty.value
+  if (effectiveTargetPower.value != null) {
+    return Math.max(ratedPower, effectiveTargetPower.value)
+  }
+  return ratedPower
 })
 
 const pcsQty = computed(() => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!pcs || totalPower.value === 0 || !pcs.power) return 0
+  if (!pcs || !pcs.power || pcs.power <= 0) return 0
+  if (effectiveTargetPower.value != null) {
+    return Math.ceil(effectiveTargetPower.value / pcs.power)
+  }
+  if (totalPower.value === 0) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
 const pairingMode = computed(() => {
@@ -473,8 +485,8 @@ let singleLineChart = null
 
 const calculatePCS = () => {
   nextTick(() => {
-    renderConnectionDiagram()
-    renderSingleLineDiagram()
+    try { renderConnectionDiagram() } catch (e) { console.error('连接图渲染失败:', e) }
+    try { renderSingleLineDiagram() } catch (e) { console.error('单线图渲染失败:', e) }
   })
 }
 
@@ -482,10 +494,17 @@ const renderConnectionDiagram = () => {
   if (!connectionDiagram.value) return
   
   if (connectionChart) {
-    connectionChart.dispose()
+    try { connectionChart.dispose() } catch {}
+    connectionChart = null
   }
   
-  connectionChart = echarts.init(connectionDiagram.value)
+  try {
+    connectionChart = echarts.init(connectionDiagram.value)
+  } catch (e) {
+    console.error('初始化连接图echarts失败:', e)
+    return
+  }
+  if (!connectionChart) return
   
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
@@ -639,10 +658,17 @@ const renderSingleLineDiagram = () => {
   if (!singleLineDiagram.value) return
   
   if (singleLineChart) {
-    singleLineChart.dispose()
+    try { singleLineChart.dispose() } catch {}
+    singleLineChart = null
   }
   
-  singleLineChart = echarts.init(singleLineDiagram.value)
+  try {
+    singleLineChart = echarts.init(singleLineDiagram.value)
+  } catch (e) {
+    console.error('初始化单线图echarts失败:', e)
+    return
+  }
+  if (!singleLineChart) return
   
   const container = containers.value.find(c => c.id === selectedContainer.value)
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
