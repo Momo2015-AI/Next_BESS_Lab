@@ -118,7 +118,7 @@ const showToast = (message, type = 'info') => {
 const activeTab = ref('home')
 
 const foundationTabs = ['survey', 'param', 'conditions', 'products', 'batteryPCS', 'formula']
-const solutionTabs = ['dc-design', 'ac-design', 'simulationLab', 'financial', 'matrix', 'inject', 'chart', 'scenario', 'sensitivity', 'engineering', 'export']
+const solutionTabs = ['dc-design', 'ac-design', 'simulationLab', 'financial', 'matrix', 'inject', 'chart', 'scenario', 'sensitivity', 'engineering', 'auxPower', 'export']
 
 const isFoundationTab = computed(() => foundationTabs.includes(activeTab.value))
 const isSolutionTab = computed(() => solutionTabs.includes(activeTab.value))

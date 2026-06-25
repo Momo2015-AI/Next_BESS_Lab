@@ -46,6 +46,16 @@ def calculate_aux_power():
         pStd = float(data.get('pStd', 1.5))
         pStation = float(data.get('pStation', 7.2))
 
+        # 输入参数校验
+        if days < 0 or cycles < 0 or hours < 0:
+            return jsonify({'success': False, 'error': '天数、循环次数、时长不能为负值'}), 400
+        if cap < 0 or units < 0:
+            return jsonify({'success': False, 'error': '容量和台数不能为负值'}), 400
+        if not (0 < dcRte <= 1) or not (0 < pcsEff <= 1) or not (0 < acEff <= 1):
+            return jsonify({'success': False, 'error': '效率值必须在 (0, 1] 范围内'}), 400
+        if bRun < 0 or bStd < 0 or pRun < 0 or pStd < 0 or pStation < 0:
+            return jsonify({'success': False, 'error': '功率参数不能为负值'}), 400
+
         sqrtRte = math.sqrt(dcRte)
         tRun = days * cycles * hours * 2
         tStd = (days * 24) - tRun

@@ -375,21 +375,14 @@ const totalEnergy = computed(() => {
 const totalPower = computed(() => {
   const container = containers.value.find(c => c.id === selectedContainer.value)
   if (!container) return 0
-  const powerFromRating = container.power * containerQty.value
-  const powerFromDuration = totalEnergy.value / durationHours.value
-  return Math.max(powerFromRating, powerFromDuration)
+  return container.power * containerQty.value
 })
 
 const pcsQty = computed(() => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!pcs) return 0
-  if (targetPower.value != null && targetPower.value > 0 && !isNaN(targetPower.value)) {
-    return Math.ceil(targetPower.value / pcs.power)
-  }
-  if (totalPower.value === 0) return 0
+  if (!pcs || totalPower.value === 0) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
-
 const pairingMode = computed(() => {
   if (!selectedContainer.value || !selectedPCS.value) return '--'
   const container = containers.value.find(c => c.id === selectedContainer.value)
@@ -759,31 +752,82 @@ const renderSingleLineDiagram = () => {
   })
   
   const containerUnitWidth = Math.min(88, span / Math.max(ctn, 1))
+  const containerHeight = 50
+  const depth = 12  // 3D深度
+  
   for (let i = 0; i < ctn; i++) {
     const x = startX + (i * span / Math.max(ctn - 1, 1)) + (containerUnitWidth / 2)
+    const boxX = x - containerUnitWidth / 2 + 4
+    const boxY = 325
     
+    // 连接线：DC母线到集装箱顶部（实线）
     graphicElements.push({
       type: 'line',
-      shape: { x1: x, y1: 285, x2: x, y2: 325 },
+      shape: { x1: x, y1: 285, x2: x, y2: boxY },
       style: { stroke: colors.slate, lineWidth: 2 },
     })
     
+    // 3D集装箱 - 右侧面（平行四边形）
+    graphicElements.push({
+      type: 'polygon',
+      shape: {
+        points: [
+          [boxX + containerUnitWidth - 8, boxY],
+          [boxX + containerUnitWidth - 8 + depth, boxY - depth],
+          [boxX + containerUnitWidth - 8 + depth, boxY - depth + containerHeight],
+          [boxX + containerUnitWidth - 8, boxY + containerHeight],
+        ]
+      },
+      style: {
+        fill: colors.teal,
+        stroke: colors.teal,
+        lineWidth: 1,
+        opacity: 0.7,
+      },
+    })
+    
+    // 3D集装箱 - 顶面（平行四边形）
+    graphicElements.push({
+      type: 'polygon',
+      shape: {
+        points: [
+          [boxX, boxY],
+          [boxX + depth, boxY - depth],
+          [boxX + containerUnitWidth - 8 + depth, boxY - depth],
+          [boxX + containerUnitWidth - 8, boxY],
+        ]
+      },
+      style: {
+        fill: colors.teal,
+        stroke: colors.teal,
+        lineWidth: 1,
+        opacity: 0.85,
+      },
+    })
+    
+    // 3D集装箱 - 正面（矩形）
     graphicElements.push({
       type: 'rect',
-      shape: { x: x - containerUnitWidth / 2 + 4, y: 325, width: containerUnitWidth - 8, height: 58 },
+      shape: { x: boxX, y: boxY, width: containerUnitWidth - 8, height: containerHeight },
       style: {
         fill: colors.teal,
         stroke: style.getPropertyValue('--color-accent-secondary').trim() + '99',
         lineWidth: 2,
-        shadowBlur: 8,
-        shadowOffsetX: 4,
-        shadowOffsetY: 4,
-        shadowColor: 'rgba(0,0,0,0.35)',
+        shadowBlur: 6,
+        shadowOffsetX: 3,
+        shadowOffsetY: 3,
+        shadowColor: 'rgba(0,0,0,0.3)',
       },
+    })
+    
+    // 集装箱标签
+    graphicElements.push({
+      type: 'text',
+      style: { text: `舱${i + 1}`, x: x, y: boxY + 20, fill: '#fff', fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
     })
     graphicElements.push({
       type: 'text',
-      style: { text: `电池舱${i + 1}\n${container.energy}MWh`, x: x, y: 358, fill: '#fff', fontSize: 9, textAlign: 'center' },
+      style: { text: `${container.energy}MWh`, x: x, y: boxY + 36, fill: '#fff', fontSize: 9, textAlign: 'center' },
     })
   }
   
