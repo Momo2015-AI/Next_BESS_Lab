@@ -15,13 +15,18 @@ const CAMEL_MAP = {
   capacity_ah: 'capacityAh',
   voltage_nominal: 'voltageNominal',
   voltage_range: 'voltageRange',
-  energy_wh: 'energyWh',
+  // 统一能量字段：
+  rated_energy_mwh: 'ratedEnergyMWh',  // 容器/簇/电芯统一
+  energy_wh: 'ratedEnergyMWh',         // 兼容旧电芯字段
+  nominal_energy_kwh: 'ratedEnergyMWh', // 兼容旧Pack/Rack字段
+  nominal_energy_mwh: 'ratedEnergyMWh', // 兼容旧簇字段
+  // 统一功率字段：
+  rated_power_mw: 'ratedPowerMW',      // 所有设备统一
+  nominal_power_mw: 'ratedPowerMW',    // 兼容旧簇字段
   cycle_life: 'cycleLife',
   soh_curve: 'sohCurve',
   cell_model: 'cellModel',
   cell_config: 'cellConfig',
-  rated_energy_mwh: 'ratedEnergyMWh',
-  rated_power_mw: 'ratedPowerMW',
   rated_power_kva: 'ratedPowerKVA',
   ac_voltage: 'acVoltage',
   dc_voltage_range: 'dcVoltageRange',
@@ -30,7 +35,6 @@ const CAMEL_MAP = {
   parallel_count: 'parallelCount',
   nominal_voltage: 'nominalVoltage',
   nominal_capacity_ah: 'nominalCapacityAh',
-  nominal_energy_kwh: 'nominalEnergyKwh',
   max_charge_current: 'maxChargeCurrent',
   max_discharge_current: 'maxDischargeCurrent',
   bms_type: 'bmsType',
@@ -38,8 +42,6 @@ const CAMEL_MAP = {
   packs_per_rack: 'packsPerRack',
   cooling: 'cooling',
   racks_per_cluster: 'racksPerCluster',
-  nominal_energy_mwh: 'nominalEnergyMwh',
-  nominal_power_mw: 'nominalPowerMw',
   bmu_type: 'bmuType',
   cluster_model: 'clusterModel',
   clusters_per_container: 'clustersPerContainer',

@@ -334,7 +334,7 @@ watch(() => config.dc.cellId, (newCellId) => {
     config.dc.cellVoltage = cell.voltageNominal || 3.2
     config.dc.cellEnergyDensity = cell.energyDensity || 165
     config.dc.cellCycleLife = cell.cycleLife || 6000
-    config.dc.cellEnergyWh = cell.energyWh || 896
+    config.dc.cellEnergyWh = (cell.ratedEnergyMWh || 0) * 1000000 || 896
     config.dc.cellWeight = cell.weight || 5.4
     config.dc.cellVoltageMin = cell.voltageMin || 2.5
     config.dc.cellVoltageMax = cell.voltageMax || 3.65

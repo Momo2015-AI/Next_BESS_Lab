@@ -34,7 +34,9 @@ _FIELD_MAP = {
         'capacityAh': 'capacity_ah',
         'voltageNominal': 'voltage_nominal',
         'voltageRange': 'voltage_range',
-        'energyWh': 'energy_wh',
+        'ratedEnergyMwh': 'rated_energy_mwh',
+        'ratedEnergyMWh': 'rated_energy_mwh',
+        'energyWh': 'rated_energy_mwh',  # 兼容旧字段
         'cycleLife': 'cycle_life',
         'sohCurve': 'soh_curve',
     },
@@ -44,7 +46,10 @@ _FIELD_MAP = {
         'parallelCount': 'parallel_count',
         'nominalVoltage': 'nominal_voltage',
         'nominalCapacityAh': 'nominal_capacity_ah',
-        'nominalEnergyKwh': 'nominal_energy_kwh',
+        'ratedEnergyMwh': 'rated_energy_mwh',
+        'ratedEnergyMWh': 'rated_energy_mwh',
+        'nominalEnergyKwh': 'rated_energy_mwh',  # 兼容旧字段
+        'nominalEnergyKWh': 'rated_energy_mwh',
         'maxChargeCurrent': 'max_charge_current',
         'maxDischargeCurrent': 'max_discharge_current',
         'cellModel': 'cell_model',
@@ -56,7 +61,10 @@ _FIELD_MAP = {
         'parallelCount': 'parallel_count',
         'nominalVoltage': 'nominal_voltage',
         'nominalCapacityAh': 'nominal_capacity_ah',
-        'nominalEnergyKwh': 'nominal_energy_kwh',
+        'ratedEnergyMwh': 'rated_energy_mwh',
+        'ratedEnergyMWh': 'rated_energy_mwh',
+        'nominalEnergyKwh': 'rated_energy_mwh',  # 兼容旧字段
+        'nominalEnergyKWh': 'rated_energy_mwh',
         'packModel': 'pack_model',
     },
     'clusters': {
@@ -65,10 +73,14 @@ _FIELD_MAP = {
         'parallelCount': 'parallel_count',
         'nominalVoltage': 'nominal_voltage',
         'nominalCapacityAh': 'nominal_capacity_ah',
-        'nominalEnergyMwh': 'nominal_energy_mwh',
-        'nominalEnergyMWh': 'nominal_energy_mwh',
-        'nominalPowerMw': 'nominal_power_mw',
-        'nominalPowerMW': 'nominal_power_mw',
+        'ratedEnergyMwh': 'rated_energy_mwh',
+        'ratedEnergyMWh': 'rated_energy_mwh',
+        'nominalEnergyMwh': 'rated_energy_mwh',  # 兼容旧字段
+        'nominalEnergyMWh': 'rated_energy_mwh',
+        'ratedPowerMw': 'rated_power_mw',
+        'ratedPowerMW': 'rated_power_mw',
+        'nominalPowerMw': 'rated_power_mw',  # 兼容旧字段
+        'nominalPowerMW': 'rated_power_mw',
         'rackModel': 'rack_model',
         'bmuType': 'bmu_type',
     },
@@ -82,6 +94,17 @@ _FIELD_MAP = {
         'cycleLife': 'cycle_life',
         'clusterModel': 'cluster_model',
         'clustersPerContainer': 'clusters_per_container',
+        'type': 'spec',  # 兼容旧字段
+        'seriesCount': 'series_count',
+        'parallelCount': 'parallel_count',
+        'dcVoltageRange': 'dc_voltage_range',
+        'maxDcCurrent': 'max_dc_current',
+        'rte': 'rte',
+        'auxRun': 'aux_run',
+        'auxStandby': 'aux_standby',
+        'certifications': 'certifications',
+        'unitPrice': 'unit_price',
+        'remarks': 'remarks',
     },
     'pcs': {
         'ratedPowerMW': 'rated_power_mw',
@@ -90,6 +113,19 @@ _FIELD_MAP = {
         'ratedPowerKva': 'rated_power_kva',
         'acVoltage': 'ac_voltage',
         'dcVoltageRange': 'dc_voltage_range',
+        'maxDcCurrent': 'max_dc_current',
+        'frequencyRange': 'frequency_range',
+        'topology': 'topology',
+        'isolation': 'isolation',
+        'dimensions': 'dimensions',
+        'weight': 'weight',
+        'efficiency': 'efficiency',
+        'cooling': 'cooling',
+        'auxRun': 'aux_run',
+        'auxStandby': 'aux_standby',
+        'certifications': 'certifications',
+        'unitPrice': 'unit_price',
+        'remarks': 'remarks',
     },
     'config_rules': {
         'cellModel': 'cell_model',
@@ -170,7 +206,11 @@ def _apply_tenant_filter(query, model_cls, user, include_builtin=True):
 
 
 def seed_products():
-    """从 products.json 种子数据初始化产品库（标记为系统内置，所有企业可见）"""
+    """从 products.json 种子数据初始化产品库（标记为系统内置，所有企业可见）
+    
+    支持 upsert：ID 存在时更新所有字段，不存在时创建。
+    避免因 _FIELD_MAP 修复后已有记录无法更新的问题。
+    """
     if not os.path.exists(PRODUCTS_DATA_PATH):
         return
 
@@ -182,13 +222,19 @@ def seed_products():
             continue
         model_cls = _MODELS[category]
         for item in items:
+            # 种子数据：标记为系统内置（对所有企业可见）
+            if 'is_builtin' not in item:
+                item['is_builtin'] = True
+            if 'tenant_id' not in item:
+                item['tenant_id'] = None
+
             existing = model_cls.query.get(item.get('id'))
-            if not existing:
-                # 种子数据：标记为系统内置（对所有企业可见）
-                if 'is_builtin' not in item:
-                    item['is_builtin'] = True
-                if 'tenant_id' not in item:
-                    item['tenant_id'] = None
+            if existing:
+                for k, v in item.items():
+                    key = _camel_to_snake(k, category)
+                    if hasattr(model_cls, key):
+                        setattr(existing, key, v)
+            else:
                 obj = _json_to_model(item, category)
                 db.session.add(obj)
 

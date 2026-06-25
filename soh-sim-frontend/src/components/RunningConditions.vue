@@ -295,7 +295,7 @@
             <select v-model="selectedPackModel" class="input-field" @change="onPackChange">
               <option value="">{{ $t('common.select') }}</option>
               <option v-for="pack in availablePacks" :key="pack.id" :value="pack.model">
-                {{ pack.model }} ({{ pack.nominalEnergyKwh }}kWh)
+                {{ pack.model }} ({{ pack.ratedEnergyMWh }}MWh)
               </option>
             </select>
           </div>
@@ -304,7 +304,7 @@
             <select v-model="selectedRackModel" class="input-field" @change="onRackChange">
               <option value="">{{ $t('common.select') }}</option>
               <option v-for="rack in availableRacks" :key="rack.id" :value="rack.model">
-                {{ rack.model }} ({{ rack.nominalEnergyKwh }}kWh)
+                {{ rack.model }} ({{ rack.ratedEnergyMWh }}MWh)
               </option>
             </select>
           </div>
@@ -313,7 +313,7 @@
             <select v-model="selectedClusterModel" class="input-field" @change="onClusterChange">
               <option value="">{{ $t('common.select') }}</option>
               <option v-for="cluster in availableClusters" :key="cluster.id" :value="cluster.model">
-                {{ cluster.model }} ({{ cluster.nominalEnergyMwh }}MWh)
+                {{ cluster.model }} ({{ cluster.ratedEnergyMWh }}MWh)
               </option>
             </select>
           </div>

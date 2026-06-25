@@ -341,7 +341,7 @@ function onCellChange() {
   batteryConfig.cellType = cell.id
   batteryConfig.cellCapacity = cell.capacityAh || 280
   batteryConfig.cellVoltage = cell.voltageNominal || 3.2
-  batteryConfig.energyDensity = cell.energyDensity || Math.round((cell.energyWh || 896) / (parseFloat(cell.weight) || 5.4))
+  batteryConfig.energyDensity = cell.energyDensity || Math.round((((cell.ratedEnergyMWh || 0.000896) * 1e6) / (parseFloat(cell.weight) || 5.4)))
   batteryConfig.cycleLife = cell.cycleLife || 6000
 }
 

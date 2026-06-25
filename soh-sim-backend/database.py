@@ -520,7 +520,7 @@ class CellProduct(db.Model):
     capacity_ah = db.Column(db.Float)
     voltage_nominal = db.Column(db.Float)
     voltage_range = db.Column(db.String(100))
-    energy_wh = db.Column(db.Float)
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was energy_wh
     cycle_life = db.Column(db.Integer)
     dimensions = db.Column(db.String(200))
     weight = db.Column(db.String(100))
@@ -547,7 +547,7 @@ class PackProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    nominal_energy_kwh = db.Column(db.Float)
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_kwh
     max_charge_current = db.Column(db.Float)
     max_discharge_current = db.Column(db.Float)
     dimensions = db.Column(db.String(200))
@@ -575,7 +575,7 @@ class RackProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    nominal_energy_kwh = db.Column(db.Float)
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_kwh
     dimensions = db.Column(db.String(200))
     weight = db.Column(db.String(100))
     cooling = db.Column(db.String(100))
@@ -600,8 +600,8 @@ class ClusterProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    nominal_energy_mwh = db.Column(db.Float)
-    nominal_power_mw = db.Column(db.Float)
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_mwh (统一命名)
+    rated_power_mw = db.Column(db.Float)  # MW, was nominal_power_mw (统一命名)
     dimensions = db.Column(db.String(200))
     weight = db.Column(db.String(100))
     bmu_type = db.Column(db.String(100))
@@ -612,7 +612,7 @@ class ClusterProduct(db.Model):
 
 
 class ContainerProduct(db.Model):
-    """集装箱产品库"""
+    """集装箱产品库（统一入口，合并原 container_library）"""
     __tablename__ = 'container_products'
 
     id = db.Column(db.String(100), primary_key=True)
@@ -620,25 +620,37 @@ class ContainerProduct(db.Model):
     is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
-    type = db.Column(db.String(100))
-    rated_energy_mwh = db.Column(db.Float)
-    rated_power_mw = db.Column(db.Float)
+    spec = db.Column(db.String(100))  # 规格，was type
+    rated_energy_mwh = db.Column(db.Float)  # MWh
+    rated_power_mw = db.Column(db.Float)  # MW
     cluster_model = db.Column(db.String(200))
     clusters_per_container = db.Column(db.Integer)
     cell_model = db.Column(db.String(200))
     cell_config = db.Column(db.String(200))
+    series_count = db.Column(db.Integer)
+    parallel_count = db.Column(db.Integer)
+    dc_voltage_range = db.Column(db.String(100))
+    max_dc_current = db.Column(db.Float)
     dimensions = db.Column(db.String(200))
     cooling = db.Column(db.String(100))
-    weight = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # t
     cycle_life = db.Column(db.Integer)
+    rte = db.Column(db.Float)  # 往返效率 %
+    aux_run = db.Column(db.Float)  # kW
+    aux_standby = db.Column(db.Float)  # kW
+    certifications = db.Column(db.Text)  # JSON
+    unit_price = db.Column(db.Float)  # 万元/台
+    remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default='mass-production')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class PcsProduct(db.Model):
-    """PCS变流器产品库"""
+    """PCS变流器产品库（统一入口，合并原 pcs_library）"""
     __tablename__ = 'pcs_products'
 
     id = db.Column(db.String(100), primary_key=True)
@@ -646,15 +658,26 @@ class PcsProduct(db.Model):
     is_builtin = db.Column(db.Boolean, default=False)
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
-    rated_power_mw = db.Column(db.Float)
-    rated_power_kva = db.Column(db.Float)
+    rated_power_mw = db.Column(db.Float)  # MW
+    rated_power_kva = db.Column(db.Float)  # KVA
     ac_voltage = db.Column(db.String(100))
     dc_voltage_range = db.Column(db.String(100))
-    efficiency = db.Column(db.Float)
+    max_dc_current = db.Column(db.Float)  # A
+    frequency_range = db.Column(db.String(50))  # Hz
+    efficiency = db.Column(db.Float)  # %
     cooling = db.Column(db.String(100))
     topology = db.Column(db.String(100))
     isolation = db.Column(db.String(100))
+    dimensions = db.Column(db.String(100))
+    weight = db.Column(db.Float)  # kg
+    aux_run = db.Column(db.Float)  # kW
+    aux_standby = db.Column(db.Float)  # kW
+    certifications = db.Column(db.Text)  # JSON
+    unit_price = db.Column(db.Float)  # 万元/台
+    remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default='mass-production')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

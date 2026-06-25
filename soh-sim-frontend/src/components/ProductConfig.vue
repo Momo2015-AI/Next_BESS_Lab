@@ -44,7 +44,7 @@
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
               <div style="color: var(--color-text-muted);">容量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.capacityAh }} Ah</div>
               <div style="color: var(--color-text-muted);">标压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.voltageNominal }} V</div>
-              <div style="color: var(--color-text-muted);">能量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.energyWh }} Wh</div>
+              <div style="color: var(--color-text-muted);">能量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.ratedEnergyMWh }} MWh</div>
               <div style="color: var(--color-text-muted);">循环</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.cycleLife }}+</div>
             </div>
           </div>
@@ -378,7 +378,7 @@ function localFiltered(key, mfrFilter, powerFilter) {
       voltageNominal: c.voltageNominal,
       voltageMax: c.voltageMax,
       voltageMin: c.voltageMin,
-      energyWh: c.energyWh,
+      ratedEnergyMwh: c.ratedEnergyMWh,
       cycleLife: c.cycleLife,
       calendarLife: c.calendarLife,
       dimensions: c.dimensions,
@@ -491,7 +491,7 @@ async function saveProduct() {
   if (type === 'cell') {
     apiData.capacityAh = f.capacityAh
     apiData.voltageNominal = f.voltageNominal
-    apiData.energyWh = (f.capacityAh || 0) * (f.voltageNominal || 3.2)
+    apiData.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     apiData.cycleLife = f.cycleLife
   } else if (type === 'container') {
     apiData.ratedEnergyMWh = f.ratedEnergyMWh
@@ -521,7 +521,7 @@ async function saveProduct() {
   let item = { id, ...f }
 
   if (type === 'cell') {
-    item.energyWh = (f.capacityAh || 0) * (f.voltageNominal || 3.2)
+    item.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     item.voltageRange = '2.5-3.65'
     item.sohCurve = 'default'
   } else if (type === 'container') {
