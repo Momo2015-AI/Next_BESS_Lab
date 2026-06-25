@@ -380,7 +380,7 @@ const totalPower = computed(() => {
 
 const pcsQty = computed(() => {
   const pcs = pcsList.value.find(p => p.id === selectedPCS.value)
-  if (!pcs || totalPower.value === 0) return 0
+  if (!pcs || totalPower.value === 0 || !pcs.power) return 0
   return Math.ceil(totalPower.value / pcs.power)
 })
 const pairingMode = computed(() => {
