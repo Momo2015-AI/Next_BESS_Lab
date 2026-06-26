@@ -122,6 +122,17 @@
         </div>
       </div>
 
+      <!-- 货币转换器 -->
+      <CurrencyConverter />
+
+      <!-- 产品库→CAPEX 自动联动 -->
+      <ProductCAPEXLink @applyConfig="handleProductConfig" />
+
+      <div class="grid grid-cols-2 gap-3">
+      <EnergyFlowSankey :params="params" :soh="soh" />
+      <CostWaterfallChart :params="params" :soh="soh" />
+      </div>
+
       <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-bold text-xs" style="color: var(--color-text);">年度现金流明细表 Annual Cash Flow</h3>
@@ -170,9 +181,17 @@
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
 import * as echarts from 'echarts'
-import { useDraft } from '../composables/useDraft'
+  import { useDraft } from '../composables/useDraft'
+import CurrencyConverter from './CurrencyConverter.vue'
+import ProductCAPEXLink from './ProductCAPEXLink.vue'
+import EnergyFlowSankey from './EnergyFlowSankey.vue'
+import CostWaterfallChart from './CostWaterfallChart.vue'
+import { useExchangeRate } from '../composables/useExchangeRate.js'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })
+
+// 使用汇率管理
+const { displayCurrency, formatAmount, convert } = useExchangeRate()
 
 const chartColors = computed(() => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -217,14 +236,16 @@ watch([() => f.debtRatio, () => f.equityRatio], () => {
 }, { immediate: true })
 
 const metrics = ref([
-  { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)', borderColor: 'var(--color-accent-secondary)' },
-  { label: 'Equity IRR', value: '-', unit: '%', textColor: 'var(--color-success)', borderColor: 'var(--color-success)' },
-  { label: 'WACC', value: '-', unit: '%', textColor: '#0ea5e9', borderColor: '#0ea5e9' },
-  { label: 'NPV', value: '-', unit: '万元', textColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' },
-  { label: 'LCOS', value: '-', unit: '元/kWh', textColor: 'var(--color-info)', borderColor: 'var(--color-info)' },
-  { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)', borderColor: 'var(--color-warning)' },
-  { label: 'Total CAPEX', value: '-', unit: '万元', textColor: 'var(--color-danger)', borderColor: 'var(--color-danger)' },
-  { label: 'Min DSCR', value: '-', unit: 'x', textColor: '#f97316', borderColor: '#f97316' },
+const metrics = ref([
+  { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)' },
+  { label: 'Equity IRR', value: '-', unit: '%', textColor: 'var(--color-success)' },
+  { label: 'WACC', value: '-', unit: '%', textColor: '#0ea5e9' },
+  { label: 'NPV (7%)', value: '-', unit: `万元 (${displayCurrency})`, textColor: 'var(--color-accent)' },
+  { label: 'LCOS', value: '-', unit: `元/kWh (${displayCurrency})`, textColor: 'var(--color-info)' },
+  { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)' },
+  { label: 'Total CAPEX', value: '-', unit: `万元 (${displayCurrency})`, textColor: 'var(--color-danger)' },
+  { label: 'Min DSCR', value: '-', unit: 'x', textColor: '#f97316' },
+])
 ])
 
 const cashFlowTable = ref([])
@@ -396,13 +417,20 @@ function computeAll() {
     }
   }
 
+  // 转换为显示货币
+  const convertToDisplay = (usdAmount) => {
+    return convert(usdAmount, 'USD', displayCurrency.value)
+  }
+  
+  metrics.value[0].value = irr + '%'
+  metrics.value[1].value = equityIrr + '%'
   metrics.value[0].value = irr + '%'
   metrics.value[1].value = equityIrr + '%'
   metrics.value[2].value = wacc.toFixed(2) + '%'
-  metrics.value[3].value = npv.toFixed(0)
-  metrics.value[4].value = lcos.toFixed(3)
+  metrics.value[3].value = convertToDisplay(npv).toFixed(0)
+  metrics.value[4].value = lcos.toFixed(3) // LCOS 保持原单位，因为已经是单位成本
   metrics.value[5].value = payback
-  metrics.value[6].value = totalCapex.toFixed(0)
+  metrics.value[6].value = convertToDisplay(totalCapex).toFixed(0)
   metrics.value[7].value = minDscr !== Infinity ? minDscr.toFixed(2) : '-'
 
   cashFlowTable.value = rows
@@ -635,18 +663,20 @@ function renderCapexChart() {
 
   const total = capexItems.reduce((sum, item) => sum + item.value, 0)
 
+  // 计算敏感性分析数据
+  const sensitivityData = calculateSensitivityData()
+  
   capexChart.setOption({
-    tooltip: { 
-      trigger: 'item', 
+      trigger: 'item',
       formatter: (params) => {
         const perMWh = params.value / totalCapMWh
         const perMW = params.value / totalCapMW
         return `${params.name}<br/>金额: ${params.value.toFixed(0)} 万元 (${params.percent.toFixed(1)}%)<br/>单价: ${perMWh.toFixed(1)} 万元/MWh = ${perMW.toFixed(1)} 万元/MW`
       }
     },
-    legend: { 
-      bottom: 0, 
-      textStyle: { color: colors.legendText, fontSize: 9 }, 
+    legend: {
+      bottom: 0,
+      textStyle: { color: colors.legendText, fontSize: 9 },
       data: capexItems.map(item => item.name),
       orient: 'horizontal',
       itemWidth: 10,
@@ -654,20 +684,21 @@ function renderCapexChart() {
     },
     series: [
       {
-        type: 'pie', 
-        radius: ['40%', '65%'], 
-        center: ['50%', '45%'], 
+        type: 'pie',
+        radius: ['40%', '65%'],
+        center: ['50%', '45%'],
         avoidLabelOverlap: false,
-        label: { 
-          show: true, 
-          position: 'outside', 
-          formatter: (params) => `${params.name}\n${params.value.toFixed(0)}万`, 
-          fontSize: 8, 
+        label: {
+          show: true,
+          position: 'outside',
+          formatter: (params) => `${params.name}
+${params.value.toFixed(0)}万`,
+          fontSize: 8,
           color: colors.legendText,
           lineHeight: 12,
         },
         labelLine: { show: true, length: 8, length2: 8 },
-        emphasis: { 
+        emphasis: {
           label: { show: true, fontSize: 10, fontWeight: 'bold' },
           itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.3)' }
         },
@@ -678,19 +709,122 @@ function renderCapexChart() {
         })),
       },
     ],
+        barWidth: 12
+      },
+      {
+        name: "+10%",
+        type: "bar",
+        data: [
+          containerCost * 1.1,
+          pcsCost * 1.1,
+          bopCost * 1.1,
+          devCost * 1.1,
+          (containerCost + pcsCost + bopCost + devCost) * 1.1
+        ],
+        itemStyle: { color: colors.cyan, borderRadius: [2, 2, 0, 0] },
+        barWidth: 12
+      },
+      {
+        name: "-10%",
+        type: "bar",
+        data: [
+          containerCost * 0.9,
+          pcsCost * 0.9,
+          bopCost * 0.9,
+          devCost * 0.9,
+          (containerCost + pcsCost + bopCost + devCost) * 0.9
+        ],
+        itemStyle: { color: colors.warning, borderRadius: [2, 2, 0, 0] },
+        barWidth: 12
+      },
+      {
+        name: "-20%",
+        type: "bar",
+        data: [
+          containerCost * 0.8,
+          pcsCost * 0.8,
+          bopCost * 0.8,
+          devCost * 0.8,
+          (containerCost + pcsCost + bopCost + devCost) * 0.8
+        ],
+        itemStyle: { color: colors.danger, borderRadius: [2, 2, 0, 0] },
+        barWidth: 12
+      }
+    ],
   })
   capexChart.resize()
 }
 
-function disposeAll() {
-  [cashFlowChart, revenueChart, dscrChart, capexChart].forEach(c => c?.dispose())
-  cashFlowChart = revenueChart = dscrChart = capexChart = null
+function calculateSensitivityData() {
+  if (!cachedCapexData) return {}
+  
+  const { containerCost, pcsCost, bopCost, devCost } = cachedCapexData
+  const sensitivityPct = f.sensPct || 20
+  
+  return {
+    base: {
+      container: containerCost,
+      pcs: pcsCost,
+      bop: bopCost,
+      dev: devCost,
+      total: containerCost + pcsCost + bopCost + devCost
+    },
+    positive: {
+      container: containerCost * (1 + sensitivityPct / 100),
+      pcs: pcsCost * (1 + sensitivityPct / 100),
+      bop: bopCost * (1 + sensitivityPct / 100),
+      dev: devCost * (1 + sensitivityPct / 100),
+      total: (containerCost + pcsCost + bopCost + devCost) * (1 + sensitivityPct / 100)
+    },
+    negative: {
+      container: containerCost * (1 - sensitivityPct / 100),
+      pcs: pcsCost * (1 - sensitivityPct / 100),
+      bop: bopCost * (1 - sensitivityPct / 100),
+      dev: devCost * (1 - sensitivityPct / 100),
+      total: (containerCost + pcsCost + bopCost + devCost) * (1 - sensitivityPct / 100)
+    }
+}
+}
+
+// 处理产品配置
+function handleProductConfig(config) {
+  if (config.autoCalculatedCAPEX) {
+    // 使用自动计算的CAPEX
+    f.containerCostPerMWh = config.autoCalculatedCapexPerMWh * 0.6 // 60% for container
+    f.pcsCostPerMW = config.autoCalculatedCapexPerMWh * config.ratedEnergy * 0.2 // 20% for PCS  
+    f.bopCostPerMWh = config.autoCalculatedCapexPerMWh * 0.2 // 20% for BOP
+  }
+  
+  if (config.ratedEnergy) {
+    // 更新能量参数
+    if (props.params) {
+      props.params.ratedEnergy = config.ratedEnergy
+    }
+  }
+  
+  if (config.acEfficiency) {
+    // 更新PCS效率
+    if (props.params) {
+      props.params.acEfficiency = config.acEfficiency
+    }
+  }
+  
+  // 重新计算
+  computeAll()
 }
 
 function recalc() { computeAll() }
 
 watch([() => props.params, () => props.soh, () => props.augQty], () => computeAll(), { deep: true, immediate: true })
 watch(f, () => computeAll(), { deep: true })
+watch(displayCurrency, () => {
+  // 更新货币单位显示
+  metrics.value[2].unit = `万元 (${displayCurrency.value})`
+  metrics.value[3].unit = `元/kWh (${displayCurrency.value})`
+  metrics.value[5].unit = `万元 (${displayCurrency.value})`
+  // 重新计算以应用新的货币转换
+  computeAll()
+})
 
 onMounted(() => { nextTick(() => computeAll()) })
 onUnmounted(() => { disposeAll() })

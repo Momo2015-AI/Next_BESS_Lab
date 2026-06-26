@@ -13,7 +13,8 @@
       "dimensions": "207*73*174mm",
       "weight": 5.42,
       "sohCurve": "default",
-      "status": "mass-production"
+      "status": "mass-production",
+      "unitPrice": 0.85
     },
     {
       "id": "eve-lf314k",
@@ -28,7 +29,8 @@
       "dimensions": "207*73*174mm",
       "weight": 5.48,
       "sohCurve": "default",
-      "status": "mass-production"
+      "status": "mass-production",
+      "unitPrice": 0.88
     },
     {
       "id": "eve-lf628k",
@@ -43,7 +45,8 @@
       "dimensions": "352*115*71mm",
       "weight": 11.2,
       "sohCurve": "lf628k",
-      "status": "mass-production"
+      "status": "mass-production",
+      "unitPrice": 0.82
     },
     {
       "id": "eve-lf560k",
@@ -407,7 +410,8 @@
       "cooling": "Liquid Cooling",
       "weight": "~35 t",
       "cycleLife": 8000,
-      "status": "mass-production"
+      "status": "mass-production",
+      "unitPrice": 850
     },
     {
       "id": "eve-3.44mwh-lf280k",
@@ -424,7 +428,8 @@
       "cooling": "Forced Air / Liquid",
       "weight": "~32 t",
       "cycleLife": 6000,
-      "status": "mass-production"
+      "status": "mass-production",
+      "unitPrice": 720
     },
     {
       "id": "catl-enerone",
