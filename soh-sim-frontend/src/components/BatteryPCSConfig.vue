@@ -513,7 +513,16 @@ const renderConnectionDiagram = () => {
     })
     return
   }
-  
+
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn <= 0 || pn <= 0) {
+    connectionChart.setOption({
+      title: { text: '请设置集装箱数量和PCS数量', left: 'center', top: 'center', textStyle: { color: 'var(--color-text-muted)', fontSize: 14 } },
+    })
+    return
+  }
+
   const nodes = []
   const links = []
   
@@ -527,8 +536,6 @@ const renderConnectionDiagram = () => {
     text: style.getPropertyValue('--color-text').trim(),
   }
 
-  const ctn = containerQty.value
-  const pn = pcsQty.value
   const maxItems = Math.max(ctn, pn, 4)
   const span = Math.min(800, maxItems * 100)
   const startX = (1000 - span) / 2
@@ -671,6 +678,15 @@ const renderSingleLineDiagram = () => {
     })
     return
   }
+
+  const ctn = containerQty.value
+  const pn = pcsQty.value
+  if (ctn <= 0 || pn <= 0) {
+    singleLineChart.setOption({
+      title: { text: '请设置集装箱数量和PCS数量', left: 'center', top: 'center', textStyle: { color: 'var(--color-text-muted)', fontSize: 14 } },
+    })
+    return
+  }
   
   const style = getComputedStyle(document.documentElement)
   const colors = {
@@ -682,8 +698,6 @@ const renderSingleLineDiagram = () => {
     text: style.getPropertyValue('--color-text').trim(),
   }
 
-  const ctn = containerQty.value
-  const pn = pcsQty.value
   const maxItems = Math.max(ctn, pn, 4)
   const span = Math.min(880, maxItems * 110)
   const startX = (1000 - span) / 2
