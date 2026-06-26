@@ -731,7 +731,6 @@ const renderSingleLineDiagram = () => {
     style: { text: `AC母线 ${pcs.voltage}V`, x: 500, y: 155, fill: colors.amber, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
   })
   
-  const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
   const pcsUnitWidth = Math.min(74, span / Math.max(pn, 1))
   const pcsPositions = []
   for (let i = 0; i < pn; i++) {
@@ -761,32 +760,59 @@ const renderSingleLineDiagram = () => {
     })
   }
   
-  graphicElements.push({
-    type: 'line',
-    shape: { x1: startX, y1: 285, x2: startX + span, y2: 285 },
-    style: { stroke: colors.slate, lineWidth: 3 },
-  })
-  graphicElements.push({
-    type: 'text',
-    style: { text: `DC母线 ${pcs.dcVoltage}`, x: 500, y: 275, fill: colors.slate, fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
-  })
-  
+  // DC侧 — 每个PCS独立连接其集装箱，无公共DC母线
+  const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
   const containerUnitWidth = Math.min(76, span / Math.max(containersPerPCSVal, 1) / Math.max(pn, 1) * 0.85)
   const containerHeight = 50
   const depth = 12
+  const dcJunctionY = 280
+  const containerTop = 320
+  
+  // 存放每个PCS组内的集装箱数量
+  const groupContainers = new Array(pn).fill(0)
+  for (let i = 0; i < ctn; i++) {
+    const gi = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
+    groupContainers[gi]++
+  }
+  
+  // 为每个PCS画DC垂直线 → DC汇流点
+  for (let i = 0; i < pn; i++) {
+    const pcsX = pcsPositions[i]
+    graphicElements.push({
+      type: 'line',
+      shape: { x1: pcsX, y1: 249, x2: pcsX, y2: dcJunctionY },
+      style: { stroke: colors.slate, lineWidth: 2 },
+    })
+    graphicElements.push({
+      type: 'circle',
+      shape: { cx: pcsX, cy: dcJunctionY, r: 4 },
+      style: { fill: colors.slate },
+    })
+  }
+  
+  // 每个PCS的DC标签
+  for (let i = 0; i < pn; i++) {
+    const pcsX = pcsPositions[i]
+    graphicElements.push({
+      type: 'text',
+      style: { text: 'DC', x: pcsX, y: dcJunctionY - 10, fill: colors.slate, fontSize: 8, textAlign: 'center' },
+    })
+  }
   
   for (let i = 0; i < ctn; i++) {
     const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
     const pcsX = pcsPositions[pcsGroupIdx] || 500
     const containerInGroup = i % containersPerPCSVal
-    const offset = (containerInGroup - (containersPerPCSVal - 1) / 2) * (containerUnitWidth + 4)
+    const groupCount = groupContainers[pcsGroupIdx]
+    const offset = (containerInGroup - (groupCount - 1) / 2) * (containerUnitWidth + 4)
     const x = pcsX + offset
     const boxX = x - containerUnitWidth / 2 + 4
-    const boxY = 325
+    const boxY = containerTop
     
+    // DC汇流点到集装箱的垂直连线
     graphicElements.push({
       type: 'line',
-      shape: { x1: x, y1: 285, x2: x, y2: boxY },
+      shape: { x1: x, y1: dcJunctionY, x2: x, y2: boxY },
       style: { stroke: colors.slate, lineWidth: 2 },
     })
     
@@ -843,7 +869,6 @@ const renderSingleLineDiagram = () => {
       },
     })
     
-    // 集装箱标签
     graphicElements.push({
       type: 'text',
       style: { text: `舱${i + 1}`, x: x, y: boxY + 20, fill: '#fff', fontSize: 10, textAlign: 'center', fontWeight: 'bold' },
