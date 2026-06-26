@@ -237,6 +237,7 @@
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useProducts } from '../composables/useProducts'
+import { useDraftRef } from '../composables/useDraft'
 
 const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])
@@ -320,11 +321,11 @@ watch(() => props.active, (isActive) => {
   }
 })
 
-const selectedContainer = ref('')
-const containerQty = ref(1)
-const selectedPCS = ref('')
-const targetEnergy = ref(null)
-const targetPower = ref(null)
+const selectedContainer = useDraftRef('battery-pcs-selected-container', '').state
+const containerQty = useDraftRef('battery-pcs-container-qty', 1).state
+const selectedPCS = useDraftRef('battery-pcs-selected-pcs', '').state
+const targetEnergy = useDraftRef('battery-pcs-target-energy', null).state
+const targetPower = useDraftRef('battery-pcs-target-power', null).state
 
 const energyPowerRatio = computed(() => {
   const e = totalEnergy.value

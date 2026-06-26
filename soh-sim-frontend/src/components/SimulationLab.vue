@@ -596,6 +596,7 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
+import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const emit = defineEmits(['applyConfig', 'error'])
 
@@ -607,13 +608,13 @@ const steps = [
   { label: '仿真结果' },
 ]
 
-const currentStep = ref(0)
-const surveyId = ref('')
+const currentStep = useDraftRef('sim-current-step', 0).state
+const surveyId = useDraftRef('sim-survey-id', '').state
 const searchKeyword = ref('')
 const searchResults = ref([])
-const selectedAlgorithm = ref('')
+const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
 
-const surveyData = reactive({
+const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-survey-data', {
   projectName: '',
   ratedEnergy: 5,
   containerQty: 62,
@@ -626,7 +627,7 @@ const surveyData = reactive({
   location: '',
 })
 
-const simParams = reactive({
+const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-params', {
   simulationYears: 25,
   guaranteeYears: 10,
   guaranteeSoh: 70,
@@ -645,14 +646,14 @@ const algorithms = ref([])
 const algoParams = reactive({})
 const selectedAlgoDetail = ref(null)
 
-const correctionFactors = reactive({
+const { state: correctionFactors, clearDraft: clearCorrectionFactorsDraft } = useDraft('sim-correction-factors', {
   sohFactor: 1.0,
   rteFactor: 1.0,
   capacityFactor: 1.0,
   agingFactor: 1.0,
 })
 
-const yearlyCorrections = ref([])
+const yearlyCorrections = useDraftRef('sim-yearly-corrections', []).state
 const initYearlyCorrections = () => {
   yearlyCorrections.value = []
   for (let i = 0; i <= simParams.simulationYears; i++) {

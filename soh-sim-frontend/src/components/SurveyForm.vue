@@ -203,12 +203,13 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
+import { useDraft } from '../composables/useDraft'
 
 const emit = defineEmits(['error'])
 
 const { cells, loadAll } = useProducts()
 
-const form = reactive({
+const defaultForm = {
   project_name: '',
   contact_person: '',
   contact_phone: '',
@@ -238,7 +239,9 @@ const form = reactive({
   ac_voltage: null,
   thdi: null,
   remarks: ''
-})
+}
+
+const { state: form, clearDraft: clearFormDraft } = useDraft('survey-form', defaultForm)
 
 const submitting = ref(false)
 const showSuccess = ref(false)
@@ -255,7 +258,7 @@ async function submitForm() {
   }
 
   submitting.value = true
-  
+
   try {
     const response = await fetch('/api/survey/submit', {
       method: 'POST',
@@ -266,10 +269,12 @@ async function submitForm() {
     })
 
     const result = await response.json()
-    
+
     if (result.success) {
       submittedData.value = result
       showSuccess.value = true
+      // 提交成功后清除草稿，正式入库的数据已存数据库
+      clearFormDraft()
       resetForm()
     } else {
       emit('error', '提交失败: ' + (result.error || '未知错误'), 'error')
@@ -283,37 +288,7 @@ async function submitForm() {
 }
 
 function resetForm() {
-  Object.assign(form, {
-    project_name: '',
-    contact_person: '',
-    contact_phone: '',
-    contact_email: '',
-    location: '',
-    altitude: null,
-    total_mw: null,
-    total_mwh: null,
-    duration: null,
-    cycles_per_day: 1,
-    temp_max: null,
-    temp_min: null,
-    temp_avg: null,
-    humidity: null,
-    grid_voltage: null,
-    grid_frequency: null,
-    cell_model: '',
-    rte_target: null,
-    soh_year1: null,
-    soh_year25: null,
-    calendar_life: null,
-    cycle_life: null,
-    availability_target: null,
-    aux_consumption: null,
-    response_time: null,
-    dc_voltage_range: '',
-    ac_voltage: null,
-    thdi: null,
-    remarks: ''
-  })
+  Object.assign(form, defaultForm)
 }
 
 function closeSuccess() {

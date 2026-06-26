@@ -170,6 +170,7 @@
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
 import * as echarts from 'echarts'
+import { useDraft } from '../composables/useDraft'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })
 
@@ -194,7 +195,7 @@ const chartColors = computed(() => {
   }
 })
 
-const f = reactive({
+const { state: f, clearDraft: clearFDraft } = useDraft('financial-params', {
   offPeakPrice: 200, peakPrice: 600, spreadCapture: 85, operatingDays: 330,
   capacityPrice: 50000, ancillaryPrice: 30000, priceEscalation: 1.5, efficiencyLossPct: 5,
   containerCostPerMWh: 100, pcsCostPerMW: 25, bopCostPerMWh: 30, developmentCostPerMW: 20,

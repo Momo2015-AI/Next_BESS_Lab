@@ -94,6 +94,7 @@ import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
 import AuxPowerCalculator from './components/AuxPowerCalculator.vue'
+import { useDraft, setupBeforeUnloadGuard } from './composables/useDraft'
 
 const batteryDC = ref(null)
 const pcsAC = ref(null)
@@ -135,7 +136,7 @@ function navigateTo(tab) {
 
 const N = 26
 
-const params = reactive({
+const params = useDraft('app-params', {
   ratedEnergy: 5,
   initContainerQty: 10,
   initPcsQty: 2,
@@ -149,23 +150,28 @@ const params = reactive({
   pcsAuxRun: 6.5,
   pcsAuxStandby: 1.0,
   requiredEnergy: 240,
-})
+}).state
 
-const soh = ref([
+const soh = useDraftRef('app-soh', [
   0.9925, 0.9318, 0.9014, 0.877, 0.856, 0.8371, 0.8197, 0.8036, 0.7885, 0.7742,
   0.7606, 0.7475, 0.735, 0.723, 0.7113, 0.7, 0.689, 0.678, 0.6672, 0.6564,
   0.6458, 0.6354, 0.6252, 0.6152, 0.6074, 0.6008,
-])
+]).state
 
-const rte = ref([
+const rte = useDraftRef('app-rte', [
   0.941, 0.9384, 0.9372, 0.9363, 0.9355, 0.9347, 0.934, 0.9333, 0.9326, 0.932,
   0.9314, 0.9308, 0.9302, 0.9296, 0.929, 0.9285, 0.9279, 0.9273, 0.9268, 0.9262,
   0.9256, 0.9251, 0.9245, 0.924, 0.9235, 0.923,
-])
+]).state
 
-const dod = ref(new Array(N).fill(100))
-const augQty = ref(new Array(N).fill(0))
-augQty.value[6] = 6
+const dod = useDraftRef('app-dod', new Array(N).fill(100)).state
+
+const augQtyDraft = useDraftRef('app-aug-qty', (function () {
+  const arr = new Array(N).fill(0)
+  arr[6] = 6
+  return arr
+})())
+const augQty = augQtyDraft.state
 
 const results = reactive({
   initGross: new Array(N).fill(0),
@@ -397,6 +403,7 @@ function loadSurveyData() {
 }
 
 onMounted(() => {
+  setupBeforeUnloadGuard()
   loadSurveyData()
   calculate()
 })

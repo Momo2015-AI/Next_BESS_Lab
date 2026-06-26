@@ -558,6 +558,7 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
+import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const { t } = useI18n()
 const emit = defineEmits(['applyParams'])
@@ -570,16 +571,16 @@ const {
   matchConfigRule, loadAll,
 } = useProducts()
 
-const selectedCellModel = ref('')
-const selectedPackModel = ref('')
-const selectedRackModel = ref('')
-const selectedClusterModel = ref('')
-const selectedContainerModel = ref('')
+const selectedCellModel = useDraftRef('rc-selected-cell-model', '').state
+const selectedPackModel = useDraftRef('rc-selected-pack-model', '').state
+const selectedRackModel = useDraftRef('rc-selected-rack-model', '').state
+const selectedClusterModel = useDraftRef('rc-selected-cluster-model', '').state
+const selectedContainerModel = useDraftRef('rc-selected-container-model', '').state
 
-const matchedConfig = ref(null)
-const autoMatchEnabled = ref(true)
+const matchedConfig = useDraftRef('rc-matched-config', null).state
+const autoMatchEnabled = useDraftRef('rc-auto-match-enabled', true).state
 
-const form = reactive({
+const { state: form, clearDraft: clearFormDraft } = useDraft('rc-form', {
   projectName: '',
   projectType: '',
   location: '',

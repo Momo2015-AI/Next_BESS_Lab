@@ -258,6 +258,7 @@
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted } from 'vue'
 import * as echarts from 'echarts'
+import { useDraftRef } from '../composables/useDraft'
 
 const props = defineProps({
   baseParams: { type: Object, default: () => ({}) },
@@ -265,8 +266,8 @@ const props = defineProps({
 
 const emit = defineEmits(['error'])
 
-const scenarios = ref([])
-const selectedScenarioIdx = ref(-1)
+const scenarios = useDraftRef('scenario-list', []).state
+const selectedScenarioIdx = useDraftRef('scenario-selected-idx', -1).state
 const editingScenario = ref(null)
 const calculating = ref(false)
 const showChart = ref('soh')

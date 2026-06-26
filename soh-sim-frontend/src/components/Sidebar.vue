@@ -53,12 +53,18 @@
     </nav>
 
     <div class="p-4 border-t" style="border-color: #E0E0E0;">
-      <button 
+      <button
         @click="$emit('navigate', 'auth')"
         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
         :class="activeTab === 'auth' ? 'sidebar-active' : 'sidebar-item'">
         <span>🔐</span>
         <span>{{ $t('sidebar.auth') }}</span>
+      </button>
+      <button
+        @click="onClearDrafts"
+        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all sidebar-item">
+        <span>🧹</span>
+        <span>清除草稿缓存</span>
       </button>
     </div>
   </aside>
@@ -66,6 +72,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { clearAllDrafts, listDrafts } from '../composables/useDraft'
 
 defineProps({
   activeTab: {
@@ -74,7 +81,20 @@ defineProps({
   }
 })
 
-defineEmits(['navigate'])
+const emit = defineEmits(['navigate'])
+
+function onClearDrafts() {
+  const keys = listDrafts()
+  if (keys.length === 0) {
+    alert('当前没有草稿缓存')
+    return
+  }
+  if (confirm(`确定清除 ${keys.length} 项草稿缓存？此操作不可恢复，已提交到数据库的数据不受影响。`)) {
+    clearAllDrafts()
+    alert('草稿缓存已清除，页面将刷新以应用默认值')
+    location.reload()
+  }
+}
 
 const foundationItems = ref([
   { id: 'survey', label: '项目调研表', icon: '📋' },

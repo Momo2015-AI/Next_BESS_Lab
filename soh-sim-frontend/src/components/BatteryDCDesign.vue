@@ -309,10 +309,11 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
+import { useDraft } from '../composables/useDraft'
 
 const emit = defineEmits(['apply-config', 'error'])
 
-const { cells, loadAll } = useProducts()
+const { cells, containers, loadAll } = useProducts()
 
 // 电芯库数据（从统一产品库获取）
 const selectedCellId = ref('')
@@ -359,7 +360,7 @@ const showToast = (message, type = 'success') => {
 }
 
 // 电池配置
-const batteryConfig = reactive({
+const { state: batteryConfig, clearDraft: clearBatteryConfigDraft } = useDraft('battery-dc-config', {
   // 电芯
   cellType: 'LFP280',
   cellCapacity: 280,
@@ -486,6 +487,7 @@ function applyBatteryConfig() {
     cyclesPerDay: batteryConfig.cyclesPerDay,
     temperature: batteryConfig.operatingTemp,
   })
+  // 应用配置后，App.vue 会触发数据库持久化（syncParamsToDb），此处保留草稿以便用户回看
   showToast('电池配置已应用')
 }
 

@@ -145,6 +145,7 @@
 <script setup>
 import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
 import * as echarts from 'echarts'
+import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -153,7 +154,7 @@ const props = defineProps({
 
 const emit = defineEmits(['error'])
 
-const sensitivityParams = reactive([
+const { state: sensitivityParams, clearDraft: clearSensitivityDraft } = useDraft('sensitivity-params', [
   { key: 'electricityPrice', label: '电价', enabled: true, min: 0.3, max: 0.8, current: 0.5, unit: '元/kWh' },
   { key: 'inflationRate', label: '通货膨胀率', enabled: true, min: 0.01, max: 0.05, current: 0.03, unit: '' },
   { key: 'discountRate', label: '折现率', enabled: false, min: 0.05, max: 0.12, current: 0.08, unit: '' },
@@ -162,7 +163,7 @@ const sensitivityParams = reactive([
   { key: 'subsidy', label: '补贴系数', enabled: false, min: 0.5, max: 1.5, current: 1.0, unit: '' },
 ])
 
-const steps = ref(5)
+const steps = useDraftRef('sensitivity-steps', 5).state
 const analyzing = ref(false)
 const analysisResults = ref([])
 const tornadoChart = ref(null)
