@@ -11,7 +11,7 @@ from flask import Blueprint, request, jsonify, current_app
 from sqlalchemy import or_
 from database import (
     db, CellProduct, PackProduct, RackProduct, ClusterProduct,
-    ContainerProduct, PcsProduct, BatteryConfigRule, User
+    ContainerProduct, PcsProduct, BatteryConfigRule, User, BatteryManufacturer
 )
 from routes.auth import _get_user_from_token
 
@@ -212,6 +212,39 @@ def _apply_tenant_filter(query, model_cls, user, include_builtin=True):
     return query
 
 
+_MFR_NAME_MAP = {
+    'EVE (亿纬锂能)': '亿纬锂能 EVE',
+    'CATL (宁德时代)': '宁德时代 CATL',
+    'BYD (比亚迪)': '比亚迪 BYD',
+    'Panasonic (松下)': '松下 Panasonic',
+    'LG Energy (LG新能源)': 'LG化学 LG Chem',
+    'Samsung SDI': '三星 SDI',
+    'Sony': '索尼 Sony',
+    'Toshiba': '东芝 Toshiba',
+    'Hitachi': '日立 Hitachi',
+    '国轩高科': '国轩高科 Gotion',
+    '欣旺达': '欣旺达 Sunwoda',
+}
+
+
+def _get_manufacturer_id(mfr_name):
+    """根据厂商名称匹配电池厂家ID"""
+    if not mfr_name:
+        return None
+    
+    normalized_name = _MFR_NAME_MAP.get(mfr_name, mfr_name)
+    
+    mfr = BatteryManufacturer.query.filter(
+        or_(
+            BatteryManufacturer.name == normalized_name,
+            BatteryManufacturer.name_en == normalized_name,
+            BatteryManufacturer.name.contains(mfr_name.split('(')[0].strip()),
+        )
+    ).first()
+    
+    return mfr.id if mfr else None
+
+
 def seed_products():
     """从 products.json 种子数据初始化产品库（标记为系统内置，所有企业可见）
     
@@ -234,6 +267,11 @@ def seed_products():
                 item['is_builtin'] = True
             if 'tenant_id' not in item:
                 item['tenant_id'] = None
+            
+            # 自动匹配manufacturer_id
+            mfr_name = item.get('mfr')
+            if mfr_name and hasattr(model_cls, 'manufacturer_id'):
+                item['manufacturer_id'] = _get_manufacturer_id(mfr_name)
 
             existing = model_cls.query.get(item.get('id'))
             if existing:

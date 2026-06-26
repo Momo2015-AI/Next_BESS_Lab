@@ -514,6 +514,7 @@ class CellProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))  # 企业隔离
     is_builtin = db.Column(db.Boolean, default=False)  # 是否系统内置（对所有企业可见）
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联电池厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     chemistry = db.Column(db.String(50))
@@ -536,6 +537,9 @@ class CellProduct(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='cells')
+    
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -547,6 +551,7 @@ class PackProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联电池厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     chemistry = db.Column(db.String(50))
@@ -564,6 +569,9 @@ class PackProduct(db.Model):
     bms_type = db.Column(db.String(100))
     cycle_life = db.Column(db.Integer)
     status = db.Column(db.String(50), default='mass-production')
+    
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='packs')
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -576,6 +584,7 @@ class RackProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联电池厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     pack_model = db.Column(db.String(200))
@@ -589,6 +598,9 @@ class RackProduct(db.Model):
     weight = db.Column(db.Float)  # kg
     cooling = db.Column(db.String(100))
     status = db.Column(db.String(50), default='mass-production')
+    
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='racks')
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -601,6 +613,7 @@ class ClusterProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联电池厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     rack_model = db.Column(db.String(200))
@@ -615,6 +628,9 @@ class ClusterProduct(db.Model):
     weight = db.Column(db.Float)  # kg
     bmu_type = db.Column(db.String(100))
     status = db.Column(db.String(50), default='mass-production')
+    
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='clusters')
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -627,6 +643,7 @@ class ContainerProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联电池厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     spec = db.Column(db.String(100))  # 规格，was type
@@ -653,6 +670,9 @@ class ContainerProduct(db.Model):
     status = db.Column(db.String(50), default='mass-production')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='containers')
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -665,6 +685,7 @@ class PcsProduct(db.Model):
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
+    manufacturer_id = db.Column(db.String(36), db.ForeignKey('battery_manufacturers.id'))  # 关联厂家
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     rated_power_mw = db.Column(db.Float)  # MW
@@ -687,6 +708,9 @@ class PcsProduct(db.Model):
     status = db.Column(db.String(50), default='mass-production')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 关联
+    manufacturer = db.relationship('BatteryManufacturer', back_populates='pcs')
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -830,6 +854,61 @@ class AlgorithmModel(db.Model):
     tenant = db.relationship('Tenant', back_populates='algorithm_models')
     created_by_user = db.relationship('User', back_populates='algorithm_models')
     simulation_results = db.relationship('SimulationResult', back_populates='algorithm_model')
+
+
+class BatteryManufacturer(db.Model):
+    """电池厂家模型 - 存储各主流厂家的SOH/RTE校准参数"""
+    __tablename__ = 'battery_manufacturers'
+    
+    id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
+    
+    # 厂家基本信息
+    name = db.Column(db.String(200), nullable=False)  # 厂家名称
+    name_en = db.Column(db.String(200))  # 英文名称
+    country = db.Column(db.String(100))  # 国家
+    logo_url = db.Column(db.String(500))  # 厂家Logo
+    
+    # 电池类型
+    chemistry_type = db.Column(db.String(50))  # 化学体系: LFP/NCM/NCA/LTO
+    
+    # 校准后的Arrhenius参数（JSON格式存储）
+    calibrated_params = db.Column(db.Text)  # {"A_cal": 0.02, "Ea_cal": 20000, ...}
+    
+    # 精度指标
+    rmse_soh = db.Column(db.Float)  # SOH预测RMSE (%)
+    rmse_rte = db.Column(db.Float)  # RTE预测RMSE (%)
+    data_points = db.Column(db.Integer)  # 训练数据点数量
+    
+    # 适用场景
+    applicable_scenarios = db.Column(db.Text)  # JSON数组
+    
+    # 是否内置（预设厂家）
+    is_builtin = db.Column(db.Boolean, default=False)
+    
+    # 是否启用
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # 排序
+    sort_order = db.Column(db.Integer, default=0)
+    
+    # 描述
+    description = db.Column(db.Text)
+    
+    # 时间
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # 反向关联
+    cells = db.relationship('CellProduct', back_populates='manufacturer')
+    packs = db.relationship('PackProduct', back_populates='manufacturer')
+    racks = db.relationship('RackProduct', back_populates='manufacturer')
+    clusters = db.relationship('ClusterProduct', back_populates='manufacturer')
+    containers = db.relationship('ContainerProduct', back_populates='manufacturer')
+    pcs = db.relationship('PcsProduct', back_populates='manufacturer')
+    
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 # 添加租户关联

@@ -370,6 +370,77 @@
         </div>
       </div>
 
+      <div v-if="selectedAlgorithm === 'builtin-ai_simulation'" class="mt-4 rounded p-4" style="background-color: var(--color-card-dark); border: 2px solid var(--color-accent);">
+        <h4 class="text-xs font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent);">
+          <span>🤖</span> AI仿真配置
+        </h4>
+        
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">电池厂家</label>
+            <select v-model="aiSimParams.manufacturerId"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+              <option value="">选择厂家（使用通用模型）</option>
+              <option v-for="mfr in manufacturers" :key="mfr.id" :value="mfr.id">
+                {{ mfr.name }} ({{ mfr.chemistry_type }})
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">仿真年限 (年)</label>
+            <input v-model.number="aiSimParams.simulationYears" type="number" min="1" max="40"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+          </div>
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">运行温度 (°C)</label>
+            <input v-model.number="aiSimParams.temperature" type="number" step="0.5" min="-20" max="60"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+          </div>
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">日循环次数</label>
+            <input v-model.number="aiSimParams.cyclesPerDay" type="number" step="0.5" min="0.5" max="3"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+          </div>
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">放电深度 DOD (%)</label>
+            <input v-model.number="aiSimParams.dod" type="number" step="1" min="20" max="100"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+          </div>
+          <div>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted);">充放电倍率 (C)</label>
+            <input v-model.number="aiSimParams.cRate" type="number" step="0.1" min="0.1" max="2"
+              class="w-full rounded px-2 py-1 text-xs" 
+              style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border);"
+              onfocus="this.style.borderColor='var(--color-input-focus)'; this.style.outline='none';"
+              onblur="this.style.borderColor='var(--color-input-border)';">
+          </div>
+        </div>
+
+        <div v-if="selectedManufacturer" class="mt-3 rounded p-2" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+          <p class="text-[10px]" style="color: var(--color-text-muted);"><strong style="color: var(--color-accent);">{{ selectedManufacturer.name }}</strong> - {{ selectedManufacturer.description }}</p>
+          <div class="flex gap-4 mt-1">
+            <span class="text-[10px]" style="color: var(--color-text-secondary);">精度: SOH RMSE {{ selectedManufacturer.rmse_soh }}%</span>
+            <span class="text-[10px]" style="color: var(--color-text-secondary);">RTE RMSE {{ selectedManufacturer.rmse_rte }}%</span>
+            <span class="text-[10px]" style="color: var(--color-text-secondary);">数据点: {{ selectedManufacturer.data_points }}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-4 flex justify-between">
         <button @click="prevStep" 
           class="text-xs px-4 py-2 rounded transition-all"
@@ -594,7 +665,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick, watch } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 
@@ -645,6 +716,20 @@ const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-para
 const algorithms = ref([])
 const algoParams = reactive({})
 const selectedAlgoDetail = ref(null)
+
+const manufacturers = ref([])
+const aiSimParams = reactive({
+  manufacturerId: '',
+  simulationYears: 25,
+  temperature: 25,
+  cyclesPerDay: 1,
+  dod: 80,
+  cRate: 0.5,
+})
+
+const selectedManufacturer = computed(() => {
+  return manufacturers.value.find(m => m.id === aiSimParams.manufacturerId)
+})
 
 const { state: correctionFactors, clearDraft: clearCorrectionFactorsDraft } = useDraft('sim-correction-factors', {
   sohFactor: 1.0,
@@ -759,9 +844,21 @@ const prevStep = () => {
 const fetchAlgorithms = async () => {
   try {
     const resp = await fetch('/api/algorithms/public?category=degradation')
+    const simResp = await fetch('/api/algorithms/public?category=simulation')
+    
     const data = await resp.json()
+    const simData = await simResp.json()
+    
+    let allAlgs = []
     if (data.success && data.data.length > 0) {
-      algorithms.value = data.data.map(alg => ({
+      allAlgs = allAlgs.concat(data.data)
+    }
+    if (simData.success && simData.data.length > 0) {
+      allAlgs = allAlgs.concat(simData.data)
+    }
+    
+    if (allAlgs.length > 0) {
+      algorithms.value = allAlgs.map(alg => ({
         id: alg.id,
         name: alg.name,
         name_en: alg.name_en || '',
@@ -781,6 +878,18 @@ const fetchAlgorithms = async () => {
     }
   } catch (e) {
     console.error('获取算法列表失败:', e)
+  }
+}
+
+const fetchManufacturers = async () => {
+  try {
+    const resp = await fetch('/api/ai-sim/manufacturers')
+    const data = await resp.json()
+    if (data.success && data.data.length > 0) {
+      manufacturers.value = data.data
+    }
+  } catch (e) {
+    console.error('获取厂家列表失败:', e)
   }
 }
 
@@ -871,15 +980,21 @@ const calculateSOH = (modelType, params, t) => {
   }
 }
 
-const runSimulation = () => {
+const runSimulation = async () => {
   currentStep.value = 4
+  
+  const algo = algorithms.value.find(a => a.id === selectedAlgorithm.value)
+  
+  if (algo?.model_type === 'ai_simulation') {
+    await runAISimulation()
+    return
+  }
   
   const N = simParams.simulationYears + 1
   const sohCurve = []
   const rteCurve = []
   const netAvailCurve = []
   
-  const algo = algorithms.value.find(a => a.id === selectedAlgorithm.value)
   const modelType = algo?.model_type || 'arrhenius'
 
   for (let i = 0; i < N; i++) {
@@ -934,7 +1049,6 @@ const runSimulation = () => {
     }, 300)
   })
 
-  // 将仿真结果 emit 给父组件，打通仿真→容量对账的数据流
   emit('applyConfig', {
     soh: simulationResults.sohCurve,
     rte: simulationResults.rteCurve,
@@ -943,6 +1057,85 @@ const runSimulation = () => {
     simulationYears: simParams.simulationYears,
     guaranteeSoh: simParams.guaranteeSoh,
   })
+}
+
+const runAISimulation = async () => {
+  try {
+    const data = {
+      manufacturer_id: aiSimParams.manufacturerId || null,
+      simulation_years: aiSimParams.simulationYears,
+      temperature: aiSimParams.temperature,
+      cycles_per_day: aiSimParams.cyclesPerDay,
+      dod: aiSimParams.dod / 100,
+      c_rate: aiSimParams.cRate,
+      rte_initial: simParams.initRte,
+    }
+    
+    const resp = await fetch('/api/ai-sim/simulation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    
+    const result = await resp.json()
+    
+    if (result.success && result.data) {
+      const aiData = result.data
+      simulationResults.sohCurve = aiData.soh_curve
+      simulationResults.rteCurve = aiData.rte_curve
+      simulationResults.initSoh = aiData.soh_curve[0]
+      simulationResults.guaranteeEndSoh = aiData.soh_curve[Math.min(simParams.guaranteeYears, aiData.soh_curve.length - 1)]
+      simulationResults.finalSoh = aiData.soh_curve[aiData.soh_curve.length - 1]
+      simulationResults.meetsGuarantee = simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh
+      
+      const N = aiData.soh_curve.length
+      simulationResults.netAvailCurve = []
+      simulationResults.tableData = []
+      
+      for (let i = 0; i < N; i++) {
+        const soh = aiData.soh_curve[i] / 100
+        const rte = aiData.rte_curve[i] / 100
+        const grossEnergy = surveyData.ratedEnergy * surveyData.containerQty * (aiSimParams.dod / 100) * rte * soh * (simParams.acEfficiency / 100)
+        const auxEnergy = (simParams.bessAuxRun + simParams.pcsAuxRun) * aiSimParams.simulationYears / 1000
+        const netAvail = Math.max(0, grossEnergy - auxEnergy)
+        
+        simulationResults.netAvailCurve.push(netAvail)
+        simulationResults.tableData.push({
+          year: i,
+          soh: aiData.soh_curve[i],
+          rte: aiData.rte_curve[i],
+          netAvail: netAvail,
+          meetsReq: netAvail >= simParams.requiredEnergy,
+        })
+      }
+      
+      nextTick(() => {
+        setTimeout(() => {
+          const container = chartContainer.value
+          if (container) {
+            container.style.height = '12rem'
+            renderChart()
+          }
+        }, 300)
+      })
+      
+      emit('applyConfig', {
+        soh: simulationResults.sohCurve,
+        rte: simulationResults.rteCurve,
+        source: 'ai_simulation',
+        algorithmType: 'ai_simulation',
+        simulationYears: aiSimParams.simulationYears,
+        guaranteeSoh: simParams.guaranteeSoh,
+      })
+      
+      showToast('AI仿真计算完成')
+    } else {
+      showToast(result.error || 'AI仿真失败', 'error')
+    }
+  } catch (e) {
+    console.error('AI仿真失败:', e)
+    showToast('AI仿真失败: ' + e.message, 'error')
+  }
 }
 
 const renderChart = () => {
@@ -1078,6 +1271,7 @@ const exportResults = () => {
 onMounted(() => {
   initYearlyCorrections()
   fetchAlgorithms()
+  fetchManufacturers()
   window.addEventListener('resize', handleResize)
 })
 </script>

@@ -362,6 +362,28 @@ def get_builtin_algorithms():
         
         # ========== 仿真配置类 (simulation) ==========
         {
+            'name': 'AI仿真 (AI Simulation)',
+            'name_en': 'AI Simulation',
+            'model_type': 'ai_simulation',
+            'applicable_scenarios': ['厂家参数校准', 'AI辅助预测', '多厂家对比', '逆向仿真'],
+            'mathematical_form': 'Arrhenius + Data-Driven Correction',
+            'formula_expression': 'AI校准的Arrhenius模型 + 高斯过程残差校正',
+            'parameters': {
+                'manufacturer_id': {'label': '电池厂家', 'default': '', 'min': '', 'max': '', 'unit': ''},
+                'simulation_years': {'label': '仿真年限', 'default': 25, 'min': 1, 'max': 40, 'unit': '年'},
+                'temperature': {'label': '运行温度', 'default': 25, 'min': -20, 'max': 60, 'unit': '°C'},
+                'cycles_per_day': {'label': '日循环次数', 'default': 1, 'min': 0.5, 'max': 3, 'unit': '次'},
+                'dod': {'label': '放电深度', 'default': 80, 'min': 20, 'max': 100, 'unit': '%'},
+                'c_rate': {'label': '充放电倍率', 'default': 0.5, 'min': 0.1, 'max': 2, 'unit': 'C'},
+                'rte_initial': {'label': '初始RTE', 'default': 97.03, 'min': 85, 'max': 99, 'unit': '%'},
+            },
+            'accuracy_level': 'high',
+            'accuracy_desc': 'RMSE < 2%',
+            'category': 'simulation',
+            'is_builtin': True,
+            'description': 'AI仿真算法 - 基于物理约束+数据驱动的混合模型。通过Arrhenius方程建立物理框架，结合贝叶斯优化校准参数，利用高斯过程回归拟合残差。预设了宁德时代、比亚迪、亿纬锂能、三星SDI、LG化学、松下、东芝等12个主流厂家的校准参数，可直接选择厂家进行SOH/RTE预测，也可上传自有数据进行参数校准。支持输出任意年限的SOH/RTE曲线，适用于大规模储能项目的长期衰减预测和厂家对比分析。',
+        },
+        {
             'name': 'SOH曲线参数配置',
             'name_en': 'SOH Curve Configuration',
             'model_type': 'soh_curve_config',
