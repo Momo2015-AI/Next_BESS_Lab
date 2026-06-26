@@ -139,6 +139,14 @@ def calculate(params, soh, rte, dod, aug_qty):
         total_ac_usable[i] = init_ac_usable[i] + total_aug_ac
         meets_req[i] = total_ac_usable[i] >= required_energy
 
+    # AC-RTE 计算（基于第1年数据，对标行业POC关口表标准）
+    rte_year1 = float(rte[0]) if (rte and len(rte) > 0 and rte[0] is not None) else 0.94
+    ac_rte_no_aux = rte_year1 * ac_efficiency * 100
+    init_gross_0 = init_gross[0] if init_gross[0] > 0 else 1e-6
+    init_aux_0 = init_aux[0]
+    aux_ratio = init_aux_0 / init_gross_0
+    ac_rte_with_aux = ac_rte_no_aux * (1 - aux_ratio)
+
     return {
         "initGross": init_gross,
         "initAux": init_aux,
@@ -149,6 +157,8 @@ def calculate(params, soh, rte, dod, aug_qty):
         "augAccumQty": aug_accum_qty,
         "totalAcUsable": total_ac_usable,
         "meetsReq": meets_req,
+        "acRteNoAux": round(ac_rte_no_aux, 2),
+        "acRteWithAux": round(ac_rte_with_aux, 2),
     }
 
 

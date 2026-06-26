@@ -183,6 +183,8 @@ const results = reactive({
   augAccumQty: new Array(N).fill(0),
   totalAcUsable: new Array(N).fill(0),
   meetsReq: new Array(N).fill(false),
+  acRteNoAux: 0,
+  acRteWithAux: 0,
 })
 
 function updateParam(key, value) {
@@ -238,6 +240,13 @@ function calculate() {
     results.totalAcUsable[i] = results.initAcUsable[i] + totalAugAc
     results.meetsReq[i] = results.totalAcUsable[i] >= p.requiredEnergy
   }
+
+  const rteYear1 = Number.isFinite(Number(rte.value[0])) ? Number(rte.value[0]) : 0.94
+  results.acRteNoAux = +(rteYear1 * acEff * 100).toFixed(2)
+  const gross0 = results.initGross[0]
+  const aux0 = results.initAux[0]
+  const auxRatio = gross0 > 0 ? aux0 / gross0 : 0.05
+  results.acRteWithAux = +(rteYear1 * acEff * (1 - auxRatio) * 100).toFixed(2)
 }
 
 async function fetchCalculation() {

@@ -190,17 +190,17 @@ const dashboardMetrics = computed(() => {
   const duration = p.duration || 1
   const cyclesPerDay = p.cyclesPerDay || 1
   const acEff = (p.acEfficiency || 97) / 100
-  const rte0 = r[0] || 0.94
 
   const totalCapacity = ratedEnergy * initContainerQty
   const totalPower = totalCapacity / duration
+  const rte0 = r[0] || 0.94
   const annualThroughput = totalCapacity * cyclesPerDay * 365 * rte0 * acEff
 
-  const acRteNoAux = (rte0 * acEff * 100).toFixed(2)
+  const acRteNoAux = (res.acRteNoAux != null) ? Number(res.acRteNoAux).toFixed(2) : (rte0 * acEff * 100).toFixed(2)
   const initGross0 = res.initGross?.[0] || 0
   const initAux0 = res.initAux?.[0] || 0
   const auxRatio = initGross0 > 0 ? initAux0 / initGross0 : 0.05
-  const acRteWithAux = (rte0 * acEff * (1 - auxRatio) * 100).toFixed(2)
+  const acRteWithAux = (res.acRteWithAux != null) ? Number(res.acRteWithAux).toFixed(2) : (rte0 * acEff * (1 - auxRatio) * 100).toFixed(2)
   const epRatio = duration.toFixed(1)
 
   return {
