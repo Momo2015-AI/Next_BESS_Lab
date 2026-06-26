@@ -765,14 +765,15 @@ const renderSingleLineDiagram = () => {
   const containerUnitWidth = Math.min(76, span / Math.max(containersPerPCSVal, 1) / Math.max(pn, 1) * 0.85)
   const containerHeight = 50
   const depth = 12
-  const dcJunctionY = 280
-  const containerTop = 320
+  const dcJunctionY = 285
+  const dcBranchY = 300
+  const containerTop = 335
   
-  // 存放每个PCS组内的集装箱数量
-  const groupContainers = new Array(pn).fill(0)
+  // 存放每个PCS组内的集装箱
+  const groupContainers = new Array(pn).fill(null).map(() => [])
   for (let i = 0; i < ctn; i++) {
     const gi = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
-    groupContainers[gi]++
+    groupContainers[gi].push(i)
   }
   
   // 为每个PCS画DC垂直线 → DC汇流点
@@ -788,35 +789,69 @@ const renderSingleLineDiagram = () => {
       shape: { cx: pcsX, cy: dcJunctionY, r: 4 },
       style: { fill: colors.slate },
     })
-  }
-  
-  // 每个PCS的DC标签
-  for (let i = 0; i < pn; i++) {
-    const pcsX = pcsPositions[i]
     graphicElements.push({
       type: 'text',
-      style: { text: 'DC', x: pcsX, y: dcJunctionY - 10, fill: colors.slate, fontSize: 8, textAlign: 'center' },
+      style: { text: 'DC', x: pcsX, y: dcJunctionY - 12, fill: colors.slate, fontSize: 8, textAlign: 'center' },
     })
+    
+    const group = groupContainers[i]
+    if (group.length === 0) continue
+    
+    // 计算此组集装箱的水平范围
+    const firstIdx = group[0]
+    const lastIdx = group[group.length - 1]
+    const containerInGroup0 = firstIdx % containersPerPCSVal
+    const containerInGroup1 = lastIdx % containersPerPCSVal
+    const groupCount = group.length
+    const offset0 = (containerInGroup0 - (groupCount - 1) / 2) * (containerUnitWidth + 4)
+    const offset1 = (containerInGroup1 - (groupCount - 1) / 2) * (containerUnitWidth + 4)
+    const firstX = pcsX + offset0
+    const lastX = pcsX + offset1
+    const leftX = Math.min(firstX, lastX)
+    const rightX = Math.max(firstX, lastX)
+    
+    if (groupCount === 1) {
+      // 单集装箱：汇流点直接下垂到集装箱
+      graphicElements.push({
+        type: 'line',
+        shape: { x1: pcsX, y1: dcJunctionY, x2: pcsX, y2: containerTop },
+        style: { stroke: colors.slate, lineWidth: 2 },
+      })
+    } else {
+      // 多集装箱：汇流点 → 水平短线 → 分支下到各集装箱
+      graphicElements.push({
+        type: 'line',
+        shape: { x1: pcsX, y1: dcJunctionY, x2: pcsX, y2: dcBranchY },
+        style: { stroke: colors.slate, lineWidth: 2 },
+      })
+      graphicElements.push({
+        type: 'line',
+        shape: { x1: leftX, y1: dcBranchY, x2: rightX, y2: dcBranchY },
+        style: { stroke: colors.slate, lineWidth: 2 },
+      })
+      for (const ci of group) {
+        const containerInGroup = ci % containersPerPCSVal
+        const offset = (containerInGroup - (groupCount - 1) / 2) * (containerUnitWidth + 4)
+        const cx = pcsX + offset
+        graphicElements.push({
+          type: 'line',
+          shape: { x1: cx, y1: dcBranchY, x2: cx, y2: containerTop },
+          style: { stroke: colors.slate, lineWidth: 2 },
+        })
+      }
+    }
   }
   
+  // 绘制集装箱3D图形
   for (let i = 0; i < ctn; i++) {
     const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
     const pcsX = pcsPositions[pcsGroupIdx] || 500
     const containerInGroup = i % containersPerPCSVal
-    const groupCount = groupContainers[pcsGroupIdx]
+    const groupCount = groupContainers[pcsGroupIdx].length
     const offset = (containerInGroup - (groupCount - 1) / 2) * (containerUnitWidth + 4)
     const x = pcsX + offset
     const boxX = x - containerUnitWidth / 2 + 4
     const boxY = containerTop
-    
-    // DC汇流点到集装箱的垂直连线
-    graphicElements.push({
-      type: 'line',
-      shape: { x1: x, y1: dcJunctionY, x2: x, y2: boxY },
-      style: { stroke: colors.slate, lineWidth: 2 },
-    })
-    
-    // 3D集装箱 - 右侧面（平行四边形）
     graphicElements.push({
       type: 'polygon',
       shape: {
