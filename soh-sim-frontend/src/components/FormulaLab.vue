@@ -86,6 +86,28 @@
       </div>
     </div>
 
+    <div class="p-3 rounded-lg space-y-1.5" style="background: var(--color-bg-secondary); border: 1px solid rgba(59,130,246,0.2);">
+      <div class="text-[11px] font-bold" style="color: #3b82f6;">
+        {{ $t('formulaLab.opAcRteTitle') }}
+      </div>
+      <div class="text-[10px] mb-1 leading-relaxed" style="color: var(--color-text-muted);">
+        {{ $t('formulaLab.opAcRteDesc') }}
+      </div>
+      <div class="p-2.5 rounded font-mono overflow-x-auto text-[11px] space-y-2" style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-secondary);">
+        <div>
+          <span style="color: #3b82f6;">AC-RTE<sub>不带辅耗</sub></span> = DC-RTE<sub>year1</sub> × η<sub>AC</sub> × 100%
+        </div>
+        <div style="border-top: 1px solid var(--color-border);" class="pt-2">
+          <span style="color: #3b82f6;">AC-RTE<sub>带辅耗</sub></span> = AC-RTE<sub>不带辅耗</sub> × (1 - Ratio<sub>aux</sub>)
+        </div>
+        <div class="text-[10px] pl-4 space-y-0.5 mt-1" style="color: var(--color-text-muted);">
+          <div>Ratio<sub>aux</sub> = Aux<sub>init</sub>[0] / E<sub>gross_init</sub>[0]</div>
+          <div>η<sub>AC</sub> = acEfficiency / 100</div>
+          <div style="color: #f59e0b;" class="mt-0.5">{{ $t('formulaLab.opAcRteNote') }}</div>
+        </div>
+      </div>
+    </div>
+
     <div class="pt-3" style="border-top: 1px solid var(--color-border);">
       <h2 class="section-title" style="color: #f59e0b; border-color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em;">{{ $t('formulaLab.financeTitle') }}</h2>
     </div>

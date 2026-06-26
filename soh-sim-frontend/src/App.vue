@@ -94,7 +94,7 @@ import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
 import AuxPowerCalculator from './components/AuxPowerCalculator.vue'
-import { useDraft, setupBeforeUnloadGuard } from './composables/useDraft'
+import { useDraft, useDraftRef, setupBeforeUnloadGuard } from './composables/useDraft'
 
 const batteryDC = ref(null)
 const pcsAC = ref(null)

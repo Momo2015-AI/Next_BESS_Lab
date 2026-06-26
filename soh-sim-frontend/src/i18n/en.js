@@ -468,6 +468,9 @@ export default {
     op9Desc: 'DSCR measures whether annual cash available for debt service is sufficient, the key metric for bank financing approval. Numerator is EBITDA minus tax; denominator is annual principal + interest. Banks typically require DSCR ≥ 1.2-1.3x minimum throughout the loan period.',
     op10Desc: 'Payback period is when cumulative net cash flow first turns positive. Static payback ignores time value of money; dynamic payback discounts all cash flows at WACC. Storage projects typically have static payback of 8-12 years, dynamic payback of 10-15 years.',
     op11Desc: 'Lithium battery and storage systems follow Wrights Law: cumulative production doubling correlates with cost decline (learning rate ~18-20%). Mid-to-late cycle augmentation container costs will be significantly lower than construction period due to technology progress and scale effects. BNEF data shows DC-side equipment cost decline ~5-8%/yr, AC-side ~3-5%/yr.',
+    opAcRteTitle: 'Operator 12 — AC-RTE AC-side Round-Trip Efficiency (w/ and w/o Aux Consumption)',
+    opAcRteDesc: 'Per GB/T 36549 and GB/T 51437 industry standards, AC-RTE measures energy ratio at the Point of Interconnection (POI) meter. AC-RTE w/o aux considers only DC-RTE and PCS+transformer+line AC efficiency; AC-RTE w/ aux further deducts self-consumption ratio to reflect actual net-to-grid efficiency. Middle East Masdar/SPPC standalone BESS tender documents commonly require AC-RTE (w/ aux) >= 85%.',
+    opAcRteNote: 'Note: Transformer and line efficiencies are currently bundled into the acEfficiency parameter. Aux consumption ratio uses year-1 data Aux_init[0] / E_gross_init[0], consistent with industry practice.',
   },
   sohChart: {
     sohCurve: 'SOH Degradation Curve',
