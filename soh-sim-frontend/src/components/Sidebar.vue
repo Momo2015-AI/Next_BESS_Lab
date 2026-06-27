@@ -1,65 +1,55 @@
 <template>
-  <aside class="sidebar w-64 flex-shrink-0 overflow-hidden flex flex-col" style="background-color: #FFFFFF; border-right: 1px solid #E0E0E0;">
-    <nav class="flex-1 overflow-y-auto p-3">
-      <div class="mb-5">
-        <button
-          @click="$router.push('/')"
-          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
-          :class="$route.path === '/' ? 'sidebar-active' : 'sidebar-item'">
-          <span>🏠</span>
-          <span>{{ $t('sidebar.home') }}</span>
-        </button>
+  <aside class="sidebar-container">
+    <nav class="sidebar-scroll">
+      <div class="sidebar-section">
+        <router-link to="/" class="sidebar-link" :class="{ active: $route.path === '/' }">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span>Home</span>
+        </router-link>
       </div>
 
-      <div class="mb-5">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">项目流程</div>
-        <button
-          v-for="item in phaseItems"
-          :key="item.id"
-          @click="$router.push(item.path)"
-          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
-          :class="$route.path === item.path ? 'sidebar-active' : 'sidebar-item'">
-          <span class="status-dot" :class="'dot-' + item.status"></span>
+      <div class="sidebar-section">
+        <div class="section-label">Phases</div>
+        <router-link
+          v-for="item in phaseItems" :key="item.id"
+          :to="item.path"
+          class="sidebar-link"
+          :class="{ active: $route.path === item.path }">
+          <span class="phase-dot" :class="'dot-' + item.status">{{ item.num }}</span>
           <span>{{ item.label }}</span>
-          <span v-if="item.status === 'completed'" class="ml-auto text-xs" style="color: #2e7d32;">&#10003;</span>
-        </button>
+        </router-link>
       </div>
 
-      <div class="mb-5">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">核心工具</div>
-        <button
-          v-for="item in coreToolItems"
-          :key="item.id"
-          @click="$router.push(item.path)"
-          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
-          :class="$route.path === item.path ? 'sidebar-active' : 'sidebar-item'">
-          <span>{{ item.icon }}</span>
+      <div class="sidebar-section">
+        <div class="section-label">Core Tools</div>
+        <router-link
+          v-for="item in coreToolItems" :key="item.id"
+          :to="item.path"
+          class="sidebar-link"
+          :class="{ active: $route.path === item.path }">
+          <span class="tool-icon">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
-        </button>
+        </router-link>
       </div>
 
-      <div class="mb-5">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">高级工具</div>
-        <button
-          v-for="item in advToolItems"
-          :key="item.id"
-          @click="$router.push(item.path)"
-          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
-          :class="$route.path === item.path ? 'sidebar-active' : 'sidebar-item'">
-          <span>{{ item.icon }}</span>
+      <div class="sidebar-section">
+        <div class="section-label">Advanced</div>
+        <router-link
+          v-for="item in advToolItems" :key="item.id"
+          :to="item.path"
+          class="sidebar-link"
+          :class="{ active: $route.path === item.path }">
+          <span class="tool-icon">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
-        </button>
+        </router-link>
       </div>
     </nav>
 
-    <div class="p-4 border-t" style="border-color: #E0E0E0;">
-      <button
-        @click="$router.push('/auth')"
-        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
-        :class="$route.path === '/auth' ? 'sidebar-active' : 'sidebar-item'">
-        <span>🔐</span>
-        <span>{{ $t('sidebar.auth') }}</span>
-      </button>
+    <div class="sidebar-footer">
+      <router-link to="/auth" class="sidebar-link" :class="{ active: $route.path === '/auth' }">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Auth</span>
+      </router-link>
     </div>
   </aside>
 </template>
@@ -71,40 +61,142 @@ import { useBessStore } from '../stores/bess.js'
 const store = useBessStore()
 
 const phaseItems = computed(() => [
-  { id: 'phase1', path: '/phase1', label: 'Phase 1: 项目立项', status: store.phases.phase1.status },
-  { id: 'phase2', path: '/phase2', label: 'Phase 2: 系统设计', status: store.phases.phase2.status },
-  { id: 'phase3', path: '/phase3', label: 'Phase 3: 性能分析', status: store.phases.phase3.status },
-  { id: 'phase4', path: '/phase4', label: 'Phase 4: 经济评估', status: store.phases.phase4.status },
-  { id: 'phase5', path: '/phase5', label: 'Phase 5: 成果输出', status: store.phases.phase5.status },
+  { id: 'phase1', num: 1, path: '/phase1', label: 'Project Setup', status: store.phases.phase1.status },
+  { id: 'phase2', num: 2, path: '/phase2', label: 'System Design', status: store.phases.phase2.status },
+  { id: 'phase3', num: 3, path: '/phase3', label: 'Performance', status: store.phases.phase3.status },
+  { id: 'phase4', num: 4, path: '/phase4', label: 'Financial', status: store.phases.phase4.status },
+  { id: 'phase5', num: 5, path: '/phase5', label: 'Deliverables', status: store.phases.phase5.status },
 ])
 
 const coreToolItems = [
-  { id: 'formula', path: '/tools/formula', label: '算法与公式', icon: '📐' },
-  { id: 'params', path: '/tools/params', label: '参数配置面板', icon: '⚙' },
-  { id: 'conditions', path: '/tools/conditions', label: '运行工况', icon: '📊' },
-  { id: 'auxpower', path: '/tools/auxpower', label: '辅助功耗计算', icon: '⚡' },
-  { id: 'financial', path: '/tools/financial', label: '财务看板', icon: '💰' },
-  { id: 'engineering', path: '/tools/engineering', label: '工程计算', icon: '🏗' },
-  { id: 'datainject', path: '/tools/datainject', label: '数据注入', icon: '💉' },
+  { id: 'formula', path: '/tools/formula', label: 'Formulas', icon: 'fx' },
+  { id: 'params', path: '/tools/params', label: 'Parameters', icon: 'sl' },
+  { id: 'conditions', path: '/tools/conditions', label: 'Conditions', icon: 'wd' },
+  { id: 'auxpower', path: '/tools/auxpower', label: 'Aux Power', icon: 'P' },
+  { id: 'financial', path: '/tools/financial', label: 'Finance', icon: '$' },
+  { id: 'engineering', path: '/tools/engineering', label: 'Engineering', icon: 'En' },
+  { id: 'datainject', path: '/tools/datainject', label: 'Data Inject', icon: 'Di' },
 ]
 
 const advToolItems = [
-  { id: 'config', path: '/tools/config', label: '方案设计', icon: '📋' },
-  { id: 'survey-view', path: '/tools/survey-view', label: '调研输入', icon: '📝' },
-  { id: 'simulation-view', path: '/tools/simulation-view', label: '仿真分析', icon: '🧪' },
-  { id: 'report', path: '/tools/report', label: '报告输出', icon: '📄' },
-  { id: 'projects', path: '/tools/projects', label: '历史项目', icon: '📁' },
-  { id: 'templates', path: '/tools/templates', label: '校正因子模板', icon: '📑' },
-  { id: 'rules', path: '/tools/rules', label: '配置规则', icon: '📐' },
+  { id: 'config', path: '/tools/config', label: 'Config', icon: 'Cf' },
+  { id: 'survey-view', path: '/tools/survey-view', label: 'Survey', icon: 'Sv' },
+  { id: 'simulation-view', path: '/tools/simulation-view', label: 'Simulation', icon: 'Sm' },
+  { id: 'report', path: '/tools/report', label: 'Report', icon: 'Rp' },
+  { id: 'projects', path: '/tools/projects', label: 'Projects', icon: 'Pj' },
+  { id: 'templates', path: '/tools/templates', label: 'Templates', icon: 'Tp' },
+  { id: 'rules', path: '/tools/rules', label: 'Rules', icon: 'Ru' },
 ]
 </script>
 
 <style scoped>
-.sidebar-item { color: #666666; cursor: pointer; }
-.sidebar-item:hover { background-color: #F5F7FA; color: #2F5496; }
-.sidebar-active { background-color: #E8EEF5; color: #2F5496; font-weight: 600; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.dot-pending { background: #ccc; }
-.dot-in_progress { background: #2F5496; }
-.dot-completed { background: #2e7d32; }
+.sidebar-container {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-right: 0.5px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .sidebar-container {
+  background: rgba(29,29,31,0.6);
+  border-right-color: rgba(255,255,255,0.06);
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 10px;
+}
+
+.sidebar-section {
+  margin-bottom: 16px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #86868b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 10px;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .section-label { color: #6e6e73; }
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #424245;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.sidebar-link:hover {
+  background: rgba(0,0,0,0.04);
+  color: #1d1d1f;
+}
+
+.sidebar-link.active {
+  background: rgba(0,113,227,0.08);
+  color: #0071e3;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .sidebar-link { color: #a1a1a6; }
+[data-theme="dark"] .sidebar-link:hover { background: rgba(255,255,255,0.06); color: #f5f5f7; }
+[data-theme="dark"] .sidebar-link.active { background: rgba(0,113,227,0.15); color: #40a9ff; }
+
+.sidebar-link svg { flex-shrink: 0; opacity: 0.6; }
+.sidebar-link.active svg { opacity: 1; }
+
+.phase-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.dot-pending { background: #f0f0f0; color: #999; }
+.dot-in_progress { background: #0071e3; color: white; }
+.dot-completed { background: #30d158; color: white; }
+
+.tool-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.04);
+  color: #86868b;
+}
+
+[data-theme="dark"] .tool-icon { background: rgba(255,255,255,0.08); color: #6e6e73; }
+
+.sidebar-footer {
+  padding: 10px;
+  border-top: 0.5px solid rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .sidebar-footer { border-top-color: rgba(255,255,255,0.06); }
 </style>

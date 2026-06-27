@@ -1,57 +1,215 @@
 <template>
-  <div class="h-screen flex flex-col overflow-hidden" style="background-color: #F5F7FA;">
-    <div v-if="toast.show" class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="toast.type === 'success' ? { backgroundColor: '#10b981', color: 'white' } :
-              toast.type === 'error' ? { backgroundColor: '#ef4444', color: 'white' } :
-              toast.type === 'warning' ? { backgroundColor: '#f59e0b', color: 'white' } :
-              { backgroundColor: '#666666', color: 'white' }">
+  <div class="app-shell">
+    <div v-if="toast.show" class="toast-notification" :class="'toast-' + toast.type">
       {{ toast.message }}
     </div>
 
-    <header class="flex justify-between items-center flex-shrink-0 z-10"
-      style="background-color: #FFFFFF; border-bottom: 1px solid #E0E0E0; padding: 10px 20px;">
-      <div class="flex items-center gap-4">
-        <router-link to="/" class="flex items-center gap-2 cursor-pointer" style="text-decoration: none;">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #2F5496; color: white;">
-            <span class="text-sm font-bold">S</span>
+    <header class="app-header">
+      <div class="header-inner">
+        <router-link to="/" class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
           </div>
-          <span class="font-bold text-sm hidden sm:block" style="color: #2F5496;">SOH-SIM</span>
+          <span class="brand-text">SOH-SIM</span>
         </router-link>
-      </div>
-      <div class="flex items-center gap-3">
+
+        <nav class="header-nav">
+          <router-link to="/" class="nav-link" :class="{ active: $route.path === '/' }">Overview</router-link>
+          <router-link to="/phase1" class="nav-link">Phases</router-link>
+          <router-link to="/tools/formula" class="nav-link">Tools</router-link>
+        </nav>
+
+        <div class="header-actions">
+          <button @click="toggleTheme" class="icon-btn" :title="isDark ? 'Light Mode' : 'Dark Mode'">
+            <svg v-if="isDark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </div>
       </div>
     </header>
 
-    <div class="flex flex-1 overflow-hidden">
+    <div class="app-body">
       <Sidebar />
-      <main class="flex-1 overflow-auto">
-        <router-view />
+      <main class="app-main">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref, provide, computed } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 
-const toast = reactive({
-  show: false,
-  message: '',
-  type: 'info',
-})
-
+const toast = reactive({ show: false, message: '', type: 'info' })
 const showToast = (message, type = 'info') => {
   toast.message = message
   toast.type = type
   toast.show = true
   setTimeout(() => { toast.show = false }, 3000)
 }
-
-// Expose showToast globally for child component access via provide
-import { provide } from 'vue'
 provide('showToast', showToast)
+
+const isDark = computed(() => document.documentElement.getAttribute('data-theme') === 'dark')
+function toggleTheme() {
+  const next = isDark.value ? 'light' : 'dark'
+  document.documentElement.setAttribute('data-theme', next)
+  localStorage.setItem('app-theme', next)
+}
 </script>
 
 <style scoped>
+.app-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.app-header {
+  height: 52px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  z-index: 100;
+  position: relative;
+}
+
+[data-theme="dark"] .app-header {
+  background: rgba(29,29,31,0.72);
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+
+.header-inner {
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 32px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #1d1d1f;
+}
+
+[data-theme="dark"] .brand { color: #f5f5f7; }
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0071e3, #40a9ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.brand-text {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.header-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-link {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #86868b;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.nav-link:hover { color: #1d1d1f; background: rgba(0,0,0,0.04); }
+.nav-link.active { color: #1d1d1f; background: rgba(0,0,0,0.06); }
+
+[data-theme="dark"] .nav-link:hover { color: #f5f5f7; background: rgba(255,255,255,0.08); }
+[data-theme="dark"] .nav-link.active { color: #f5f5f7; background: rgba(255,255,255,0.1); }
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #86868b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover { background: rgba(0,0,0,0.06); color: #1d1d1f; }
+[data-theme="dark"] .icon-btn:hover { background: rgba(255,255,255,0.1); color: #f5f5f7; }
+
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.toast-notification {
+  position: fixed;
+  top: 64px;
+  right: 24px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 9999;
+  backdrop-filter: blur(20px);
+  animation: slideIn 0.3s ease;
+}
+.toast-success { background: rgba(16,185,129,0.9); color: white; }
+.toast-error { background: rgba(239,68,68,0.9); color: white; }
+.toast-warning { background: rgba(245,158,11,0.9); color: white; }
+.toast-info { background: rgba(0,113,227,0.9); color: white; }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
