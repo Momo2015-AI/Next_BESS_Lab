@@ -13,10 +13,29 @@
         <button v-for="(s, i) in steps" :key="i" @click="activeStep = i" :class="{ active: activeStep === i }">{{ s.label }}</button>
       </div>
       <div class="step-content">
-        <SimulationLab v-if="activeStep === 0" />
-        <MatrixTable v-if="activeStep === 1" />
-        <SohChart v-if="activeStep === 2" />
-        <ScenarioCompare v-if="activeStep === 3" />
+        <SimulationLab v-if="activeStep === 0"
+          @applyConfig="onApplySimulationConfig"
+          @error="onError" />
+        <MatrixTable v-if="activeStep === 1"
+          :params="store.systemParams"
+          :results="store.results"
+          :soh="store.degradation.soh"
+          :rte="store.degradation.rte"
+          :dod="store.degradation.dod"
+          :augQty="store.degradation.augQty"
+          @update:param="(key, val) => store.systemParams[key] = val"
+          @update:soh="store.degradation.soh = $event"
+          @update:rte="store.degradation.rte = $event"
+          @update:dod="store.degradation.dod = $event"
+          @update:augQty="store.degradation.augQty = $event"
+          @recalculate="runPipeline" />
+        <SohChart v-if="activeStep === 2"
+          :results="store.results"
+          :soh="store.degradation.soh"
+          :rte="store.degradation.rte"
+          :requiredEnergy="store.systemParams.requiredEnergy" />
+        <ScenarioCompare v-if="activeStep === 3"
+          :baseParams="store.systemParams" @error="onError" />
       </div>
     </div>
   </div>
@@ -41,6 +60,26 @@ const steps = [
 
 async function runPipeline() {
   await store.runPipeline()
+}
+
+function onError(msg) {
+  store.calculationError = msg
+}
+
+function onApplySimulationConfig(payload) {
+  Object.keys(payload).forEach(key => {
+    if (payload[key] != null && store.systemParams[key] !== undefined) {
+      store.systemParams[key] = payload[key]
+    }
+  })
+  const sohData = payload.sohCurve || payload.soh
+  const rteData = payload.rteCurve || payload.rte
+  if (sohData && Array.isArray(sohData)) {
+    store.degradation.soh = sohData
+  }
+  if (rteData && Array.isArray(rteData)) {
+    store.degradation.rte = rteData
+  }
 }
 </script>
 

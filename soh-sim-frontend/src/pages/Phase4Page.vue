@@ -36,7 +36,10 @@
             <tr><td>投资回收期 (年)</td><td>{{ store.financial.metrics.payback > 0 ? store.financial.metrics.payback : '未回收' }}</td></tr>
           </table>
         </div>
-        <SensitivityAnalysis v-if="activeStep === 4" />
+        <SensitivityAnalysis v-if="activeStep === 4"
+          :params="store.systemParams"
+          :financial="store.financial.metrics"
+          @error="onError" />
       </div>
     </div>
   </div>
@@ -60,6 +63,10 @@ const steps = [
 function metricClass(value, threshold) {
   if (value >= threshold) return 'status-good'
   return 'status-bad'
+}
+
+function onError(msg) {
+  store.calculationError = msg
 }
 </script>
 

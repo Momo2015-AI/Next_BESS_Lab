@@ -21,7 +21,15 @@
           <button @click="generateBom" :disabled="generatingBom">生成设备清单</button>
           <p v-if="bomMsg" class="msg">{{ bomMsg }}</p>
         </div>
-        <DataExport v-if="activeStep === 2" />
+        <DataExport v-if="activeStep === 2"
+          :params="store.systemParams"
+          :results="store.results"
+          :soh="store.degradation.soh"
+          :rte="store.degradation.rte"
+          :dod="store.degradation.dod"
+          :augQty="store.degradation.augQty"
+          :financial="store.financial.metrics"
+          :projectId="store.project.id" />
         <div v-if="activeStep === 3" class="card">
           <h3>项目存档</h3>
           <p>将当前项目全部数据保存到数据库。</p>
