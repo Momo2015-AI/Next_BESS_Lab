@@ -64,7 +64,9 @@ const toolItems = [
   { id: 'datainject', path: '/tools/datainject', label: '数据注入', icon: '📥' },
   { id: 'conditions', path: '/tools/conditions', label: '运行工况', icon: '🌤' },
   { id: 'params', path: '/tools/params', label: '参数面板', icon: '⚙' },
-](() => [
+]
+
+const phaseItems = computed(() => [
   { id: 'phase1', path: '/phase1', label: 'Phase 1: 项目立项', status: store.phases.phase1.status },
   { id: 'phase2', path: '/phase2', label: 'Phase 2: 系统设计', status: store.phases.phase2.status },
   { id: 'phase3', path: '/phase3', label: 'Phase 3: 性能分析', status: store.phases.phase3.status },
