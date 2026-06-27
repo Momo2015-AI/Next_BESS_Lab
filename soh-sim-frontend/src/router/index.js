@@ -41,6 +41,36 @@ const routes = [
     name: 'survey-edit',
     component: () => import('../pages/SurveyPage.vue'),
   },
+  {
+    path: '/tools/formula',
+    name: 'tool-formula',
+    component: () => import('../pages/ToolFormulaPage.vue'),
+  },
+  {
+    path: '/tools/auxpower',
+    name: 'tool-auxpower',
+    component: () => import('../pages/ToolAuxPowerPage.vue'),
+  },
+  {
+    path: '/tools/engineering',
+    name: 'tool-engineering',
+    component: () => import('../pages/ToolEngineeringPage.vue'),
+  },
+  {
+    path: '/tools/datainject',
+    name: 'tool-datainject',
+    component: () => import('../pages/ToolDataInjectPage.vue'),
+  },
+  {
+    path: '/tools/conditions',
+    name: 'tool-conditions',
+    component: () => import('../pages/ToolConditionsPage.vue'),
+  },
+  {
+    path: '/tools/params',
+    name: 'tool-params',
+    component: () => import('../pages/ToolParamsPage.vue'),
+  },
 ]
 
 const router = createRouter({
