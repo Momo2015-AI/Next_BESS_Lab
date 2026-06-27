@@ -71,6 +71,51 @@ const routes = [
     name: 'tool-params',
     component: () => import('../pages/ToolParamsPage.vue'),
   },
+  {
+    path: '/tools/financial',
+    name: 'tool-financial',
+    component: () => import('../pages/ToolFinancialPage.vue'),
+  },
+  {
+    path: '/tools/config',
+    name: 'tool-config',
+    component: () => import('../pages/ToolConfigPage.vue'),
+  },
+  {
+    path: '/tools/survey-view',
+    name: 'tool-survey-view',
+    component: () => import('../pages/ToolSurveyViewPage.vue'),
+  },
+  {
+    path: '/tools/simulation-view',
+    name: 'tool-simulation-view',
+    component: () => import('../pages/ToolSimulationViewPage.vue'),
+  },
+  {
+    path: '/tools/report',
+    name: 'tool-report',
+    component: () => import('../pages/ToolReportPage.vue'),
+  },
+  {
+    path: '/tools/projects',
+    name: 'tool-projects',
+    component: () => import('../pages/ToolProjectsPage.vue'),
+  },
+  {
+    path: '/tools/templates',
+    name: 'tool-templates',
+    component: () => import('../pages/ToolTemplatesPage.vue'),
+  },
+  {
+    path: '/tools/rules',
+    name: 'tool-rules',
+    component: () => import('../pages/ToolRulesPage.vue'),
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: () => import('../pages/AuthPage.vue'),
+  },
 ]
 
 const router = createRouter({

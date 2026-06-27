@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar w-64 flex-shrink-0 overflow-hidden flex flex-col" style="background-color: #FFFFFF; border-right: 1px solid #E0E0E0;">
     <nav class="flex-1 overflow-y-auto p-3">
-      <div class="mb-6">
+      <div class="mb-5">
         <button
           @click="$router.push('/')"
           class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
@@ -11,7 +11,7 @@
         </button>
       </div>
 
-      <div class="mb-6">
+      <div class="mb-5">
         <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">项目流程</div>
         <button
           v-for="item in phaseItems"
@@ -25,10 +25,23 @@
         </button>
       </div>
 
-      <div class="mb-6">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">专用工具</div>
+      <div class="mb-5">
+        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">核心工具</div>
         <button
-          v-for="item in toolItems"
+          v-for="item in coreToolItems"
+          :key="item.id"
+          @click="$router.push(item.path)"
+          class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
+          :class="$route.path === item.path ? 'sidebar-active' : 'sidebar-item'">
+          <span>{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </button>
+      </div>
+
+      <div class="mb-5">
+        <div class="text-xs font-semibold uppercase tracking-wider mb-2 px-2" style="color: #999999;">高级工具</div>
+        <button
+          v-for="item in advToolItems"
           :key="item.id"
           @click="$router.push(item.path)"
           class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all"
@@ -57,15 +70,6 @@ import { useBessStore } from '../stores/bess.js'
 
 const store = useBessStore()
 
-const toolItems = [
-  { id: 'formula', path: '/tools/formula', label: '算法与公式', icon: '🔬' },
-  { id: 'auxpower', path: '/tools/auxpower', label: '辅助功耗', icon: '⚡' },
-  { id: 'engineering', path: '/tools/engineering', label: '工程计算', icon: '🏗' },
-  { id: 'datainject', path: '/tools/datainject', label: '数据注入', icon: '📥' },
-  { id: 'conditions', path: '/tools/conditions', label: '运行工况', icon: '🌤' },
-  { id: 'params', path: '/tools/params', label: '参数面板', icon: '⚙' },
-]
-
 const phaseItems = computed(() => [
   { id: 'phase1', path: '/phase1', label: 'Phase 1: 项目立项', status: store.phases.phase1.status },
   { id: 'phase2', path: '/phase2', label: 'Phase 2: 系统设计', status: store.phases.phase2.status },
@@ -73,6 +77,26 @@ const phaseItems = computed(() => [
   { id: 'phase4', path: '/phase4', label: 'Phase 4: 经济评估', status: store.phases.phase4.status },
   { id: 'phase5', path: '/phase5', label: 'Phase 5: 成果输出', status: store.phases.phase5.status },
 ])
+
+const coreToolItems = [
+  { id: 'formula', path: '/tools/formula', label: '算法与公式', icon: '📐' },
+  { id: 'params', path: '/tools/params', label: '参数配置面板', icon: '⚙' },
+  { id: 'conditions', path: '/tools/conditions', label: '运行工况', icon: '📊' },
+  { id: 'auxpower', path: '/tools/auxpower', label: '辅助功耗计算', icon: '⚡' },
+  { id: 'financial', path: '/tools/financial', label: '财务看板', icon: '💰' },
+  { id: 'engineering', path: '/tools/engineering', label: '工程计算', icon: '🏗' },
+  { id: 'datainject', path: '/tools/datainject', label: '数据注入', icon: '💉' },
+]
+
+const advToolItems = [
+  { id: 'config', path: '/tools/config', label: '方案设计', icon: '📋' },
+  { id: 'survey-view', path: '/tools/survey-view', label: '调研输入', icon: '📝' },
+  { id: 'simulation-view', path: '/tools/simulation-view', label: '仿真分析', icon: '🧪' },
+  { id: 'report', path: '/tools/report', label: '报告输出', icon: '📄' },
+  { id: 'projects', path: '/tools/projects', label: '历史项目', icon: '📁' },
+  { id: 'templates', path: '/tools/templates', label: '校正因子模板', icon: '📑' },
+  { id: 'rules', path: '/tools/rules', label: '配置规则', icon: '📐' },
+]
 </script>
 
 <style scoped>
