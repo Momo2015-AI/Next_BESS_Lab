@@ -181,4 +181,5 @@ export const useBessStore = defineStore('bess', {
       }
     },
   },
+  persist: true,
 })
