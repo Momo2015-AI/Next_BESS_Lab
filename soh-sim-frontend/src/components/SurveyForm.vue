@@ -80,6 +80,24 @@
             <label>相对湿度 (%)</label>
             <input v-model.number="form.humidity" type="number" min="0" max="100" placeholder="如：65" />
           </div>
+          <div class="form-group">
+            <label>沙尘防护等级</label>
+            <select v-model="form.sand_protection" class="input-field">
+              <option value="">请选择</option>
+              <option value="IP54">IP54 (一般防尘)</option>
+              <option value="IP55">IP55 (防尘防喷水)</option>
+              <option value="IP65">IP65 (完全防尘防喷水)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>湿度循环等级</label>
+            <select v-model="form.humidity_cycle" class="input-field">
+              <option value="">请选择</option>
+              <option value="low">低 (干燥气候)</option>
+              <option value="medium">中 (沿海气候)</option>
+              <option value="high">高 (热带气候)</option>
+            </select>
+          </div>
         </div>
       </section>
 
@@ -94,6 +112,25 @@
           <div class="form-group">
             <label>电网频率 (Hz)</label>
             <input v-model.number="form.grid_frequency" type="number" step="0.1" placeholder="如：50" />
+          </div>
+          <div class="form-group">
+            <label>PCC 接入点电压 (kV)</label>
+            <input v-model.number="form.pcc_voltage" type="number" step="0.1" placeholder="如：33" />
+          </div>
+          <div class="form-group">
+            <label>PCC 短路容量 (MVA)</label>
+            <input v-model.number="form.pcc_short_circuit_mva" type="number" step="1" placeholder="如：500" />
+          </div>
+          <div class="form-group">
+            <label>并网标准</label>
+            <select v-model="form.grid_code" class="input-field">
+              <option value="">请选择</option>
+              <option value="SEC">SEC (沙特)</option>
+              <option value="ESMA">ESMA (阿联酋)</option>
+              <option value="GSO">GSO (海湾标准)</option>
+              <option value="IEC">IEC (国际)</option>
+              <option value="other">其他</option>
+            </select>
           </div>
         </div>
       </section>
@@ -224,6 +261,11 @@ const form = reactive({
   temp_avg: null,
   humidity: null,
   grid_voltage: null,
+  pcc_voltage: null,
+  pcc_short_circuit_mva: null,
+  grid_code: '',
+  sand_protection: '',
+  humidity_cycle: '',
   grid_frequency: null,
   cell_model: '',
   rte_target: null,
@@ -300,6 +342,11 @@ function resetForm() {
     humidity: null,
     grid_voltage: null,
     grid_frequency: null,
+    pcc_voltage: null,
+    pcc_short_circuit_mva: null,
+    grid_code: '',
+    sand_protection: '',
+    humidity_cycle: '',
     cell_model: '',
     rte_target: null,
     soh_year1: null,
@@ -338,6 +385,11 @@ function fillTestData() {
     humidity: 65,
     grid_voltage: 132,
     grid_frequency: 50,
+    pcc_voltage: 33,
+    pcc_short_circuit_mva: 500,
+    grid_code: 'SEC',
+    sand_protection: 'IP55',
+    humidity_cycle: 'medium',
     rte_target: 92,
     soh_year1: 97.5,
     soh_year25: 70,

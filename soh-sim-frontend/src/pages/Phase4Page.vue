@@ -2,39 +2,55 @@
   <div class="phase-page phase4-page">
     <div class="phase-header">
       <h1>Phase 4: 经济评估</h1>
-      <p class="phase-desc">CAPEX 估算、OPEX/收入模型、财务指标、敏感性分析</p>
+      <p class="phase-desc">BOQ 报价、成本汇总、收入模型、财务指标、敏感性分析</p>
     </div>
     <div class="phase-body">
       <div class="steps-nav">
         <button v-for="(s, i) in steps" :key="i" @click="activeStep = i" :class="{ active: activeStep === i }">{{ s.label }}</button>
       </div>
       <div class="step-content">
-        <div v-if="activeStep === 0" class="form-card">
-          <h3>投资估算 (CAPEX)</h3>
-          <label>设备采购成本 (万元) <input v-model.number="store.financial.capex.equipment" type="number" /></label>
-          <label>EPC 费用 (万元) <input v-model.number="store.financial.capex.epc" type="number" /></label>
-          <label>前期开发费 (万元) <input v-model.number="store.financial.capex.development" type="number" /></label>
+        <div v-if="activeStep === 0" class="step-panel">
+          <BoqEditor />
         </div>
         <div v-if="activeStep === 1" class="form-card">
-          <h3>运营模型 (OPEX)</h3>
-          <label>年运维成本 (万元) <input v-model.number="store.financial.opex.maintenance" type="number" /></label>
-          <label>年保险费用 (万元) <input v-model.number="store.financial.opex.insurance" type="number" /></label>
-          <label>年电网费用 (万元) <input v-model.number="store.financial.opex.grid" type="number" /></label>
+          <h3>成本汇总 (CAPEX + OPEX)</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text);">CAPEX</h4>
+              <label>设备采购 (USD) <input v-model.number="store.financial.capex.equipment" type="number" /></label>
+              <label>EPC 费用 (USD) <input v-model.number="store.financial.capex.epc" type="number" /></label>
+              <label>前期开发 (USD) <input v-model.number="store.financial.capex.development" type="number" /></label>
+              <div class="mt-2 text-sm font-bold" style="color: var(--color-accent);">总 CAPEX: ${{ totalCapex.toLocaleString() }}</div>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text);">OPEX</h4>
+              <label>固定 O&M ($/MW-yr) <input v-model.number="store.financial.opex.fixedOpexPerMw" type="number" step="100" /></label>
+              <label>可变 O&M ($/MWh) <input v-model.number="store.financial.opex.variableOpexPerMwh" type="number" step="0.1" /></label>
+              <label>保险率 (% CAPEX) <input v-model.number="store.financial.opex.insuranceRate" type="number" step="0.1" /></label>
+              <label>土地租赁 ($/yr) <input v-model.number="store.financial.opex.landLease" type="number" step="1000" /></label>
+            </div>
+          </div>
         </div>
         <div v-if="activeStep === 2" class="form-card">
-          <h3>收入模型</h3>
-          <label>峰谷套利电价 (元/kWh) <input v-model.number="store.financial.revenue.arbitragePrice" type="number" step="0.01" /></label>
+          <h3>收入模型与融资</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text);">融资参数</h4>
+              <label>贷款比例 (%) <input v-model.number="store.financial.financing.debtRatio" type="number" step="1" /></label>
+              <label>贷款利率 (%) <input v-model.number="store.financial.financing.interestRate" type="number" step="0.1" /></label>
+              <label>贷款期限 (年) <input v-model.number="store.financial.financing.loanTerm" type="number" step="1" /></label>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text);">税收与折旧</h4>
+              <label>所得税率 (%) <input v-model.number="store.financial.tax.corporateTaxRate" type="number" step="0.5" /></label>
+              <label>免税期 (年) <input v-model.number="store.financial.tax.taxHolidayYears" type="number" step="1" /></label>
+              <label>折现率 (%) <input v-model.number="store.financial.discountRate" type="number" step="0.1" /></label>
+              <label>折旧年限 <input v-model.number="store.financial.depreciationYears" type="number" step="1" /></label>
+            </div>
+          </div>
         </div>
-        <div v-if="activeStep === 3" class="metrics-card">
-          <h3>财务指标</h3>
-          <table>
-            <tr><td>NPV (万元)</td><td :class="metricClass(store.financial.metrics.npv, 0)">{{ store.financial.metrics.npv }}</td></tr>
-            <tr><td>IRR (%)</td><td :class="metricClass(store.financial.metrics.irr, 8)">{{ store.financial.metrics.irr }}</td></tr>
-            <tr><td>LCOS</td><td>{{ store.financial.metrics.lcos }}</td></tr>
-            <tr><td>ROI (%)</td><td>{{ store.financial.metrics.roi }}</td></tr>
-            <tr><td>DSCR</td><td :class="metricClass(store.financial.metrics.dscr, 1.2)">{{ store.financial.metrics.dscr }}</td></tr>
-            <tr><td>投资回收期 (年)</td><td>{{ store.financial.metrics.payback > 0 ? store.financial.metrics.payback : '未回收' }}</td></tr>
-          </table>
+        <div v-if="activeStep === 3" class="step-panel">
+          <FinancialDashboard />
         </div>
         <SensitivityAnalysis v-if="activeStep === 4"
           :params="store.systemParams"
@@ -46,24 +62,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useBessStore } from '../stores/bess.js'
 import SensitivityAnalysis from '../components/SensitivityAnalysis.vue'
+import BoqEditor from '../components/BoqEditor.vue'
+import FinancialDashboard from '../components/FinancialDashboard.vue'
 
 const store = useBessStore()
 const activeStep = ref(0)
 const steps = [
-  { label: '4.1 投资估算' },
-  { label: '4.2 运营模型' },
-  { label: '4.3 收入模型' },
+  { label: '4.1 BOQ 报价' },
+  { label: '4.2 成本汇总' },
+  { label: '4.3 收入与融资' },
   { label: '4.4 财务指标' },
   { label: '4.5 敏感性分析' },
 ]
 
-function metricClass(value, threshold) {
-  if (value >= threshold) return 'status-good'
-  return 'status-bad'
-}
+const totalCapex = computed(() => {
+  const c = store.financial.capex
+  return (c.equipment || 0) + (c.epc || 0) + (c.development || 0)
+})
 
 function onError(msg) {
   store.calculationError = msg
@@ -82,14 +100,9 @@ function onError(msg) {
 }
 .steps-nav button.active { background: #409eff; color: #fff; border-color: #409eff; }
 .step-content { min-height: 400px; }
+.step-panel { min-height: 500px; }
 .form-card { background: var(--bg-card, #fff); padding: 20px; border-radius: 8px; border: 1px solid var(--border, #eee); }
 .form-card h3 { margin: 0 0 16px; font-size: 18px; }
 .form-card label { display: block; margin-bottom: 12px; font-size: 14px; }
 .form-card input { margin-left: 8px; padding: 6px 10px; border: 1px solid var(--border, #ddd); border-radius: 4px; width: 160px; }
-.metrics-card { background: var(--bg-card, #fff); padding: 20px; border-radius: 8px; border: 1px solid var(--border, #eee); }
-.metrics-card h3 { margin: 0 0 16px; font-size: 18px; }
-.metrics-card table { width: 100%; border-collapse: collapse; }
-.metrics-card td { padding: 8px 12px; border-bottom: 1px solid var(--border, #eee); font-size: 14px; }
-.status-good { color: #67c23a; font-weight: 600; }
-.status-bad { color: #f56c6c; font-weight: 600; }
 </style>

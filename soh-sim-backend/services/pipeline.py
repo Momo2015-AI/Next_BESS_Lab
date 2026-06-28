@@ -168,93 +168,24 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
 
 def calculate_financial_metrics(total_ac_usable, financial_params=None):
     """Calculate financial metrics based on energy output.
-
-    Returns dict with NPV, IRR, LCOE, LCOS, ROI, DSCR, payback_period.
+    
+    Delegates to services/financial.py:calculate_full_financial for full 25-year cashflow.
+    Returns backward-compatible metrics dict.
     """
-    if financial_params is None:
-        financial_params = {}
-
-    capex = financial_params.get("capex", {})
-    opex = financial_params.get("opex", {})
-    revenue = financial_params.get("revenue", {})
-
-    total_capex = capex.get("equipment", 0) + capex.get("epc", 0) + capex.get("development", 0)
-    annual_opex = opex.get("maintenance", 0) + opex.get("insurance", 0) + opex.get("grid", 0)
-    discount_rate = financial_params.get("discountRate", 0.08)
-
-    electricity_price = revenue.get("arbitragePrice", 0.5)
-    annual_revenue = [0.0] * NUM_YEARS
-    for i in range(NUM_YEARS):
-        annual_revenue[i] = total_ac_usable[i] * 365 * electricity_price
-
-    cash_flows = [-total_capex]
-    for i in range(1, NUM_YEARS):
-        cf = annual_revenue[i] - annual_opex
-        cash_flows.append(cf)
-
-    npv = 0.0
-    for t, cf in enumerate(cash_flows):
-        npv += cf / ((1 + discount_rate) ** t)
-
-    irr = _compute_irr(cash_flows)
-
-    total_discounted_energy = 0.0
-    total_discounted_cost = total_capex
-    for i in range(NUM_YEARS):
-        total_discounted_energy += total_ac_usable[i] * 365 / ((1 + discount_rate) ** i)
-        if i > 0:
-            total_discounted_cost += annual_opex / ((1 + discount_rate) ** i)
-
-    lcoe = total_discounted_cost / total_discounted_energy if total_discounted_energy > 0 else 0
-    lcos = lcoe
-
-    total_investment = total_capex + annual_opex * (NUM_YEARS - 1)
-    total_return = sum(annual_revenue[1:]) - annual_opex * (NUM_YEARS - 1)
-    roi = total_return / total_investment * 100 if total_investment > 0 else 0
-
-    dscr = 0.0
-    debt_service = financial_params.get("annualDebtService", 0)
-    if debt_service > 0:
-        dscr_vals = []
-        for i in range(1, NUM_YEARS):
-            dscr_vals.append(annual_revenue[i] / debt_service)
-        dscr = sum(dscr_vals) / len(dscr_vals)
-
-    payback = -1
-    cumulative = -total_capex
-    for i in range(1, NUM_YEARS):
-        cumulative += annual_revenue[i] - annual_opex
-        if cumulative >= 0:
-            payback = i
-            break
-
+    from services.financial import calculate_full_financial as _calc_full
+    
+    result = _calc_full(total_ac_usable, financial_params)
+    metrics = result["metrics"]
+    
     return {
-        "npv": round(npv, 2),
-        "irr": round(irr * 100, 2),
-        "lcoe": round(lcoe, 4),
-        "lcos": round(lcos, 4),
-        "roi": round(roi, 2),
-        "dscr": round(dscr, 2),
-        "payback": payback,
+        "npv": metrics["npv"],
+        "irr": metrics["projectIrr"],
+        "lcoe": metrics["lcos"],
+        "lcos": metrics["lcos"],
+        "roi": metrics["roi"],
+        "dscr": metrics["dscr"]["avg"],
+        "payback": metrics["payback"],
     }
-
-
-def _compute_irr(cash_flows, guess=0.1):
-    """Compute IRR using Newton-Raphson method."""
-    rate = guess
-    for _ in range(100):
-        npv = 0.0
-        dnpv = 0.0
-        for t, cf in enumerate(cash_flows):
-            npv += cf / ((1 + rate) ** t)
-            if t > 0:
-                dnpv += -t * cf / ((1 + rate) ** (t + 1))
-        if abs(dnpv) < 1e-12:
-            break
-        rate -= npv / dnpv
-        if abs(npv) < 1e-6:
-            break
-    return rate
 
 
 def calculate_full_pipeline(system_params, degradation=None, algorithm=None, financial_params=None):

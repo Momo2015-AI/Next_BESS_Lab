@@ -118,6 +118,13 @@ class Survey(db.Model):
     # 电网参数
     grid_voltage = db.Column(db.Float)
     grid_frequency = db.Column(db.Float)
+    pcc_voltage = db.Column(db.Float)
+    pcc_short_circuit_mva = db.Column(db.Float)
+    grid_code = db.Column(db.String(50))
+    
+    # 环境条件
+    sand_protection = db.Column(db.String(10))
+    humidity_cycle = db.Column(db.String(20))
     
     # 性能要求
     rte_target = db.Column(db.Float)
@@ -456,6 +463,10 @@ class FinancialData(db.Model):
     irr = db.Column(db.Float)  # 内部收益率
     payback_years = db.Column(db.Float)  # 回收期
     lcos = db.Column(db.Float)  # 储能度电成本
+    
+    # 单位体系
+    currency = db.Column(db.String(3), default='USD')
+    unit_system = db.Column(db.String(10), default='metric')
     
     # 详细结果（25年现金流）
     cashflow_data = db.Column(db.Text)  # JSON格式
@@ -832,6 +843,37 @@ class AlgorithmModel(db.Model):
     simulation_results = db.relationship('SimulationResult', back_populates='algorithm_model')
 
 
+class BoqSection(db.Model):
+    """BOQ 分类——固定7级模板"""
+    __tablename__ = 'boq_sections'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    code = db.Column(db.String(10), unique=True)
+    name = db.Column(db.String(100))
+    name_zh = db.Column(db.String(100))
+    default_unit = db.Column(db.String(20))
+    sort_order = db.Column(db.Integer)
+
+
+class BoqItem(db.Model):
+    """BOQ 条目"""
+    __tablename__ = 'boq_items'
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey('projects.id'), nullable=False)
+    section_code = db.Column(db.String(10))
+    seq = db.Column(db.Integer)
+    name = db.Column(db.String(300))
+    spec = db.Column(db.String(500))
+    unit = db.Column(db.String(20))
+    quantity = db.Column(db.Float)
+    unit_price = db.Column(db.Float)
+    total_price = db.Column(db.Float)
+    note = db.Column(db.String(500))
+    is_alternative = db.Column(db.Boolean, default=False)
+    version = db.Column(db.Integer, default=1)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 # 添加租户关联
 Tenant.correction_templates = db.relationship('CorrectionTemplate', back_populates='tenant')
 Tenant.algorithm_models = db.relationship('AlgorithmModel', back_populates='tenant')
@@ -850,7 +892,7 @@ def init_db(app):
     # 给所有模型挂上 to_dict 方法（一次性，避免每类重复定义）
     for model_cls in [Tenant, User, Survey, Project, Simulation,
                       BatteryPCSConfig, SohRteData, FinancialData,
-                      ProductConfig, FormulaConfig]:
+                      ProductConfig, FormulaConfig, BoqSection, BoqItem]:
         model_cls.to_dict = _model_to_dict
 
     return db

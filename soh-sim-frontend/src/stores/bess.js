@@ -63,9 +63,31 @@ export const useBessStore = defineStore('bess', {
     },
     financial: {
       capex: { equipment: 0, epc: 0, development: 0 },
-      opex: { maintenance: 0, insurance: 0, grid: 0 },
-      revenue: { arbitragePrice: 0.5 },
-      metrics: { npv: 0, irr: 0, lcoe: 0, lcos: 0, roi: 0, dscr: 0, payback: -1 },
+      opex: { maintenance: 0, insurance: 0, grid: 0, landLease: 0, fixedOpexPerMw: 5000, variableOpexPerMwh: 2.5, insuranceRate: 0.5 },
+      revenue: {
+        arbitrage: { enabled: true, offPeakPrice: 30, peakPrice: 60, spreadCapture: 85, operatingDays: 330 },
+        capacity: { enabled: true, capacityPrice: 45000 },
+        ancillary: { enabled: true, ancillaryPrice: 15000 },
+        ppa: { enabled: true, ppaPrice: 55, escalation: 2.0 },
+        capacityAuction: { enabled: true, auctionPrice: 120000, contractYears: 5 },
+      },
+      financing: { debtRatio: 70, interestRate: 6.5, loanTerm: 15, repaymentType: 'equal_installment' },
+      tax: { corporateTaxRate: 20, vatRate: 15, taxHolidayYears: 5 },
+      discountRate: 8.0,
+      depreciationYears: 15,
+      residualRate: 5,
+      priceEscalation: 2.0,
+      efficiencyLossPct: 3,
+      metrics: { projectIrr: 0, equityIrr: 0, npv: 0, lcos: 0, dscr: { min: 0, avg: 0 }, payback: -1, roi: 0 },
+      cashflowTable: [],
+      capexBreakdown: { equipment: 0, epc: 0, development: 0 },
+      currency: 'USD',
+      calculating: false,
+    },
+    boq: {
+      items: [],
+      activeVersion: 'main',
+      totalPrice: 0,
     },
     exports: {
       reportGenerated: false,
@@ -120,6 +142,14 @@ export const useBessStore = defineStore('bess', {
             capex: { ...this.financial.capex },
             opex: { ...this.financial.opex },
             revenue: { ...this.financial.revenue },
+            financing: { ...this.financial.financing },
+            tax: { ...this.financial.tax },
+            discountRate: this.financial.discountRate,
+            depreciationYears: this.financial.depreciationYears,
+            residualRate: this.financial.residualRate,
+            priceEscalation: this.financial.priceEscalation,
+            efficiencyLossPct: this.financial.efficiencyLossPct,
+            systemParams: { ...this.systemParams },
           },
         }
         const res = await fetch('/api/pipeline/calculate', {
@@ -148,13 +178,138 @@ export const useBessStore = defineStore('bess', {
           this.degradation.rte = data.result.rte
           this.degradation.dod = data.result.dod
           if (data.result.financial) {
-            this.financial.metrics = { ...data.result.financial }
+            this.financial.metrics = {
+              projectIrr: data.result.financial.irr || 0,
+              equityIrr: 0,
+              npv: data.result.financial.npv || 0,
+              lcos: data.result.financial.lcos || 0,
+              dscr: { min: data.result.financial.dscr || 0, avg: data.result.financial.dscr || 0 },
+              payback: data.result.financial.payback || -1,
+              roi: data.result.financial.roi || 0,
+            }
           }
         }
       } catch (e) {
         this.calculationError = e.message
       } finally {
         this.calculating = false
+      }
+    },
+
+    async refreshFinancialResults() {
+      this.financial.calculating = true
+      try {
+        const body = {
+          totalAcUsable: [...this.results.totalAcUsable],
+          financialParams: {
+            capex: { ...this.financial.capex },
+            opex: { ...this.financial.opex },
+            revenue: { ...this.financial.revenue },
+            financing: { ...this.financial.financing },
+            tax: { ...this.financial.tax },
+            discountRate: this.financial.discountRate,
+            depreciationYears: this.financial.depreciationYears,
+            residualRate: this.financial.residualRate,
+            priceEscalation: this.financial.priceEscalation,
+            efficiencyLossPct: this.financial.efficiencyLossPct,
+            cyclesPerDay: this.systemParams.cyclesPerDay,
+            systemParams: { ...this.systemParams },
+          },
+        }
+        const res = await fetch('/api/financial/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.message || 'Financial calculation failed')
+        }
+        const json = await res.json()
+        if (json.success && json.data) {
+          this.financial.metrics = { ...json.data.metrics }
+          this.financial.cashflowTable = json.data.cashflowTable || []
+          this.financial.capexBreakdown = json.data.capexBreakdown || { equipment: 0, epc: 0, development: 0 }
+        }
+      } catch (e) {
+        console.error('Financial calculation failed:', e)
+      } finally {
+        this.financial.calculating = false
+      }
+    },
+
+    async fetchBoqItems(projectId) {
+      try {
+        const isAlt = this.boq.activeVersion === 'alternative'
+        const res = await fetch(`/api/boq/items?project_id=${projectId}&is_alternative=${isAlt}`)
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success) {
+            this.boq.items = json.data
+            this.boq.totalPrice = json.data.reduce((sum, item) => sum + (item.total_price || 0), 0)
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch BOQ items:', e)
+      }
+    },
+
+    async saveBoqItems(projectId) {
+      try {
+        const payload = {
+          projectId,
+          isAlternative: this.boq.activeVersion === 'alternative',
+          items: this.boq.items.map((item, index) => ({
+            id: item.id,
+            sectionCode: item.section_code || item.sectionCode || '',
+            seq: item.seq || index + 1,
+            name: item.name || '',
+            spec: item.spec || '',
+            unit: item.unit || '',
+            quantity: item.quantity || 0,
+            unitPrice: item.unit_price || item.unitPrice || 0,
+            totalPrice: item.total_price || item.totalPrice || 0,
+            note: item.note || '',
+            version: item.version || 1,
+          })),
+        }
+        const res = await fetch('/api/boq/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error('Failed to save BOQ items')
+        const json = await res.json()
+        if (json.success) {
+          this.boq.items = json.data
+          this.boq.totalPrice = json.data.reduce((sum, item) => sum + (item.total_price || 0), 0)
+        }
+      } catch (e) {
+        console.error('Failed to save BOQ items:', e)
+      }
+    },
+
+    async aggregateCapexFromBoq() {
+      try {
+        const payload = {
+          boqItems: this.boq.items.map(item => ({
+            section_code: item.section_code || item.sectionCode || '',
+            total_price: item.total_price || item.totalPrice || (item.quantity || 0) * (item.unit_price || item.unitPrice || 0),
+          })),
+        }
+        const res = await fetch('/api/financial/capex-from-boq', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success) {
+            this.financial.capex = { ...json.data }
+          }
+        }
+      } catch (e) {
+        console.error('Failed to aggregate CAPEX from BOQ:', e)
       }
     },
 
