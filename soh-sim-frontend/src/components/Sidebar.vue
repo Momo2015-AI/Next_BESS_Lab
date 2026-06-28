@@ -4,12 +4,12 @@
       <div class="sidebar-section">
         <router-link to="/" class="sidebar-link" :class="{ active: $route.path === '/' }">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-          <span>Home</span>
+          <span>{{ $t('sidebar.home') }}</span>
         </router-link>
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">Phases</div>
+        <div class="section-label">{{ $t('sidebar.sectionPhases') }}</div>
         <router-link
           v-for="item in phaseItems" :key="item.id"
           :to="item.path"
@@ -21,7 +21,7 @@
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">Core Tools</div>
+        <div class="section-label">{{ $t('sidebar.sectionCoreTools') }}</div>
         <router-link
           v-for="item in coreToolItems" :key="item.id"
           :to="item.path"
@@ -33,7 +33,7 @@
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">Advanced</div>
+        <div class="section-label">{{ $t('sidebar.sectionAdvanced') }}</div>
         <router-link
           v-for="item in advToolItems" :key="item.id"
           :to="item.path"
@@ -48,7 +48,7 @@
     <div class="sidebar-footer">
       <router-link to="/auth" class="sidebar-link" :class="{ active: $route.path === '/auth' }">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>Auth</span>
+        <span>{{ $t('sidebar.auth') }}</span>
       </router-link>
     </div>
   </aside>
@@ -56,36 +56,38 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 
+const { t } = useI18n()
 const store = useBessStore()
 
 const phaseItems = computed(() => [
-  { id: 'phase1', num: 1, path: '/phase1', label: 'Project Setup', status: store.phases.phase1.status },
-  { id: 'phase2', num: 2, path: '/phase2', label: 'System Design', status: store.phases.phase2.status },
-  { id: 'phase3', num: 3, path: '/phase3', label: 'Performance', status: store.phases.phase3.status },
-  { id: 'phase4', num: 4, path: '/phase4', label: 'Financial', status: store.phases.phase4.status },
-  { id: 'phase5', num: 5, path: '/phase5', label: 'Deliverables', status: store.phases.phase5.status },
+  { id: 'phase1', num: 1, path: '/phase1', label: t('sidebar.phaseSetup'), status: store.phases.phase1.status },
+  { id: 'phase2', num: 2, path: '/phase2', label: t('sidebar.phaseDesign'), status: store.phases.phase2.status },
+  { id: 'phase3', num: 3, path: '/phase3', label: t('sidebar.phasePerformance'), status: store.phases.phase3.status },
+  { id: 'phase4', num: 4, path: '/phase4', label: t('sidebar.phaseFinancial'), status: store.phases.phase4.status },
+  { id: 'phase5', num: 5, path: '/phase5', label: t('sidebar.phaseDeliverables'), status: store.phases.phase5.status },
 ])
 
 const coreToolItems = [
-  { id: 'formula', path: '/tools/formula', label: 'Formulas', icon: 'fx' },
-  { id: 'params', path: '/tools/params', label: 'Parameters', icon: 'sl' },
-  { id: 'conditions', path: '/tools/conditions', label: 'Conditions', icon: 'wd' },
-  { id: 'auxpower', path: '/tools/auxpower', label: 'Aux Power', icon: 'P' },
-  { id: 'financial', path: '/tools/financial', label: 'Finance', icon: '$' },
-  { id: 'engineering', path: '/tools/engineering', label: 'Engineering', icon: 'En' },
-  { id: 'datainject', path: '/tools/datainject', label: 'Data Inject', icon: 'Di' },
+  { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), icon: 'fx' },
+  { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), icon: 'sl' },
+  { id: 'conditions', path: '/tools/conditions', label: t('sidebar.toolConditions'), icon: 'wd' },
+  { id: 'auxpower', path: '/tools/auxpower', label: t('sidebar.toolAuxPower'), icon: 'P' },
+  { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), icon: '$' },
+  { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), icon: 'En' },
+  { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), icon: 'Di' },
 ]
 
 const advToolItems = [
-  { id: 'config', path: '/tools/config', label: 'Config', icon: 'Cf' },
-  { id: 'survey-view', path: '/tools/survey-view', label: 'Survey', icon: 'Sv' },
-  { id: 'simulation-view', path: '/tools/simulation-view', label: 'Simulation', icon: 'Sm' },
-  { id: 'report', path: '/tools/report', label: 'Report', icon: 'Rp' },
-  { id: 'projects', path: '/tools/projects', label: 'Projects', icon: 'Pj' },
-  { id: 'templates', path: '/tools/templates', label: 'Templates', icon: 'Tp' },
-  { id: 'rules', path: '/tools/rules', label: 'Rules', icon: 'Ru' },
+  { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), icon: 'Cf' },
+  { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyView'), icon: 'Sv' },
+  { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), icon: 'Sm' },
+  { id: 'report', path: '/tools/report', label: t('sidebar.toolReport'), icon: 'Rp' },
+  { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), icon: 'Pj' },
+  { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), icon: 'Tp' },
+  { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), icon: 'Ru' },
 ]
 </script>
 
