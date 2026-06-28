@@ -772,14 +772,19 @@ const fetchAlgorithms = async () => {
         mathematical_form: alg.mathematical_form || '',
         formula_expression: alg.formula_expression || '',
       }))
-      
-      if (!selectedAlgorithm.value && algorithms.value.length > 0) {
-        selectedAlgorithm.value = algorithms.value[0].id
-        selectAlgorithm(algorithms.value[0])
-      }
     }
   } catch (e) {
     console.error('获取算法列表失败:', e)
+  }
+
+  if (algorithms.value.length === 0) {
+    const { BUILTIN_DEGRADATION_ALGORITHMS, mapToSimulationLabFormat } = await import('../data/builtinAlgorithms.js')
+    algorithms.value = BUILTIN_DEGRADATION_ALGORITHMS.map(mapToSimulationLabFormat)
+  }
+
+  if (!selectedAlgorithm.value && algorithms.value.length > 0) {
+    selectedAlgorithm.value = algorithms.value[0].id
+    selectAlgorithm(algorithms.value[0])
   }
 }
 
