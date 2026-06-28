@@ -2,21 +2,21 @@
   <div class="home-root">
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-eyebrow">Battery Energy Storage System</p>
-        <h1 class="hero-title">SOH-SIM<span class="hero-accent">.</span></h1>
-        <p class="hero-subtitle">Professional BESS design evaluation platform.<br/>From concept to commissioning, five phases to delivery.</p>
+        <p class="hero-eyebrow">{{ $t('home.heroEyebrow') }}</p>
+        <h1 class="hero-title">{{ $t('home.heroTitle') }}<span class="hero-accent">.</span></h1>
+        <p class="hero-subtitle">{{ $t('home.heroSubtitle') }}</p>
       </div>
       <div class="hero-metrics">
         <div class="metric-card">
-          <div class="metric-label">Current SOH</div>
+          <div class="metric-label">{{ $t('home.currentSoh') }}</div>
           <div class="metric-value">{{ sohDisplay }}<span class="metric-unit">%</span></div>
         </div>
         <div class="metric-card">
-          <div class="metric-label">NPV</div>
-          <div class="metric-value">{{ npvDisplay }}<span class="metric-unit">万</span></div>
+          <div class="metric-label">{{ $t('home.npv') }}</div>
+          <div class="metric-value">{{ npvDisplay }}<span class="metric-unit">{{ $t('home.wan') }}</span></div>
         </div>
         <div class="metric-card">
-          <div class="metric-label">IRR</div>
+          <div class="metric-label">{{ $t('home.irr') }}</div>
           <div class="metric-value">{{ irrDisplay }}<span class="metric-unit">%</span></div>
         </div>
       </div>
@@ -24,15 +24,15 @@
 
     <section class="phases-section">
       <div class="section-header">
-        <h2 class="section-title">Five Phases to Delivery</h2>
-        <p class="section-desc">A structured workflow aligned with real-world BESS project lifecycle.</p>
+        <h2 class="section-title">{{ $t('home.sectionPhases') }}</h2>
+        <p class="section-desc">{{ $t('home.sectionPhasesDesc') }}</p>
       </div>
 
       <div class="phases-grid">
-        <div v-for="(phase, key) in phases" :key="key" class="phase-card" @click="gotoPhase(key)">
+        <div v-for="phase in phases" :key="phase.key" class="phase-card" @click="gotoPhase(phase.key)">
           <div class="phase-header-row">
-            <span class="phase-num" :class="'num-' + getPhaseStatus(key)">{{ phase.num }}</span>
-            <span class="phase-badge" :class="'badge-' + getPhaseStatus(key)">{{ statusText(getPhaseStatus(key)) }}</span>
+            <span class="phase-num" :class="'num-' + phase.status">{{ phase.num }}</span>
+            <span class="phase-badge" :class="'badge-' + phase.status">{{ $t('home.' + phase.statusText) }}</span>
           </div>
           <h3 class="phase-name">{{ phase.title }}</h3>
           <p class="phase-desc">{{ phase.desc }}</p>
@@ -45,8 +45,8 @@
 
     <section class="tools-section">
       <div class="section-header">
-        <h2 class="section-title">Professional Toolset</h2>
-        <p class="section-desc">Every tool you need, accessible independently or within the project flow.</p>
+        <h2 class="section-title">{{ $t('home.sectionTools') }}</h2>
+        <p class="section-desc">{{ $t('home.sectionToolsDesc') }}</p>
       </div>
 
       <div class="tools-grid">
@@ -71,41 +71,43 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 
+const { t } = useI18n()
 const router = useRouter()
 const store = useBessStore()
 
-const phases = {
-  phase1: { num: '01', title: 'Project Setup', desc: 'Survey, site evaluation, requirement confirmation', path: '/phase1' },
-  phase2: { num: '02', title: 'System Design', desc: 'Product selection, DC/AC design, system integration', path: '/phase2' },
-  phase3: { num: '03', title: 'Performance', desc: 'SOH/RTE prediction, 25-year capacity accounting, visualization', path: '/phase3' },
-  phase4: { num: '04', title: 'Financial', desc: 'CAPEX/OPEX estimation, IRR/LCOS/DSCR, sensitivity analysis', path: '/phase4' },
-  phase5: { num: '05', title: 'Deliverables', desc: 'Technical reports, equipment lists, data export, archival', path: '/phase5' },
+const phases = computed(() => {
+  const st = store.phases
+  return [
+    { key: 'phase1', num: '01', title: t('home.phase1Title'), desc: t('home.phase1Desc'), path: '/phase1', status: st.phase1.status, statusText: statusKey(st.phase1.status) },
+    { key: 'phase2', num: '02', title: t('home.phase2Title'), desc: t('home.phase2Desc'), path: '/phase2', status: st.phase2.status, statusText: statusKey(st.phase2.status) },
+    { key: 'phase3', num: '03', title: t('home.phase3Title'), desc: t('home.phase3Desc'), path: '/phase3', status: st.phase3.status, statusText: statusKey(st.phase3.status) },
+    { key: 'phase4', num: '04', title: t('home.phase4Title'), desc: t('home.phase4Desc'), path: '/phase4', status: st.phase4.status, statusText: statusKey(st.phase4.status) },
+    { key: 'phase5', num: '05', title: t('home.phase5Title'), desc: t('home.phase5Desc'), path: '/phase5', status: st.phase5.status, statusText: statusKey(st.phase5.status) },
+  ]
+})
+function statusKey(s) {
+  if (s === 'in_progress') return 'statusInProgress'
+  if (s === 'completed') return 'statusComplete'
+  return 'statusNotStarted'
 }
 
-const tools = [
-  { path: '/tools/formula', name: 'Formula Lab', desc: 'Algorithm & formula management', iconText: 'fx', gradient: 'linear-gradient(135deg, #0071e3, #40a9ff)' },
-  { path: '/tools/params', name: 'Parameters', desc: 'System parameter configuration', iconText: 'sl', gradient: 'linear-gradient(135deg, #5856d6, #af52de)' },
-  { path: '/tools/conditions', name: 'Conditions', desc: 'Operating conditions & grid params', iconText: 'wd', gradient: 'linear-gradient(135deg, #ff9500, #ffac33)' },
-  { path: '/tools/auxpower', name: 'Aux Power', desc: 'DC/AC auxiliary consumption', iconText: 'P', gradient: 'linear-gradient(135deg, #ff2d55, #ff6482)' },
-  { path: '/tools/financial', name: 'Finance', desc: 'CAPEX/OPEX/IRR/LCOS dashboard', iconText: '$', gradient: 'linear-gradient(135deg, #30d158, #63e68b)' },
-  { path: '/tools/engineering', name: 'Engineering', desc: 'Site area, BOM, spare parts', iconText: 'En', gradient: 'linear-gradient(135deg, #5ac8fa, #34aadc)' },
-  { path: '/tools/datainject', name: 'Data Inject', desc: 'Manual SOH/RTE data override', iconText: 'Di', gradient: 'linear-gradient(135deg, #ff3b30, #ff6259)' },
-  { path: '/tools/simulation-view', name: 'Simulation', desc: 'Full simulation analysis view', iconText: 'Sm', gradient: 'linear-gradient(135deg, #007aff, #5ac8fa)' },
-]
-
-function getPhaseStatus(phase) {
-  return store.phases[phase]?.status || 'pending'
-}
-
-function statusText(status) {
-  const map = { pending: 'Not Started', in_progress: 'In Progress', completed: 'Complete' }
-  return map[status] || 'Not Started'
-}
+const tools = computed(() => [
+  { path: '/tools/formula', name: t('sidebar.toolFormula'), desc: t('home.toolFormulaDesc'), iconText: 'fx', gradient: 'linear-gradient(135deg, #0071e3, #40a9ff)' },
+  { path: '/tools/params', name: t('sidebar.toolParams'), desc: t('home.toolParamsDesc'), iconText: 'sl', gradient: 'linear-gradient(135deg, #5856d6, #af52de)' },
+  { path: '/tools/conditions', name: t('sidebar.toolConditions'), desc: t('home.toolConditionsDesc'), iconText: 'wd', gradient: 'linear-gradient(135deg, #ff9500, #ffac33)' },
+  { path: '/tools/auxpower', name: t('sidebar.toolAuxPower'), desc: t('home.toolAuxPowerDesc'), iconText: 'P', gradient: 'linear-gradient(135deg, #ff2d55, #ff6482)' },
+  { path: '/tools/financial', name: t('sidebar.toolFinance'), desc: t('home.toolFinanceDesc'), iconText: '$', gradient: 'linear-gradient(135deg, #30d158, #63e68b)' },
+  { path: '/tools/engineering', name: t('sidebar.toolEngineering'), desc: t('home.toolEngineeringDesc'), iconText: 'En', gradient: 'linear-gradient(135deg, #5ac8fa, #34aadc)' },
+  { path: '/tools/datainject', name: t('sidebar.toolDataInject'), desc: t('home.toolDataInjectDesc'), iconText: 'Di', gradient: 'linear-gradient(135deg, #ff3b30, #ff6259)' },
+  { path: '/tools/simulation-view', name: t('sidebar.toolSimulation'), desc: t('home.toolSimulationDesc'), iconText: 'Sm', gradient: 'linear-gradient(135deg, #007aff, #5ac8fa)' },
+])
 
 function gotoPhase(phase) {
-  router.push(phases[phase].path)
+  const p = phases.value.find(x => x.key === phase)
+  if (p) router.push(p.path)
 }
 
 const sohDisplay = computed(() => {
@@ -188,6 +190,7 @@ const irrDisplay = computed(() => {
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
+  white-space: pre-line;
 }
 
 .hero-metrics {
