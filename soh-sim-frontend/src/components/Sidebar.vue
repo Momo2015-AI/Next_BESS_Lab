@@ -70,7 +70,7 @@ const phaseItems = computed(() => [
   { id: 'phase5', num: 5, path: '/phase5', label: t('sidebar.phaseDeliverables'), status: store.phases.phase5.status },
 ])
 
-const coreToolItems = [
+const coreToolItems = computed(() => [
   { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), icon: 'fx' },
   { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), icon: 'sl' },
   { id: 'conditions', path: '/tools/conditions', label: t('sidebar.toolConditions'), icon: 'wd' },
@@ -78,9 +78,9 @@ const coreToolItems = [
   { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), icon: '$' },
   { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), icon: 'En' },
   { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), icon: 'Di' },
-]
+])
 
-const advToolItems = [
+const advToolItems = computed(() => [
   { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), icon: 'Cf' },
   { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyView'), icon: 'Sv' },
   { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), icon: 'Sm' },
@@ -88,7 +88,7 @@ const advToolItems = [
   { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), icon: 'Pj' },
   { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), icon: 'Tp' },
   { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), icon: 'Ru' },
-]
+])
 </script>
 
 <style scoped>
