@@ -104,29 +104,35 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
         accum += int(aug_qty[i]) if (i < len(aug_qty) and aug_qty[i] is not None) else 0
         aug_accum_qty[i] = accum
 
-        if i < len(dod) and dod[i] is not None:
-            try:
-                c_dod = float(dod[i]) / 100
-            except (ValueError, TypeError):
-                c_dod = 1.0
-        else:
-            c_dod = float(dod[-1]) / 100 if (dod and dod[-1] is not None) else 1.0
-
-        if i < len(rte) and rte[i] is not None:
-            try:
-                c_rte = float(rte[i])
-            except (ValueError, TypeError):
-                c_rte = 0.94
-        else:
-            c_rte = float(rte[-1]) if (rte and rte[-1] is not None) else 0.94
-
         if i < len(soh) and soh[i] is not None:
             try:
-                c_soh = float(soh[i])
+                raw = float(soh[i])
+                c_soh = raw / 100.0 if raw > 1.0 else raw
             except (ValueError, TypeError):
                 c_soh = 1.0
         else:
-            c_soh = float(soh[-1]) if (soh and soh[-1] is not None) else 1.0
+            raw_last = float(soh[-1]) if (soh and soh[-1] is not None) else 100.0
+            c_soh = raw_last / 100.0 if raw_last > 1.0 else raw_last
+
+        if i < len(dod) and dod[i] is not None:
+            try:
+                raw_dod = float(dod[i])
+                c_dod = raw_dod / 100.0 if raw_dod > 1.0 else raw_dod
+            except (ValueError, TypeError):
+                c_dod = 1.0
+        else:
+            raw_dod_last = float(dod[-1]) if (dod and dod[-1] is not None) else 1.0
+            c_dod = raw_dod_last / 100.0 if raw_dod_last > 1.0 else raw_dod_last
+
+        if i < len(rte) and rte[i] is not None:
+            try:
+                raw_rte = float(rte[i])
+                c_rte = raw_rte / 100.0 if raw_rte > 1.0 else raw_rte
+            except (ValueError, TypeError):
+                c_rte = 0.9703
+        else:
+            raw_rte_last = float(rte[-1]) if (rte and rte[-1] is not None) else 97.03
+            c_rte = raw_rte_last / 100.0 if raw_rte_last > 1.0 else raw_rte_last
 
         init_gross[i] = rated_energy * init_container_qty * c_dod * c_rte * c_soh * ac_efficiency
         init_aux[i] = init_container_qty * cycle_container_aux_per_unit + init_pcs_qty * cycle_pcs_aux_per_unit
@@ -139,7 +145,8 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
             if qty_k > 0:
                 age = i - k
                 try:
-                    asset_soh = float(soh[min(age, N - 1)])
+                    raw_asset_soh = float(soh[min(age, N - 1)])
+                    asset_soh = raw_asset_soh / 100.0 if raw_asset_soh > 1.0 else raw_asset_soh
                 except (ValueError, TypeError, IndexError):
                     asset_soh = 1.0
                 asset_gross = rated_energy * qty_k * c_dod * c_rte * asset_soh * ac_efficiency
