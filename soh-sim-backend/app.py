@@ -21,6 +21,7 @@ from routes.aux_power import aux_power_bp
 from routes.pipeline import pipeline_bp
 from routes.financial import financial_bp
 from routes.boq import boq_bp
+from routes.efficiency import efficiency_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -48,6 +49,7 @@ app.register_blueprint(aux_power_bp)
 app.register_blueprint(pipeline_bp)
 app.register_blueprint(financial_bp)
 app.register_blueprint(boq_bp)
+app.register_blueprint(efficiency_bp)
 
 with app.app_context():
     seed_products()

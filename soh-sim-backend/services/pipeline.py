@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
 
 NUM_YEARS = 26
 R = 8.314  # Ideal gas constant J/(mol*K)
@@ -63,8 +64,12 @@ def predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate, model_params
     return soh, rte
 
 
-def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
+def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_factors=None):
     """Calculate 25-year energy accounting matrix.
+
+    If efficiency_factors is provided (10-factor chain), RTE is computed from
+    the chain at each year based on SOH. Otherwise falls back to the single
+    acEfficiency parameter for backward compatibility.
 
     Returns dict with 26-element arrays for all accounting metrics.
     """
@@ -124,17 +129,23 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
             raw_dod_last = float(dod[-1]) if (dod and dod[-1] is not None) else 1.0
             c_dod = raw_dod_last / 100.0 if raw_dod_last > 1.0 else raw_dod_last
 
-        if i < len(rte) and rte[i] is not None:
-            try:
-                raw_rte = float(rte[i])
-                c_rte = raw_rte / 100.0 if raw_rte > 1.0 else raw_rte
-            except (ValueError, TypeError):
-                c_rte = 0.9703
+        if efficiency_factors is not None:
+            soh_pct = c_soh * 100.0
+            chain = calculate_efficiency_chain(efficiency_factors, soh_pct)
+            cycle_rte = chain["rte"]
         else:
-            raw_rte_last = float(rte[-1]) if (rte and rte[-1] is not None) else 97.03
-            c_rte = raw_rte_last / 100.0 if raw_rte_last > 1.0 else raw_rte_last
+            if i < len(rte) and rte[i] is not None:
+                try:
+                    raw_rte = float(rte[i])
+                    c_rte = raw_rte / 100.0 if raw_rte > 1.0 else raw_rte
+                except (ValueError, TypeError):
+                    c_rte = 0.9703
+            else:
+                raw_rte_last = float(rte[-1]) if (rte and rte[-1] is not None) else 97.03
+                c_rte = raw_rte_last / 100.0 if raw_rte_last > 1.0 else raw_rte_last
+            cycle_rte = c_rte * ac_efficiency
 
-        init_gross[i] = rated_energy * init_container_qty * c_dod * c_rte * c_soh * ac_efficiency
+        init_gross[i] = rated_energy * init_container_qty * c_dod * cycle_rte * c_soh
         init_aux[i] = init_container_qty * cycle_container_aux_per_unit + init_pcs_qty * cycle_pcs_aux_per_unit
         init_ac_usable[i] = max(0, init_gross[i] - init_aux[i])
 
@@ -149,7 +160,13 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty):
                     asset_soh = raw_asset_soh / 100.0 if raw_asset_soh > 1.0 else raw_asset_soh
                 except (ValueError, TypeError, IndexError):
                     asset_soh = 1.0
-                asset_gross = rated_energy * qty_k * c_dod * c_rte * asset_soh * ac_efficiency
+                if efficiency_factors is not None:
+                    asset_soh_pct = asset_soh * 100.0
+                    asset_chain = calculate_efficiency_chain(efficiency_factors, asset_soh_pct)
+                    asset_cycle_rte = asset_chain["rte"]
+                else:
+                    asset_cycle_rte = c_rte * ac_efficiency
+                asset_gross = rated_energy * qty_k * c_dod * asset_cycle_rte * asset_soh
                 asset_aux = qty_k * cycle_container_aux_per_unit
                 total_aug_ac += max(0, asset_gross - asset_aux)
                 total_aug_aux += asset_aux
@@ -242,14 +259,28 @@ def calculate_full_pipeline(system_params, degradation=None, algorithm=None, fin
     else:
         aug_qty = [0] * NUM_YEARS
 
-    energy_results = calculate_energy_accounting(system_params, soh, rte, dod, aug_qty)
+    efficiency_factors = system_params.get("efficiencyFactors")
+    if efficiency_factors is None:
+        efficiency_factors = FACTOR_DEFAULTS
+
+    energy_results = calculate_energy_accounting(system_params, soh, rte, dod, aug_qty, efficiency_factors)
     financial_results = calculate_financial_metrics(energy_results["totalAcUsable"], financial_params)
+
+    if efficiency_factors is not None:
+        eff_curves = calculate_efficiency_curves(efficiency_factors, soh, NUM_YEARS)
+        rte = eff_curves["rte"]
+        efficiency_detail = calculate_efficiency_chain(efficiency_factors, soh[0])
+    else:
+        eff_curves = None
+        efficiency_detail = None
 
     return {
         "years": list(range(NUM_YEARS)),
         "soh": soh,
         "rte": rte,
         "dod": dod,
+        "efficiencyCurves": eff_curves,
+        "efficiencyDetail": efficiency_detail,
         **energy_results,
         "financial": financial_results,
     }

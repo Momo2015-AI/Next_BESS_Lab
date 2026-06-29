@@ -102,6 +102,9 @@ export const useBessStore = defineStore('bess', {
     },
     calculating: false,
     calculationError: null,
+    efficiencyFactors: [],
+    efficiencyCurves: null,
+    efficiencyDetail: null,
   }),
 
   getters: {
@@ -126,12 +129,22 @@ export const useBessStore = defineStore('bess', {
       }
     },
 
+    async loadEfficiencyFactors() {
+      try {
+        const resp = await fetch('/api/efficiency/factors')
+        const data = await resp.json()
+        this.efficiencyFactors = data.factors
+      } catch (e) {
+        console.error('Failed to load efficiency factors:', e)
+      }
+    },
+
     async runPipeline() {
       this.calculating = true
       this.calculationError = null
       try {
         const body = {
-          systemParams: { ...this.systemParams },
+          systemParams: { ...this.systemParams, efficiencyFactors: this.efficiencyFactors },
           degradation: {
             soh: [...this.degradation.soh],
             rte: [...this.degradation.rte],
@@ -187,6 +200,12 @@ export const useBessStore = defineStore('bess', {
               payback: data.result.financial.payback || -1,
               roi: data.result.financial.roi || 0,
             }
+          }
+          if (data.result.efficiencyCurves) {
+            this.efficiencyCurves = data.result.efficiencyCurves
+          }
+          if (data.result.efficiencyDetail) {
+            this.efficiencyDetail = data.result.efficiencyDetail
           }
         }
       } catch (e) {

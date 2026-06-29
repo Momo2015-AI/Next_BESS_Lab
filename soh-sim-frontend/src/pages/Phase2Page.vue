@@ -13,6 +13,7 @@
         <BatteryDCDesign v-if="activeStep === 1" />
         <PcsACDesign v-if="activeStep === 2" />
         <BatteryPCSConfig v-if="activeStep === 3" />
+        <EfficiencyChain v-if="activeStep === 4" />
       </div>
     </div>
   </div>
@@ -24,6 +25,7 @@ import ProductConfig from '../components/ProductConfig.vue'
 import BatteryDCDesign from '../components/BatteryDCDesign.vue'
 import PcsACDesign from '../components/PcsACDesign.vue'
 import BatteryPCSConfig from '../components/BatteryPCSConfig.vue'
+import EfficiencyChain from '../components/EfficiencyChain.vue'
 
 const activeStep = ref(0)
 const steps = [
@@ -31,6 +33,7 @@ const steps = [
   { label: '2.2 直流侧设计' },
   { label: '2.3 交流侧设计' },
   { label: '2.4 系统集成配置' },
+  { label: '2.5 效率链配置' },
 ]
 </script>
 
