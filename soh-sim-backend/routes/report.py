@@ -8,6 +8,7 @@ import os
 from datetime import datetime
 from flask import Blueprint, request, jsonify, make_response, current_app
 from database import db, Project, Simulation, Survey, BatteryPCSConfig, SohRteData
+from routes.auth import token_required
 
 report_bp = Blueprint('report', __name__)
 
@@ -477,6 +478,7 @@ def _build_bom_report(data):
 # ==================== API 接口 ====================
 
 @report_bp.route('/api/report/technical', methods=['POST'])
+@token_required
 def export_technical_report():
     """
     导出技术报告 PDF
@@ -533,6 +535,7 @@ def export_technical_report():
 
 
 @report_bp.route('/api/report/bom', methods=['POST'])
+@token_required
 def export_bom_report():
     """
     导出设备清单 BOM PDF
