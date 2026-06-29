@@ -18,6 +18,7 @@ from routes.simulation import simulation_bp
 from routes.report import report_bp
 from routes.aux_power import aux_power_bp
 from routes.ai_sim import ai_sim_bp, seed_manufacturers
+from routes.epc_modules import epc_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -43,6 +44,7 @@ app.register_blueprint(algorithm_bp)
 app.register_blueprint(report_bp)
 app.register_blueprint(aux_power_bp)
 app.register_blueprint(ai_sim_bp)
+app.register_blueprint(epc_bp)
 
 with app.app_context():
     seed_manufacturers()

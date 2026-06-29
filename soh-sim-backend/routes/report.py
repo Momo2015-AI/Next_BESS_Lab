@@ -571,3 +571,217 @@ def export_bom_report():
         f'attachment; filename=bom_report_{timestamp}.pdf'
 
     return response
+
+
+# ==================== Plotly 交互式图表 ====================
+# 用于投标报告/技术方案的高质量可视化，与 PDF 报告互补
+# 前端可通过 iframe 嵌入或弹窗预览
+
+try:
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    PLOTLY_AVAILABLE = True
+except ImportError:
+    PLOTLY_AVAILABLE = False
+
+
+def _plotly_layout_defaults(title: str, x_title: str = '', y_title: str = ''):
+    """Plotly 通用布局（中文友好、投标风格）"""
+    return dict(
+        title=title,
+        xaxis=dict(title=x_title, gridcolor='#e5e7eb', zerolinecolor='#9ca3af'),
+        yaxis=dict(title=y_title, gridcolor='#e5e7eb', zerolinecolor='#9ca3af'),
+        plot_bgcolor='#ffffff',
+        paper_bgcolor='#ffffff',
+        font=dict(family='Microsoft YaHei, Arial, sans-serif', size=12, color='#1f2937'),
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        margin=dict(l=60, r=30, t=80, b=60),
+    )
+
+
+def _build_soh_rte_curve_chart(data):
+    """SOH/RTE 25 年衰减曲线（双轴折线）"""
+    soh = data.get('soh', [])
+    rte = data.get('rte', [])
+    n = max(len(soh), len(rte))
+    if n == 0:
+        return None
+    years = list(range(n))
+
+    fig = make_subplots(specs=[[{'secondary_y': True}]])
+    fig.add_trace(go.Scatter(
+        x=years, y=[s * 100 if s is not None else None for s in soh],
+        name='SOH', mode='lines+markers',
+        line=dict(color='#1a56db', width=2.5),
+        marker=dict(size=6),
+    ), secondary_y=False)
+    fig.add_trace(go.Scatter(
+        x=years, y=[r * 100 if r is not None else None for r in rte],
+        name='RTE', mode='lines+markers',
+        line=dict(color='#dc2626', width=2.5, dash='dot'),
+        marker=dict(size=6),
+    ), secondary_y=True)
+
+    fig.update_layout(**_plotly_layout_defaults('25 年 SOH/RTE 衰减曲线', '运行年数', ''))
+    fig.update_yaxes(title_text='SOH (%)', secondary_y=False, range=[60, 105])
+    fig.update_yaxes(title_text='RTE (%)', secondary_y=True, range=[85, 100])
+    return fig
+
+
+def _build_capacity_matrix_heatmap(data):
+    """25 年容量矩阵热力图（年度可用容量 vs 年份）"""
+    results = data.get('results', {})
+    total_ac = results.get('totalAcUsable', [])
+    required = data.get('params', {}).get('requiredEnergy')
+    if not total_ac:
+        return None
+
+    years = list(range(len(total_ac)))
+    z = [[v] for v in total_ac]
+
+    fig = go.Figure(data=go.Heatmap(
+        z=z, x=['可用容量 (MWh)'], y=years,
+        colorscale='RdYlGn',
+        colorbar=dict(title='MWh'),
+        text=[[f'{v:.1f}'] for v in total_ac],
+        texttemplate='%{text}',
+        hovertemplate='Year %{y}<br>Capacity %{z:.2f} MWh<extra></extra>',
+    ))
+    # 达标参考线
+    if required:
+        fig.add_hline(y=required, line_dash='dash', line_color='#1f2937',
+                      annotation_text=f'要求 {required} MWh', annotation_position='top right')
+    fig.update_layout(**_plotly_layout_defaults('25 年容量矩阵热力图', '', '运行年数'))
+    return fig
+
+
+def _build_grid_compliance_chart(data):
+    """电网合规 LVRT/HVRT 曲线"""
+    lvrt = data.get('lvrt_curve', {})
+    hvrt = data.get('hvrt_curve', {})
+    if not lvrt and not hvrt:
+        return None
+
+    fig = go.Figure()
+    if lvrt:
+        fig.add_trace(go.Scatter(
+            x=lvrt.get('voltage', []), y=lvrt.get('time', []),
+            name='LVRT', fill='tozeroy',
+            line=dict(color='#1a56db', width=2.5),
+        ))
+    if hvrt:
+        fig.add_trace(go.Scatter(
+            x=hvrt.get('voltage', []), y=hvrt.get('time', []),
+            name='HVRT', fill='tozeroy',
+            line=dict(color='#dc2626', width=2.5),
+        ))
+    fig.update_layout(**_plotly_layout_defaults('电网合规 LVRT/HVRT 曲线',
+                                                '电压 (pu)', '时间 (s)'))
+    return fig
+
+
+def _build_ipp_cashflow_chart(data):
+    """IPP 现金流瀑布图（累计 NPV）"""
+    cashflow = data.get('cashflow_data', [])
+    if not cashflow:
+        return None
+
+    years = [c.get('year', i) for i, c in enumerate(cashflow)]
+    cum_npv = []
+    acc = 0
+    for c in cashflow:
+        acc += c.get('net_cashflow', 0)
+        cum_npv.append(acc)
+
+    fig = go.Figure(go.Waterfall(
+        x=years, y=[c.get('net_cashflow', 0) for c in cashflow],
+        name='年度净现金流',
+        measure=[c.get('measure', 'relative') for c in cashflow],
+        decreasing=dict(marker=dict(color='#dc2626')),
+        increasing=dict(marker=dict(color='#16a34a')),
+        totals=dict(marker=dict(color='#1a56db')),
+        connector=dict(line=dict(color='#9ca3af', width=1)),
+    ))
+    fig.add_trace(go.Scatter(
+        x=years, y=cum_npv, name='累计现金流',
+        line=dict(color='#f59e0b', width=2, dash='dot'),
+        mode='lines+markers',
+    ))
+    fig.update_layout(**_plotly_layout_defaults('IPP 25 年现金流瀑布图',
+                                                '运行年数', '现金流 (USD)'))
+    return fig
+
+
+_CHART_BUILDERS = {
+    'soh_rte_curve': _build_soh_rte_curve_chart,
+    'capacity_matrix': _build_capacity_matrix_heatmap,
+    'grid_compliance': _build_grid_compliance_chart,
+    'ipp_cashflow': _build_ipp_cashflow_chart,
+}
+
+
+@report_bp.route('/api/report/charts/<chart_type>', methods=['POST'])
+def export_plotly_chart(chart_type):
+    """
+    生成 Plotly 交互式图表
+
+    路径参数 chart_type:
+      - soh_rte_curve:    25 年 SOH/RTE 衰减曲线
+      - capacity_matrix:  容量矩阵热力图
+      - grid_compliance:  LVRT/HVRT 电网合规曲线
+      - ipp_cashflow:     IPP 现金流瀑布图
+
+    返回: { success, html, div_id } 前端可直接 iframe 或 innerHTML 渲染
+    """
+    if not PLOTLY_AVAILABLE:
+        return jsonify({'error': 'Plotly 未安装，请运行 pip install plotly'}), 500
+
+    if chart_type not in _CHART_BUILDERS:
+        return jsonify({
+            'error': f'不支持的图表类型: {chart_type}',
+            'available': list(_CHART_BUILDERS.keys()),
+        }), 400
+
+    data = request.get_json() or {}
+
+    # 数据库补充（与 PDF 报告一致的数据回填逻辑）
+    project_id = data.get('project_id')
+    simulation_id = data.get('simulation_id')
+    if project_id:
+        if simulation_id:
+            simulation = Simulation.query.get(simulation_id)
+            if simulation and simulation.results:
+                sim_results = json.loads(simulation.results)
+                data.setdefault('results', sim_results.get('results', {}))
+                data.setdefault('params', sim_results.get('params', {}))
+                data.setdefault('soh', sim_results.get('soh', []))
+                data.setdefault('rte', sim_results.get('rte', []))
+
+    try:
+        fig = _CHART_BUILDERS[chart_type](data)
+        if fig is None:
+            return jsonify({'error': f'数据不足，无法生成 {chart_type} 图表'}), 422
+
+        div_id = f'plotly-{chart_type}-{datetime.now().strftime("%H%M%S")}'
+        html = fig.to_html(
+            full_html=False, include_plotlyjs='cdn',
+            div_id=div_id, config={'displaylogo': False, 'responsive': True},
+        )
+        return jsonify({'success': True, 'html': html, 'div_id': div_id})
+
+    except Exception as e:
+        return jsonify({'error': f'图表生成失败: {str(e)}'}), 500
+
+
+@report_bp.route('/api/report/charts', methods=['GET'])
+def list_chart_types():
+    """列出可用的图表类型"""
+    return jsonify({
+        'chart_types': list(_CHART_BUILDERS.keys()),
+        'descriptions': {
+            'soh_rte_curve': '25 年 SOH/RTE 衰减曲线（双轴折线）',
+            'capacity_matrix': '25 年容量矩阵热力图',
+            'grid_compliance': 'LVRT/HVRT 电网合规曲线',
+            'ipp_cashflow': 'IPP 现金流瀑布图（累计 NPV）',
+        },
+    })
