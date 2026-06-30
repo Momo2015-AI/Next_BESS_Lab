@@ -1,67 +1,6 @@
-import math
 import numpy as np
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
-
-NUM_YEARS = 26
-R = 8.314  # Ideal gas constant J/(mol*K)
-
-# Default Arrhenius model parameters by battery chemistry
-DEFAULT_MODEL_PARAMS = {
-    "LFP": {
-        "A_cal": 0.02, "Ea_cal": 20000, "alpha": 0.8,
-        "A_cyc": 0.001, "Ea_cyc": 15000, "beta": 0.5, "gamma": 1.5, "delta": 0.2,
-    },
-    "NMC": {
-        "A_cal": 0.03, "Ea_cal": 22000, "alpha": 0.85,
-        "A_cyc": 0.0015, "Ea_cyc": 18000, "beta": 0.55, "gamma": 1.6, "delta": 0.25,
-    },
-}
-
-
-def predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate, model_params=None, correction_factor=1.0, correction_table=None):
-    """Predict SOH degradation using Arrhenius model (calendar aging + cycle aging).
-
-    Returns arrays of length NUM_YEARS for SOH (%) and RTE (%).
-    """
-    if model_params is None:
-        model_params = DEFAULT_MODEL_PARAMS["LFP"]
-
-    T_kelvin = temperature + 273.15
-    A_cal = model_params["A_cal"]
-    Ea_cal = model_params["Ea_cal"]
-    alpha = model_params.get("alpha", 0.8)
-    A_cyc = model_params["A_cyc"]
-    Ea_cyc = model_params["Ea_cyc"]
-    beta = model_params.get("beta", 0.5)
-    gamma = model_params.get("gamma", 1.5)
-    delta = model_params.get("delta", 0.2)
-
-    dod_factor = (dod / 100) ** gamma if dod > 0 else 0
-    c_rate_factor = 1 + delta * (c_rate - 0.5)
-
-    soh = [0.0] * NUM_YEARS
-    rte = [0.0] * NUM_YEARS
-
-    for year in range(NUM_YEARS):
-        if year == 0:
-            soh[year] = 100.0
-            rte[year] = 97.03
-            continue
-
-        days = year * 365
-        cycles = year * 365 * cycles_per_day
-
-        q_cal = A_cal * math.exp(-Ea_cal / (R * T_kelvin)) * (days ** alpha)
-        q_cyc = A_cyc * math.exp(-Ea_cyc / (R * T_kelvin)) * (cycles ** beta) * dod_factor * c_rate_factor
-
-        total_degradation = (q_cal + q_cyc) * correction_factor * 100
-        if correction_table and year in correction_table:
-            total_degradation *= correction_table[year]
-
-        soh[year] = max(0, 100 - total_degradation)
-        rte[year] = max(80, 97.03 - total_degradation * 0.15)
-
-    return soh, rte
+from services.degradation import predict_soh, NUM_YEARS, get_default_gb_curves, get_default_environmental
 
 
 def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_factors=None):
@@ -232,6 +171,8 @@ def calculate_full_pipeline(system_params, degradation=None, algorithm=None, fin
     correction_factor = algorithm.get("correctionFactor", 1.0)
     correction_table = algorithm.get("correctionTable")
     model_params = algorithm.get("modelParams")
+    environmental = algorithm.get("environmental")
+    gb_curves = algorithm.get("gb36276Curves")
 
     temperature = system_params.get("temperature", 25)
     cycles_per_day = system_params.get("cyclesPerDay", 1)
@@ -241,8 +182,9 @@ def calculate_full_pipeline(system_params, degradation=None, algorithm=None, fin
     if degradation.get("soh") and len(degradation["soh"]) == NUM_YEARS:
         soh = list(degradation["soh"])
     else:
-        soh, rte = predict_soh_arrhenius(temperature, cycles_per_day, dod_input, c_rate,
-                                          model_params, correction_factor, correction_table)
+        soh, rte = predict_soh(model_type, temperature, cycles_per_day, dod_input, c_rate,
+                                model_params, correction_factor, correction_table,
+                                environmental, gb_curves)
 
     if degradation.get("rte") and len(degradation["rte"]) == NUM_YEARS:
         rte = list(degradation["rte"])

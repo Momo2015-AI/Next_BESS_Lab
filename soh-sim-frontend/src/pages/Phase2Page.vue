@@ -14,6 +14,7 @@
         <PcsACDesign v-if="activeStep === 2" />
         <BatteryPCSConfig v-if="activeStep === 3" />
         <EfficiencyChain v-if="activeStep === 4" />
+        <DegradationConfig v-if="activeStep === 5" />
       </div>
     </div>
   </div>
@@ -26,6 +27,7 @@ import BatteryDCDesign from '../components/BatteryDCDesign.vue'
 import PcsACDesign from '../components/PcsACDesign.vue'
 import BatteryPCSConfig from '../components/BatteryPCSConfig.vue'
 import EfficiencyChain from '../components/EfficiencyChain.vue'
+import DegradationConfig from '../components/DegradationConfig.vue'
 
 const activeStep = ref(0)
 const steps = [
@@ -34,6 +36,7 @@ const steps = [
   { label: '2.3 交流侧设计' },
   { label: '2.4 系统集成配置' },
   { label: '2.5 效率链配置' },
+  { label: '2.6 退化模型配置' },
 ]
 </script>
 

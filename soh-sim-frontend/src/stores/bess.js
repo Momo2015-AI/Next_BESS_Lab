@@ -105,6 +105,19 @@ export const useBessStore = defineStore('bess', {
     efficiencyFactors: [],
     efficiencyCurves: null,
     efficiencyDetail: null,
+    degradationModel: 'arrhenius',
+    gb36276Curves: [],
+    environmental: {
+      accelerate_temperature: true,
+      accelerate_dust: false,
+      accelerate_humidity: false,
+      ref_temperature: 25,
+      ref_humidity: 50,
+      field_humidity: 65,
+      dust_factor: 1.10,
+      humidity_exponent: 2.5,
+      activation_energy: 25000,
+    },
   }),
 
   getters: {
@@ -139,6 +152,71 @@ export const useBessStore = defineStore('bess', {
       }
     },
 
+    async loadDegradationConfig() {
+      try {
+        const [curvesRes, envRes] = await Promise.all([
+          fetch('/api/degradation/gb36276-curves'),
+          fetch('/api/degradation/environmental'),
+        ])
+        const curves = await curvesRes.json()
+        const env = await envRes.json()
+        this.gb36276Curves = curves.curves
+        this.environmental = env.environmental
+      } catch (e) {
+        console.error('Failed to load degradation config:', e)
+      }
+    },
+
+    async updateGb36276Curves(curves) {
+      const res = await fetch('/api/degradation/gb36276-curves', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ curves }),
+      })
+      const data = await res.json()
+      this.gb36276Curves = data.curves
+    },
+
+    async resetGb36276Curves() {
+      const res = await fetch('/api/degradation/gb36276-curves/reset', { method: 'POST' })
+      const data = await res.json()
+      this.gb36276Curves = data.curves
+    },
+
+    async updateEnvironmental(env) {
+      const res = await fetch('/api/degradation/environmental', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(env),
+      })
+      const data = await res.json()
+      this.environmental = data.environmental
+    },
+
+    async resetEnvironmental() {
+      const res = await fetch('/api/degradation/environmental/reset', { method: 'POST' })
+      const data = await res.json()
+      this.environmental = data.environmental
+    },
+
+    async previewDegradation(params) {
+      const res = await fetch('/api/degradation/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      })
+      return await res.json()
+    },
+
+    async previewAcceleration(params) {
+      const res = await fetch('/api/degradation/environmental/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      })
+      return await res.json()
+    },
+
     async runPipeline() {
       this.calculating = true
       this.calculationError = null
@@ -150,6 +228,12 @@ export const useBessStore = defineStore('bess', {
             rte: [...this.degradation.rte],
             dod: [...this.degradation.dod],
             augQty: [...this.degradation.augQty],
+          },
+          algorithm: {
+            model: this.degradationModel,
+            correctionFactor: 1.0,
+            environmental: { ...this.environmental },
+            gb36276Curves: [...this.gb36276Curves],
           },
           financial: {
             capex: { ...this.financial.capex },
