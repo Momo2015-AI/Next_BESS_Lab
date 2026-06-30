@@ -14,11 +14,20 @@ from routes.auth import auth_bp
 from routes.products import products_bp, seed_products
 from routes.algorithm import algorithm_bp, seed_algorithms
 from routes.project import project_bp
+from services.boq import seed_boq_sections
 from routes.simulation import simulation_bp
 from routes.report import report_bp
 from routes.aux_power import aux_power_bp
+
 from routes.ai_sim import ai_sim_bp, seed_manufacturers
 from routes.epc_modules import epc_bp
+
+from routes.pipeline import pipeline_bp
+from routes.financial import financial_bp
+from routes.boq import boq_bp
+from routes.efficiency import efficiency_bp
+from routes.degradation import degradation_bp
+
 
 app = Flask(__name__)
 CORS(app)
@@ -43,13 +52,25 @@ app.register_blueprint(simulation_bp)
 app.register_blueprint(algorithm_bp)
 app.register_blueprint(report_bp)
 app.register_blueprint(aux_power_bp)
+
 app.register_blueprint(ai_sim_bp)
 app.register_blueprint(epc_bp)
+
+app.register_blueprint(pipeline_bp)
+app.register_blueprint(financial_bp)
+app.register_blueprint(boq_bp)
+app.register_blueprint(efficiency_bp)
+app.register_blueprint(degradation_bp)
+
 
 with app.app_context():
     seed_manufacturers()
     seed_products()
+
     seed_algorithms()
+
+    seed_boq_sections(db)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

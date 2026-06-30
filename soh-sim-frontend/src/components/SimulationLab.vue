@@ -564,7 +564,12 @@
         <button @click="runSimulation" :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
           :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }">
-          执行仿真计算
+          前端计算
+        </button>
+        <button @click="runBackendSimulation" :disabled="!selectedAlgorithm"
+          class="text-xs px-6 py-2 rounded font-bold transition-all"
+          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }">
+          后端引擎计算
         </button>
       </div>
     </div>
@@ -870,14 +875,19 @@ const fetchAlgorithms = async () => {
         mathematical_form: alg.mathematical_form || '',
         formula_expression: alg.formula_expression || '',
       }))
-      
-      if (!selectedAlgorithm.value && algorithms.value.length > 0) {
-        selectedAlgorithm.value = algorithms.value[0].id
-        selectAlgorithm(algorithms.value[0])
-      }
     }
   } catch (e) {
     console.error('获取算法列表失败:', e)
+  }
+
+  if (algorithms.value.length === 0) {
+    const { BUILTIN_DEGRADATION_ALGORITHMS, mapToSimulationLabFormat } = await import('../data/builtinAlgorithms.js')
+    algorithms.value = BUILTIN_DEGRADATION_ALGORITHMS.map(mapToSimulationLabFormat)
+  }
+
+  if (!selectedAlgorithm.value && algorithms.value.length > 0) {
+    selectedAlgorithm.value = algorithms.value[0].id
+    selectAlgorithm(algorithms.value[0])
   }
 }
 
@@ -1135,6 +1145,77 @@ const runAISimulation = async () => {
   } catch (e) {
     console.error('AI仿真失败:', e)
     showToast('AI仿真失败: ' + e.message, 'error')
+const runBackendSimulation = async () => {
+  currentStep.value = 4
+  try {
+    const algo = algorithms.value.find(a => a.id === selectedAlgorithm.value)
+    const modelType = algo?.model_type || 'arrhenius'
+    const modelParams = {}
+    if (algo?.parameters) {
+      for (const [key, cfg] of Object.entries(algo.parameters)) {
+        modelParams[key] = algoParams[key] ?? cfg.default
+      }
+    }
+    const body = {
+      systemParams: {
+        ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
+        initContainerQty: surveyData.containerQty || store.systemParams.initContainerQty,
+        initPcsQty: store.systemParams.initPcsQty,
+        pcsPower: store.systemParams.pcsPower,
+        duration: surveyData.duration || store.systemParams.duration,
+        temperature: surveyData.temperature || store.systemParams.temperature,
+        cyclesPerDay: surveyData.cyclesPerDay || store.systemParams.cyclesPerDay,
+        dod: surveyData.dod || store.systemParams.dod || 80,
+        cRate: store.systemParams.cRate || 0.5,
+        requiredEnergy: store.systemParams.requiredEnergy,
+        acEfficiency: simParams.acEfficiency || store.systemParams.acEfficiency,
+        bessAuxRun: store.systemParams.bessAuxRun,
+        bessAuxStandby: store.systemParams.bessAuxStandby,
+        pcsAuxRun: store.systemParams.pcsAuxRun,
+        pcsAuxStandby: store.systemParams.pcsAuxStandby,
+      },
+      algorithm: {
+        model: modelType,
+        correctionFactor: correctionFactors.sohFactor || 1.0,
+        modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined,
+      },
+    }
+    const res = await fetch('/api/pipeline/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    if (!res.ok) throw new Error('Backend simulation failed')
+    const data = await res.json()
+    if (data.result) {
+      const sohArr = data.result.soh || []
+      const rteArr = data.result.rte || []
+      simulationResults.sohCurve = sohArr
+      simulationResults.rteCurve = rteArr
+      simulationResults.netAvailCurve = data.result.totalAcUsable || []
+      simulationResults.initSoh = sohArr[0] || 100
+      simulationResults.finalSoh = sohArr[sohArr.length - 1] || 0
+      simulationResults.guaranteeEndSoh = sohArr[simParams.guaranteeYears] || 0
+      simulationResults.meetsGuarantee = (sohArr[simParams.guaranteeYears] || 0) >= simParams.guaranteeSoh
+      simulationResults.tableData = sohArr.map((s, i) => ({
+        year: i,
+        soh: s,
+        rte: rteArr[i] || 0,
+        netAvail: (data.result.totalAcUsable || [])[i] || 0,
+        meetsReq: ((data.result.meetsReq || [])[i]) || false,
+      }))
+      nextTick(() => setTimeout(() => renderChart(), 100))
+      emit('applyConfig', {
+        soh: sohArr,
+        rte: rteArr,
+        source: 'backend-pipeline',
+        algorithmType: modelType,
+        simulationYears: simParams.simulationYears,
+        guaranteeSoh: simParams.guaranteeSoh,
+      })
+    }
+  } catch (e) {
+    console.error('Backend simulation error:', e)
   }
 }
 

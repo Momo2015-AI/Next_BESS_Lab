@@ -22,7 +22,8 @@
 
     <div v-if="filteredAlgorithms.length === 0" class="text-center py-16 text-slate-500">
       <div class="text-4xl mb-3">&#9312;</div>
-      <div>正在加载算法模型...</div>
+      <div>暂无算法模型</div>
+      <button @click="initializeBuiltin" class="mt-4 text-teal-400 hover:text-teal-300 text-sm underline">初始化内置算法</button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -367,32 +368,329 @@ function showToast(message, type = 'success') {
   setTimeout(() => { toast.show = false }, 3000)
 }
 
+function getBuiltinFallback() {
+  return [
+    {
+      id: 'builtin-arrhenius',
+      name: 'Arrhenius 加速老化模型',
+      name_en: 'Arrhenius Accelerated Aging',
+      model_type: 'arrhenius',
+      category: 'degradation',
+      accuracy_level: 'high',
+      accuracy_desc: 'R^2 > 0.99',
+      mathematical_form: 'SOH(t) = A * exp(-Ea/(R*T)) * t^n',
+      description: '基于 Arrhenius 方程的电化学老化模型，考虑温度对反应速率的加速效应，适用于 LFP 电池日历衰减预测。',
+      is_builtin: true,
+      applicable_scenarios: ['LFP日历衰减', '温度加速老化', '日历寿命预测'],
+      parameters: {
+        A: { label: '前置系数', default: 1.0, min: 0, max: 10, unit: '' },
+        Ea: { label: '活化能', default: 25000, min: 0, max: 100000, unit: 'J/mol' },
+        n: { label: '时间指数', default: 0.5, min: 0, max: 2, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-double-exp',
+      name: '双指数衰减模型',
+      name_en: 'Double Exponential Decay',
+      model_type: 'double_exponential',
+      category: 'degradation',
+      accuracy_level: 'high',
+      accuracy_desc: 'R^2 > 0.98',
+      mathematical_form: 'SOH(t) = A1*exp(-k1*t) + A2*exp(-k2*t) + C',
+      description: '双指数模型捕获电池早期快速衰减和中长期缓慢衰减两阶段特征，对 LFP 全寿命周期拟合精度高。',
+      is_builtin: true,
+      applicable_scenarios: ['LFP日历衰减', '综合衰减预测', '循环衰减'],
+      parameters: {
+        A1: { label: '快衰减幅值', default: 0.03, min: 0, max: 0.2, unit: '' },
+        k1: { label: '快衰减速率', default: 0.5, min: 0, max: 5, unit: '1/yr' },
+        A2: { label: '慢衰减幅值', default: 0.35, min: 0, max: 0.6, unit: '' },
+        k2: { label: '慢衰减速率', default: 0.02, min: 0, max: 0.1, unit: '1/yr' },
+        C: { label: '渐近值', default: 0.6, min: 0, max: 1, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-linear-log',
+      name: '线性-对数衰减模型',
+      name_en: 'Linear-Log Degradation',
+      model_type: 'linear_log',
+      category: 'degradation',
+      accuracy_level: 'medium',
+      accuracy_desc: 'R^2 > 0.95',
+      mathematical_form: 'SOH(t) = a - b*ln(t+1)',
+      description: '基于 SEI 膜生长理论的简化模型，适用于日历老化的粗略估算。',
+      is_builtin: true,
+      applicable_scenarios: ['LFP日历衰减', '日历寿命预测', '默认配置'],
+      parameters: {
+        a: { label: '初始值', default: 1.0, min: 0.8, max: 1.0, unit: '' },
+        b: { label: '衰减系数', default: 0.05, min: 0, max: 0.2, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-rainflow',
+      name: '雨流计数模型 (Rainflow)',
+      name_en: 'Rainflow Counting Model',
+      model_type: 'rainflow',
+      category: 'degradation',
+      accuracy_level: 'high',
+      accuracy_desc: '与实际工况高度吻合',
+      mathematical_form: 'D = Σ(n_i/N_i) * (DOD_i/DOD_ref)^m',
+      description: '基于Miner线性损伤累积法则和雨流计数法的循环寿命预测模型。将实际运行中不规则、变幅的充放电循环统计为等效标准循环次数，按DOD加权计算累积损伤。大DOD循环的损伤远高于小DOD循环。参考循环寿命（6000次）为LFP电池在100%DOD、25°C下的行业标准值。',
+      is_builtin: true,
+      applicable_scenarios: ['不规则循环损伤', '实际运行工况', '多DOD混合工况'],
+      parameters: {
+        damage_exponent: { label: '损伤指数', default: 1.5, min: 1.0, max: 3.0, unit: '' },
+        cycle_life_ref: { label: '参考循环寿命', default: 6000, min: 1000, max: 20000, unit: '次' },
+        dod_ref: { label: '参考DOD', default: 1.0, min: 0.1, max: 1.0, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-semi-empirical',
+      name: '半经验综合模型 (Semi-Empirical)',
+      name_en: 'Semi-Empirical Comprehensive Model',
+      model_type: 'semi_empirical',
+      category: 'degradation',
+      accuracy_level: 'medium',
+      accuracy_desc: 'R^2 > 0.97',
+      mathematical_form: 'SOH = f(T) * f(DOD) * f(C-rate) * f(SOC)',
+      description: '综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。温度每偏离25°C 1°C，衰减速率变化0.2%；DOD从50%升至100%时衰减速率翻倍；0.5C充电相比1C充电衰减减半；宽SOC窗口加速衰减。适用于多应力耦合的复杂运行工况。',
+      is_builtin: true,
+      applicable_scenarios: ['多应力耦合', '综合衰减', '复杂工况预测'],
+      parameters: {
+        temp_coeff: { label: '温度系数', default: 0.002, min: 0, max: 0.01, unit: '/°C' },
+        dod_coeff: { label: 'DOD系数', default: 0.5, min: 0, max: 2.0, unit: '' },
+        c_rate_coeff: { label: '倍率系数', default: 0.1, min: 0, max: 1.0, unit: '' },
+        soc_coeff: { label: 'SOC窗口系数', default: 0.3, min: 0, max: 1.0, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-hybrid',
+      name: '默认混合模型 (Default Hybrid)',
+      name_en: 'Default Hybrid Model',
+      model_type: 'arrhenius_hybrid',
+      category: 'degradation',
+      accuracy_level: 'medium',
+      accuracy_desc: '通用默认模型，适用广泛',
+      mathematical_form: '基于Arrhenius方程的综合混合模型',
+      description: '通用默认混合衰减模型，基于Arrhenius框架同时处理日历老化和循环老化。日历老化因子（A_cal=0.001）和循环老化因子（A_cyc=1e-5）分别为两个老化路径的基础速率。参数参考多款主流LFP电芯（EVE LF280K、宁德时代 LFP280等）公开数据平均值，可作为快速评估的起点。',
+      is_builtin: true,
+      applicable_scenarios: ['通用默认', '快速评估', '无详细数据时使用'],
+      parameters: {
+        A_cal: { label: '日历老化因子', default: 0.001, min: 0.0001, max: 0.01, unit: '' },
+        Ea_cal: { label: '日历活化能', default: 35, min: 20, max: 60, unit: 'kJ/mol' },
+        alpha: { label: '时间指数', default: 0.5, min: 0.3, max: 0.7, unit: '' },
+        A_cyc: { label: '循环老化因子', default: 0.00001, min: 1e-7, max: 1e-4, unit: '' },
+        Ea_cyc: { label: '循环活化能', default: 25, min: 15, max: 50, unit: 'kJ/mol' },
+        beta: { label: '循环指数', default: 0.7, min: 0.5, max: 0.9, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-lcos',
+      name: 'LCOS 度电成本模型',
+      name_en: 'Levelized Cost of Storage',
+      model_type: 'lcos',
+      category: 'financial',
+      accuracy_level: 'high',
+      accuracy_desc: 'NPV 精度 < 1%',
+      mathematical_form: 'LCOS = TotalDiscountedCosts / TotalDiscountedEnergy',
+      description: '平准化储能成本模型，通过贴现现金流计算全生命周期每 MWh 的综合成本。',
+      is_builtin: true,
+      applicable_scenarios: ['投资决策', '项目评估', '经济性对标'],
+      parameters: {
+        discountRate: { label: '贴现率', default: 0.08, min: 0, max: 0.2, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-irr',
+      name: 'IRR 内部收益率模型',
+      name_en: 'Internal Rate of Return',
+      model_type: 'irr_newton',
+      category: 'financial',
+      accuracy_level: 'high',
+      accuracy_desc: 'Newton-Raphson 收敛 < 1e-8',
+      mathematical_form: 'NPV(r) = 0, Newton: r(k+1) = r(k) - NPV/NPV\'',
+      description: '使用 Newton-Raphson 迭代法求解使净现值为零的贴现率，支持项目 IRR 和股权 IRR。',
+      is_builtin: true,
+      applicable_scenarios: ['投资决策', '融资审批', '收益建模'],
+      parameters: {
+        maxIter: { label: '最大迭代', default: 200, min: 50, max: 1000, unit: '次' },
+        tol: { label: '收敛阈值', default: 1e-8, min: 1e-12, max: 1e-4, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-dscr',
+      name: 'DSCR 偿债备付率模型',
+      name_en: 'Debt Service Coverage Ratio',
+      model_type: 'dscr',
+      category: 'financial',
+      accuracy_level: 'medium',
+      accuracy_desc: '财务合规模型',
+      mathematical_form: 'DSCR = (EBITDA - Tax) / DebtService',
+      description: '评估项目每年经营现金流对还本付息的覆盖能力，DSCR >= 1.2 为融资安全线。',
+      is_builtin: true,
+      applicable_scenarios: ['融资审批', '项目评估'],
+      parameters: {
+        minDscr: { label: '最低DSCR', default: 1.2, min: 1.0, max: 2.0, unit: '' },
+      },
+    },
+    {
+      id: 'builtin-payback',
+      name: '投资回收期模型',
+      name_en: 'Payback Period',
+      model_type: 'payback',
+      category: 'financial',
+      accuracy_level: 'medium',
+      accuracy_desc: '静态/动态双模型',
+      mathematical_form: 'Static: CumCF >= 0; Dynamic: DiscountedCumCF >= 0',
+      description: '计算静态和动态投资回收期，评估资金回笼速度。',
+      is_builtin: true,
+      applicable_scenarios: ['投资决策', '项目评估'],
+      parameters: {},
+    },
+    {
+      id: 'builtin-gross-discharge',
+      name: '粗放电量计算模型',
+      name_en: 'Gross Discharge Calculation',
+      model_type: 'gross_discharge',
+      category: 'engineering',
+      accuracy_level: 'high',
+      accuracy_desc: '解析解',
+      mathematical_form: 'E_gross = RatedEnergy * Q * DOD * RTE * SOH * eta_AC',
+      description: '计算每个年份的毛放电量，考虑容器数量、DOD、RTE、SOH 和 AC 效率。',
+      is_builtin: true,
+      applicable_scenarios: ['容量配置', '能耗评估'],
+      parameters: {
+        acEfficiency: { label: 'AC效率', default: 97.03, min: 90, max: 99, unit: '%' },
+      },
+    },
+    {
+      id: 'builtin-aux-consumption',
+      name: '自辅耗校核模型',
+      name_en: 'Auxiliary Consumption Verification',
+      model_type: 'aux_consumption',
+      category: 'engineering',
+      accuracy_level: 'high',
+      accuracy_desc: '解析解',
+      mathematical_form: 'Aux = (tRun*P_run + tStd*P_std) / 1000',
+      description: '根据运行/待机时长和功耗计算单次循环辅助能耗，用于校核 POI 并网点净可用电量。',
+      is_builtin: true,
+      applicable_scenarios: ['能耗评估', '扩容策略'],
+      parameters: {
+        bessAuxRun: { label: 'BESS运行功耗', default: 18.124, min: 0, max: 50, unit: 'kW' },
+        bessAuxStandby: { label: 'BESS待机功耗', default: 3.5, min: 0, max: 20, unit: 'kW' },
+      },
+    },
+    {
+      id: 'builtin-aug-aging',
+      name: '增容老化模型',
+      name_en: 'Augmentation Aging Model',
+      model_type: 'aug_aging',
+      category: 'engineering',
+      accuracy_level: 'high',
+      accuracy_desc: '解析解',
+      mathematical_form: 'E_aug(i) = SUM(k<=i)[Qty_k * RatedEnergy * SOH(i-k) * RTE * DOD * eta_AC - Qty_k * Aux_per_unit]',
+      description: '计算每个年份增容资产的老化贡献，按投运年份追踪各批次 SOH 衰减。',
+      is_builtin: true,
+      applicable_scenarios: ['扩容策略', '容量配置'],
+      parameters: {},
+    },
+    {
+      id: 'builtin-soh-config',
+      name: 'SOH 曲线配置模型',
+      name_en: 'SOH Curve Configuration',
+      model_type: 'soh_curve_config',
+      category: 'simulation',
+      accuracy_level: 'medium',
+      accuracy_desc: '用户自定义',
+      mathematical_form: 'SOH(t) = user-defined array[0..N]',
+      description: '允许用户手工输入或上传 SOH 曲线数据，覆盖算法计算结果。',
+      is_builtin: true,
+      applicable_scenarios: ['默认配置', '实际运行工况'],
+      parameters: {},
+    },
+    {
+      id: 'builtin-rte-config',
+      name: 'RTE 曲线配置模型',
+      name_en: 'RTE Curve Configuration',
+      model_type: 'rte_curve_config',
+      category: 'simulation',
+      accuracy_level: 'medium',
+      accuracy_desc: '用户自定义',
+      mathematical_form: 'RTE(t) = user-defined array[0..N]',
+      description: '允许用户手工输入或上传 RTE 曲线数据，覆盖算法计算结果。',
+      is_builtin: true,
+      applicable_scenarios: ['默认配置', '实际运行工况'],
+      parameters: {},
+    },
+    {
+      id: 'builtin-temp-factor',
+      name: '温度加速因子模型',
+      name_en: 'Temperature Acceleration Factor',
+      model_type: 'temp_factor',
+      category: 'simulation',
+      accuracy_level: 'medium',
+      accuracy_desc: 'Arrhenius 近似',
+      mathematical_form: 'AF = exp(Ea/R * (1/T_ref - 1/T))',
+      description: '基于 Arrhenius 方程计算温度对老化速率的加速因子，用于工况修正。',
+      is_builtin: true,
+      applicable_scenarios: ['温度加速老化', '环境适应性评估', '实际运行工况'],
+      parameters: {
+        Ea: { label: '活化能', default: 25000, min: 0, max: 100000, unit: 'J/mol' },
+        Tref: { label: '参考温度', default: 298.15, min: 250, max: 350, unit: 'K' },
+      },
+    },
+    {
+      id: 'builtin-revenue-stack',
+      name: '多收入叠加模型',
+      name_en: 'Revenue Stack Model',
+      model_type: 'revenue_stack',
+      category: 'financial',
+      accuracy_level: 'medium',
+      accuracy_desc: '线性叠加',
+      mathematical_form: 'Revenue = Arbitrage + Capacity + Ancillary',
+      description: '将能量套利、容量补偿和辅助服务收入线性叠加为总收益。',
+      is_builtin: true,
+      applicable_scenarios: ['收益建模', '项目评估'],
+      parameters: {},
+    },
+  ]
+}
+
 async function fetchAlgorithms() {
+  const allAlgorithms = []
+  
   try {
     const res = await fetch('/api/algorithms/public')
     const data = await res.json()
-    if (data.success) {
-      algorithms.value = data.data
-      return
+    if (data.success && data.data && data.data.length > 0) {
+      allAlgorithms.push(...data.data.map(a => ({ ...a, is_builtin: true })))
     }
   } catch (e) {
-    console.error('公开API获取失败:', e)
+    console.error('获取公开算法列表失败:', e)
   }
-
+  
   const token = localStorage.getItem('token')
-  if (!token) return
-
-  try {
-    const res = await fetch('/api/algorithms', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    const data = await res.json()
-    if (data.success) {
-      algorithms.value = data.data
+  if (token) {
+    try {
+      const res = await fetch('/api/algorithms', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (data.success && data.data) {
+        const builtinIds = new Set(allAlgorithms.map(a => a.id))
+        data.data.forEach(a => {
+          if (!builtinIds.has(a.id)) allAlgorithms.push(a)
+        })
+      }
+    } catch (e) {
+      console.error('获取自定义算法列表失败:', e)
     }
-  } catch (e) {
-    console.error('获取算法列表失败:', e)
   }
+  
+  if (allAlgorithms.length === 0) {
+    allAlgorithms.push(...getBuiltinFallback())
+  }
+  
+  algorithms.value = allAlgorithms
 }
 
 async function createAlgorithm() {
@@ -406,7 +704,12 @@ async function createAlgorithm() {
   
   try {
     const res = await fetch('/api/algorithms', {
-      headers: { Authorization: `Bearer ${token}` },
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(newAlg),
     })
     const data = await res.json()
     if (data.success) {
