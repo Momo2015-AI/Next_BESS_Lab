@@ -18,7 +18,6 @@
         <EnergyFlowSankey v-if="activeStep === 6" />
         <DegradationConfig v-if="activeStep === 7" />
         <BatteryHealthHeatmap v-if="activeStep === 8" />
-        <EpcModules v-if="activeStep === 9" />
       </div>
     </div>
   </div>
@@ -35,7 +34,6 @@ import EfficiencyChain from '../components/EfficiencyChain.vue'
 import EnergyFlowSankey from '../components/EnergyFlowSankey.vue'
 import DegradationConfig from '../components/DegradationConfig.vue'
 import BatteryHealthHeatmap from '../components/BatteryHealthHeatmap.vue'
-import EpcModules from '../components/EpcModules.vue'
 
 const activeStep = ref(0)
 const steps = [
@@ -48,7 +46,6 @@ const steps = [
   { label: '2.7 能量流向图' },
   { label: '2.8 退化模型配置' },
   { label: '2.9 健康热力图' },
-  { label: '2.10 EPC 工程化' },
 ]
 </script>
 

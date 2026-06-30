@@ -43,6 +43,14 @@
           <span>{{ item.label }}</span>
         </router-link>
       </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">EPC</div>
+        <router-link to="/epc" class="sidebar-link" :class="{ active: $route.path === '/epc' }">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>EPC 工程化</span>
+        </router-link>
+      </div>
     </nav>
 
     <div class="sidebar-footer">

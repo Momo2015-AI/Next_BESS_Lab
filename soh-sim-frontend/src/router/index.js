@@ -116,6 +116,11 @@ const routes = [
     name: 'auth',
     component: () => import('../pages/AuthPage.vue'),
   },
+  {
+    path: '/epc',
+    name: 'epc',
+    component: () => import('../pages/EpcPage.vue'),
+  },
 ]
 
 const router = createRouter({
