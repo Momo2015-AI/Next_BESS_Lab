@@ -61,6 +61,7 @@
           <SensitivityAnalysis v-show="activeTab === 'sensitivity'" :params="params" :financial="financialData" @error="showToast" />
           <EngineeringCalc v-show="activeTab === 'engineering'" @error="showToast" />
           <AuxPowerCalculator v-show="activeTab === 'auxPower'" @error="showToast" />
+          <EpcModules v-show="activeTab === 'epc'" @error="showToast" />
           <DataExport v-show="activeTab === 'export'" :params="params" :results="results" :soh="soh" :rte="rte" :dod="dod" :aug-qty="augQty" :financial="financialData" :project-id="currentProjectId" />
           <AuthPanel v-show="activeTab === 'auth'" @auth-success="onAuthSuccess" @error="showToast" />
         </div>
@@ -94,6 +95,7 @@ import EngineeringCalc from './components/EngineeringCalc.vue'
 import AuthPanel from './components/AuthPanel.vue'
 import SurveyForm from './components/SurveyForm.vue'
 import AuxPowerCalculator from './components/AuxPowerCalculator.vue'
+import EpcModules from './components/EpcModules.vue'
 import { useDraft, useDraftRef, setupBeforeUnloadGuard } from './composables/useDraft'
 
 const batteryDC = ref(null)
@@ -119,7 +121,7 @@ const showToast = (message, type = 'info') => {
 const activeTab = ref('home')
 
 const foundationTabs = ['survey', 'param', 'conditions', 'products', 'batteryPCS', 'formula']
-const solutionTabs = ['dc-design', 'ac-design', 'simulationLab', 'financial', 'matrix', 'inject', 'chart', 'scenario', 'sensitivity', 'engineering', 'auxPower', 'export']
+const solutionTabs = ['dc-design', 'ac-design', 'simulationLab', 'financial', 'matrix', 'inject', 'chart', 'scenario', 'sensitivity', 'engineering', 'auxPower', 'epc', 'export']
 
 const isFoundationTab = computed(() => foundationTabs.includes(activeTab.value))
 const isSolutionTab = computed(() => solutionTabs.includes(activeTab.value))

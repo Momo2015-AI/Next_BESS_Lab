@@ -117,11 +117,13 @@ const solutionItems = ref([
   { id: 'sensitivity', label: '敏感性分析', icon: '🎯' },
   { id: 'engineering', label: '工程计算', icon: '📐' },
   { id: 'auxPower', label: '辅助功耗计算', icon: '⚙️' },
+  { id: 'epc', label: 'EPC工程模块', icon: '🏗️' },
   { id: 'export', label: '数据导出', icon: '📥' },
 ])
 
 const toolItems = ref([
   { id: 'auxPower', label: '辅助功耗计算', icon: '⚙️' },
+  { id: 'formula', label: '算法与公式', icon: '📐' },
 ])
 </script>
 
