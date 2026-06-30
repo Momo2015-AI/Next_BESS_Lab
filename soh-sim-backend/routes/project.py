@@ -453,6 +453,7 @@ def activate_version(version_id):
 # ==================== 参数同步API ====================
 
 @project_bp.route('/api/project/sync-params', methods=['POST'])
+@token_required
 def sync_params():
     """同步参数到数据库"""
     data = request.get_json()

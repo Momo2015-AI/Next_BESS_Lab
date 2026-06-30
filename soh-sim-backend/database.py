@@ -883,6 +883,37 @@ User.correction_templates = db.relationship('CorrectionTemplate', back_populates
 User.algorithm_models = db.relationship('AlgorithmModel', back_populates='created_by_user')
 
 
+class BatteryManufacturer(db.Model):
+    """电池厂家数据模型（含校准后的退化参数）"""
+    __tablename__ = 'battery_manufacturers'
+
+    id = db.Column(db.String(50), primary_key=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    name_en = db.Column(db.String(255))
+    country = db.Column(db.String(100))
+    chemistry_type = db.Column(db.String(50))
+    calibrated_params = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<BatteryManufacturer {self.name}>'
+
+
+class PinnModelWeights(db.Model):
+    """PINN 神经网络权重存储模型"""
+    __tablename__ = 'pinn_model_weights'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    model_name = db.Column(db.String(255), nullable=False)
+    weights = db.Column(db.LargeBinary, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<PinnModelWeights {self.model_name}>'
+
+
 def init_db(app):
     """初始化数据库"""
     db.init_app(app)
@@ -892,7 +923,8 @@ def init_db(app):
     # 给所有模型挂上 to_dict 方法（一次性，避免每类重复定义）
     for model_cls in [Tenant, User, Survey, Project, Simulation,
                       BatteryPCSConfig, SohRteData, FinancialData,
-                      ProductConfig, FormulaConfig, BoqSection, BoqItem]:
+                      ProductConfig, FormulaConfig, BoqSection, BoqItem,
+                      BatteryManufacturer]:
         model_cls.to_dict = _model_to_dict
 
     return db

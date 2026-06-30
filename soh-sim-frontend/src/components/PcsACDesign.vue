@@ -348,13 +348,14 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
+import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const emit = defineEmits(['apply-config', 'error'])
 
 const { pcs, loadAll } = useProducts()
 
 // PCS库数据源（从统一产品库获取）
-const selectedPcsId = ref('')
+const selectedPcsId = useDraftRef('pcs-ac-selected-pcs-id', '').state
 
 async function loadPcsLibrary() {
   await loadAll()
@@ -394,19 +395,19 @@ const showToast = (message, type = 'success') => {
   setTimeout(() => { toast.show = false }, 3000)
 }
 
-const pcsConfig = reactive({
+const { state: pcsConfig, clearDraft: clearPcsConfigDraft } = useDraft('pcs-ac-config', {
   pcsPower: 5,
   dcVoltageRange: '672-864V',
   maxDcCurrent: 1500,
   acRatedPower: 5000,
   acRatedCurrent: 5774,
-  
+
   calcMode: 'ratio',
   pcsQty: 10,
   parallelCount: 1,
   totalPcsPower: 50,
   powerRatio: 1.0,
-  
+
   transformerType: '一体化',
   transformerCapacity: 6.3,
   transformerQty: 5,
@@ -415,7 +416,7 @@ const pcsConfig = reactive({
   impedance: 10.5,
   connection: 'Dyn11',
   grounding: '电阻接地',
-  
+
   pcsEfficiency: 99,
   auxConsumption: 6.5,
   standbyConsumption: 1.0,

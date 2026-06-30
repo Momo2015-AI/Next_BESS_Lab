@@ -1,5 +1,40 @@
 <template>
   <div class="flex-1 min-h-0 flex flex-col">
+    <div class="rounded-xl p-3 flex-shrink-0 mb-3" style="background-color: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-2">
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-accent);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">AC-RTE 不带辅耗</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-accent);">{{ dashboardMetrics.acRteNoAux }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">%</div>
+        </div>
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-success);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">AC-RTE 带辅耗</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-success);">{{ dashboardMetrics.acRteWithAux }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">%</div>
+        </div>
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-accent-secondary);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">总装机容量</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-accent-secondary);">{{ dashboardMetrics.totalCapacity }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">MWh</div>
+        </div>
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-info);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">总装机功率</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-info);">{{ dashboardMetrics.totalPower }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">MW</div>
+        </div>
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-warning);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">年吞吐量</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-warning);">{{ dashboardMetrics.annualThroughput }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">MWh/yr</div>
+        </div>
+        <div class="rounded-lg p-2 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-top: 2px solid var(--color-danger);">
+          <div class="text-[9px] uppercase" style="color: var(--color-text-muted);">E/P 配比</div>
+          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-danger);">{{ dashboardMetrics.epRatio }}</div>
+          <div class="text-[8px]" style="color: var(--color-text-muted);">h</div>
+        </div>
+      </div>
+    </div>
+
     <div class="rounded-xl p-3 flex-shrink-0 mb-3 card">
       <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-3">
         <div>
@@ -139,12 +174,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, dod: Array, augQty: Array })
 const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty', 'update:param', 'recalculate'])
 
 const isCalculating = ref(false)
+
+const dashboardMetrics = computed(() => {
+  const p = props.params || {}
+  const r = props.rte || []
+  const res = props.results || {}
+  const ratedEnergy = p.ratedEnergy || 0
+  const initContainerQty = p.initContainerQty || 0
+  const duration = p.duration || 1
+  const cyclesPerDay = p.cyclesPerDay || 1
+  const acEff = (p.acEfficiency || 97) / 100
+
+  const totalCapacity = ratedEnergy * initContainerQty
+  const totalPower = totalCapacity / duration
+  const rte0 = r[0] || 0.94
+  const annualThroughput = totalCapacity * cyclesPerDay * 365 * rte0 * acEff
+
+  const acRteNoAux = (res.acRteNoAux != null) ? Number(res.acRteNoAux).toFixed(2) : (rte0 * acEff * 100).toFixed(2)
+  const initGross0 = res.initGross?.[0] || 0
+  const initAux0 = res.initAux?.[0] || 0
+  const auxRatio = initGross0 > 0 ? initAux0 / initGross0 : 0.05
+  const acRteWithAux = (res.acRteWithAux != null) ? Number(res.acRteWithAux).toFixed(2) : (rte0 * acEff * (1 - auxRatio) * 100).toFixed(2)
+  const epRatio = duration.toFixed(1)
+
+  return {
+    acRteNoAux: acRteNoAux + '%',
+    acRteWithAux: acRteWithAux + '%',
+    totalCapacity: totalCapacity.toFixed(1),
+    totalPower: totalPower.toFixed(1),
+    annualThroughput: annualThroughput.toFixed(0),
+    epRatio: epRatio + 'h',
+  }
+})
 
 function updateDod(idx, val) {
   const newArr = [...props.dod]

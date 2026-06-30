@@ -293,10 +293,11 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const emit = defineEmits(['error'])
 
-const activeTab = ref('area')
+const activeTab = useDraftRef('eng-active-tab', 'area').state
 const tabs = [
   { id: 'area', label: '场地面积' },
   { id: 'bom', label: 'BOM清单' },
@@ -318,7 +319,7 @@ const showToast = (message, type = 'success') => {
   }, 3000)
 }
 
-const siteData = reactive({
+const { state: siteData } = useDraft('eng-site-data', {
   containerQty: 10,
   pcsQty: 5,
   transformerQty: 2,
@@ -350,7 +351,7 @@ function calculateSiteArea() {
   showToast('场地面积计算完成')
 }
 
-const bomData = reactive({
+const { state: bomData } = useDraft('eng-bom-data', {
   energy: 100,
   containerQty: 10,
   pcsCapacity: 50,
@@ -502,7 +503,7 @@ function exportBOM() {
   showToast('BOM已导出')
 }
 
-const spareData = reactive({
+const { state: spareData } = useDraft('eng-spare-data', {
   batteryCapacity: 100,
   pcsQty: 5,
   years: 25,

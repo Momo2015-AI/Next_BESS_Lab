@@ -9,6 +9,7 @@ import uuid
 from datetime import datetime
 from flask import Blueprint, request, jsonify, make_response
 from database import db, Simulation
+from routes.auth import token_required
 
 export_bp = Blueprint('export', __name__)
 
@@ -35,6 +36,7 @@ def _make_csv_response(output, filename_prefix):
 
 
 @export_bp.route('/api/export/csv', methods=['POST'])
+@token_required
 def export_csv():
     """导出计算结果为CSV格式"""
     data = request.get_json()
@@ -135,6 +137,7 @@ def export_csv():
 
 
 @export_bp.route('/api/export/financial-csv', methods=['POST'])
+@token_required
 def export_financial_csv():
     """导出财务分析结果为CSV格式"""
     data = request.get_json()
@@ -192,6 +195,7 @@ def export_financial_csv():
 
 
 @export_bp.route('/api/export/simulation', methods=['POST'])
+@token_required
 def export_simulation():
     """保存完整仿真结果到数据库"""
     data = request.get_json()
@@ -257,6 +261,7 @@ def export_simulation():
 
 
 @export_bp.route('/api/simulation/list', methods=['GET'])
+@token_required
 def list_simulations():
     """获取仿真列表"""
     page = request.args.get('page', 1, type=int)
@@ -288,6 +293,7 @@ def list_simulations():
 
 
 @export_bp.route('/api/simulation/<simulation_id>', methods=['GET'])
+@token_required
 def get_simulation(simulation_id):
     """获取仿真详情"""
     simulation = Simulation.query.get(simulation_id)

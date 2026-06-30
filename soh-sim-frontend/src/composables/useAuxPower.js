@@ -1,4 +1,5 @@
 import { reactive, computed } from 'vue'
+import { useDraft } from './useDraft'
 
 const strategyParams = [
   { key: 'days', label: '本次计算总天数 (Days)', min: 1, max: 365, step: 1, hasSlider: true },
@@ -26,8 +27,9 @@ const externalParams = [
 ]
 
 // 工厂函数：每次调用创建独立实例，避免组件间状态共享
+// 同时支持草稿持久化（关闭网页后数据仍在，重新打开恢复）
 export function useAuxPower() {
-  const state = reactive({
+  const { state, clearDraft } = useDraft('aux-power', {
     days: 365,
     cycles: 2,
     hours: 2,
@@ -74,5 +76,6 @@ export function useAuxPower() {
     efficiencyParams,
     auxParams,
     externalParams,
+    clearDraft,
   }
 }
