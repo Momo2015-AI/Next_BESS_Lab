@@ -171,7 +171,7 @@ def get_simulation_result(result_id):
     """获取单条仿真结果详情"""
     user = request.current_user
 
-    from database import CorrectionTemplate, db
+    from database import CorrectionTemplate
 
     result = SimulationResult.query.get(result_id)
     if not result:
@@ -238,7 +238,7 @@ def get_correction_templates():
 
     # 如果有租户筛选
     if user.tenant_id:
-        query = query.filter((CorrectionTemplate.tenant_id == user.tenant_id) | (CorrectionTemplate.tenant_id == None))
+        query = query.filter((CorrectionTemplate.tenant_id == user.tenant_id) | (CorrectionTemplate.tenant_id.is(None)))
 
     pagination = query.order_by(CorrectionTemplate.is_default.desc(), CorrectionTemplate.created_at.desc()).paginate(
         page=page, per_page=per_page, error_out=False
@@ -331,7 +331,7 @@ def create_correction_template():
 @token_required
 def get_correction_template(template_id):
     """获取校正因子模板详情"""
-    from database import CorrectionTemplate, db
+    from database import CorrectionTemplate
 
     template = CorrectionTemplate.query.get(template_id)
     if not template:

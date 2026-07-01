@@ -3,10 +3,6 @@
 支持 5 种收入模型、融资参数化、税收/折旧建模，向后兼容简化参数。
 """
 
-import math
-
-from services.units import EXCHANGE_RATES
-
 NUM_YEARS = 26
 
 BOQ_TO_CAPEX_MAP = {
@@ -62,7 +58,6 @@ def _calculate_revenue_arbitrage(params, year, total_ac_usable_for_year):
     spread_capture = float(arb.get("spreadCapture", 85)) / 100
     operating_days = int(arb.get("operatingDays", 330))
     escalation = float(params.get("_escalation", 2.0)) / 100
-    cycles_per_day = float(params.get("_cyclesPerDay", 1))
     efficiency_loss = float(params.get("_efficiencyLossPct", 3)) / 100
 
     spread = (peak - off_peak) * spread_capture

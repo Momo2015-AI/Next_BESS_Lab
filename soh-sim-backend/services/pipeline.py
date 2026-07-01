@@ -1,6 +1,4 @@
-import numpy as np
-
-from services.degradation import NUM_YEARS, get_default_environmental, get_default_gb_curves, predict_soh
+from services.degradation import NUM_YEARS, predict_soh
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
 
 

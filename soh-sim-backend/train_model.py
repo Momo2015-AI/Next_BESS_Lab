@@ -17,7 +17,7 @@ import json
 import os
 import warnings
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -270,9 +270,9 @@ class ModelCalibrator:
         self.best_params = study.best_params
         self.best_rmse = study.best_value
 
-        print(f"\n✓ 参数校准完成!")
+        print("\n✓ 参数校准完成!")
         print(f"  最优 RMSE: {self.best_rmse * 100:.3f}%")
-        print(f"  最优参数:")
+        print("  最优参数:")
         for key, value in self.best_params.items():
             print(f"    {key}: {value:.6f}")
 
@@ -319,7 +319,7 @@ class ModelManager:
         model = ArrheniusSOHModel(data["model_params"])
 
         if "metadata" in data:
-            print(f"模型元数据:")
+            print("模型元数据:")
             for key, value in data["metadata"].items():
                 print(f"  {key}: {value}")
         print(f"保存时间: {data.get('saved_at', '未知')}")
@@ -387,7 +387,7 @@ def train_mode(args):
     # 创建模型
     print("\n初始化模型...")
     model = ArrheniusSOHModel()
-    print(f"初始参数:")
+    print("初始参数:")
     for key, value in model.params.items():
         print(f"  {key}: {value}")
 

@@ -339,7 +339,6 @@ def predict_soh_arrhenius(
         environmental = ENV_DEFAULTS
 
     T_kelvin = temperature + 273.15
-    T_ref = environmental.get("ref_temperature", 25.0) + 273.15
     A_cal = model_params["A_cal"]
     Ea_cal = model_params["Ea_cal"]
     alpha = model_params.get("alpha", 0.8)
@@ -351,8 +350,6 @@ def predict_soh_arrhenius(
 
     dod_factor = (dod / 100) ** gamma if dod > 0 else 0
     c_rate_factor = 1 + delta * (c_rate - 0.5)
-
-    env_accel = _compute_environmental_acceleration(temperature, environmental)
 
     soh = [0.0] * NUM_YEARS
     rte = [0.0] * NUM_YEARS
