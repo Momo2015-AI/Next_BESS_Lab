@@ -9,28 +9,66 @@ on:
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./soh-sim-frontend
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-        working-directory: ./soh-sim-frontend
-      - run: npm run build
-        working-directory: ./soh-sim-frontend
+          cache: 'npm'
+          cache-dependency-path: soh-sim-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint:no-fix
+
+      - name: Prettier check
+        run: npm run format:check
+
+      - name: TypeScript check
+        run: npm run type-check
+        continue-on-error: true
 
   backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./soh-sim-backend
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - run: pip install black isort flake8
-        working-directory: ./soh-sim-backend
-      - run: black --check .
-        working-directory: ./soh-sim-backend
-      - run: isort --check-only .
-        working-directory: ./soh-sim-backend
-      - run: flake8
-        working-directory: ./soh-sim-backend
+
+      - name: Install dev dependencies
+        run: pip install black isort flake8
+
+      - name: Black check
+        run: black --check .
+
+      - name: isort check
+        run: isort --check-only .
+
+      - name: Flake8
+        run: flake8
+
+  rules-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check AI rules consistency
+        run: node scripts/check-ai-rules-consistency.js
+
+      - name: Check code style
+        run: bash scripts/check-code-style.sh

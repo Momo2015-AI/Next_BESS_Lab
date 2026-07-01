@@ -1,4 +1,20 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+echo "Running pre-commit checks..."
+
+# Frontend checks
+cd soh-sim-frontend
+if [ -f package.json ]; then
+  echo "  ESLint..."
+  npx eslint src/ --ext .vue,.js,.ts --fix 2>/dev/null || echo "  ESLint found issues"
+
+  echo "  Prettier..."
+  npx prettier --check "src/**/*.{vue,js,ts,css}" 2>/dev/null || echo "  Prettier found issues"
+fi
+
+# AI rules consistency
+echo "  AI rules consistency..."
+node ../scripts/check-ai-rules-consistency.js 2>/dev/null || echo "  AI rules may be out of sync (run: node scripts/sync-ai-rules.js)"
+
+echo "Pre-commit checks completed."

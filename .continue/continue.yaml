@@ -1,52 +1,56 @@
-# Project Code Standards
+# AI Code Rules
+# Auto-generated from .ai-rules-core.md - DO NOT EDIT MANUALLY
 
-You are a professional frontend/backend AI developer. Follow these rules when generating code:
-
-## Frontend (Vue 3 + Vite)
-
-### Naming
-- Components: PascalCase (.vue)
-- Composables: camelCase + use prefix (useDraft.js)
-- Store: camelCase (bess.js)
-- CSS classes: kebab-case (tool-page, step-content)
-- Constants: UPPER_SNAKE_CASE
-
-### Mandatory Rules
-1. All text must use $t('key') for i18n. NO hardcoded Chinese or English.
-2. NO inline event handlers (onfocus/onblur/onmouseover/onmouseout). Use CSS :focus-visible or @focus/@blur.
-3. NO inline style attributes. Use CSS classes.
-4. Single component max 400 lines. Split if larger.
-5. ECharts instances must be disposed in onUnmounted.
-6. window.addEventListener('resize') must have matching removeEventListener in onUnmounted.
-7. setInterval must be cleared in onUnmounted.
-8. MutationObserver must be disconnected in onUnmounted.
-9. watch({ deep: true }) must be debounced (300-500ms).
-10. Use tree-shakable echarts imports, NOT import * as echarts.
-
-### Shared Styles
-- Extract common styles to src/assets/styles/shared.css
-- Page layout classes: .tool-page, .phase-page, .tool-header
-
-### Performance
-- Input changes triggering calculations must debounce 300ms+
-- localStorage writes must debounce 500ms+
-
-## Backend (Python + Flask)
-
-### Naming
-- Modules: snake_case
-- Classes: PascalCase
-- Functions: snake_case
-- Constants: UPPER_SNAKE_CASE
-
-### Mandatory Rules
-1. All foreign key columns must have indexes.
-2. NO N+1 queries. Use joinedload/selectinload.
-3. List queries must be paginated.
-4. Bulk delete+insert must be wrapped in transactions.
-5. Model to_dict() methods must be explicitly defined. NO runtime dynamic injection.
-6. Auth endpoints must NOT re-query User.
-
-## Reference
-- Full spec: CODE_STYLE.md
-- Translations: src/i18n/zh.js and src/i18n/en.js
+rules:
+  - name: code-standards
+    description: "Follow project code standards"
+    content: |
+      ## Frontend (Vue 3 + Vite)
+      
+      ### Naming
+      - Components: PascalCase (.vue)
+      - Composables: camelCase + use prefix (useDraft.js)
+      - Store: camelCase (bess.js)
+      - CSS classes: kebab-case (tool-page, step-content)
+      - Constants: UPPER_SNAKE_CASE
+      
+      ### Mandatory Rules
+      1. All text must use $t('key') for i18n. NO hardcoded Chinese or English.
+      2. NO inline event handlers (onfocus/onblur/onmouseover/onmouseout). Use CSS :focus-visible or @focus/@blur.
+      3. NO inline style attributes. Use CSS classes.
+      4. Single component max 400 lines. Split if larger.
+      5. ECharts instances must be disposed in onUnmounted.
+      6. window.addEventListener('resize') must have matching removeEventListener in onUnmounted.
+      7. setInterval must be cleared in onUnmounted.
+      8. MutationObserver must be disconnected in onUnmounted.
+      9. watch({ deep: true }) must be debounced (300-500ms).
+      10. Use tree-shakable echarts imports, NOT import * as echarts.
+      
+      ### Shared Styles
+      - Extract common styles to src/assets/styles/shared.css
+      - Page layout classes: .tool-page, .phase-page, .tool-header
+      
+      ### Performance
+      - Input changes triggering calculations must debounce 300ms+
+      - localStorage writes must debounce 500ms+
+      
+      ## Backend (Python + Flask)
+      
+      ### Naming
+      - Modules: snake_case
+      - Classes: PascalCase
+      - Functions: snake_case
+      - Constants: UPPER_SNAKE_CASE
+      
+      ### Mandatory Rules
+      1. All foreign key columns must have indexes.
+      2. NO N+1 queries. Use joinedload/selectinload.
+      3. List queries must be paginated.
+      4. Bulk delete+insert must be wrapped in transactions.
+      5. Model to_dict() methods must be explicitly defined. NO runtime dynamic injection.
+      6. Auth endpoints must NOT re-query User.
+      
+      ## Reference
+      - Full spec: CODE_STYLE.md
+      - Translations: src/i18n/zh.js and src/i18n/en.js
+      

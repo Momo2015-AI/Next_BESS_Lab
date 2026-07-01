@@ -1,136 +1,440 @@
-# 代码规范
+# 代码规范手册
 
-本文档定义 soh-sim 项目的代码规范，所有开发者（人类和 AI）必须遵守。
+**版本**: v2.0
+**最后更新**: 2026-07-01
+**负责人**: @Momo2015-AI
+
+本文档使用 RFC 2119 关键词：
+- **MUST**: 强制执行，违反不得合并
+- **SHOULD**: 强烈建议，特殊情况可豁免但需注释说明
+- **MAY**: 可选，由开发者自行决定
 
 ---
 
-## 前端规范 (Vue 3 + Vite)
+## 版本历史
 
-### 命名约定
+| 版本 | 日期 | 更新内容 | 负责人 |
+|------|------|----------|--------|
+| v2.0 | 2026-07-01 | 添加 TypeScript、API设计、数据库设计、安全、测试、团队协作、代码示例 | @Momo2015-AI |
+| v1.0 | 2026-06-20 | 初始版本，前后端基础规范 | @Momo2015-AI |
+
+---
+
+## 一、前端规范 (Vue 3 + Vite)
+
+### 1.1 命名约定
 
 | 类型 | 规则 | 示例 |
 |------|------|------|
-| 组件文件 | PascalCase + .vue | `BatteryDCDesign.vue`, `FinancialDashboard.vue` |
-| 组合式函数 | camelCase + use 前缀 | `useDraft.js`, `useAuxPower.js` |
-| Store 模块 | camelCase + .js | `bess.js` |
-| 路由名称 | kebab-case | `tool-auxpower`, `tool-financial` |
-| CSS 类名 | kebab-case | `tool-page`, `step-content` |
-| 常量 | UPPER_SNAKE_CASE | `ABBR_MAP`, `FACTOR_DEFAULTS` |
+| 组件文件 | PascalCase + .vue | `BatteryDCDesign.vue` |
+| 组合式函数 | camelCase + use 前缀 | `useDraft.js` |
+| Store 模块 | camelCase | `bess.js` |
+| 路由名称 | kebab-case | `tool-auxpower` |
+| CSS 类名 | kebab-case | `tool-page` |
+| 常量 | UPPER_SNAKE_CASE | `ABBR_MAP` |
 | 私有变量 | _ 前缀 | `_in_memory_factors` |
-| 模板 ref | $ 后缀（可选） | `chartContainer` |
+| Props | camelCase | `ratedEnergy` |
+| Emits | camelCase | `updateConfig` |
 
-### 组件规范
+### 1.2 组件规范
 
-- 单组件不超过 400 行，超过必须拆分为子组件
-- 禁止使用内联事件处理器（`onfocus`/`onblur`/`onmouseover`/`onmouseout`）
-- 禁止使用内联 `style` 属性，统一使用 CSS 类或 CSS 变量
-- 所有文本必须使用 `$t('key')` 国际化，禁止硬编码中英文
-- ECharts 实例必须通过 `useChart()` composable 管理，在 `onUnmounted` 中 dispose
-- `watch({ deep: true })` 必须配合防抖（debounce 300-500ms）
+- MUST 单组件不超过 400 行，超过必须拆分
+- MUST 禁止内联事件处理器（`onfocus`/`onblur`/`onmouseover`/`onmouseout`）
+- MUST 禁止内联 `style` 属性，使用 CSS 类
+- MUST 所有文本使用 `$t('key')` 国际化，禁止硬编码中英文
+- MUST ECharts 实例在 `onUnmounted` 中 dispose
+- MUST `window.addEventListener('resize')` 在 `onUnmounted` 中 removeEventListener
+- MUST `setInterval` 在 `onUnmounted` 中 clearInterval
+- MUST `MutationObserver` 在 `onUnmounted` 中 disconnect
+- MUST `watch({ deep: true })` 配合防抖（300-500ms）
+- SHOULD 使用 `<script setup>` 语法
+- SHOULD Props 声明类型和默认值
 
-### 共享样式
+### 1.3 模板规范
 
-- 公共样式提取到 `src/assets/styles/shared.css`
-- 页面布局类：`.tool-page`, `.phase-page`, `.tool-header`
-- 输入框使用 `.base-input` 类，焦点样式使用 CSS `:focus-visible` 伪类
-- 选择框使用 `.base-select` 类
-- 按钮使用 `.base-btn` 类，hover 效果使用 CSS `:hover` 伪类
-- 卡片使用 `.base-card` 类
-- 网格布局使用 `.grid-2`, `.grid-3`, `.grid-4` 类
+**正确示例：**
 
-### 图表管理
+```vue
+<template>
+  <div class="tool-page">
+    <h2>{{ $t('sidebar.toolAuxPower') }}</h2>
+    <input
+      v-model="inputValue"
+      @input="debouncedCalculate"
+      class="input-field"
+    />
+  </div>
+</template>
 
-使用 `useChart()` composable 统一管理 ECharts 实例：
+<script setup>
+import { ref, watch } from 'vue'
+import { debounce } from 'lodash-es'
+
+const inputValue = ref('')
+const debouncedCalculate = debounce(() => {
+  // 计算逻辑
+}, 300)
+
+watch(inputValue, debouncedCalculate)
+</script>
+
+<style scoped>
+.input-field {
+  background-color: var(--color-input-bg-dark);
+  border: 1px solid var(--color-input-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus-visible {
+  border-color: var(--color-accent);
+  outline: none;
+}
+</style>
+```
+
+**错误示例：**
+
+```vue
+<template>
+  <div>
+    <h2>辅助功率计算</h2>           <!-- ❌ 硬编码中文 -->
+    <input
+      v-model="inputValue"
+      @input="calculate"             <!-- ❌ 无防抖 -->
+      style="border:1px solid #ccc"  <!-- ❌ 内联样式 -->
+      onfocus="this.style.border='blue'"  <!-- ❌ 内联事件 -->
+    />
+  </div>
+</template>
+```
+
+### 1.4 TypeScript 规范
+
+#### 命名
+
+| 类型 | 规则 | 示例 |
+|------|------|------|
+| 接口 | IPascalCase | `IBatteryConfig`, `ISimParams` |
+| 类型别名 | PascalCase | `DegradationType`, `CellData` |
+| 泛型 | 单字母 | `T`, `K`, `V` |
+| 枚举 | PascalCase | `GridStandard`, `BatteryType` |
+| .ts 文件 | kebab-case | `battery-types.ts` |
+
+#### 类型定义
+
+- MUST 优先使用 `interface` 定义对象类型
+- MUST 使用 `type` 定义联合类型、交叉类型
+- MUST 禁止使用 `any`，用 `unknown` 代替
+- SHOULD 为复杂类型编写 JSDoc 注释
+- SHOULD 利用类型推导，避免冗余注解
+
+```typescript
+// 接口定义对象
+interface IBatteryConfig {
+  cellModel: string
+  capacityAh: number
+  voltageNominal: number
+}
+
+// 类型别名定义联合类型
+type DegradationModel = 'arrhenius' | 'linear_log' | 'double_exponential'
+
+// 泛型
+function getResult<T>(data: T): T {
+  return data
+}
+```
+
+### 1.5 共享样式
+
+- MUST 公共样式提取到 `src/assets/styles/shared.css`
+- MUST 页面布局使用统一类：`.tool-page`, `.phase-page`, `.tool-header`
+- MUST 输入框焦点使用 CSS `:focus-visible` + `transition`
+- MUST 按钮 hover 使用 CSS `:hover` 伪类
+
+### 1.6 图表管理
 
 ```javascript
-import { ref } from 'vue'
+// 正确：使用 composable 管理
 import { useChart } from '@/composables/useChart'
 
-const chartRef = ref(null)
-const chartOptions = ref({
-  title: { text: $t('chart.title') },
-  xAxis: { type: 'category', data: [...] },
-  yAxis: { type: 'value' },
-  series: [{ type: 'line', data: [...] }],
-})
-
-const { chart, init, resize, update } = useChart(chartRef, chartOptions)
+const { chart, containerRef, dispose } = useChart()
 ```
 
-**useChart API**：
+### 1.7 性能要求
 
-| 属性/方法 | 类型 | 说明 |
-|-----------|------|------|
-| `chart` | `ref` | ECharts 实例引用 |
-| `init()` | `function` | 手动初始化图表 |
-| `resize()` | `function` | 手动调整图表大小 |
-| `update(newOptions)` | `function` | 更新图表配置 |
-
-**多图表管理**：
-
-```javascript
-import { ref } from 'vue'
-import { useMultiChart } from '@/composables/useChart'
-
-const chartRefs = ref([ref(null), ref(null), ref(null)])
-const optionsList = ref([{ /* chart 1 */ }, { /* chart 2 */ }, { /* chart 3 */ }])
-
-const { charts, initAll, resizeAll, updateAll } = useMultiChart(chartRefs, optionsList)
-```
-
-### 性能要求
-
-- 所有输入框变更触发计算必须防抖 300ms+
-- localStorage 写入必须防抖 500ms+
-- 多个图表同时渲染时，使用 `requestAnimationFrame` 或 `setTimeout` 错开渲染
-- 路由组件必须使用动态导入（`() => import()`）
+- MUST 输入框变更触发计算必须防抖 300ms+
+- MUST localStorage 写入必须防抖 500ms+
+- SHOULD 多图表渲染使用 `requestAnimationFrame` 错开
+- MUST 路由组件使用动态导入 `() => import()`
+- SHOULD ECharts 按需导入，禁止 `import * as echarts`
 
 ---
 
-## 后端规范 (Python + Flask + SQLAlchemy)
+## 二、后端规范 (Python + Flask + SQLAlchemy)
 
-### 命名约定
+### 2.1 命名约定
 
 | 类型 | 规则 | 示例 |
 |------|------|------|
-| 模块/文件 | snake_case | `efficiency.py`, `cache_manager.py` |
-| 类名 | PascalCase | `BatteryManufacturer`, `LRUCache` |
+| 模块/文件 | snake_case | `efficiency.py` |
+| 类名 | PascalCase | `BatteryManufacturer` |
 | 函数/方法 | snake_case | `calculate_efficiency_chain()` |
-| 常量 | UPPER_SNAKE_CASE | `FACTOR_DEFAULTS`, `MANUFACTURERS_DB` |
+| 常量 | UPPER_SNAKE_CASE | `FACTOR_DEFAULTS` |
 | 私有变量 | _ 前缀 | `_token_blacklist` |
+| 模块级私有 | __ 前缀 | `__all__` |
 
-### 数据库规范
+### 2.2 模块规范
 
-- 所有外键列必须添加索引
-- 禁止 N+1 查询，使用 `joinedload` 或 `selectinload`
-- 列表查询必须分页（每页 20-50 条）
-- 批量删除+插入必须使用事务包裹
-- 模型 `to_dict()` 方法必须在类中显式定义，禁止运行时动态注入
+```python
+"""模块文档字符串 - 描述模块功能和职责"""
 
-### API 规范
+# 标准库导入
+import json
+from datetime import datetime
 
-- 统一响应格式：`{ "success": true/false, "data": ..., "error": ... }`
-- 所有认证端点使用 `token_required` 装饰器，避免重复查询 User
-- 计算密集型端点考虑异步处理（Celery/RQ）
-- 静态数据（如厂家列表）必须缓存
+# 第三方库导入
+from flask import Blueprint, request, jsonify
+from sqlalchemy.orm import joinedload
 
-### 性能要求
+# 本地导入
+from services.efficiency import calculate_efficiency_chain
+```
 
-- 内存缓存至少 200 条，生产环境使用 Redis
-- LRU 淘汰算法使用 `OrderedDict`，O(1) 复杂度
-- 缓存键使用序列化稳定的格式（如 `json.dumps(sort_keys=True)`）
+### 2.3 数据库规范
+
+#### 表结构设计
+
+- MUST 主键使用 Integer 自增 ID 或 UUID String(36)
+- MUST 所有外键列添加索引
+- MUST 所有表包含 `created_at` 和 `updated_at` 字段
+- SHOULD 使用软删除（`is_deleted` 字段），禁止物理删除
+- MUST `to_dict()` 方法显式定义，禁止运行时动态注入
+
+```python
+class Project(db.Model):
+    __tablename__ = 'project'
+    __table_args__ = (
+        db.Index('ix_project_tenant_id', 'tenant_id'),
+        db.Index('ix_project_status', 'status'),
+        db.Index('ix_project_updated_at', 'updated_at'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    status = db.Column(db.String(20), default='draft')
+    is_deleted = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'tenant_id': self.tenant_id,
+            'name': self.name,
+            'status': self.status,
+        }
+```
+
+#### 索引策略
+
+- MUST 单列索引：查询频繁的字段（`status`, `tenant_id`）
+- SHOULD 复合索引：WHERE 条件中的字段组合
+- MUST 唯一索引：业务唯一性约束（`name + tenant_id`）
+- MAY 全文索引：文本搜索字段
+
+#### 查询规范
+
+- MUST 禁止 N+1 查询，使用 `joinedload` 或 `selectinload`
+- MUST 列表查询必须分页（每页 20-50 条）
+- MUST 批量删除+插入使用事务包裹
+
+```python
+# 正确：使用 joinedload 预加载
+products = Product.query.options(
+    joinedload(Product.cells),
+    joinedload(Product.containers)
+).all()
+
+# 正确：使用事务
+with db.session.begin():
+    BoqItem.query.filter_by(version_id=vid).delete()
+    for item in new_items:
+        db.session.add(item)
+
+# 错误：N+1 查询
+for project in projects:
+    versions = Version.query.filter_by(project_id=project.id).all()  # ❌
+```
+
+#### 数据库迁移
+
+- MUST 使用 Alembic 进行数据库迁移
+- MUST 每个 PR 只包含一个迁移文件
+- MUST 迁移必须可逆（支持 downgrade）
+- MUST 迁移前备份生产数据
+
+### 2.4 API 设计规范
+
+#### URL 设计
+
+- MUST 使用 RESTful 风格
+- SHOULD 资源名使用复数形式
+- MUST 使用连字符分隔多单词路径
+- SHOULD 版本控制放在 URL 中：`/api/v1/`
+
+```
+GET    /api/v1/projects        # 获取项目列表
+GET    /api/v1/projects/:id    # 获取单个项目
+POST   /api/v1/projects        # 创建项目
+PUT    /api/v1/projects/:id    # 更新项目
+DELETE /api/v1/projects/:id    # 删除项目
+```
+
+#### 请求规范
+
+- MUST Content-Type 使用 `application/json`
+- MUST 请求体字段使用 camelCase
+- MUST 查询参数使用 snake_case
+- SHOULD 请求体验证使用 JSON Schema 或 marshmallow
+
+#### 响应规范
+
+统一响应格式：
+
+```json
+{
+  "success": true,
+  "data": { ... },
+  "error": null,
+  "message": "操作成功"
+}
+```
+
+错误码定义：
+
+| 状态码 | 含义 |
+|--------|------|
+| 200 | 成功 |
+| 201 | 创建成功 |
+| 400 | 客户端请求错误 |
+| 401 | 未认证 |
+| 403 | 无权限 |
+| 404 | 资源不存在 |
+| 409 | 资源冲突 |
+| 422 | 请求体验证失败 |
+| 429 | 请求频率超限 |
+| 500 | 服务器内部错误 |
+
+#### 分页规范
+
+请求参数：
+- `page`: 页码（从 1 开始）
+- `page_size`: 每页数量（默认 20，最大 100）
+
+响应格式：
+
+```json
+{
+  "success": true,
+  "data": [ ... ],
+  "pagination": {
+    "page": 1,
+    "page_size": 20,
+    "total": 100,
+    "total_pages": 5
+  }
+}
+```
+
+#### 认证规范
+
+- MUST 使用 JWT Bearer Token 认证
+- MUST `token_required` 装饰器获取的 User 对象直接传递给路由函数
+- MUST 禁止在路由函数中重复查询 User
+- MUST Token 黑名单使用 Redis 存储
+
+### 2.5 性能要求
+
+- MUST 内存缓存至少 200 条，生产环境使用 Redis
+- MUSR LRU 淘汰算法使用 `OrderedDict`，O(1) 复杂度
+- MUST 缓存键使用序列化稳定的格式
+- SHOULD 计算密集型端点使用 Celery/RQ 异步处理
+- MUST 生产环境使用 gunicorn/uwsgi，禁止 Flask 单线程服务器
 
 ---
 
-## 国际化 (i18n) 规范
+## 三、安全规范
 
-### 强制要求
+### 3.1 前端安全
 
-- 所有面向用户的文本必须使用 `$t('key')`
-- 禁止在模板中硬编码中文或英文
-- 翻译文件按模块组织，key 使用点号分隔
+- MUST 用户输入必须转义，防止 XSS
+- SHOULD 使用 CSP (Content Security Policy) 头
+- MUST 禁止在前端存储敏感信息（API Key、Token 存储在 httpOnly Cookie）
+- MUST 使用 HTTPS，生产环境禁止 HTTP
 
-### 翻译文件结构
+### 3.2 后端安全
+
+- MUST 密码使用 bcrypt/argon2 哈希存储，禁止明文
+- MUST API 端点必须有认证和授权检查
+- MUST SQL 查询使用参数化，防止 SQL 注入
+- MUST 文件上传限制类型和大小
+- MUST 敏感日志（密码、Token）必须脱敏
+- SHOULD 实现请求频率限制（rate limiting）
+
+### 3.3 日志安全
+
+- MUST 日志不输出密码、Token、API Key
+- MUST 日志不输出完整的请求体和响应体
+- SHOULD 日志包含请求 ID（request_id）用于追踪
+
+---
+
+## 四、测试规范
+
+### 4.1 前端测试
+
+- SHOULD 组件有单元测试（Jest + Vue Test Utils）
+- SHOULD 关键工具函数有测试覆盖
+- SHOULD 测试覆盖率目标：>70%
+
+### 4.2 后端测试
+
+- MUST 每个 API 端点有端到端测试
+- SHOULD 服务层函数有单元测试
+- SHOULD 数据库操作有集成测试
+- SHOULD 测试覆盖率目标：>80%
+
+### 4.3 测试命名
+
+```
+describe('ComponentName', () => {
+  it('should render correctly', () => { ... })
+  it('should handle empty data', () => { ... })
+})
+
+def test_get_projects_returns_paginated_list():
+    pass
+
+def test_create_project_validates_required_fields():
+    pass
+```
+
+---
+
+## 五、国际化 (i18n) 规范
+
+### 5.1 强制要求
+
+- MUST 所有面向用户的文本使用 `$t('key')`
+- MUST 禁止模板中硬编码中文或英文
+- MUST 翻译文件按模块组织，key 使用点号分隔
+
+### 5.2 翻译文件
 
 ```javascript
 // src/i18n/zh.js
@@ -139,93 +443,171 @@ export default {
     home: '首页',
     toolAuxPower: '辅助功耗计算',
   },
-  phase2: {
-    step6: '效率链配置',
-  },
 }
-```
 
-```javascript
 // src/i18n/en.js
 export default {
   sidebar: {
     home: 'Home',
     toolAuxPower: 'Auxiliary Power Calculator',
   },
-  phase2: {
-    step6: 'Efficiency Chain',
-  },
 }
 ```
 
-### 使用方式
-
-```vue
-<!-- 模板中使用 -->
-<h3>{{ $t('phase2.step6') }}</h3>
-
-<!-- 脚本中使用 -->
-const { t } = useI18n()
-console.log(t('sidebar.toolAuxPower'))
-```
-
 ---
 
-## 禁止事项
+## 六、团队协作规范
 
-### 前端
+### 6.1 分支管理
 
-1. 禁止使用内联事件处理器（`onfocus`/`onblur`/`onmouseover`/`onmouseout`）
-2. 禁止硬编码中文/英文文本
-3. 禁止在 `.vue` 文件中定义重复的 CSS 类（提取到 shared.css）
-4. 禁止组件超过 400 行
-5. 禁止 ECharts 实例在 `onUnmounted` 中未 dispose
-6. 禁止 `window.addEventListener('resize')` 未在 `onUnmounted` 中 remove
-7. 禁止 `setInterval` 未在 `onUnmounted` 中 clearInterval
-8. 禁止 `MutationObserver` 未在 `onUnmounted` 中 disconnect
-9. 禁止 `watch({ deep: true })` 无防抖触发重计算
-10. 禁止 `import * as echarts` 全量导入，使用按需导入
+| 分支 | 用途 | 保护规则 |
+|------|------|---------|
+| `main` | 生产环境 | 禁止直接 push，至少 2 人审查 |
+| `develop` | 开发环境 | 禁止直接 push |
+| `feature/*` | 功能分支 | 从 develop 创建 |
+| `fix/*` | Bug 修复分支 | 从 main 或 develop 创建 |
+| `release/*` | 发布分支 | 从 develop 创建 |
 
-### 后端
+### 6.2 提交规范
 
-1. 禁止 N+1 查询
-2. 禁止无索引的外键列查询
-3. 禁止无分页的列表查询
-4. 禁止无事务保护的批量删除+插入
-5. 禁止运行时动态注入模型方法
-6. 禁止生产环境使用 Flask 单线程服务器
-
----
-
-## Git 提交规范
+使用 Conventional Commits 格式：
 
 ```
 <type>(<scope>): <subject>
 
 type: feat|fix|chore|refactor|docs|style|test|perf
 scope: frontend|backend|docs|config
-subject: 使用中文简短描述
+subject: 使用中文简短描述，不超过 72 字符
 ```
 
 示例：
 ```
 feat(frontend): 添加效率链独立页面
 fix(backend): 修复产品层级查询 N+1 问题
-chore(frontend): 统一 i18n 翻译文件
+chore(config): 统一 AI 工具规则文件
+refactor(frontend): 提取 useChart composable
+perf(frontend): 添加 FinancialDashboard 防抖
+```
+
+### 6.3 代码审查
+
+- MUST 至少 1 人审查（建议 2 人）
+- MUST 审查者检查 [代码审查清单](#代码审查清单)
+- SHOULD 审查时间不超过 24 小时
+- SHOULD 使用 Squash Merge 合并
+
+### 6.4 合并规范
+
+- MUST 合并前通过 CI 检查
+- MUST 合并后删除功能分支
+- SHOULD 使用 Squash Merge 合并到 main
+- SHOULD commit message 描述完整功能
+
+---
+
+## 七、工具配置
+
+### 7.1 编辑器配置
+
+`.vscode/settings.json`：
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
+```
+
+### 7.2 AI 工具配置
+
+本项目已配置以下 AI 工具规则文件，内容通过 `scripts/sync-ai-rules.js` 自动同步：
+
+| 文件 | 对应工具 |
+|------|---------|
+| `.cursorrules` | Cursor |
+| `.github/copilot-instructions.md` | GitHub Copilot |
+| `CLAUDE.md` | Claude Code / opencode |
+| `.continue/continue.yaml` | Continue |
+| `.windsurfrules` | Windsurf |
+| `AGENTS.md` | 通用 AI 工具 |
+
+### 7.3 同步机制
+
+```bash
+# 同步所有 AI 工具规则文件（修改 .ai-rules-core.md 后运行）
+node scripts/sync-ai-rules.js
+
+# 检查 AI 工具规则文件一致性
+node scripts/check-ai-rules-consistency.js
 ```
 
 ---
 
-## 代码审查清单
+## 八、项目脚本速查
+
+### 前端
+
+```bash
+cd soh-sim-frontend
+
+npm run lint              # ESLint 修复
+npm run lint:no-fix       # ESLint 仅检查
+npm run format            # Prettier 格式化
+npm run format:check      # Prettier 格式检查
+npm run type-check        # TypeScript 类型检查
+npm run i18n:check        # 国际化覆盖率检查
+```
+
+### 后端
+
+```bash
+cd soh-sim-backend
+
+black .                   # Black 格式化
+isort .                   # isort 排序
+flake8                    # Flake8 检查
+mypy .                    # MyPy 类型检查
+```
+
+### 全局检查
+
+```bash
+bash scripts/check-code-style.sh
+```
+
+---
+
+## 九、代码审查清单
 
 提交 PR 前自查：
 
+### 前端
 - [ ] 所有文本使用 `$t()` 国际化
-- [ ] 无内联事件处理器和内联样式
+- [ ] 无内联事件处理器（`onfocus`/`onblur`）
+- [ ] 无内联 `style` 属性
 - [ ] 组件不超过 400 行
-- [ ] 无内存泄漏（resize/MutationObserver/setInterval 已清理）
-- [ ] 所有 deep watch 有防抖
-- [ ] 后端查询有索引，无 N+1
-- [ ] 列表查询有分页
+- [ ] ECharts 实例在 `onUnmounted` 中 dispose
+- [ ] `resize` 监听器在 `onUnmounted` 中移除
+- [ ] `deep watch` 有防抖
+- [ ] TypeScript 无 `any` 类型
 - [ ] 运行 `npm run lint` 无错误
-- [ ] 运行 `black .` 和 `isort .`（后端）
+- [ ] 运行 `npm run type-check` 通过
+
+### 后端
+- [ ] 外键列有索引
+- [ ] 无 N+1 查询（使用 `joinedload`/`selectinload`）
+- [ ] 列表查询有分页
+- [ ] 批量操作使用事务
+- [ ] 无运行时动态注入 `to_dict`
+- [ ] 认证端点未重复查询 User
+- [ ] 运行 `black --check .` 通过
+- [ ] 运行 `flake8` 无错误
+
+### 通用
+- [ ] 通过 CI/CD 流水线
+- [ ] AI 规则文件已同步
+- [ ] 相关文档已更新
+- [ ] 有充分的测试覆盖
