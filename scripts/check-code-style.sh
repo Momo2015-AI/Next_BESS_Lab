@@ -63,6 +63,7 @@ echo ""
 
 # 检查 AI 工具规则文件
 echo "[3/4] 检查 AI 工具规则文件一致性..."
+cd ..
 RULE_FILES=(
   ".cursorrules"
   ".github/copilot-instructions.md"
