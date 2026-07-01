@@ -8,13 +8,12 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
-    'plugin:i18n-json/recommended',
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['vue', 'i18n'],
+  plugins: ['vue'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -31,17 +30,5 @@ module.exports = {
     'max-lines': ['warn', { max: 400 }],
 
     'vue/no-v-html': 'warn',
-
-    'i18n-json/keys-sorted': 'off',
-    'i18n-json/no-duplicate-keys': 'error',
-    'i18n-json/sorted-keys': 'off',
   },
-  overrides: [
-    {
-      files: ['src/i18n/*.js'],
-      rules: {
-        'i18n-json/valid-json': 'error',
-      },
-    },
-  ],
 }
