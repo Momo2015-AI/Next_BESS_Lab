@@ -32,17 +32,50 @@
 
 - 公共样式提取到 `src/assets/styles/shared.css`
 - 页面布局类：`.tool-page`, `.phase-page`, `.tool-header`
-- 输入框焦点样式使用 CSS `:focus-visible` 伪类 + `transition`
-- 按钮 hover 效果使用 CSS `:hover` 伪类
+- 输入框使用 `.base-input` 类，焦点样式使用 CSS `:focus-visible` 伪类
+- 选择框使用 `.base-select` 类
+- 按钮使用 `.base-btn` 类，hover 效果使用 CSS `:hover` 伪类
+- 卡片使用 `.base-card` 类
+- 网格布局使用 `.grid-2`, `.grid-3`, `.grid-4` 类
 
 ### 图表管理
 
+使用 `useChart()` composable 统一管理 ECharts 实例：
+
 ```javascript
-// 正确：使用 composable 管理图表
+import { ref } from 'vue'
 import { useChart } from '@/composables/useChart'
 
-const { chart, containerRef, dispose } = useChart()
-// chart 实例在 onMounted 自动创建，onUnmounted 自动 dispose
+const chartRef = ref(null)
+const chartOptions = ref({
+  title: { text: $t('chart.title') },
+  xAxis: { type: 'category', data: [...] },
+  yAxis: { type: 'value' },
+  series: [{ type: 'line', data: [...] }],
+})
+
+const { chart, init, resize, update } = useChart(chartRef, chartOptions)
+```
+
+**useChart API**：
+
+| 属性/方法 | 类型 | 说明 |
+|-----------|------|------|
+| `chart` | `ref` | ECharts 实例引用 |
+| `init()` | `function` | 手动初始化图表 |
+| `resize()` | `function` | 手动调整图表大小 |
+| `update(newOptions)` | `function` | 更新图表配置 |
+
+**多图表管理**：
+
+```javascript
+import { ref } from 'vue'
+import { useMultiChart } from '@/composables/useChart'
+
+const chartRefs = ref([ref(null), ref(null), ref(null)])
+const optionsList = ref([{ /* chart 1 */ }, { /* chart 2 */ }, { /* chart 3 */ }])
+
+const { charts, initAll, resizeAll, updateAll } = useMultiChart(chartRefs, optionsList)
 ```
 
 ### 性能要求

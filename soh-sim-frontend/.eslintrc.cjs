@@ -8,33 +8,40 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
+    'plugin:i18n-json/recommended',
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
+  plugins: ['vue', 'i18n'],
   rules: {
-    // 禁止硬编码文本
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
 
-    // Vue 规则
     'vue/multi-word-component-names': 'off',
     'vue/no-unused-vars': 'warn',
     'vue/block-order': ['error', {
       'order': ['template', 'script', 'style'],
     }],
 
-    // 字符串引号
     'quotes': ['error', 'single'],
-
-    // 分号
     'semi': ['error', 'never'],
-
-    // 缩进
     'indent': ['error', 2],
-
-    // 最大行数
     'max-lines': ['warn', { max: 400 }],
+
+    'vue/no-v-html': 'warn',
+
+    'i18n-json/keys-sorted': 'off',
+    'i18n-json/no-duplicate-keys': 'error',
+    'i18n-json/sorted-keys': 'off',
   },
+  overrides: [
+    {
+      files: ['src/i18n/*.js'],
+      rules: {
+        'i18n-json/valid-json': 'error',
+      },
+    },
+  ],
 }

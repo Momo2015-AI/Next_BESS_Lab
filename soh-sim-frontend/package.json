@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "lint:check": "eslint src/",
+    "format:check": "prettier --check src/"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
@@ -19,6 +23,13 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.6",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "eslint": "^9.12.0",
+    "eslint-plugin-vue": "^9.28.0",
+    "eslint-plugin-i18n": "^2.0.0",
+    "eslint-plugin-i18n-json": "^3.0.0",
+    "prettier": "^3.3.3",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
   }
 }
