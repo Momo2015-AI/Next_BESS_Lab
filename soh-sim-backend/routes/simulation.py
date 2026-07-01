@@ -238,7 +238,10 @@ def get_correction_templates():
 
     # 如果有租户筛选
     if user.tenant_id:
-        query = query.filter((CorrectionTemplate.tenant_id == user.tenant_id) | (CorrectionTemplate.tenant_id.is(None)))
+        query = query.filter(
+            (CorrectionTemplate.tenant_id == user.tenant_id)
+            | (CorrectionTemplate.tenant_id.is_(None))
+        )
 
     pagination = query.order_by(CorrectionTemplate.is_default.desc(), CorrectionTemplate.created_at.desc()).paginate(
         page=page, per_page=per_page, error_out=False
