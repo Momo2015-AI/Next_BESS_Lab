@@ -1,4 +1,4 @@
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 
 /**
  * 汇率管理 Composable
@@ -32,6 +32,8 @@ export function useExchangeRate() {
   const loading = ref(false)
   const lastUpdated = ref('')
   const rateSource = ref('')
+
+  let rateIntervalId = null
 
   // 从localStorage加载用户偏好
   const loadPreferences = () => {
@@ -188,11 +190,17 @@ export function useExchangeRate() {
   onMounted(() => {
     loadPreferences()
     fetchAllRates()
-    
-    // 每5分钟自动刷新汇率
-    setInterval(() => {
+
+    rateIntervalId = setInterval(() => {
       fetchAllRates()
     }, 5 * 60 * 1000)
+  })
+
+  onUnmounted(() => {
+    if (rateIntervalId) {
+      clearInterval(rateIntervalId)
+      rateIntervalId = null
+    }
   })
 
   return {

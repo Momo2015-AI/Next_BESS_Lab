@@ -17,23 +17,24 @@ project_bp = Blueprint('project', __name__)
 @token_required
 def get_projects():
     """获取项目列表"""
-    user_id = request.user_id
+    user = request.current_user
     
-    from database import db, Project, User
+    from database import db, Project
     
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': '用户不存在'}), 404
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
     
     # 根据角色筛选项目
     query = Project.query
     
     # 客户只能看到自己的项目
     if user.role == 'customer':
-        query = query.filter(Project.customer_id == user_id)
+        query = query.filter(Project.customer_id == user.id)
     
     # 按更新时间倒序
-    projects = query.order_by(Project.updated_at.desc()).all()
+    pagination = query.order_by(Project.updated_at.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
     
     return jsonify({
         'success': True,
@@ -46,7 +47,11 @@ def get_projects():
             'customer_id': p.customer_id,
             'created_at': p.created_at.isoformat() if p.created_at else None,
             'updated_at': p.updated_at.isoformat() if p.updated_at else None,
-        } for p in projects]
+        } for p in pagination.items],
+        'total': pagination.total,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'pages': pagination.pages,
     })
 
 
@@ -238,24 +243,25 @@ def delete_project(project_id):
 @token_required
 def get_versions(project_id):
     """获取项目版本列表"""
-    user_id = request.user_id
+    user = request.current_user
     
-    from database import db, Project, ProjectVersion, User
+    from database import db, Project, ProjectVersion
     
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': '用户不存在'}), 404
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
     
     project = Project.query.get(project_id)
     if not project:
         return jsonify({'error': '项目不存在'}), 404
     
     # 检查权限
-    if user.role == 'customer' and project.customer_id != user_id:
+    if user.role == 'customer' and project.customer_id != user.id:
         return jsonify({'error': '权限不足'}), 403
     
-    versions = ProjectVersion.query.filter_by(project_id=project_id)\
-        .order_by(ProjectVersion.version_num.desc()).all()
+    pagination = ProjectVersion.query.filter_by(project_id=project_id)\
+        .order_by(ProjectVersion.version_num.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
     
     return jsonify({
         'success': True,
@@ -269,7 +275,12 @@ def get_versions(project_id):
             'config_data': json.loads(v.config_data) if v.config_data else None,
             'created_by': v.created_by,
             'created_at': v.created_at.isoformat() if v.created_at else None,
-        } for v in versions]
+            'updated_at': v.updated_at.isoformat() if v.updated_at else None,
+        } for v in pagination.items],
+        'total': pagination.total,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'pages': pagination.pages,
     })
 
 

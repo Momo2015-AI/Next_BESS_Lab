@@ -72,6 +72,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
+import { debounce } from 'lodash-es'
 import * as echarts from 'echarts'
 
 const props = defineProps({
@@ -81,6 +82,8 @@ const props = defineProps({
 
 const sankeyChartRef = ref(null)
 let sankeyChart = null
+let themeObserver = null
+let _resizeHandler = null
 
 // 参数
 const cyclesPerDay = ref(1)
@@ -263,17 +266,18 @@ const watchTheme = () => {
 // 组件挂载
 onMounted(() => {
   initChart()
-  watchTheme()
-  
-  // 监听参数变化
-  watch([() => props.params, () => props.soh], () => {
+  themeObserver = watchTheme()
+
+  watch([() => props.params, () => props.soh], debounce(() => {
     updateChart()
-  }, { deep: true })
-  
-  // 监听输入参数变化
+  }, 300), { deep: true })
+
   watch([cyclesPerDay, operatingDays, chargingEfficiency, dischargingEfficiency], () => {
     updateChart()
   })
+
+  _resizeHandler = () => { sankeyChart?.resize() }
+  window.addEventListener('resize', _resizeHandler)
 })
 
 // 组件卸载
@@ -282,10 +286,13 @@ onUnmounted(() => {
     sankeyChart.dispose()
     sankeyChart = null
   }
-})
-
-// 响应式调整
-window.addEventListener('resize', () => {
-  sankeyChart?.resize()
+  if (themeObserver) {
+    themeObserver.disconnect()
+    themeObserver = null
+  }
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
 })
 </script>

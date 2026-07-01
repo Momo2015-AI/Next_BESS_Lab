@@ -7,7 +7,7 @@ import os
 import json
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
+from sqlalchemy import text, Index
 
 db = SQLAlchemy()
 
@@ -68,6 +68,10 @@ class User(db.Model):
     """用户模型"""
     __tablename__ = 'users'
     
+    __table_args__ = (
+        db.Index('idx_users_tenant_id', 'tenant_id'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -94,6 +98,10 @@ class User(db.Model):
 class Survey(db.Model):
     """调研表模型 - 存储客户填写的调研信息"""
     __tablename__ = 'surveys'
+    
+    __table_args__ = (
+        db.Index('idx_surveys_project_id', 'project_id'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     project_name = db.Column(db.String(200), nullable=False)
@@ -159,6 +167,11 @@ class Project(db.Model):
     """项目模型 - 由调研表自动生成"""
     __tablename__ = 'projects'
     
+    __table_args__ = (
+        db.Index('idx_projects_tenant_id', 'tenant_id'),
+        db.Index('idx_projects_customer_id', 'customer_id'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     name = db.Column(db.String(200), nullable=False)
@@ -193,6 +206,11 @@ class ProjectVersion(db.Model):
     """项目版本模型 - 支持同一项目多个方案版本"""
     __tablename__ = 'project_versions'
     
+    __table_args__ = (
+        db.Index('idx_project_versions_project_id', 'project_id'),
+        db.Index('idx_project_versions_created_by', 'created_by'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
     
@@ -226,6 +244,11 @@ class ProjectVersion(db.Model):
 class Simulation(db.Model):
     """仿真配置与结果模型"""
     __tablename__ = 'simulations'
+    
+    __table_args__ = (
+        db.Index('idx_simulations_project_id', 'project_id'),
+        db.Index('idx_simulations_user_id', 'user_id'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
@@ -266,6 +289,13 @@ class Simulation(db.Model):
 class SimulationResult(db.Model):
     """仿真结果模型 - 完整存储每次仿真结果，带日期戳便于对比"""
     __tablename__ = 'simulation_results'
+    
+    __table_args__ = (
+        db.Index('idx_simulation_results_version_id', 'version_id'),
+        db.Index('idx_simulation_results_algorithm_model_id', 'algorithm_model_id'),
+        db.Index('idx_simulation_results_correction_template_id', 'correction_template_id'),
+        db.Index('idx_simulation_results_created_by', 'created_by'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     version_id = db.Column(db.String(36), db.ForeignKey('project_versions.id'))
@@ -315,6 +345,11 @@ class CorrectionTemplate(db.Model):
     """校正因子模板模型 - 支持保存多个校正因子模板"""
     __tablename__ = 'correction_templates'
     
+    __table_args__ = (
+        db.Index('idx_correction_templates_tenant_id', 'tenant_id'),
+        db.Index('idx_correction_templates_created_by', 'created_by'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     
@@ -354,6 +389,10 @@ class CorrectionTemplate(db.Model):
 class BatteryPCSConfig(db.Model):
     """电池与PCS配置模型"""
     __tablename__ = 'battery_pcs_configs'
+    
+    __table_args__ = (
+        db.Index('idx_battery_pcs_configs_project_id', 'project_id'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
@@ -395,6 +434,11 @@ class SohRteData(db.Model):
     """SOH/RTE数据模型 - 25年生命周期数据"""
     __tablename__ = 'soh_rte_data'
     
+    __table_args__ = (
+        db.Index('idx_soh_rte_data_project_id', 'project_id'),
+        db.Index('idx_soh_rte_data_simulation_id', 'simulation_id'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
     simulation_id = db.Column(db.String(36), db.ForeignKey('simulations.id'))
@@ -429,6 +473,10 @@ class SohRteData(db.Model):
 class FinancialData(db.Model):
     """财务数据模型"""
     __tablename__ = 'financial_data'
+    
+    __table_args__ = (
+        db.Index('idx_financial_data_project_id', 'project_id'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
@@ -483,6 +531,10 @@ class ProductConfig(db.Model):
     """产品与方案配置模型"""
     __tablename__ = 'product_configs'
     
+    __table_args__ = (
+        db.Index('idx_product_configs_project_id', 'project_id'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'))
     
@@ -522,6 +574,10 @@ class CellProduct(db.Model):
     """电芯产品库"""
     __tablename__ = 'cell_products'
 
+    __table_args__ = (
+        db.Index('idx_cell_products_tenant_id', 'tenant_id'),
+    )
+
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))  # 企业隔离
     is_builtin = db.Column(db.Boolean, default=False)  # 是否系统内置（对所有企业可见）
@@ -555,6 +611,10 @@ class PackProduct(db.Model):
     """电池包产品库"""
     __tablename__ = 'pack_products'
 
+    __table_args__ = (
+        db.Index('idx_pack_products_tenant_id', 'tenant_id'),
+    )
+
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
@@ -584,6 +644,10 @@ class RackProduct(db.Model):
     """电池架产品库"""
     __tablename__ = 'rack_products'
 
+    __table_args__ = (
+        db.Index('idx_rack_products_tenant_id', 'tenant_id'),
+    )
+
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
@@ -608,6 +672,10 @@ class RackProduct(db.Model):
 class ClusterProduct(db.Model):
     """电池簇产品库"""
     __tablename__ = 'cluster_products'
+
+    __table_args__ = (
+        db.Index('idx_cluster_products_tenant_id', 'tenant_id'),
+    )
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
@@ -634,6 +702,10 @@ class ClusterProduct(db.Model):
 class ContainerProduct(db.Model):
     """集装箱产品库（统一入口，合并原 container_library）"""
     __tablename__ = 'container_products'
+
+    __table_args__ = (
+        db.Index('idx_container_products_tenant_id', 'tenant_id'),
+    )
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
@@ -673,6 +745,10 @@ class PcsProduct(db.Model):
     """PCS变流器产品库（统一入口，合并原 pcs_library）"""
     __tablename__ = 'pcs_products'
 
+    __table_args__ = (
+        db.Index('idx_pcs_products_tenant_id', 'tenant_id'),
+    )
+
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
     is_builtin = db.Column(db.Boolean, default=False)
@@ -706,6 +782,10 @@ class PcsProduct(db.Model):
 class BatteryConfigRule(db.Model):
     """电池层级配置规则模型"""
     __tablename__ = 'battery_config_rules'
+
+    __table_args__ = (
+        db.Index('idx_battery_config_rules_tenant_id', 'tenant_id'),
+    )
 
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
@@ -760,6 +840,10 @@ class FormulaConfig(db.Model):
     """算法公式配置模型 - 支持自定义公式"""
     __tablename__ = 'formula_configs'
     
+    __table_args__ = (
+        db.Index('idx_formula_configs_user_id', 'user_id'),
+    )
+    
     id = db.Column(db.String(36), primary_key=True)
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
     
@@ -792,6 +876,11 @@ class FormulaConfig(db.Model):
 class AlgorithmModel(db.Model):
     """算法模型库 - 支持添加和管理多种衰减模型"""
     __tablename__ = 'algorithm_models'
+    
+    __table_args__ = (
+        db.Index('idx_algorithm_models_tenant_id', 'tenant_id'),
+        db.Index('idx_algorithm_models_created_by', 'created_by'),
+    )
     
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey('tenants.id'))
@@ -857,6 +946,9 @@ class BoqSection(db.Model):
 class BoqItem(db.Model):
     """BOQ 条目"""
     __tablename__ = 'boq_items'
+    __table_args__ = (
+        db.Index('idx_boq_items_project_id', 'project_id'),
+    )
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey('projects.id'), nullable=False)
     section_code = db.Column(db.String(10))

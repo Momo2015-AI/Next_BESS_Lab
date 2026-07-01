@@ -39,6 +39,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { debounce } from 'lodash-es';
 import * as echarts from 'echarts';
 
 const props = defineProps({
@@ -207,11 +208,11 @@ onUnmounted(() => {
 });
 
 // 监听props变化重新渲染
-watch(() => [props.soh, props.cellData], () => {
+watch(() => [props.soh, props.cellData], debounce(() => {
   nextTick(() => {
     renderHeatmap();
   });
-}, { deep: true });
+}, 300), { deep: true });
 
 // 监听主题变化
 watch(() => document.documentElement.getAttribute('data-theme'), () => {

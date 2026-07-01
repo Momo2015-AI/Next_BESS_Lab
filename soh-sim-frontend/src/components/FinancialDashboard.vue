@@ -180,6 +180,7 @@
 
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
+import { debounce } from 'lodash-es'
 import * as echarts from 'echarts'
 import { useDraft } from '../composables/useDraft'
 import CurrencyConverter from './CurrencyConverter.vue'
@@ -255,6 +256,7 @@ const capexChartRef = ref(null)
 let cashFlowChart = null, revenueChart = null, dscrChart = null, capexChart = null
 let cachedRows = []
 let cachedCapexData = null
+let _resizeHandler = null
 
 function disposeAll() {
   [cashFlowChart, revenueChart, dscrChart, capexChart].forEach(c => { c?.dispose() })
@@ -776,9 +778,10 @@ function handleProductConfig(config) {
 }
 
 function recalc() { computeAll() }
+const debouncedRecalc = debounce(recalc, 300)
 
-watch([() => props.params, () => props.soh, () => props.augQty], () => computeAll(), { deep: true, immediate: true })
-watch(f, () => computeAll(), { deep: true })
+watch([() => props.params, () => props.soh, () => props.augQty], debouncedRecalc, { deep: true, immediate: true })
+watch(f, debouncedRecalc, { deep: true })
 watch(displayCurrency, () => {
   // 更新货币单位显示
   metrics.value[2].unit = `万元 (${displayCurrency.value})`
@@ -789,7 +792,14 @@ watch(displayCurrency, () => {
 })
 
 onMounted(() => { nextTick(() => computeAll()) })
-onUnmounted(() => { disposeAll() })
+onUnmounted(() => {
+  disposeAll()
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
+})
 
-window.addEventListener('resize', () => { cashFlowChart?.resize(); revenueChart?.resize(); dscrChart?.resize(); capexChart?.resize() })
+_resizeHandler = () => { cashFlowChart?.resize(); revenueChart?.resize(); dscrChart?.resize(); capexChart?.resize() }
+window.addEventListener('resize', _resizeHandler)
 </script>

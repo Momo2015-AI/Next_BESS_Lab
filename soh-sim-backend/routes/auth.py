@@ -337,6 +337,7 @@ def token_required(f):
         user, error = _get_user_from_token()
         if error:
             return jsonify({'error': error[0]}), error[1]
+        request.current_user = user
         request.user_id = user.id
         return f(*args, **kwargs)
 
@@ -350,10 +351,7 @@ def role_required(*roles):
     def decorator(f):
         @token_required
         def decorated(*args, **kwargs):
-            from database import User
-            user = User.query.get(request.user_id)
-            if not user:
-                return jsonify({'error': '用户不存在'}), 404
+            user = request.current_user
             if user.role not in roles:
                 return jsonify({'error': '权限不足'}), 403
             request.user_role = user.role

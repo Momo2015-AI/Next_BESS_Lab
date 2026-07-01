@@ -192,6 +192,7 @@
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { debounce } from 'lodash-es'
 
 const ABBR_MAP = {
   1: 'HV', 2: 'TR-H', 3: 'MV', 4: 'TR-L', 5: 'LV', 6: 'PCS',
@@ -209,7 +210,7 @@ const acResult = reactive({ charge: 1, discharge: 1 })
 const dcResult = reactive({ charge: 1, discharge: 1 })
 const totalResult = reactive({ charge: 1, discharge: 1, rte: 1 })
 
-watch(factors, () => { modified.value = true; updatePreview() }, { deep: true })
+watch(factors, debounce(() => { modified.value = true; updatePreview() }, 300), { deep: true })
 watch(previewSoh, () => updatePreview())
 
 onMounted(async () => {

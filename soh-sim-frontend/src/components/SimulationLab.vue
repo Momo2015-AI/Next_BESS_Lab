@@ -670,7 +670,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 
@@ -768,6 +768,7 @@ const simulationResults = reactive({
 
 const chartContainer = ref(null)
 let chartInstance = null
+let _resizeHandler = null
 
 const toast = reactive({ show: false, message: '', type: 'success' })
 
@@ -1356,6 +1357,18 @@ onMounted(() => {
   initYearlyCorrections()
   fetchAlgorithms()
   fetchManufacturers()
-  window.addEventListener('resize', handleResize)
+  _resizeHandler = handleResize
+  window.addEventListener('resize', _resizeHandler)
+})
+
+onUnmounted(() => {
+  if (chartInstance) {
+    chartInstance.dispose()
+    chartInstance = null
+  }
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
 })
 </script>

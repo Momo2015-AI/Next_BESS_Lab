@@ -234,7 +234,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useProducts } from '../composables/useProducts'
 import { useDraftRef } from '../composables/useDraft'
@@ -986,5 +986,16 @@ onMounted(() => {
     autoCalcQty()
     calculatePCS()
   })
+})
+
+onUnmounted(() => {
+  if (connectionChart) {
+    connectionChart.dispose()
+    connectionChart = null
+  }
+  if (singleLineChart) {
+    singleLineChart.dispose()
+    singleLineChart = null
+  }
 })
 </script>

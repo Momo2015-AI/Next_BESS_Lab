@@ -256,7 +256,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, nextTick, onMounted } from 'vue'
+import { ref, reactive, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { useDraftRef } from '../composables/useDraft'
 
@@ -273,6 +273,7 @@ const calculating = ref(false)
 const showChart = ref('soh')
 const chartContainer = ref(null)
 let chartInstance = null
+let _resizeHandler = null
 
 const toast = reactive({
   show: false,
@@ -509,9 +510,19 @@ watch(showChart, () => {
 
 // 窗口调整
 onMounted(() => {
-  window.addEventListener('resize', () => {
-    chartInstance?.resize()
-  })
+  _resizeHandler = () => { chartInstance?.resize() }
+  window.addEventListener('resize', _resizeHandler)
+})
+
+onUnmounted(() => {
+  if (chartInstance) {
+    chartInstance.dispose()
+    chartInstance = null
+  }
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
 })
 </script>
 

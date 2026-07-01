@@ -191,7 +191,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
+import { debounce } from 'lodash-es'
 import { useBessStore } from '../stores/bess.js'
 import { NUM_YEARS } from '../constants.js'
 
@@ -310,7 +311,8 @@ async function applyConfig() {
 watch(() => model.value, markDirty)
 watch(() => correctionFactor.value, markDirty)
 
-const envWatch = watch(env, () => {}, { deep: true })
+const debouncedEnvUpdate = debounce(() => { /* env changed */ }, 300)
+watch(env, debouncedEnvUpdate, { deep: true })
 
 onMounted(async () => {
   await store.loadDegradationConfig()

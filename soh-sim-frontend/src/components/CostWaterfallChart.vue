@@ -56,6 +56,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
+import { debounce } from 'lodash-es'
 import * as echarts from 'echarts'
 
 const props = defineProps({
@@ -65,6 +66,8 @@ const props = defineProps({
 
 const waterfallChartRef = ref(null)
 let waterfallChart = null
+let themeObserver = null
+let _resizeHandler = null
 
 // 年份选择
 const selectedYear = ref(1)
@@ -318,12 +321,14 @@ const watchTheme = () => {
 // 组件挂载
 onMounted(() => {
   initChart()
-  watchTheme()
-  
-  // 监听数据变化
-  watch([() => props.cashFlowTable, selectedYear], () => {
+  themeObserver = watchTheme()
+
+  watch([() => props.cashFlowTable, selectedYear], debounce(() => {
     updateChart()
-  }, { deep: true })
+  }, 300), { deep: true })
+
+  _resizeHandler = () => { waterfallChart?.resize() }
+  window.addEventListener('resize', _resizeHandler)
 })
 
 // 组件卸载
@@ -332,10 +337,13 @@ onUnmounted(() => {
     waterfallChart.dispose()
     waterfallChart = null
   }
-})
-
-// 响应式调整
-window.addEventListener('resize', () => {
-  waterfallChart?.resize()
+  if (themeObserver) {
+    themeObserver.disconnect()
+    themeObserver = null
+  }
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
 })
 </script>

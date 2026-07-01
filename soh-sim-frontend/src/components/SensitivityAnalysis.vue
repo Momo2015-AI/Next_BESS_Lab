@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 
@@ -170,6 +170,7 @@ const tornadoChart = ref(null)
 const spiderChart = ref(null)
 let tornadoInstance = null
 let spiderInstance = null
+let _resizeHandler = null
 
 const toast = reactive({
   show: false,
@@ -471,10 +472,26 @@ function updateSpiderChart() {
 
 // 窗口调整
 onMounted(() => {
-  window.addEventListener('resize', () => {
+  _resizeHandler = () => {
     tornadoInstance?.resize()
     spiderInstance?.resize()
-  })
+  }
+  window.addEventListener('resize', _resizeHandler)
+})
+
+onUnmounted(() => {
+  if (tornadoInstance) {
+    tornadoInstance.dispose()
+    tornadoInstance = null
+  }
+  if (spiderInstance) {
+    spiderInstance.dispose()
+    spiderInstance = null
+  }
+  if (_resizeHandler) {
+    window.removeEventListener('resize', _resizeHandler)
+    _resizeHandler = null
+  }
 })
 </script>
 

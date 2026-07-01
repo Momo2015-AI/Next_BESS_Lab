@@ -17,13 +17,9 @@ simulation_bp = Blueprint('simulation', __name__)
 @token_required
 def get_simulation_results(version_id):
     """获取版本的所有仿真结果"""
-    user_id = request.user_id
+    user = request.current_user
     
-    from database import db, ProjectVersion, SimulationResult, User
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': '用户不存在'}), 404
+    from database import db, ProjectVersion, SimulationResult, CorrectionTemplate, AlgorithmModel
     
     version = ProjectVersion.query.get(version_id)
     if not version:
@@ -168,13 +164,9 @@ def create_simulation_result(version_id):
 @token_required
 def get_simulation_result(result_id):
     """获取单条仿真结果详情"""
-    user_id = request.user_id
+    user = request.current_user
     
-    from database import db, SimulationResult, User
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': '用户不存在'}), 404
+    from database import db, CorrectionTemplate
     
     result = SimulationResult.query.get(result_id)
     if not result:
@@ -227,15 +219,14 @@ def delete_simulation_result(result_id):
 @token_required
 def get_correction_templates():
     """获取校正因子模板列表"""
-    user_id = request.user_id
+    user = request.current_user
     
-    from database import db, CorrectionTemplate, User
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': '用户不存在'}), 404
+    from database import db, CorrectionTemplate
     
     query = CorrectionTemplate.query.filter_by(status='active')
+    
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
     
     # 如果有租户筛选
     if user.tenant_id:
@@ -244,7 +235,9 @@ def get_correction_templates():
             (CorrectionTemplate.tenant_id == None)
         )
     
-    templates = query.order_by(CorrectionTemplate.is_default.desc(), CorrectionTemplate.created_at.desc()).all()
+    pagination = query.order_by(CorrectionTemplate.is_default.desc(), CorrectionTemplate.created_at.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
     
     return jsonify({
         'success': True,
@@ -260,7 +253,12 @@ def get_correction_templates():
             'status': t.status,
             'created_by': t.created_by,
             'created_at': t.created_at.isoformat() if t.created_at else None,
-        } for t in templates]
+            'updated_at': t.updated_at.isoformat() if t.updated_at else None,
+        } for t in pagination.items],
+        'total': pagination.total,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'pages': pagination.pages,
     })
 
 

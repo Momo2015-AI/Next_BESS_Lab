@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 
 // 支持的货币
 const supportedCurrencies = reactive({
@@ -115,6 +115,8 @@ const rateStatus = ref('cached')
 
 // 项目设置
 const displayCurrency = ref('CNY')
+
+let rateIntervalId = null
 
 // 从localStorage读取用户偏好
 const loadPreferences = () => {
@@ -207,11 +209,17 @@ const updateDisplayCurrency = () => {
 onMounted(() => {
   loadPreferences()
   fetchRate()
-  
-  // 每5分钟自动刷新汇率
-  setInterval(() => {
+
+  rateIntervalId = setInterval(() => {
     fetchRate()
   }, 5 * 60 * 1000)
+})
+
+onUnmounted(() => {
+  if (rateIntervalId) {
+    clearInterval(rateIntervalId)
+    rateIntervalId = null
+  }
 })
 
 // 监听货币变化

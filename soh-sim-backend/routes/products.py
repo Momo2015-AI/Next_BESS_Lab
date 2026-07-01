@@ -301,14 +301,14 @@ def seed_api():
 def refresh_products():
     """刷新产品库：清空现有数据并重新导入种子数据"""
     try:
-        for category, model_cls in _MODELS.items():
-            # 仅清空系统内置数据
-            if hasattr(model_cls, 'is_builtin'):
-                model_cls.query.filter(model_cls.is_builtin == True).delete()
-            else:
-                model_cls.query.delete()
-        db.session.commit()
-        seed_products()
+        with db.session.begin():
+            for category, model_cls in _MODELS.items():
+                # 仅清空系统内置数据
+                if hasattr(model_cls, 'is_builtin'):
+                    model_cls.query.filter(model_cls.is_builtin == True).delete()
+                else:
+                    model_cls.query.delete()
+            seed_products()
         return jsonify({'success': True, 'message': '产品库已刷新'})
     except Exception as e:
         db.session.rollback()
@@ -349,10 +349,17 @@ def list_products(category):
     if chemistry and hasattr(model_cls, 'chemistry'):
         query = query.filter(model_cls.chemistry == chemistry)
 
-    items = query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    items = pagination.items
     return jsonify({
         'items': [item.to_dict() for item in items],
-        'total': len(items),
+        'total': pagination.total,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'pages': pagination.pages,
     })
 
 
@@ -547,7 +554,7 @@ def match_config_rule():
             'success': True,
             'matched': True,
             'rule': default_rule.to_dict(),
-            'all_rules': [r.to_dict() for r in rules],
+            'all_rules_count': len(rules),
         })
     else:
         return jsonify({
@@ -569,10 +576,16 @@ def list_config_rules():
     if status:
         query = query.filter(BatteryConfigRule.status == status)
 
-    rules = query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     return jsonify({
-        'items': [r.to_dict() for r in rules],
-        'total': len(rules),
+        'items': [r.to_dict() for r in pagination.items],
+        'total': pagination.total,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'pages': pagination.pages,
     })
 
 
