@@ -171,7 +171,7 @@ def get_simulation_result(result_id):
     """获取单条仿真结果详情"""
     user = request.current_user
 
-    from database import CorrectionTemplate
+    from database import CorrectionTemplate, SimulationResult
 
     result = SimulationResult.query.get(result_id)
     if not result:

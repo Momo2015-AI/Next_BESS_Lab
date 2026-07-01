@@ -214,11 +214,11 @@ def _apply_tenant_filter(query, model_cls, user, include_builtin=True):
     if user is None:
         # 未登录用户仅看系统内置数据
         if include_builtin and hasattr(model_cls, "is_builtin"):
-            return query.filter(model_cls.is_builtin == True)
+            return query.filter(model_cls.is_builtin.is_(True))
         return query.filter(False)  # 不可见
     if hasattr(model_cls, "tenant_id") and hasattr(model_cls, "is_builtin"):
         if include_builtin:
-            return query.filter(or_(model_cls.tenant_id == user.tenant_id, model_cls.is_builtin == True))
+            return query.filter(or_(model_cls.tenant_id == user.tenant_id, model_cls.is_builtin.is_(True)))
         return query.filter(model_cls.tenant_id == user.tenant_id)
     return query
 
@@ -316,7 +316,7 @@ def refresh_products():
             for category, model_cls in _MODELS.items():
                 # 仅清空系统内置数据
                 if hasattr(model_cls, "is_builtin"):
-                    model_cls.query.filter(model_cls.is_builtin == True).delete()
+                    model_cls.query.filter(model_cls.is_builtin.is_(True)).delete()
                 else:
                     model_cls.query.delete()
             seed_products()
@@ -344,7 +344,7 @@ def list_products(category):
     # 应用企业隔离
     if scope == "builtin":
         if hasattr(model_cls, "is_builtin"):
-            query = query.filter(model_cls.is_builtin == True)
+            query = query.filter(model_cls.is_builtin.is_(True))
     elif scope == "mine":
         if user and hasattr(model_cls, "tenant_id"):
             query = query.filter(model_cls.tenant_id == user.tenant_id)
