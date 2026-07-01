@@ -238,10 +238,16 @@ _MFR_NAME_MAP = {
 }
 
 
+_MFR_CACHE = {}
+
+
 def _get_manufacturer_id(mfr_name):
-    """根据厂商名称匹配电池厂家ID"""
+    """根据厂商名称匹配电池厂家ID（带缓存）"""
     if not mfr_name:
         return None
+
+    if mfr_name in _MFR_CACHE:
+        return _MFR_CACHE[mfr_name]
 
     normalized_name = _MFR_NAME_MAP.get(mfr_name, mfr_name)
 
@@ -253,7 +259,9 @@ def _get_manufacturer_id(mfr_name):
         )
     ).first()
 
-    return mfr.id if mfr else None
+    result = mfr.id if mfr else None
+    _MFR_CACHE[mfr_name] = result
+    return result
 
 
 def seed_products():

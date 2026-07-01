@@ -78,7 +78,7 @@ def create_project():
 
     from database import Project, ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -134,7 +134,7 @@ def get_project(project_id):
 
     from database import Project, ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -189,7 +189,7 @@ def update_project(project_id):
 
     from database import Project, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -306,7 +306,7 @@ def create_version(project_id):
 
     from database import Project, ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -363,7 +363,7 @@ def get_version(version_id):
 
     from database import ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -400,7 +400,7 @@ def update_version(version_id):
 
     from database import ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -449,7 +449,7 @@ def activate_version(version_id):
 
     from database import ProjectVersion, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 

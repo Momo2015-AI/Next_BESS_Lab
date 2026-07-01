@@ -96,7 +96,7 @@ def _get_user_from_token():
     user_id = payload.get("user_id")
     from database import User
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return None, ("用户不存在", 404)
 

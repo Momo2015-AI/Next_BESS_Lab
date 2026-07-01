@@ -66,7 +66,7 @@ def create_simulation_result(version_id):
 
     from database import Project, ProjectVersion, SimulationResult, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -283,7 +283,7 @@ def create_correction_template():
 
     from database import CorrectionTemplate, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -369,7 +369,7 @@ def update_correction_template(template_id):
 
     from database import CorrectionTemplate, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
@@ -447,7 +447,7 @@ def seed_correction_templates():
 
     from database import CorrectionTemplate, User, db
 
-    user = User.query.get(user_id)
+    user = request.current_user
     if not user:
         return jsonify({"error": "用户不存在"}), 404
 
