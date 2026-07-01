@@ -2,7 +2,7 @@ export const EXCHANGE_RATES = {
   USD: 1,
   SAR: 3.75,
   AED: 3.6725,
-  CNY: 7.24,
+  CNY: 7.24
 }
 
 const POWER_FACTORS = { W: 1e-6, kW: 1e-3, MW: 1, GW: 1e3 }

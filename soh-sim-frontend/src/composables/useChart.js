@@ -2,7 +2,16 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, PieChart, RadarChart, GaugeChart, HeatmapChart, SankeyChart } from 'echarts/charts'
-import { TitleComponent, TooltipComponent, LegendComponent, GridComponent, PolarComponent, DataZoomComponent, VisualMapComponent, ToolboxComponent } from 'echarts/components'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  PolarComponent,
+  DataZoomComponent,
+  VisualMapComponent,
+  ToolboxComponent
+} from 'echarts/components'
 
 echarts.use([
   CanvasRenderer,
@@ -20,7 +29,7 @@ echarts.use([
   PolarComponent,
   DataZoomComponent,
   VisualMapComponent,
-  ToolboxComponent,
+  ToolboxComponent
 ])
 
 export function useChart(chartRef, options, dependencies = []) {
@@ -58,11 +67,15 @@ export function useChart(chartRef, options, dependencies = []) {
     }
   })
 
-  watch([options, ...dependencies], () => {
-    if (chart.value && options.value) {
-      chart.value.setOption(options.value, true)
-    }
-  }, { deep: true })
+  watch(
+    [options, ...dependencies],
+    () => {
+      if (chart.value && options.value) {
+        chart.value.setOption(options.value, true)
+      }
+    },
+    { deep: true }
+  )
 
   return { chart, init, resize, update }
 }
@@ -110,13 +123,17 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
     charts.value = []
   })
 
-  watch([optionsList, ...dependencies], () => {
-    charts.value.forEach((chart, index) => {
-      if (chart && optionsList.value[index]) {
-        chart.setOption(optionsList.value[index], true)
-      }
-    })
-  }, { deep: true })
+  watch(
+    [optionsList, ...dependencies],
+    () => {
+      charts.value.forEach((chart, index) => {
+        if (chart && optionsList.value[index]) {
+          chart.setOption(optionsList.value[index], true)
+        }
+      })
+    },
+    { deep: true }
+  )
 
   return { charts, initAll, resizeAll, updateAll }
 }

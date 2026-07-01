@@ -1,70 +1,110 @@
 <template>
   <div class="export-panel p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary);">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary);"></span>
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary)">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
         数据导出
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <!-- 导出类型选择 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2" style="color: var(--color-text-muted);">选择导出内容</div>
-          
+          <div class="text-xs mb-2" style="color: var(--color-text-muted)">选择导出内容</div>
+
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.matrix" style="accent-color: var(--color-accent-secondary);">
-            <span class="text-xs" style="color: var(--color-text-secondary);">25年生命周期矩阵</span>
+            <input v-model="exportOptions.matrix" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
+            <span class="text-xs" style="color: var(--color-text-secondary)">25年生命周期矩阵</span>
           </label>
-          
+
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.soh" style="accent-color: var(--color-accent-secondary);">
-            <span class="text-xs" style="color: var(--color-text-secondary);">SOH/RTE数据序列</span>
+            <input v-model="exportOptions.soh" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
+            <span class="text-xs" style="color: var(--color-text-secondary)">SOH/RTE数据序列</span>
           </label>
-          
+
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.params" style="accent-color: var(--color-accent-secondary);">
-            <span class="text-xs" style="color: var(--color-text-secondary);">参数配置</span>
+            <input v-model="exportOptions.params" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
+            <span class="text-xs" style="color: var(--color-text-secondary)">参数配置</span>
           </label>
-          
+
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="exportOptions.financial" style="accent-color: var(--color-accent-secondary);">
-            <span class="text-xs" style="color: var(--color-text-secondary);">财务分析数据</span>
+            <input
+              v-model="exportOptions.financial"
+              type="checkbox"
+              style="accent-color: var(--color-accent-secondary)"
+            />
+            <span class="text-xs" style="color: var(--color-text-secondary)">财务分析数据</span>
           </label>
         </div>
 
         <!-- 导出操作 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2" style="color: var(--color-text-muted);">导出格式</div>
-          
-          <button @click="exportCSV" :disabled="exporting"
+          <div class="text-xs mb-2" style="color: var(--color-text-muted)">导出格式</div>
+
+          <button
+            :disabled="exporting"
             class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }"
-            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
-            onmouseout="if(!this.disabled) this.style.opacity='1';">
+            :style="
+              exporting
+                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
+                : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }
+            "
+            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
+            onmouseout="if (!this.disabled) this.style.opacity = '1'"
+            @click="exportCSV"
+          >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
             {{ exporting ? '导出中...' : '导出 CSV' }}
           </button>
-          
-          <button @click="exportPNG" :disabled="exporting"
+
+          <button
+            :disabled="exporting"
             class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent)', color: 'white' }"
-            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
-            onmouseout="if(!this.disabled) this.style.opacity='1';">
+            :style="
+              exporting
+                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
+                : { backgroundColor: 'var(--color-accent)', color: 'white' }
+            "
+            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
+            onmouseout="if (!this.disabled) this.style.opacity = '1'"
+            @click="exportPNG"
+          >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
             导出 PNG 图表
           </button>
-          
-          <button @click="saveSimulation" :disabled="saving"
+
+          <button
+            :disabled="saving"
             class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="saving ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
-            onmouseover="if(!this.disabled) this.style.opacity='0.9';"
-            onmouseout="if(!this.disabled) this.style.opacity='1';">
+            :style="
+              saving
+                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
+                : { backgroundColor: 'var(--color-warning)', color: 'white' }
+            "
+            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
+            onmouseout="if (!this.disabled) this.style.opacity = '1'"
+            @click="saveSimulation"
+          >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+              />
             </svg>
             {{ saving ? '保存中...' : '保存仿真结果' }}
           </button>
@@ -72,28 +112,52 @@
       </div>
 
       <!-- 历史仿真记录 -->
-      <div class="mt-4 pt-4 border-t" style="border-color: var(--color-border);">
+      <div class="mt-4 pt-4 border-t" style="border-color: var(--color-border)">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs" style="color: var(--color-text-muted);">历史仿真记录</span>
-          <button @click="loadSimulations" class="text-xs" style="color: var(--color-accent-secondary);" onmouseover="this.style.color='var(--color-accent)';" onmouseout="this.style.color='var(--color-accent-secondary)';">
+          <span class="text-xs" style="color: var(--color-text-muted)">历史仿真记录</span>
+          <button
+            class="text-xs"
+            style="color: var(--color-accent-secondary)"
+            onmouseover="this.style.color = 'var(--color-accent)'"
+            onmouseout="this.style.color = 'var(--color-accent-secondary)'"
+            @click="loadSimulations"
+          >
             刷新
           </button>
         </div>
-        
-        <div v-if="simulations.length === 0" class="text-xs text-center py-2" style="color: var(--color-text-muted);">
+
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2" style="color: var(--color-text-muted)">
           暂无保存的仿真记录
         </div>
-        
+
         <div v-else class="space-y-2 max-h-40 overflow-y-auto">
-          <div v-for="sim in simulations" :key="sim.id"
-            class="flex items-center justify-between rounded px-3 py-2 text-xs" style="background-color: var(--color-card-dark);">
+          <div
+            v-for="sim in simulations"
+            :key="sim.id"
+            class="flex items-center justify-between rounded px-3 py-2 text-xs"
+            style="background-color: var(--color-card-dark)"
+          >
             <div>
-              <span style="color: var(--color-text-secondary);">{{ sim.name }}</span>
-              <span style="color: var(--color-text-muted);" class="ml-2">{{ sim.created_at }}</span>
+              <span style="color: var(--color-text-secondary)">{{ sim.name }}</span>
+              <span style="color: var(--color-text-muted)" class="ml-2">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
-              <button @click="loadSimulation(sim.id)" style="color: var(--color-accent-secondary);" onmouseover="this.style.color='var(--color-accent)';" onmouseout="this.style.color='var(--color-accent-secondary)';">加载</button>
-              <button @click="exportSimulationCSV(sim.id)" style="color: var(--color-accent);" onmouseover="this.style.color='var(--color-accent-secondary)';" onmouseout="this.style.color='var(--color-accent)';">导出</button>
+              <button
+                style="color: var(--color-accent-secondary)"
+                onmouseover="this.style.color = 'var(--color-accent)'"
+                onmouseout="this.style.color = 'var(--color-accent-secondary)'"
+                @click="loadSimulation(sim.id)"
+              >
+                加载
+              </button>
+              <button
+                style="color: var(--color-accent)"
+                onmouseover="this.style.color = 'var(--color-accent-secondary)'"
+                onmouseout="this.style.color = 'var(--color-accent)'"
+                @click="exportSimulationCSV(sim.id)"
+              >
+                导出
+              </button>
             </div>
           </div>
         </div>
@@ -101,8 +165,15 @@
     </div>
 
     <!-- Toast提示 -->
-    <div v-if="toast.show" class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } : { backgroundColor: 'var(--color-danger)', color: 'white' }">
+    <div
+      v-if="toast.show"
+      class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
+      :style="
+        toast.type === 'success'
+          ? { backgroundColor: 'var(--color-success)', color: 'white' }
+          : { backgroundColor: 'var(--color-danger)', color: 'white' }
+      "
+    >
       {{ toast.message }}
     </div>
   </div>
@@ -119,7 +190,7 @@ const props = defineProps({
   dod: { type: Array, default: () => [] },
   augQty: { type: Array, default: () => [] },
   financial: { type: Object, default: () => ({}) },
-  projectId: { type: String, default: '' },
+  projectId: { type: String, default: '' }
 })
 
 const emit = defineEmits(['load-simulation', 'show-toast'])
@@ -128,7 +199,7 @@ const exportOptions = reactive({
   matrix: true,
   soh: true,
   params: true,
-  financial: false,
+  financial: false
 })
 
 const exporting = ref(false)
@@ -138,7 +209,7 @@ const simulations = ref([])
 const toast = reactive({
   show: false,
   message: '',
-  type: 'success',
+  type: 'success'
 })
 
 const showToast = (message, type = 'success') => {
@@ -160,9 +231,9 @@ async function exportCSV() {
   exporting.value = true
 
   try {
-    let endpoint = '/api/export/csv'
+    const endpoint = '/api/export/csv'
     let exportType = 'all'
-    
+
     if (exportOptions.matrix && !exportOptions.soh && !exportOptions.params) {
       exportType = 'matrix'
     } else if (exportOptions.soh && !exportOptions.matrix && !exportOptions.params) {
@@ -181,8 +252,8 @@ async function exportCSV() {
         soh: props.soh,
         rte: props.rte,
         dod: props.dod,
-        augQty: props.augQty,
-      }),
+        augQty: props.augQty
+      })
     })
 
     if (!response.ok) throw new Error('导出失败')
@@ -213,7 +284,7 @@ function exportPNG() {
   try {
     // 查找所有ECharts图表
     const charts = document.querySelectorAll('.echarts-instance, canvas')
-    
+
     if (charts.length === 0) {
       showToast('未找到可导出的图表', 'error')
       return
@@ -263,12 +334,12 @@ async function saveSimulation() {
         rte: props.rte,
         dod: props.dod,
         augQty: props.augQty,
-        financial: props.financial,
-      }),
+        financial: props.financial
+      })
     })
 
     const result = await response.json()
-    
+
     if (result.success) {
       showToast('仿真结果已保存')
       loadSimulations()
@@ -299,7 +370,7 @@ async function loadSimulation(simulationId) {
   try {
     const response = await fetch(`/api/simulation/${simulationId}`)
     const data = await response.json()
-    
+
     emit('load-simulation', data)
     showToast('仿真结果已加载')
   } catch (error) {
@@ -313,9 +384,9 @@ async function exportSimulationCSV(simulationId) {
   try {
     const response = await fetch(`/api/simulation/${simulationId}`)
     const data = await response.json()
-    
+
     if (data) {
-      const csvContent = generateCSV(data)  // 传入完整data对象
+      const csvContent = generateCSV(data) // 传入完整data对象
       const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -334,12 +405,13 @@ async function exportSimulationCSV(simulationId) {
 // 生成CSV内容
 function generateCSV(data) {
   let csv = '储能电站SOH仿真计算结果\n\n'
-  
+
   // 矩阵数据
   if (data.results) {
     csv += '25年生命周期矩阵\n'
-    csv += '年份,初始Gross(MWh),初始Aux(MWh),初始净可用(MWh),扩容Gross(MWh),扩容Aux(MWh),扩容净可用(MWh),总净可用(MWh),累计扩容,满足需求\n'
-    
+    csv +=
+      '年份,初始Gross(MWh),初始Aux(MWh),初始净可用(MWh),扩容Gross(MWh),扩容Aux(MWh),扩容净可用(MWh),总净可用(MWh),累计扩容,满足需求\n'
+
     const r = data.results
     for (let i = 0; i < 26; i++) {
       csv += `${i},${r.initGross?.[i]?.toFixed(2) || 0},${r.initAux?.[i]?.toFixed(2) || 0},${r.initAcUsable?.[i]?.toFixed(2) || 0},`
@@ -347,7 +419,7 @@ function generateCSV(data) {
       csv += `${r.totalAcUsable?.[i]?.toFixed(2) || 0},${r.augAccumQty?.[i] || 0},${r.meetsReq?.[i] ? '是' : '否'}\n`
     }
   }
-  
+
   // SOH数据
   if (data.soh && data.soh.length > 0) {
     csv += '\nSOH/RTE数据\n年份,SOH(%),RTE(%)\n'
@@ -355,7 +427,7 @@ function generateCSV(data) {
       csv += `${i},${(data.soh[i] * 100).toFixed(2)},${data.rte?.[i] ? (data.rte[i] * 100).toFixed(2) : ''}\n`
     }
   }
-  
+
   return csv
 }
 

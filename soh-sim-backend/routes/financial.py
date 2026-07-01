@@ -1,5 +1,6 @@
-from flask import Blueprint, request, jsonify
-from services.financial import calculate_full_financial, _aggregate_boq_to_capex
+from flask import Blueprint, jsonify, request
+
+from services.financial import _aggregate_boq_to_capex, calculate_full_financial
 
 financial_bp = Blueprint("financial", __name__)
 
@@ -12,7 +13,10 @@ def financial_calculate():
 
     total_ac_usable = data.get("totalAcUsable")
     if not total_ac_usable or len(total_ac_usable) == 0:
-        return jsonify({"error": "validation failed", "field": "totalAcUsable", "message": "totalAcUsable is required"}), 400
+        return (
+            jsonify({"error": "validation failed", "field": "totalAcUsable", "message": "totalAcUsable is required"}),
+            400,
+        )
 
     financial_params = data.get("financialParams", {})
     boq_data = data.get("boqData")

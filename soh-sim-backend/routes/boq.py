@@ -1,6 +1,8 @@
 import uuid
-from flask import Blueprint, request, jsonify
-from database import db, BoqSection, BoqItem
+
+from flask import Blueprint, jsonify, request
+
+from database import BoqItem, BoqSection, db
 
 boq_bp = Blueprint("boq", __name__)
 
@@ -8,18 +10,20 @@ boq_bp = Blueprint("boq", __name__)
 @boq_bp.route("/api/boq/sections", methods=["GET"])
 def get_boq_sections():
     sections = BoqSection.query.order_by(BoqSection.sort_order).all()
-    return jsonify({
-        "success": True,
-        "data": [s.to_dict() for s in sections],
-    })
+    return jsonify(
+        {
+            "success": True,
+            "data": [s.to_dict() for s in sections],
+        }
+    )
 
 
 @boq_bp.route("/api/boq/items", methods=["GET"])
 def get_boq_items():
     project_id = request.args.get("project_id")
     is_alternative = request.args.get("is_alternative", "false").lower() == "true"
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 50, type=int)
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 50, type=int)
 
     query = BoqItem.query
     if project_id:
@@ -29,14 +33,16 @@ def get_boq_items():
         page=page, per_page=per_page, error_out=False
     )
 
-    return jsonify({
-        "success": True,
-        "data": [i.to_dict() for i in pagination.items],
-        "total": pagination.total,
-        "page": pagination.page,
-        "per_page": pagination.per_page,
-        "pages": pagination.pages,
-    })
+    return jsonify(
+        {
+            "success": True,
+            "data": [i.to_dict() for i in pagination.items],
+            "total": pagination.total,
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "pages": pagination.pages,
+        }
+    )
 
 
 @boq_bp.route("/api/boq/items", methods=["POST"])
@@ -78,11 +84,13 @@ def save_boq_items():
 
         db.session.commit()
 
-        return jsonify({
-            "success": True,
-            "data": [i.to_dict() for i in saved],
-            "count": len(saved),
-        })
+        return jsonify(
+            {
+                "success": True,
+                "data": [i.to_dict() for i in saved],
+                "count": len(saved),
+            }
+        )
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"保存失败: {str(e)}"}), 500
@@ -104,7 +112,9 @@ def create_boq_version():
 
     db.session.commit()
 
-    return jsonify({
-        "success": True,
-        "message": f"Version bumped to {items[0].version if items else 1}",
-    })
+    return jsonify(
+        {
+            "success": True,
+            "message": f"Version bumped to {items[0].version if items else 1}",
+        }
+    )

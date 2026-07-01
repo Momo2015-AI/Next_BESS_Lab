@@ -25,14 +25,14 @@ export default {
     themeDark: 'Dark',
     langEN: 'English',
     langZH: '中文',
-    langAR: 'العربية',
+    langAR: 'العربية'
   },
   app: {
     title: 'BESS SOH Simulation & Capacity Configuration Matrix',
     subtitle: 'BESS SOH Simulation, Degradation Matrix & Augmentation Lifecycle Engine',
     simulate: 'Run Simulation',
     foundation: 'Foundation',
-    solution: 'Solution',
+    solution: 'Solution'
   },
   home: {
     title: 'SOH-SIM Energy Storage Simulation Platform',
@@ -40,7 +40,8 @@ export default {
     learnMore: 'Learn More',
     heroEyebrow: 'Battery Energy Storage System',
     heroTitle: 'SOH-SIM',
-    heroSubtitle: 'Professional BESS design evaluation platform.\nFrom concept to commissioning, five phases to delivery.',
+    heroSubtitle:
+      'Professional BESS design evaluation platform.\nFrom concept to commissioning, five phases to delivery.',
     currentSoh: 'Current SOH',
     npv: 'NPV',
     irr: 'IRR',
@@ -51,15 +52,15 @@ export default {
     sectionToolsDesc: 'Every tool you need, accessible independently or within the project flow.',
     survey: {
       title: 'Survey Form',
-      desc: 'Customer survey data entry, collect basic project information',
+      desc: 'Customer survey data entry, collect basic project information'
     },
     foundation: {
       title: 'Foundation',
-      desc: 'Parameter configuration, product library management, algorithm definition',
+      desc: 'Parameter configuration, product library management, algorithm definition'
     },
     solution: {
       title: 'Solution',
-      desc: 'DC-side design, AC-side design, simulation, financial analysis',
+      desc: 'DC-side design, AC-side design, simulation, financial analysis'
     },
     phase1Title: 'Project Setup',
     phase1Desc: 'Survey, site evaluation, requirement confirmation',
@@ -81,7 +82,7 @@ export default {
     toolFinanceDesc: 'CAPEX/OPEX/IRR/LCOS dashboard',
     toolEngineeringDesc: 'Site area, BOM, spare parts',
     toolDataInjectDesc: 'Manual SOH/RTE data override',
-    toolSimulationDesc: 'Full simulation analysis view',
+    toolSimulationDesc: 'Full simulation analysis view'
   },
   sidebar: {
     home: 'Home',
@@ -110,7 +111,7 @@ export default {
     toolReport: 'Report',
     toolProjects: 'Projects',
     toolTemplates: 'Templates',
-    toolRules: 'Rules',
+    toolRules: 'Rules'
   },
   tabs: {
     survey: '0. Survey Form',
@@ -130,7 +131,7 @@ export default {
     sensitivity: '14. Sensitivity Analysis',
     engineering: '15. Engineering Calc',
     export: '16. Data Export',
-    auth: '17. Authentication',
+    auth: '17. Authentication'
   },
   paramPanel: {
     systemParams: 'System Parameters',
@@ -158,7 +159,7 @@ export default {
     requiredEnergy: 'Guaranteed Threshold (MWh/cycle)',
     times: 'cycles',
     units: 'units',
-    mwhPerDay: 'MWh/day',
+    mwhPerDay: 'MWh/day'
   },
   runningConditions: {
     title: 'Operating Conditions',
@@ -171,7 +172,7 @@ export default {
       residential: 'Residential',
       microgrid: 'Microgrid',
       solar: 'Solar + BESS',
-      wind: 'Wind + BESS',
+      wind: 'Wind + BESS'
     },
     location: 'Location',
     ratedPower: 'Rated Total Power MW',
@@ -188,7 +189,7 @@ export default {
     seismicZones: {
       low: 'Zone I (Low)',
       mid: 'Zone III (Medium)',
-      high: 'Zone IV (High)',
+      high: 'Zone IV (High)'
     },
     corrosionLevel: 'Corrosion Level',
     corrosionLevels: {
@@ -196,13 +197,13 @@ export default {
       c2: 'C2 (Low)',
       c3: 'C3 (Medium)',
       c4: 'C4 (High)',
-      c5: 'C5 (Extreme)',
+      c5: 'C5 (Extreme)'
     },
     installType: 'Installation Type',
     installTypes: {
       outdoor: 'Outdoor',
       indoor: 'Indoor',
-      semi: 'Semi-Outdoor',
+      semi: 'Semi-Outdoor'
     },
     section03: 'Grid & Electrical',
     gridVoltage: 'Grid Voltage Level kV',
@@ -213,7 +214,7 @@ export default {
       solid: 'Solid Grounding',
       resistance: 'Resistance Grounding',
       arcSuppression: 'Arc-Suppression Coil',
-      ungrounded: 'Ungrounded',
+      ungrounded: 'Ungrounded'
     },
     dcVoltage: 'DC Rated Voltage Range V',
     acVoltage: 'AC Rated Voltage V',
@@ -234,7 +235,7 @@ export default {
       lfp: 'LFP (Lithium Iron Phosphate)',
       nmc: 'NMC (Nickel Manganese Cobalt)',
       lto: 'LTO (Lithium Titanate)',
-      naion: 'Sodium-Ion Na-ion',
+      naion: 'Sodium-Ion Na-ion'
     },
     cellCapacity: 'Cell Capacity Range Ah',
     cellCycleLife: 'Cell Cycle Life (&#64;25°C)',
@@ -246,7 +247,7 @@ export default {
     thermalRunaways: {
       pack: 'Pack-Level Isolation (Standard)',
       cluster: 'Cluster Isolation',
-      rack: 'Rack-Level Isolation (MWh+)',
+      rack: 'Rack-Level Isolation (MWh+)'
     },
     section06: 'Battery Hierarchy Config',
     cellModel: 'Cell Model',
@@ -266,19 +267,19 @@ export default {
     overloads: {
       standard: '110% 10min / 120% 1min',
       advanced: '120% 10min / 150% 1min',
-      premium: '130% 30min / 150% 10min',
+      premium: '130% 30min / 150% 10min'
     },
     gridSupport: 'Grid Support Functions',
     gridSupports: {
       basic: 'Basic: LVRT + HVRT',
       advanced: 'Advanced: + PFR + Inertia Response',
-      full: 'Full: + Black Start + Grid-Forming',
+      full: 'Full: + Black Start + Grid-Forming'
     },
     coolingType: 'Cooling Method',
     coolingTypes: {
       forcedAir: 'Forced Air (Standard)',
       liquid: 'Liquid Cooling (50°C no derating)',
-      fullSiC: 'Liquid-Cooled SiC (Masdar-grade)',
+      fullSiC: 'Liquid-Cooled SiC (Masdar-grade)'
     },
     section07: 'Certification & Standards',
     certifications: {
@@ -286,7 +287,7 @@ export default {
       system: 'System / Module Level',
       grid: 'Grid & Environmental',
       extra: 'Special Certifications',
-      gridCode: 'Target Market Grid Codes',
+      gridCode: 'Target Market Grid Codes'
     },
     section08: 'EPC & O&M Scope',
     epcModel: 'EPC Delivery Model',
@@ -294,7 +295,7 @@ export default {
       turnkey: 'Turnkey EPC',
       supplyOnly: 'Supply Only',
       supplySupervision: 'Supply + Supervision',
-      epcm: 'EPCM',
+      epcm: 'EPCM'
     },
     omYears: 'O&M Duration yrs',
     performanceGuarantee: 'Performance Guarantee',
@@ -302,7 +303,7 @@ export default {
       availability: 'Availability ≥97%',
       rte: 'RTE Guarantee (with LD)',
       soh: 'SOH Guarantee (with Capacity LD)',
-      full: 'Full: Availability+RTE+SOH',
+      full: 'Full: Availability+RTE+SOH'
     },
     warrantyYears: 'Warranty Period yrs',
     scada: 'SCADA / Remote Monitoring',
@@ -310,14 +311,14 @@ export default {
       none: 'Not Required',
       basic: 'Basic: Modbus TCP',
       advanced: 'Advanced: IEC 61850 + DNP3',
-      full: 'Full: + Cloud Platform + AI Diagnostics',
+      full: 'Full: + Cloud Platform + AI Diagnostics'
     },
     spareParts: 'Spare Parts Strategy',
     sparePartsOptions: {
       none: 'Excluded',
       standard: 'Standard: 2-year operating spares',
       enhanced: 'Enhanced: 5-year + critical components',
-      full: 'Full: Complete replacement + on-site storage',
+      full: 'Full: Complete replacement + on-site storage'
     },
     section09: 'Document Upload',
     uploadHint: 'Upload technical specifications, SLD, load profiles etc. to auto-extract parameters',
@@ -330,7 +331,7 @@ export default {
     clickSelect: 'click to select',
     resetAll: 'Reset All',
     exportCSV: 'Export CSV',
-    applyEngine: 'Apply to Simulation Engine',
+    applyEngine: 'Apply to Simulation Engine'
   },
   productConfig: {
     cellLibrary: 'Cell Library',
@@ -376,7 +377,7 @@ export default {
     uploadSpec: 'Or upload spec sheet (PDF/CSV)',
     uploadSpecBtn: 'Upload Spec',
     parsing: 'Parsing...',
-    applyToParams: 'Apply to Simulation Parameters',
+    applyToParams: 'Apply to Simulation Parameters'
   },
   financialDashboard: {
     projectIRR: 'Project IRR',
@@ -458,7 +459,7 @@ export default {
     chartContainer: 'Container',
     chartPcs: 'PCS',
     chartBop: 'BOP',
-    chartDev: 'Development',
+    chartDev: 'Development'
   },
   matrixTable: {
     time: 'Time',
@@ -486,7 +487,7 @@ export default {
     meetsYes: 'Yes',
     meetsNo: 'No',
     recalculate: '🔄 Recalculate',
-    calculating: 'Calculating...',
+    calculating: 'Calculating...'
   },
   dataInjection: {
     sohTitle: 'SOH 25-Year Degradation Sequence (Paste per row)',
@@ -498,7 +499,7 @@ export default {
     parseRte: 'Parse & Push RTE',
     currentPreview: 'Current SOH & RTE Sequence Preview (Year 0-25)',
     sohLabel: 'SOH:',
-    rteLabel: 'RTE:',
+    rteLabel: 'RTE:'
   },
   formulaLab: {
     physicsTitle: 'Core Physics Formula Sandbox',
@@ -515,16 +516,25 @@ export default {
     op9Title: 'Operator 9 — DSCR (Debt Service Coverage Ratio)',
     op10Title: 'Operator 10 — Payback Period (Static & Dynamic)',
     op11Title: 'Operator 11 — Augmentation Cost Decline Learning Curve',
-    op5Desc: 'Large-scale BESS projects typically stack multiple revenue sources to enhance project IRR. For Masdar-style Middle East projects, standalone storage revenue primarily comes from energy arbitrage spread + capacity market payments + ancillary services. Revenue mix varies significantly (arbitrage 40-70%, capacity 20-40%, ancillary 10-20%).',
-    op6Desc: 'CAPEX includes container procurement + PCS procurement + BOP auxiliary systems + project development fees. OPEX covers fixed O&M + variable O&M + insurance + land lease. All OPEX items escalate annually to reflect inflation and aging effects.',
-    op7Desc: 'LCOS is the core economic benchmark for storage projects, analogous to solar LCOE. It calculates the discounted total cost per kWh discharged over the full lifecycle, including initial investment, O&M, augmentation, minus residual value. Profitability requires LCOS below average selling price. Masdar-grade projects typically target LCOS < $0.06/kWh.',
-    op8Desc: 'IRR is the discount rate at which NPV equals zero, the most critical investment decision metric. Project IRR reflects project profitability regardless of financing; Equity IRR incorporates leverage effects. Typical targets: Project IRR 6-10%, Equity IRR 10-15%. Solved via Newton-Raphson iteration.',
-    op9Desc: 'DSCR measures whether annual cash available for debt service is sufficient, the key metric for bank financing approval. Numerator is EBITDA minus tax; denominator is annual principal + interest. Banks typically require DSCR ≥ 1.2-1.3x minimum throughout the loan period.',
-    op10Desc: 'Payback period is when cumulative net cash flow first turns positive. Static payback ignores time value of money; dynamic payback discounts all cash flows at WACC. Storage projects typically have static payback of 8-12 years, dynamic payback of 10-15 years.',
-    op11Desc: 'Lithium battery and storage systems follow Wrights Law: cumulative production doubling correlates with cost decline (learning rate ~18-20%). Mid-to-late cycle augmentation container costs will be significantly lower than construction period due to technology progress and scale effects. BNEF data shows DC-side equipment cost decline ~5-8%/yr, AC-side ~3-5%/yr.',
+    op5Desc:
+      'Large-scale BESS projects typically stack multiple revenue sources to enhance project IRR. For Masdar-style Middle East projects, standalone storage revenue primarily comes from energy arbitrage spread + capacity market payments + ancillary services. Revenue mix varies significantly (arbitrage 40-70%, capacity 20-40%, ancillary 10-20%).',
+    op6Desc:
+      'CAPEX includes container procurement + PCS procurement + BOP auxiliary systems + project development fees. OPEX covers fixed O&M + variable O&M + insurance + land lease. All OPEX items escalate annually to reflect inflation and aging effects.',
+    op7Desc:
+      'LCOS is the core economic benchmark for storage projects, analogous to solar LCOE. It calculates the discounted total cost per kWh discharged over the full lifecycle, including initial investment, O&M, augmentation, minus residual value. Profitability requires LCOS below average selling price. Masdar-grade projects typically target LCOS < $0.06/kWh.',
+    op8Desc:
+      'IRR is the discount rate at which NPV equals zero, the most critical investment decision metric. Project IRR reflects project profitability regardless of financing; Equity IRR incorporates leverage effects. Typical targets: Project IRR 6-10%, Equity IRR 10-15%. Solved via Newton-Raphson iteration.',
+    op9Desc:
+      'DSCR measures whether annual cash available for debt service is sufficient, the key metric for bank financing approval. Numerator is EBITDA minus tax; denominator is annual principal + interest. Banks typically require DSCR ≥ 1.2-1.3x minimum throughout the loan period.',
+    op10Desc:
+      'Payback period is when cumulative net cash flow first turns positive. Static payback ignores time value of money; dynamic payback discounts all cash flows at WACC. Storage projects typically have static payback of 8-12 years, dynamic payback of 10-15 years.',
+    op11Desc:
+      'Lithium battery and storage systems follow Wrights Law: cumulative production doubling correlates with cost decline (learning rate ~18-20%). Mid-to-late cycle augmentation container costs will be significantly lower than construction period due to technology progress and scale effects. BNEF data shows DC-side equipment cost decline ~5-8%/yr, AC-side ~3-5%/yr.',
     opAcRteTitle: 'Operator 12 — AC-RTE AC-side Round-Trip Efficiency (w/ and w/o Aux Consumption)',
-    opAcRteDesc: 'Per GB/T 36549 and GB/T 51437 industry standards, AC-RTE measures energy ratio at the Point of Interconnection (POI) meter. AC-RTE w/o aux considers only DC-RTE and PCS+transformer+line AC efficiency; AC-RTE w/ aux further deducts self-consumption ratio to reflect actual net-to-grid efficiency. Middle East Masdar/SPPC standalone BESS tender documents commonly require AC-RTE (w/ aux) >= 85%.',
-    opAcRteNote: 'Note: Transformer and line efficiencies are currently bundled into the acEfficiency parameter. Aux consumption ratio uses year-1 data Aux_init[0] / E_gross_init[0], consistent with industry practice.',
+    opAcRteDesc:
+      'Per GB/T 36549 and GB/T 51437 industry standards, AC-RTE measures energy ratio at the Point of Interconnection (POI) meter. AC-RTE w/o aux considers only DC-RTE and PCS+transformer+line AC efficiency; AC-RTE w/ aux further deducts self-consumption ratio to reflect actual net-to-grid efficiency. Middle East Masdar/SPPC standalone BESS tender documents commonly require AC-RTE (w/ aux) >= 85%.',
+    opAcRteNote:
+      'Note: Transformer and line efficiencies are currently bundled into the acEfficiency parameter. Aux consumption ratio uses year-1 data Aux_init[0] / E_gross_init[0], consistent with industry practice.'
   },
   sohChart: {
     sohCurve: 'SOH Degradation Curve',
@@ -539,6 +549,6 @@ export default {
     reqThreshold: 'Req Threshold',
     totalOutput: 'Total Output',
     initAux: 'Init Aux Loss',
-    augAux: 'Aug Aux Loss',
-  },
+    augAux: 'Aug Aux Loss'
+  }
 }

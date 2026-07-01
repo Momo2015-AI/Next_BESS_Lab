@@ -4,6 +4,7 @@
 """
 
 import math
+
 from services.units import EXCHANGE_RATES
 
 NUM_YEARS = 26
@@ -137,23 +138,41 @@ def _calculate_debt_schedule(total_capex, financing):
 
     principal = total_capex * debt_ratio
     if principal <= 0 or loan_term <= 0:
-        return [{"year": y, "beginningBalance": 0, "principalPayment": 0, "interestPayment": 0, "endingBalance": 0} for y in range(NUM_YEARS)]
+        return [
+            {"year": y, "beginningBalance": 0, "principalPayment": 0, "interestPayment": 0, "endingBalance": 0}
+            for y in range(NUM_YEARS)
+        ]
 
     schedule = []
     balance = principal
 
     for y in range(NUM_YEARS):
         if y == 0:
-            schedule.append({"year": 0, "beginningBalance": 0, "principalPayment": 0, "interestPayment": 0, "endingBalance": principal})
+            schedule.append(
+                {
+                    "year": 0,
+                    "beginningBalance": 0,
+                    "principalPayment": 0,
+                    "interestPayment": 0,
+                    "endingBalance": principal,
+                }
+            )
             continue
         if y > loan_term:
-            schedule.append({"year": y, "beginningBalance": 0, "principalPayment": 0, "interestPayment": 0, "endingBalance": 0})
+            schedule.append(
+                {"year": y, "beginningBalance": 0, "principalPayment": 0, "interestPayment": 0, "endingBalance": 0}
+            )
             continue
 
         interest = balance * interest_rate
         if repayment_type == "equal_installment":
             if loan_term > 0 and interest_rate > 0:
-                annual_payment = principal * interest_rate * (1 + interest_rate) ** loan_term / ((1 + interest_rate) ** loan_term - 1)
+                annual_payment = (
+                    principal
+                    * interest_rate
+                    * (1 + interest_rate) ** loan_term
+                    / ((1 + interest_rate) ** loan_term - 1)
+                )
             else:
                 annual_payment = principal / loan_term
             principal_pmt = annual_payment - interest
@@ -164,13 +183,15 @@ def _calculate_debt_schedule(total_capex, financing):
         principal_pmt = min(principal_pmt, balance)
         balance -= principal_pmt
 
-        schedule.append({
-            "year": y,
-            "beginningBalance": balance + principal_pmt,
-            "principalPayment": principal_pmt,
-            "interestPayment": interest,
-            "endingBalance": max(0, balance),
-        })
+        schedule.append(
+            {
+                "year": y,
+                "beginningBalance": balance + principal_pmt,
+                "principalPayment": principal_pmt,
+                "interestPayment": interest,
+                "endingBalance": max(0, balance),
+            }
+        )
 
     return schedule
 
@@ -309,27 +330,29 @@ def calculate_full_financial(total_ac_usable, financial_params=None, boq_data=No
         if y == 1 and equity_of and equity_of > 0:
             equity_cf = free_cashflow
 
-        cashflow_table.append({
-            "year": y,
-            "revenue": {
-                "arbitrage": round(rev_arbitrage, 2),
-                "capacity": round(rev_capacity, 2),
-                "ancillary": round(rev_ancillary, 2),
-                "ppa": round(rev_ppa, 2),
-                "capacityAuction": round(rev_auction, 2),
-            },
-            "totalRevenue": round(total_revenue, 2),
-            "opex": round(annual_opex, 2),
-            "ebitda": round(ebitda, 2),
-            "depreciation": round(depr, 2),
-            "interest": round(interest, 2),
-            "taxableIncome": round(taxable_income, 2),
-            "tax": round(tax, 2),
-            "netIncome": round(net_income, 2),
-            "debtService": round(debt_service, 2),
-            "freeCashflow": round(free_cashflow, 2),
-            "equityCashflow": round(equity_cf, 2),
-        })
+        cashflow_table.append(
+            {
+                "year": y,
+                "revenue": {
+                    "arbitrage": round(rev_arbitrage, 2),
+                    "capacity": round(rev_capacity, 2),
+                    "ancillary": round(rev_ancillary, 2),
+                    "ppa": round(rev_ppa, 2),
+                    "capacityAuction": round(rev_auction, 2),
+                },
+                "totalRevenue": round(total_revenue, 2),
+                "opex": round(annual_opex, 2),
+                "ebitda": round(ebitda, 2),
+                "depreciation": round(depr, 2),
+                "interest": round(interest, 2),
+                "taxableIncome": round(taxable_income, 2),
+                "tax": round(tax, 2),
+                "netIncome": round(net_income, 2),
+                "debtService": round(debt_service, 2),
+                "freeCashflow": round(free_cashflow, 2),
+                "equityCashflow": round(equity_cf, 2),
+            }
+        )
 
         project_cashflows.append(free_cashflow)
         equity_cashflows.append(equity_cf)

@@ -15,12 +15,13 @@ def seed_boq_sections(db):
     """初始化 7 级 BOQ 分类模板"""
     for cat in BOQ_CATEGORIES:
         existing = db.session.execute(
-            db.select(db.Model.metadata.tables['boq_sections']).where(
-                db.Model.metadata.tables['boq_sections'].c.code == cat["code"]
+            db.select(db.Model.metadata.tables["boq_sections"]).where(
+                db.Model.metadata.tables["boq_sections"].c.code == cat["code"]
             )
         ).first()
         if not existing:
             from database import BoqSection
+
             section = BoqSection(
                 code=cat["code"],
                 name=cat["name"],

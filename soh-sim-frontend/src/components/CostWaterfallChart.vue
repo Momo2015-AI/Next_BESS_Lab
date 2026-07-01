@@ -1,35 +1,52 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text);">
-      <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold" style="background-color: rgba(139, 92, 246, 0.2); color: var(--color-accent);">IX</span>
+  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+      <span
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
+        style="background-color: rgba(139, 92, 246, 0.2); color: var(--color-accent)"
+      >
+        IX
+      </span>
       成本构成瀑布图 Cost Structure Waterfall
     </h3>
-    
-    <div class="mb-2 flex items-center justify-between text-[10px]" style="color: var(--color-text-secondary);">
+
+    <div class="mb-2 flex items-center justify-between text-[10px]" style="color: var(--color-text-secondary)">
       <div>年度成本分析 Annual Cost Breakdown</div>
-      <select v-model="selectedYear" class="rounded px-2 py-1 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);">
+      <select
+        v-model="selectedYear"
+        class="rounded px-2 py-1 text-xs"
+        style="
+          background-color: var(--color-input-bg-dark);
+          border: 1px solid var(--color-input-border);
+          color: var(--color-text);
+        "
+      >
         <option v-for="year in availableYears" :key="year" :value="year">Year {{ year }}</option>
       </select>
     </div>
-    
-    <div ref="waterfallChartRef" class="w-full" style="height: 300px;"></div>
-    
+
+    <div ref="waterfallChartRef" class="w-full" style="height: 300px" />
+
     <!-- 成本摘要 -->
-    <div class="mt-3 border-t pt-2" style="border-color: var(--color-border);">
+    <div class="mt-3 border-t pt-2" style="border-color: var(--color-border)">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
-        <div class="rounded p-2" style="background-color: var(--color-card-dark);">
-          <div style="color: var(--color-text-muted);">总成本</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-danger);">{{ formatCurrency(totalCost) }}</div>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
+          <div style="color: var(--color-text-muted)">总成本</div>
+          <div class="font-mono mt-0.5" style="color: var(--color-danger)">
+            {{ formatCurrency(totalCost) }}
+          </div>
         </div>
-        <div class="rounded p-2" style="background-color: var(--color-card-dark);">
-          <div style="color: var(--color-text-muted);">单位成本</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-warning);">{{ formatCostPerMWh(costPerMWh) }}</div>
+        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
+          <div style="color: var(--color-text-muted)">单位成本</div>
+          <div class="font-mono mt-0.5" style="color: var(--color-warning)">
+            {{ formatCostPerMWh(costPerMWh) }}
+          </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 成本明细 -->
-    <div class="mt-2 space-y-1 text-[9x]" style="color: var(--color-text-muted);">
+    <div class="mt-2 space-y-1 text-[9x]" style="color: var(--color-text-muted)">
       <div class="flex justify-between">
         <span>初始CAPEX</span>
         <span>{{ formatCurrency(initialCapex) }}</span>
@@ -73,7 +90,7 @@ let _resizeHandler = null
 const selectedYear = ref(1)
 const availableYears = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return []
-  return props.cashFlowTable.filter(row => row.year > 0).map(row => row.year)
+  return props.cashFlowTable.filter((row) => row.year > 0).map((row) => row.year)
 })
 
 // 成本计算
@@ -84,25 +101,25 @@ const initialCapex = computed(() => {
 
 const annualOpex = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return 0
-  const yearData = props.cashFlowTable.find(row => row.year === selectedYear.value)
+  const yearData = props.cashFlowTable.find((row) => row.year === selectedYear.value)
   return yearData?.opex || 0
 })
 
 const maintenanceCost = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return 0
-  const yearData = props.cashFlowTable.find(row => row.year === selectedYear.value)
+  const yearData = props.cashFlowTable.find((row) => row.year === selectedYear.value)
   return yearData?.opex * 0.6 || 0 // 60% for maintenance
 })
 
 const insuranceCost = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return 0
-  const yearData = props.cashFlowTable.find(row => row.year === selectedYear.value)
+  const yearData = props.cashFlowTable.find((row) => row.year === selectedYear.value)
   return yearData?.opex * 0.15 || 0 // 15% for insurance
 })
 
 const landLeaseCost = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return 0
-  const yearData = props.cashFlowTable.find(row => row.year === selectedYear.value)
+  const yearData = props.cashFlowTable.find((row) => row.year === selectedYear.value)
   return yearData?.opex * 0.1 || 0 // 10% for land lease
 })
 
@@ -112,7 +129,7 @@ const totalCost = computed(() => {
 
 const costPerMWh = computed(() => {
   if (!props.cashFlowTable || props.cashFlowTable.length === 0) return 0
-  const yearData = props.cashFlowTable.find(row => row.year === selectedYear.value)
+  const yearData = props.cashFlowTable.find((row) => row.year === selectedYear.value)
   const energy = yearData?.energy || 1
   return totalCost.value / energy
 })
@@ -137,7 +154,7 @@ const formatCostPerMWh = (cost) => {
 // 生成瀑布图数据
 const generateWaterfallData = () => {
   const baseValue = 0
-  
+
   // 瀑布图数据：正值为向上，负值为向下
   const data = [
     {
@@ -166,11 +183,11 @@ const generateWaterfallData = () => {
       itemStyle: { color: '#06b6d4' }
     }
   ]
-  
+
   // 计算累计值
   let cumulative = baseValue
   const series = []
-  
+
   // 第一列：从0到初始值
   series.push({
     name: '初始CAPEX',
@@ -181,11 +198,11 @@ const generateWaterfallData = () => {
     itemStyle: { color: '#ef4444' },
     barWidth: '40%'
   })
-  
+
   // 中间列：每个成本项
   data.forEach((item, index) => {
     if (index === 0) return // 跳过第一列
-    
+
     cumulative += item.value
     series.push({
       name: item.name,
@@ -197,7 +214,7 @@ const generateWaterfallData = () => {
       barWidth: '40%'
     })
   })
-  
+
   // 最后一列：累计线
   series.push({
     name: '累计',
@@ -208,24 +225,24 @@ const generateWaterfallData = () => {
     symbol: 'none',
     silent: true
   })
-  
+
   return {
     series,
-    categories: data.map(item => item.name)
+    categories: data.map((item) => item.name)
   }
 }
 
 // 更新图表
 const updateChart = () => {
   if (!waterfallChart) return
-  
+
   const { series, categories } = generateWaterfallData()
-  
+
   waterfallChart.setOption({
     title: {
       text: `Year ${selectedYear.value} Cost Structure`,
       left: 'center',
-      textStyle: { 
+      textStyle: {
         color: getComputedStyle(document.documentElement).getPropertyValue('--color-text') || '#64748b',
         fontSize: 12,
         fontWeight: 'normal'
@@ -250,7 +267,7 @@ const updateChart = () => {
     xAxis: {
       type: 'category',
       data: categories,
-      axisLabel: { 
+      axisLabel: {
         color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
         fontSize: 9,
         interval: 0,
@@ -261,28 +278,28 @@ const updateChart = () => {
       {
         type: 'value',
         name: '金额 (万元)',
-        nameTextStyle: { 
+        nameTextStyle: {
           color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
-          fontSize: 10 
+          fontSize: 10
         },
-        axisLabel: { 
+        axisLabel: {
           color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
           fontSize: 9,
-          formatter: value => formatCurrency(value)
+          formatter: (value) => formatCurrency(value)
         },
-        splitLine: { 
-          lineStyle: { 
+        splitLine: {
+          lineStyle: {
             color: getComputedStyle(document.documentElement).getPropertyValue('--color-border') || '#e2e8f0',
             type: 'dashed'
-          } 
+          }
         }
       },
       {
         type: 'value',
         name: '累计线',
-        nameTextStyle: { 
+        nameTextStyle: {
           color: '#3b82f6',
-          fontSize: 10 
+          fontSize: 10
         },
         axisLine: { show: false },
         axisTick: { show: false },
@@ -299,7 +316,7 @@ const initChart = () => {
   if (waterfallChart) {
     waterfallChart.dispose()
   }
-  
+
   waterfallChart = echarts.init(waterfallChartRef.value)
   updateChart()
 }
@@ -309,12 +326,12 @@ const watchTheme = () => {
   const observer = new MutationObserver(() => {
     updateChart()
   })
-  
+
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme']
   })
-  
+
   return observer
 }
 
@@ -323,11 +340,17 @@ onMounted(() => {
   initChart()
   themeObserver = watchTheme()
 
-  watch([() => props.cashFlowTable, selectedYear], debounce(() => {
-    updateChart()
-  }, 300), { deep: true })
+  watch(
+    [() => props.cashFlowTable, selectedYear],
+    debounce(() => {
+      updateChart()
+    }, 300),
+    { deep: true }
+  )
 
-  _resizeHandler = () => { waterfallChart?.resize() }
+  _resizeHandler = () => {
+    waterfallChart?.resize()
+  }
   window.addEventListener('resize', _resizeHandler)
 })
 

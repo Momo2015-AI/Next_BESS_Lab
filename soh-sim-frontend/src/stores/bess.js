@@ -10,7 +10,7 @@ export const useBessStore = defineStore('bess', {
     project: {
       id: null,
       name: '',
-      status: 'draft',
+      status: 'draft'
     },
     survey: {
       projectName: '',
@@ -22,7 +22,7 @@ export const useBessStore = defineStore('bess', {
       ratedEnergy: 5,
       totalPower: 50,
       gridVoltage: '110kV',
-      altitude: 0,
+      altitude: 0
     },
     systemParams: {
       ratedEnergy: 5,
@@ -37,18 +37,18 @@ export const useBessStore = defineStore('bess', {
       bessAuxStandby: 3.5,
       pcsAuxRun: 6.5,
       pcsAuxStandby: 1.0,
-      requiredEnergy: 240,
+      requiredEnergy: 240
     },
     selectedProducts: {
       cell: null,
       container: null,
-      pcs: null,
+      pcs: null
     },
     degradation: {
       soh: create26Array(100),
       rte: create26Array(97.03),
       dod: create26Array(100),
-      augQty: create26Array(0),
+      augQty: create26Array(0)
     },
     results: {
       initGross: create26Array(0),
@@ -59,17 +59,25 @@ export const useBessStore = defineStore('bess', {
       augAcUsable: create26Array(0),
       augAccumQty: create26Array(0),
       totalAcUsable: create26Array(0),
-      meetsReq: create26Array(false),
+      meetsReq: create26Array(false)
     },
     financial: {
       capex: { equipment: 0, epc: 0, development: 0 },
-      opex: { maintenance: 0, insurance: 0, grid: 0, landLease: 0, fixedOpexPerMw: 5000, variableOpexPerMwh: 2.5, insuranceRate: 0.5 },
+      opex: {
+        maintenance: 0,
+        insurance: 0,
+        grid: 0,
+        landLease: 0,
+        fixedOpexPerMw: 5000,
+        variableOpexPerMwh: 2.5,
+        insuranceRate: 0.5
+      },
       revenue: {
         arbitrage: { enabled: true, offPeakPrice: 30, peakPrice: 60, spreadCapture: 85, operatingDays: 330 },
         capacity: { enabled: true, capacityPrice: 45000 },
         ancillary: { enabled: true, ancillaryPrice: 15000 },
         ppa: { enabled: true, ppaPrice: 55, escalation: 2.0 },
-        capacityAuction: { enabled: true, auctionPrice: 120000, contractYears: 5 },
+        capacityAuction: { enabled: true, auctionPrice: 120000, contractYears: 5 }
       },
       financing: { debtRatio: 70, interestRate: 6.5, loanTerm: 15, repaymentType: 'equal_installment' },
       tax: { corporateTaxRate: 20, vatRate: 15, taxHolidayYears: 5 },
@@ -82,23 +90,23 @@ export const useBessStore = defineStore('bess', {
       cashflowTable: [],
       capexBreakdown: { equipment: 0, epc: 0, development: 0 },
       currency: 'USD',
-      calculating: false,
+      calculating: false
     },
     boq: {
       items: [],
       activeVersion: 'main',
-      totalPrice: 0,
+      totalPrice: 0
     },
     exports: {
       reportGenerated: false,
-      bomGenerated: false,
+      bomGenerated: false
     },
     phases: {
       phase1: { status: 'pending' },
       phase2: { status: 'pending' },
       phase3: { status: 'pending' },
       phase4: { status: 'pending' },
-      phase5: { status: 'pending' },
+      phase5: { status: 'pending' }
     },
     calculating: false,
     calculationError: null,
@@ -114,10 +122,10 @@ export const useBessStore = defineStore('bess', {
       ref_temperature: 25,
       ref_humidity: 50,
       field_humidity: 65,
-      dust_factor: 1.10,
+      dust_factor: 1.1,
       humidity_exponent: 2.5,
-      activation_energy: 25000,
-    },
+      activation_energy: 25000
+    }
   }),
 
   getters: {
@@ -125,10 +133,9 @@ export const useBessStore = defineStore('bess', {
       duration: state.survey.duration || 2,
       cyclesPerDay: state.survey.cyclesPerDay || 1,
       requiredEnergy: state.survey.requiredEnergy || 240,
-      temperature: state.survey.temperature || 25,
+      temperature: state.survey.temperature || 25
     }),
-    allPhasesComplete: (state) =>
-      Object.values(state.phases).every((p) => p.status === 'completed'),
+    allPhasesComplete: (state) => Object.values(state.phases).every((p) => p.status === 'completed')
   },
 
   actions: {
@@ -156,7 +163,7 @@ export const useBessStore = defineStore('bess', {
       try {
         const [curvesRes, envRes] = await Promise.all([
           fetch('/api/degradation/gb36276-curves'),
-          fetch('/api/degradation/environmental'),
+          fetch('/api/degradation/environmental')
         ])
         const curves = await curvesRes.json()
         const env = await envRes.json()
@@ -171,7 +178,7 @@ export const useBessStore = defineStore('bess', {
       const res = await fetch('/api/degradation/gb36276-curves', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curves }),
+        body: JSON.stringify({ curves })
       })
       const data = await res.json()
       this.gb36276Curves = data.curves
@@ -187,7 +194,7 @@ export const useBessStore = defineStore('bess', {
       const res = await fetch('/api/degradation/environmental', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(env),
+        body: JSON.stringify(env)
       })
       const data = await res.json()
       this.environmental = data.environmental
@@ -203,7 +210,7 @@ export const useBessStore = defineStore('bess', {
       const res = await fetch('/api/degradation/preview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params),
+        body: JSON.stringify(params)
       })
       return await res.json()
     },
@@ -212,7 +219,7 @@ export const useBessStore = defineStore('bess', {
       const res = await fetch('/api/degradation/environmental/preview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params),
+        body: JSON.stringify(params)
       })
       return await res.json()
     },
@@ -227,13 +234,13 @@ export const useBessStore = defineStore('bess', {
             soh: [...this.degradation.soh],
             rte: [...this.degradation.rte],
             dod: [...this.degradation.dod],
-            augQty: [...this.degradation.augQty],
+            augQty: [...this.degradation.augQty]
           },
           algorithm: {
             model: this.degradationModel,
             correctionFactor: 1.0,
             environmental: { ...this.environmental },
-            gb36276Curves: [...this.gb36276Curves],
+            gb36276Curves: [...this.gb36276Curves]
           },
           financial: {
             capex: { ...this.financial.capex },
@@ -246,13 +253,13 @@ export const useBessStore = defineStore('bess', {
             residualRate: this.financial.residualRate,
             priceEscalation: this.financial.priceEscalation,
             efficiencyLossPct: this.financial.efficiencyLossPct,
-            systemParams: { ...this.systemParams },
-          },
+            systemParams: { ...this.systemParams }
+          }
         }
         const res = await fetch('/api/pipeline/calculate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify(body)
         })
         if (!res.ok) {
           const err = await res.json()
@@ -269,7 +276,7 @@ export const useBessStore = defineStore('bess', {
             augAcUsable: data.result.augAcUsable,
             augAccumQty: data.result.augAccumQty,
             totalAcUsable: data.result.totalAcUsable,
-            meetsReq: data.result.meetsReq,
+            meetsReq: data.result.meetsReq
           }
           this.degradation.soh = data.result.soh
           this.degradation.rte = data.result.rte
@@ -282,7 +289,7 @@ export const useBessStore = defineStore('bess', {
               lcos: data.result.financial.lcos || 0,
               dscr: { min: data.result.financial.dscr || 0, avg: data.result.financial.dscr || 0 },
               payback: data.result.financial.payback || -1,
-              roi: data.result.financial.roi || 0,
+              roi: data.result.financial.roi || 0
             }
           }
           if (data.result.efficiencyCurves) {
@@ -316,13 +323,13 @@ export const useBessStore = defineStore('bess', {
             priceEscalation: this.financial.priceEscalation,
             efficiencyLossPct: this.financial.efficiencyLossPct,
             cyclesPerDay: this.systemParams.cyclesPerDay,
-            systemParams: { ...this.systemParams },
-          },
+            systemParams: { ...this.systemParams }
+          }
         }
         const res = await fetch('/api/financial/calculate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify(body)
         })
         if (!res.ok) {
           const err = await res.json()
@@ -373,13 +380,13 @@ export const useBessStore = defineStore('bess', {
             unitPrice: item.unit_price || item.unitPrice || 0,
             totalPrice: item.total_price || item.totalPrice || 0,
             note: item.note || '',
-            version: item.version || 1,
-          })),
+            version: item.version || 1
+          }))
         }
         const res = await fetch('/api/boq/items', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(payload)
         })
         if (!res.ok) throw new Error('Failed to save BOQ items')
         const json = await res.json()
@@ -395,15 +402,16 @@ export const useBessStore = defineStore('bess', {
     async aggregateCapexFromBoq() {
       try {
         const payload = {
-          boqItems: this.boq.items.map(item => ({
+          boqItems: this.boq.items.map((item) => ({
             section_code: item.section_code || item.sectionCode || '',
-            total_price: item.total_price || item.totalPrice || (item.quantity || 0) * (item.unit_price || item.unitPrice || 0),
-          })),
+            total_price:
+              item.total_price || item.totalPrice || (item.quantity || 0) * (item.unit_price || item.unitPrice || 0)
+          }))
         }
         const res = await fetch('/api/financial/capex-from-boq', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(payload)
         })
         if (res.ok) {
           const json = await res.json()
@@ -435,9 +443,9 @@ export const useBessStore = defineStore('bess', {
         phase2: { status: 'pending' },
         phase3: { status: 'pending' },
         phase4: { status: 'pending' },
-        phase5: { status: 'pending' },
+        phase5: { status: 'pending' }
       }
-    },
+    }
   },
-  persist: true,
+  persist: true
 })

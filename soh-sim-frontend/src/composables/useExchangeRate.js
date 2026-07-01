@@ -7,22 +7,22 @@ import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 export function useExchangeRate() {
   // 支持的货币列表
   const supportedCurrencies = reactive({
-    'USD': '美元',
-    'CNY': '人民币', 
-    'EUR': '欧元',
-    'GBP': '英镑',
-    'AED': '迪拉姆(阿联酋)',
-    'SAR': '里亚尔(沙特)',
-    'QAR': '里亚尔(卡塔尔)',
-    'KWD': '第纳尔(科威特)',
-    'OMR': '里亚尔(阿曼)',
-    'BHD': '第纳尔(巴林)',
-    'JPY': '日元',
-    'KRW': '韩元',
-    'AUD': '澳元',
-    'INR': '卢比(印度)',
-    'TND': '第纳尔(突尼斯)',
-    'EGP': '镑(埃及)',
+    USD: '美元',
+    CNY: '人民币',
+    EUR: '欧元',
+    GBP: '英镑',
+    AED: '迪拉姆(阿联酋)',
+    SAR: '里亚尔(沙特)',
+    QAR: '里亚尔(卡塔尔)',
+    KWD: '第纳尔(科威特)',
+    OMR: '里亚尔(阿曼)',
+    BHD: '第纳尔(巴林)',
+    JPY: '日元',
+    KRW: '韩元',
+    AUD: '澳元',
+    INR: '卢比(印度)',
+    TND: '第纳尔(突尼斯)',
+    EGP: '镑(埃及)'
   })
 
   // 状态
@@ -68,7 +68,7 @@ export function useExchangeRate() {
     try {
       const response = await fetch('/api/exchange-rates/all')
       const data = await response.json()
-      
+
       if (data.success) {
         exchangeRates.value = data.rates
         lastUpdated.value = data.date
@@ -89,7 +89,7 @@ export function useExchangeRate() {
     try {
       const response = await fetch(`/api/exchange-rates/latest?currency=${currency}`)
       const data = await response.json()
-      
+
       if (data.success) {
         exchangeRates.value[currency] = {
           rate: data.rate,
@@ -115,19 +115,19 @@ export function useExchangeRate() {
   // 货币转换
   const convert = (amount, fromCurrency, toCurrency) => {
     if (!amount || isNaN(amount)) return 0
-    
+
     // 如果相同货币，直接返回
     if (fromCurrency === toCurrency) return amount
-    
+
     // 获取汇率
     const fromRate = exchangeRates.value[fromCurrency]?.rate
     const toRate = exchangeRates.value[toCurrency]?.rate
-    
+
     if (fromRate && toRate) {
       // 通过USD转换：amount * (toRate / fromRate)
       return amount * (toRate / fromRate)
     }
-    
+
     // 如果没有汇率数据，返回0
     return 0
   }
@@ -135,14 +135,14 @@ export function useExchangeRate() {
   // 格式化金额
   const formatAmount = (amount, currency = displayCurrency.value) => {
     if (!amount || isNaN(amount)) return '0'
-    
+
     const converted = convert(amount, 'USD', currency)
     const rate = exchangeRates.value[currency]?.rate
-    
+
     if (rate) {
       return `${converted.toFixed(2)} ${currency}`
     }
-    
+
     return `${amount.toFixed(2)} ${currency}`
   }
 
@@ -156,7 +156,7 @@ export function useExchangeRate() {
     try {
       const response = await fetch('/api/exchange-rates/refresh', { method: 'POST' })
       const data = await response.json()
-      
+
       if (data.success) {
         await fetchAllRates()
         return true
@@ -191,9 +191,12 @@ export function useExchangeRate() {
     loadPreferences()
     fetchAllRates()
 
-    rateIntervalId = setInterval(() => {
-      fetchAllRates()
-    }, 5 * 60 * 1000)
+    rateIntervalId = setInterval(
+      () => {
+        fetchAllRates()
+      },
+      5 * 60 * 1000
+    )
   })
 
   onUnmounted(() => {
@@ -212,7 +215,7 @@ export function useExchangeRate() {
     loading,
     lastUpdated,
     rateSource,
-    
+
     // 方法
     loadPreferences,
     savePreferences,
@@ -223,6 +226,6 @@ export function useExchangeRate() {
     getRateInfo,
     refreshRates,
     setBaseCurrency,
-    setDisplayCurrency,
+    setDisplayCurrency
   }
 }

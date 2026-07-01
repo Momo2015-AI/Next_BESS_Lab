@@ -1,17 +1,29 @@
-import math
 import copy
+import math
 
 NUM_YEARS = 26
 R = 8.314
 
 DEFAULT_MODEL_PARAMS = {
     "LFP": {
-        "A_cal": 0.02, "Ea_cal": 20000, "alpha": 0.8,
-        "A_cyc": 0.001, "Ea_cyc": 15000, "beta": 0.5, "gamma": 1.5, "delta": 0.2,
+        "A_cal": 0.02,
+        "Ea_cal": 20000,
+        "alpha": 0.8,
+        "A_cyc": 0.001,
+        "Ea_cyc": 15000,
+        "beta": 0.5,
+        "gamma": 1.5,
+        "delta": 0.2,
     },
     "NMC": {
-        "A_cal": 0.03, "Ea_cal": 22000, "alpha": 0.85,
-        "A_cyc": 0.0015, "Ea_cyc": 18000, "beta": 0.55, "gamma": 1.6, "delta": 0.25,
+        "A_cal": 0.03,
+        "Ea_cal": 22000,
+        "alpha": 0.85,
+        "A_cyc": 0.0015,
+        "Ea_cyc": 18000,
+        "beta": 0.55,
+        "gamma": 1.6,
+        "delta": 0.25,
     },
 }
 
@@ -21,10 +33,26 @@ GB36276_DEFAULT_CURVES = [
         "p_rate": 0.125,
         "temperature": 25,
         "data": [
-            (0, 100.0), (500, 99.8), (1000, 99.5), (1500, 99.1), (2000, 98.5),
-            (2500, 97.8), (3000, 97.0), (3500, 96.1), (4000, 95.0), (4500, 93.7),
-            (5000, 92.2), (5500, 90.5), (6000, 88.5), (6500, 86.2), (7000, 83.6),
-            (7500, 80.5), (8000, 77.0), (8500, 73.0), (9000, 68.5), (9500, 63.5),
+            (0, 100.0),
+            (500, 99.8),
+            (1000, 99.5),
+            (1500, 99.1),
+            (2000, 98.5),
+            (2500, 97.8),
+            (3000, 97.0),
+            (3500, 96.1),
+            (4000, 95.0),
+            (4500, 93.7),
+            (5000, 92.2),
+            (5500, 90.5),
+            (6000, 88.5),
+            (6500, 86.2),
+            (7000, 83.6),
+            (7500, 80.5),
+            (8000, 77.0),
+            (8500, 73.0),
+            (9000, 68.5),
+            (9500, 63.5),
             (10000, 58.0),
         ],
     },
@@ -33,10 +61,26 @@ GB36276_DEFAULT_CURVES = [
         "p_rate": 0.125,
         "temperature": 45,
         "data": [
-            (0, 100.0), (500, 99.5), (1000, 98.8), (1500, 97.9), (2000, 96.7),
-            (2500, 95.2), (3000, 93.4), (3500, 91.3), (4000, 88.8), (4500, 85.9),
-            (5000, 82.5), (5500, 78.6), (6000, 74.0), (6500, 68.8), (7000, 63.0),
-            (7500, 56.5), (8000, 50.0), (8500, 44.0), (9000, 38.5), (9500, 33.5),
+            (0, 100.0),
+            (500, 99.5),
+            (1000, 98.8),
+            (1500, 97.9),
+            (2000, 96.7),
+            (2500, 95.2),
+            (3000, 93.4),
+            (3500, 91.3),
+            (4000, 88.8),
+            (4500, 85.9),
+            (5000, 82.5),
+            (5500, 78.6),
+            (6000, 74.0),
+            (6500, 68.8),
+            (7000, 63.0),
+            (7500, 56.5),
+            (8000, 50.0),
+            (8500, 44.0),
+            (9000, 38.5),
+            (9500, 33.5),
             (10000, 29.0),
         ],
     },
@@ -45,10 +89,26 @@ GB36276_DEFAULT_CURVES = [
         "p_rate": 0.25,
         "temperature": 25,
         "data": [
-            (0, 100.0), (500, 99.6), (1000, 99.0), (1500, 98.2), (2000, 97.1),
-            (2500, 95.8), (3000, 94.2), (3500, 92.3), (4000, 90.0), (4500, 87.3),
-            (5000, 84.2), (5500, 80.6), (6000, 76.5), (6500, 71.8), (7000, 66.5),
-            (7500, 60.5), (8000, 54.0), (8500, 47.5), (9000, 41.5), (9500, 36.5),
+            (0, 100.0),
+            (500, 99.6),
+            (1000, 99.0),
+            (1500, 98.2),
+            (2000, 97.1),
+            (2500, 95.8),
+            (3000, 94.2),
+            (3500, 92.3),
+            (4000, 90.0),
+            (4500, 87.3),
+            (5000, 84.2),
+            (5500, 80.6),
+            (6000, 76.5),
+            (6500, 71.8),
+            (7000, 66.5),
+            (7500, 60.5),
+            (8000, 54.0),
+            (8500, 47.5),
+            (9000, 41.5),
+            (9500, 36.5),
             (10000, 32.0),
         ],
     },
@@ -57,10 +117,26 @@ GB36276_DEFAULT_CURVES = [
         "p_rate": 0.25,
         "temperature": 45,
         "data": [
-            (0, 100.0), (500, 99.2), (1000, 98.1), (1500, 96.7), (2000, 94.9),
-            (2500, 92.6), (3000, 89.8), (3500, 86.4), (4000, 82.3), (4500, 77.5),
-            (5000, 71.8), (5500, 65.2), (6000, 57.8), (6500, 50.0), (7000, 43.0),
-            (7500, 37.0), (8000, 31.5), (8500, 26.5), (9000, 22.0), (9500, 18.0),
+            (0, 100.0),
+            (500, 99.2),
+            (1000, 98.1),
+            (1500, 96.7),
+            (2000, 94.9),
+            (2500, 92.6),
+            (3000, 89.8),
+            (3500, 86.4),
+            (4000, 82.3),
+            (4500, 77.5),
+            (5000, 71.8),
+            (5500, 65.2),
+            (6000, 57.8),
+            (6500, 50.0),
+            (7000, 43.0),
+            (7500, 37.0),
+            (8000, 31.5),
+            (8500, 26.5),
+            (9000, 22.0),
+            (9500, 18.0),
             (10000, 14.5),
         ],
     },
@@ -102,8 +178,16 @@ def _interp_curve_soh(curve, target_cycles):
     return _linear_interp(target_cycles, cycles, soh_vals)
 
 
-def predict_soh_gb36276(cycles_per_day, dod, c_rate, temperature, gb_curves=None,
-                          environmental=None, correction_factor=1.0, correction_table=None):
+def predict_soh_gb36276(
+    cycles_per_day,
+    dod,
+    c_rate,
+    temperature,
+    gb_curves=None,
+    environmental=None,
+    correction_factor=1.0,
+    correction_table=None,
+):
     """Predict SOH using GB/T 36276 test curves with 2D interpolation.
 
     Args:
@@ -187,10 +271,7 @@ def _bilinear_interp(x, y, curves, soh_vals, x_sorted, y_sorted):
     tx = (x - x0) / (x1 - x0) if x1 != x0 else 0
     ty = (y - y0) / (y1 - y0) if y1 != y0 else 0
 
-    result = (f00 * (1 - tx) * (1 - ty)
-              + f10 * tx * (1 - ty)
-              + f01 * (1 - tx) * ty
-              + f11 * tx * ty)
+    result = f00 * (1 - tx) * (1 - ty) + f10 * tx * (1 - ty) + f01 * (1 - tx) * ty + f11 * tx * ty
     return result
 
 
@@ -238,8 +319,16 @@ def _compute_environmental_acceleration(operating_temp, environmental):
     return accel
 
 
-def predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate, model_params=None,
-                           correction_factor=1.0, correction_table=None, environmental=None):
+def predict_soh_arrhenius(
+    temperature,
+    cycles_per_day,
+    dod,
+    c_rate,
+    model_params=None,
+    correction_factor=1.0,
+    correction_table=None,
+    environmental=None,
+):
     """Predict SOH degradation using Arrhenius model with optional environmental acceleration.
 
     Returns arrays of length NUM_YEARS for SOH (%) and RTE (%).
@@ -277,8 +366,8 @@ def predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate, model_params
         days = year * 365
         cycles = year * 365 * cycles_per_day
 
-        q_cal = A_cal * math.exp(-Ea_cal / (R * T_kelvin)) * (days ** alpha)
-        q_cyc = A_cyc * math.exp(-Ea_cyc / (R * T_kelvin)) * (cycles ** beta) * dod_factor * c_rate_factor
+        q_cal = A_cal * math.exp(-Ea_cal / (R * T_kelvin)) * (days**alpha)
+        q_cyc = A_cyc * math.exp(-Ea_cyc / (R * T_kelvin)) * (cycles**beta) * dod_factor * c_rate_factor
 
         env_dust_humidity = _dust_humidity_factor(environmental)
         q_cal *= env_dust_humidity
@@ -294,9 +383,18 @@ def predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate, model_params
     return soh, rte
 
 
-def predict_soh(model_type, temperature, cycles_per_day, dod, c_rate,
-                model_params=None, correction_factor=1.0, correction_table=None,
-                environmental=None, gb_curves=None):
+def predict_soh(
+    model_type,
+    temperature,
+    cycles_per_day,
+    dod,
+    c_rate,
+    model_params=None,
+    correction_factor=1.0,
+    correction_table=None,
+    environmental=None,
+    gb_curves=None,
+):
     """Unified entry point for SOH prediction.
 
     Args:
@@ -315,11 +413,13 @@ def predict_soh(model_type, temperature, cycles_per_day, dod, c_rate,
         (soh[], rte[]) arrays of length NUM_YEARS
     """
     if model_type == "gb36276":
-        return predict_soh_gb36276(cycles_per_day, dod, c_rate, temperature,
-                                    gb_curves, environmental, correction_factor, correction_table)
+        return predict_soh_gb36276(
+            cycles_per_day, dod, c_rate, temperature, gb_curves, environmental, correction_factor, correction_table
+        )
     else:
-        return predict_soh_arrhenius(temperature, cycles_per_day, dod, c_rate,
-                                      model_params, correction_factor, correction_table, environmental)
+        return predict_soh_arrhenius(
+            temperature, cycles_per_day, dod, c_rate, model_params, correction_factor, correction_table, environmental
+        )
 
 
 def get_default_gb_curves():

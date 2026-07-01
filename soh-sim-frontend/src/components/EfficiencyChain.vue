@@ -1,40 +1,76 @@
 <template>
   <div class="h-full flex flex-col gap-3">
     <div class="flex items-center justify-between">
-      <h3 class="text-sm font-bold" style="color: var(--color-accent);">
-        Efficiency Chain (10-Factor Model)
-      </h3>
+      <h3 class="text-sm font-bold" style="color: var(--color-accent)">Efficiency Chain (10-Factor Model)</h3>
       <div class="flex gap-2">
-        <button @click="setRfpMode" class="text-xs px-3 py-1 rounded transition-all"
-          style="background: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border);">
+        <button
+          class="text-xs px-3 py-1 rounded transition-all"
+          style="background: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border)"
+          @click="setRfpMode"
+        >
           RFP Mode
         </button>
-        <button @click="resetDefaults" class="text-xs px-3 py-1 rounded transition-all"
-          style="background: var(--color-card-dark); color: var(--color-text-muted); border: 1px solid var(--color-border);">
+        <button
+          class="text-xs px-3 py-1 rounded transition-all"
+          style="
+            background: var(--color-card-dark);
+            color: var(--color-text-muted);
+            border: 1px solid var(--color-border);
+          "
+          @click="resetDefaults"
+        >
           Reset
         </button>
-        <button @click="applyFactors" class="text-xs px-4 py-1 rounded font-bold transition-all"
-          :style="modified ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }">
+        <button
+          class="text-xs px-4 py-1 rounded font-bold transition-all"
+          :style="
+            modified
+              ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' }
+              : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }
+          "
+          @click="applyFactors"
+        >
           Apply
         </button>
       </div>
     </div>
 
-    <div class="rounded-lg p-3 flex items-center gap-3" style="background: var(--color-card-dark); border: 1px solid var(--color-border);">
-      <span class="text-xs" style="color: var(--color-text-muted);">SOH:</span>
-      <input v-model.number="previewSoh" type="number" min="60" max="100" class="text-xs px-2 py-1 rounded"
-        style="width:56px; background: var(--color-input-bg-dark); color: var(--color-text); border: 1px solid var(--color-input-border);" />
-      <span class="text-xs" style="color: var(--color-text-muted);">%</span>
+    <div
+      class="rounded-lg p-3 flex items-center gap-3"
+      style="background: var(--color-card-dark); border: 1px solid var(--color-border)"
+    >
+      <span class="text-xs" style="color: var(--color-text-muted)">SOH:</span>
+      <input
+        v-model.number="previewSoh"
+        type="number"
+        min="60"
+        max="100"
+        class="text-xs px-2 py-1 rounded"
+        style="
+          width: 56px;
+          background: var(--color-input-bg-dark);
+          color: var(--color-text);
+          border: 1px solid var(--color-input-border);
+        "
+      />
+      <span class="text-xs" style="color: var(--color-text-muted)">%</span>
     </div>
 
-    <div class="rounded-lg p-3 flex flex-col gap-2.5" style="background: var(--color-card-dark); border: 1px solid var(--color-border);">
+    <div
+      class="rounded-lg p-3 flex flex-col gap-2.5"
+      style="background: var(--color-card-dark); border: 1px solid var(--color-border)"
+    >
       <div class="formula-row">
         <span class="formula-label">AC Side</span>
-        <span class="formula-label" style="color: var(--color-accent);">Charge:</span>
+        <span class="formula-label" style="color: var(--color-accent)">Charge:</span>
         <div class="formula-chain">
-          <span v-for="f in acFactors" :key="'ac-'+f.id" class="formula-block"
+          <span
+            v-for="f in acFactors"
+            :key="'ac-' + f.id"
+            class="formula-block"
             :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}">
+            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+          >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_c * 100).toFixed(2) }}</span>
           </span>
@@ -42,12 +78,16 @@
         </div>
       </div>
       <div class="formula-row">
-        <span class="formula-label"></span>
-        <span class="formula-label" style="color: var(--color-text-muted);">Disch:</span>
+        <span class="formula-label" />
+        <span class="formula-label" style="color: var(--color-text-muted)">Disch:</span>
         <div class="formula-chain">
-          <span v-for="f in acFactors" :key="'acd-'+f.id" class="formula-block"
+          <span
+            v-for="f in acFactors"
+            :key="'acd-' + f.id"
+            class="formula-block"
             :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}">
+            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+          >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_d * 100).toFixed(2) }}</span>
           </span>
@@ -55,15 +95,19 @@
         </div>
       </div>
 
-      <div class="separator-line"></div>
+      <div class="separator-line" />
 
       <div class="formula-row">
         <span class="formula-label">DC Side</span>
-        <span class="formula-label" style="color: var(--color-accent);">Charge:</span>
+        <span class="formula-label" style="color: var(--color-accent)">Charge:</span>
         <div class="formula-chain">
-          <span v-for="f in dcFactors" :key="'dc-'+f.id" class="formula-block"
+          <span
+            v-for="f in dcFactors"
+            :key="'dc-' + f.id"
+            class="formula-block"
             :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}">
+            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+          >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_c * 100).toFixed(2) }}</span>
           </span>
@@ -71,12 +115,16 @@
         </div>
       </div>
       <div class="formula-row">
-        <span class="formula-label"></span>
-        <span class="formula-label" style="color: var(--color-text-muted);">Disch:</span>
+        <span class="formula-label" />
+        <span class="formula-label" style="color: var(--color-text-muted)">Disch:</span>
         <div class="formula-chain">
-          <span v-for="f in dcFactors" :key="'dcd-'+f.id" class="formula-block"
+          <span
+            v-for="f in dcFactors"
+            :key="'dcd-' + f.id"
+            class="formula-block"
             :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}">
+            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+          >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_d * 100).toFixed(2) }}</span>
           </span>
@@ -84,99 +132,141 @@
         </div>
       </div>
 
-      <div class="separator-line"></div>
+      <div class="separator-line" />
 
       <div class="total-bar">
         <div class="total-item">
           <span class="total-label">η Charge</span>
-          <span class="total-value" style="color: var(--color-accent);">{{ (totalResult.charge * 100).toFixed(2) }}%</span>
-          <span class="total-formula" style="color: var(--color-text-muted);">= AC-c {{ (acResult.charge * 100).toFixed(1) }}% x DC-c {{ (dcResult.charge * 100).toFixed(1) }}%</span>
+          <span class="total-value" style="color: var(--color-accent)">
+            {{ (totalResult.charge * 100).toFixed(2) }}%
+          </span>
+          <span class="total-formula" style="color: var(--color-text-muted)">
+            = AC-c {{ (acResult.charge * 100).toFixed(1) }}% x DC-c {{ (dcResult.charge * 100).toFixed(1) }}%
+          </span>
         </div>
         <div class="total-item">
           <span class="total-label">η Discharge</span>
-          <span class="total-value" style="color: var(--color-text-muted);">{{ (totalResult.discharge * 100).toFixed(2) }}%</span>
-          <span class="total-formula" style="color: var(--color-text-muted);">= AC-d {{ (acResult.discharge * 100).toFixed(1) }}% x DC-d {{ (dcResult.discharge * 100).toFixed(1) }}%</span>
+          <span class="total-value" style="color: var(--color-text-muted)">
+            {{ (totalResult.discharge * 100).toFixed(2) }}%
+          </span>
+          <span class="total-formula" style="color: var(--color-text-muted)">
+            = AC-d {{ (acResult.discharge * 100).toFixed(1) }}% x DC-d {{ (dcResult.discharge * 100).toFixed(1) }}%
+          </span>
         </div>
         <div class="total-item rte">
-          <span class="total-label" style="font-weight: bold;">RTE</span>
-          <span class="total-value" style="font-weight: bold;" :style="{ color: totalResult.rte >= 0.85 ? 'var(--color-success)' : totalResult.rte >= 0.80 ? '#f59e0b' : '#ef4444' }">{{ (totalResult.rte * 100).toFixed(2) }}%</span>
-          <span class="total-formula" style="color: var(--color-text-muted);">= {{ (totalResult.charge * 100).toFixed(1) }}% x {{ (totalResult.discharge * 100).toFixed(1) }}%</span>
+          <span class="total-label" style="font-weight: bold">RTE</span>
+          <span
+            class="total-value"
+            style="font-weight: bold"
+            :style="{
+              color: totalResult.rte >= 0.85 ? 'var(--color-success)' : totalResult.rte >= 0.8 ? '#f59e0b' : '#ef4444'
+            }"
+          >
+            {{ (totalResult.rte * 100).toFixed(2) }}%
+          </span>
+          <span class="total-formula" style="color: var(--color-text-muted)">
+            = {{ (totalResult.charge * 100).toFixed(1) }}% x {{ (totalResult.discharge * 100).toFixed(1) }}%
+          </span>
         </div>
       </div>
     </div>
 
-    <div class="overflow-auto flex-1" style="min-height: 0;">
-      <table class="w-full text-xs" style="border-collapse: collapse;">
+    <div class="overflow-auto flex-1" style="min-height: 0">
+      <table class="w-full text-xs" style="border-collapse: collapse">
         <thead>
-          <tr class="section-header" style="background: rgba(64,158,255,0.08);">
-            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-accent); font-size: 11px;">AC Side (Grid → PCS)</th>
+          <tr class="section-header" style="background: rgba(64, 158, 255, 0.08)">
+            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-accent); font-size: 11px">
+              AC Side (Grid → PCS)
+            </th>
           </tr>
-          <tr style="border-bottom: 2px solid var(--color-border);">
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px;">#</th>
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted);">Component</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px;">η Charge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px;">η Discharge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px;">SOH Link</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px;">Rate</th>
+          <tr style="border-bottom: 2px solid var(--color-border)">
+            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px">#</th>
+            <th class="text-left py-2 px-2" style="color: var(--color-text-muted)">Component</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Charge</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Discharge</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px">SOH Link</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px">Rate</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="f in acFactors" :key="f.id">
             <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
-              <td class="py-1.5 px-2" style="color: var(--color-text-muted);">{{ f.id }}</td>
-              <td class="py-1.5 px-2" style="color: var(--color-text);">{{ f.name }}</td>
-              <td class="py-1.5 px-2 text-center">
-                <input v-model.number="f.eta_c" type="number" min="0.5" max="1" step="0.001"
-                  class="cell-input" />
+              <td class="py-1.5 px-2" style="color: var(--color-text-muted)">
+                {{ f.id }}
+              </td>
+              <td class="py-1.5 px-2" style="color: var(--color-text)">
+                {{ f.name }}
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001"
-                  class="cell-input" />
+                <input v-model.number="f.eta_c" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-accent);" />
+                <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-if="f.degrade" v-model.number="f.degrade_rate" type="number" min="0" max="1" step="0.01"
-                  class="cell-input" style="width:48px;" />
-                <span v-else style="color: var(--color-text-muted);">-</span>
+                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-accent)" />
+              </td>
+              <td class="py-1.5 px-2 text-center">
+                <input
+                  v-if="f.degrade"
+                  v-model.number="f.degrade_rate"
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  class="cell-input"
+                  style="width: 48px"
+                />
+                <span v-else style="color: var(--color-text-muted)">-</span>
               </td>
             </tr>
           </template>
         </tbody>
         <thead>
-          <tr class="section-header" style="background: rgba(16,185,129,0.08);">
-            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-success); font-size: 11px;">DC Side (PCS → Cell)</th>
+          <tr class="section-header" style="background: rgba(16, 185, 129, 0.08)">
+            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-success); font-size: 11px">
+              DC Side (PCS → Cell)
+            </th>
           </tr>
-          <tr style="border-bottom: 2px solid var(--color-border);">
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px;">#</th>
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted);">Component</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px;">η Charge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px;">η Discharge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px;">SOH Link</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px;">Rate</th>
+          <tr style="border-bottom: 2px solid var(--color-border)">
+            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px">#</th>
+            <th class="text-left py-2 px-2" style="color: var(--color-text-muted)">Component</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Charge</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Discharge</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px">SOH Link</th>
+            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px">Rate</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="f in dcFactors" :key="f.id">
             <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
-              <td class="py-1.5 px-2" style="color: var(--color-text-muted);">{{ f.id }}</td>
-              <td class="py-1.5 px-2" style="color: var(--color-text);">{{ f.name }}</td>
-              <td class="py-1.5 px-2 text-center">
-                <input v-model.number="f.eta_c" type="number" min="0.5" max="1" step="0.001"
-                  class="cell-input" />
+              <td class="py-1.5 px-2" style="color: var(--color-text-muted)">
+                {{ f.id }}
+              </td>
+              <td class="py-1.5 px-2" style="color: var(--color-text)">
+                {{ f.name }}
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001"
-                  class="cell-input" />
+                <input v-model.number="f.eta_c" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-success);" />
+                <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-if="f.degrade" v-model.number="f.degrade_rate" type="number" min="0" max="1" step="0.01"
-                  class="cell-input" style="width:48px;" />
-                <span v-else style="color: var(--color-text-muted);">-</span>
+                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-success)" />
+              </td>
+              <td class="py-1.5 px-2 text-center">
+                <input
+                  v-if="f.degrade"
+                  v-model.number="f.degrade_rate"
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  class="cell-input"
+                  style="width: 48px"
+                />
+                <span v-else style="color: var(--color-text-muted)">-</span>
               </td>
             </tr>
           </template>
@@ -184,7 +274,7 @@
       </table>
     </div>
 
-    <div class="text-xs" style="color: var(--color-text-muted);">
+    <div class="text-xs" style="color: var(--color-text-muted)">
       SOH-linked factors degrade as: η(t) = η₀ x (1 - rate x (1 - SOH(t)/100))
     </div>
   </div>
@@ -195,13 +285,21 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { debounce } from 'lodash-es'
 
 const ABBR_MAP = {
-  1: 'HV', 2: 'TR-H', 3: 'MV', 4: 'TR-L', 5: 'LV', 6: 'PCS',
-  7: 'DC1', 8: 'DC2', 9: 'DCDC', 10: 'Cell',
+  1: 'HV',
+  2: 'TR-H',
+  3: 'MV',
+  4: 'TR-L',
+  5: 'LV',
+  6: 'PCS',
+  7: 'DC1',
+  8: 'DC2',
+  9: 'DCDC',
+  10: 'Cell'
 }
 
 const factors = ref([])
-const acFactors = computed(() => factors.value.filter(f => f.id <= 6))
-const dcFactors = computed(() => factors.value.filter(f => f.id > 6))
+const acFactors = computed(() => factors.value.filter((f) => f.id <= 6))
+const dcFactors = computed(() => factors.value.filter((f) => f.id > 6))
 const defaults = ref([])
 const modified = ref(false)
 const previewSoh = ref(100)
@@ -210,7 +308,14 @@ const acResult = reactive({ charge: 1, discharge: 1 })
 const dcResult = reactive({ charge: 1, discharge: 1 })
 const totalResult = reactive({ charge: 1, discharge: 1, rte: 1 })
 
-watch(factors, debounce(() => { modified.value = true; updatePreview() }, 300), { deep: true })
+watch(
+  factors,
+  debounce(() => {
+    modified.value = true
+    updatePreview()
+  }, 300),
+  { deep: true }
+)
 watch(previewSoh, () => updatePreview())
 
 onMounted(async () => {
@@ -221,8 +326,11 @@ async function loadFactors() {
   try {
     const resp = await fetch('/api/efficiency/factors')
     const data = await resp.json()
-    factors.value = data.factors.map(f => ({
-      ...f, abbr: ABBR_MAP[f.id] || `F${f.id}`, _eta_c: f.eta_c, _eta_d: f.eta_d,
+    factors.value = data.factors.map((f) => ({
+      ...f,
+      abbr: ABBR_MAP[f.id] || `F${f.id}`,
+      _eta_c: f.eta_c,
+      _eta_d: f.eta_d
     }))
     defaults.value = JSON.parse(JSON.stringify(factors.value))
     modified.value = false
@@ -240,7 +348,8 @@ function calcSohDegrade(f, sohRatio) {
 }
 
 function computeSubtotal(fs, sohRatio) {
-  let charge = 1, discharge = 1
+  let charge = 1,
+    discharge = 1
   for (const f of fs) {
     const { ec, ed } = f.degrade ? calcSohDegrade(f, sohRatio) : { ec: f.eta_c, ed: f.eta_d }
     f._eta_c = ec
@@ -270,12 +379,16 @@ function updatePreview() {
 
 async function applyFactors() {
   try {
-    const payload = factors.value.map(f => ({
-      eta_c: f.eta_c, eta_d: f.eta_d, degrade: f.degrade, degrade_rate: f.degrade_rate,
+    const payload = factors.value.map((f) => ({
+      eta_c: f.eta_c,
+      eta_d: f.eta_d,
+      degrade: f.degrade,
+      degrade_rate: f.degrade_rate
     }))
     await fetch('/api/efficiency/factors', {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ factors: payload }),
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ factors: payload })
     })
     modified.value = false
   } catch (e) {
@@ -284,7 +397,7 @@ async function applyFactors() {
 }
 
 function setRfpMode() {
-  const f = factors.value.find(f => f.id === 10)
+  const f = factors.value.find((f) => f.id === 10)
   if (f) {
     f.eta_d = 1.0
     modified.value = true
@@ -299,7 +412,9 @@ async function resetDefaults() {
 </script>
 
 <style scoped>
-h3 { margin: 0; }
+h3 {
+  margin: 0;
+}
 
 .cell-input {
   width: 64px;
@@ -342,12 +457,12 @@ h3 { margin: 0; }
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid var(--color-border);
-  background: rgba(64,158,255,0.06);
+  background: rgba(64, 158, 255, 0.06);
   min-width: 40px;
 }
 
 .formula-block.linking {
-  background: rgba(245,158,11,0.08);
+  background: rgba(245, 158, 11, 0.08);
 }
 
 .block-name {

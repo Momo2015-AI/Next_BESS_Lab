@@ -1,14 +1,17 @@
 """
 缓存管理器 - 用于缓存计算密集型结果
 """
-import time
+
 import threading
+import time
 from functools import wraps
+
 
 class LRUCache:
     """
     简单的LRU缓存实现
     """
+
     def __init__(self, capacity: int = 100, ttl: int = 3600):
         self.capacity = capacity
         self.ttl = ttl  # Time-to-live in seconds
@@ -42,7 +45,7 @@ class LRUCache:
                     oldest_key = min(self.access_times.keys(), key=lambda k: self.access_times[k])
                     del self.cache[oldest_key]
                     del self.access_times[oldest_key]
-                
+
                 self.cache[key] = value
                 self.access_times[key] = time.time()
 
@@ -66,27 +69,30 @@ def cached_function(ttl=3600):
     """
     缓存装饰器
     """
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             # 生成缓存键
             cache_key = f"{func.__name__}:{str(args)}:{str(sorted(kwargs.items()))}"
-            
+
             # 尝试从缓存获取结果
             cached_result = calculation_cache.get(cache_key)
             if cached_result is not None:
                 print(f"Cache hit for {func.__name__}")
                 return cached_result
-            
+
             # 计算结果
             result = func(*args, **kwargs)
-            
+
             # 存储到缓存
             calculation_cache.put(cache_key, result)
             print(f"Cache miss for {func.__name__}, cached result")
-            
+
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -105,11 +111,12 @@ def invalidate_cache(pattern=None):
 
 # 示例用法
 if __name__ == "__main__":
+
     @cached_function(ttl=1800)  # 30分钟过期
     def expensive_calculation(x, y):
         print(f"Performing expensive calculation for {x}, {y}")
         time.sleep(1)  # 模拟耗时计算
-        return x * y + x ** 2 + y ** 2
+        return x * y + x**2 + y**2
 
     # 测试缓存
     print(expensive_calculation(2, 3))  # 第一次调用，会计算

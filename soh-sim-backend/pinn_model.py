@@ -1,7 +1,9 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 from scipy.integrate import solve_ivp
-from database import db, PinnModelWeights
+
+from database import PinnModelWeights, db
+
 
 class PINN:
     def __init__(self, layers, learning_rate=0.001):
@@ -12,9 +14,9 @@ class PINN:
     def _build_model(self):
         model = tf.keras.Sequential()
         for i in range(len(self.layers) - 2):
-            model.add(tf.keras.layers.Dense(self.layers[i + 1], activation='tanh', input_dim=self.layers[i]))
+            model.add(tf.keras.layers.Dense(self.layers[i + 1], activation="tanh", input_dim=self.layers[i]))
         model.add(tf.keras.layers.Dense(self.layers[-1], input_dim=self.layers[-2]))
-        model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate), loss='mse')
+        model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate), loss="mse")
         return model
 
     def train(self, X, y, epochs=1000):
@@ -39,6 +41,7 @@ class PINN:
         else:
             raise ValueError(f"No weights found for model: {model_name}")
 
+
 # 示例数据
 X_train = np.random.rand(1000, 1)
 y_train = np.sin(2 * np.pi * X_train)
@@ -50,10 +53,10 @@ pinn = PINN(layers=[1, 20, 20, 1])
 pinn.train(X_train, y_train)
 
 # 保存权重
-pinn.save_weights('example_model')
+pinn.save_weights("example_model")
 
 # 加载权重
-pinn.load_weights('example_model')
+pinn.load_weights("example_model")
 
 # 预测
 X_test = np.linspace(0, 1, 100).reshape(-1, 1)

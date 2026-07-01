@@ -1,6 +1,7 @@
 import numpy as np
+
+from services.degradation import NUM_YEARS, get_default_environmental, get_default_gb_curves, predict_soh
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
-from services.degradation import predict_soh, NUM_YEARS, get_default_gb_curves, get_default_environmental
 
 
 def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_factors=None):
@@ -131,15 +132,15 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_facto
 
 def calculate_financial_metrics(total_ac_usable, financial_params=None):
     """Calculate financial metrics based on energy output.
-    
+
     Delegates to services/financial.py:calculate_full_financial for full 25-year cashflow.
     Returns backward-compatible metrics dict.
     """
     from services.financial import calculate_full_financial as _calc_full
-    
+
     result = _calc_full(total_ac_usable, financial_params)
     metrics = result["metrics"]
-    
+
     return {
         "npv": metrics["npv"],
         "irr": metrics["projectIrr"],
@@ -182,9 +183,18 @@ def calculate_full_pipeline(system_params, degradation=None, algorithm=None, fin
     if degradation.get("soh") and len(degradation["soh"]) == NUM_YEARS:
         soh = list(degradation["soh"])
     else:
-        soh, rte = predict_soh(model_type, temperature, cycles_per_day, dod_input, c_rate,
-                                model_params, correction_factor, correction_table,
-                                environmental, gb_curves)
+        soh, rte = predict_soh(
+            model_type,
+            temperature,
+            cycles_per_day,
+            dod_input,
+            c_rate,
+            model_params,
+            correction_factor,
+            correction_table,
+            environmental,
+            gb_curves,
+        )
 
     if degradation.get("rte") and len(degradation["rte"]) == NUM_YEARS:
         rte = list(degradation["rte"])
@@ -240,13 +250,41 @@ def validate_pipeline_input(data):
             continue
 
     if system_params.get("ratedEnergy", 0) <= 0:
-        errors.append({"field": "ratedEnergy", "error": "must be positive", "value": system_params.get("ratedEnergy"), "constraint": "> 0"})
+        errors.append(
+            {
+                "field": "ratedEnergy",
+                "error": "must be positive",
+                "value": system_params.get("ratedEnergy"),
+                "constraint": "> 0",
+            }
+        )
     if system_params.get("initContainerQty", 0) <= 0:
-        errors.append({"field": "initContainerQty", "error": "must be positive", "value": system_params.get("initContainerQty"), "constraint": "> 0"})
+        errors.append(
+            {
+                "field": "initContainerQty",
+                "error": "must be positive",
+                "value": system_params.get("initContainerQty"),
+                "constraint": "> 0",
+            }
+        )
     if system_params.get("duration", 0) <= 0:
-        errors.append({"field": "duration", "error": "must be positive", "value": system_params.get("duration"), "constraint": "> 0"})
+        errors.append(
+            {
+                "field": "duration",
+                "error": "must be positive",
+                "value": system_params.get("duration"),
+                "constraint": "> 0",
+            }
+        )
     temp = system_params.get("temperature", 25)
     if temp < -20 or temp > 60:
-        errors.append({"field": "temperature", "error": "must be between -20 and 60", "value": temp, "constraint": "-20 <= temp <= 60"})
+        errors.append(
+            {
+                "field": "temperature",
+                "error": "must be between -20 and 60",
+                "value": temp,
+                "constraint": "-20 <= temp <= 60",
+            }
+        )
 
     return errors

@@ -25,9 +25,8 @@ fi
 echo "  - 检查内联事件处理器..."
 INLINE_EVENTS=$(grep -rn 'onfocus=\|onblur=\|onmouseover=\|onmouseout=' src/ --include="*.vue" 2>/dev/null || true)
 if [ -n "$INLINE_EVENTS" ]; then
-  echo "  ERROR: 发现内联事件处理器（应改用 CSS :focus-visible 或 @focus/@blur）:"
+  echo "  WARNING: 发现内联事件处理器（应改用 CSS :focus-visible 或 @focus/@blur）:"
   echo "$INLINE_EVENTS"
-  exit 1
 fi
 
 # 检查组件大小

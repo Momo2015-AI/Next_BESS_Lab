@@ -13,5 +13,7 @@ function onError(err) {
 </script>
 
 <style scoped>
-.tool-page { padding: 24px; }
+.tool-page {
+  padding: 24px;
+}
 </style>

@@ -11,14 +11,18 @@
           <label class="block text-xs mb-1 field-label">调研表串码ID</label>
           <div class="flex gap-2">
             <input v-model="surveyId" type="text" placeholder="输入调研表ID" class="form-input" />
-            <button @click="loadSurveyById" :disabled="loading" class="btn-primary btn-sm">{{ loading ? '加载中...' : '加载' }}</button>
+            <button :disabled="loading" class="btn-primary btn-sm" @click="loadSurveyById">
+              {{ loading ? '加载中...' : '加载' }}
+            </button>
           </div>
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">项目名称搜索</label>
           <div class="flex gap-2">
             <input v-model="searchKeyword" type="text" placeholder="输入项目名称搜索" class="form-input" />
-            <button @click="searchByProjectName" :disabled="loading" class="btn-primary btn-sm">{{ loading ? '搜索中...' : '搜索' }}</button>
+            <button :disabled="loading" class="btn-primary btn-sm" @click="searchByProjectName">
+              {{ loading ? '搜索中...' : '搜索' }}
+            </button>
           </div>
         </div>
       </div>
@@ -28,7 +32,9 @@
         <div class="results-list">
           <div v-for="item in searchResults" :key="item.id" class="result-item" @click="selectSurvey(item)">
             <div class="result-info">
-              <p class="result-name">{{ item.project_name }}</p>
+              <p class="result-name">
+                {{ item.project_name }}
+              </p>
               <p class="result-detail">{{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh</p>
             </div>
             <span class="result-action">选择</span>
@@ -76,11 +82,27 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">DOD (%)</label>
-          <input v-model.number="formData.dod" type="number" step="1" min="0" max="100" class="form-input" placeholder="80" />
+          <input
+            v-model.number="formData.dod"
+            type="number"
+            step="1"
+            min="0"
+            max="100"
+            class="form-input"
+            placeholder="80"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">充放电倍率 (C)</label>
-          <input v-model.number="formData.cRate" type="number" step="0.1" min="0.1" max="2" class="form-input" placeholder="0.5" />
+          <input
+            v-model.number="formData.cRate"
+            type="number"
+            step="0.1"
+            min="0.1"
+            max="2"
+            class="form-input"
+            placeholder="0.5"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">电池类型</label>
@@ -117,25 +139,63 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">保障SOH底线 (%)</label>
-          <input v-model.number="simParams.guaranteeSoh" type="number" step="1" min="60" max="90" class="form-input" placeholder="70" />
+          <input
+            v-model.number="simParams.guaranteeSoh"
+            type="number"
+            step="1"
+            min="60"
+            max="90"
+            class="form-input"
+            placeholder="70"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">承诺能量底线 (MWh)</label>
-          <input v-model.number="simParams.requiredEnergy" type="number" step="1" class="form-input" placeholder="100" />
+          <input
+            v-model.number="simParams.requiredEnergy"
+            type="number"
+            step="1"
+            class="form-input"
+            placeholder="100"
+          />
         </div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div>
           <label class="block text-xs mb-1 field-label">初始RTE (%)</label>
-          <input v-model.number="simParams.initRte" type="number" step="0.1" min="85" max="95" class="form-input" placeholder="92" />
+          <input
+            v-model.number="simParams.initRte"
+            type="number"
+            step="0.1"
+            min="85"
+            max="95"
+            class="form-input"
+            placeholder="92"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">AC效率 (%)</label>
-          <input v-model.number="simParams.acEfficiency" type="number" step="0.1" min="95" max="99" class="form-input" placeholder="97" />
+          <input
+            v-model.number="simParams.acEfficiency"
+            type="number"
+            step="0.1"
+            min="95"
+            max="99"
+            class="form-input"
+            placeholder="97"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">DC效率 (%)</label>
-          <input v-model.number="simParams.dcEfficiency" type="number" step="0.1" min="95" max="99" class="form-input" placeholder="97.5" />
+          <input
+            v-model.number="simParams.dcEfficiency"
+            type="number"
+            step="0.1"
+            min="95"
+            max="99"
+            class="form-input"
+            placeholder="97.5"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">自辅耗功率 (kW)</label>
@@ -145,11 +205,11 @@
     </div>
 
     <div class="actions">
-      <button @click="saveSurvey" :disabled="loading" class="btn-primary">
+      <button :disabled="loading" class="btn-primary" @click="saveSurvey">
         {{ loading ? '保存中...' : '保存调研数据' }}
       </button>
-      <button @click="resetForm" class="btn-secondary">重置</button>
-      <button @click="goToSimulation" class="btn-accent">前往仿真分析</button>
+      <button class="btn-secondary" @click="resetForm">重置</button>
+      <button class="btn-accent" @click="goToSimulation">前往仿真分析</button>
     </div>
   </div>
 </template>
@@ -176,7 +236,7 @@ const formData = reactive({
   cyclesPerDay: 1,
   dod: 80,
   cRate: 0.5,
-  batteryType: 'LFP',
+  batteryType: 'LFP'
 })
 
 const simParams = reactive({
@@ -187,7 +247,7 @@ const simParams = reactive({
   initRte: 92,
   acEfficiency: 97,
   dcEfficiency: 97.5,
-  auxPower: 5,
+  auxPower: 5
 })
 
 async function loadSurveyById() {
@@ -274,12 +334,12 @@ async function saveSurvey() {
       init_rte: simParams.initRte,
       ac_efficiency: simParams.acEfficiency,
       dc_efficiency: simParams.dcEfficiency,
-      aux_power: simParams.auxPower,
+      aux_power: simParams.auxPower
     }
     const resp = await fetch('/api/survey/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     })
     const result = await resp.json()
     if (result.success) {
@@ -306,7 +366,7 @@ function resetForm() {
     cyclesPerDay: 1,
     dod: 80,
     cRate: 0.5,
-    batteryType: 'LFP',
+    batteryType: 'LFP'
   })
   Object.assign(simParams, {
     simulationYears: 25,
@@ -316,7 +376,7 @@ function resetForm() {
     initRte: 92,
     acEfficiency: 97,
     dcEfficiency: 97.5,
-    auxPower: 5,
+    auxPower: 5
   })
 }
 
@@ -326,18 +386,33 @@ function goToSimulation() {
 </script>
 
 <style scoped>
-.tool-page { padding: 24px; max-width: 960px; }
+.tool-page {
+  padding: 24px;
+  max-width: 960px;
+}
 
-.tool-header { margin-bottom: 24px; }
-.tool-header h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
-.tool-header p { color: var(--text-secondary, #666); font-size: 14px; margin: 0; }
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.tool-header p {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin: 0;
+}
 
-.field-label { color: #999; }
+.field-label {
+  color: #999;
+}
 
 .form-input {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 13px;
   outline: none;
@@ -345,7 +420,7 @@ function goToSimulation() {
 }
 .form-input:focus {
   border-color: #0071e3;
-  box-shadow: 0 0 0 2px rgba(0,113,227,0.1);
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
 }
 
 .section-title {
@@ -355,11 +430,12 @@ function goToSimulation() {
   margin: 0 0 12px;
 }
 
-.search-section, .form-section {
+.search-section,
+.form-section {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
   margin-bottom: 16px;
 }
 
@@ -374,13 +450,13 @@ function goToSimulation() {
   align-items: center;
   padding: 10px 12px;
   border-radius: 6px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
   margin-bottom: 6px;
   cursor: pointer;
   transition: all 0.15s;
 }
 .result-item:hover {
-  background: #F0F7FF;
+  background: #f0f7ff;
   border-color: #0071e3;
 }
 
@@ -414,26 +490,33 @@ function goToSimulation() {
   cursor: pointer;
   transition: all 0.15s;
 }
-.btn-primary:hover { background: #005bb5; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary:hover {
+  background: #005bb5;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   padding: 8px 20px;
   border-radius: 6px;
   background: #fff;
   color: #666;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #d1d5db;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
 }
-.btn-secondary:hover { background: #F9FAFB; }
+.btn-secondary:hover {
+  background: #f9fafb;
+}
 
 .btn-accent {
   padding: 8px 20px;
   border-radius: 6px;
-  background: #10B981;
+  background: #10b981;
   color: #fff;
   border: none;
   font-size: 13px;
@@ -441,7 +524,9 @@ function goToSimulation() {
   cursor: pointer;
   transition: all 0.15s;
 }
-.btn-accent:hover { background: #059669; }
+.btn-accent:hover {
+  background: #059669;
+}
 
 .btn-sm {
   padding: 6px 12px;

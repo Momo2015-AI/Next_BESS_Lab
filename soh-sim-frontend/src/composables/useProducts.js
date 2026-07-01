@@ -18,13 +18,13 @@ const CAMEL_MAP = {
   voltage_min: 'voltageMin',
   voltage_range: 'voltageRange',
   // 统一能量字段：
-  rated_energy_mwh: 'ratedEnergyMWh',  // 容器/簇/电芯统一
-  energy_wh: 'ratedEnergyMWh',         // 兼容旧电芯字段
+  rated_energy_mwh: 'ratedEnergyMWh', // 容器/簇/电芯统一
+  energy_wh: 'ratedEnergyMWh', // 兼容旧电芯字段
   nominal_energy_kwh: 'ratedEnergyMWh', // 兼容旧Pack/Rack字段
   nominal_energy_mwh: 'ratedEnergyMWh', // 兼容旧簇字段
   // 统一功率字段：
-  rated_power_mw: 'ratedPowerMW',      // 所有设备统一
-  nominal_power_mw: 'ratedPowerMW',    // 兼容旧簇字段
+  rated_power_mw: 'ratedPowerMW', // 所有设备统一
+  nominal_power_mw: 'ratedPowerMW', // 兼容旧簇字段
   cycle_life: 'cycleLife',
   calendar_life: 'calendarLife',
   energy_density: 'energyDensity',
@@ -72,7 +72,7 @@ const CAMEL_MAP = {
   series_per_cluster: 'seriesPerCluster',
   parallel_per_cluster: 'parallelPerCluster',
   is_builtin: 'isBuiltin',
-  tenant_id: 'tenantId',
+  tenant_id: 'tenantId'
 }
 
 function toCamel(obj) {
@@ -86,14 +86,14 @@ function toCamel(obj) {
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token')
-  return token ? { 'Authorization': `Bearer ${token}` } : {}
+  return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
 async function fetchCategory(category, force = false) {
   try {
     const resp = await fetch(`/api/products/${category}`, {
       headers: getAuthHeaders(),
-      cache: force ? 'no-store' : 'default',
+      cache: force ? 'no-store' : 'default'
     })
     if (!resp.ok) return []
     const data = await resp.json()
@@ -107,7 +107,7 @@ async function fetchConfigRules(force = false) {
   try {
     const resp = await fetch('/api/products/config-rules', {
       headers: getAuthHeaders(),
-      cache: force ? 'no-store' : 'default',
+      cache: force ? 'no-store' : 'default'
     })
     if (!resp.ok) return []
     const data = await resp.json()
@@ -142,7 +142,7 @@ export function useProducts() {
         fetchCategory('clusters', force),
         fetchCategory('containers', force),
         fetchCategory('pcs', force),
-        fetchConfigRules(force),
+        fetchConfigRules(force)
       ])
       const totalFromApi = c.length + p.length + r.length + cl.length + ct.length + pc.length
       if (totalFromApi === 0) {
@@ -155,7 +155,7 @@ export function useProducts() {
             fetchCategory('clusters', true),
             fetchCategory('containers', true),
             fetchCategory('pcs', true),
-            fetchConfigRules(true),
+            fetchConfigRules(true)
           ])
           if (c2.length + p2.length + r2.length + cl2.length + ct2.length + pc2.length > 0) {
             cells.value = c2
@@ -203,7 +203,7 @@ export function useProducts() {
     const resp = await fetch(`/api/products/${category}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     })
     const result = await resp.json()
     if (!resp.ok) {
@@ -221,7 +221,7 @@ export function useProducts() {
     const resp = await fetch(`/api/products/${category}/${itemId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     })
     const result = await resp.json()
     if (!resp.ok) {
@@ -237,7 +237,7 @@ export function useProducts() {
   async function deleteProduct(category, itemId) {
     const resp = await fetch(`/api/products/${category}/${itemId}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
+      headers: getAuthHeaders()
     })
     const result = await resp.json()
     if (!resp.ok) {
@@ -252,7 +252,7 @@ export function useProducts() {
       const resp = await fetch('/api/products/match-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-        body: JSON.stringify(params),
+        body: JSON.stringify(params)
       })
       const data = await resp.json()
       return data
@@ -266,7 +266,7 @@ export function useProducts() {
       const resp = await fetch('/api/products/hierarchy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-        body: JSON.stringify(params),
+        body: JSON.stringify(params)
       })
       const data = await resp.json()
       return data
@@ -276,103 +276,131 @@ export function useProducts() {
   }
 
   function getCellById(id) {
-    return cells.value.find(c => c.id === id)
+    return cells.value.find((c) => c.id === id)
   }
 
   function getCellByModel(model) {
-    return cells.value.find(c => c.model === model)
+    return cells.value.find((c) => c.model === model)
   }
 
   function getPackById(id) {
-    return packs.value.find(p => p.id === id)
+    return packs.value.find((p) => p.id === id)
   }
 
   function getPackByModel(model) {
-    return packs.value.find(p => p.model === model)
+    return packs.value.find((p) => p.model === model)
   }
 
   function getRackById(id) {
-    return racks.value.find(r => r.id === id)
+    return racks.value.find((r) => r.id === id)
   }
 
   function getRackByModel(model) {
-    return racks.value.find(r => r.model === model)
+    return racks.value.find((r) => r.model === model)
   }
 
   function getClusterById(id) {
-    return clusters.value.find(c => c.id === id)
+    return clusters.value.find((c) => c.id === id)
   }
 
   function getClusterByModel(model) {
-    return clusters.value.find(c => c.model === model)
+    return clusters.value.find((c) => c.model === model)
   }
 
   function getContainerById(id) {
-    return containers.value.find(c => c.id === id)
+    return containers.value.find((c) => c.id === id)
   }
 
   function getContainerByModel(model) {
-    return containers.value.find(c => c.model === model)
+    return containers.value.find((c) => c.model === model)
   }
 
   function getPcsById(id) {
-    return pcs.value.find(p => p.id === id)
+    return pcs.value.find((p) => p.id === id)
   }
 
   function getPcsByModel(model) {
-    return pcs.value.find(p => p.model === model)
+    return pcs.value.find((p) => p.model === model)
   }
 
   function getPackByCellModel(cellModel) {
-    return packs.value.filter(p => p.cellModel === cellModel)
+    return packs.value.filter((p) => p.cellModel === cellModel)
   }
 
   function getRackByPackModel(packModel) {
-    return racks.value.filter(r => r.packModel === packModel)
+    return racks.value.filter((r) => r.packModel === packModel)
   }
 
   function getClusterByRackModel(rackModel) {
-    return clusters.value.filter(c => c.rackModel === rackModel)
+    return clusters.value.filter((c) => c.rackModel === rackModel)
   }
 
   function getContainerByClusterModel(clusterModel) {
-    return containers.value.filter(c => c.clusterModel === clusterModel)
+    return containers.value.filter((c) => c.clusterModel === clusterModel)
   }
 
   function getContainerByCellModel(cellModel) {
-    return containers.value.filter(c => c.cellModel === cellModel)
+    return containers.value.filter((c) => c.cellModel === cellModel)
   }
 
-  const cellModels = computed(() => [...new Set(cells.value.map(c => c.model).filter(Boolean))])
-  const cellMfrs = computed(() => [...new Set(cells.value.map(c => c.mfr).filter(Boolean))])
-  const packModels = computed(() => [...new Set(packs.value.map(p => p.model).filter(Boolean))])
-  const packMfrs = computed(() => [...new Set(packs.value.map(p => p.mfr).filter(Boolean))])
-  const rackModels = computed(() => [...new Set(racks.value.map(r => r.model).filter(Boolean))])
-  const rackMfrs = computed(() => [...new Set(racks.value.map(r => r.mfr).filter(Boolean))])
-  const clusterModels = computed(() => [...new Set(clusters.value.map(c => c.model).filter(Boolean))])
-  const clusterMfrs = computed(() => [...new Set(clusters.value.map(c => c.mfr).filter(Boolean))])
-  const containerModels = computed(() => [...new Set(containers.value.map(c => c.model).filter(Boolean))])
-  const containerMfrs = computed(() => [...new Set(containers.value.map(c => c.mfr).filter(Boolean))])
-  const pcsModels = computed(() => [...new Set(pcs.value.map(p => p.model).filter(Boolean))])
-  const pcsMfrs = computed(() => [...new Set(pcs.value.map(p => p.mfr).filter(Boolean))])
+  const cellModels = computed(() => [...new Set(cells.value.map((c) => c.model).filter(Boolean))])
+  const cellMfrs = computed(() => [...new Set(cells.value.map((c) => c.mfr).filter(Boolean))])
+  const packModels = computed(() => [...new Set(packs.value.map((p) => p.model).filter(Boolean))])
+  const packMfrs = computed(() => [...new Set(packs.value.map((p) => p.mfr).filter(Boolean))])
+  const rackModels = computed(() => [...new Set(racks.value.map((r) => r.model).filter(Boolean))])
+  const rackMfrs = computed(() => [...new Set(racks.value.map((r) => r.mfr).filter(Boolean))])
+  const clusterModels = computed(() => [...new Set(clusters.value.map((c) => c.model).filter(Boolean))])
+  const clusterMfrs = computed(() => [...new Set(clusters.value.map((c) => c.mfr).filter(Boolean))])
+  const containerModels = computed(() => [...new Set(containers.value.map((c) => c.model).filter(Boolean))])
+  const containerMfrs = computed(() => [...new Set(containers.value.map((c) => c.mfr).filter(Boolean))])
+  const pcsModels = computed(() => [...new Set(pcs.value.map((p) => p.model).filter(Boolean))])
+  const pcsMfrs = computed(() => [...new Set(pcs.value.map((p) => p.mfr).filter(Boolean))])
 
   return {
-    cells, packs, racks, clusters, containers, pcs, configRules,
-    loading, source,
-    loadAll, refreshProducts,
-    createProduct, updateProduct, deleteProduct,
-    matchConfigRule, getHierarchy,
-    getCellById, getCellByModel,
-    getPackById, getPackByModel, getPackByCellModel,
-    getRackById, getRackByModel, getRackByPackModel,
-    getClusterById, getClusterByModel, getClusterByRackModel,
-    getContainerById, getContainerByModel, getContainerByClusterModel, getContainerByCellModel,
-    getPcsById, getPcsByModel,
-    cellModels, cellMfrs,
-    packModels, packMfrs,
-    rackModels, rackMfrs,
-    clusterModels, clusterMfrs,
-    containerModels, containerMfrs,
-    pcsModels, pcsMfrs,
+    cells,
+    packs,
+    racks,
+    clusters,
+    containers,
+    pcs,
+    configRules,
+    loading,
+    source,
+    loadAll,
+    refreshProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    matchConfigRule,
+    getHierarchy,
+    getCellById,
+    getCellByModel,
+    getPackById,
+    getPackByModel,
+    getPackByCellModel,
+    getRackById,
+    getRackByModel,
+    getRackByPackModel,
+    getClusterById,
+    getClusterByModel,
+    getClusterByRackModel,
+    getContainerById,
+    getContainerByModel,
+    getContainerByClusterModel,
+    getContainerByCellModel,
+    getPcsById,
+    getPcsByModel,
+    cellModels,
+    cellMfrs,
+    packModels,
+    packMfrs,
+    rackModels,
+    rackMfrs,
+    clusterModels,
+    clusterMfrs,
+    containerModels,
+    containerMfrs,
+    pcsModels,
+    pcsMfrs
   }
 }

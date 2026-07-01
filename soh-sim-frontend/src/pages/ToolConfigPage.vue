@@ -15,9 +15,24 @@ import BatteryDCDesign from '../components/BatteryDCDesign.vue'
 </script>
 
 <style scoped>
-.tool-page { padding: 24px; }
-.tool-header { margin-bottom: 24px; }
-.tool-header h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--color-text); }
-.tool-header p { color: #666; font-size: 14px; margin: 0; }
-.mt-4 { margin-top: 16px; }
+.tool-page {
+  padding: 24px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--color-text);
+}
+.tool-header p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+.mt-4 {
+  margin-top: 16px;
+}
 </style>

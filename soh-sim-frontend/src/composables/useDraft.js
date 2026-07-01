@@ -62,7 +62,7 @@ function safeStringify(data) {
   return JSON.stringify({
     __v: SCHEMA_VERSION,
     savedAt: Date.now(),
-    data,
+    data
   })
 }
 
@@ -205,17 +205,21 @@ export function useDraftRef(key, defaultValue, options = {}) {
   const state = ref(initialValue)
 
   let saveTimer = null
-  watch(state, () => {
-    if (saveTimer) clearTimeout(saveTimer)
-    saveTimer = setTimeout(() => {
-      try {
-        localStorage.setItem(fullKey, safeStringify(state.value))
-        writeMeta(key, { savedAt: Date.now() })
-      } catch {
-        /* ignore */
-      }
-    }, debounce)
-  }, { deep: true })
+  watch(
+    state,
+    () => {
+      if (saveTimer) clearTimeout(saveTimer)
+      saveTimer = setTimeout(() => {
+        try {
+          localStorage.setItem(fullKey, safeStringify(state.value))
+          writeMeta(key, { savedAt: Date.now() })
+        } catch {
+          /* ignore */
+        }
+      }, debounce)
+    },
+    { deep: true }
+  )
 
   function clearDraft() {
     try {
@@ -269,7 +273,7 @@ export function clearAllDrafts() {
         keysToRemove.push(k)
       }
     }
-    keysToRemove.forEach(k => localStorage.removeItem(k))
+    keysToRemove.forEach((k) => localStorage.removeItem(k))
   } catch {
     /* ignore */
   }

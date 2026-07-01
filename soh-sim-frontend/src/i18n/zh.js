@@ -25,14 +25,14 @@ export default {
     themeDark: '深色暗夜',
     langEN: 'English',
     langZH: '中文',
-    langAR: 'العربية',
+    langAR: 'العربية'
   },
   app: {
     title: '储能电站 SOH 仿真计算与容量配置矩阵',
     subtitle: 'BESS SOH Simulation, Degradation Matrix & Augmentation Lifecycle Engine',
     simulate: '执行仿真计算',
     foundation: '基础配置',
-    solution: '方案开发',
+    solution: '方案开发'
   },
   home: {
     title: 'SOH-SIM 储能仿真平台',
@@ -51,15 +51,15 @@ export default {
     sectionToolsDesc: '所有工具独立可用，也可融入项目流程中使用。',
     survey: {
       title: '项目调研表',
-      desc: '客户调研数据录入，收集项目基础信息',
+      desc: '客户调研数据录入，收集项目基础信息'
     },
     foundation: {
       title: '基础配置',
-      desc: '参数配置、产品库管理、算法定义等基础设置',
+      desc: '参数配置、产品库管理、算法定义等基础设置'
     },
     solution: {
       title: '方案开发',
-      desc: '直流侧设计、交流侧设计、仿真计算、财务分析等方案开发功能',
+      desc: '直流侧设计、交流侧设计、仿真计算、财务分析等方案开发功能'
     },
     phase1Title: '项目立项',
     phase1Desc: '调研填表、选址评估、需求确认',
@@ -81,7 +81,7 @@ export default {
     toolFinanceDesc: 'CAPEX/OPEX/IRR/LCOS 看板',
     toolEngineeringDesc: '场地面积、BOM、备品备件',
     toolDataInjectDesc: '手工 SOH/RTE 数据修正',
-    toolSimulationDesc: '完整仿真分析视图',
+    toolSimulationDesc: '完整仿真分析视图'
   },
   sidebar: {
     home: '首页',
@@ -110,7 +110,7 @@ export default {
     toolReport: '报告输出',
     toolProjects: '历史项目',
     toolTemplates: '校正因子模板',
-    toolRules: '配置规则',
+    toolRules: '配置规则'
   },
   tabs: {
     survey: '0. 项目调研表',
@@ -130,7 +130,7 @@ export default {
     sensitivity: '14. 敏感性分析',
     engineering: '15. 工程计算',
     export: '16. 数据导出',
-    auth: '17. 用户认证',
+    auth: '17. 用户认证'
   },
   paramPanel: {
     systemParams: '系统参数配置',
@@ -158,7 +158,7 @@ export default {
     requiredEnergy: '承诺保障线 (MWh/次)',
     times: '次',
     units: '台',
-    mwhPerDay: 'MWh/天',
+    mwhPerDay: 'MWh/天'
   },
   runningConditions: {
     title: '运行工况配置',
@@ -171,7 +171,7 @@ export default {
       residential: '户用储能',
       microgrid: '微电网',
       solar: '光伏配储',
-      wind: '风电配储',
+      wind: '风电配储'
     },
     location: '项目地点',
     ratedPower: '额定总功率 MW',
@@ -188,7 +188,7 @@ export default {
     seismicZones: {
       low: 'Zone I (低)',
       mid: 'Zone III (中)',
-      high: 'Zone IV (高)',
+      high: 'Zone IV (高)'
     },
     corrosionLevel: '防腐等级',
     corrosionLevels: {
@@ -196,13 +196,13 @@ export default {
       c2: 'C2 (低)',
       c3: 'C3 (中)',
       c4: 'C4 (高)',
-      c5: 'C5 (极高)',
+      c5: 'C5 (极高)'
     },
     installType: '安装方式',
     installTypes: {
       outdoor: '户外 Outdoor',
       indoor: '户内 Indoor',
-      semi: '半户外 Semi',
+      semi: '半户外 Semi'
     },
     section03: '电网电气',
     gridVoltage: '并网电压等级 kV',
@@ -213,7 +213,7 @@ export default {
       solid: '直接接地 Solid',
       resistance: '经电阻接地 Resistance',
       arcSuppression: '经消弧线圈 Arc-Suppression',
-      ungrounded: '不接地 Ungrounded',
+      ungrounded: '不接地 Ungrounded'
     },
     dcVoltage: 'DC侧额定电压范围 V',
     acVoltage: 'AC侧额定电压 V',
@@ -234,7 +234,7 @@ export default {
       lfp: 'LFP (磷酸铁锂)',
       nmc: 'NMC (镍锰钴)',
       lto: 'LTO (钛酸锂)',
-      naion: '钠离子 Na-ion',
+      naion: '钠离子 Na-ion'
     },
     cellCapacity: '单电芯容量范围 Ah',
     cellCycleLife: '电芯循环寿命 (&#64;25°C)',
@@ -246,7 +246,7 @@ export default {
     thermalRunaways: {
       pack: 'Pack 级隔离 (标准)',
       cluster: '簇级隔离',
-      rack: 'Rack 级隔离 (MWh+标准)',
+      rack: 'Rack 级隔离 (MWh+标准)'
     },
     section06: '电池层级配置',
     cellModel: '电芯型号',
@@ -266,19 +266,19 @@ export default {
     overloads: {
       standard: '110% 10min / 120% 1min',
       advanced: '120% 10min / 150% 1min',
-      premium: '130% 30min / 150% 10min',
+      premium: '130% 30min / 150% 10min'
     },
     gridSupport: '电网支撑功能',
     gridSupports: {
       basic: '基础: LVRT + HVRT',
       advanced: '高级: + 一次调频 + 惯量响应',
-      full: '完整: + 黑启动 + 构网型 Grid-Forming',
+      full: '完整: + 黑启动 + 构网型 Grid-Forming'
     },
     coolingType: '冷却方式',
     coolingTypes: {
       forcedAir: '强迫风冷 (标准)',
       liquid: '液冷 (50°C不降额)',
-      fullSiC: '全液冷碳化硅 SiC (Masdar级)',
+      fullSiC: '全液冷碳化硅 SiC (Masdar级)'
     },
     section07: '认证与标准要求',
     certifications: {
@@ -286,7 +286,7 @@ export default {
       system: '系统级 / 模组级',
       grid: '并网与环境 Grid & Env',
       extra: '其它特殊认证',
-      gridCode: '目标市场电网规范',
+      gridCode: '目标市场电网规范'
     },
     section08: 'EPC 与运维范围',
     epcModel: 'EPC 交付模式',
@@ -294,7 +294,7 @@ export default {
       turnkey: '交钥匙 Turnkey EPC',
       supplyOnly: '纯供货 Supply Only',
       supplySupervision: '供货+督导 Supply+Supervision',
-      epcm: 'EPCM 管理承包',
+      epcm: 'EPCM 管理承包'
     },
     omYears: 'O&M 年限',
     performanceGuarantee: '性能保证 (PR) 要求',
@@ -302,7 +302,7 @@ export default {
       availability: '可用率保证 ≥97%',
       rte: 'RTE 保证 (含 LD 罚则)',
       soh: 'SOH 保证 (含容量衰减 LD)',
-      full: '全保证: 可用率+RTE+SOH',
+      full: '全保证: 可用率+RTE+SOH'
     },
     warrantyYears: '质保年限',
     scada: '远程监控/SCADA',
@@ -310,14 +310,14 @@ export default {
       none: '不需要',
       basic: '基础: Modbus TCP',
       advanced: '高级: IEC 61850 + DNP3',
-      full: '完整: + 云平台 + AI诊断',
+      full: '完整: + 云平台 + AI诊断'
     },
     spareParts: '备品备件策略',
     sparePartsOptions: {
       none: '不含',
       standard: '标准: 2年运行备件',
       enhanced: '增强: 5年 + 关键部件',
-      full: '全包: 全套更换件 + 现场仓储',
+      full: '全包: 全套更换件 + 现场仓储'
     },
     section09: '文档上传',
     uploadHint: '上传项目技术规范书、SLD、负荷曲线等文档，自动提取工况参数填充上方表单',
@@ -330,7 +330,7 @@ export default {
     clickSelect: '点击选择',
     resetAll: '清空 Reset',
     exportCSV: '导出 CSV',
-    applyEngine: '应用至仿真引擎',
+    applyEngine: '应用至仿真引擎'
   },
   productConfig: {
     cellLibrary: '电芯选型库',
@@ -376,7 +376,7 @@ export default {
     uploadSpec: '或上传规格书自动提取 (支持 PDF/CSV)',
     uploadSpecBtn: '上传规格书',
     parsing: '解析中...',
-    applyToParams: '应用至仿真参数 Apply to Simulation',
+    applyToParams: '应用至仿真参数 Apply to Simulation'
   },
   financialDashboard: {
     projectIRR: 'Project IRR',
@@ -458,7 +458,7 @@ export default {
     chartContainer: '集装箱',
     chartPcs: 'PCS',
     chartBop: 'BOP配套',
-    chartDev: '开发费',
+    chartDev: '开发费'
   },
   matrixTable: {
     time: '时间',
@@ -486,7 +486,7 @@ export default {
     meetsYes: 'Yes',
     meetsNo: 'No',
     recalculate: '🔄 实时计算',
-    calculating: '计算中...',
+    calculating: '计算中...'
   },
   dataInjection: {
     sohTitle: 'SOH 25年衰减序列 (逐行粘贴)',
@@ -498,7 +498,7 @@ export default {
     parseRte: '解析推入 RTE',
     currentPreview: '当前 SOH & RTE 序列预览 (Year 0-25)',
     sohLabel: 'SOH:',
-    rteLabel: 'RTE:',
+    rteLabel: 'RTE:'
   },
   formulaLab: {
     physicsTitle: '核心物理公式仿真沙盒',
@@ -515,16 +515,25 @@ export default {
     op9Title: '算子 9 — DSCR (Debt Service Coverage Ratio) 偿债覆盖倍率',
     op10Title: '算子 10 — Payback Period 静态与动态投资回收期',
     op11Title: '算子 11 — 增容成本逐年递减学习曲线效应',
-    op5Desc: '大型储能电站通常叠加多个收入来源以提升项目 IRR。参考 Masdar 等中东项目，独立储能收益主要来源于电能量套利价差+容量市场费用+辅助服务费三项叠加。不同市场结构下，各收入占比差异显著（套利 40-70%、容量 20-40%、辅助服务 10-20%）。',
-    op6Desc: '资本性支出包含储能集装箱采购+变流器采购+BOP辅助系统+项目开发费四部分。运营费用含固定运维（按装机容量计算，覆盖人力+例行维护）、可变运维（按吞吐电量计算，覆盖非计划检修）、保险费（按CAPEX比率）和土地租赁费四项。所有OPEX项按年涨幅递增以反映通胀和老化效应。',
-    op7Desc: 'LCOS是储能项目经济性的核心对标指标，类比光伏LCOE。它计算全生命周期内每放出1度电的折现总成本，包含初始投资、运维支出、增容支出，扣除末期残值。项目盈利的前提是LCOS低于售电均价。Masdar 级项目通常要求 LCOS < 0.06 美元/kWh (折合人民币约 0.40 元/kWh)。',
-    op8Desc: 'IRR为净现值为零时的折现率，是投资者最关注的决策指标。全投资IRR (Project IRR) 不区分资金来源、反映项目本身的盈利能力；自有资金IRR (Equity IRR) 考虑了杠杆效应后股东的回报率。一般储能项目目标 Project IRR 为 6-10%、Equity IRR 为 10-15%。采用 Newton-Raphson 法迭代求解 f(r)=0 的根。',
-    op9Desc: 'DSCR衡量项目每年可用于还本付息的现金是否充足，是银行和金融机构放贷的核心审批指标。分子为息税折旧前利润减所得税后的可偿债现金流，分母为当年应付本息。银行通常要求DSCR全程不低于1.2-1.3倍，若某年DSCR跌破1.0则意味着项目无法自行偿债。',
-    op10Desc: '回收期是累计净现金流首次由负转正的时间点。静态回收期不考虑资金时间价值，直接累加名义现金流；动态回收期将所有现金流按WACC折现后再累加。储能项目静态回收期通常为8-12年，动态回收期为10-15年。回收期越短，项目抗风险能力越强。',
-    op11Desc: '锂电池和储能系统遵循 Wright 定律，累计出货量翻倍时成本下降一定比例（学习率约18-20%）。在25年运营周期中后期增容的集装箱采购成本将因技术进步和规模效应而显著低于建设期。参考 BNEF 等机构数据，直流侧设备成本年均降幅约5-8%/年，AC侧约3-5%/年。',
+    op5Desc:
+      '大型储能电站通常叠加多个收入来源以提升项目 IRR。参考 Masdar 等中东项目，独立储能收益主要来源于电能量套利价差+容量市场费用+辅助服务费三项叠加。不同市场结构下，各收入占比差异显著（套利 40-70%、容量 20-40%、辅助服务 10-20%）。',
+    op6Desc:
+      '资本性支出包含储能集装箱采购+变流器采购+BOP辅助系统+项目开发费四部分。运营费用含固定运维（按装机容量计算，覆盖人力+例行维护）、可变运维（按吞吐电量计算，覆盖非计划检修）、保险费（按CAPEX比率）和土地租赁费四项。所有OPEX项按年涨幅递增以反映通胀和老化效应。',
+    op7Desc:
+      'LCOS是储能项目经济性的核心对标指标，类比光伏LCOE。它计算全生命周期内每放出1度电的折现总成本，包含初始投资、运维支出、增容支出，扣除末期残值。项目盈利的前提是LCOS低于售电均价。Masdar 级项目通常要求 LCOS < 0.06 美元/kWh (折合人民币约 0.40 元/kWh)。',
+    op8Desc:
+      'IRR为净现值为零时的折现率，是投资者最关注的决策指标。全投资IRR (Project IRR) 不区分资金来源、反映项目本身的盈利能力；自有资金IRR (Equity IRR) 考虑了杠杆效应后股东的回报率。一般储能项目目标 Project IRR 为 6-10%、Equity IRR 为 10-15%。采用 Newton-Raphson 法迭代求解 f(r)=0 的根。',
+    op9Desc:
+      'DSCR衡量项目每年可用于还本付息的现金是否充足，是银行和金融机构放贷的核心审批指标。分子为息税折旧前利润减所得税后的可偿债现金流，分母为当年应付本息。银行通常要求DSCR全程不低于1.2-1.3倍，若某年DSCR跌破1.0则意味着项目无法自行偿债。',
+    op10Desc:
+      '回收期是累计净现金流首次由负转正的时间点。静态回收期不考虑资金时间价值，直接累加名义现金流；动态回收期将所有现金流按WACC折现后再累加。储能项目静态回收期通常为8-12年，动态回收期为10-15年。回收期越短，项目抗风险能力越强。',
+    op11Desc:
+      '锂电池和储能系统遵循 Wright 定律，累计出货量翻倍时成本下降一定比例（学习率约18-20%）。在25年运营周期中后期增容的集装箱采购成本将因技术进步和规模效应而显著低于建设期。参考 BNEF 等机构数据，直流侧设备成本年均降幅约5-8%/年，AC侧约3-5%/年。',
     opAcRteTitle: '算子 12 — AC-RTE 交流侧综合效率 (含/不含自辅耗)',
-    opAcRteDesc: '依据 GB/T 36549 和 GB/T 51437 行业标准，AC-RTE 定义为并网点关口表计量电量之比。不带辅耗的 AC-RTE 仅考虑直流 RTE 和 PCS+变压器+线路的 AC 效率；带辅耗的 AC-RTE 在此基础上扣除自用电比例，反映真实上网电量效率。中东 Masdar/SPPC 等独立储能并网项目招标文件普遍要求 AC-RTE(带辅耗) ≥ 85%。',
-    opAcRteNote: '注：当前公式暂未单独计入变压器效率和线路效率，这两个因素已合并到 acEfficiency 参数中。自辅耗比例采用第一年数据 Aux_init[0] / E_gross_init[0] 计算，与行业实践一致。',
+    opAcRteDesc:
+      '依据 GB/T 36549 和 GB/T 51437 行业标准，AC-RTE 定义为并网点关口表计量电量之比。不带辅耗的 AC-RTE 仅考虑直流 RTE 和 PCS+变压器+线路的 AC 效率；带辅耗的 AC-RTE 在此基础上扣除自用电比例，反映真实上网电量效率。中东 Masdar/SPPC 等独立储能并网项目招标文件普遍要求 AC-RTE(带辅耗) ≥ 85%。',
+    opAcRteNote:
+      '注：当前公式暂未单独计入变压器效率和线路效率，这两个因素已合并到 acEfficiency 参数中。自辅耗比例采用第一年数据 Aux_init[0] / E_gross_init[0] 计算，与行业实践一致。'
   },
   sohChart: {
     sohCurve: 'SOH 衰减曲线',
@@ -539,6 +548,6 @@ export default {
     reqThreshold: '承诺底线',
     totalOutput: '总输出',
     initAux: '存量自辅耗',
-    augAux: '补容自辅耗',
-  },
+    augAux: '补容自辅耗'
+  }
 }

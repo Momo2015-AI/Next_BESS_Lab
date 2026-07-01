@@ -15,15 +15,18 @@ SOH/RTE 模型训练与预测工具
 import argparse
 import json
 import os
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Tuple, Any
-from datetime import datetime
 import warnings
-warnings.filterwarnings('ignore')
+from datetime import datetime
+from typing import Any, Dict, List, Tuple
+
+import numpy as np
+import pandas as pd
+
+warnings.filterwarnings("ignore")
 
 
 # ==================== Arrhenius 模型 ====================
+
 
 class ArrheniusSOHModel:
     """阿伦尼乌斯电池衰减模型"""
@@ -34,15 +37,15 @@ class ArrheniusSOHModel:
 
         # 默认参数
         self.params = {
-            'A_cal': 0.02,
-            'Ea_cal': 20000,
-            'alpha': 0.8,
-            'A_cyc': 0.001,
-            'Ea_cyc': 15000,
-            'beta': 0.5,
-            'gamma': 1.5,
-            'delta': 0.2,
-            'degradation_rate': 0.1
+            "A_cal": 0.02,
+            "Ea_cal": 20000,
+            "alpha": 0.8,
+            "A_cyc": 0.001,
+            "Ea_cyc": 15000,
+            "beta": 0.5,
+            "gamma": 1.5,
+            "delta": 0.2,
+            "degradation_rate": 0.1,
         }
 
         if params:
@@ -51,27 +54,29 @@ class ArrheniusSOHModel:
     def calculate_calendar_aging(self, years: float, temperature: float) -> float:
         """计算日历老化"""
         T = temperature + 273.15  # 转换为开尔文温度
-        rate = self.params['A_cal'] * np.exp(-self.params['Ea_cal'] / (self.R * T))
-        Q_cal = rate * (years ** self.params['alpha'])
+        rate = self.params["A_cal"] * np.exp(-self.params["Ea_cal"] / (self.R * T))
+        Q_cal = rate * (years ** self.params["alpha"])
         return Q_cal
 
-    def calculate_cycle_aging(self, years: float, temperature: float,
-                             cycles_per_day: float, dod: float, c_rate: float) -> float:
+    def calculate_cycle_aging(
+        self, years: float, temperature: float, cycles_per_day: float, dod: float, c_rate: float
+    ) -> float:
         """计算循环老化"""
         T = temperature + 273.15  # 转换为开尔文温度
 
         # 计算影响因子
-        DOD_factor = dod ** self.params['gamma']
-        C_rate_factor = 1 + self.params['delta'] * (c_rate - 0.5)
+        DOD_factor = dod ** self.params["gamma"]
+        C_rate_factor = 1 + self.params["delta"] * (c_rate - 0.5)
 
-        rate = self.params['A_cyc'] * np.exp(-self.params['Ea_cyc'] / (self.R * T))
+        rate = self.params["A_cyc"] * np.exp(-self.params["Ea_cyc"] / (self.R * T))
         N = years * cycles_per_day * 365  # 计算总循环次数
-        Q_cyc = rate * (N ** self.params['beta']) * DOD_factor * C_rate_factor
+        Q_cyc = rate * (N ** self.params["beta"]) * DOD_factor * C_rate_factor
 
         return Q_cyc
 
-    def calculate_soh(self, years: float, temperature: float,
-                     cycles_per_day: float, dod: float, c_rate: float) -> float:
+    def calculate_soh(
+        self, years: float, temperature: float, cycles_per_day: float, dod: float, c_rate: float
+    ) -> float:
         """计算SOH衰减"""
         # 计算日历老化
         Q_cal = self.calculate_calendar_aging(years, temperature)
@@ -88,7 +93,7 @@ class ArrheniusSOHModel:
     def calculate_rte(self, soh: float, rte_initial: float) -> float:
         """计算RTE衰减"""
         soh_loss = 1 - soh
-        rte = rte_initial * (1 - self.params['degradation_rate'] * soh_loss)
+        rte = rte_initial * (1 - self.params["degradation_rate"] * soh_loss)
         return max(rte, 0)
 
     def predict(self, X: Dict[str, float]) -> Dict[str, float]:
@@ -110,23 +115,25 @@ class ArrheniusSOHModel:
                 - rte: RTE (%)
         """
         soh = self.calculate_soh(
-            years=X.get('years', 1),
-            temperature=X.get('temperature', 25),
-            cycles_per_day=X.get('cycles_per_day', 1),
-            dod=X.get('dod', 0.8),
-            c_rate=X.get('c_rate', 0.5)
+            years=X.get("years", 1),
+            temperature=X.get("temperature", 25),
+            cycles_per_day=X.get("cycles_per_day", 1),
+            dod=X.get("dod", 0.8),
+            c_rate=X.get("c_rate", 0.5),
         )
 
-        rte = self.calculate_rte(soh, X.get('rte_initial', 97.03))
+        rte = self.calculate_rte(soh, X.get("rte_initial", 97.03))
 
-        return {
-            'soh': round(soh * 100, 2),
-            'rte': round(rte, 2)
-        }
+        return {"soh": round(soh * 100, 2), "rte": round(rte, 2)}
 
-    def predict_soh_batch(self, years: np.ndarray, temperature: np.ndarray,
-                         cycles_per_day: np.ndarray, dod: np.ndarray,
-                         c_rate: np.ndarray) -> np.ndarray:
+    def predict_soh_batch(
+        self,
+        years: np.ndarray,
+        temperature: np.ndarray,
+        cycles_per_day: np.ndarray,
+        dod: np.ndarray,
+        c_rate: np.ndarray,
+    ) -> np.ndarray:
         """
         向量化批量预测 SOH（用于训练和批量预测，性能比循环调用高 1-2 个数量级）
 
@@ -139,15 +146,21 @@ class ArrheniusSOHModel:
         T = temperature + 273.15
 
         # 日历老化（向量化）
-        Q_cal = self.params['A_cal'] * np.exp(-self.params['Ea_cal'] / (self.R * T)) \
-                * np.power(years, self.params['alpha'])
+        Q_cal = (
+            self.params["A_cal"] * np.exp(-self.params["Ea_cal"] / (self.R * T)) * np.power(years, self.params["alpha"])
+        )
 
         # 循环老化（向量化）
-        DOD_factor = np.power(dod, self.params['gamma'])
-        C_rate_factor = 1 + self.params['delta'] * (c_rate - 0.5)
+        DOD_factor = np.power(dod, self.params["gamma"])
+        C_rate_factor = 1 + self.params["delta"] * (c_rate - 0.5)
         N = years * cycles_per_day * 365
-        Q_cyc = self.params['A_cyc'] * np.exp(-self.params['Ea_cyc'] / (self.R * T)) \
-                * np.power(N, self.params['beta']) * DOD_factor * C_rate_factor
+        Q_cyc = (
+            self.params["A_cyc"]
+            * np.exp(-self.params["Ea_cyc"] / (self.R * T))
+            * np.power(N, self.params["beta"])
+            * DOD_factor
+            * C_rate_factor
+        )
 
         soh = 1 - (Q_cal + Q_cyc)
         return np.maximum(soh, 0)
@@ -157,6 +170,7 @@ class ArrheniusSOHModel:
 
 try:
     import optuna
+
     OPTUNA_AVAILABLE = True
 except ImportError:
     OPTUNA_AVAILABLE = False
@@ -177,7 +191,7 @@ class ModelCalibrator:
         self.model = model
         self.data = data
         self.best_params = None
-        self.best_rmse = float('inf')
+        self.best_rmse = float("inf")
 
     def prepare_data(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -187,12 +201,12 @@ class ModelCalibrator:
             (X, y): 特征矩阵 (N, 5) 和标签 (N,)
         """
         # 直接列切片，避免 iterrows 性能损耗
-        years = (self.data['operating_days'] / 365).to_numpy(dtype=float)
-        temperature = self.data['temperature'].to_numpy(dtype=float)
-        cycles_per_day = self.data['cycles_per_day'].to_numpy(dtype=float)
-        dod = self.data['dod'].to_numpy(dtype=float)
-        c_rate = self.data['c_rate'].to_numpy(dtype=float)
-        labels = (self.data['measured_soh'] / 100).to_numpy(dtype=float)
+        years = (self.data["operating_days"] / 365).to_numpy(dtype=float)
+        temperature = self.data["temperature"].to_numpy(dtype=float)
+        cycles_per_day = self.data["cycles_per_day"].to_numpy(dtype=float)
+        dod = self.data["dod"].to_numpy(dtype=float)
+        c_rate = self.data["c_rate"].to_numpy(dtype=float)
+        labels = (self.data["measured_soh"] / 100).to_numpy(dtype=float)
 
         X = np.column_stack([years, temperature, cycles_per_day, dod, c_rate])
         return X, labels
@@ -212,8 +226,7 @@ class ModelCalibrator:
 
         # 向量化批量预测
         predictions = temp_model.predict_soh_batch(
-            years=X[:, 0], temperature=X[:, 1],
-            cycles_per_day=X[:, 2], dod=X[:, 3], c_rate=X[:, 4]
+            years=X[:, 0], temperature=X[:, 1], cycles_per_day=X[:, 2], dod=X[:, 3], c_rate=X[:, 4]
         )
 
         return float(np.sqrt(np.mean((predictions - labels) ** 2)))
@@ -239,19 +252,19 @@ class ModelCalibrator:
         def objective(trial):
             """目标函数"""
             params = {
-                'A_cal': trial.suggest_float('A_cal', 0.001, 0.1),
-                'Ea_cal': trial.suggest_float('Ea_cal', 10000, 50000),
-                'alpha': trial.suggest_float('alpha', 0.5, 1.2),
-                'A_cyc': trial.suggest_float('A_cyc', 0.0001, 0.01),
-                'Ea_cyc': trial.suggest_float('Ea_cyc', 10000, 30000),
-                'beta': trial.suggest_float('beta', 0.3, 0.8),
-                'gamma': trial.suggest_float('gamma', 1.0, 2.0),
-                'delta': trial.suggest_float('delta', 0.1, 0.5),
+                "A_cal": trial.suggest_float("A_cal", 0.001, 0.1),
+                "Ea_cal": trial.suggest_float("Ea_cal", 10000, 50000),
+                "alpha": trial.suggest_float("alpha", 0.5, 1.2),
+                "A_cyc": trial.suggest_float("A_cyc", 0.0001, 0.01),
+                "Ea_cyc": trial.suggest_float("Ea_cyc", 10000, 30000),
+                "beta": trial.suggest_float("beta", 0.3, 0.8),
+                "gamma": trial.suggest_float("gamma", 1.0, 2.0),
+                "delta": trial.suggest_float("delta", 0.1, 0.5),
             }
             return self.calculate_rmse(params)
 
         print(f"\n开始贝叶斯优化 ({n_trials} 次尝试)...")
-        study = optuna.create_study(direction='minimize')
+        study = optuna.create_study(direction="minimize")
         study.optimize(objective, n_trials=n_trials, show_progress_bar=verbose)
 
         self.best_params = study.best_params
@@ -268,6 +281,7 @@ class ModelCalibrator:
 
 # ==================== 模型管理 ====================
 
+
 class ModelManager:
     """模型管理器"""
 
@@ -281,13 +295,9 @@ class ModelManager:
             filepath: 保存路径
             metadata: 额外元数据（如训练数据信息、RMSE 等）
         """
-        data = {
-            'model_params': model.params,
-            'metadata': metadata or {},
-            'saved_at': datetime.now().isoformat()
-        }
+        data = {"model_params": model.params, "metadata": metadata or {}, "saved_at": datetime.now().isoformat()}
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
         print(f"✓ 模型已保存到: {filepath}")
@@ -303,14 +313,14 @@ class ModelManager:
         Returns:
             ArrheniusSOHModel 实例
         """
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        model = ArrheniusSOHModel(data['model_params'])
+        model = ArrheniusSOHModel(data["model_params"])
 
-        if 'metadata' in data:
+        if "metadata" in data:
             print(f"模型元数据:")
-            for key, value in data['metadata'].items():
+            for key, value in data["metadata"].items():
                 print(f"  {key}: {value}")
         print(f"保存时间: {data.get('saved_at', '未知')}")
 
@@ -318,6 +328,7 @@ class ModelManager:
 
 
 # ==================== 主程序 ====================
+
 
 def validate_data(df: pd.DataFrame) -> bool:
     """
@@ -329,10 +340,7 @@ def validate_data(df: pd.DataFrame) -> bool:
     Returns:
         是否有效
     """
-    required_columns = [
-        'temperature', 'cycles_per_day', 'dod', 'c_rate',
-        'operating_days', 'measured_soh'
-    ]
+    required_columns = ["temperature", "cycles_per_day", "dod", "c_rate", "operating_days", "measured_soh"]
 
     missing_cols = [col for col in required_columns if col not in df.columns]
     if missing_cols:
@@ -340,7 +348,7 @@ def validate_data(df: pd.DataFrame) -> bool:
         return False
 
     # 检查数据范围
-    if df['measured_soh'].max() > 100 or df['measured_soh'].min() < 0:
+    if df["measured_soh"].max() > 100 or df["measured_soh"].min() < 0:
         print("警告: SOH 值应在 0-100 范围内")
 
     return True
@@ -398,10 +406,16 @@ def train_mode(args):
     # 评估最终效果
     print("\n评估最终效果...")
     features, labels = calibrator.prepare_data()
-    predictions = model.predict_soh_batch(
-        years=features[:, 0], temperature=features[:, 1],
-        cycles_per_day=features[:, 2], dod=features[:, 3], c_rate=features[:, 4]
-    ) * 100
+    predictions = (
+        model.predict_soh_batch(
+            years=features[:, 0],
+            temperature=features[:, 1],
+            cycles_per_day=features[:, 2],
+            dod=features[:, 3],
+            c_rate=features[:, 4],
+        )
+        * 100
+    )
 
     final_rmse = float(np.sqrt(np.mean((predictions - labels * 100) ** 2)))
     max_error = float(np.max(np.abs(predictions - labels * 100)))
@@ -409,14 +423,14 @@ def train_mode(args):
     print(f"最大误差: {max_error:.3f}%")
 
     # 保存模型
-    output_path = args.output or 'calibrated_model.json'
+    output_path = args.output or "calibrated_model.json"
     metadata = {
-        'training_data': args.data,
-        'data_points': len(data),
-        'initial_rmse': round(initial_rmse * 100, 3),
-        'final_rmse': round(final_rmse, 3),
-        'max_error': round(max_error, 3),
-        'trials': args.trials
+        "training_data": args.data,
+        "data_points": len(data),
+        "initial_rmse": round(initial_rmse * 100, 3),
+        "final_rmse": round(final_rmse, 3),
+        "max_error": round(max_error, 3),
+        "trials": args.trials,
     }
     ModelManager.save_model(model, output_path, metadata)
 
@@ -444,17 +458,17 @@ def predict_mode(args):
     # 获取输入工况
     if args.input and os.path.exists(args.input):
         # 从文件读取
-        with open(args.input, 'r', encoding='utf-8') as f:
+        with open(args.input, "r", encoding="utf-8") as f:
             input_data = json.load(f)
     else:
         # 使用命令行参数
         input_data = {
-            'years': args.years,
-            'temperature': args.temperature,
-            'cycles_per_day': args.cycles_per_day,
-            'dod': args.dod,
-            'c_rate': args.c_rate,
-            'rte_initial': args.rte_initial
+            "years": args.years,
+            "temperature": args.temperature,
+            "cycles_per_day": args.cycles_per_day,
+            "dod": args.dod,
+            "c_rate": args.c_rate,
+            "rte_initial": args.rte_initial,
         }
 
     print("\n输入工况:")
@@ -502,24 +516,24 @@ def batch_predict_mode(args):
 
     # 批量预测（向量化，无 iterrows）
     print("\n开始批量预测...")
-    rte_initial = input_data['rte_initial'] if 'rte_initial' in input_data.columns else 97.03
+    rte_initial = input_data["rte_initial"] if "rte_initial" in input_data.columns else 97.03
     soh_arr = model.predict_soh_batch(
-        years=(input_data['operating_days'] / 365).to_numpy(dtype=float),
-        temperature=input_data['temperature'].to_numpy(dtype=float),
-        cycles_per_day=input_data['cycles_per_day'].to_numpy(dtype=float),
-        dod=input_data['dod'].to_numpy(dtype=float),
-        c_rate=input_data['c_rate'].to_numpy(dtype=float),
+        years=(input_data["operating_days"] / 365).to_numpy(dtype=float),
+        temperature=input_data["temperature"].to_numpy(dtype=float),
+        cycles_per_day=input_data["cycles_per_day"].to_numpy(dtype=float),
+        dod=input_data["dod"].to_numpy(dtype=float),
+        c_rate=input_data["c_rate"].to_numpy(dtype=float),
     )
-    rte_arr = rte_initial * (1 - model.params['degradation_rate'] * (1 - soh_arr))
+    rte_arr = rte_initial * (1 - model.params["degradation_rate"] * (1 - soh_arr))
     rte_arr = np.maximum(rte_arr, 0)
 
     input_data = input_data.copy()
-    input_data['predicted_soh'] = np.round(soh_arr * 100, 2)
-    input_data['predicted_rte'] = np.round(rte_arr, 2)
+    input_data["predicted_soh"] = np.round(soh_arr * 100, 2)
+    input_data["predicted_rte"] = np.round(rte_arr, 2)
 
     # 保存结果
-    output_path = args.output or 'prediction_results.csv'
-    input_data.to_csv(output_path, index=False, encoding='utf-8')
+    output_path = args.output or "prediction_results.csv"
+    input_data.to_csv(output_path, index=False, encoding="utf-8")
     print(f"✓ 预测结果已保存到: {output_path}")
 
     print("\n预测统计:")
@@ -531,43 +545,43 @@ def batch_predict_mode(args):
 
 def main():
     """主函数"""
-    parser = argparse.ArgumentParser(description='SOH/RTE 模型训练与预测工具')
-    subparsers = parser.add_subparsers(dest='mode', help='运行模式')
+    parser = argparse.ArgumentParser(description="SOH/RTE 模型训练与预测工具")
+    subparsers = parser.add_subparsers(dest="mode", help="运行模式")
 
     # 训练模式
-    train_parser = subparsers.add_parser('train', help='训练模型')
-    train_parser.add_argument('--data', required=True, help='训练数据 CSV 文件路径')
-    train_parser.add_argument('--output', '-o', help='输出模型文件路径 (默认: calibrated_model.json)')
-    train_parser.add_argument('--trials', '-t', type=int, default=500, help='优化尝试次数 (默认: 500)')
+    train_parser = subparsers.add_parser("train", help="训练模型")
+    train_parser.add_argument("--data", required=True, help="训练数据 CSV 文件路径")
+    train_parser.add_argument("--output", "-o", help="输出模型文件路径 (默认: calibrated_model.json)")
+    train_parser.add_argument("--trials", "-t", type=int, default=500, help="优化尝试次数 (默认: 500)")
 
     # 预测模式
-    predict_parser = subparsers.add_parser('predict', help='预测 SOH/RTE')
-    predict_parser.add_argument('--model', required=True, help='模型文件路径')
-    predict_parser.add_argument('--input', '-i', help='输入工况 JSON 文件路径')
-    predict_parser.add_argument('--years', type=float, default=1, help='运行年数 (默认: 1)')
-    predict_parser.add_argument('--temperature', type=float, default=25, help='温度 °C (默认: 25)')
-    predict_parser.add_argument('--cycles_per_day', type=float, default=1, help='每日循环次数 (默认: 1)')
-    predict_parser.add_argument('--dod', type=float, default=0.8, help='放电深度 (默认: 0.8)')
-    predict_parser.add_argument('--c_rate', type=float, default=0.5, help='充放电倍率 C (默认: 0.5)')
-    predict_parser.add_argument('--rte_initial', type=float, default=97.03, help='初始 RTE % (默认: 97.03)')
+    predict_parser = subparsers.add_parser("predict", help="预测 SOH/RTE")
+    predict_parser.add_argument("--model", required=True, help="模型文件路径")
+    predict_parser.add_argument("--input", "-i", help="输入工况 JSON 文件路径")
+    predict_parser.add_argument("--years", type=float, default=1, help="运行年数 (默认: 1)")
+    predict_parser.add_argument("--temperature", type=float, default=25, help="温度 °C (默认: 25)")
+    predict_parser.add_argument("--cycles_per_day", type=float, default=1, help="每日循环次数 (默认: 1)")
+    predict_parser.add_argument("--dod", type=float, default=0.8, help="放电深度 (默认: 0.8)")
+    predict_parser.add_argument("--c_rate", type=float, default=0.5, help="充放电倍率 C (默认: 0.5)")
+    predict_parser.add_argument("--rte_initial", type=float, default=97.03, help="初始 RTE % (默认: 97.03)")
 
     # 批量预测模式
-    batch_parser = subparsers.add_parser('batch_predict', help='批量预测 SOH/RTE')
-    batch_parser.add_argument('--model', required=True, help='模型文件路径')
-    batch_parser.add_argument('--input', '-i', required=True, help='输入数据 CSV 文件路径')
-    batch_parser.add_argument('--output', '-o', help='输出结果文件路径 (默认: prediction_results.csv)')
+    batch_parser = subparsers.add_parser("batch_predict", help="批量预测 SOH/RTE")
+    batch_parser.add_argument("--model", required=True, help="模型文件路径")
+    batch_parser.add_argument("--input", "-i", required=True, help="输入数据 CSV 文件路径")
+    batch_parser.add_argument("--output", "-o", help="输出结果文件路径 (默认: prediction_results.csv)")
 
     args = parser.parse_args()
 
-    if args.mode == 'train':
+    if args.mode == "train":
         train_mode(args)
-    elif args.mode == 'predict':
+    elif args.mode == "predict":
         predict_mode(args)
-    elif args.mode == 'batch_predict':
+    elif args.mode == "batch_predict":
         batch_predict_mode(args)
     else:
         parser.print_help()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

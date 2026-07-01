@@ -5,7 +5,7 @@
       <p class="subtitle">请填写以下信息，提交后将自动生成项目</p>
     </div>
 
-    <form @submit.prevent="submitForm" class="survey-form">
+    <form class="survey-form" @submit.prevent="submitForm">
       <!-- 基本信息 -->
       <section class="form-section">
         <h2>基本信息</h2>
@@ -51,7 +51,14 @@
           </div>
           <div class="form-group">
             <label>每日循环次数</label>
-            <input v-model.number="form.cycles_per_day" type="number" step="0.5" min="0.5" max="4" placeholder="如：1" />
+            <input
+              v-model.number="form.cycles_per_day"
+              type="number"
+              step="0.5"
+              min="0.5"
+              max="4"
+              placeholder="如：1"
+            />
           </div>
         </div>
       </section>
@@ -207,7 +214,7 @@
         <h2>备注信息</h2>
         <div class="form-group full-width">
           <label>其他说明</label>
-          <textarea v-model="form.remarks" rows="4" placeholder="请输入其他需要说明的信息..."></textarea>
+          <textarea v-model="form.remarks" rows="4" placeholder="请输入其他需要说明的信息..." />
         </div>
       </section>
 
@@ -228,8 +235,14 @@
         <h3>提交成功！</h3>
         <p>调研表已成功提交，项目已自动创建</p>
         <div class="info-box">
-          <p><strong>调研表ID:</strong> {{ submittedData.survey_id }}</p>
-          <p><strong>项目编号:</strong> {{ submittedData.project_code }}</p>
+          <p>
+            <strong>调研表ID:</strong>
+            {{ submittedData.survey_id }}
+          </p>
+          <p>
+            <strong>项目编号:</strong>
+            {{ submittedData.project_code }}
+          </p>
         </div>
         <button class="btn-primary" @click="closeSuccess">确定</button>
       </div>
@@ -297,7 +310,7 @@ async function submitForm() {
   }
 
   submitting.value = true
-  
+
   try {
     const response = await fetch('/api/survey/submit', {
       method: 'POST',
@@ -308,7 +321,7 @@ async function submitForm() {
     })
 
     const result = await response.json()
-    
+
     if (result.success) {
       submittedData.value = result
       showSuccess.value = true
@@ -401,7 +414,8 @@ function fillTestData() {
     dc_voltage_range: '1000-1500V',
     ac_voltage: 380,
     thdi: 3,
-    remarks: '项目位于沙漠气候区，要求集装箱具备C4以上防腐等级。PCS需满足Masdar级液冷碳化硅方案，支持构网型Grid-Forming功能。预期2027年Q1并网投运。'
+    remarks:
+      '项目位于沙漠气候区，要求集装箱具备C4以上防腐等级。PCS需满足Masdar级液冷碳化硅方案，支持构网型Grid-Forming功能。预期2027年Q1并网投运。'
   })
 }
 </script>
@@ -443,8 +457,8 @@ function fillTestData() {
 }
 
 .form-section {
-  background: #FFFFFF;
-  border: 1px solid #E0E0E0;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 24px;
 }
@@ -493,13 +507,15 @@ function fillTestData() {
   font-size: 14px;
   background: var(--color-bg);
   color: var(--color-text);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2F5496;
+  border-color: #2f5496;
   box-shadow: 0 0 0 3px rgba(47, 84, 150, 0.1);
 }
 
@@ -526,7 +542,7 @@ function fillTestData() {
 }
 
 .btn-primary {
-  background: #2F5496;
+  background: #2f5496;
   color: white;
   border: none;
 }
@@ -547,7 +563,7 @@ function fillTestData() {
 }
 
 .btn-secondary:hover {
-  background: #F5F7FA;
+  background: #f5f7fa;
 }
 
 .success-modal {
@@ -597,7 +613,7 @@ function fillTestData() {
 }
 
 .info-box {
-  background: #F5F7FA;
+  background: #f5f7fa;
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 20px;

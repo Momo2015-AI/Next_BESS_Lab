@@ -1,10 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from services.degradation import (
-    predict_soh,
-    get_default_gb_curves,
-    get_default_environmental,
-    _compute_environmental_acceleration,
     ENV_DEFAULTS,
+    _compute_environmental_acceleration,
+    get_default_environmental,
+    get_default_gb_curves,
+    predict_soh,
 )
 
 degradation_bp = Blueprint("degradation", __name__)
@@ -85,15 +86,17 @@ def preview_acceleration():
     env = data.get("environmental", _in_memory_env)
 
     accel = _compute_environmental_acceleration(temperature, env)
-    return jsonify({
-        "accelerationFactor": round(accel, 4),
-        "temperature": temperature,
-        "details": {
-            "temperature_enabled": env.get("accelerate_temperature", True),
-            "dust_enabled": env.get("accelerate_dust", False),
-            "humidity_enabled": env.get("accelerate_humidity", False),
-        },
-    })
+    return jsonify(
+        {
+            "accelerationFactor": round(accel, 4),
+            "temperature": temperature,
+            "details": {
+                "temperature_enabled": env.get("accelerate_temperature", True),
+                "dust_enabled": env.get("accelerate_dust", False),
+                "humidity_enabled": env.get("accelerate_humidity", False),
+            },
+        }
+    )
 
 
 @degradation_bp.route("/api/degradation/preview", methods=["POST"])
@@ -113,18 +116,29 @@ def preview_degradation():
     environmental = data.get("environmental", _in_memory_env)
     gb_curves = data.get("gb36276Curves", _in_memory_gb_curves)
 
-    soh, rte = predict_soh(model_type, temperature, cycles_per_day, dod, c_rate,
-                            model_params, correction_factor, correction_table,
-                            environmental, gb_curves)
+    soh, rte = predict_soh(
+        model_type,
+        temperature,
+        cycles_per_day,
+        dod,
+        c_rate,
+        model_params,
+        correction_factor,
+        correction_table,
+        environmental,
+        gb_curves,
+    )
 
-    return jsonify({
-        "model": model_type,
-        "soh": soh,
-        "rte": rte,
-        "parameters": {
-            "temperature": temperature,
-            "cyclesPerDay": cycles_per_day,
-            "dod": dod,
-            "cRate": c_rate,
-        },
-    })
+    return jsonify(
+        {
+            "model": model_type,
+            "soh": soh,
+            "rte": rte,
+            "parameters": {
+                "temperature": temperature,
+                "cyclesPerDay": cycles_per_day,
+                "dod": dod,
+                "cRate": c_rate,
+            },
+        }
+    )

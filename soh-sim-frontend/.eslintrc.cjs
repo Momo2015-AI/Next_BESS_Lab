@@ -8,19 +8,16 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
+    'eslint-config-prettier',
   ],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
-  plugins: [],
+  plugins: ['prettier'],
   rules: {
+    'prettier/prettier': 'error',
     // 通用规则
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'quotes': ['error', 'single'],
     'semi': ['error', 'never'],
-    'indent': ['error', 2],
     'no-var': 'error',
     'prefer-const': 'error',
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
@@ -32,8 +29,6 @@ module.exports = {
       order: ['template', 'script', 'style'],
     }],
     'vue/component-name-in-template-casing': ['error', 'PascalCase'],
-    'vue/component-options-name-capitalization': ['error', 'PascalCase'],
-    'vue/no-multiple-objects-in-class': 'warn',
 
     // 禁止内联事件处理器（自定义规则思路：检查模板中的 onfocus 等）
     // NOTE: ESLint 原生不支持提取模板中的属性，需要 vue-eslint-parser + 自定义规则
@@ -62,6 +57,14 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-non-null-assertion': 'warn',
+      },
+    },
+    {
+      files: ['*.jsx', '*.js'],
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
   ],

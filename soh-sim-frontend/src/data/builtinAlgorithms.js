@@ -9,15 +9,16 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: 'R^2 > 0.95',
     mathematical_form: 'k = A * e^(-Ea/RT)',
     formula_expression: 'params.A * Math.exp(-params.Ea * 1000 / (R * T)) * Math.pow(t + 0.5, 0.5)',
-    description: '基于阿伦尼乌斯化学动力学方程的温度加速老化模型。核心原理：温度每升高10°C，电化学反应速率约翻倍，老化也随之加速。指前因子（A）描述基础反应速率，活化能（Ea=35 kJ/mol）为LFP电池标准值。',
+    description:
+      '基于阿伦尼乌斯化学动力学方程的温度加速老化模型。核心原理：温度每升高10°C，电化学反应速率约翻倍，老化也随之加速。指前因子（A）描述基础反应速率，活化能（Ea=35 kJ/mol）为LFP电池标准值。',
     is_builtin: true,
     applicable_scenarios: ['温度加速老化', '日历寿命预测', '高温/高倍率工况'],
     parameters: {
       A: { label: '指前因子', default: 1e12, min: 1e6, max: 1e18, unit: '/年' },
       Ea: { label: '活化能', default: 35, min: 20, max: 80, unit: 'kJ/mol' },
       R: { label: '气体常数', default: 8.314, min: 8.0, max: 8.5, unit: 'J/(mol·K)' },
-      T_ref: { label: '参考温度', default: 298, min: 273, max: 350, unit: 'K' },
-    },
+      T_ref: { label: '参考温度', default: 298, min: 273, max: 350, unit: 'K' }
+    }
   },
   {
     id: 'builtin-double-exp',
@@ -29,7 +30,8 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: 'R^2 > 0.999',
     mathematical_form: 'SOH(t) = A*e^(-k1*t) + B*e^(-k2*t) + C',
     formula_expression: 'A * Math.exp(-k1 * t) + B * Math.exp(-k2 * t) + C',
-    description: '适用于LFP电池的日历衰减和循环衰减。双指数形式：快速衰减阶段（A项）描述SEI膜形成导致的初期快速容量损失；慢速衰减阶段（B项）描述活性物质损失导致的长期缓慢衰减。C为25年末剩余容量。',
+    description:
+      '适用于LFP电池的日历衰减和循环衰减。双指数形式：快速衰减阶段（A项）描述SEI膜形成导致的初期快速容量损失；慢速衰减阶段（B项）描述活性物质损失导致的长期缓慢衰减。C为25年末剩余容量。',
     is_builtin: true,
     applicable_scenarios: ['LFP日历衰减', '循环衰减', '综合衰减预测'],
     parameters: {
@@ -37,8 +39,8 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
       B: { label: '慢速衰减幅度', default: 0.08, min: 0, max: 0.3, unit: '' },
       k1: { label: '快速衰减系数', default: 0.05, min: 0, max: 0.2, unit: '/年' },
       k2: { label: '慢速衰减系数', default: 0.008, min: 0, max: 0.05, unit: '/年' },
-      C: { label: '剩余容量', default: 0.77, min: 0.5, max: 0.9, unit: '' },
-    },
+      C: { label: '剩余容量', default: 0.77, min: 0.5, max: 0.9, unit: '' }
+    }
   },
   {
     id: 'builtin-linear-log',
@@ -50,15 +52,16 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: 'R^2 > 0.99',
     mathematical_form: 'RTE(t) = RTE0 - a*t - b*ln(1+g*t)',
     formula_expression: 'RTE0 - alpha * t - beta * Math.log(1 + gamma * t)',
-    description: '适用于RTE往返效率衰减建模。线性项描述设备老化导致的效率线性下降；对数项描述效率下降随时间的减缓趋势——初期衰减快，后期趋于平稳。适合液冷系统在25°C标准工况下。',
+    description:
+      '适用于RTE往返效率衰减建模。线性项描述设备老化导致的效率线性下降；对数项描述效率下降随时间的减缓趋势——初期衰减快，后期趋于平稳。适合液冷系统在25°C标准工况下。',
     is_builtin: true,
     applicable_scenarios: ['RTE衰减', '效率衰减建模'],
     parameters: {
       RTE0: { label: '初始RTE', default: 0.94, min: 0.8, max: 0.99, unit: '' },
       alpha: { label: '线性衰减系数', default: 0.0008, min: 0, max: 0.005, unit: '/年' },
       beta: { label: '对数衰减幅度', default: 0.02, min: 0, max: 0.1, unit: '' },
-      gamma: { label: '对数衰减速率', default: 0.5, min: 0, max: 5, unit: '/年' },
-    },
+      gamma: { label: '对数衰减速率', default: 0.5, min: 0, max: 5, unit: '/年' }
+    }
   },
   {
     id: 'builtin-rainflow',
@@ -70,14 +73,15 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: '与实际工况高度吻合',
     mathematical_form: 'D = SUM(n_i/N_i) * (DOD_i/DOD_ref)^m',
     formula_expression: 'Math.pow(N_cycles / cycle_life_ref, damage_exponent) * Math.pow(DOD / 100 / dod_ref, 1.5)',
-    description: '基于Miner线性损伤累积法则和雨流计数法的循环寿命预测模型。将实际运行中不规则、变幅的充放电循环统计为等效标准循环次数，按DOD加权计算累积损伤。参考循环寿命（6000次）为LFP电池在100%DOD、25°C下的行业标准值。',
+    description:
+      '基于Miner线性损伤累积法则和雨流计数法的循环寿命预测模型。将实际运行中不规则、变幅的充放电循环统计为等效标准循环次数，按DOD加权计算累积损伤。参考循环寿命（6000次）为LFP电池在100%DOD、25°C下的行业标准值。',
     is_builtin: true,
     applicable_scenarios: ['不规则循环损伤', '实际运行工况', '多DOD混合工况'],
     parameters: {
       damage_exponent: { label: '损伤指数', default: 1.5, min: 1.0, max: 3.0, unit: '' },
       cycle_life_ref: { label: '参考循环寿命', default: 6000, min: 1000, max: 20000, unit: '次' },
-      dod_ref: { label: '参考DOD', default: 1.0, min: 0.1, max: 1.0, unit: '' },
-    },
+      dod_ref: { label: '参考DOD', default: 1.0, min: 0.1, max: 1.0, unit: '' }
+    }
   },
   {
     id: 'builtin-semi-empirical',
@@ -89,15 +93,16 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: 'R^2 > 0.97',
     mathematical_form: 'SOH = f(T) * f(DOD) * f(C-rate) * f(SOC)',
     formula_expression: '1 - (1 - temp_factor * dod_factor * c_rate_factor * soc_factor) * t / 25',
-    description: '综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。温度每偏离25°C 1°C，衰减速率变化0.2%；DOD从50%升至100%时衰减速率翻倍；0.5C充电相比1C充电衰减减半。',
+    description:
+      '综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。温度每偏离25°C 1°C，衰减速率变化0.2%；DOD从50%升至100%时衰减速率翻倍；0.5C充电相比1C充电衰减减半。',
     is_builtin: true,
     applicable_scenarios: ['多应力耦合', '综合衰减', '复杂工况预测'],
     parameters: {
       temp_coeff: { label: '温度系数', default: 0.002, min: 0, max: 0.01, unit: '/°C' },
       dod_coeff: { label: 'DOD系数', default: 0.5, min: 0, max: 2.0, unit: '' },
       c_rate_coeff: { label: '倍率系数', default: 0.1, min: 0, max: 1.0, unit: '' },
-      soc_coeff: { label: 'SOC窗口系数', default: 0.3, min: 0, max: 1.0, unit: '' },
-    },
+      soc_coeff: { label: 'SOC窗口系数', default: 0.3, min: 0, max: 1.0, unit: '' }
+    }
   },
   {
     id: 'builtin-hybrid',
@@ -109,7 +114,8 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_desc: '通用默认模型，适用广泛',
     mathematical_form: '基于Arrhenius方程的综合混合模型',
     formula_expression: 'A_cal * Math.exp(-Ea_cal * 1000 / (R * T)) * Math.pow(t + 0.5, alpha)',
-    description: '通用默认混合衰减模型，基于Arrhenius框架同时处理日历老化和循环老化。日历老化因子（A_cal=0.001）和循环老化因子（A_cyc=1e-5）分别为两个老化路径的基础速率。参数参考多款主流LFP电芯公开数据平均值。',
+    description:
+      '通用默认混合衰减模型，基于Arrhenius框架同时处理日历老化和循环老化。日历老化因子（A_cal=0.001）和循环老化因子（A_cyc=1e-5）分别为两个老化路径的基础速率。参数参考多款主流LFP电芯公开数据平均值。',
     is_builtin: true,
     applicable_scenarios: ['通用默认', '快速评估', '无详细数据时使用'],
     parameters: {
@@ -118,9 +124,9 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
       alpha: { label: '时间指数', default: 0.5, min: 0.3, max: 0.7, unit: '' },
       A_cyc: { label: '循环老化因子', default: 0.00001, min: 1e-7, max: 1e-4, unit: '' },
       Ea_cyc: { label: '循环活化能', default: 25, min: 15, max: 50, unit: 'kJ/mol' },
-      beta: { label: '循环指数', default: 0.7, min: 0.5, max: 0.9, unit: '' },
-    },
-  },
+      beta: { label: '循环指数', default: 0.7, min: 0.5, max: 0.9, unit: '' }
+    }
+  }
 ]
 
 export function mapToSimulationLabFormat(alg) {
@@ -134,6 +140,6 @@ export function mapToSimulationLabFormat(alg) {
     model_type: alg.model_type,
     parameters: alg.parameters || {},
     mathematical_form: alg.mathematical_form || '',
-    formula_expression: alg.formula_expression || '',
+    formula_expression: alg.formula_expression || ''
   }
 }

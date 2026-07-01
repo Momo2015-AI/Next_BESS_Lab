@@ -1,305 +1,1041 @@
 <template>
   <div class="h-full overflow-y-auto custom-scrollbar">
     <div class="max-w-6xl mx-auto space-y-4 py-2">
-
-      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary);">A</span>
+          <span
+            class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
+            style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary)"
+          >
+            A
+          </span>
           <div>
-            <h3 class="font-bold text-sm" style="color: var(--color-text);">电芯选型库 <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Battery Cell Library</span></h3>
+            <h3 class="font-bold text-sm" style="color: var(--color-text)">
+              电芯选型库
+              <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted)">
+                Battery Cell Library
+              </span>
+            </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select v-model="cellFilter" 
+            <select
+              v-model="cellFilter"
               class="text-xs rounded px-2 py-1"
-              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-              onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
-              onblur="this.style.borderColor='var(--color-input-border)';">
+              style="
+                background-color: var(--color-input-bg-dark);
+                border: 1px solid var(--color-input-border);
+                color: var(--color-text);
+              "
+              onfocus="
+                this.style.borderColor = 'var(--color-accent)'
+                this.style.outline = 'none'
+              "
+              onblur="this.style.borderColor = 'var(--color-input-border)'"
+            >
               <option value="">全部厂商</option>
-              <option v-for="m in localMfrList('cells')" :key="m" :value="m">{{ m }}</option>
+              <option v-for="m in localMfrList('cells')" :key="m" :value="m">
+                {{ m }}
+              </option>
             </select>
-            <button @click="openAddModal('cell')" 
+            <button
               class="text-[10px] px-2 py-1 rounded transition-colors"
-              style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent); color: var(--color-accent-secondary);"
-              onmouseover="this.style.backgroundColor='var(--color-accent-dark)';"
-              onmouseout="this.style.backgroundColor='var(--color-accent-glow)';">+ 新增电芯</button>
+              style="
+                background-color: var(--color-accent-glow);
+                border: 1px solid var(--color-accent);
+                color: var(--color-accent-secondary);
+              "
+              onmouseover="this.style.backgroundColor = 'var(--color-accent-dark)'"
+              onmouseout="this.style.backgroundColor = 'var(--color-accent-glow)'"
+              @click="openAddModal('cell')"
+            >
+              + 新增电芯
+            </button>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2">
-          <div v-for="cell in localFiltered('cells', cellFilter)" :key="cell.id"
+          <div
+            v-for="cell in localFiltered('cells', cellFilter)"
+            :key="cell.id"
+            class="border rounded-lg p-3 cursor-pointer transition-all group relative"
+            :style="
+              selectedCell === cell.id
+                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
+            onmouseover="
+              if (this.style.borderColor !== 'var(--color-accent-secondary)')
+                this.style.borderColor = 'var(--color-input-border)'
+            "
+            onmouseout="
+              if (this.style.borderColor !== 'var(--color-accent-secondary)')
+                this.style.borderColor = 'var(--color-border)'
+            "
             @click="selectedCell = cell.id"
-            class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="selectedCell === cell.id ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
-            onmouseover="if(this.style.borderColor !== 'var(--color-accent-secondary)') this.style.borderColor='var(--color-input-border)';"
-            onmouseout="if(this.style.borderColor !== 'var(--color-accent-secondary)') this.style.borderColor='var(--color-border)';">
-            <button @click.stop="deleteItem('cells', cell.id)" 
+          >
+            <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-danger)';"
-              onmouseout="this.style.color='var(--color-text-muted)';">×</button>
+              style="color: var(--color-text-muted)"
+              onmouseover="this.style.color = 'var(--color-danger)'"
+              onmouseout="this.style.color = 'var(--color-text-muted)'"
+              @click.stop="deleteItem('cells', cell.id)"
+            >
+              ×
+            </button>
             <div class="flex justify-between items-start mb-1">
-              <span class="text-xs font-bold" style="color: var(--color-text);">{{ cell.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded" :style="cell.status === 'mass-production' ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' } : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }">{{ cell.status === 'mass-production' ? '量产' : '预研' }}</span>
+              <span class="text-xs font-bold" style="color: var(--color-text)">{{ cell.model }}</span>
+              <span
+                class="text-[10px] px-1.5 py-0.5 rounded"
+                :style="
+                  cell.status === 'mass-production'
+                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
+                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
+                "
+              >
+                {{ cell.status === 'mass-production' ? '量产' : '预研' }}
+              </span>
             </div>
-            <div class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ cell.mfr }}</div>
+            <div class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+              {{ cell.mfr }}
+            </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div style="color: var(--color-text-muted);">容量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.capacityAh }} Ah</div>
-              <div style="color: var(--color-text-muted);">标压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.voltageNominal }} V</div>
-              <div style="color: var(--color-text-muted);">电压范围</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.voltageMin }}~{{ cell.voltageMax }}V</div>
-              <div style="color: var(--color-text-muted);">能量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.ratedEnergyMWh }} MWh</div>
-              <div style="color: var(--color-text-muted);">密度</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.energyDensity ?? '--' }} Wh/kg</div>
-              <div style="color: var(--color-text-muted);">循环/日历</div><div style="color: var(--color-text-secondary); text-align:right;">{{ cell.cycleLife }}/{{ cell.calendarLife }}y</div>
+              <div style="color: var(--color-text-muted)">容量</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ cell.capacityAh }} Ah</div>
+              <div style="color: var(--color-text-muted)">标压</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ cell.voltageNominal }} V</div>
+              <div style="color: var(--color-text-muted)">电压范围</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ cell.voltageMin }}~{{ cell.voltageMax }}V
+              </div>
+              <div style="color: var(--color-text-muted)">能量</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ cell.ratedEnergyMWh }} MWh</div>
+              <div style="color: var(--color-text-muted)">密度</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ cell.energyDensity ?? '--' }} Wh/kg
+              </div>
+              <div style="color: var(--color-text-muted)">循环/日历</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ cell.cycleLife }}/{{ cell.calendarLife }}y
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-warning-glow); color: var(--color-warning);">B</span>
+          <span
+            class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
+            style="background-color: var(--color-warning-glow); color: var(--color-warning)"
+          >
+            B
+          </span>
           <div>
-            <h3 class="font-bold text-sm" style="color: var(--color-text);">集装箱库 <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Container Library</span></h3>
+            <h3 class="font-bold text-sm" style="color: var(--color-text)">
+              集装箱库
+              <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted)">Container Library</span>
+            </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select v-model="containerFilter" 
+            <select
+              v-model="containerFilter"
               class="text-xs rounded px-2 py-1"
-              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-              onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
-              onblur="this.style.borderColor='var(--color-input-border)';">
+              style="
+                background-color: var(--color-input-bg-dark);
+                border: 1px solid var(--color-input-border);
+                color: var(--color-text);
+              "
+              onfocus="
+                this.style.borderColor = 'var(--color-accent)'
+                this.style.outline = 'none'
+              "
+              onblur="this.style.borderColor = 'var(--color-input-border)'"
+            >
               <option value="">全部厂商</option>
-              <option v-for="m in localMfrList('containers')" :key="m" :value="m">{{ m }}</option>
+              <option v-for="m in localMfrList('containers')" :key="m" :value="m">
+                {{ m }}
+              </option>
             </select>
-            <button @click="openAddModal('container')" 
+            <button
               class="text-[10px] px-2 py-1 rounded transition-colors"
-              style="background-color: var(--color-warning-glow); border: 1px solid var(--color-warning); color: var(--color-warning);"
-              onmouseover="this.style.backgroundColor='rgba(234, 179, 8, 0.2)';"
-              onmouseout="this.style.backgroundColor='var(--color-warning-glow)';">+ 新增集装箱</button>
+              style="
+                background-color: var(--color-warning-glow);
+                border: 1px solid var(--color-warning);
+                color: var(--color-warning);
+              "
+              onmouseover="this.style.backgroundColor = 'rgba(234, 179, 8, 0.2)'"
+              onmouseout="this.style.backgroundColor = 'var(--color-warning-glow)'"
+              @click="openAddModal('container')"
+            >
+              + 新增集装箱
+            </button>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2">
-          <div v-for="c in localFiltered('containers', containerFilter)" :key="c.id"
-            @click="selectedContainer = c.id"
+          <div
+            v-for="c in localFiltered('containers', containerFilter)"
+            :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="selectedContainer === c.id ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
-            onmouseover="if(this.style.borderColor !== 'var(--color-warning)') this.style.borderColor='var(--color-input-border)';"
-            onmouseout="if(this.style.borderColor !== 'var(--color-warning)') this.style.borderColor='var(--color-border)';">
-            <button @click.stop="deleteItem('containers', c.id)" 
+            :style="
+              selectedContainer === c.id
+                ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
+            onmouseover="
+              if (this.style.borderColor !== 'var(--color-warning)')
+                this.style.borderColor = 'var(--color-input-border)'
+            "
+            onmouseout="
+              if (this.style.borderColor !== 'var(--color-warning)') this.style.borderColor = 'var(--color-border)'
+            "
+            @click="selectedContainer = c.id"
+          >
+            <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-danger)';"
-              onmouseout="this.style.color='var(--color-text-muted)';">×</button>
+              style="color: var(--color-text-muted)"
+              onmouseover="this.style.color = 'var(--color-danger)'"
+              onmouseout="this.style.color = 'var(--color-text-muted)'"
+              @click.stop="deleteItem('containers', c.id)"
+            >
+              ×
+            </button>
             <div class="flex justify-between items-start mb-1">
-              <span class="text-xs font-bold" style="color: var(--color-text);">{{ c.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded" :style="c.status === 'mass-production' ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' } : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }">{{ c.status === 'mass-production' ? '量产' : '预研' }}</span>
+              <span class="text-xs font-bold" style="color: var(--color-text)">{{ c.model }}</span>
+              <span
+                class="text-[10px] px-1.5 py-0.5 rounded"
+                :style="
+                  c.status === 'mass-production'
+                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
+                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
+                "
+              >
+                {{ c.status === 'mass-production' ? '量产' : '预研' }}
+              </span>
             </div>
-            <div class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ c.mfr }}</div>
+            <div class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+              {{ c.mfr }}
+            </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div style="color: var(--color-text-muted);">能量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedEnergyMWh }} MWh</div>
-              <div style="color: var(--color-text-muted);">功率</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedPowerMW }} MW</div>
-              <div style="color: var(--color-text-muted);">电芯</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.cellModel }}</div>
-              <div style="color: var(--color-text-muted);">散热</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.cooling }}</div>
+              <div style="color: var(--color-text-muted)">能量</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ c.ratedEnergyMWh }} MWh</div>
+              <div style="color: var(--color-text-muted)">功率</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ c.ratedPowerMW }} MW</div>
+              <div style="color: var(--color-text-muted)">电芯</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ c.cellModel }}
+              </div>
+              <div style="color: var(--color-text-muted)">散热</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ c.cooling }}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent);">C</span>
+          <span
+            class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
+            style="background-color: var(--color-accent-glow); color: var(--color-accent)"
+          >
+            C
+          </span>
           <div>
-            <h3 class="font-bold text-sm" style="color: var(--color-text);">PCS 变流器库 <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">PCS Library</span></h3>
+            <h3 class="font-bold text-sm" style="color: var(--color-text)">
+              PCS 变流器库
+              <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted)">PCS Library</span>
+            </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select v-model="pcsFilter" 
+            <select
+              v-model="pcsFilter"
               class="text-xs rounded px-2 py-1"
-              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-              onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
-              onblur="this.style.borderColor='var(--color-input-border)';">
+              style="
+                background-color: var(--color-input-bg-dark);
+                border: 1px solid var(--color-input-border);
+                color: var(--color-text);
+              "
+              onfocus="
+                this.style.borderColor = 'var(--color-accent)'
+                this.style.outline = 'none'
+              "
+              onblur="this.style.borderColor = 'var(--color-input-border)'"
+            >
               <option value="">全部厂商</option>
-              <option v-for="m in localMfrList('pcs')" :key="m" :value="m">{{ m }}</option>
+              <option v-for="m in localMfrList('pcs')" :key="m" :value="m">
+                {{ m }}
+              </option>
             </select>
-            <select v-model="pcsPowerFilter" 
+            <select
+              v-model="pcsPowerFilter"
               class="text-xs rounded px-2 py-1"
-              style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);"
-              onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';"
-              onblur="this.style.borderColor='var(--color-input-border)';">
+              style="
+                background-color: var(--color-input-bg-dark);
+                border: 1px solid var(--color-input-border);
+                color: var(--color-text);
+              "
+              onfocus="
+                this.style.borderColor = 'var(--color-accent)'
+                this.style.outline = 'none'
+              "
+              onblur="this.style.borderColor = 'var(--color-input-border)'"
+            >
               <option value="0">全部功率</option>
               <option value="1.25">1.25 MW</option>
               <option value="1.725">1.725 MW</option>
               <option value="2.5">2.5 MW</option>
               <option value="3.45">3.45 MW</option>
             </select>
-            <button @click="openAddModal('pcs')" 
+            <button
               class="text-[10px] px-2 py-1 rounded transition-colors"
-              style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent); color: var(--color-accent);"
-              onmouseover="this.style.backgroundColor='var(--color-accent-dark)';"
-              onmouseout="this.style.backgroundColor='var(--color-accent-glow)';">+ 新增 PCS</button>
+              style="
+                background-color: var(--color-accent-glow);
+                border: 1px solid var(--color-accent);
+                color: var(--color-accent);
+              "
+              onmouseover="this.style.backgroundColor = 'var(--color-accent-dark)'"
+              onmouseout="this.style.backgroundColor = 'var(--color-accent-glow)'"
+              @click="openAddModal('pcs')"
+            >
+              + 新增 PCS
+            </button>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2">
-          <div v-for="p in localFiltered('pcs', pcsFilter, pcsPowerFilter)" :key="p.id"
-            @click="selectedPcs = p.id"
+          <div
+            v-for="p in localFiltered('pcs', pcsFilter, pcsPowerFilter)"
+            :key="p.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="selectedPcs === p.id ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
-            onmouseover="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-input-border)';"
-            onmouseout="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-border)';">
-            <button @click.stop="deleteItem('pcs', p.id)" 
+            :style="
+              selectedPcs === p.id
+                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
+            onmouseover="
+              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-input-border)'
+            "
+            onmouseout="
+              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-border)'
+            "
+            @click="selectedPcs = p.id"
+          >
+            <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-danger)';"
-              onmouseout="this.style.color='var(--color-text-muted)';">×</button>
+              style="color: var(--color-text-muted)"
+              onmouseover="this.style.color = 'var(--color-danger)'"
+              onmouseout="this.style.color = 'var(--color-text-muted)'"
+              @click.stop="deleteItem('pcs', p.id)"
+            >
+              ×
+            </button>
             <div class="flex justify-between items-start mb-1">
-              <span class="text-xs font-bold" style="color: var(--color-text);">{{ p.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background-color: var(--color-success-glow); color: var(--color-success);">量产</span>
+              <span class="text-xs font-bold" style="color: var(--color-text)">{{ p.model }}</span>
+              <span
+                class="text-[10px] px-1.5 py-0.5 rounded"
+                style="background-color: var(--color-success-glow); color: var(--color-success)"
+              >
+                量产
+              </span>
             </div>
-            <div class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ p.mfr }}</div>
+            <div class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+              {{ p.mfr }}
+            </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div style="color: var(--color-text-muted);">功率</div><div style="color: var(--color-text-secondary); text-align:right;">{{ p.ratedPowerMW }} MW</div>
-              <div style="color: var(--color-text-muted);">效率</div><div style="color: var(--color-text-secondary); text-align:right;">{{ p.efficiency }}%</div>
-              <div style="color: var(--color-text-muted);">AC电压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ p.acVoltage }}</div>
-              <div style="color: var(--color-text-muted);">散热</div><div style="color: var(--color-text-secondary); text-align:right;">{{ p.cooling }}</div>
+              <div style="color: var(--color-text-muted)">功率</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ p.ratedPowerMW }} MW</div>
+              <div style="color: var(--color-text-muted)">效率</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ p.efficiency }}%</div>
+              <div style="color: var(--color-text-muted)">AC电压</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ p.acVoltage }}
+              </div>
+              <div style="color: var(--color-text-muted)">散热</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ p.cooling }}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent);">D</span>
+          <span
+            class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
+            style="background-color: var(--color-accent-glow); color: var(--color-accent)"
+          >
+            D
+          </span>
           <div>
-            <h3 class="font-bold text-sm" style="color: var(--color-text);">工商业储能柜 C&I Cabinet <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Commercial & Industrial</span></h3>
+            <h3 class="font-bold text-sm" style="color: var(--color-text)">
+              工商业储能柜 C&I Cabinet
+              <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted)">
+                Commercial & Industrial
+              </span>
+            </h3>
           </div>
         </div>
         <div class="grid grid-cols-4 gap-2">
-          <div v-for="c in cabinets" :key="c.id"
+          <div
+            v-for="c in cabinets"
+            :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="selectedCabinet === c.id ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
-            onmouseover="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-input-border)';"
-            onmouseout="if(this.style.borderColor !== 'var(--color-accent)') this.style.borderColor='var(--color-border)';">
+            :style="
+              selectedCabinet === c.id
+                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
+            onmouseover="
+              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-input-border)'
+            "
+            onmouseout="
+              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-border)'
+            "
+          >
             <div class="flex justify-between items-start mb-1">
-              <span class="text-xs font-bold" style="color: var(--color-text);">{{ c.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background-color: var(--color-success-glow); color: var(--color-success);">{{ c.status === 'mass-production' ? '量产' : '在研' }}</span>
+              <span class="text-xs font-bold" style="color: var(--color-text)">{{ c.model }}</span>
+              <span
+                class="text-[10px] px-1.5 py-0.5 rounded"
+                style="background-color: var(--color-success-glow); color: var(--color-success)"
+              >
+                {{ c.status === 'mass-production' ? '量产' : '在研' }}
+              </span>
             </div>
-            <div class="text-[10px] mb-2" style="color: var(--color-text-muted);">{{ c.mfr }}</div>
+            <div class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+              {{ c.mfr }}
+            </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div style="color: var(--color-text-muted);">容量</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedEnergyKwh }} kWh</div>
-              <div style="color: var(--color-text-muted);">功率</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.ratedPowerKw }} kW</div>
-              <div style="color: var(--color-text-muted);">AC电压</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.acVoltage }}</div>
-              <div style="color: var(--color-text-muted);">散热</div><div style="color: var(--color-text-secondary); text-align:right;">{{ c.cooling }}</div>
+              <div style="color: var(--color-text-muted)">容量</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ c.ratedEnergyKwh }} kWh</div>
+              <div style="color: var(--color-text-muted)">功率</div>
+              <div style="color: var(--color-text-secondary); text-align: right">{{ c.ratedPowerKw }} kW</div>
+              <div style="color: var(--color-text-muted)">AC电压</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ c.acVoltage }}
+              </div>
+              <div style="color: var(--color-text-muted)">散热</div>
+              <div style="color: var(--color-text-secondary); text-align: right">
+                {{ c.cooling }}
+              </div>
             </div>
             <div class="mt-2">
-              <span class="text-[9px] px-1.5 py-0.5 rounded" style="background-color: var(--color-accent-glow); color: var(--color-accent);">{{ c.scenario }}</span>
+              <span
+                class="text-[9px] px-1.5 py-0.5 rounded"
+                style="background-color: var(--color-accent-glow); color: var(--color-accent)"
+              >
+                {{ c.scenario }}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
+      <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary);">E</span>
+          <span
+            class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
+            style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary)"
+          >
+            E
+          </span>
           <div>
-            <h3 class="font-bold text-sm" style="color: var(--color-text);">典型场景方案 Template <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted);">Scenario Templates</span></h3>
+            <h3 class="font-bold text-sm" style="color: var(--color-text)">
+              典型场景方案 Template
+              <span class="text-[10px] font-normal ml-1" style="color: var(--color-text-muted)">
+                Scenario Templates
+              </span>
+            </h3>
           </div>
         </div>
         <div class="grid grid-cols-5 gap-2 mb-4">
-          <div v-for="s in scenarios" :key="s.id"
-            @click="applyScenario(s)"
+          <div
+            v-for="s in scenarios"
+            :key="s.id"
             class="border rounded-lg p-3 cursor-pointer transition-all text-center"
-            :style="selectedScenario === s.id ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
-            onmouseover="if(this.style.borderColor !== 'var(--color-accent-secondary)') this.style.borderColor='var(--color-input-border)';"
-            onmouseout="if(this.style.borderColor !== 'var(--color-accent-secondary)') this.style.borderColor='var(--color-border)';">
-            <div class="text-xs font-bold mb-1" style="color: var(--color-text);">{{ s.name }}</div>
-            <div class="text-[10px] leading-relaxed" style="color: var(--color-text-muted);">{{ s.description }}</div>
+            :style="
+              selectedScenario === s.id
+                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
+            onmouseover="
+              if (this.style.borderColor !== 'var(--color-accent-secondary)')
+                this.style.borderColor = 'var(--color-input-border)'
+            "
+            onmouseout="
+              if (this.style.borderColor !== 'var(--color-accent-secondary)')
+                this.style.borderColor = 'var(--color-border)'
+            "
+            @click="applyScenario(s)"
+          >
+            <div class="text-xs font-bold mb-1" style="color: var(--color-text)">
+              {{ s.name }}
+            </div>
+            <div class="text-[10px] leading-relaxed" style="color: var(--color-text-muted)">
+              {{ s.description }}
+            </div>
           </div>
         </div>
-        <div v-if="configSummary" class="border-t pt-3" style="border-color: var(--color-border);">
-          <h4 class="text-xs font-bold mb-2" style="color: var(--color-text-secondary);">当前方案摘要 Current Selection</h4>
+        <div v-if="configSummary" class="border-t pt-3" style="border-color: var(--color-border)">
+          <h4 class="text-xs font-bold mb-2" style="color: var(--color-text-secondary)">
+            当前方案摘要 Current Selection
+          </h4>
           <div class="grid grid-cols-3 gap-3 text-[10px]">
-            <div class="rounded p-2" style="background-color: var(--color-card-dark);">
-              <span style="color: var(--color-text-muted);">电芯</span>
-              <div class="font-mono mt-0.5" style="color: var(--color-text);">{{ configSummary.cell || '未选择' }}</div>
+            <div class="rounded p-2" style="background-color: var(--color-card-dark)">
+              <span style="color: var(--color-text-muted)">电芯</span>
+              <div class="font-mono mt-0.5" style="color: var(--color-text)">
+                {{ configSummary.cell || '未选择' }}
+              </div>
             </div>
-            <div class="rounded p-2" style="background-color: var(--color-card-dark);">
-              <span style="color: var(--color-text-muted);">集装箱</span>
-              <div class="font-mono mt-0.5" style="color: var(--color-text);">{{ configSummary.container || '未选择' }}</div>
+            <div class="rounded p-2" style="background-color: var(--color-card-dark)">
+              <span style="color: var(--color-text-muted)">集装箱</span>
+              <div class="font-mono mt-0.5" style="color: var(--color-text)">
+                {{ configSummary.container || '未选择' }}
+              </div>
             </div>
-            <div class="rounded p-2" style="background-color: var(--color-card-dark);">
-              <span style="color: var(--color-text-muted);">PCS</span>
-              <div class="font-mono mt-0.5" style="color: var(--color-text);">{{ configSummary.pcs || '未选择' }}</div>
+            <div class="rounded p-2" style="background-color: var(--color-card-dark)">
+              <span style="color: var(--color-text-muted)">PCS</span>
+              <div class="font-mono mt-0.5" style="color: var(--color-text)">
+                {{ configSummary.pcs || '未选择' }}
+              </div>
             </div>
           </div>
           <div class="mt-3 flex justify-end">
-            <button @click="applyToSimulation"
+            <button
               class="text-xs px-6 py-1.5 rounded shadow-md transition-all active:scale-95"
-              style="background-color: var(--color-accent-secondary); color: white;"
-              onmouseover="this.style.opacity='0.9';"
-              onmouseout="this.style.opacity='1';">
+              style="background-color: var(--color-accent-secondary); color: white"
+              onmouseover="this.style.opacity = '0.9'"
+              onmouseout="this.style.opacity = '1'"
+              @click="applyToSimulation"
+            >
               应用至仿真参数 Apply to Simulation
             </button>
           </div>
         </div>
       </div>
 
-      <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center" style="background-color: rgba(0,0,0,0.6);" @click.self="showModal = false">
-        <div class="rounded-xl p-5 w-[480px] max-h-[80vh] overflow-y-auto shadow-2xl" style="background-color: var(--color-card); border: 1px solid var(--color-border);">
-          <h3 class="font-bold text-sm mb-4" style="color: var(--color-text);">{{ modalTitle }}</h3>
+      <div
+        v-if="showModal"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+        style="background-color: rgba(0, 0, 0, 0.6)"
+        @click.self="showModal = false"
+      >
+        <div
+          class="rounded-xl p-5 w-[480px] max-h-[80vh] overflow-y-auto shadow-2xl"
+          style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+        >
+          <h3 class="font-bold text-sm mb-4" style="color: var(--color-text)">
+            {{ modalTitle }}
+          </h3>
           <div class="space-y-3">
             <template v-if="modalType === 'cell'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">厂商</label><input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">型号</label><input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">化学体系</label><input v-model="modalForm.chemistry" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">容量 Ah</label><input v-model.number="modalForm.capacityAh" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">标称电压 V</label><input v-model.number="modalForm.voltageNominal" type="number" step="0.1" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">循环寿命</label><input v-model.number="modalForm.cycleLife" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">尺寸</label><input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">重量 kg</label><input v-model="modalForm.weight" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">厂商</label>
+                  <input
+                    v-model="modalForm.mfr"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">型号</label>
+                  <input
+                    v-model="modalForm.model"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">化学体系</label>
+                  <input
+                    v-model="modalForm.chemistry"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">容量 Ah</label>
+                  <input
+                    v-model.number="modalForm.capacityAh"
+                    type="number"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">标称电压 V</label>
+                  <input
+                    v-model.number="modalForm.voltageNominal"
+                    type="number"
+                    step="0.1"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">循环寿命</label>
+                  <input
+                    v-model.number="modalForm.cycleLife"
+                    type="number"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">尺寸</label>
+                  <input
+                    v-model="modalForm.dimensions"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">重量 kg</label>
+                  <input
+                    v-model="modalForm.weight"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
               </div>
             </template>
             <template v-else-if="modalType === 'container'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">厂商</label><input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">型号</label><input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">容量 Ah</label><input v-model.number="modalForm.capacityAh" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">标称电压 V</label><input v-model.number="modalForm.voltageNominal" type="number" step="0.1" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">最高电压 V</label><input v-model.number="modalForm.voltageMax" type="number" step="0.05" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">最低电压 V</label><input v-model.number="modalForm.voltageMin" type="number" step="0.05" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">循环寿命</label><input v-model.number="modalForm.cycleLife" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">日历寿命 年</label><input v-model.number="modalForm.calendarLife" type="number" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">尺寸</label><input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">重量 kg</label><input v-model.number="modalForm.weight" type="number" step="0.01" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">厂商</label>
+                  <input
+                    v-model="modalForm.mfr"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">型号</label>
+                  <input
+                    v-model="modalForm.model"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">容量 Ah</label>
+                  <input
+                    v-model.number="modalForm.capacityAh"
+                    type="number"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">标称电压 V</label>
+                  <input
+                    v-model.number="modalForm.voltageNominal"
+                    type="number"
+                    step="0.1"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">最高电压 V</label>
+                  <input
+                    v-model.number="modalForm.voltageMax"
+                    type="number"
+                    step="0.05"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">最低电压 V</label>
+                  <input
+                    v-model.number="modalForm.voltageMin"
+                    type="number"
+                    step="0.05"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">循环寿命</label>
+                  <input
+                    v-model.number="modalForm.cycleLife"
+                    type="number"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">日历寿命 年</label>
+                  <input
+                    v-model.number="modalForm.calendarLife"
+                    type="number"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">尺寸</label>
+                  <input
+                    v-model="modalForm.dimensions"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">重量 kg</label>
+                  <input
+                    v-model.number="modalForm.weight"
+                    type="number"
+                    step="0.01"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
               </div>
             </template>
             <template v-else-if="modalType === 'pcs'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">厂商</label><input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">型号</label><input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">额定功率 MW</label><input v-model.number="modalForm.ratedPowerMW" type="number" step="0.001" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">效率 %</label><input v-model.number="modalForm.efficiency" type="number" step="0.1" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">AC电压</label><input v-model="modalForm.acVoltage" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">DC范围</label><input v-model="modalForm.dcVoltageRange" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
-                <div><label class="block mb-0.5" style="color: var(--color-text-muted);">散热</label><input v-model="modalForm.cooling" class="w-full rounded px-2 py-1.5 text-xs" style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border); color: var(--color-text);" onfocus="this.style.borderColor='var(--color-accent)'; this.style.outline='none';" onblur="this.style.borderColor='var(--color-input-border)';"></div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">厂商</label>
+                  <input
+                    v-model="modalForm.mfr"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">型号</label>
+                  <input
+                    v-model="modalForm.model"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">额定功率 MW</label>
+                  <input
+                    v-model.number="modalForm.ratedPowerMW"
+                    type="number"
+                    step="0.001"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">效率 %</label>
+                  <input
+                    v-model.number="modalForm.efficiency"
+                    type="number"
+                    step="0.1"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">AC电压</label>
+                  <input
+                    v-model="modalForm.acVoltage"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">DC范围</label>
+                  <input
+                    v-model="modalForm.dcVoltageRange"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-0.5" style="color: var(--color-text-muted)">散热</label>
+                  <input
+                    v-model="modalForm.cooling"
+                    class="w-full rounded px-2 py-1.5 text-xs"
+                    style="
+                      background-color: var(--color-input-bg-dark);
+                      border: 1px solid var(--color-input-border);
+                      color: var(--color-text);
+                    "
+                    onfocus="
+                      this.style.borderColor = 'var(--color-accent)'
+                      this.style.outline = 'none'
+                    "
+                    onblur="this.style.borderColor = 'var(--color-input-border)'"
+                  />
+                </div>
               </div>
             </template>
 
-            <div class="border-t pt-3" style="border-color: var(--color-border);">
-              <p class="text-[10px] mb-2" style="color: var(--color-text-muted);">或上传规格书自动提取 (支持 PDF/CSV)</p>
+            <div class="border-t pt-3" style="border-color: var(--color-border)">
+              <p class="text-[10px] mb-2" style="color: var(--color-text-muted)">或上传规格书自动提取 (支持 PDF/CSV)</p>
               <div class="flex gap-2 text-[10px]">
-                <input ref="specInput" type="file" accept=".pdf,.csv,.xlsx,.xls" class="hidden" @change="onSpecUpload">
-                <button @click="$refs.specInput.click()" class="px-3 py-1.5 rounded transition-colors" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border); color: var(--color-text-secondary);" onmouseover="this.style.borderColor='var(--color-accent)';" onmouseout="this.style.borderColor='var(--color-border)';">
+                <input
+                  ref="specInput"
+                  type="file"
+                  accept=".pdf,.csv,.xlsx,.xls"
+                  class="hidden"
+                  @change="onSpecUpload"
+                />
+                <button
+                  class="px-3 py-1.5 rounded transition-colors"
+                  style="
+                    background-color: var(--color-card-dark);
+                    border: 1px solid var(--color-border);
+                    color: var(--color-text-secondary);
+                  "
+                  onmouseover="this.style.borderColor = 'var(--color-accent)'"
+                  onmouseout="this.style.borderColor = 'var(--color-border)'"
+                  @click="$refs.specInput.click()"
+                >
                   上传规格书
                 </button>
-                <span v-if="specUploading" class="self-center" style="color: var(--color-accent-secondary);">解析中...</span>
-                <span v-if="specResult" class="self-center" style="color: var(--color-success);">{{ specResult }}</span>
+                <span v-if="specUploading" class="self-center" style="color: var(--color-accent-secondary)">
+                  解析中...
+                </span>
+                <span v-if="specResult" class="self-center" style="color: var(--color-success)">{{ specResult }}</span>
               </div>
             </div>
           </div>
-          <div class="flex justify-end gap-2 mt-4 pt-3 border-t" style="border-color: var(--color-border);">
-            <button @click="showModal = false" class="text-xs px-3 py-1.5" style="color: var(--color-text-muted);" onmouseover="this.style.color='var(--color-text-secondary)';" onmouseout="this.style.color='var(--color-text-muted)';">取消</button>
-            <button @click="saveProduct" class="text-xs px-4 py-1.5 rounded transition-colors" style="background-color: var(--color-accent-secondary); color: white;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">保存</button>
+          <div class="flex justify-end gap-2 mt-4 pt-3 border-t" style="border-color: var(--color-border)">
+            <button
+              class="text-xs px-3 py-1.5"
+              style="color: var(--color-text-muted)"
+              onmouseover="this.style.color = 'var(--color-text-secondary)'"
+              onmouseout="this.style.color = 'var(--color-text-muted)'"
+              @click="showModal = false"
+            >
+              取消
+            </button>
+            <button
+              class="text-xs px-4 py-1.5 rounded transition-colors"
+              style="background-color: var(--color-accent-secondary); color: white"
+              onmouseover="this.style.opacity = '0.9'"
+              onmouseout="this.style.opacity = '1'"
+              @click="saveProduct"
+            >
+              保存
+            </button>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -323,7 +1059,14 @@ const pcsFilter = ref('')
 const pcsPowerFilter = ref('0')
 
 // 从useProducts加载的数据
-const { cells: cellsFromProducts, containers: containersFromProducts, pcs: pcsFromProducts, loadAll, createProduct, deleteProduct } = useProducts()
+const {
+  cells: cellsFromProducts,
+  containers: containersFromProducts,
+  pcs: pcsFromProducts,
+  loadAll,
+  createProduct,
+  deleteProduct
+} = useProducts()
 
 // 本地数据（用于降级）
 const localData = ref(JSON.parse(JSON.stringify(baseProducts)))
@@ -332,9 +1075,13 @@ const localData = ref(JSON.parse(JSON.stringify(baseProducts)))
 async function loadLibraryData() {
   try {
     await loadAll()
-    
+
     // 如果数据库为空，初始化默认数据
-    if (cellsFromProducts.value.length === 0 && containersFromProducts.value.length === 0 && pcsFromProducts.value.length === 0) {
+    if (
+      cellsFromProducts.value.length === 0 &&
+      containersFromProducts.value.length === 0 &&
+      pcsFromProducts.value.length === 0
+    ) {
       await seedLibrary()
     }
   } catch (error) {
@@ -359,21 +1106,26 @@ async function seedLibrary() {
 
 function localMfrList(key) {
   // 优先使用useProducts数据，否则降级使用本地数据
-  const data = key === 'cells' ? cellsFromProducts.value : 
-               key === 'containers' ? containersFromProducts.value : 
-               key === 'pcs' ? pcsFromProducts.value : []
-  
+  const data =
+    key === 'cells'
+      ? cellsFromProducts.value
+      : key === 'containers'
+        ? containersFromProducts.value
+        : key === 'pcs'
+          ? pcsFromProducts.value
+          : []
+
   if (data.length > 0) {
-    return [...new Set(data.map(c => c.mfr).filter(Boolean))]
+    return [...new Set(data.map((c) => c.mfr).filter(Boolean))]
   }
-  return [...new Set(localData.value[key]?.map(c => c.mfr) || [])]
+  return [...new Set(localData.value[key]?.map((c) => c.mfr) || [])]
 }
 
 function localFiltered(key, mfrFilter, powerFilter) {
   // 优先使用useProducts数据
   let list = []
   if (key === 'cells' && cellsFromProducts.value.length > 0) {
-    list = cellsFromProducts.value.map(c => ({
+    list = cellsFromProducts.value.map((c) => ({
       id: c.id,
       model: c.model,
       mfr: c.mfr,
@@ -391,10 +1143,10 @@ function localFiltered(key, mfrFilter, powerFilter) {
       status: c.status,
       certifications: c.certifications,
       unitPrice: c.unitPrice,
-      remarks: c.remarks,
+      remarks: c.remarks
     }))
   } else if (key === 'containers' && containersFromProducts.value.length > 0) {
-    list = containersFromProducts.value.map(c => ({
+    list = containersFromProducts.value.map((c) => ({
       id: c.id,
       model: c.model,
       mfr: c.mfr,
@@ -415,10 +1167,10 @@ function localFiltered(key, mfrFilter, powerFilter) {
       status: c.status,
       certifications: c.certifications,
       unitPrice: c.unitPrice,
-      remarks: c.remarks,
+      remarks: c.remarks
     }))
   } else if (key === 'pcs' && pcsFromProducts.value.length > 0) {
-    list = pcsFromProducts.value.map(p => ({
+    list = pcsFromProducts.value.map((p) => ({
       id: p.id,
       model: p.model,
       mfr: p.mfr,
@@ -436,15 +1188,15 @@ function localFiltered(key, mfrFilter, powerFilter) {
       status: p.status,
       certifications: p.certifications,
       unitPrice: p.unitPrice,
-      remarks: p.remarks,
+      remarks: p.remarks
     }))
   } else {
     list = localData.value[key] || []
   }
-  
-  if (mfrFilter) list = list.filter(c => c.mfr === mfrFilter)
+
+  if (mfrFilter) list = list.filter((c) => c.mfr === mfrFilter)
   if (key === 'pcs' && powerFilter && powerFilter !== '0') {
-    list = list.filter(p => p.ratedPowerMW === Number(powerFilter))
+    list = list.filter((p) => p.ratedPowerMW === Number(powerFilter))
   }
   return list
 }
@@ -459,7 +1211,7 @@ async function deleteItem(key, id) {
     console.error('API删除失败:', error)
   }
   // 降级使用本地删除
-  localData.value[key] = localData.value[key].filter(item => item.id !== id)
+  localData.value[key] = localData.value[key].filter((item) => item.id !== id)
   saveLocal()
 }
 
@@ -475,23 +1227,55 @@ function openAddModal(type) {
   showModal.value = true
   specResult.value = ''
   if (type === 'cell') {
-    modalForm.value = { mfr: '', model: '', chemistry: 'LFP', capacityAh: '', voltageNominal: 3.2, voltageMax: '', voltageMin: '', cycleLife: '', calendarLife: 20, dimensions: '', weight: '', status: 'mass-production' }
+    modalForm.value = {
+      mfr: '',
+      model: '',
+      chemistry: 'LFP',
+      capacityAh: '',
+      voltageNominal: 3.2,
+      voltageMax: '',
+      voltageMin: '',
+      cycleLife: '',
+      calendarLife: 20,
+      dimensions: '',
+      weight: '',
+      status: 'mass-production'
+    }
   } else if (type === 'container') {
-    modalForm.value = { mfr: '', model: '', ratedEnergyMWh: '', ratedPowerMW: '', cellModel: '', cooling: '', dimensions: '', weight: '', status: 'mass-production' }
+    modalForm.value = {
+      mfr: '',
+      model: '',
+      ratedEnergyMWh: '',
+      ratedPowerMW: '',
+      cellModel: '',
+      cooling: '',
+      dimensions: '',
+      weight: '',
+      status: 'mass-production'
+    }
   } else {
-    modalForm.value = { mfr: '', model: '', ratedPowerMW: '', efficiency: '', acVoltage: '', dcVoltageRange: '', cooling: '', status: 'mass-production' }
+    modalForm.value = {
+      mfr: '',
+      model: '',
+      ratedPowerMW: '',
+      efficiency: '',
+      acVoltage: '',
+      dcVoltageRange: '',
+      cooling: '',
+      status: 'mass-production'
+    }
   }
 }
 
 async function saveProduct() {
   const type = modalType.value
   const f = modalForm.value
-  
+
   // 构建API请求数据
-  let apiData = { ...f }
+  const apiData = { ...f }
   // 单数转复数
   const category = type === 'cell' ? 'cells' : type === 'container' ? 'containers' : 'pcs'
-  
+
   if (type === 'cell') {
     apiData.capacityAh = f.capacityAh
     apiData.voltageNominal = f.voltageNominal
@@ -500,7 +1284,8 @@ async function saveProduct() {
     apiData.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     apiData.cycleLife = f.cycleLife
     apiData.calendarLife = f.calendarLife || 20
-    apiData.energyDensity = f.energyDensity || (f.weight > 0 ? Math.round((apiData.ratedEnergyMwh * 1e6) / f.weight) : null)
+    apiData.energyDensity =
+      f.energyDensity || (f.weight > 0 ? Math.round((apiData.ratedEnergyMwh * 1e6) / f.weight) : null)
     apiData.dimensions = f.dimensions
     apiData.weight = f.weight ? parseFloat(f.weight) : null
   } else if (type === 'container') {
@@ -515,7 +1300,7 @@ async function saveProduct() {
     apiData.dcVoltageRange = f.dcVoltageRange
     apiData.cooling = f.cooling
   }
-  
+
   // 调用 Products API 保存（统一产品库，自动归属当前企业 + 刷新下拉框）
   try {
     await createProduct(category, apiData)
@@ -525,16 +1310,16 @@ async function saveProduct() {
     console.error('API保存失败:', error)
     alert('保存失败：' + (error.message || '未知错误'))
   }
-  
+
   // 降级使用本地保存
   const id = type + '-' + f.model?.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36)
-  let item = { id, ...f }
+  const item = { id, ...f }
 
   if (type === 'cell') {
     item.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     item.voltageMax = f.voltageMax || null
     item.voltageMin = f.voltageMin || null
-    item.voltageRange = (f.voltageMin && f.voltageMax) ? `${f.voltageMin}-${f.voltageMax}` : '2.5-3.65'
+    item.voltageRange = f.voltageMin && f.voltageMax ? `${f.voltageMin}-${f.voltageMax}` : '2.5-3.65'
     item.calendarLife = f.calendarLife || 20
     item.energyDensity = f.weight > 0 ? Math.round((item.ratedEnergyMwh * 1e6) / f.weight) : null
     item.sohCurve = 'default'
@@ -575,13 +1360,19 @@ async function onSpecUpload(e) {
     } else {
       specResult.value = '未能自动提取，请手动填写'
     }
-  } catch { specResult.value = '上传失败' }
+  } catch {
+    specResult.value = '上传失败'
+  }
   specUploading.value = false
 }
 
 function saveLocal() {
   if (typeof localStorage === 'undefined') return
-  try { localStorage.setItem('soh-products', JSON.stringify(localData.value)) } catch(e) {}
+  try {
+    localStorage.setItem('soh-products', JSON.stringify(localData.value))
+  } catch (e) {
+    console.warn(e)
+  }
 }
 
 try {
@@ -592,12 +1383,14 @@ try {
       localData.value = { ...baseProducts, ...parsed }
     }
   }
-} catch(e) {}
+} catch (e) {
+  console.warn(e)
+}
 
 const mfrList = computed(() => ({
   cells: localMfrList('cells'),
   containers: localMfrList('containers'),
-  pcs: localMfrList('pcs'),
+  pcs: localMfrList('pcs')
 }))
 
 const scenarios = baseProducts.scenarios
@@ -608,22 +1401,25 @@ const filteredContainers = computed(() => localFiltered('containers', containerF
 const filteredPcs = computed(() => localFiltered('pcs', pcsFilter.value, pcsPowerFilter.value))
 
 const configSummary = computed(() => {
-  const cell = localData.value.cells?.find(c => c.id === selectedCell.value)
-  const container = localData.value.containers?.find(c => c.id === selectedContainer.value)
-  const pcs = localData.value.pcs?.find(p => p.id === selectedPcs.value)
+  const cell = localData.value.cells?.find((c) => c.id === selectedCell.value)
+  const container = localData.value.containers?.find((c) => c.id === selectedContainer.value)
+  const pcs = localData.value.pcs?.find((p) => p.id === selectedPcs.value)
   return {
     cell: cell ? `${cell.mfr} ${cell.model} (${cell.capacityAh}Ah)` : null,
     container: container ? `${container.mfr} ${container.model} (${container.ratedEnergyMWh}MWh)` : null,
-    pcs: pcs ? `${pcs.mfr} ${pcs.model} (${pcs.ratedPowerMW}MW)` : null,
+    pcs: pcs ? `${pcs.mfr} ${pcs.model} (${pcs.ratedPowerMW}MW)` : null
   }
 })
 
 function applyScenario(s) {
   selectedScenario.value = s.id
   emit('applyConfig', {
-    duration: s.duration, requiredEnergy: s.requiredEnergy,
-    initContainerQty: s.initContainerQty, initPcsQty: s.initPcsQty,
-    ratedEnergy: s.ratedEnergy, scenario: s.name,
+    duration: s.duration,
+    requiredEnergy: s.requiredEnergy,
+    initContainerQty: s.initContainerQty,
+    initPcsQty: s.initPcsQty,
+    ratedEnergy: s.ratedEnergy,
+    scenario: s.name
   })
 }
 
@@ -631,23 +1427,23 @@ function applyToSimulation() {
   // 优先使用useProducts数据
   let cell, container, pcs
   if (cellsFromProducts.value.length > 0) {
-    cell = cellsFromProducts.value.find(c => c.id === selectedCell.value)
+    cell = cellsFromProducts.value.find((c) => c.id === selectedCell.value)
   } else {
-    cell = localData.value.cells?.find(c => c.id === selectedCell.value)
+    cell = localData.value.cells?.find((c) => c.id === selectedCell.value)
   }
-  
+
   if (containersFromProducts.value.length > 0) {
-    container = containersFromProducts.value.find(c => c.id === selectedContainer.value)
+    container = containersFromProducts.value.find((c) => c.id === selectedContainer.value)
   } else {
-    container = localData.value.containers?.find(c => c.id === selectedContainer.value)
+    container = localData.value.containers?.find((c) => c.id === selectedContainer.value)
   }
-  
+
   if (pcsFromProducts.value.length > 0) {
-    pcs = pcsFromProducts.value.find(p => p.id === selectedPcs.value)
+    pcs = pcsFromProducts.value.find((p) => p.id === selectedPcs.value)
   } else {
-    pcs = localData.value.pcs?.find(p => p.id === selectedPcs.value)
+    pcs = localData.value.pcs?.find((p) => p.id === selectedPcs.value)
   }
-  
+
   const payload = { cell, container, pcs }
   if (container) {
     payload.ratedEnergy = container.ratedEnergyMWh

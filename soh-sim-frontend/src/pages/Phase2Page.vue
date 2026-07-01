@@ -6,7 +6,9 @@
     </div>
     <div class="phase-body">
       <div class="steps-nav">
-        <button v-for="(s, i) in steps" :key="i" @click="activeStep = i" :class="{ active: activeStep === i }">{{ s.label }}</button>
+        <button v-for="(s, i) in steps" :key="i" :class="{ active: activeStep === i }" @click="activeStep = i">
+          {{ s.label }}
+        </button>
       </div>
       <div class="step-content">
         <ProductConfig v-if="activeStep === 0" />
@@ -45,20 +47,48 @@ const steps = [
   { label: '2.6 效率链配置' },
   { label: '2.7 能量流向图' },
   { label: '2.8 退化模型配置' },
-  { label: '2.9 健康热力图' },
+  { label: '2.9 健康热力图' }
 ]
 </script>
 
 <style scoped>
-.phase-page { padding: 24px; }
-.phase-header { margin-bottom: 24px; }
-.phase-header h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
-.phase-desc { color: var(--text-secondary, #666); font-size: 14px; margin: 0; }
-.steps-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.steps-nav button {
-  padding: 8px 16px; border: 1px solid var(--border, #ddd); border-radius: 6px;
-  background: var(--bg, #fff); cursor: pointer; font-size: 13px; transition: all 0.2s;
+.phase-page {
+  padding: 24px;
 }
-.steps-nav button.active { background: #409eff; color: #fff; border-color: #409eff; }
-.step-content { min-height: 400px; }
+.phase-header {
+  margin-bottom: 24px;
+}
+.phase-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.phase-desc {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin: 0;
+}
+.steps-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.steps-nav button {
+  padding: 8px 16px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.steps-nav button.active {
+  background: #409eff;
+  color: #fff;
+  border-color: #409eff;
+}
+.step-content {
+  min-height: 400px;
+}
 </style>

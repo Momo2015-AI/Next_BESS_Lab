@@ -20,11 +20,15 @@
     <div v-else class="template-grid">
       <div v-for="t in templates" :key="t.id" class="template-card">
         <div class="card-header">
-          <h3 class="card-title">{{ t.name }}</h3>
+          <h3 class="card-title">
+            {{ t.name }}
+          </h3>
           <span v-if="t.is_default" class="badge-default">默认</span>
           <span class="badge-type">{{ t.template_type }}</span>
         </div>
-        <p class="card-desc">{{ t.description }}</p>
+        <p class="card-desc">
+          {{ t.description }}
+        </p>
 
         <div class="card-metrics">
           <div class="metric">
@@ -103,13 +107,29 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.tool-page { padding: 24px; }
+.tool-page {
+  padding: 24px;
+}
 
-.tool-header { margin-bottom: 24px; }
-.tool-header h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
-.tool-header p { color: var(--text-secondary, #666); font-size: 14px; margin: 0; }
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.tool-header p {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin: 0;
+}
 
-.toolbar { display: flex; gap: 8px; margin-bottom: 20px; }
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
 
 .btn-primary {
   padding: 8px 16px;
@@ -122,8 +142,13 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.15s;
 }
-.btn-primary:hover { background: #005bb5; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary:hover {
+  background: #005bb5;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   padding: 8px 16px;
@@ -136,16 +161,21 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.15s;
 }
-.btn-secondary:hover { background: #EFF6FF; }
+.btn-secondary:hover {
+  background: #eff6ff;
+}
 
 .empty-state {
   text-align: center;
   padding: 48px 24px;
   background: #fff;
   border-radius: 12px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 }
-.empty-state p { color: #999; margin-bottom: 16px; }
+.empty-state p {
+  color: #999;
+  margin-bottom: 16px;
+}
 
 .template-grid {
   display: grid;
@@ -157,8 +187,8 @@ onMounted(() => {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #E0E0E0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
 }
@@ -182,8 +212,8 @@ onMounted(() => {
   border-radius: 4px;
   font-size: 11px;
   font-weight: 600;
-  background: #D1FAE5;
-  color: #065F46;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .badge-type {
@@ -191,8 +221,8 @@ onMounted(() => {
   border-radius: 4px;
   font-size: 11px;
   font-weight: 500;
-  background: #F3F4F6;
-  color: #6B7280;
+  background: #f3f4f6;
+  color: #6b7280;
   margin-left: auto;
 }
 
@@ -226,7 +256,7 @@ onMounted(() => {
 }
 
 .card-corrections {
-  background: #F9FAFB;
+  background: #f9fafb;
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 12px;
@@ -253,7 +283,7 @@ onMounted(() => {
   padding: 4px;
   background: #fff;
   border-radius: 4px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
 }
 
 .year-label {
@@ -272,7 +302,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding-top: 8px;
-  border-top: 1px solid #F0F0F0;
+  border-top: 1px solid #f0f0f0;
 }
 
 .card-meta {

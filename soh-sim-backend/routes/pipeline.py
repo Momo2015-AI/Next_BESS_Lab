@@ -1,6 +1,8 @@
-import uuid
 import threading
-from flask import Blueprint, request, jsonify
+import uuid
+
+from flask import Blueprint, jsonify, request
+
 from services.pipeline import calculate_full_pipeline, validate_pipeline_input
 
 pipeline_bp = Blueprint("pipeline", __name__)
