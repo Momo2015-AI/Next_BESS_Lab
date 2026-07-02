@@ -17,6 +17,7 @@ from routes.aux_power import aux_power_bp
 from routes.boq import boq_bp
 from routes.degradation import degradation_bp
 from routes.efficiency import efficiency_bp
+from routes.epc_modules import epc_bp
 from routes.export import export_bp
 from routes.financial import financial_bp
 from routes.pipeline import pipeline_bp
@@ -26,8 +27,6 @@ from routes.report import report_bp
 from routes.simulation import simulation_bp
 from routes.survey import survey_bp
 from services.boq import seed_boq_sections
-
-from routes.epc_modules import epc_bp
 
 app = Flask(__name__)
 CORS(app)
