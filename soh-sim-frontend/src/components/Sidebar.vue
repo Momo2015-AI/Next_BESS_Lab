@@ -7,10 +7,7 @@
     <nav class="sidebar-scroll">
       <div class="sidebar-section">
         <router-link to="/" class="sidebar-menu-item" :class="{ active: $route.path === '/' }">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
+          <AppIcon name="home" />
           <span>{{ $t('sidebar.home') }}</span>
         </router-link>
       </div>
@@ -48,12 +45,7 @@
           class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
-              {{ item.icon }}
-            </text>
-          </svg>
+          <AppIcon :name="item.icon" />
           <span>{{ item.label }}</span>
         </router-link>
       </div>
@@ -69,12 +61,7 @@
           class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
-              {{ item.icon }}
-            </text>
-          </svg>
+          <AppIcon :name="item.icon" />
           <span>{{ item.label }}</span>
         </router-link>
       </div>
@@ -82,10 +69,7 @@
       <div class="sidebar-section">
         <div class="sidebar-section-label">EPC</div>
         <router-link to="/epc" class="sidebar-menu-item" :class="{ active: $route.path === '/epc' }">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
+          <AppIcon name="dashboard" />
           <span>EPC</span>
         </router-link>
       </div>
@@ -93,10 +77,7 @@
 
     <div class="sidebar-footer">
       <router-link to="/auth" class="sidebar-menu-item" :class="{ active: $route.path === '/auth' }">
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
+        <AppIcon name="lock" />
         <span>{{ $t('sidebar.auth') }}</span>
       </router-link>
     </div>
@@ -108,6 +89,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import NexBessLogo from './NexBessLogo.vue'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
@@ -121,23 +103,23 @@ const phaseItems = computed(() => [
 ])
 
 const coreToolItems = computed(() => [
-  { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), icon: 'fx' },
-  { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), icon: 'sl' },
-  { id: 'conditions', path: '/tools/conditions', label: t('sidebar.toolConditions'), icon: 'wd' },
-  { id: 'auxpower', path: '/tools/auxpower', label: t('sidebar.toolAuxPower'), icon: 'P' },
-  { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), icon: '$' },
-  { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), icon: 'En' },
-  { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), icon: 'Di' }
+  { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), icon: 'code' },
+  { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), icon: 'sliders' },
+  { id: 'conditions', path: '/tools/conditions', label: t('sidebar.toolConditions'), icon: 'target' },
+  { id: 'auxpower', path: '/tools/auxpower', label: t('sidebar.toolAuxPower'), icon: 'lightning' },
+  { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), icon: 'dollar' },
+  { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), icon: 'wrench' },
+  { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), icon: 'upload' }
 ])
 
 const advToolItems = computed(() => [
-  { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), icon: 'Cf' },
-  { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyView'), icon: 'Sv' },
-  { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), icon: 'Sm' },
-  { id: 'report', path: '/tools/report', label: t('sidebar.toolReport'), icon: 'Rp' },
-  { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), icon: 'Pj' },
-  { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), icon: 'Tp' },
-  { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), icon: 'Ru' }
+  { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), icon: 'settings' },
+  { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyView'), icon: 'clipboard' },
+  { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), icon: 'play' },
+  { id: 'report', path: '/tools/report', label: t('sidebar.toolReport'), icon: 'document' },
+  { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), icon: 'folder' },
+  { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), icon: 'document' },
+  { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), icon: 'shield' }
 ])
 </script>
 
