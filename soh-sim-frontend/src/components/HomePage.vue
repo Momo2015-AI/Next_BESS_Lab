@@ -64,7 +64,7 @@
           <h3 class="step-name">{{ phase.title }}</h3>
           <p class="step-desc">{{ phase.desc }}</p>
           <div class="step-arrow">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </div>
