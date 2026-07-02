@@ -62,12 +62,12 @@
       class="p-3 rounded-lg space-y-2"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(245, 158, 11, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #f59e0b">
+      <div class="text-[11px] font-bold" style="color: var(--color-warning)">
         {{ $t('formulaLab.op2Title') }}
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
         <div class="p-2 rounded space-y-1" style="background: var(--color-bg); border: 1px solid var(--color-border)">
-          <span class="font-bold block text-[10px]" style="color: #f59e0b">
+          <span class="font-bold block text-[10px]" style="color: var(--color-warning)">
             A. {{ $t('paramPanel.dailyRunTotal') }}:
           </span>
           <div>
@@ -167,7 +167,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(236, 72, 153, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #ec4899">
+      <div class="text-[11px] font-bold" style="color: var(--color-info)">
         {{ $t('formulaLab.op3Title') }}
       </div>
       <div
@@ -177,7 +177,7 @@
         {{ $t('formulaLab.op3Title') }}
         <div
           class="my-1 p-1.5 rounded text-[10px]"
-          style="background: var(--color-input-bg); border: 1px solid var(--color-border); color: #ec4899"
+          style="background: var(--color-input-bg); border: 1px solid var(--color-border); color: var(--color-info)"
         >
           {{ $t('formulaLab.op3Title') }} (Age) = i - k
         </div>
@@ -235,7 +235,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(59, 130, 246, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #3b82f6">
+      <div class="text-[11px] font-bold" style="color: var(--color-accent)">
         {{ $t('formulaLab.opAcRteTitle') }}
       </div>
       <div class="text-[10px] mb-1 leading-relaxed" style="color: var(--color-text-muted)">
@@ -246,7 +246,7 @@
         style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-secondary)"
       >
         <div>
-          <span style="color: #3b82f6">
+          <span style="color: var(--color-accent)">
             AC-RTE
             <sub>不带辅耗</sub>
           </span>
@@ -257,7 +257,7 @@
           × 100%
         </div>
         <div style="border-top: 1px solid var(--color-border)" class="pt-2">
-          <span style="color: #3b82f6">
+          <span style="color: var(--color-accent)">
             AC-RTE
             <sub>带辅耗</sub>
           </span>
@@ -282,7 +282,7 @@
             <sub>AC</sub>
             = acEfficiency / 100
           </div>
-          <div style="color: #f59e0b" class="mt-0.5">
+          <div style="color: var(--color-warning)" class="mt-0.5">
             {{ $t('formulaLab.opAcRteNote') }}
           </div>
         </div>
@@ -292,7 +292,7 @@
     <div class="pt-3" style="border-top: 1px solid var(--color-border)">
       <h2
         class="section-title"
-        style="color: #f59e0b; border-color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em"
+        style="color: var(--color-warning); border-color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.05em"
       >
         {{ $t('formulaLab.financeTitle') }}
       </h2>
@@ -302,7 +302,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(234, 179, 8, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #eab308">
+      <div class="text-[11px] font-bold" style="color: var(--color-warning)">
         {{ $t('formulaLab.op5Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">
@@ -341,7 +341,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(249, 115, 22, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #f97316">
+      <div class="text-[11px] font-bold" style="color: var(--color-warning)">
         {{ $t('formulaLab.op6Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">
@@ -408,7 +408,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(244, 63, 94, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #e11d48">
+      <div class="text-[11px] font-bold" style="color: var(--color-danger)">
         {{ $t('formulaLab.op7Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">
@@ -537,7 +537,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(139, 92, 246, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #8b5cf6">
+      <div class="text-[11px] font-bold" style="color: var(--color-info)">
         {{ $t('formulaLab.op11Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">
@@ -565,7 +565,7 @@
     <div class="mt-4">
       <div
         class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all"
-        style="background: linear-gradient(135deg, #1e3a5f, #2f5496)"
+        style="background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent))"
         @click="showAuxPanel = !showAuxPanel"
       >
         <div class="flex items-center gap-2">

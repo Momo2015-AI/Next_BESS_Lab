@@ -19,7 +19,7 @@
     <div class="flex gap-2">
       <button
         class="px-3 py-1 text-xs rounded"
-        style="background: var(--color-accent); color: #fff"
+        style="background: var(--color-accent); color: white"
         @click="autoFillQuantities"
       >
         自动预填数量
@@ -171,7 +171,7 @@
                   />
                 </td>
                 <td class="p-1 text-center">
-                  <button class="text-xs" style="color: #ef4444" @click="removeItem(section.code, idx)">x</button>
+                  <button class="text-xs" style="color: var(--color-danger)" @click="removeItem(section.code, idx)">x</button>
                 </td>
               </tr>
             </tbody>
@@ -193,7 +193,7 @@
 
     <div
       class="flex items-center justify-between px-3 py-2 rounded"
-      style="background: var(--color-accent); color: #fff"
+      style="background: var(--color-accent); color: white"
     >
       <span class="text-sm font-bold">BOQ 总价</span>
       <span class="text-lg font-mono font-bold">{{ formatPrice(totalPrice) }} USD</span>

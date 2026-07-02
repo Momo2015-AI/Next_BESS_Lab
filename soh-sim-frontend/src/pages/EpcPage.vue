@@ -1083,7 +1083,7 @@ onMounted(() => {
   gap: 4px;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0;
 }
 
@@ -1092,24 +1092,24 @@ onMounted(() => {
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid var(--border, #ddd);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   border-bottom: none;
-  background: var(--bg, #fff);
+  background: var(--color-card);
   cursor: pointer;
   font-size: 13px;
-  transition: all 0.2s;
-  color: #666;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--color-text-secondary);
   position: relative;
   top: 1px;
 }
 
 .epc-tabs button.active {
-  background: #fff;
-  color: #0071e3;
-  border-color: #0071e3;
+  background: var(--color-card);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
   font-weight: 500;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid var(--color-card);
 }
 
 .tab-icon {
@@ -1130,49 +1130,50 @@ onMounted(() => {
   margin-left: 2px;
 }
 
+/* Priority badges - semantic status colors */
 .pri-P0-1 {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-success);
+  color: white;
 }
 .pri-P0-2 {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
 }
 .pri-P0-3 {
-  background: #e0e7ff;
-  color: #3730a3;
+  background: var(--color-accent-dark);
+  color: var(--color-accent);
 }
 .pri-P0-4 {
-  background: #fef3c7;
-  color: #92400e;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning);
 }
 .pri-P0-5 {
-  background: #f3e8ff;
-  color: #6b21a8;
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--color-info);
 }
 .pri-P1-1 {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--color-tab-hover);
+  color: var(--color-text-secondary);
 }
 .pri-P1-2 {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--color-card-dark);
+  color: var(--color-text-secondary);
 }
 .pri-P1-3 {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--color-step-bg);
+  color: var(--color-text-secondary);
 }
 .pri-P1-4 {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
 }
 
 /* Panel card */
 .panel-card {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 12px;
   padding: 24px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -1180,49 +1181,49 @@ onMounted(() => {
   font-size: 16px;
   font-weight: 700;
   margin: 0 0 16px;
-  color: #0071e3;
+  color: var(--color-accent);
 }
 
 .section-title {
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
 /* Form inputs */
 .field-label {
-  color: #999;
+  color: var(--color-text-muted);
 }
 
 .form-input {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-input-border);
   border-radius: 6px;
   font-size: 13px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .form-input:focus {
-  border-color: #0071e3;
-  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-glow);
 }
 
 /* Buttons */
 .btn-primary {
   padding: 8px 24px;
   border-radius: 8px;
-  background: #0071e3;
-  color: #fff;
+  background: var(--color-accent);
+  color: white;
   border: none;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary:hover {
-  background: #005bb5;
+  background: var(--color-accent-secondary);
 }
 .btn-primary:disabled {
   opacity: 0.6;
@@ -1231,8 +1232,8 @@ onMounted(() => {
 
 /* Metric cards */
 .metric-card {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 12px;
   text-align: center;
@@ -1241,44 +1242,44 @@ onMounted(() => {
 .metric-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text);
 }
 
 .metric-label {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--color-text-muted);
   margin-top: 2px;
 }
 
 .primary-text {
-  color: #0071e3 !important;
+  color: var(--color-accent) !important;
 }
 .pass-text {
-  color: #10b981 !important;
+  color: var(--color-success) !important;
 }
 .fail-text {
-  color: #ef4444 !important;
+  color: var(--color-danger) !important;
 }
 .warn-text {
-  color: #f59e0b !important;
+  color: var(--color-warning) !important;
 }
 
 /* Stage cards */
 .stage-card {
-  background: #eff6ff;
+  background: var(--color-accent-glow);
   border-radius: 8px;
   padding: 12px;
-  border: 1px solid #bfdbfe;
+  border: 1px solid var(--color-accent-dark);
 }
 
 /* Banners */
 .pass-banner {
-  background: #d1fae5;
+  background: rgba(16, 185, 129, 0.15);
   border-radius: 8px;
 }
 
 .fail-banner {
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.1);
   border-radius: 8px;
 }
 
@@ -1293,13 +1294,13 @@ onMounted(() => {
 }
 
 .header-cell {
-  background: #f5f7fa;
+  background: var(--color-table-header);
   font-weight: 600;
-  color: #333;
+  color: var(--color-text);
 }
 
 .border-row {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .status-badge {
@@ -1311,60 +1312,60 @@ onMounted(() => {
 }
 
 .status-badge.pass {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-success);
+  color: white;
 }
 .status-badge.fail {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--color-danger);
+  color: white;
 }
 .status-badge.warn {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--color-warning);
+  color: white;
 }
 .status-badge.neutral {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
 }
 
 /* Derating chart */
 .derating-chart {
-  background: #f9fafb;
+  background: var(--color-card);
   border-radius: 8px;
   padding: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
 }
 
 .derating-bar {
   min-height: 4px;
-  transition: height 0.3s;
+  transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Info box */
 .info-box {
-  background: #f9fafb;
+  background: var(--color-card);
   border-radius: 8px;
   padding: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
 }
 
 .info-list div {
-  color: #666;
+  color: var(--color-text-secondary);
 }
 
 /* Protection items */
 .protection-item {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 6px;
   padding: 8px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   font-size: 12px;
 }
 
 /* Chapter / section */
 .chapter-title {
-  background: #e8eef5;
-  color: #0071e3;
+  background: var(--color-bg-secondary);
+  color: var(--color-accent);
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
@@ -1375,7 +1376,7 @@ onMounted(() => {
 .section-item {
   margin-left: 16px;
   padding: 12px;
-  background: #f9fafb;
+  background: var(--color-card);
   border-radius: 6px;
   margin-bottom: 8px;
 }
@@ -1386,20 +1387,20 @@ onMounted(() => {
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
-  border: 1px solid #0071e3;
-  background: #fff;
-  color: #0071e3;
+  border: 1px solid var(--color-accent);
+  background: var(--color-card);
+  color: var(--color-accent);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chart-btn:hover {
-  background: #eff6ff;
+  background: var(--color-accent-glow);
 }
 
 .chart-btn.active {
-  background: #0071e3;
-  color: #fff;
+  background: var(--color-accent);
+  color: white;
 }
 
 .chart-btn:disabled {
@@ -1409,27 +1410,27 @@ onMounted(() => {
 
 /* Chart container */
 .chart-container {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--color-card);
   min-height: 300px;
 }
 
 /* Error box */
 .error-box {
-  background: #fef2f2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
   border-radius: 6px;
 }
 
 /* Empty state */
 .empty-state {
-  color: #999;
+  color: var(--color-text-muted);
 }
 
 /* Border top */
 .border-top {
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--color-border);
 }
 
 .space-y-4 > * + * {

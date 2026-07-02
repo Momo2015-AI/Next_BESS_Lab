@@ -508,20 +508,20 @@ function fillTestData() {
   background: var(--color-bg);
   color: var(--color-text);
   transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2f5496;
-  box-shadow: 0 0 0 3px rgba(47, 84, 150, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-muted);
 }
 
 .form-actions {
@@ -538,21 +538,21 @@ function fillTestData() {
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary {
-  background: #2f5496;
+  background: var(--color-accent);
   color: white;
   border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #2563eb;
+  background: var(--color-accent-secondary);
 }
 
 .btn-primary:disabled {
-  background: #9ca3af;
+  background: var(--color-text-muted);
   cursor: not-allowed;
 }
 

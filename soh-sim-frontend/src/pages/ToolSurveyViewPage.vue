@@ -412,30 +412,30 @@ function goToSimulation() {
 .form-input {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-input-border);
   border-radius: 6px;
   font-size: 13px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .form-input:focus {
-  border-color: #0071e3;
-  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-glow);
 }
 
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text);
   margin: 0 0 12px;
 }
 
 .search-section,
 .form-section {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   margin-bottom: 16px;
 }
 
@@ -450,48 +450,48 @@ function goToSimulation() {
   align-items: center;
   padding: 10px 12px;
   border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   margin-bottom: 6px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .result-item:hover {
-  background: #f0f7ff;
-  border-color: #0071e3;
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
 }
 
 .result-name {
   font-size: 13px;
   font-weight: 600;
-  color: #0071e3;
+  color: var(--color-accent);
   margin: 0;
 }
 .result-detail {
   font-size: 11px;
-  color: #999;
+  color: var(--color-text-muted);
   margin: 2px 0 0;
 }
 .result-action {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 4px;
-  background: #0071e3;
-  color: #fff;
+  background: var(--color-accent);
+  color: white;
 }
 
 .btn-primary {
   padding: 8px 20px;
   border-radius: 6px;
-  background: #0071e3;
-  color: #fff;
+  background: var(--color-accent);
+  color: white;
   border: none;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary:hover {
-  background: #005bb5;
+  background: var(--color-accent-secondary);
 }
 .btn-primary:disabled {
   opacity: 0.6;
@@ -501,31 +501,32 @@ function goToSimulation() {
 .btn-secondary {
   padding: 8px 20px;
   border-radius: 6px;
-  background: #fff;
-  color: #666;
-  border: 1px solid #d1d5db;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-input-border);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-secondary:hover {
-  background: #f9fafb;
+  background: var(--color-accent-glow);
 }
 
 .btn-accent {
   padding: 8px 20px;
   border-radius: 6px;
-  background: #10b981;
-  color: #fff;
+  background: var(--color-success);
+  color: white;
   border: none;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-accent:hover {
-  background: #059669;
+  background: var(--color-success);
+  opacity: 0.85;
 }
 
 .btn-sm {

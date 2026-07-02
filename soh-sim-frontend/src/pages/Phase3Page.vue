@@ -140,12 +140,12 @@ function onApplySimulationConfig(payload) {
   background: var(--bg, #fff);
   cursor: pointer;
   font-size: 13px;
-  transition: all 0.2s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .steps-nav button.active {
-  background: #409eff;
-  color: #fff;
-  border-color: #409eff;
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
 }
 .step-content {
   min-height: 400px;

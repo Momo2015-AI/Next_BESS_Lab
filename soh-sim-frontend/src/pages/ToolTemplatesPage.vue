@@ -135,15 +135,15 @@ onMounted(() => {
   padding: 8px 16px;
   border-radius: 6px;
   background: #0071e3;
-  color: #fff;
+  color: white;
   border: none;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary:hover {
-  background: #005bb5;
+  background: var(--color-accent-secondary);
 }
 .btn-primary:disabled {
   opacity: 0.6;
@@ -153,16 +153,16 @@ onMounted(() => {
 .btn-secondary {
   padding: 8px 16px;
   border-radius: 6px;
-  background: #fff;
-  color: #0071e3;
-  border: 1px solid #0071e3;
+  background: var(--color-card);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-secondary:hover {
-  background: #eff6ff;
+  background: var(--color-accent-glow);
 }
 
 .empty-state {

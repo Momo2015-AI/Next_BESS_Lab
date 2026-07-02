@@ -12,13 +12,13 @@
         <textarea
           v-model="sohText"
           class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none"
-          style="background: var(--color-input-bg); border: 1px solid var(--color-input-border); color: #f59e0b"
+          style="background: var(--color-input-bg); border: 1px solid var(--color-input-border); color: var(--color-warning)"
           placeholder="0.9925&#10;0.9318&#10;0.9014..."
         />
         <div class="flex gap-2 mt-2">
           <button
             class="flex-1 font-bold py-1.5 rounded text-xs transition-all"
-            style="background: #d97706; color: white"
+            style="background: var(--color-warning); color: white"
             @click="parseSoh"
           >
             {{ $t('dataInjection.parseSoh') }}
@@ -84,11 +84,11 @@
       </span>
       <div class="grid grid-cols-2 gap-4 mt-2 text-[11px] font-mono">
         <div class="overflow-auto max-h-32">
-          <div class="font-bold mb-1" style="color: #f59e0b">
+          <div class="font-bold mb-1" style="color: var(--color-warning)">
             {{ $t('dataInjection.sohLabel') }}
           </div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in soh" :key="'s-' + i" style="color: #d97706">
+            <div v-for="(v, i) in soh" :key="'s-' + i" style="color: var(--color-warning)">
               {{ 'Y' + i }}:{{ (v * 100).toFixed(1) }}%
             </div>
           </div>

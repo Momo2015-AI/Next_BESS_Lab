@@ -228,7 +228,7 @@ const advToolItems = computed(() => [
   color: white;
 }
 .dot-completed {
-  background: #30d158;
+  background: var(--color-success);
   color: white;
 }
 

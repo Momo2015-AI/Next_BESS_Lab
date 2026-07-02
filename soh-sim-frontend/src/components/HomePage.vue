@@ -289,7 +289,7 @@ const irrDisplay = computed(() => {
 .hero-eyebrow {
   font-size: 14px;
   font-weight: 500;
-  color: #0071e3;
+  color: var(--color-accent);
   letter-spacing: 0.02em;
   margin: 0 0 12px;
 }
@@ -298,23 +298,23 @@ const irrDisplay = computed(() => {
   font-size: 56px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: #1d1d1f;
+  color: var(--color-text);
   margin: 0 0 16px;
   line-height: 1.05;
 }
 
 [data-theme='dark'] .hero-title {
-  color: #f5f5f7;
+  color: var(--color-text);
 }
 
 .hero-accent {
-  color: #0071e3;
+  color: var(--color-accent);
 }
 
 .hero-subtitle {
   font-size: 19px;
   font-weight: 400;
-  color: #86868b;
+  color: var(--color-text-secondary);
   line-height: 1.5;
   margin: 0;
   max-width: 520px;
@@ -350,7 +350,7 @@ const irrDisplay = computed(() => {
 .metric-label {
   font-size: 12px;
   font-weight: 500;
-  color: #86868b;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 6px;
@@ -359,18 +359,18 @@ const irrDisplay = computed(() => {
 .metric-value {
   font-size: 32px;
   font-weight: 700;
-  color: #1d1d1f;
+  color: var(--color-text);
   letter-spacing: -0.02em;
 }
 
 [data-theme='dark'] .metric-value {
-  color: #f5f5f7;
+  color: var(--color-text);
 }
 
 .metric-unit {
   font-size: 16px;
   font-weight: 400;
-  color: #86868b;
+  color: var(--color-text-secondary);
   margin-left: 2px;
 }
 
@@ -427,8 +427,8 @@ const irrDisplay = computed(() => {
   border-radius: 20px;
   padding: 24px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 0.5px solid var(--border-color, rgba(0, 0, 0, 0.04));
   position: relative;
   overflow: hidden;
 }
@@ -463,13 +463,13 @@ const irrDisplay = computed(() => {
 }
 
 .num-pending {
-  color: #d2d2d7;
+  color: var(--color-text-muted);
 }
 .num-in_progress {
-  color: #0071e3;
+  color: var(--color-accent);
 }
 .num-completed {
-  color: #30d158;
+  color: var(--color-success);
 }
 
 .phase-badge {
@@ -481,24 +481,24 @@ const irrDisplay = computed(() => {
 
 .badge-pending {
   background: rgba(0, 0, 0, 0.04);
-  color: #86868b;
+  color: var(--color-text-secondary);
 }
 .badge-in_progress {
-  background: rgba(0, 113, 227, 0.1);
-  color: #0071e3;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
 }
 .badge-completed {
   background: rgba(48, 209, 88, 0.1);
-  color: #30d158;
+  color: var(--color-success);
 }
 
 [data-theme='dark'] .badge-pending {
   background: rgba(255, 255, 255, 0.06);
-  color: #6e6e73;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .badge-in_progress {
-  background: rgba(0, 113, 227, 0.15);
-  color: #40a9ff;
+  background: var(--color-accent-dark);
+  color: var(--color-accent-secondary);
 }
 [data-theme='dark'] .badge-completed {
   background: rgba(48, 209, 88, 0.15);
@@ -528,11 +528,11 @@ const irrDisplay = computed(() => {
   bottom: 20px;
   right: 20px;
   color: #d2d2d7;
-  transition: all 0.3s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .phase-card:hover .phase-arrow {
-  color: #0071e3;
+  color: var(--color-accent, #0071e3);
   transform: translateX(3px);
 }
 
@@ -564,7 +564,7 @@ const irrDisplay = computed(() => {
   backdrop-filter: blur(12px);
   border: 0.5px solid rgba(0, 0, 0, 0.04);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
@@ -609,17 +609,17 @@ const irrDisplay = computed(() => {
 .tool-name {
   font-size: 14px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--color-text);
   margin-bottom: 2px;
 }
 
 [data-theme='dark'] .tool-name {
-  color: #f5f5f7;
+  color: var(--color-text);
 }
 
 .tool-desc {
   font-size: 12px;
-  color: #86868b;
+  color: var(--color-text-secondary);
   line-height: 1.3;
 }
 
@@ -627,12 +627,12 @@ const irrDisplay = computed(() => {
   text-align: center;
   padding: 32px 48px;
   font-size: 12px;
-  color: #d2d2d7;
+  color: var(--color-text-muted);
   border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 
 [data-theme='dark'] .home-footer {
   border-top-color: rgba(255, 255, 255, 0.06);
-  color: #48484a;
+  color: var(--color-text);
 }
 </style>
