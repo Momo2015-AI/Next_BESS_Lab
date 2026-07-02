@@ -1,22 +1,8 @@
 <template>
   <aside class="sidebar-container">
-    <div class="sidebar-brand">
-      <div class="brand-icon-wrap">
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-        </svg>
-      </div>
-      <span class="brand-text">SOH-SIM</span>
-    </div>
+    <router-link to="/" class="sidebar-brand">
+      <NexBessLogo :hoverable="false" />
+    </router-link>
 
     <nav class="sidebar-scroll">
       <div class="sidebar-section">
@@ -121,6 +107,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
+import NexBessLogo from './NexBessLogo.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
@@ -182,26 +169,8 @@ const advToolItems = computed(() => [
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
   padding: 32px 28px 0;
-}
-
-.brand-icon-wrap {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent-blue), #40a9ff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.brand-text {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
+  text-decoration: none;
 }
 
 .sidebar-scroll {
