@@ -58,7 +58,7 @@ provide('showToast', showToast)
   display: flex;
   flex-direction: column;
   background: var(--bg-global);
-  background-attachment: fixed;
+  background-attachment: scroll;
   overflow: hidden;
 }
 
