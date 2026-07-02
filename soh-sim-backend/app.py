@@ -27,8 +27,7 @@ from routes.simulation import simulation_bp
 from routes.survey import survey_bp
 from services.boq import seed_boq_sections
 
-# EPC modules require database models not yet defined (SystemArchitecture et al)
-# from routes.epc_modules import epc_bp
+from routes.epc_modules import epc_bp
 
 
 app = Flask(__name__)
@@ -58,8 +57,7 @@ app.register_blueprint(report_bp)
 app.register_blueprint(aux_power_bp)
 
 app.register_blueprint(ai_sim_bp)
-# EPC blueprint disabled until database models are created
-# app.register_blueprint(epc_bp)
+app.register_blueprint(epc_bp)
 
 app.register_blueprint(pipeline_bp)
 app.register_blueprint(financial_bp)

@@ -320,14 +320,13 @@ def seed_api():
 def refresh_products():
     """刷新产品库：清空现有数据并重新导入种子数据"""
     try:
-        with db.session.begin():
-            for category, model_cls in _MODELS.items():
-                # 仅清空系统内置数据
-                if hasattr(model_cls, "is_builtin"):
-                    model_cls.query.filter(model_cls.is_builtin.is_(True)).delete()
-                else:
-                    model_cls.query.delete()
-            seed_products()
+        for category, model_cls in _MODELS.items():
+            # 仅清空系统内置数据
+            if hasattr(model_cls, "is_builtin"):
+                model_cls.query.filter(model_cls.is_builtin.is_(True)).delete()
+            else:
+                model_cls.query.delete()
+        seed_products()
         return jsonify({"success": True, "message": "产品库已刷新"})
     except Exception as e:
         db.session.rollback()
@@ -749,25 +748,23 @@ def get_hierarchy():
             packs_query = _apply_tenant_filter(
                 PackProduct.query.filter(PackProduct.cell_model == cell_model), PackProduct, user
             )
-            packs = packs_query.all()
-            if packs:
-                result["pack"] = packs[0].to_dict()
-                pack_model = packs[0].model
-                racks_query = _apply_tenant_filter(
+            pack = packs_query.first()
+            if pack:
+                result["pack"] = pack.to_dict()
+                pack_model = pack.model
+                rack = _apply_tenant_filter(
                     RackProduct.query.filter(RackProduct.pack_model == pack_model), RackProduct, user
-                )
-                racks = racks_query.all()
-                if racks:
-                    result["rack"] = racks[0].to_dict()
-                    rack_model = racks[0].model
-                    clusters_query = _apply_tenant_filter(
+                ).first()
+                if rack:
+                    result["rack"] = rack.to_dict()
+                    rack_model = rack.model
+                    cluster = _apply_tenant_filter(
                         ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model), ClusterProduct, user
-                    )
-                    clusters = clusters_query.all()
-                    if clusters:
-                        result["cluster"] = clusters[0].to_dict()
-                        cluster_model = clusters[0].model
-                        containers_query = _apply_tenant_filter(
+                    ).first()
+                    if cluster:
+                        result["cluster"] = cluster.to_dict()
+                        cluster_model = cluster.model
+                        container = _apply_tenant_filter(
                             ContainerProduct.query.filter(
                                 or_(
                                     ContainerProduct.cluster_model == cluster_model,
@@ -776,38 +773,34 @@ def get_hierarchy():
                             ),
                             ContainerProduct,
                             user,
-                        )
-                        containers = containers_query.all()
-                        if containers:
-                            result["container"] = containers[0].to_dict()
+                        ).first()
+                        if container:
+                            result["container"] = container.to_dict()
 
     elif pack_model:
         pack_query = _apply_tenant_filter(PackProduct.query.filter(PackProduct.model == pack_model), PackProduct, user)
         pack = pack_query.first()
         if pack:
             result["pack"] = pack.to_dict()
-            racks_query = _apply_tenant_filter(
+            rack = _apply_tenant_filter(
                 RackProduct.query.filter(RackProduct.pack_model == pack_model), RackProduct, user
-            )
-            racks = racks_query.all()
-            if racks:
-                result["rack"] = racks[0].to_dict()
-                rack_model = racks[0].model
-                clusters_query = _apply_tenant_filter(
+            ).first()
+            if rack:
+                result["rack"] = rack.to_dict()
+                rack_model = rack.model
+                cluster = _apply_tenant_filter(
                     ClusterProduct.query.filter(ClusterProduct.rack_model == rack_model), ClusterProduct, user
-                )
-                clusters = clusters_query.all()
-                if clusters:
-                    result["cluster"] = clusters[0].to_dict()
-                    cluster_model = clusters[0].model
-                    containers_query = _apply_tenant_filter(
+                ).first()
+                if cluster:
+                    result["cluster"] = cluster.to_dict()
+                    cluster_model = cluster.model
+                    container = _apply_tenant_filter(
                         ContainerProduct.query.filter(ContainerProduct.cluster_model == cluster_model),
                         ContainerProduct,
                         user,
-                    )
-                    containers = containers_query.all()
-                    if containers:
-                        result["container"] = containers[0].to_dict()
+                    ).first()
+                    if container:
+                        result["container"] = container.to_dict()
 
     rule_query = _apply_tenant_filter(
         BatteryConfigRule.query.filter(

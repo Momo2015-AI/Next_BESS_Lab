@@ -41,19 +41,7 @@ def get_projects():
     return jsonify(
         {
             "success": True,
-            "data": [
-                {
-                    "id": p.id,
-                    "name": p.name,
-                    "code": p.code,
-                    "status": p.status,
-                    "stage": p.stage,
-                    "customer_id": p.customer_id,
-                    "created_at": p.created_at.isoformat() if p.created_at else None,
-                    "updated_at": p.updated_at.isoformat() if p.updated_at else None,
-                }
-                for p in pagination.items
-            ],
+            "data": [p.to_dict() for p in pagination.items],
             "total": pagination.total,
             "page": pagination.page,
             "per_page": pagination.per_page,
@@ -146,36 +134,28 @@ def get_project(project_id):
     if user.role == "customer" and project.customer_id != user_id:
         return jsonify({"error": "权限不足"}), 403
 
-    # 获取所有版本
-    versions = ProjectVersion.query.filter_by(project_id=project_id).order_by(ProjectVersion.version_num.desc()).all()
+    # 获取版本列表（支持分页）
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 20, type=int)
+    pagination = (
+        ProjectVersion.query
+        .filter_by(project_id=project_id)
+        .order_by(ProjectVersion.version_num.desc())
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
+    versions = pagination.items
+
+    project_data = project.to_dict()
+    project_data["versions"] = [v.to_dict() for v in versions]
+    project_data["versions_total"] = pagination.total
+    project_data["versions_page"] = pagination.page
+    project_data["versions_per_page"] = pagination.per_page
+    project_data["versions_pages"] = pagination.pages
 
     return jsonify(
         {
             "success": True,
-            "data": {
-                "id": project.id,
-                "name": project.name,
-                "code": project.code,
-                "status": project.status,
-                "stage": project.stage,
-                "customer_id": project.customer_id,
-                "config": json.loads(project.config) if project.config else None,
-                "created_at": project.created_at.isoformat() if project.created_at else None,
-                "updated_at": project.updated_at.isoformat() if project.updated_at else None,
-                "versions": [
-                    {
-                        "id": v.id,
-                        "version_num": v.version_num,
-                        "name": v.name,
-                        "description": v.description,
-                        "is_active": v.is_active,
-                        "status": v.status,
-                        "created_by": v.created_by,
-                        "created_at": v.created_at.isoformat() if v.created_at else None,
-                    }
-                    for v in versions
-                ],
-            },
+            "data": project_data,
         }
     )
 
@@ -274,21 +254,7 @@ def get_versions(project_id):
     return jsonify(
         {
             "success": True,
-            "data": [
-                {
-                    "id": v.id,
-                    "version_num": v.version_num,
-                    "name": v.name,
-                    "description": v.description,
-                    "is_active": v.is_active,
-                    "status": v.status,
-                    "config_data": json.loads(v.config_data) if v.config_data else None,
-                    "created_by": v.created_by,
-                    "created_at": v.created_at.isoformat() if v.created_at else None,
-                    "updated_at": v.updated_at.isoformat() if v.updated_at else None,
-                }
-                for v in pagination.items
-            ],
+            "data": [v.to_dict() for v in pagination.items],
             "total": pagination.total,
             "page": pagination.page,
             "per_page": pagination.per_page,
@@ -374,19 +340,7 @@ def get_version(version_id):
     return jsonify(
         {
             "success": True,
-            "data": {
-                "id": version.id,
-                "project_id": version.project_id,
-                "version_num": version.version_num,
-                "name": version.name,
-                "description": version.description,
-                "is_active": version.is_active,
-                "status": version.status,
-                "config_data": json.loads(version.config_data) if version.config_data else None,
-                "created_by": version.created_by,
-                "created_at": version.created_at.isoformat() if version.created_at else None,
-                "updated_at": version.updated_at.isoformat() if version.updated_at else None,
-            },
+            "data": version.to_dict(),
         }
     )
 

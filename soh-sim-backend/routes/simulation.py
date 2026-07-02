@@ -29,30 +29,23 @@ def get_simulation_results(version_id):
     if not version:
         return jsonify({"error": "版本不存在"}), 404
 
-    results = (
-        SimulationResult.query.filter_by(version_id=version_id).order_by(SimulationResult.executed_at.desc()).all()
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 20, type=int)
+    pagination = (
+        SimulationResult.query
+        .filter_by(version_id=version_id)
+        .order_by(SimulationResult.executed_at.desc())
+        .paginate(page=page, per_page=per_page, error_out=False)
     )
 
     return jsonify(
         {
             "success": True,
-            "data": [
-                {
-                    "id": r.id,
-                    "name": r.name,
-                    "description": r.description,
-                    "simulation_type": r.simulation_type,
-                    "correction_template_id": r.correction_template_id,
-                    "params": json.loads(r.params) if r.params else None,
-                    "summary": json.loads(r.summary) if r.summary else None,
-                    "status": r.status,
-                    "executed_at": r.executed_at.isoformat() if r.executed_at else None,
-                    "execution_time_ms": r.execution_time_ms,
-                    "created_by": r.created_by,
-                    "created_at": r.created_at.isoformat() if r.created_at else None,
-                }
-                for r in results
-            ],
+            "data": [r.to_dict() for r in pagination.items],
+            "total": pagination.total,
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "pages": pagination.pages,
         }
     )
 
@@ -180,22 +173,7 @@ def get_simulation_result(result_id):
     return jsonify(
         {
             "success": True,
-            "data": {
-                "id": result.id,
-                "version_id": result.version_id,
-                "name": result.name,
-                "description": result.description,
-                "simulation_type": result.simulation_type,
-                "correction_template_id": result.correction_template_id,
-                "params": json.loads(result.params) if result.params else None,
-                "results": json.loads(result.results) if result.results else None,
-                "summary": json.loads(result.summary) if result.summary else None,
-                "status": result.status,
-                "executed_at": result.executed_at.isoformat() if result.executed_at else None,
-                "execution_time_ms": result.execution_time_ms,
-                "created_by": result.created_by,
-                "created_at": result.created_at.isoformat() if result.created_at else None,
-            },
+            "data": result.to_dict(),
         }
     )
 
@@ -249,23 +227,7 @@ def get_correction_templates():
     return jsonify(
         {
             "success": True,
-            "data": [
-                {
-                    "id": t.id,
-                    "name": t.name,
-                    "description": t.description,
-                    "template_type": t.template_type,
-                    "global_soh_factor": t.global_soh_factor,
-                    "global_rte_factor": t.global_rte_factor,
-                    "annual_corrections": json.loads(t.annual_corrections) if t.annual_corrections else {},
-                    "is_default": t.is_default,
-                    "status": t.status,
-                    "created_by": t.created_by,
-                    "created_at": t.created_at.isoformat() if t.created_at else None,
-                    "updated_at": t.updated_at.isoformat() if t.updated_at else None,
-                }
-                for t in pagination.items
-            ],
+            "data": [t.to_dict() for t in pagination.items],
             "total": pagination.total,
             "page": pagination.page,
             "per_page": pagination.per_page,
@@ -342,20 +304,7 @@ def get_correction_template(template_id):
     return jsonify(
         {
             "success": True,
-            "data": {
-                "id": template.id,
-                "name": template.name,
-                "description": template.description,
-                "template_type": template.template_type,
-                "global_soh_factor": template.global_soh_factor,
-                "global_rte_factor": template.global_rte_factor,
-                "annual_corrections": json.loads(template.annual_corrections) if template.annual_corrections else {},
-                "is_default": template.is_default,
-                "status": template.status,
-                "created_by": template.created_by,
-                "created_at": template.created_at.isoformat() if template.created_at else None,
-                "updated_at": template.updated_at.isoformat() if template.updated_at else None,
-            },
+            "data": template.to_dict(),
         }
     )
 

@@ -9,11 +9,19 @@ boq_bp = Blueprint("boq", __name__)
 
 @boq_bp.route("/api/boq/sections", methods=["GET"])
 def get_boq_sections():
-    sections = BoqSection.query.order_by(BoqSection.sort_order).all()
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 50, type=int)
+    pagination = BoqSection.query.order_by(BoqSection.sort_order).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
     return jsonify(
         {
             "success": True,
-            "data": [s.to_dict() for s in sections],
+            "data": [s.to_dict() for s in pagination.items],
+            "total": pagination.total,
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "pages": pagination.pages,
         }
     )
 

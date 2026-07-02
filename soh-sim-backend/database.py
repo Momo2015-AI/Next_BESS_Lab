@@ -17,12 +17,29 @@ db = SQLAlchemy()
 _JSON_COLUMNS = {
     "Survey": {"attachments"},
     "Project": {"config"},
+    "ProjectVersion": {"config_data"},
     "Simulation": {"input_params", "results", "manual_corrections"},
+    "SimulationResult": {"params", "results", "summary"},
+    "CorrectionTemplate": {"annual_corrections"},
     "BatteryPCSConfig": {"connection_diagram", "single_line_diagram"},
     "SohRteData": {"soh_values", "rte_values", "dod_values", "aug_qty_values"},
     "FinancialData": {"cashflow_data"},
     "ProductConfig": {"certifications"},
+    "CellProduct": {"certifications"},
+    "ContainerProduct": {"certifications"},
+    "PcsProduct": {"certifications"},
     "FormulaConfig": {"parameters"},
+    "AlgorithmModel": {"parameters", "applicable_scenarios"},
+    "BatteryManufacturer": {"calibrated_params"},
+    "SystemArchitecture": {"data"},
+    "GridComplianceAnalysis": {"data"},
+    "SafetyFireDesign": {"data"},
+    "IPPFinancialModel": {"data"},
+    "ComplianceMatrix": {"data"},
+    "ThermalManagement": {"data"},
+    "ScadaEmsDesign": {"data"},
+    "HVInterconnection": {"data"},
+    "BidDocument": {"data"},
 }
 
 
@@ -607,7 +624,7 @@ class CellProduct(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class PackProduct(db.Model):
@@ -639,7 +656,7 @@ class PackProduct(db.Model):
     status = db.Column(db.String(50), default="mass-production")
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class RackProduct(db.Model):
@@ -667,7 +684,7 @@ class RackProduct(db.Model):
     status = db.Column(db.String(50), default="mass-production")
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class ClusterProduct(db.Model):
@@ -696,7 +713,7 @@ class ClusterProduct(db.Model):
     status = db.Column(db.String(50), default="mass-production")
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class ContainerProduct(db.Model):
@@ -737,7 +754,7 @@ class ContainerProduct(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class PcsProduct(db.Model):
@@ -774,7 +791,7 @@ class PcsProduct(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class BatteryConfigRule(db.Model):
@@ -830,7 +847,7 @@ class BatteryConfigRule(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return _model_to_dict(self)
 
 
 class FormulaConfig(db.Model):
@@ -992,6 +1009,132 @@ class BatteryManufacturer(db.Model):
         return f"<BatteryManufacturer {self.name}>"
 
 
+class SystemArchitecture(db.Model):
+    """系统架构评估模型 (EPC: system-architecture)"""
+
+    __tablename__ = "system_architectures"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_sa_project_id", "project_id"),)
+
+
+class GridComplianceAnalysis(db.Model):
+    """电网合规分析模型 (EPC: grid-compliance)"""
+
+    __tablename__ = "grid_compliance_analyses"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_gca_project_id", "project_id"),)
+
+
+class SafetyFireDesign(db.Model):
+    """安全消防设计模型 (EPC: safety-fire)"""
+
+    __tablename__ = "safety_fire_designs"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_sfd_project_id", "project_id"),)
+
+
+class IPPFinancialModel(db.Model):
+    """IPP 财务模型 (EPC: ipp-financial)"""
+
+    __tablename__ = "ipp_financial_models"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_ifm_project_id", "project_id"),)
+
+
+class ComplianceMatrix(db.Model):
+    """合规矩阵模型 (EPC: compliance-matrix)"""
+
+    __tablename__ = "compliance_matrices"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_cm_project_id", "project_id"),)
+
+
+class ThermalManagement(db.Model):
+    """热管理设计模型 (EPC: thermal-management)"""
+
+    __tablename__ = "thermal_managements"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_tm_project_id", "project_id"),)
+
+
+class ScadaEmsDesign(db.Model):
+    """SCADA/EMS 设计模型 (EPC: scada-ems)"""
+
+    __tablename__ = "scada_ems_designs"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_sed_project_id", "project_id"),)
+
+
+class HVInterconnection(db.Model):
+    """高压接入设计模型 (EPC: hv-interconnection)"""
+
+    __tablename__ = "hv_interconnections"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_hvi_project_id", "project_id"),)
+
+
+class BidDocument(db.Model):
+    """投标文档模型 (EPC: bid-document)"""
+
+    __tablename__ = "bid_documents"
+
+    id = db.Column(db.String(36), primary_key=True)
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    data = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (db.Index("idx_bd_project_id", "project_id"),)
+
+
 class PinnModelWeights(db.Model):
     """PINN 神经网络权重存储模型"""
 
@@ -1019,15 +1162,29 @@ def init_db(app):
         User,
         Survey,
         Project,
+        ProjectVersion,
         Simulation,
+        SimulationResult,
+        CorrectionTemplate,
         BatteryPCSConfig,
         SohRteData,
         FinancialData,
         ProductConfig,
         FormulaConfig,
+        AlgorithmModel,
         BoqSection,
         BoqItem,
         BatteryManufacturer,
+        PinnModelWeights,
+        SystemArchitecture,
+        GridComplianceAnalysis,
+        SafetyFireDesign,
+        IPPFinancialModel,
+        ComplianceMatrix,
+        ThermalManagement,
+        ScadaEmsDesign,
+        HVInterconnection,
+        BidDocument,
     ]:
         model_cls.to_dict = _model_to_dict
 
