@@ -443,8 +443,12 @@
 
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onUnmounted } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { LineChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
+echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
 const props = defineProps({
   baseParams: { type: Object, default: () => ({}) }

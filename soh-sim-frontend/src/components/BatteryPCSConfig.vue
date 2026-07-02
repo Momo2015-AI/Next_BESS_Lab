@@ -365,9 +365,21 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { LineChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
 import { useProducts } from '../composables/useProducts'
 import { useDraftRef } from '../composables/useDraft'
+echarts.use([
+  CanvasRenderer,
+  LineChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  GraphicComponent
+])
 
 const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])

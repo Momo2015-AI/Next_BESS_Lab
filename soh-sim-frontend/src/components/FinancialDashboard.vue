@@ -975,9 +975,23 @@
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
 import { debounce } from 'lodash-es'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart, LineChart, PieChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
 import CurrencyConverter from './CurrencyConverter.vue'
+echarts.use([
+  CanvasRenderer,
+  BarChart,
+  LineChart,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  GraphicComponent
+])
 import CostWaterfallChart from './CostWaterfallChart.vue'
 import EnergyFlowSankey from './EnergyFlowSankey.vue'
 import ProductCAPEXLink from './ProductCAPEXLink.vue'

@@ -158,9 +158,23 @@
 <script setup>
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import * as echarts from 'echarts'
-
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { LineChart, BarChart, ScatterChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
+import { useDraft } from '../composables/useDraft'
 const { t } = useI18n()
+echarts.use([
+  CanvasRenderer,
+  LineChart,
+  BarChart,
+  ScatterChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  GraphicComponent
+])
 const props = defineProps({ results: Object, soh: Array, rte: Array, requiredEnergy: Number })
 
 const activeChart = ref('combined')

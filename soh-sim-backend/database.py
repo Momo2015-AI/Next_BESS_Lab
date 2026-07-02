@@ -113,6 +113,15 @@ class User(db.Model):
     formula_configs = db.relationship("FormulaConfig", back_populates="user")
     project_versions = db.relationship("ProjectVersion", back_populates="created_by_user")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "tenant_id": self.tenant_id, "username": self.username,
+            "email": self.email, "role": self.role, "status": self.status,
+            "is_active": self.is_active, "login_count": self.login_count,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "last_login": self.last_login.isoformat() if self.last_login else None,
+        }
 
 class Survey(db.Model):
     """调研表模型 - 存储客户填写的调研信息"""
@@ -180,6 +189,30 @@ class Survey(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
     project = db.relationship("Project", back_populates="surveys")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "project_name": self.project_name,
+            "contact_person": self.contact_person, "contact_phone": self.contact_phone,
+            "contact_email": self.contact_email, "location": self.location,
+            "altitude": self.altitude, "total_mw": self.total_mw,
+            "total_mwh": self.total_mwh, "duration": self.duration,
+            "cycles_per_day": self.cycles_per_day, "temp_max": self.temp_max,
+            "temp_min": self.temp_min, "temp_avg": self.temp_avg,
+            "humidity": self.humidity, "grid_voltage": self.grid_voltage,
+            "grid_frequency": self.grid_frequency, "pcc_voltage": self.pcc_voltage,
+            "pcc_short_circuit_mva": self.pcc_short_circuit_mva,
+            "grid_code": self.grid_code, "sand_protection": self.sand_protection,
+            "humidity_cycle": self.humidity_cycle, "rte_target": self.rte_target,
+            "soh_year1": self.soh_year1, "soh_year25": self.soh_year25,
+            "calendar_life": self.calendar_life, "cycle_life": self.cycle_life,
+            "availability_target": self.availability_target,
+            "aux_consumption": self.aux_consumption, "response_time": self.response_time,
+            "dc_voltage_range": self.dc_voltage_range, "ac_voltage": self.ac_voltage,
+            "thdi": self.thdi, "remarks": self.remarks, "attachments": self.attachments,
+            "status": self.status,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class Project(db.Model):
     """项目模型 - 由调研表自动生成"""
@@ -220,6 +253,14 @@ class Project(db.Model):
     product_configs = db.relationship("ProductConfig", back_populates="project")
     versions = db.relationship("ProjectVersion", back_populates="project", order_by="desc(ProjectVersion.version_num)")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "tenant_id": self.tenant_id, "name": self.name,
+            "code": self.code, "status": self.status, "stage": self.stage,
+            "customer_id": self.customer_id, "config": self.config,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class ProjectVersion(db.Model):
     """项目版本模型 - 支持同一项目多个方案版本"""
@@ -260,6 +301,15 @@ class ProjectVersion(db.Model):
     created_by_user = db.relationship("User", back_populates="project_versions")
     simulation_results = db.relationship("SimulationResult", back_populates="version")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "version_num": self.version_num,
+            "name": self.name, "description": self.description, "is_active": self.is_active,
+            "config_data": self.config_data, "created_by": self.created_by,
+            "status": self.status,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class Simulation(db.Model):
     """仿真配置与结果模型"""
@@ -306,6 +356,19 @@ class Simulation(db.Model):
     project = db.relationship("Project", back_populates="simulations")
     user = db.relationship("User", back_populates="simulations")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "user_id": self.user_id,
+            "name": self.name, "description": self.description,
+            "algorithm_type": self.algorithm_type, "duration_years": self.duration_years,
+            "correction_factor": self.correction_factor, "input_params": self.input_params,
+            "results": self.results, "manual_corrections": self.manual_corrections,
+            "status": self.status,
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class SimulationResult(db.Model):
     """仿真结果模型 - 完整存储每次仿真结果，带日期戳便于对比"""
@@ -362,6 +425,19 @@ class SimulationResult(db.Model):
     algorithm_model = db.relationship("AlgorithmModel", back_populates="simulation_results")
     correction_template = db.relationship("CorrectionTemplate", back_populates="simulation_results")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "version_id": self.version_id, "name": self.name,
+            "description": self.description, "simulation_type": self.simulation_type,
+            "algorithm_model_id": self.algorithm_model_id,
+            "correction_template_id": self.correction_template_id,
+            "params": self.params, "results": self.results, "summary": self.summary,
+            "status": self.status,
+            "executed_at": self.executed_at.isoformat() if self.executed_at else None,
+            "execution_time_ms": self.execution_time_ms,
+            "created_by": self.created_by,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
 
 class CorrectionTemplate(db.Model):
     """校正因子模板模型 - 支持保存多个校正因子模板"""
@@ -408,6 +484,17 @@ class CorrectionTemplate(db.Model):
     created_by_user = db.relationship("User", back_populates="correction_templates")
     simulation_results = db.relationship("SimulationResult", back_populates="correction_template")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "tenant_id": self.tenant_id, "name": self.name,
+            "description": self.description, "template_type": self.template_type,
+            "global_soh_factor": self.global_soh_factor,
+            "global_rte_factor": self.global_rte_factor,
+            "annual_corrections": self.annual_corrections, "is_default": self.is_default,
+            "status": self.status, "created_by": self.created_by,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class BatteryPCSConfig(db.Model):
     """电池与PCS配置模型"""
@@ -451,6 +538,20 @@ class BatteryPCSConfig(db.Model):
     # 关联
     project = db.relationship("Project", back_populates="battery_configs")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "name": self.name,
+            "container_model": self.container_model, "container_qty": self.container_qty,
+            "container_energy": self.container_energy, "container_power": self.container_power,
+            "pcs_model": self.pcs_model, "pcs_qty": self.pcs_qty,
+            "pcs_power": self.pcs_power, "pcs_voltage": self.pcs_voltage,
+            "total_energy": self.total_energy, "total_power": self.total_power,
+            "pcs_ratio": self.pcs_ratio, "connection_type": self.connection_type,
+            "connection_diagram": self.connection_diagram,
+            "single_line_diagram": self.single_line_diagram,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class SohRteData(db.Model):
     """SOH/RTE数据模型 - 25年生命周期数据"""
@@ -492,6 +593,15 @@ class SohRteData(db.Model):
     # 关联
     project = db.relationship("Project", back_populates="soh_rte_data")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "simulation_id": self.simulation_id,
+            "name": self.name, "soh_values": self.soh_values, "rte_values": self.rte_values,
+            "dod_values": self.dod_values, "aug_qty_values": self.aug_qty_values,
+            "source": self.source, "import_file": self.import_file,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class FinancialData(db.Model):
     """财务数据模型"""
@@ -548,6 +658,23 @@ class FinancialData(db.Model):
     # 关联
     project = db.relationship("Project", back_populates="financial_data")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "name": self.name,
+            "off_peak_price": self.off_peak_price, "peak_price": self.peak_price,
+            "spread_capture": self.spread_capture, "operating_days": self.operating_days,
+            "capacity_price": self.capacity_price, "ancillary_price": self.ancillary_price,
+            "price_escalation": self.price_escalation, "capex": self.capex,
+            "capex_per_mwh": self.capex_per_mwh, "opex_per_year": self.opex_per_year,
+            "opex_per_mwh": self.opex_per_mwh, "augmentation_cost": self.augmentation_cost,
+            "debt_ratio": self.debt_ratio, "interest_rate": self.interest_rate,
+            "loan_term": self.loan_term, "discount_rate": self.discount_rate,
+            "npv": self.npv, "irr": self.irr, "payback_years": self.payback_years,
+            "lcos": self.lcos, "currency": self.currency,
+            "unit_system": self.unit_system, "cashflow_data": self.cashflow_data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class ProductConfig(db.Model):
     """产品与方案配置模型"""
@@ -590,6 +717,18 @@ class ProductConfig(db.Model):
     # 关联
     project = db.relationship("Project", back_populates="product_configs")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "name": self.name,
+            "cell_model": self.cell_model, "cell_capacity": self.cell_capacity,
+            "cell_voltage": self.cell_voltage, "cell_supplier": self.cell_supplier,
+            "container_model": self.container_model, "container_supplier": self.container_supplier,
+            "pcs_model": self.pcs_model, "pcs_supplier": self.pcs_supplier,
+            "certifications": self.certifications, "epc_company": self.epc_company,
+            "epc_contract_type": self.epc_contract_type,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class CellProduct(db.Model):
     """电芯产品库"""
@@ -885,6 +1024,15 @@ class FormulaConfig(db.Model):
     # 关联
     user = db.relationship("User", back_populates="formula_configs")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "user_id": self.user_id, "name": self.name,
+            "formula_type": self.formula_type, "expression": self.expression,
+            "parameters": self.parameters, "description": self.description,
+            "is_public": self.is_public,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class AlgorithmModel(db.Model):
     """算法模型库 - 支持添加和管理多种衰减模型"""
@@ -947,6 +1095,21 @@ class AlgorithmModel(db.Model):
     created_by_user = db.relationship("User", back_populates="algorithm_models")
     simulation_results = db.relationship("SimulationResult", back_populates="algorithm_model")
 
+    def to_dict(self):
+        return {
+            "id": self.id, "tenant_id": self.tenant_id, "name": self.name,
+            "name_en": self.name_en, "model_type": self.model_type,
+            "applicable_scenarios": self.applicable_scenarios,
+            "mathematical_form": self.mathematical_form,
+            "formula_expression": self.formula_expression,
+            "parameters": self.parameters, "accuracy_level": self.accuracy_level,
+            "accuracy_desc": self.accuracy_desc, "category": self.category,
+            "is_builtin": self.is_builtin, "is_active": self.is_active,
+            "sort_order": self.sort_order, "description": self.description,
+            "created_by": self.created_by,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class BoqSection(db.Model):
     """BOQ 分类——固定7级模板"""
@@ -959,6 +1122,12 @@ class BoqSection(db.Model):
     default_unit = db.Column(db.String(20))
     sort_order = db.Column(db.Integer)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "code": self.code, "name": self.name,
+            "name_zh": self.name_zh, "default_unit": self.default_unit,
+            "sort_order": self.sort_order,
+        }
 
 class BoqItem(db.Model):
     """BOQ 条目"""
@@ -981,6 +1150,16 @@ class BoqItem(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "section_code": self.section_code,
+            "seq": self.seq, "name": self.name, "spec": self.spec, "unit": self.unit,
+            "quantity": self.quantity, "unit_price": self.unit_price,
+            "total_price": self.total_price, "note": self.note,
+            "is_alternative": self.is_alternative, "version": self.version,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 # 添加租户关联
 Tenant.correction_templates = db.relationship("CorrectionTemplate", back_populates="tenant")
@@ -1008,6 +1187,14 @@ class BatteryManufacturer(db.Model):
     def __repr__(self):
         return f"<BatteryManufacturer {self.name}>"
 
+    def to_dict(self):
+        return {
+            "id": self.id, "name": self.name, "name_en": self.name_en,
+            "country": self.country, "chemistry_type": self.chemistry_type,
+            "calibrated_params": self.calibrated_params,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class SystemArchitecture(db.Model):
     """系统架构评估模型 (EPC: system-architecture)"""
@@ -1022,6 +1209,12 @@ class SystemArchitecture(db.Model):
 
     __table_args__ = (db.Index("idx_sa_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class GridComplianceAnalysis(db.Model):
     """电网合规分析模型 (EPC: grid-compliance)"""
@@ -1036,6 +1229,12 @@ class GridComplianceAnalysis(db.Model):
 
     __table_args__ = (db.Index("idx_gca_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class SafetyFireDesign(db.Model):
     """安全消防设计模型 (EPC: safety-fire)"""
@@ -1050,6 +1249,12 @@ class SafetyFireDesign(db.Model):
 
     __table_args__ = (db.Index("idx_sfd_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class IPPFinancialModel(db.Model):
     """IPP 财务模型 (EPC: ipp-financial)"""
@@ -1064,6 +1269,12 @@ class IPPFinancialModel(db.Model):
 
     __table_args__ = (db.Index("idx_ifm_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class ComplianceMatrix(db.Model):
     """合规矩阵模型 (EPC: compliance-matrix)"""
@@ -1078,6 +1289,12 @@ class ComplianceMatrix(db.Model):
 
     __table_args__ = (db.Index("idx_cm_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class ThermalManagement(db.Model):
     """热管理设计模型 (EPC: thermal-management)"""
@@ -1092,6 +1309,12 @@ class ThermalManagement(db.Model):
 
     __table_args__ = (db.Index("idx_tm_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class ScadaEmsDesign(db.Model):
     """SCADA/EMS 设计模型 (EPC: scada-ems)"""
@@ -1106,6 +1329,12 @@ class ScadaEmsDesign(db.Model):
 
     __table_args__ = (db.Index("idx_sed_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class HVInterconnection(db.Model):
     """高压接入设计模型 (EPC: hv-interconnection)"""
@@ -1120,6 +1349,12 @@ class HVInterconnection(db.Model):
 
     __table_args__ = (db.Index("idx_hvi_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class BidDocument(db.Model):
     """投标文档模型 (EPC: bid-document)"""
@@ -1134,6 +1369,12 @@ class BidDocument(db.Model):
 
     __table_args__ = (db.Index("idx_bd_project_id", "project_id"),)
 
+    def to_dict(self):
+        return {
+            "id": self.id, "project_id": self.project_id, "data": self.data,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class PinnModelWeights(db.Model):
     """PINN 神经网络权重存储模型"""
@@ -1194,3 +1435,10 @@ def init_db(app):
 def get_db_path():
     """获取数据库文件路径"""
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "soh_sim.db")
+
+    def to_dict(self):
+        return {
+            "id": self.id, "model_name": self.model_name,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }

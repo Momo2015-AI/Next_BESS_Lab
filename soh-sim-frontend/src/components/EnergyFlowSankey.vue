@@ -136,7 +136,12 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { SankeyChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
+import { useDraft } from '../composables/useDraft'
+echarts.use([CanvasRenderer, SankeyChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({
   params: Object,

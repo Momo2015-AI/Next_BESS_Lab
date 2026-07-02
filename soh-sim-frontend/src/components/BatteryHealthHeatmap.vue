@@ -45,7 +45,26 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { debounce } from 'lodash-es'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { HeatmapChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  VisualMapComponent
+} from 'echarts/components'
+import { useDraft } from '../composables/useDraft'
+echarts.use([
+  CanvasRenderer,
+  HeatmapChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  VisualMapComponent
+])
 
 const props = defineProps({
   params: Object,

@@ -217,8 +217,21 @@
 
 <script setup>
 import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart, RadarChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, RadarComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+echarts.use([
+  CanvasRenderer,
+  BarChart,
+  RadarChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  RadarComponent
+])
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },

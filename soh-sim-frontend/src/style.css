@@ -12,7 +12,7 @@
 
   :root {
     /* ── 流体舞台画布 ── */
-    --bg-global: radial-gradient(circle at 10% 10%, #FFFFFF 0%, #F4F5F8 70%, #EAECEF 100%);
+    --bg-global: radial-gradient(circle at 10% 10%, #ffffff 0%, #f4f5f8 70%, #eaecef 100%);
 
     /* ── 侧边栏：空气滤镜 / 实体纸张 ── */
     --bg-sidebar: rgba(244, 245, 248, 0.4);
@@ -36,13 +36,13 @@
     --backdrop-filter: blur(40px);
 
     /* ── 主题色: SOH-SIM 蓝 ── */
-    --accent-blue: #0066CC;
+    --accent-blue: #0066cc;
 
     /* ── 文本 ── */
-    --text-primary: #1D1D1F;
-    --text-secondary: #86868B;
+    --text-primary: #1d1d1f;
+    --text-secondary: #86868b;
     --icon-color: #929297;
-    --icon-active: #0066CC;
+    --icon-active: #0066cc;
 
     /* ============================================
        向后兼容别名 (保留现有 --color-* 变量)
@@ -55,11 +55,11 @@
     --color-card-dark: #e8eef5;
     --color-border: #e0e0e0;
     --color-border-light: #e8eef5;
-    --color-text: #1D1D1F;
-    --color-text-secondary: #86868B;
+    --color-text: #1d1d1f;
+    --color-text-secondary: #86868b;
     --color-text-muted: #999999;
     --color-text-light: #cccccc;
-    --color-accent: #0066CC;
+    --color-accent: #0066cc;
     --color-accent-secondary: #4a7bc4;
     --color-accent-glow: rgba(0, 102, 204, 0.12);
     --color-accent-dark: rgba(0, 102, 204, 0.2);
@@ -70,7 +70,7 @@
     --color-input-bg: #f5f7fa;
     --color-input-bg-dark: #ffffff;
     --color-input-border: #e0e0e0;
-    --color-input-focus: #0066CC;
+    --color-input-focus: #0066cc;
     --color-header-bg: rgba(255, 255, 255, 0.72);
     --color-header-border: #e0e0e0;
     --color-nav-bg: rgba(255, 255, 255, 0.72);
@@ -80,8 +80,8 @@
     --color-step-bg: #f5f7fa;
     --color-step-border: #e0e0e0;
     --color-step-active: rgba(0, 102, 204, 0.12);
-    --color-step-num: #86868B;
-    --color-step-num-active: #0066CC;
+    --color-step-num: #86868b;
+    --color-step-num-active: #0066cc;
     --color-table-header: #f5f7fa;
     --color-table-row: #ffffff;
     --color-table-row-alt: #f5f7fa;
@@ -99,7 +99,7 @@
 
   [data-theme='dark'] {
     /* ── 流体舞台画布 ── */
-    --bg-global: radial-gradient(circle at 80% 20%, #1A2238 0%, #0D0E12 60%, #07080A 100%);
+    --bg-global: radial-gradient(circle at 80% 20%, #1a2238 0%, #0d0e12 60%, #07080a 100%);
 
     /* ── 侧边栏：低照度 / 黑曜石 ── */
     --bg-sidebar: rgba(11, 12, 16, 0.45);
@@ -123,13 +123,13 @@
     --backdrop-filter: blur(40px);
 
     /* ── 主题色: SOH-SIM 冷蓝 ── */
-    --accent-blue: #3A8BFF;
+    --accent-blue: #3a8bff;
 
     /* ── 文本 ── */
-    --text-primary: #F5F7FA;
-    --text-secondary: #86878C;
-    --icon-color: #7E7F85;
-    --icon-active: #3A8BFF;
+    --text-primary: #f5f7fa;
+    --text-secondary: #86878c;
+    --icon-color: #7e7f85;
+    --icon-active: #3a8bff;
 
     /* ============================================
        向后兼容别名 (保留现有 --color-* 变量)
@@ -142,11 +142,11 @@
     --color-card-dark: rgba(30, 41, 59, 0.6);
     --color-border: #1e293b;
     --color-border-light: #1e293b;
-    --color-text: #F5F7FA;
-    --color-text-secondary: #86878C;
+    --color-text: #f5f7fa;
+    --color-text-secondary: #86878c;
     --color-text-muted: #64748b;
     --color-text-light: #94a3b8;
-    --color-accent: #3A8BFF;
+    --color-accent: #3a8bff;
     --color-accent-secondary: #38bdf8;
     --color-accent-glow: rgba(58, 139, 255, 0.12);
     --color-accent-dark: rgba(58, 139, 255, 0.2);
@@ -157,7 +157,7 @@
     --color-input-bg: #020617;
     --color-input-bg-dark: #0f172a;
     --color-input-border: #334155;
-    --color-input-focus: #3A8BFF;
+    --color-input-focus: #3a8bff;
     --color-header-bg: rgba(11, 12, 16, 0.72);
     --color-header-border: #1e293b;
     --color-nav-bg: rgba(11, 12, 16, 0.72);
@@ -168,7 +168,7 @@
     --color-step-border: #1e293b;
     --color-step-active: rgba(58, 139, 255, 0.2);
     --color-step-num: #64748b;
-    --color-step-num-active: #3A8BFF;
+    --color-step-num-active: #3a8bff;
     --color-table-header: rgba(15, 23, 42, 0.8);
     --color-table-row: rgba(15, 23, 42, 0.4);
     --color-table-row-alt: rgba(30, 41, 59, 0.2);
@@ -238,21 +238,24 @@
     -webkit-backdrop-filter: var(--backdrop-filter);
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
-    box-shadow: 0 30px 60px var(--shadow-subtle),
-                inset 0 1px 0 var(--border-inner-glow),
-                var(--shadow-card-glow);
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow:
+      0 30px 60px var(--shadow-subtle),
+      inset 0 1px 0 var(--border-inner-glow),
+      var(--shadow-card-glow);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .card:hover {
     border-color: rgba(47, 128, 237, 0.45);
-    box-shadow: 0 30px 60px var(--shadow-subtle),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                0 0 13px rgba(47, 128, 237, 0.25);
+    box-shadow:
+      0 30px 60px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 13px rgba(47, 128, 237, 0.25);
     transform: translateY(-2px);
   }
 
@@ -260,20 +263,23 @@
     background: var(--bg-card, var(--color-card));
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
-    box-shadow: 0 30px 60px var(--shadow-subtle),
-                inset 0 1px 0 var(--border-inner-glow),
-                var(--shadow-card-glow);
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow:
+      0 30px 60px var(--shadow-subtle),
+      inset 0 1px 0 var(--border-inner-glow),
+      var(--shadow-card-glow);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .card-hover:hover {
     border-color: rgba(47, 128, 237, 0.45);
-    box-shadow: 0 30px 60px var(--shadow-subtle),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                0 0 13px rgba(47, 128, 237, 0.25);
+    box-shadow:
+      0 30px 60px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 13px rgba(47, 128, 237, 0.25);
     transform: translateY(-2px);
   }
 
@@ -285,16 +291,18 @@
     background-color: var(--bg-card, var(--color-step-bg));
     border: 1px solid var(--border-color, var(--color-step-border));
     border-radius: var(--radius-sm);
-    box-shadow: 0 15px 35px var(--shadow-subtle),
-                inset 0 1px 0 var(--border-inner-glow),
-                var(--shadow-card-glow);
+    box-shadow:
+      0 15px 35px var(--shadow-subtle),
+      inset 0 1px 0 var(--border-inner-glow),
+      var(--shadow-card-glow);
     position: relative;
     overflow: hidden;
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .theme-step::before {
@@ -313,9 +321,10 @@
 
   .theme-step:hover {
     border-color: rgba(47, 128, 237, 0.45);
-    box-shadow: 0 15px 35px var(--shadow-subtle),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                0 0 13px rgba(47, 128, 237, 0.2);
+    box-shadow:
+      0 15px 35px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 13px rgba(47, 128, 237, 0.2);
     transform: translateY(-2px);
   }
 
@@ -330,9 +339,10 @@
     font-weight: 600;
     border-radius: 6px;
     color: var(--color-text-secondary);
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     border: none;
     background: transparent;
@@ -409,9 +419,10 @@
     border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 8px var(--color-accent-glow);
   }
   .btn-primary:hover {
@@ -453,9 +464,10 @@
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn:hover {
     opacity: 0.9;
@@ -497,9 +509,10 @@
     padding: 5px 12px;
     font-size: 11px;
     cursor: pointer;
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn-secondary:hover {
     background-color: var(--color-tab-hover);
