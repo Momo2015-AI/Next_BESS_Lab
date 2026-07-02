@@ -16,7 +16,7 @@
       </button>
     </div>
     <button
-      class="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--color-card)] border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors cursor-pointer"
+      class="theme-toggle-btn w-[42px] h-[42px]"
       :title="theme === 'light' ? $t('common.themeDark') : $t('common.themeLight')"
       @click="toggleTheme"
     >

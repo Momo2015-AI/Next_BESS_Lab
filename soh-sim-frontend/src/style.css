@@ -44,6 +44,13 @@
     --icon-color: #929297;
     --icon-active: #0066cc;
 
+    /* ── Hover 增强状态 ── */
+    --border-color-hover: rgba(47, 128, 237, 0.45);
+    --shadow-card-glow-hover: 0 0 13px rgba(47, 128, 237, 0.25);
+
+    /* ── 辅助色 ── */
+    --accent-green: #24a148;
+
     /* ============================================
        向后兼容别名 (保留现有 --color-* 变量)
        ============================================ */
@@ -130,6 +137,13 @@
     --text-secondary: #86878c;
     --icon-color: #7e7f85;
     --icon-active: #3a8bff;
+
+    /* ── Hover 增强状态 ── */
+    --border-color-hover: rgba(47, 128, 237, 0.45);
+    --shadow-card-glow-hover: 0 0 13px rgba(47, 128, 237, 0.25);
+
+    /* ── 辅助色 ── */
+    --accent-green: #30d158;
 
     /* ============================================
        向后兼容别名 (保留现有 --color-* 变量)
@@ -251,11 +265,11 @@
   }
 
   .card:hover {
-    border-color: rgba(47, 128, 237, 0.45);
+    border-color: var(--border-color-hover);
     box-shadow:
       0 30px 60px var(--shadow-subtle),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 0 13px rgba(47, 128, 237, 0.25);
+      var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
 
@@ -275,11 +289,11 @@
       transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .card-hover:hover {
-    border-color: rgba(47, 128, 237, 0.45);
+    border-color: var(--border-color-hover);
     box-shadow:
       0 30px 60px var(--shadow-subtle),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 0 13px rgba(47, 128, 237, 0.25);
+      var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
 
@@ -320,11 +334,11 @@
   }
 
   .theme-step:hover {
-    border-color: rgba(47, 128, 237, 0.45);
+    border-color: var(--border-color-hover);
     box-shadow:
       0 15px 35px var(--shadow-subtle),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 0 13px rgba(47, 128, 237, 0.2);
+      var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
 
@@ -623,5 +637,133 @@
     height: 8px;
     border-radius: 4px;
     background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  }
+
+  /* ==========================================================================
+     SOH-SIM 侧边栏菜单项
+     ========================================================================== */
+
+  .sidebar-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 4px;
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sidebar-menu-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+  }
+  .sidebar-menu-item.active {
+    font-weight: 600;
+    color: var(--accent-blue);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card-glow);
+  }
+  .sidebar-menu-item svg {
+    flex-shrink: 0;
+    stroke: var(--icon-color);
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+    fill: none;
+    transition: stroke 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sidebar-menu-item:hover svg,
+  .sidebar-menu-item.active svg {
+    stroke: var(--icon-active);
+  }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 12px;
+    margin: 28px 0 8px;
+    opacity: 0.8;
+  }
+  .sidebar-section-label:first-child {
+    margin-top: 0;
+  }
+
+  /* ==========================================================================
+     SOH-SIM 顶部导航栏
+     ========================================================================== */
+
+  .header-glass {
+    background: var(--bg-card);
+    backdrop-filter: var(--backdrop-filter);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    border-bottom: 1px solid var(--border-color);
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ==========================================================================
+     SOH-SIM 主题切换按钮
+     ========================================================================== */
+
+  .theme-toggle-btn {
+    background: var(--bg-card);
+    backdrop-filter: var(--backdrop-filter);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px var(--shadow-subtle);
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .theme-toggle-btn:hover {
+    transform: scale(1.05);
+    border-color: var(--border-color-hover);
+  }
+
+  /* ==========================================================================
+     SOH-SIM 工具卡片渐变 (替代 inline style)
+     ========================================================================== */
+
+  .tool-gradient-formula {
+    background: linear-gradient(135deg, #0071e3, #40a9ff);
+  }
+  .tool-gradient-params {
+    background: linear-gradient(135deg, #5856d6, #af52de);
+  }
+  .tool-gradient-conditions {
+    background: linear-gradient(135deg, #ff9500, #ffac33);
+  }
+  .tool-gradient-auxpower {
+    background: linear-gradient(135deg, #ff2d55, #ff6482);
+  }
+  .tool-gradient-financial {
+    background: linear-gradient(135deg, #30d158, #63e68b);
+  }
+  .tool-gradient-engineering {
+    background: linear-gradient(135deg, #5ac8fa, #34aadc);
+  }
+  .tool-gradient-datainject {
+    background: linear-gradient(135deg, #ff3b30, #ff6259);
+  }
+  .tool-gradient-simulation {
+    background: linear-gradient(135deg, #007aff, #5ac8fa);
   }
 }

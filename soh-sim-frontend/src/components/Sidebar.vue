@@ -1,78 +1,113 @@
 <template>
   <aside class="sidebar-container">
+    <div class="sidebar-brand">
+      <div class="brand-icon-wrap">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      </div>
+      <span class="brand-text">SOH-SIM</span>
+    </div>
+
     <nav class="sidebar-scroll">
       <div class="sidebar-section">
-        <router-link to="/" class="sidebar-link" :class="{ active: $route.path === '/' }">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <router-link to="/" class="sidebar-menu-item" :class="{ active: $route.path === '/' }">
+          <svg viewBox="0 0 24 24">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
           <span>{{ $t('sidebar.home') }}</span>
         </router-link>
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">
+        <div class="sidebar-section-label">
           {{ $t('sidebar.sectionPhases') }}
         </div>
         <router-link
           v-for="item in phaseItems"
           :key="item.id"
           :to="item.path"
-          class="sidebar-link"
+          class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <span class="phase-dot" :class="'dot-' + item.status">{{ item.num }}</span>
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="10" font-weight="700">
+              {{ item.num }}
+            </text>
+          </svg>
           <span>{{ item.label }}</span>
+          <span class="phase-badge">{{ String(item.num).padStart(2, '0') }}</span>
         </router-link>
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">
+        <div class="sidebar-section-label">
           {{ $t('sidebar.sectionCoreTools') }}
         </div>
         <router-link
           v-for="item in coreToolItems"
           :key="item.id"
           :to="item.path"
-          class="sidebar-link"
+          class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <span class="tool-icon">{{ item.icon }}</span>
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
+              {{ item.icon }}
+            </text>
+          </svg>
           <span>{{ item.label }}</span>
         </router-link>
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">
+        <div class="sidebar-section-label">
           {{ $t('sidebar.sectionAdvanced') }}
         </div>
         <router-link
           v-for="item in advToolItems"
           :key="item.id"
           :to="item.path"
-          class="sidebar-link"
+          class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <span class="tool-icon">{{ item.icon }}</span>
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
+              {{ item.icon }}
+            </text>
+          </svg>
           <span>{{ item.label }}</span>
         </router-link>
       </div>
 
       <div class="sidebar-section">
-        <div class="section-label">EPC</div>
-        <router-link to="/epc" class="sidebar-link" :class="{ active: $route.path === '/epc' }">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="sidebar-section-label">EPC</div>
+        <router-link to="/epc" class="sidebar-menu-item" :class="{ active: $route.path === '/epc' }">
+          <svg viewBox="0 0 24 24">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
-          <span>EPC 工程化</span>
+          <span>EPC</span>
         </router-link>
       </div>
     </nav>
 
     <div class="sidebar-footer">
-      <router-link to="/auth" class="sidebar-link" :class="{ active: $route.path === '/auth' }">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <router-link to="/auth" class="sidebar-menu-item" :class="{ active: $route.path === '/auth' }">
+        <svg viewBox="0 0 24 24">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
@@ -121,14 +156,14 @@ const advToolItems = computed(() => [
 
 <style scoped>
 .sidebar-container {
-  width: 220px;
+  width: 260px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   background: var(--bg-sidebar);
   backdrop-filter: var(--backdrop-filter);
   -webkit-backdrop-filter: var(--backdrop-filter);
-  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  border-right: 1px solid var(--border-color);
   overflow: hidden;
   position: relative;
   z-index: 10;
@@ -140,118 +175,57 @@ const advToolItems = computed(() => [
 
 .sidebar-container:hover {
   background: var(--bg-sidebar-hover);
-  border-right-color: rgba(47, 128, 237, 0.45);
+  border-right-color: var(--border-color-hover);
   box-shadow: var(--shadow-sidebar-dynamic);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 28px 0;
+}
+
+.brand-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), #40a9ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.brand-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .sidebar-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 10px;
+  padding: 32px 12px 12px;
 }
 
 .sidebar-section {
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
-.section-label {
+.phase-badge {
+  margin-left: auto;
   font-size: 10px;
   font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding: 0 10px;
-  margin-bottom: 6px;
-  opacity: 0.8;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition:
-    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-
-.sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-}
-
-.sidebar-link.active {
-  background: var(--bg-card, rgba(0, 113, 227, 0.08));
-  color: var(--icon-active, var(--accent-blue));
-  font-weight: 600;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.04));
-  box-shadow: var(--shadow-card-glow);
-}
-
-.sidebar-link svg {
-  flex-shrink: 0;
-  opacity: 0.6;
-  stroke: var(--icon-color, #929297);
-}
-.sidebar-link:hover svg {
-  stroke: var(--icon-color, #929297);
-}
-.sidebar-link.active svg {
-  opacity: 1;
-  stroke: var(--icon-active, var(--accent-blue));
-}
-
-.phase-dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.dot-pending {
   background: rgba(142, 142, 147, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
   color: var(--text-secondary);
-}
-.dot-in_progress {
-  background: var(--accent-blue);
-  color: white;
-}
-.dot-completed {
-  background: var(--color-success);
-  color: white;
-}
-
-.tool-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
-  flex-shrink: 0;
-  background: rgba(142, 142, 147, 0.12);
-  color: var(--text-secondary);
-}
-
-[data-theme='dark'] .tool-icon {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-footer {
-  padding: 10px;
-  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-color);
 }
 </style>

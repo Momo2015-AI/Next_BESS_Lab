@@ -78,10 +78,10 @@ provide('showToast', showToast)
 .app-header {
   height: 52px;
   flex-shrink: 0;
-  background: var(--bg-card, rgba(255, 255, 255, 0.72));
+  background: var(--bg-card);
   backdrop-filter: var(--backdrop-filter);
   -webkit-backdrop-filter: var(--backdrop-filter);
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.04));
+  border-bottom: 1px solid var(--border-color);
   z-index: 100;
   position: relative;
   transition:
@@ -130,10 +130,10 @@ provide('showToast', showToast)
 
 .nav-link {
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 14px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-secondary, #86868b);
+  color: var(--text-secondary);
   text-decoration: none;
   transition:
     background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
@@ -142,23 +142,14 @@ provide('showToast', showToast)
 
 .nav-link:hover {
   color: var(--text-primary);
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(128, 128, 128, 0.08);
 }
 .nav-link.active {
-  color: var(--text-primary);
-  background: rgba(0, 0, 0, 0.06);
-}
-
-[data-theme='dark'] .nav-link {
-  color: var(--text-secondary, #86868b);
-}
-[data-theme='dark'] .nav-link:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
-}
-[data-theme='dark'] .nav-link.active {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-blue);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card-glow);
+  font-weight: 600;
 }
 
 .header-actions {
@@ -174,7 +165,7 @@ provide('showToast', showToast)
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: var(--text-secondary, #86868b);
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -185,11 +176,7 @@ provide('showToast', showToast)
 }
 
 .icon-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
-  color: var(--text-primary);
-}
-[data-theme='dark'] .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
   color: var(--text-primary);
 }
 

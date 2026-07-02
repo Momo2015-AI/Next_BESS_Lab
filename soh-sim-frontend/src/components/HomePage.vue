@@ -14,16 +14,19 @@
         </p>
       </div>
       <div class="hero-metrics">
-        <div class="metric-card">
+        <div class="card metric-card">
           <div class="metric-label">
             {{ $t('home.currentSoh') }}
           </div>
-          <div class="metric-value">
+          <div class="metric-value text-[var(--accent-green)]">
             {{ sohDisplay }}
             <span class="metric-unit">%</span>
           </div>
+          <div class="soh-bar-wrap">
+            <div class="soh-bar-fill" :style="{ width: sohPercent + '%' }" />
+          </div>
         </div>
-        <div class="metric-card">
+        <div class="card metric-card">
           <div class="metric-label">
             {{ $t('home.npv') }}
           </div>
@@ -32,11 +35,11 @@
             <span class="metric-unit">{{ $t('home.wan') }}</span>
           </div>
         </div>
-        <div class="metric-card">
+        <div class="card metric-card">
           <div class="metric-label">
             {{ $t('home.irr') }}
           </div>
-          <div class="metric-value">
+          <div class="metric-value metric-value-muted">
             {{ irrDisplay }}
             <span class="metric-unit">%</span>
           </div>
@@ -46,27 +49,21 @@
 
     <section class="phases-section">
       <div class="section-header">
-        <h2 class="section-title">
-          {{ $t('home.sectionPhases') }}
-        </h2>
-        <p class="section-desc">
-          {{ $t('home.sectionPhasesDesc') }}
-        </p>
+        <h2 class="phase-section-title">{{ $t('home.sectionPhases') }}</h2>
+        <p class="phase-section-desc">{{ $t('home.sectionPhasesDesc') }}</p>
       </div>
 
       <div class="phases-grid">
-        <div v-for="phase in phases" :key="phase.key" class="phase-card" @click="gotoPhase(phase.key)">
-          <div class="phase-header-row">
-            <span class="phase-num" :class="'num-' + phase.status">{{ phase.num }}</span>
-            <span class="phase-badge" :class="'badge-' + phase.status">{{ $t('home.' + phase.statusText) }}</span>
-          </div>
-          <h3 class="phase-name">
-            {{ phase.title }}
-          </h3>
-          <p class="phase-desc">
-            {{ phase.desc }}
-          </p>
-          <div class="phase-arrow">
+        <div
+          v-for="phase in phases"
+          :key="phase.key"
+          class="step-node theme-step cursor-pointer"
+          @click="gotoPhase(phase.key)"
+        >
+          <div class="step-num" :class="'num-' + phase.status">{{ phase.num }}</div>
+          <h3 class="step-name">{{ phase.title }}</h3>
+          <p class="step-desc">{{ phase.desc }}</p>
+          <div class="step-arrow">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -77,26 +74,18 @@
 
     <section class="tools-section">
       <div class="section-header">
-        <h2 class="section-title">
-          {{ $t('home.sectionTools') }}
-        </h2>
-        <p class="section-desc">
-          {{ $t('home.sectionToolsDesc') }}
-        </p>
+        <h2 class="phase-section-title">{{ $t('home.sectionTools') }}</h2>
+        <p class="phase-section-desc">{{ $t('home.sectionToolsDesc') }}</p>
       </div>
 
       <div class="tools-grid">
-        <router-link v-for="tool in tools" :key="tool.path" :to="tool.path" class="tool-card">
-          <div class="tool-icon-wrap" :style="{ background: tool.gradient }">
+        <router-link v-for="tool in tools" :key="tool.path" :to="tool.path" class="card card-hover tool-card">
+          <div class="tool-icon-wrap" :class="tool.gradientClass">
             <span class="tool-icon-text">{{ tool.iconText }}</span>
           </div>
           <div class="tool-info">
-            <div class="tool-name">
-              {{ tool.name }}
-            </div>
-            <div class="tool-desc">
-              {{ tool.desc }}
-            </div>
+            <div class="tool-name">{{ tool.name }}</div>
+            <div class="tool-desc">{{ tool.desc }}</div>
           </div>
         </router-link>
       </div>
@@ -127,8 +116,7 @@ const phases = computed(() => {
       title: t('home.phase1Title'),
       desc: t('home.phase1Desc'),
       path: '/phase1',
-      status: st.phase1.status,
-      statusText: statusKey(st.phase1.status)
+      status: st.phase1.status
     },
     {
       key: 'phase2',
@@ -136,8 +124,7 @@ const phases = computed(() => {
       title: t('home.phase2Title'),
       desc: t('home.phase2Desc'),
       path: '/phase2',
-      status: st.phase2.status,
-      statusText: statusKey(st.phase2.status)
+      status: st.phase2.status
     },
     {
       key: 'phase3',
@@ -145,8 +132,7 @@ const phases = computed(() => {
       title: t('home.phase3Title'),
       desc: t('home.phase3Desc'),
       path: '/phase3',
-      status: st.phase3.status,
-      statusText: statusKey(st.phase3.status)
+      status: st.phase3.status
     },
     {
       key: 'phase4',
@@ -154,8 +140,7 @@ const phases = computed(() => {
       title: t('home.phase4Title'),
       desc: t('home.phase4Desc'),
       path: '/phase4',
-      status: st.phase4.status,
-      statusText: statusKey(st.phase4.status)
+      status: st.phase4.status
     },
     {
       key: 'phase5',
@@ -163,16 +148,10 @@ const phases = computed(() => {
       title: t('home.phase5Title'),
       desc: t('home.phase5Desc'),
       path: '/phase5',
-      status: st.phase5.status,
-      statusText: statusKey(st.phase5.status)
+      status: st.phase5.status
     }
   ]
 })
-function statusKey(s) {
-  if (s === 'in_progress') return 'statusInProgress'
-  if (s === 'completed') return 'statusComplete'
-  return 'statusNotStarted'
-}
 
 const tools = computed(() => [
   {
@@ -180,56 +159,56 @@ const tools = computed(() => [
     name: t('sidebar.toolFormula'),
     desc: t('home.toolFormulaDesc'),
     iconText: 'fx',
-    gradient: 'linear-gradient(135deg, #0071e3, #40a9ff)'
+    gradientClass: 'tool-gradient-formula'
   },
   {
     path: '/tools/params',
     name: t('sidebar.toolParams'),
     desc: t('home.toolParamsDesc'),
     iconText: 'sl',
-    gradient: 'linear-gradient(135deg, #5856d6, #af52de)'
+    gradientClass: 'tool-gradient-params'
   },
   {
     path: '/tools/conditions',
     name: t('sidebar.toolConditions'),
     desc: t('home.toolConditionsDesc'),
     iconText: 'wd',
-    gradient: 'linear-gradient(135deg, #ff9500, #ffac33)'
+    gradientClass: 'tool-gradient-conditions'
   },
   {
     path: '/tools/auxpower',
     name: t('sidebar.toolAuxPower'),
     desc: t('home.toolAuxPowerDesc'),
     iconText: 'P',
-    gradient: 'linear-gradient(135deg, #ff2d55, #ff6482)'
+    gradientClass: 'tool-gradient-auxpower'
   },
   {
     path: '/tools/financial',
     name: t('sidebar.toolFinance'),
     desc: t('home.toolFinanceDesc'),
     iconText: '$',
-    gradient: 'linear-gradient(135deg, #30d158, #63e68b)'
+    gradientClass: 'tool-gradient-financial'
   },
   {
     path: '/tools/engineering',
     name: t('sidebar.toolEngineering'),
     desc: t('home.toolEngineeringDesc'),
     iconText: 'En',
-    gradient: 'linear-gradient(135deg, #5ac8fa, #34aadc)'
+    gradientClass: 'tool-gradient-engineering'
   },
   {
     path: '/tools/datainject',
     name: t('sidebar.toolDataInject'),
     desc: t('home.toolDataInjectDesc'),
     iconText: 'Di',
-    gradient: 'linear-gradient(135deg, #ff3b30, #ff6259)'
+    gradientClass: 'tool-gradient-datainject'
   },
   {
     path: '/tools/simulation-view',
     name: t('sidebar.toolSimulation'),
     desc: t('home.toolSimulationDesc'),
     iconText: 'Sm',
-    gradient: 'linear-gradient(135deg, #007aff, #5ac8fa)'
+    gradientClass: 'tool-gradient-simulation'
   }
 ])
 
@@ -241,6 +220,10 @@ function gotoPhase(phase) {
 const sohDisplay = computed(() => {
   const v = store.degradation.soh?.[0]
   return v != null ? (v * 100).toFixed(1) : '--'
+})
+const sohPercent = computed(() => {
+  const v = store.degradation.soh?.[0]
+  return v != null ? v * 100 : 0
 })
 const npvDisplay = computed(() => {
   const v = store.financial?.metrics?.npv
@@ -255,7 +238,6 @@ const irrDisplay = computed(() => {
 <style scoped>
 .home-root {
   min-height: 100%;
-  background: var(--color-bg);
 }
 
 .hero {
@@ -289,7 +271,7 @@ const irrDisplay = computed(() => {
 .hero-eyebrow {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-accent);
+  color: var(--accent-blue);
   letter-spacing: 0.02em;
   margin: 0 0 12px;
 }
@@ -298,23 +280,19 @@ const irrDisplay = computed(() => {
   font-size: 56px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--color-text);
+  color: var(--text-primary);
   margin: 0 0 16px;
   line-height: 1.05;
 }
 
-[data-theme='dark'] .hero-title {
-  color: var(--color-text);
-}
-
 .hero-accent {
-  color: var(--color-accent);
+  color: var(--accent-blue);
 }
 
 .hero-subtitle {
   font-size: 19px;
   font-weight: 400;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.5;
   margin: 0;
   max-width: 520px;
@@ -333,45 +311,53 @@ const irrDisplay = computed(() => {
 }
 
 .metric-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
-  padding: 20px 32px;
-  min-width: 140px;
-  border: 0.5px solid rgba(0, 0, 0, 0.06);
-}
-
-[data-theme='dark'] .metric-card {
-  background: rgba(44, 44, 46, 0.6);
-  border-color: rgba(255, 255, 255, 0.06);
+  padding: 24px 32px;
+  min-width: 150px;
+  text-align: left;
 }
 
 .metric-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 1px;
+  opacity: 0.8;
   margin-bottom: 6px;
 }
 
 .metric-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-text);
-  letter-spacing: -0.02em;
+  font-size: 54px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
 }
 
-[data-theme='dark'] .metric-value {
-  color: var(--color-text);
+.metric-value-muted {
+  font-weight: 200;
+  color: var(--text-secondary);
 }
 
 .metric-unit {
   font-size: 16px;
-  font-weight: 400;
-  color: var(--color-text-secondary);
-  margin-left: 2px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+
+.soh-bar-wrap {
+  height: 4px;
+  background: rgba(142, 142, 147, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.soh-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  border-radius: 2px;
 }
 
 .phases-section {
@@ -383,21 +369,17 @@ const irrDisplay = computed(() => {
   margin-bottom: 48px;
 }
 
-.section-title {
+.phase-section-title {
   font-size: 36px;
   font-weight: 700;
-  color: #1d1d1f;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
   margin: 0 0 8px;
 }
 
-[data-theme='dark'] .section-title {
-  color: #f5f5f7;
-}
-
-.section-desc {
+.phase-section-desc {
   font-size: 17px;
-  color: #86868b;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -420,119 +402,44 @@ const irrDisplay = computed(() => {
   }
 }
 
-.phase-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
+.step-node {
   padding: 24px;
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 0.5px solid var(--border-color, rgba(0, 0, 0, 0.04));
-  position: relative;
-  overflow: hidden;
+  border-radius: 20px;
 }
 
-[data-theme='dark'] .phase-card {
-  background: rgba(44, 44, 46, 0.5);
-  border-color: rgba(255, 255, 255, 0.04);
-}
-
-.phase-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 113, 227, 0.2);
-}
-
-[data-theme='dark'] .phase-card:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  border-color: rgba(0, 113, 227, 0.3);
-}
-
-.phase-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.phase-num {
-  font-size: 28px;
+.step-num {
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
-.num-pending {
-  color: var(--color-text-muted);
-}
-.num-in_progress {
-  color: var(--color-accent);
-}
-.num-completed {
-  color: var(--color-success);
-}
-
-.phase-badge {
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 12px;
-}
-
-.badge-pending {
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--color-text-secondary);
-}
-.badge-in_progress {
-  background: var(--color-accent-glow);
-  color: var(--color-accent);
-}
-.badge-completed {
-  background: rgba(48, 209, 88, 0.1);
-  color: var(--color-success);
-}
-
-[data-theme='dark'] .badge-pending {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--color-text-secondary);
-}
-[data-theme='dark'] .badge-in_progress {
-  background: var(--color-accent-dark);
-  color: var(--color-accent-secondary);
-}
-[data-theme='dark'] .badge-completed {
-  background: rgba(48, 209, 88, 0.15);
-  color: #30d158;
-}
-
-.phase-name {
+.step-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-primary);
   margin: 0 0 6px;
 }
 
-[data-theme='dark'] .phase-name {
-  color: #f5f5f7;
-}
-
-.phase-desc {
+.step-desc {
   font-size: 13px;
-  color: #86868b;
+  color: var(--text-secondary);
   line-height: 1.4;
   margin: 0;
 }
 
-.phase-arrow {
+.step-arrow {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  color: #d2d2d7;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-secondary);
+  opacity: 0.4;
 }
 
-.phase-card:hover .phase-arrow {
-  color: var(--color-accent, #0071e3);
+.step-node:hover .step-arrow {
+  opacity: 1;
+  color: var(--accent-blue);
   transform: translateX(3px);
 }
 
@@ -560,28 +467,8 @@ const irrDisplay = computed(() => {
   gap: 14px;
   padding: 16px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(0, 0, 0, 0.04);
   text-decoration: none;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
-}
-
-[data-theme='dark'] .tool-card {
-  background: rgba(44, 44, 46, 0.4);
-  border-color: rgba(255, 255, 255, 0.04);
-}
-
-.tool-card:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-}
-
-[data-theme='dark'] .tool-card:hover {
-  background: rgba(44, 44, 46, 0.7);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .tool-icon-wrap {
@@ -609,17 +496,13 @@ const irrDisplay = computed(() => {
 .tool-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
   margin-bottom: 2px;
-}
-
-[data-theme='dark'] .tool-name {
-  color: var(--color-text);
 }
 
 .tool-desc {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.3;
 }
 
@@ -627,12 +510,7 @@ const irrDisplay = computed(() => {
   text-align: center;
   padding: 32px 48px;
   font-size: 12px;
-  color: var(--color-text-muted);
-  border-top: 0.5px solid rgba(0, 0, 0, 0.06);
-}
-
-[data-theme='dark'] .home-footer {
-  border-top-color: rgba(255, 255, 255, 0.06);
-  color: var(--color-text);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-color);
 }
 </style>
