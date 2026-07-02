@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark-theme">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOH-SIM Performance: Blur vs No-Blur Comparison</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       SHARED TOKENS
+       ================================================================ */
+    .dark-theme {
+      --bg-global: radial-gradient(circle at 80% 20%, #1A2238 0%, #0D0E12 60%, #07080A 100%);
+      --bg-card-blur: rgba(22, 24, 31, 0.65);
+      --bg-card-solid: rgba(28, 31, 38, 0.88);
+      --border-color: rgba(47, 128, 237, 0.16);
+      --border-color-hover: rgba(47, 128, 237, 0.45);
+      --border-inner-glow: rgba(255, 255, 255, 0.08);
+      --shadow-card-glow: 0 0 10px rgba(47, 128, 237, 0.12);
+      --shadow-card-glow-hover: 0 0 13px rgba(47, 128, 237, 0.25);
+      --shadow-subtle: rgba(0, 0, 0, 0.5);
+      --text-primary: #F5F7FA;
+      --text-secondary: #86878C;
+      --accent-blue: #3A8BFF;
+      --accent-green: #30D158;
+      --backdrop-blur-heavy: blur(40px);
+      --backdrop-blur-light: blur(12px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; font-family: 'Inter', ui-sans-serif, sans-serif; }
+    body { background: var(--bg-global); background-attachment: scroll; color: var(--text-primary); display: flex; flex-direction: column; }
+
+    /* ================================================================
+       TOP BAR
+       ================================================================ */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .top-bar h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .fps-badge { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 6px; }
+    .fps-good { background: rgba(48,209,88,0.15); color: var(--accent-green); }
+    .fps-bad { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    /* ================================================================
+       SPLIT PANELS
+       ================================================================ */
+    .panels { display: flex; flex: 1; overflow: hidden; }
+    .panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .panel:first-child { border-right: 2px solid rgba(255,255,255,0.06); }
+
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 24px; flex-shrink: 0;
+      background: rgba(0,0,0,0.15);
+    }
+    .panel-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .label-danger { color: #ef4444; }
+    .label-success { color: var(--accent-green); }
+    .panel-sub { font-size: 10px; color: var(--text-secondary); }
+
+    .panel-scroll { flex: 1; overflow-y: auto; padding: 24px; }
+    .panel-scroll::-webkit-scrollbar { width: 4px; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 16px; margin-bottom: 24px;
+    }
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px; margin-bottom: 24px;
+    }
+    .tools-grid-compact {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    /* ================================================================
+       LEFT PANEL: WITH BLUR (ORIGINAL)
+       ================================================================ */
+    .card-blur {
+      background: var(--bg-card-blur);
+      backdrop-filter: var(--backdrop-blur-heavy);
+      -webkit-backdrop-filter: var(--backdrop-blur-heavy);
+    }
+    .step-blur {
+      background: var(--bg-card-blur);
+      backdrop-filter: var(--backdrop-blur-heavy);
+      -webkit-backdrop-filter: var(--backdrop-blur-heavy);
+    }
+
+    /* ================================================================
+       RIGHT PANEL: NO BLUR (OPTIMIZED)
+       ================================================================ */
+    .card-no-blur {
+      background: var(--bg-card-solid);
+    }
+    .step-no-blur {
+      background: var(--bg-card-solid);
+    }
+
+    /* ================================================================
+       SHARED CARD STYLES
+       ================================================================ */
+    .card-base {
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 30px var(--shadow-subtle),
+                  inset 0 1px 0 var(--border-inner-glow),
+                  var(--shadow-card-glow);
+    }
+
+    /* LEFT: slow 0.5s transition */
+    .trans-slow {
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* RIGHT: fast 0.25s transition */
+    .trans-fast {
+      will-change: transform;
+      transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-base:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 15px 30px var(--shadow-subtle),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  var(--shadow-card-glow-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-label {
+      font-size: 10px; font-weight: 700; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 8px;
+    }
+    .card-value {
+      font-size: 42px; font-weight: 300; letter-spacing: -0.04em; margin-bottom: 12px;
+    }
+    .card-unit { font-size: 14px; color: var(--text-secondary); margin-left: 3px; font-weight: 500; }
+    .progress-bar {
+      height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+      width: 84.5%;
+    }
+
+    /* Steps */
+    .step-node {
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 25px var(--shadow-subtle),
+                  inset 0 1px 0 var(--border-inner-glow),
+                  var(--shadow-card-glow);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .step-node::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%; background: transparent;
+      transition: background 0.25s ease;
+    }
+    .step-node:hover::before { background: var(--accent-blue); }
+    .step-node:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 10px 25px var(--shadow-subtle),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  var(--shadow-card-glow-hover);
+      transform: translateY(-2px);
+    }
+    .step-num { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 4px; }
+    .step-name { font-size: 13px; font-weight: 600; }
+
+    /* Tool cards */
+    .tool-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; border-radius: 12px;
+      border: 1px solid var(--border-color);
+      text-decoration: none; color: var(--text-primary);
+      box-shadow: 0 8px 20px var(--shadow-subtle),
+                  inset 0 1px 0 var(--border-inner-glow),
+                  var(--shadow-card-glow);
+    }
+    .tool-card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 8px 20px var(--shadow-subtle),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  var(--shadow-card-glow-hover);
+      transform: translateY(-1px);
+    }
+    .tool-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tool-icon span { color: white; font-size: 11px; font-weight: 700; }
+    .tool-name { font-size: 12px; font-weight: 600; }
+    .tool-desc { font-size: 10px; color: var(--text-secondary); }
+
+    /* ================================================================
+       FPS METER (rough)
+       ================================================================ */
+    .fps-meter {
+      position: absolute; bottom: 12px; right: 12px; z-index: 10;
+      background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.5);
+      font-size: 10px; padding: 3px 8px; border-radius: 4px; font-family: monospace;
+    }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <div class="top-bar">
+    <h3>Performance Comparison: backdrop-filter blur(40px) vs Solid Background</h3>
+    <span id="globalFps" class="fps-badge fps-good">FPS: --</span>
+  </div>
+
+  <div class="panels">
+    <!-- LEFT: ORIGINAL (with blur, slow transition) -->
+    <div class="panel" id="panelBlur">
+      <div class="panel-header">
+        <span class="panel-label label-danger">Original: blur(40px) + 0.5s</span>
+        <span class="panel-sub">Every card runs backdrop-filter</span>
+      </div>
+      <div class="panel-scroll" id="scrollBlur">
+        <!-- Metric cards -->
+        <div class="cards-grid">
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">Current SOH</div>
+            <div class="card-value" style="color: var(--accent-green);">84.5<span class="card-unit">%</span></div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">NPV</div>
+            <div class="card-value">4,212<span class="card-unit">k</span></div>
+          </div>
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">IRR</div>
+            <div class="card-value" style="color:var(--text-secondary);font-weight:200;">--<span class="card-unit">%</span></div>
+          </div>
+        </div>
+
+        <!-- Repeat 2 more rows to stress test -->
+        <div class="cards-grid">
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">Capacity</div>
+            <div class="card-value">200<span class="card-unit">MWh</span></div>
+          </div>
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">Power</div>
+            <div class="card-value">50<span class="card-unit">MW</span></div>
+          </div>
+          <div class="card-base card-blur trans-slow">
+            <div class="card-label">Cycles</div>
+            <div class="card-value">6,500<span class="card-unit">#</span></div>
+          </div>
+        </div>
+
+        <!-- Workflow -->
+        <div class="workflow-grid">
+          <div class="step-node step-blur trans-slow"><div class="step-num">01</div><div class="step-name">Project Setup</div></div>
+          <div class="step-node step-blur trans-slow"><div class="step-num">02</div><div class="step-name">System Design</div></div>
+          <div class="step-node step-blur trans-slow"><div class="step-num">03</div><div class="step-name">Performance</div></div>
+          <div class="step-node step-blur trans-slow"><div class="step-num">04</div><div class="step-name">Financial</div></div>
+          <div class="step-node step-blur trans-slow"><div class="step-num">05</div><div class="step-name">Deliverables</div></div>
+        </div>
+
+        <!-- Tools -->
+        <div class="tools-grid-compact">
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#0071e3,#40a9ff);"><span>fx</span></div><div><div class="tool-name">Formulas</div><div class="tool-desc">Custom math engine</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#5856d6,#af52de);"><span>sl</span></div><div><div class="tool-name">Parameters</div><div class="tool-desc">Global settings</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#ff9500,#ffac33);"><span>wd</span></div><div><div class="tool-name">Conditions</div><div class="tool-desc">Weather data</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#ff2d55,#ff6482);"><span>P</span></div><div><div class="tool-name">Aux Power</div><div class="tool-desc">Auxiliary calc</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#30d158,#63e68b);"><span>$</span></div><div><div class="tool-name">Financial</div><div class="tool-desc">NPV/IRR models</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#5ac8fa,#34aadc);"><span>En</span></div><div><div class="tool-name">Engineering</div><div class="tool-desc">PCS & BMS</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#ff3b30,#ff6259);"><span>Di</span></div><div><div class="tool-name">Data Inject</div><div class="tool-desc">Import curves</div></div></div>
+          <div class="tool-card card-blur trans-slow"><div class="tool-icon" style="background:linear-gradient(135deg,#007aff,#5ac8fa);"><span>Sm</span></div><div><div class="tool-name">Simulation</div><div class="tool-desc">Run models</div></div></div>
+        </div>
+      </div>
+      <div class="fps-meter" id="fpsBlur">Paint: -- fps</div>
+    </div>
+
+    <!-- RIGHT: OPTIMIZED (no blur, fast transition) -->
+    <div class="panel" id="panelSolid">
+      <div class="panel-header">
+        <span class="panel-label label-success">Optimized: solid bg + 0.25s</span>
+        <span class="panel-sub">Only sidebar/header use backdrop-filter</span>
+      </div>
+      <div class="panel-scroll" id="scrollSolid">
+        <div class="cards-grid">
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">Current SOH</div>
+            <div class="card-value" style="color: var(--accent-green);">84.5<span class="card-unit">%</span></div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">NPV</div>
+            <div class="card-value">4,212<span class="card-unit">k</span></div>
+          </div>
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">IRR</div>
+            <div class="card-value" style="color:var(--text-secondary);font-weight:200;">--<span class="card-unit">%</span></div>
+          </div>
+        </div>
+        <div class="cards-grid">
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">Capacity</div>
+            <div class="card-value">200<span class="card-unit">MWh</span></div>
+          </div>
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">Power</div>
+            <div class="card-value">50<span class="card-unit">MW</span></div>
+          </div>
+          <div class="card-base card-no-blur trans-fast">
+            <div class="card-label">Cycles</div>
+            <div class="card-value">6,500<span class="card-unit">#</span></div>
+          </div>
+        </div>
+        <div class="workflow-grid">
+          <div class="step-node step-no-blur trans-fast"><div class="step-num">01</div><div class="step-name">Project Setup</div></div>
+          <div class="step-node step-no-blur trans-fast"><div class="step-num">02</div><div class="step-name">System Design</div></div>
+          <div class="step-node step-no-blur trans-fast"><div class="step-num">03</div><div class="step-name">Performance</div></div>
+          <div class="step-node step-no-blur trans-fast"><div class="step-num">04</div><div class="step-name">Financial</div></div>
+          <div class="step-node step-no-blur trans-fast"><div class="step-num">05</div><div class="step-name">Deliverables</div></div>
+        </div>
+        <div class="tools-grid-compact">
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#0071e3,#40a9ff);"><span>fx</span></div><div><div class="tool-name">Formulas</div><div class="tool-desc">Custom math engine</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#5856d6,#af52de);"><span>sl</span></div><div><div class="tool-name">Parameters</div><div class="tool-desc">Global settings</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#ff9500,#ffac33);"><span>wd</span></div><div><div class="tool-name">Conditions</div><div class="tool-desc">Weather data</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#ff2d55,#ff6482);"><span>P</span></div><div><div class="tool-name">Aux Power</div><div class="tool-desc">Auxiliary calc</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#30d158,#63e68b);"><span>$</span></div><div><div class="tool-name">Financial</div><div class="tool-desc">NPV/IRR models</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#5ac8fa,#34aadc);"><span>En</span></div><div><div class="tool-name">Engineering</div><div class="tool-desc">PCS & BMS</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#ff3b30,#ff6259);"><span>Di</span></div><div><div class="tool-name">Data Inject</div><div class="tool-desc">Import curves</div></div></div>
+          <div class="tool-card card-no-blur trans-fast"><div class="tool-icon" style="background:linear-gradient(135deg,#007aff,#5ac8fa);"><span>Sm</span></div><div><div class="tool-name">Simulation</div><div class="tool-desc">Run models</div></div></div>
+        </div>
+      </div>
+      <div class="fps-meter" id="fpsSolid">Paint: -- fps</div>
+    </div>
+  </div>
+
+  <script>
+    // Rough frame counter to demonstrate performance difference
+    let blurFrames = 0, solidFrames = 0, lastTime = performance.now();
+
+    function countFrames() {
+      const now = performance.now();
+      blurFrames++;
+      solidFrames++;
+
+      if (now - lastTime >= 1000) {
+        const blurFps = blurFrames;
+        const solidFps = solidFrames;
+        document.getElementById('fpsBlur').textContent = `approx: ${blurFps} fps`;
+        document.getElementById('fpsSolid').textContent = `approx: ${solidFps} fps`;
+
+        const globalEl = document.getElementById('globalFps');
+        if (solidFps > blurFps * 1.3) {
+          globalEl.textContent = `Right panel ~${Math.round((solidFps/blurFps - 1) * 100)}% faster`;
+          globalEl.className = 'fps-badge fps-good';
+        } else {
+          globalEl.textContent = `FPS similar: ${blurFps} vs ${solidFps}`;
+          globalEl.className = 'fps-badge fps-bad';
+        }
+
+        blurFrames = 0;
+        solidFrames = 0;
+        lastTime = now;
+      }
+
+      requestAnimationFrame(countFrames);
+    }
+
+    // Force continuous repaint for stress test
+    function stressTest() {
+      const el1 = document.getElementById('scrollBlur');
+      const el2 = document.getElementById('scrollSolid');
+      if (el1 && el2) {
+        el1.style.transform = `translateY(${Math.sin(Date.now() / 800) * 2}px)`;
+        el2.style.transform = `translateY(${Math.sin(Date.now() / 800) * 2}px)`;
+      }
+      requestAnimationFrame(stressTest);
+    }
+
+    requestAnimationFrame(countFrames);
+    requestAnimationFrame(stressTest);
+  </script>
+
+</body>
+</html>

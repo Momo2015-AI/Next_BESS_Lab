@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark-theme">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOH-SIM Dynamic Depth Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       1. Design Tokens -- CSS Variables
+       ========================================================================== */
+    .dark-theme {
+      --bg-global: radial-gradient(circle at 80% 20%, #1A2238 0%, #0D0E12 60%, #07080A 100%);
+      --bg-sidebar: rgba(11, 12, 16, 0.45);
+      --bg-sidebar-hover: rgba(5, 6, 8, 0.96);
+      --bg-card: rgba(22, 24, 31, 0.65);
+      --bg-card-hover: rgba(28, 31, 38, 0.8);
+
+      --border-color: rgba(47, 128, 237, 0.16);
+      --border-color-hover: rgba(47, 128, 237, 0.45);
+      --border-inner-glow: rgba(255, 255, 255, 0.08);
+
+      --shadow-card-glow: 0 0 10px rgba(47, 128, 237, 0.12);
+      --shadow-card-glow-hover: 0 0 13px rgba(47, 128, 237, 0.25);
+      --shadow-sidebar-dynamic: 15px 0 35px rgba(0, 0, 0, 0.8), 1px 0 15px rgba(47, 128, 237, 0.25);
+      --shadow-subtle: rgba(0, 0, 0, 0.5);
+
+      --text-primary: #F5F7FA;
+      --text-secondary: #86878C;
+      --accent-blue: #3A8BFF;
+      --accent-green: #30D158;
+      --icon-color: #7E7F85;
+      --icon-active: #3A8BFF;
+
+      --backdrop-blur: blur(40px);
+    }
+
+    .light-theme {
+      --bg-global: radial-gradient(circle at 10% 10%, #FFFFFF 0%, #F4F5F8 70%, #EAECEF 100%);
+      --bg-sidebar: rgba(244, 245, 248, 0.4);
+      --bg-sidebar-hover: rgba(255, 255, 255, 0.9);
+      --bg-card: rgba(255, 255, 255, 0.7);
+      --bg-card-hover: rgba(255, 255, 255, 0.95);
+
+      --border-color: rgba(0, 0, 0, 0.04);
+      --border-color-hover: rgba(47, 128, 237, 0.45);
+      --border-inner-glow: rgba(255, 255, 255, 0.6);
+
+      --shadow-card-glow: 0 4px 12px rgba(0, 0, 0, 0.01);
+      --shadow-card-glow-hover: 0 0 13px rgba(47, 128, 237, 0.25);
+      --shadow-sidebar-dynamic: 12px 0 30px rgba(142, 142, 147, 0.08);
+      --shadow-subtle: rgba(142, 142, 147, 0.05);
+
+      --text-primary: #1D1D1F;
+      --text-secondary: #86868B;
+      --accent-blue: #0066CC;
+      --accent-green: #24A148;
+      --icon-color: #929297;
+      --icon-active: #0066CC;
+
+      --backdrop-blur: blur(40px);
+    }
+
+    /* ==========================================================================
+       2. Global Reset + Damping Motion Curve
+       ========================================================================== */
+    * {
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg-global);
+      background-attachment: fixed;
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       3. Component Classes (non-Tailwind-able styles)
+       ========================================================================== */
+
+    /* --- Sidebar --- */
+    .sidebar-glass {
+      background: var(--bg-sidebar);
+      backdrop-filter: var(--backdrop-blur);
+      -webkit-backdrop-filter: var(--backdrop-blur);
+    }
+    .sidebar-glass:hover {
+      background: var(--bg-sidebar-hover);
+      border-right-color: var(--border-color-hover);
+      box-shadow: var(--shadow-sidebar-dynamic);
+    }
+
+    /* --- Card (Glass + Inner Glow + Edge Glow) --- */
+    .card-glass {
+      background: var(--bg-card);
+      backdrop-filter: var(--backdrop-blur);
+      -webkit-backdrop-filter: var(--backdrop-blur);
+      box-shadow: 0 30px 60px var(--shadow-subtle),
+                  inset 0 1px 0 var(--border-inner-glow),
+                  var(--shadow-card-glow);
+    }
+    .card-glass:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 30px 60px var(--shadow-subtle),
+                  inset 0 1px 0 rgba(255,255,255,0.15),
+                  var(--shadow-card-glow-hover);
+      transform: translateY(-2px);
+    }
+
+    /* --- Step Node (hover reveals left accent bar) --- */
+    .step-node {
+      background: var(--bg-card);
+      backdrop-filter: var(--backdrop-blur);
+      -webkit-backdrop-filter: var(--backdrop-blur);
+      box-shadow: 0 15px 35px var(--shadow-subtle),
+                  inset 0 1px 0 var(--border-inner-glow),
+                  var(--shadow-card-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    .step-node::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: transparent;
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .step-node:hover::before {
+      background: var(--accent-blue);
+    }
+    .step-node:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 15px 35px var(--shadow-subtle),
+                  inset 0 1px 0 rgba(255,255,255,0.15),
+                  var(--shadow-card-glow-hover);
+      transform: translateY(-2px);
+    }
+
+    /* --- Header (top nav bar) --- */
+    .header-glass {
+      background: var(--bg-card);
+      backdrop-filter: var(--backdrop-blur);
+      -webkit-backdrop-filter: var(--backdrop-blur);
+    }
+
+    /* --- Theme Toggle Button --- */
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      backdrop-filter: var(--backdrop-blur);
+      -webkit-backdrop-filter: var(--backdrop-blur);
+      box-shadow: 0 4px 20px var(--shadow-subtle);
+    }
+    .theme-toggle-btn:hover {
+      transform: scale(1.05);
+      border-color: rgba(47, 128, 237, 0.4);
+    }
+
+    /* --- Nav Link (pill-shaped) --- */
+    .nav-pill {
+      color: var(--text-secondary);
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-pill:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .nav-pill.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* --- SOH Progress Bar --- */
+    .soh-bar {
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    }
+
+    /* --- Scrollbar --- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* --- Sidebar text color overrides for light theme --- */
+    .light-theme .nav-pill:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .light-theme .nav-pill.active {
+      background: rgba(0, 0, 0, 0.06);
+    }
+    .light-theme ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); }
+    .light-theme ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body class="dark-theme flex h-full">
+
+  <!-- ======================================================================
+       SIDEBAR - Dynamic Depth Console
+       ====================================================================== -->
+  <aside class="sidebar-glass flex flex-col flex-shrink-0 border-r border-[var(--border-color)] relative z-10" style="width:260px">
+    <!-- Brand -->
+    <div class="flex items-center gap-3 px-6 pt-8 pb-0">
+      <div class="w-8 h-8 rounded-lg bg-[var(--accent-blue)] flex items-center justify-center text-white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </div>
+      <span class="text-lg font-bold tracking-[-0.02em] text-[var(--text-primary)]">SOH-SIM</span>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-4 pt-8 pb-4">
+      <!-- Home -->
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1 active">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Home
+      </a>
+
+      <!-- Section: Phases -->
+      <div class="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-[1.5px] opacity-80 mt-7 mb-2 px-3">Phases</div>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.8"/>
+          <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.8"/>
+          <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.8"/>
+          <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Project Setup
+        <span class="ml-auto text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded-md">01</span>
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <polygon points="12 2 2 7 12 12 22 7 12 2" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="2 17 12 22 22 17" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="2 12 12 17 22 12" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        System Design
+        <span class="ml-auto text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded-md">02</span>
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Performance
+        <span class="ml-auto text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded-md">03</span>
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Financial
+        <span class="ml-auto text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded-md">04</span>
+      </a>
+
+      <!-- Section: Core Tools -->
+      <div class="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-[1.5px] opacity-80 mt-7 mb-2 px-3">Core Tools</div>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <line x1="18" y1="2" x2="22" y2="6" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="22" y1="2" x2="18" y2="6" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="18" y1="18" x2="22" y2="22" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="22" y1="18" x2="18" y2="22" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="2" y1="15" x2="6" y2="15" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Formulas
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <line x1="4" y1="21" x2="4" y2="14" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="4" y1="10" x2="4" y2="3" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="12" y1="21" x2="12" y2="12" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="12" y1="8" x2="12" y2="3" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="20" y1="21" x2="20" y2="16" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="20" y1="12" x2="20" y2="3" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="1" y1="14" x2="7" y2="14" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="9" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="17" y1="16" x2="23" y2="16" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Parameters
+      </a>
+
+      <!-- Section: Advanced -->
+      <div class="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-[1.5px] opacity-80 mt-7 mb-2 px-3">Advanced</div>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M12 20h9" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Configuration
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.8"/>
+          <polyline points="10 9 9 9 8 9" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Reports
+      </a>
+      <a href="#" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)] mb-1">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Projects
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="border-t border-[var(--border-color)] p-3">
+      <a href="/auth" class="sidebar-item flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-2xl cursor-pointer no-underline text-[var(--text-secondary)]">
+        <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Auth / Settings
+      </a>
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       MAIN CONTENT
+       ====================================================================== -->
+  <main class="flex-1 flex flex-col overflow-hidden relative z-[1]">
+
+    <!-- Header -->
+    <header class="header-glass flex items-center justify-end h-[60px] flex-shrink-0 px-12 border-b border-[var(--border-color)]">
+      <button id="themeToggle" class="theme-toggle-btn w-[42px] h-[42px] flex items-center justify-center rounded-2xl border border-[var(--border-color)] cursor-pointer" title="Toggle Theme">
+        <!-- Sun icon (shown in dark mode) -->
+        <svg id="sunIcon" class="w-[18px] h-[18px] text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="4.22" x2="19.78" y2="5.64"/>
+        </svg>
+        <!-- Moon icon (hidden in dark mode) -->
+        <svg id="moonIcon" class="w-[18px] h-[18px] text-sky-400" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto px-12 py-12 flex flex-col gap-12">
+
+      <!-- Hero Section -->
+      <section class="text-center pt-4 pb-2">
+        <p class="text-[11px] font-bold text-[var(--accent-blue)] uppercase tracking-[3px] m-0">Battery Energy Storage System</p>
+        <h2 class="text-[52px] font-extralight tracking-[-0.04em] m-0 mt-3">
+          SOH-SIM<strong class="font-bold">.</strong>
+        </h2>
+        <p class="text-[15px] text-[var(--text-secondary)] max-w-[600px] mx-auto mt-3 leading-relaxed">
+          Professional BESS design evaluation platform. Formulated mathematically from concept to commissioning, ensuring five phases to structural delivery.
+        </p>
+      </section>
+
+      <!-- Metric Cards -->
+      <section class="grid gap-7" style="grid-template-columns: 1.5fr 1fr 1fr;">
+        <!-- SOH Card (wider) -->
+        <div class="card-glass flex flex-col justify-between border border-[var(--border-color)] rounded-[28px] p-8">
+          <div>
+            <div class="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-[1px] opacity-80">Current SOH Status</div>
+            <div class="flex items-baseline my-6">
+              <span class="text-[54px] font-light tracking-[-0.04em] text-[var(--accent-green)]">84.5</span>
+              <span class="text-base text-[var(--text-secondary)] ml-1.5 font-medium">%</span>
+            </div>
+          </div>
+          <div class="h-1 bg-white/10 rounded-sm overflow-hidden">
+            <div class="soh-bar h-full rounded-sm" style="width:84.5%"></div>
+          </div>
+        </div>
+
+        <!-- NPV Card -->
+        <div class="card-glass flex flex-col justify-between border border-[var(--border-color)] rounded-[28px] p-8">
+          <div>
+            <div class="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-[1px] opacity-80">NPV Evaluation</div>
+            <div class="flex items-baseline my-6">
+              <span class="text-[54px] font-light tracking-[-0.04em]">4,212,<strong class="font-bold">912</strong></span>
+              <span class="text-base text-[var(--text-secondary)] ml-1.5 font-medium">k</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- IRR Card -->
+        <div class="card-glass flex flex-col justify-between border border-[var(--border-color)] rounded-[28px] p-8">
+          <div>
+            <div class="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-[1px] opacity-80">IRR Projection</div>
+            <div class="flex items-baseline my-6">
+              <span class="text-[54px] font-extralight tracking-[-0.04em] text-[var(--text-secondary)]">--</span>
+              <span class="text-base text-[var(--text-secondary)] ml-1.5 font-medium">%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Five Phases Workflow -->
+      <section class="border-t border-[var(--border-color)] pt-12">
+        <h3 class="text-2xl font-semibold tracking-[-0.02em] m-0">Five Phases to Delivery</h3>
+        <p class="text-sm text-[var(--text-secondary)] mt-2 mb-8">A structured workflow perfectly aligned with real-world BESS project lifecycle.</p>
+
+        <div class="grid grid-cols-5 gap-5 mt-8">
+          <div class="step-node border border-[var(--border-color)] rounded-[20px] p-6 text-sm cursor-pointer">
+            <div class="text-xs font-bold text-[var(--accent-blue)] mb-2 tracking-[0.5px]">01</div>
+            <div class="font-semibold opacity-90">Project Setup</div>
+            <p class="text-[11px] text-[var(--text-secondary)] mt-2 opacity-70">Site survey, grid analysis, preliminary sizing</p>
+          </div>
+          <div class="step-node border border-[var(--border-color)] rounded-[20px] p-6 text-sm cursor-pointer">
+            <div class="text-xs font-bold text-[var(--accent-blue)] mb-2 tracking-[0.5px]">02</div>
+            <div class="font-semibold opacity-90">System Design</div>
+            <p class="text-[11px] text-[var(--text-secondary)] mt-2 opacity-70">Battery config, PCS sizing, architecture</p>
+          </div>
+          <div class="step-node border border-[var(--border-color)] rounded-[20px] p-6 text-sm cursor-pointer">
+            <div class="text-xs font-bold text-[var(--accent-blue)] mb-2 tracking-[0.5px]">03</div>
+            <div class="font-semibold opacity-90">Performance</div>
+            <p class="text-[11px] text-[var(--text-secondary)] mt-2 opacity-70">SOH simulation, degradation modeling</p>
+          </div>
+          <div class="step-node border border-[var(--border-color)] rounded-[20px] p-6 text-sm cursor-pointer">
+            <div class="text-xs font-bold text-[var(--accent-blue)] mb-2 tracking-[0.5px]">04</div>
+            <div class="font-semibold opacity-90">Financial</div>
+            <p class="text-[11px] text-[var(--text-secondary)] mt-2 opacity-70">NPV, IRR, LCOE, cashflow analysis</p>
+          </div>
+          <div class="step-node border border-[var(--border-color)] rounded-[20px] p-6 text-sm cursor-pointer">
+            <div class="text-xs font-bold text-[var(--accent-blue)] mb-2 tracking-[0.5px]">05</div>
+            <div class="font-semibold opacity-90">Deliverables</div>
+            <p class="text-[11px] text-[var(--text-secondary)] mt-2 opacity-70">BOQ, bid docs, compliance matrix</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Design QA Checklist (visual summary) -->
+      <section class="border-t border-[var(--border-color)] pt-12 pb-8">
+        <h3 class="text-2xl font-semibold tracking-[-0.02em] m-0 mb-8">Design QA Checklist</h3>
+        <div class="grid grid-cols-4 gap-4">
+          <div class="card-glass border border-[var(--border-color)] rounded-2xl p-6">
+            <div class="text-[10px] font-bold text-[var(--accent-blue)] uppercase tracking-[2px] mb-3">Glow Audit</div>
+            <p class="text-xs text-[var(--text-secondary)] leading-relaxed m-0">Hover glow radius &le; 15px, no floodlight effect</p>
+          </div>
+          <div class="card-glass border border-[var(--border-color)] rounded-2xl p-6">
+            <div class="text-[10px] font-bold text-[var(--accent-blue)] uppercase tracking-[2px] mb-3">Dark Shadow</div>
+            <p class="text-xs text-[var(--text-secondary)] leading-relaxed m-0">Sidebar right edge cold-blue backlight seepage visible</p>
+          </div>
+          <div class="card-glass border border-[var(--border-color)] rounded-2xl p-6">
+            <div class="text-[10px] font-bold text-[var(--accent-blue)] uppercase tracking-[2px] mb-3">Easing Curve</div>
+            <p class="text-xs text-[var(--text-secondary)] leading-relaxed m-0">All animations use cubic-bezier(0.16, 1, 0.3, 1)</p>
+          </div>
+          <div class="card-glass border border-[var(--border-color)] rounded-2xl p-6">
+            <div class="text-[10px] font-bold text-[var(--accent-blue)] uppercase tracking-[2px] mb-3">Continuity</div>
+            <p class="text-xs text-[var(--text-secondary)] leading-relaxed m-0">Sidebar invisible when idle, radial gradient penetrates</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       Theme Toggle Script
+       ====================================================================== -->
+  <script>
+    const toggleBtn = document.getElementById('themeToggle')
+    const body = document.body
+    const sunIcon = document.getElementById('sunIcon')
+    const moonIcon = document.getElementById('moonIcon')
+
+    toggleBtn.addEventListener('click', () => {
+      if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme')
+        body.classList.add('light-theme')
+        sunIcon.style.display = 'none'
+        moonIcon.style.display = 'block'
+      } else {
+        body.classList.remove('light-theme')
+        body.classList.add('dark-theme')
+        sunIcon.style.display = 'block'
+        moonIcon.style.display = 'none'
+      }
+    })
+  </script>
+
+  <style>
+    /* ======================================================================
+       Sidebar Menu Item Styles (keep out of global * transition to avoid
+       overriding SVG stroke transitions)
+       ====================================================================== */
+    .sidebar-item {
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sidebar-item svg {
+      stroke: var(--icon-color);
+      transition: stroke 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sidebar-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+    .sidebar-item:hover svg {
+      stroke: var(--icon-active);
+    }
+    .sidebar-item.active {
+      font-weight: 600;
+      color: var(--accent-blue);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-card-glow);
+    }
+    .sidebar-item.active svg {
+      stroke: var(--icon-active);
+    }
+    .light-theme .sidebar-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  </style>
+
+</body>
+</html>
