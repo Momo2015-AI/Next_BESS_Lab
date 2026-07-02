@@ -5,23 +5,64 @@
     box-sizing: border-box;
   }
 
+  /* ==========================================================================
+     SOH-SIM Dynamic Depth Design Tokens
+     动态景深 + 连续性美学材质系统
+     ========================================================================== */
+
   :root {
+    /* ── 流体舞台画布 ── */
+    --bg-global: radial-gradient(circle at 10% 10%, #FFFFFF 0%, #F4F5F8 70%, #EAECEF 100%);
+
+    /* ── 侧边栏：空气滤镜 / 实体纸张 ── */
+    --bg-sidebar: rgba(244, 245, 248, 0.4);
+    --bg-sidebar-hover: rgba(255, 255, 255, 0.9);
+
+    /* ── 悬浮水晶卡片 ── */
+    --bg-card: rgba(255, 255, 255, 0.7);
+
+    /* ── 极细玻璃微缝 ── */
+    --border-color: rgba(0, 0, 0, 0.04);
+    --border-inner-glow: rgba(255, 255, 255, 0.6);
+
+    /* ── 1/3 精密微光 ── */
+    --shadow-card-glow: 0 4px 12px rgba(0, 0, 0, 0.01);
+    --shadow-subtle: rgba(142, 142, 147, 0.05);
+
+    /* ── 侧边栏：极细腻软吸光阴影 ── */
+    --shadow-sidebar-dynamic: 12px 0 30px rgba(142, 142, 147, 0.08);
+
+    /* ── 全局毛玻璃 ── */
+    --backdrop-filter: blur(40px);
+
+    /* ── 主题色: SOH-SIM 蓝 ── */
+    --accent-blue: #0066CC;
+
+    /* ── 文本 ── */
+    --text-primary: #1D1D1F;
+    --text-secondary: #86868B;
+    --icon-color: #929297;
+    --icon-active: #0066CC;
+
+    /* ============================================
+       向后兼容别名 (保留现有 --color-* 变量)
+       ============================================ */
     --color-bg: #f5f7fa;
     --color-bg-secondary: #e8eef5;
     --color-bg-tertiary: #dce4ec;
-    --color-card: #ffffff;
+    --color-card: rgba(255, 255, 255, 0.7);
     --color-card-hover: #f5f7fa;
     --color-card-dark: #e8eef5;
     --color-border: #e0e0e0;
     --color-border-light: #e8eef5;
-    --color-text: #333333;
-    --color-text-secondary: #666666;
+    --color-text: #1D1D1F;
+    --color-text-secondary: #86868B;
     --color-text-muted: #999999;
     --color-text-light: #cccccc;
-    --color-accent: #2f5496;
+    --color-accent: #0066CC;
     --color-accent-secondary: #4a7bc4;
-    --color-accent-glow: rgba(47, 84, 150, 0.15);
-    --color-accent-dark: rgba(47, 84, 150, 0.2);
+    --color-accent-glow: rgba(0, 102, 204, 0.12);
+    --color-accent-dark: rgba(0, 102, 204, 0.2);
     --color-success: #10b981;
     --color-warning: #f7931e;
     --color-danger: #ef4444;
@@ -29,18 +70,18 @@
     --color-input-bg: #f5f7fa;
     --color-input-bg-dark: #ffffff;
     --color-input-border: #e0e0e0;
-    --color-input-focus: #2f5496;
-    --color-header-bg: #ffffff;
+    --color-input-focus: #0066CC;
+    --color-header-bg: rgba(255, 255, 255, 0.72);
     --color-header-border: #e0e0e0;
-    --color-nav-bg: #ffffff;
+    --color-nav-bg: rgba(255, 255, 255, 0.72);
     --color-nav-border: #e0e0e0;
     --color-tab-bg: #f5f7fa;
     --color-tab-hover: #e8eef5;
     --color-step-bg: #f5f7fa;
     --color-step-border: #e0e0e0;
-    --color-step-active: rgba(47, 84, 150, 0.15);
-    --color-step-num: #666666;
-    --color-step-num-active: #2f5496;
+    --color-step-active: rgba(0, 102, 204, 0.12);
+    --color-step-num: #86868B;
+    --color-step-num-active: #0066CC;
     --color-table-header: #f5f7fa;
     --color-table-row: #ffffff;
     --color-table-row-alt: #f5f7fa;
@@ -57,22 +98,58 @@
   }
 
   [data-theme='dark'] {
+    /* ── 流体舞台画布 ── */
+    --bg-global: radial-gradient(circle at 80% 20%, #1A2238 0%, #0D0E12 60%, #07080A 100%);
+
+    /* ── 侧边栏：低照度 / 黑曜石 ── */
+    --bg-sidebar: rgba(11, 12, 16, 0.45);
+    --bg-sidebar-hover: rgba(5, 6, 8, 0.96);
+
+    /* ── 悬浮水晶卡片 ── */
+    --bg-card: rgba(22, 24, 31, 0.65);
+
+    /* ── 极细玻璃微缝 ── */
+    --border-color: rgba(47, 128, 237, 0.16);
+    --border-inner-glow: rgba(255, 255, 255, 0.08);
+
+    /* ── 1/3 精密缝隙微光 ── */
+    --shadow-card-glow: 0 0 10px rgba(47, 128, 237, 0.12);
+    --shadow-subtle: rgba(0, 0, 0, 0.5);
+
+    /* ── 黑阴影阻断 + 冷蓝背光渗出 ── */
+    --shadow-sidebar-dynamic: 15px 0 35px rgba(0, 0, 0, 0.8), 1px 0 15px rgba(47, 128, 237, 0.25);
+
+    /* ── 全局毛玻璃 ── */
+    --backdrop-filter: blur(40px);
+
+    /* ── 主题色: SOH-SIM 冷蓝 ── */
+    --accent-blue: #3A8BFF;
+
+    /* ── 文本 ── */
+    --text-primary: #F5F7FA;
+    --text-secondary: #86878C;
+    --icon-color: #7E7F85;
+    --icon-active: #3A8BFF;
+
+    /* ============================================
+       向后兼容别名 (保留现有 --color-* 变量)
+       ============================================ */
     --color-bg: #020617;
     --color-bg-secondary: #0f172a;
     --color-bg-tertiary: #1e293b;
-    --color-card: rgba(15, 23, 42, 0.8);
+    --color-card: rgba(22, 24, 31, 0.65);
     --color-card-hover: rgba(30, 41, 59, 0.3);
     --color-card-dark: rgba(30, 41, 59, 0.6);
     --color-border: #1e293b;
     --color-border-light: #1e293b;
-    --color-text: #e2e8f0;
-    --color-text-secondary: #94a3b8;
+    --color-text: #F5F7FA;
+    --color-text-secondary: #86878C;
     --color-text-muted: #64748b;
     --color-text-light: #94a3b8;
-    --color-accent: #2dd4bf;
+    --color-accent: #3A8BFF;
     --color-accent-secondary: #38bdf8;
-    --color-accent-glow: rgba(45, 212, 191, 0.08);
-    --color-accent-dark: rgba(45, 212, 191, 0.2);
+    --color-accent-glow: rgba(58, 139, 255, 0.12);
+    --color-accent-dark: rgba(58, 139, 255, 0.2);
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-danger: #ef4444;
@@ -80,18 +157,18 @@
     --color-input-bg: #020617;
     --color-input-bg-dark: #0f172a;
     --color-input-border: #334155;
-    --color-input-focus: #2dd4bf;
-    --color-header-bg: rgba(15, 23, 42, 0.6);
+    --color-input-focus: #3A8BFF;
+    --color-header-bg: rgba(11, 12, 16, 0.72);
     --color-header-border: #1e293b;
-    --color-nav-bg: rgba(15, 23, 42, 0.6);
+    --color-nav-bg: rgba(11, 12, 16, 0.72);
     --color-nav-border: #1e293b;
     --color-tab-bg: rgba(15, 23, 42, 0.6);
     --color-tab-hover: #1e293b;
     --color-step-bg: rgba(15, 23, 42, 0.6);
     --color-step-border: #1e293b;
-    --color-step-active: rgba(45, 212, 191, 0.2);
+    --color-step-active: rgba(58, 139, 255, 0.2);
     --color-step-num: #64748b;
-    --color-step-num-active: #2dd4bf;
+    --color-step-num-active: #3A8BFF;
     --color-table-header: rgba(15, 23, 42, 0.8);
     --color-table-row: rgba(15, 23, 42, 0.4);
     --color-table-row-alt: rgba(30, 41, 59, 0.2);
@@ -109,16 +186,12 @@
 
   body {
     margin: 0;
-    background: var(--color-bg);
-    color: var(--color-text);
+    background: var(--bg-global);
+    background-attachment: fixed;
+    color: var(--text-primary);
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     font-size: 12px;
     overflow: hidden;
-  }
-
-  [data-theme='light'] body {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 30%, #e0f2fe 70%, #f0f9ff 100%);
-    background-attachment: fixed;
   }
 
   input[type='number']::-webkit-inner-spin-button,
@@ -155,6 +228,130 @@
 }
 
 @layer components {
+  /* ==========================================================================
+     SOH-SIM 精密微光卡片系统
+     ========================================================================== */
+
+  .card {
+    background: var(--bg-card, var(--color-card));
+    backdrop-filter: var(--backdrop-filter);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    border: 1px solid var(--border-color, var(--color-border));
+    border-radius: var(--radius-md);
+    box-shadow: 0 30px 60px var(--shadow-subtle),
+                inset 0 1px 0 var(--border-inner-glow),
+                var(--shadow-card-glow);
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card:hover {
+    border-color: rgba(47, 128, 237, 0.45);
+    box-shadow: 0 30px 60px var(--shadow-subtle),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 13px rgba(47, 128, 237, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .card-hover {
+    background: var(--bg-card, var(--color-card));
+    border: 1px solid var(--border-color, var(--color-border));
+    border-radius: var(--radius-md);
+    box-shadow: 0 30px 60px var(--shadow-subtle),
+                inset 0 1px 0 var(--border-inner-glow),
+                var(--shadow-card-glow);
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover:hover {
+    border-color: rgba(47, 128, 237, 0.45);
+    box-shadow: 0 30px 60px var(--shadow-subtle),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 13px rgba(47, 128, 237, 0.25);
+    transform: translateY(-2px);
+  }
+
+  /* ==========================================================================
+     SOH-SIM 步骤/流程节点 (左侧蓝色状态条)
+     ========================================================================== */
+
+  .theme-step {
+    background-color: var(--bg-card, var(--color-step-bg));
+    border: 1px solid var(--border-color, var(--color-step-border));
+    border-radius: var(--radius-sm);
+    box-shadow: 0 15px 35px var(--shadow-subtle),
+                inset 0 1px 0 var(--border-inner-glow),
+                var(--shadow-card-glow);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .theme-step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: transparent;
+  }
+
+  .theme-step:hover::before {
+    background: var(--accent-blue, var(--color-accent));
+  }
+
+  .theme-step:hover {
+    border-color: rgba(47, 128, 237, 0.45);
+    box-shadow: 0 15px 35px var(--shadow-subtle),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 13px rgba(47, 128, 237, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* ==========================================================================
+     SOH-SIM 统一阻尼缓动标签系统
+     ========================================================================== */
+
+  .tab-btn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: var(--color-accent);
+    background: var(--color-accent-glow);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    font-weight: 700;
+  }
+  .tab-btn:hover:not(.active) {
+    color: var(--color-text);
+  }
+
+  /* ==========================================================================
+     输入 / 按钮 / 通用组件
+     ========================================================================== */
+
   .formula-input {
     background-color: var(--color-input-bg);
     border: 1px dashed var(--color-input-border);
@@ -172,55 +369,11 @@
     background-color: var(--color-card-hover);
   }
 
-  .tab-btn {
-    flex: 1;
-    padding: 6px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 6px;
-    color: var(--color-text-secondary);
-    transition: all 0.15s;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    white-space: nowrap;
-  }
-  .tab-btn.active {
-    color: var(--color-accent);
-    background: var(--color-accent-glow);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-    font-weight: 700;
-  }
-  .tab-btn:hover:not(.active) {
-    color: var(--color-text);
-  }
-
   .matrix-cell {
     padding: 2px 4px;
     text-align: center;
     font-family: var(--font-mono);
     font-size: 11px;
-  }
-
-  .card {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .card-hover {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition:
-      box-shadow 0.15s,
-      border-color 0.15s;
-  }
-  .card-hover:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-accent);
   }
 
   .input-field {
@@ -256,7 +409,9 @@
     border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 8px var(--color-accent-glow);
   }
   .btn-primary:hover {
@@ -281,7 +436,7 @@
     padding: 5px 8px;
     color: var(--color-accent);
     font-size: 11px;
-    transition: border-color 0.15s;
+    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-input:focus {
     outline: none;
@@ -298,7 +453,9 @@
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn:hover {
     opacity: 0.9;
@@ -306,8 +463,8 @@
   }
 
   .theme-card {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border);
+    background-color: var(--bg-card, var(--color-card));
+    border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
   }
 
@@ -317,12 +474,6 @@
     border-radius: var(--radius-md);
   }
 
-  .theme-step {
-    background-color: var(--color-step-bg);
-    border: 1px solid var(--color-step-border);
-    border-radius: var(--radius-sm);
-  }
-
   .theme-input-field {
     background-color: var(--color-input-bg-dark);
     border: 1px solid var(--color-input-border);
@@ -330,7 +481,7 @@
     padding: 5px 8px;
     color: var(--color-accent);
     font-size: 11px;
-    transition: border-color 0.15s;
+    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-input-field:focus {
     outline: none;
@@ -346,7 +497,9 @@
     padding: 5px 12px;
     font-size: 11px;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn-secondary:hover {
     background-color: var(--color-tab-hover);

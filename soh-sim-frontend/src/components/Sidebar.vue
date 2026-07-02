@@ -125,16 +125,22 @@ const advToolItems = computed(() => [
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-right: 0.5px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-sidebar);
+  backdrop-filter: var(--backdrop-filter);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   overflow: hidden;
+  position: relative;
+  z-index: 10;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-theme='dark'] .sidebar-container {
-  background: rgba(29, 29, 31, 0.6);
-  border-right-color: rgba(255, 255, 255, 0.06);
+.sidebar-container:hover {
+  background: var(--bg-sidebar-hover);
+  border-right-color: rgba(47, 128, 237, 0.45);
+  box-shadow: var(--shadow-sidebar-dynamic);
 }
 
 .sidebar-scroll {
@@ -148,17 +154,14 @@ const advToolItems = computed(() => [
 }
 
 .section-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #86868b;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 1.5px;
   padding: 0 10px;
-  margin-bottom: 4px;
-}
-
-[data-theme='dark'] .section-label {
-  color: #6e6e73;
+  margin-bottom: 6px;
+  opacity: 0.8;
 }
 
 .sidebar-link {
@@ -169,41 +172,37 @@ const advToolItems = computed(() => [
   border-radius: 8px;
   font-size: 13px;
   font-weight: 400;
-  color: #424245;
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
 .sidebar-link:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: #1d1d1f;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
 }
 
 .sidebar-link.active {
-  background: rgba(0, 113, 227, 0.08);
-  color: #0071e3;
-  font-weight: 500;
-}
-
-[data-theme='dark'] .sidebar-link {
-  color: #a1a1a6;
-}
-[data-theme='dark'] .sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f5f5f7;
-}
-[data-theme='dark'] .sidebar-link.active {
-  background: rgba(0, 113, 227, 0.15);
-  color: #40a9ff;
+  background: var(--bg-card, rgba(0, 113, 227, 0.08));
+  color: var(--icon-active, var(--accent-blue));
+  font-weight: 600;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.04));
+  box-shadow: var(--shadow-card-glow);
 }
 
 .sidebar-link svg {
   flex-shrink: 0;
   opacity: 0.6;
+  stroke: var(--icon-color, #929297);
+}
+.sidebar-link:hover svg {
+  stroke: var(--icon-color, #929297);
 }
 .sidebar-link.active svg {
   opacity: 1;
+  stroke: var(--icon-active, var(--accent-blue));
 }
 
 .phase-dot {
@@ -219,11 +218,11 @@ const advToolItems = computed(() => [
 }
 
 .dot-pending {
-  background: #f0f0f0;
-  color: #999;
+  background: rgba(142, 142, 147, 0.12);
+  color: var(--text-secondary);
 }
 .dot-in_progress {
-  background: #0071e3;
+  background: var(--accent-blue);
   color: white;
 }
 .dot-completed {
@@ -241,21 +240,16 @@ const advToolItems = computed(() => [
   font-size: 9px;
   font-weight: 700;
   flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.04);
-  color: #86868b;
+  background: rgba(142, 142, 147, 0.12);
+  color: var(--text-secondary);
 }
 
 [data-theme='dark'] .tool-icon {
   background: rgba(255, 255, 255, 0.08);
-  color: #6e6e73;
 }
 
 .sidebar-footer {
   padding: 10px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
-}
-
-[data-theme='dark'] .sidebar-footer {
-  border-top-color: rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
 }
 </style>

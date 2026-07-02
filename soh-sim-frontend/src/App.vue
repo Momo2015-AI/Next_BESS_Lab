@@ -70,24 +70,22 @@ provide('showToast', showToast)
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--color-bg);
+  background: var(--bg-global);
+  background-attachment: fixed;
   overflow: hidden;
 }
 
 .app-header {
   height: 52px;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-card, rgba(255, 255, 255, 0.72));
+  backdrop-filter: var(--backdrop-filter);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.04));
   z-index: 100;
   position: relative;
-}
-
-[data-theme='dark'] .app-header {
-  background: rgba(29, 29, 31, 0.72);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .header-inner {
@@ -104,18 +102,14 @@ provide('showToast', showToast)
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #1d1d1f;
-}
-
-[data-theme='dark'] .brand {
-  color: #f5f5f7;
+  color: var(--text-primary);
 }
 
 .brand-icon {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #0071e3, #40a9ff);
+  background: linear-gradient(135deg, var(--accent-blue), #40a9ff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,26 +132,30 @@ provide('showToast', showToast)
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  color: #86868b;
+  color: var(--text-secondary, #86868b);
   text-decoration: none;
-  transition: all 0.2s;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-link:hover {
-  color: #1d1d1f;
+  color: var(--text-primary);
   background: rgba(0, 0, 0, 0.04);
 }
 .nav-link.active {
-  color: #1d1d1f;
+  color: var(--text-primary);
   background: rgba(0, 0, 0, 0.06);
 }
 
+[data-theme='dark'] .nav-link {
+  color: var(--text-secondary, #86868b);
+}
 [data-theme='dark'] .nav-link:hover {
-  color: #f5f5f7;
+  color: var(--text-primary);
   background: rgba(255, 255, 255, 0.08);
 }
 [data-theme='dark'] .nav-link.active {
-  color: #f5f5f7;
+  color: var(--text-primary);
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -174,21 +172,22 @@ provide('showToast', showToast)
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #86868b;
+  color: var(--text-secondary, #86868b);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .icon-btn:hover {
   background: rgba(0, 0, 0, 0.06);
-  color: #1d1d1f;
+  color: var(--text-primary);
 }
 [data-theme='dark'] .icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #f5f5f7;
+  color: var(--text-primary);
 }
 
 .app-body {
@@ -201,6 +200,8 @@ provide('showToast', showToast)
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+  z-index: 1;
 }
 
 .toast-notification {
@@ -245,7 +246,7 @@ provide('showToast', showToast)
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.15s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .fade-enter-from,
 .fade-leave-to {
