@@ -138,8 +138,7 @@ def get_project(project_id):
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
     pagination = (
-        ProjectVersion.query
-        .filter_by(project_id=project_id)
+        ProjectVersion.query.filter_by(project_id=project_id)
         .order_by(ProjectVersion.version_num.desc())
         .paginate(page=page, per_page=per_page, error_out=False)
     )

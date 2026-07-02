@@ -32,8 +32,7 @@ def get_simulation_results(version_id):
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
     pagination = (
-        SimulationResult.query
-        .filter_by(version_id=version_id)
+        SimulationResult.query.filter_by(version_id=version_id)
         .order_by(SimulationResult.executed_at.desc())
         .paginate(page=page, per_page=per_page, error_out=False)
     )

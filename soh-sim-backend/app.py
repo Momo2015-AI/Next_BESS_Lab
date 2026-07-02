@@ -29,7 +29,6 @@ from services.boq import seed_boq_sections
 
 from routes.epc_modules import epc_bp
 
-
 app = Flask(__name__)
 CORS(app)
 
