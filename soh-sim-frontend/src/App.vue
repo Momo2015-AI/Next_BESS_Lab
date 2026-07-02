@@ -7,16 +7,24 @@
     <header class="app-header">
       <div class="header-inner">
         <router-link to="/" class="brand">
-          <NexBessLogo compact :hoverable="false" />
+          <NexBessLogo compact />
         </router-link>
 
-        <nav class="header-nav">
-          <router-link to="/" class="nav-link" :class="{ active: $route.path === '/' }">Overview</router-link>
-          <router-link to="/phase1" class="nav-link">Phases</router-link>
-          <router-link to="/tools/formula" class="nav-link">Tools</router-link>
-        </nav>
-
         <div class="header-actions">
+          <router-link to="/auth" class="auth-btn" :class="{ active: $route.path === '/auth' }">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span>{{ $t('sidebar.auth') }}</span>
+          </router-link>
           <ThemeSwitcher />
         </div>
       </div>
@@ -36,7 +44,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, provide } from 'vue'
+import { reactive, provide } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import NexBessLogo from './components/NexBessLogo.vue'
@@ -91,40 +99,49 @@ provide('showToast', showToast)
   text-decoration: none;
 }
 
-.header-nav {
+.header-actions {
+  margin-left: auto;
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 12px;
 }
 
-.nav-link {
+.auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 14px;
   border-radius: 14px;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  transition:
-    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-link:hover {
-  color: var(--text-primary);
-  background: rgba(128, 128, 128, 0.08);
-}
-.nav-link.active {
-  color: var(--accent-blue);
-  background: var(--bg-card);
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-card-glow);
-  font-weight: 600;
+  background: var(--bg-card);
+  transition:
+    background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
-.header-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.auth-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-color-hover);
+  box-shadow: var(--shadow-card-glow);
+}
+
+.auth-btn.active {
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  box-shadow: var(--shadow-card-glow);
+}
+
+.auth-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .icon-btn {

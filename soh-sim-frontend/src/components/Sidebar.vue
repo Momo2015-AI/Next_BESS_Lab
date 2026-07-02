@@ -1,13 +1,17 @@
 <template>
   <aside class="sidebar-container">
-    <router-link to="/" class="sidebar-brand">
-      <NexBessLogo :hoverable="false" />
-    </router-link>
-
     <nav class="sidebar-scroll">
       <div class="sidebar-section">
         <router-link to="/" class="sidebar-menu-item" :class="{ active: $route.path === '/' }">
-          <svg viewBox="0 0 24 24">
+          <svg
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
@@ -26,14 +30,8 @@
           class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="10" font-weight="700">
-              {{ item.num }}
-            </text>
-          </svg>
+          <span class="phase-num">{{ String(item.num).padStart(2, '0') }}</span>
           <span>{{ item.label }}</span>
-          <span class="phase-badge">{{ String(item.num).padStart(2, '0') }}</span>
         </router-link>
       </div>
 
@@ -48,11 +46,22 @@
           class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
-              {{ item.icon }}
-            </text>
+          <svg
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle v-if="item.icon === 'fx'" cx="12" cy="12" r="10" />
+            <path v-else-if="item.icon === 'sl'" d="M4 12h16M12 8v8" />
+            <path v-else-if="item.icon === 'wd'" d="M12 3v18M3 12h18" />
+            <path v-else-if="item.icon === 'P'" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            <path v-else-if="item.icon === '$'" d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+            <path v-else-if="item.icon === 'En'" d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18" />
+            <path v-else-if="item.icon === 'Di'" d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
           </svg>
           <span>{{ item.label }}</span>
         </router-link>
@@ -69,11 +78,25 @@
           class="sidebar-menu-item"
           :class="{ active: $route.path === item.path }"
         >
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="700">
-              {{ item.icon }}
-            </text>
+          <svg
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path v-if="item.icon === 'Cf'" d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+            <path v-else-if="item.icon === 'Sv'" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <path v-else-if="item.icon === 'Sm'" d="M18 20V10M12 20V4M6 20v-6" />
+            <path v-else-if="item.icon === 'Rp'" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <path
+              v-else-if="item.icon === 'Pj'"
+              d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"
+            />
+            <path v-else-if="item.icon === 'Tp'" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+            <path v-else-if="item.icon === 'Ru'" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
           <span>{{ item.label }}</span>
         </router-link>
@@ -82,7 +105,15 @@
       <div class="sidebar-section">
         <div class="sidebar-section-label">EPC</div>
         <router-link to="/epc" class="sidebar-menu-item" :class="{ active: $route.path === '/epc' }">
-          <svg viewBox="0 0 24 24">
+          <svg
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
@@ -93,7 +124,15 @@
 
     <div class="sidebar-footer">
       <router-link to="/auth" class="sidebar-menu-item" :class="{ active: $route.path === '/auth' }">
-        <svg viewBox="0 0 24 24">
+        <svg
+          class="menu-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
@@ -107,7 +146,6 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
-import NexBessLogo from './NexBessLogo.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
@@ -166,13 +204,6 @@ const advToolItems = computed(() => [
   box-shadow: var(--shadow-sidebar-dynamic);
 }
 
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  padding: 32px 28px 0;
-  text-decoration: none;
-}
-
 .sidebar-scroll {
   flex: 1;
   overflow-y: auto;
@@ -183,14 +214,13 @@ const advToolItems = computed(() => [
   margin-bottom: 4px;
 }
 
-.phase-badge {
-  margin-left: auto;
-  font-size: 10px;
-  font-weight: 700;
-  background: rgba(142, 142, 147, 0.12);
-  padding: 2px 8px;
-  border-radius: 6px;
+.phase-num {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  text-align: center;
 }
 
 .sidebar-footer {
