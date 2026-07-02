@@ -84,8 +84,9 @@ provide('showToast', showToast)
   border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.04));
   z-index: 100;
   position: relative;
-  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .header-inner {
@@ -134,8 +135,9 @@ provide('showToast', showToast)
   font-weight: 500;
   color: var(--text-secondary, #86868b);
   text-decoration: none;
-  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-link:hover {
@@ -177,8 +179,9 @@ provide('showToast', showToast)
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .icon-btn:hover {

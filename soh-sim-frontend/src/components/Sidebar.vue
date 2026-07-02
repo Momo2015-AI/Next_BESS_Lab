@@ -132,9 +132,10 @@ const advToolItems = computed(() => [
   overflow: hidden;
   position: relative;
   z-index: 10;
-  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sidebar-container:hover {
@@ -174,8 +175,9 @@ const advToolItems = computed(() => [
   font-weight: 400;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
