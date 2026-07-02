@@ -21,6 +21,9 @@
     /* ── 悬浮水晶卡片 ── */
     --bg-card: rgba(255, 255, 255, 0.7);
 
+    /* ── 实色卡片 (无毛玻璃，高不透明度补偿) ── */
+    --bg-card-solid: rgba(255, 255, 255, 0.92);
+
     /* ── 极细玻璃微缝 ── */
     --border-color: rgba(0, 0, 0, 0.04);
     --border-inner-glow: rgba(255, 255, 255, 0.6);
@@ -115,6 +118,9 @@
     /* ── 悬浮水晶卡片 ── */
     --bg-card: rgba(22, 24, 31, 0.65);
 
+    /* ── 实色卡片 (无毛玻璃，高不透明度补偿) ── */
+    --bg-card-solid: rgba(22, 24, 31, 0.9);
+
     /* ── 极细玻璃微缝 ── */
     --border-color: rgba(47, 128, 237, 0.16);
     --border-inner-glow: rgba(255, 255, 255, 0.08);
@@ -201,7 +207,7 @@
   body {
     margin: 0;
     background: var(--bg-global);
-    background-attachment: fixed;
+    background-attachment: scroll;
     color: var(--text-primary);
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     font-size: 12px;
@@ -247,52 +253,52 @@
      ========================================================================== */
 
   .card {
-    background: var(--bg-card, var(--color-card));
-    backdrop-filter: var(--backdrop-filter);
-    -webkit-backdrop-filter: var(--backdrop-filter);
+    background: var(--bg-card-solid, var(--color-card));
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
     box-shadow:
-      0 30px 60px var(--shadow-subtle),
+      0 15px 30px var(--shadow-subtle),
       inset 0 1px 0 var(--border-inner-glow),
       var(--shadow-card-glow);
+    will-change: transform;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .card:hover {
     border-color: var(--border-color-hover);
     box-shadow:
-      0 30px 60px var(--shadow-subtle),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 15px 30px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
       var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
 
   .card-hover {
-    background: var(--bg-card, var(--color-card));
+    background: var(--bg-card-solid, var(--color-card));
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
     box-shadow:
-      0 30px 60px var(--shadow-subtle),
+      0 15px 30px var(--shadow-subtle),
       inset 0 1px 0 var(--border-inner-glow),
       var(--shadow-card-glow);
+    will-change: transform;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .card-hover:hover {
     border-color: var(--border-color-hover);
     box-shadow:
-      0 30px 60px var(--shadow-subtle),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 15px 30px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
       var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
@@ -302,21 +308,22 @@
      ========================================================================== */
 
   .theme-step {
-    background-color: var(--bg-card, var(--color-step-bg));
+    background-color: var(--bg-card-solid, var(--color-step-bg));
     border: 1px solid var(--border-color, var(--color-step-border));
     border-radius: var(--radius-sm);
     box-shadow:
-      0 15px 35px var(--shadow-subtle),
+      0 10px 25px var(--shadow-subtle),
       inset 0 1px 0 var(--border-inner-glow),
       var(--shadow-card-glow);
     position: relative;
     overflow: hidden;
+    will-change: transform;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .theme-step::before {
@@ -327,6 +334,7 @@
     width: 4px;
     height: 100%;
     background: transparent;
+    transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .theme-step:hover::before {
@@ -336,8 +344,8 @@
   .theme-step:hover {
     border-color: var(--border-color-hover);
     box-shadow:
-      0 15px 35px var(--shadow-subtle),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 10px 25px var(--shadow-subtle),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
       var(--shadow-card-glow-hover);
     transform: translateY(-2px);
   }
@@ -354,9 +362,9 @@
     border-radius: 6px;
     color: var(--color-text-secondary);
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     border: none;
     background: transparent;
@@ -434,9 +442,9 @@
     border: none;
     cursor: pointer;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 8px var(--color-accent-glow);
   }
   .btn-primary:hover {
@@ -461,7 +469,7 @@
     padding: 5px 8px;
     color: var(--color-accent);
     font-size: 11px;
-    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-input:focus {
     outline: none;
@@ -479,9 +487,9 @@
     font-weight: 600;
     cursor: pointer;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn:hover {
     opacity: 0.9;
@@ -507,7 +515,7 @@
     padding: 5px 8px;
     color: var(--color-accent);
     font-size: 11px;
-    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-input-field:focus {
     outline: none;
@@ -524,9 +532,9 @@
     font-size: 11px;
     cursor: pointer;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-btn-secondary:hover {
     background-color: var(--color-tab-hover);
@@ -656,8 +664,8 @@
     text-decoration: none;
     margin-bottom: 4px;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .sidebar-menu-item:hover {
     background: rgba(255, 255, 255, 0.05);
@@ -677,7 +685,7 @@
     height: 18px;
     stroke-width: 1.8;
     fill: none;
-    transition: stroke 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: stroke 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .sidebar-menu-item:hover svg,
   .sidebar-menu-item.active svg {
@@ -708,8 +716,8 @@
     -webkit-backdrop-filter: var(--backdrop-filter);
     border-bottom: 1px solid var(--border-color);
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* ==========================================================================
@@ -729,9 +737,9 @@
     align-items: center;
     justify-content: center;
     transition:
-      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .theme-toggle-btn:hover {
     transform: scale(1.05);
