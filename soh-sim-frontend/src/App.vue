@@ -6,23 +6,7 @@
 
     <header class="app-header">
       <div class="header-inner">
-        <router-link to="/" class="brand">
-          <div class="brand-icon">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-            </svg>
-          </div>
-          <span class="brand-text">SOH-SIM</span>
-        </router-link>
+        <BrandLogo />
 
         <nav class="header-nav">
           <router-link to="/" class="nav-link" :class="{ active: $route.path === '/' }">Overview</router-link>
@@ -53,6 +37,7 @@
 import { reactive, ref, provide } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
+import BrandLogo from './components/BrandLogo.vue'
 const toast = reactive({ show: false, message: '', type: 'info' })
 const showToast = (message, type = 'info') => {
   toast.message = message
@@ -96,31 +81,6 @@ provide('showToast', showToast)
   align-items: center;
   padding: 0 24px;
   gap: 32px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--text-primary);
-}
-
-.brand-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent-blue), #40a9ff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.brand-text {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
 }
 
 .header-nav {

@@ -1,21 +1,7 @@
 <template>
   <aside class="sidebar-container">
     <div class="sidebar-brand">
-      <div class="brand-icon-wrap">
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-        </svg>
-      </div>
-      <span class="brand-text">SOH-SIM</span>
+      <BrandLogo />
     </div>
 
     <nav class="sidebar-scroll">
@@ -121,6 +107,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
+import BrandLogo from './BrandLogo.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
@@ -180,10 +167,7 @@ const advToolItems = computed(() => [
 }
 
 .sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 32px 28px 0;
+  padding: 28px 24px 0;
 }
 
 .brand-icon-wrap {
