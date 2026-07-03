@@ -12,5 +12,4 @@ function onError(err) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

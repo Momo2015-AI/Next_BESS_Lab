@@ -20,5 +20,4 @@ import FinancialDashboard from '../components/FinancialDashboard.vue'
 const store = useBessStore()
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

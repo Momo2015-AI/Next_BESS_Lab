@@ -185,8 +185,14 @@ async function saveProject() {
   font-weight: 600;
   transition: opacity 0.2s ease;
 }
-.card button:hover { opacity: 0.88; }
-.card button:disabled { background: var(--color-text-muted); opacity: 0.5; cursor: not-allowed; }
+.card button:hover {
+  opacity: 0.88;
+}
+.card button:disabled {
+  background: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .msg {
   margin-top: 12px;
   font-size: 13px;

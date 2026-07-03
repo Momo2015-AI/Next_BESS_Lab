@@ -32,5 +32,7 @@ import SectionCard from '../components/SectionCard.vue'
   text-decoration: none;
   font-weight: 500;
 }
-.inline-link:hover { text-decoration: underline; }
+.inline-link:hover {
+  text-decoration: underline;
+}
 </style>

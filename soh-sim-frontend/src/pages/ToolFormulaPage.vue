@@ -14,5 +14,4 @@ import FormulaLab from '../components/FormulaLab.vue'
 const store = useBessStore()
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

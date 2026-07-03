@@ -12,5 +12,4 @@
 import AuthPanel from '../components/AuthPanel.vue'
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

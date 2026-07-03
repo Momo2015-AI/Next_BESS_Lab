@@ -59,7 +59,10 @@
             <path v-if="item.icon === 'fx'" d="M9 3h6v2a4 4 0 01-4 4v5a3 3 0 01-3-3V7a4 4 0 01-4-4z" />
             <line v-if="item.icon === 'fx'" x1="6" y1="21" x2="18" y2="21" />
             <!-- sliders: 滑块 -->
-            <path v-else-if="item.icon === 'sl'" d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 14h6M17 14h6" />
+            <path
+              v-else-if="item.icon === 'sl'"
+              d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 14h6M17 14h6"
+            />
             <!-- conditions: 交叉线 -->
             <path v-else-if="item.icon === 'wd'" d="M3 3l18 18M3 21l18-18" />
             <!-- auxpower: 闪电 -->
@@ -104,7 +107,10 @@
             <!-- report: 文档 -->
             <path v-else-if="item.icon === 'Rp'" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
             <!-- projects: 文件夹 -->
-            <path v-else-if="item.icon === 'Pj'" d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+            <path
+              v-else-if="item.icon === 'Pj'"
+              d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"
+            />
             <!-- templates: 模板 -->
             <path v-else-if="item.icon === 'Tp'" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
             <!-- rules: 盾牌 -->

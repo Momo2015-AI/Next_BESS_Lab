@@ -12,5 +12,4 @@
 import EngineeringCalc from '../components/EngineeringCalc.vue'
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

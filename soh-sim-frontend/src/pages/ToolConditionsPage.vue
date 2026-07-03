@@ -20,5 +20,4 @@ function onApply(mapped) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

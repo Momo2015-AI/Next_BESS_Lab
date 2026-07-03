@@ -31,9 +31,7 @@
                 前期开发 (USD)
                 <input v-model.number="store.financial.capex.development" type="number" />
               </label>
-              <div class="total-capex">
-                总 CAPEX: ${{ totalCapex.toLocaleString() }}
-              </div>
+              <div class="total-capex">总 CAPEX: ${{ totalCapex.toLocaleString() }}</div>
             </div>
             <div>
               <h4 class="text-sm font-bold mb-2 section-title">OPEX</h4>
@@ -179,7 +177,9 @@ function onError(msg) {
   transition: all 0.18s ease;
 }
 
-.form-card input:hover { background-color: var(--form-field-bg-hover); }
+.form-card input:hover {
+  background-color: var(--form-field-bg-hover);
+}
 
 .form-card input:focus-visible {
   border-color: var(--form-field-border-focus);

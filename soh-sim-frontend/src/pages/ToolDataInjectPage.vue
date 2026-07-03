@@ -19,5 +19,4 @@ import DataInjection from '../components/DataInjection.vue'
 const store = useBessStore()
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

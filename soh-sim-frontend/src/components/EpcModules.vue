@@ -137,7 +137,9 @@
                 style="border-color: var(--color-accent-glow)"
               >
                 <div class="font-bold text-sm" style="color: var(--color-accent)">第{{ stage.stage }}期</div>
-                <div class="text-xs" style="color: var(--color-text-secondary)">{{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh</div>
+                <div class="text-xs" style="color: var(--color-text-secondary)">
+                  {{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh
+                </div>
                 <div class="text-xs" style="color: var(--color-text-muted)">
                   {{ stage.estimated_date }}
                 </div>
@@ -192,11 +194,18 @@
         <div v-if="gcResult" class="mt-6 space-y-4">
           <div
             class="flex items-center gap-4 p-4 rounded-lg"
-            :style="gcResult.overall_pass ? { backgroundColor: 'rgba(16, 185, 129, 0.15)' } : { backgroundColor: 'rgba(239, 68, 68, 0.1)' }"
+            :style="
+              gcResult.overall_pass
+                ? { backgroundColor: 'rgba(16, 185, 129, 0.15)' }
+                : { backgroundColor: 'rgba(239, 68, 68, 0.1)' }
+            "
           >
             <span class="text-3xl">{{ gcResult.overall_pass ? '✅' : '❌' }}</span>
             <div>
-              <div class="font-bold" :style="gcResult.overall_pass ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }">
+              <div
+                class="font-bold"
+                :style="gcResult.overall_pass ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+              >
                 {{ gcResult.overall_pass ? '全部合规' : '存在不合规项' }}
               </div>
               <div v-if="gcResult.failed_items.length" class="text-xs" style="color: var(--color-text-secondary)">
@@ -833,7 +842,10 @@
 
         <div v-if="bidResult" class="mt-4">
           <div v-for="chapter in bidResult.chapters" :key="chapter.num" class="mb-4">
-            <div class="font-bold text-sm p-2 rounded" style="background-color: var(--color-bg-secondary); color: var(--color-accent)">
+            <div
+              class="font-bold text-sm p-2 rounded"
+              style="background-color: var(--color-bg-secondary); color: var(--color-accent)"
+            >
               {{ chapter.num }}. {{ chapter.title }}
             </div>
             <div v-for="sec in chapter.sections" :key="sec.num" class="ml-4 mt-2 p-3 bg-gray-50 rounded">
@@ -861,14 +873,22 @@
               :style="
                 activeChart === c.id
                   ? { backgroundColor: 'var(--color-accent)', color: 'white', borderColor: 'var(--color-accent)' }
-                  : { backgroundColor: 'var(--color-card)', color: 'var(--color-accent)', borderColor: 'var(--color-accent)' }
+                  : {
+                      backgroundColor: 'var(--color-card)',
+                      color: 'var(--color-accent)',
+                      borderColor: 'var(--color-accent)'
+                    }
               "
               @click="previewChart(c.id)"
             >
               {{ chartLoading === c.id ? '加载中...' : c.label }}
             </button>
           </div>
-          <div v-if="chartError" class="text-xs p-2 rounded mb-3" style="background-color: var(--color-accent-glow); color: var(--color-danger)">
+          <div
+            v-if="chartError"
+            class="text-xs p-2 rounded mb-3"
+            style="background-color: var(--color-accent-glow); color: var(--color-danger)"
+          >
             {{ chartError }}
           </div>
           <div

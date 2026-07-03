@@ -18,7 +18,13 @@
         <!-- 01. 基本信息 -->
         <SectionCard number="01" title="基本信息">
           <div class="form-grid-2">
-            <FormField v-model="formData.projectName" label="项目名称" required type="text" placeholder="请输入项目名称" />
+            <FormField
+              v-model="formData.projectName"
+              label="项目名称"
+              required
+              type="text"
+              placeholder="请输入项目名称"
+            />
             <FormField v-model="formData.location" label="项目地址" required type="text" placeholder="省/市/区" />
             <FormField v-model="formData.contact" label="联系人" type="text" placeholder="姓名" />
             <FormField v-model="formData.phone" label="联系电话" type="text" placeholder="手机号码" />
@@ -28,26 +34,86 @@
         <!-- 02. 储能需求 -->
         <SectionCard number="02" title="储能需求">
           <div class="form-grid-3">
-            <FormField v-model.number="formData.ratedEnergy" label="额定能量 (MWh)" required type="number" step="0.1" placeholder="如：10" hint="电池集装箱总容量" />
-            <FormField v-model.number="formData.ratedPower" label="额定功率 (MW)" type="number" step="0.1" placeholder="如：5" hint="PCS总额定功率" />
-            <FormField v-model.number="formData.dischargeHours" label="放电时长 (h)" type="select" :options="dischargeHourOptions" />
+            <FormField
+              v-model.number="formData.ratedEnergy"
+              label="额定能量 (MWh)"
+              required
+              type="number"
+              step="0.1"
+              placeholder="如：10"
+              hint="电池集装箱总容量"
+            />
+            <FormField
+              v-model.number="formData.ratedPower"
+              label="额定功率 (MW)"
+              type="number"
+              step="0.1"
+              placeholder="如：5"
+              hint="PCS总额定功率"
+            />
+            <FormField
+              v-model.number="formData.dischargeHours"
+              label="放电时长 (h)"
+              type="select"
+              :options="dischargeHourOptions"
+            />
           </div>
           <div class="form-grid-2">
-            <FormField v-model="formData.application" label="应用场景" required type="select" placeholder="请选择" :options="applicationOptions" />
-            <FormField v-model.number="formData.voltageLevel" label="并网电压等级" type="select" :options="voltageOptions" />
+            <FormField
+              v-model="formData.application"
+              label="应用场景"
+              required
+              type="select"
+              placeholder="请选择"
+              :options="applicationOptions"
+            />
+            <FormField
+              v-model.number="formData.voltageLevel"
+              label="并网电压等级"
+              type="select"
+              :options="voltageOptions"
+            />
           </div>
         </SectionCard>
 
         <!-- 03. 运行参数 -->
         <SectionCard number="03" title="运行参数">
           <div class="form-grid-3">
-            <FormField v-model.number="formData.cyclesPerDay" label="日均循环次数" type="number" step="0.5" min="0" placeholder="如：1" hint="0.5 = 每2天一次" />
-            <FormField v-model.number="formData.dod" label="DOD设置 (%)" type="number" step="5" min="0" max="100" placeholder="如：90" />
+            <FormField
+              v-model.number="formData.cyclesPerDay"
+              label="日均循环次数"
+              type="number"
+              step="0.5"
+              min="0"
+              placeholder="如：1"
+              hint="0.5 = 每2天一次"
+            />
+            <FormField
+              v-model.number="formData.dod"
+              label="DOD设置 (%)"
+              type="number"
+              step="5"
+              min="0"
+              max="100"
+              placeholder="如：90"
+            />
             <FormField v-model.number="formData.cRate" label="设计倍率 (C)" type="select" :options="cRateOptions" />
           </div>
           <div class="form-grid-2">
-            <FormField v-model.number="formData.temperature" label="年平均温度 (°C)" type="number" placeholder="如：25" />
-            <FormField v-model.number="formData.guaranteeYears" label="保障年限 (年)" type="number" min="1" max="30" placeholder="如：10" />
+            <FormField
+              v-model.number="formData.temperature"
+              label="年平均温度 (°C)"
+              type="number"
+              placeholder="如：25"
+            />
+            <FormField
+              v-model.number="formData.guaranteeYears"
+              label="保障年限 (年)"
+              type="number"
+              min="1"
+              max="30"
+              placeholder="如：10"
+            />
           </div>
         </SectionCard>
 
@@ -55,7 +121,12 @@
         <SectionCard number="04" title="电池选型偏好">
           <div class="form-grid-3">
             <FormField v-model="formData.batteryType" label="电池类型" type="select" :options="batteryTypeOptions" />
-            <FormField v-model="formData.cellCapacity" label="电芯容量偏好" type="select" :options="cellCapacityOptions" />
+            <FormField
+              v-model="formData.cellCapacity"
+              label="电芯容量偏好"
+              type="select"
+              :options="cellCapacityOptions"
+            />
             <FormField v-model="formData.containerSpec" label="集装箱规格" type="select" :options="containerOptions" />
           </div>
         </SectionCard>
@@ -94,12 +165,16 @@ const showToast = (message, type = 'info') => {
   toast.message = message
   toast.type = type
   toast.show = true
-  setTimeout(() => { toast.show = false }, 3000)
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
 }
 
 const submitting = ref(false)
 
-function goHome() { router.push('/') }
+function goHome() {
+  router.push('/')
+}
 
 const featureOptions = [
   { value: 'EMS', label: '能量管理系统' },
@@ -189,35 +264,56 @@ function resetForm() {
 }
 
 async function submitSurvey() {
-  if (!formData.projectName) { showToast('请填写项目名称', 'error'); return }
-  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) { showToast('请填写额定能量', 'error'); return }
+  if (!formData.projectName) {
+    showToast('请填写项目名称', 'error')
+    return
+  }
+  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
+    showToast('请填写额定能量', 'error')
+    return
+  }
 
   submitting.value = true
   try {
     const mappedData = {
-      project_name: formData.projectName, contact_person: formData.contact || '',
-      contact_phone: formData.phone || '', location: formData.location || '',
-      total_mwh: formData.ratedEnergy, total_mw: formData.ratedPower || null,
-      duration: formData.dischargeHours || null, grid_voltage: formData.voltageLevel || null,
-      cycles_per_day: formData.cyclesPerDay || 1, temp_avg: formData.temperature || null,
+      project_name: formData.projectName,
+      contact_person: formData.contact || '',
+      contact_phone: formData.phone || '',
+      location: formData.location || '',
+      total_mwh: formData.ratedEnergy,
+      total_mw: formData.ratedPower || null,
+      duration: formData.dischargeHours || null,
+      grid_voltage: formData.voltageLevel || null,
+      cycles_per_day: formData.cyclesPerDay || 1,
+      temp_avg: formData.temperature || null,
       remarks: formData.remarks || ''
     }
     const surveyId = 'SURV' + Date.now()
     const surveyData = {
-      id: surveyId, ...formData, submittedAt: new Date().toISOString(),
-      status: 'pending', containerQty: Math.ceil(formData.ratedEnergy / 5),
+      id: surveyId,
+      ...formData,
+      submittedAt: new Date().toISOString(),
+      status: 'pending',
+      containerQty: Math.ceil(formData.ratedEnergy / 5),
       pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
-      totalEnergyMwh: formData.ratedEnergy, totalPowerMw: formData.ratedPower
+      totalEnergyMwh: formData.ratedEnergy,
+      totalPowerMw: formData.ratedPower
     }
     let apiSuccess = false
     try {
       const response = await fetch('/api/survey/submit', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mappedData)
       })
       const result = await response.json()
-      if (result.success) { apiSuccess = true; surveyData.id = result.data?.survey_id || surveyId }
-    } catch (e) { console.error('API 提交失败，使用本地存储:', e) }
+      if (result.success) {
+        apiSuccess = true
+        surveyData.id = result.data?.survey_id || surveyId
+      }
+    } catch (e) {
+      console.error('API 提交失败，使用本地存储:', e)
+    }
 
     const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
     surveys.push(surveyData)
@@ -229,7 +325,9 @@ async function submitSurvey() {
   } catch (error) {
     console.error('提交失败:', error)
     showToast('提交失败，请重试', 'error')
-  } finally { submitting.value = false }
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -292,13 +390,21 @@ async function submitSurvey() {
   color: #fff;
   font-size: 14px;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: opacity 0.3s ease;
 }
-.toast-success { background: var(--color-success); }
-.toast-error { background: var(--color-danger); }
-.toast-info { background: var(--color-info, #3b82f6); }
-.toast-warning { background: var(--color-warning); }
+.toast-success {
+  background: var(--color-success);
+}
+.toast-error {
+  background: var(--color-danger);
+}
+.toast-info {
+  background: var(--color-info, #3b82f6);
+}
+.toast-warning {
+  background: var(--color-warning);
+}
 
 /* Feature checkboxes */
 .feature-checkboxes {
@@ -323,7 +429,7 @@ async function submitSurvey() {
 .feature-chip:hover {
   background: var(--form-field-bg-hover);
 }
-.feature-chip input[type="checkbox"] {
+.feature-chip input[type='checkbox'] {
   accent-color: var(--color-accent);
   width: 16px;
   height: 16px;
@@ -364,11 +470,20 @@ async function submitSurvey() {
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
-.btn-submit:hover { opacity: 0.9; }
+.btn-submit:hover {
+  opacity: 0.9;
+}
 
 @media (max-width: 640px) {
-  .survey-page { padding: 16px; }
-  .form-actions { flex-direction: column; align-items: stretch; }
-  .form-actions button { width: 100%; }
+  .survey-page {
+    padding: 16px;
+  }
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .form-actions button {
+    width: 100%;
+  }
 }
 </style>

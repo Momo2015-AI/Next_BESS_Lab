@@ -51,5 +51,4 @@ const steps = [
 ]
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

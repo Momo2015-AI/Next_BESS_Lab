@@ -1241,8 +1241,13 @@ onMounted(() => {
   transition: opacity 0.2s ease;
 }
 
-.btn-primary:hover { opacity: 0.88; }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary:hover {
+  opacity: 0.88;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* Metric cards */
 .metric-card {
@@ -1452,7 +1457,13 @@ onMounted(() => {
 }
 
 /* Utility helpers */
-.tx-muted { color: var(--color-text-muted); }
-.tx-muted-dark { color: var(--color-text-secondary); }
-.max-w-sm { max-width: 300px; }
+.tx-muted {
+  color: var(--color-text-muted);
+}
+.tx-muted-dark {
+  color: var(--color-text-secondary);
+}
+.max-w-sm {
+  max-width: 300px;
+}
 </style>

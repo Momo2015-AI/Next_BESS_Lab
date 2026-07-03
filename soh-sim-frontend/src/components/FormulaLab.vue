@@ -292,7 +292,12 @@
     <div class="pt-3" style="border-top: 1px solid var(--color-border)">
       <h2
         class="section-title"
-        style="color: var(--color-warning); border-color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.05em"
+        style="
+          color: var(--color-warning);
+          border-color: var(--color-warning);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        "
       >
         {{ $t('formulaLab.financeTitle') }}
       </h2>

@@ -1,46 +1,3 @@
-<script setup>
-import { computed } from 'vue'
-
-const props = defineProps({
-  label: { type: String, default: '' },
-  required: { type: Boolean, default: false },
-  optional: { type: Boolean, default: false },
-  type: { type: String, default: 'text' }, // text | number | email | select | textarea
-  modelValue: { type: [String, Number, null], default: null },
-  placeholder: { type: String, default: '' },
-  options: { type: Array, default: () => [] }, // [{label, value}] or [string]
-  error: { type: String, default: '' },
-  hint: { type: String, default: '' },
-  min: { type: [String, Number], default: undefined },
-  max: { type: [String, Number], default: undefined },
-  step: { type: [String, Number], default: undefined },
-  disabled: { type: Boolean, default: false },
-  readonly: { type: Boolean, default: false }
-})
-
-const emit = defineEmits(['update:modelValue', 'change', 'blur', 'focus'])
-
-const inputId = computed(() => `ff-${Math.random().toString(36).slice(2, 9)}`)
-
-function onInput(e) {
-  let v = e.target.value
-  if (props.type === 'number') {
-    v = v === '' ? null : Number(v)
-  }
-  emit('update:modelValue', v)
-  emit('change', e)
-}
-
-const normalizedOptions = computed(() => {
-  return props.options.map(opt => {
-    if (typeof opt === 'object' && opt !== null) {
-      return { label: opt.label, value: opt.value }
-    }
-    return { label: String(opt), value: opt }
-  })
-})
-</script>
-
 <template>
   <div class="form-field">
     <label v-if="label" :for="inputId" class="form-field-label">
@@ -99,3 +56,46 @@ const normalizedOptions = computed(() => {
     <div v-else-if="hint" class="form-field-hint">{{ hint }}</div>
   </div>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  label: { type: String, default: '' },
+  required: { type: Boolean, default: false },
+  optional: { type: Boolean, default: false },
+  type: { type: String, default: 'text' }, // text | number | email | select | textarea
+  modelValue: { type: [String, Number, null], default: null },
+  placeholder: { type: String, default: '' },
+  options: { type: Array, default: () => [] }, // [{label, value}] or [string]
+  error: { type: String, default: '' },
+  hint: { type: String, default: '' },
+  min: { type: [String, Number], default: undefined },
+  max: { type: [String, Number], default: undefined },
+  step: { type: [String, Number], default: undefined },
+  disabled: { type: Boolean, default: false },
+  readonly: { type: Boolean, default: false }
+})
+
+const emit = defineEmits(['update:modelValue', 'change', 'blur', 'focus'])
+
+const inputId = computed(() => `ff-${Math.random().toString(36).slice(2, 9)}`)
+
+function onInput(e) {
+  let v = e.target.value
+  if (props.type === 'number') {
+    v = v === '' ? null : Number(v)
+  }
+  emit('update:modelValue', v)
+  emit('change', e)
+}
+
+const normalizedOptions = computed(() => {
+  return props.options.map((opt) => {
+    if (typeof opt === 'object' && opt !== null) {
+      return { label: opt.label, value: opt.value }
+    }
+    return { label: String(opt), value: opt }
+  })
+})
+</script>

@@ -12,5 +12,4 @@
 import AuxPowerCalculator from '../components/AuxPowerCalculator.vue'
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

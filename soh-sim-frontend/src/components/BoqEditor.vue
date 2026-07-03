@@ -171,7 +171,9 @@
                   />
                 </td>
                 <td class="p-1 text-center">
-                  <button class="text-xs" style="color: var(--color-danger)" @click="removeItem(section.code, idx)">x</button>
+                  <button class="text-xs" style="color: var(--color-danger)" @click="removeItem(section.code, idx)">
+                    x
+                  </button>
                 </td>
               </tr>
             </tbody>

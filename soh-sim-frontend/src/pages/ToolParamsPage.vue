@@ -18,5 +18,4 @@ import ParameterPanel from '../components/ParameterPanel.vue'
 const store = useBessStore()
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

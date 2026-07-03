@@ -5,9 +5,7 @@
       <p>管理系统配置规则与约束</p>
     </div>
     <SectionCard number="00" title="规则引擎" subtitle="功能开发中">
-      <p class="placeholder-text">
-        Grid Code 合规规则、电池配置约束、财务计算规则等将集中在此管理。
-      </p>
+      <p class="placeholder-text">Grid Code 合规规则、电池配置约束、财务计算规则等将集中在此管理。</p>
     </SectionCard>
   </div>
 </template>

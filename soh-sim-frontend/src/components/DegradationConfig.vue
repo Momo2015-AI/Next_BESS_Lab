@@ -331,7 +331,9 @@
               <td class="py-1 px-2" style="color: var(--color-text)">Year {{ y }}</td>
               <td
                 class="text-center py-1 px-2 font-bold"
-                :style="{ color: s >= 80 ? 'var(--color-success)' : s >= 60 ? 'var(--color-warning)' : 'var(--color-danger)' }"
+                :style="{
+                  color: s >= 80 ? 'var(--color-success)' : s >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'
+                }"
               >
                 {{ s.toFixed(2) }}%
               </td>
@@ -353,7 +355,11 @@
                 >
                   Warning
                 </span>
-                <span v-else class="text-xs px-1 rounded" style="background: rgba(239, 68, 68, 0.15); color: var(--color-danger)">
+                <span
+                  v-else
+                  class="text-xs px-1 rounded"
+                  style="background: rgba(239, 68, 68, 0.15); color: var(--color-danger)"
+                >
                   Critical
                 </span>
               </td>

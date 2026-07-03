@@ -164,10 +164,7 @@
               style="color: var(--color-accent-secondary)"
               onmouseover="this.style.color = 'var(--color-accent)'"
               onmouseout="this.style.color = 'var(--color-accent-secondary)'"
-              @click="
-                isLogin = !isLogin
-                clearForm()
-              "
+              @click="switchMode"
             >
               {{ isLogin ? '还没有账号？立即注册' : '已有账号？立即登录' }}
             </button>
@@ -281,6 +278,11 @@ const showToast = (message, type = 'success') => {
   setTimeout(() => {
     toast.show = false
   }, 3000)
+}
+
+function switchMode() {
+  isLogin.value = !isLogin.value
+  clearForm()
 }
 
 function clearForm() {

@@ -1,11 +1,3 @@
-<script setup>
-defineProps({
-  number: { type: [String, Number], required: true },
-  title: { type: String, required: true },
-  subtitle: { type: String, default: '' }
-})
-</script>
-
 <template>
   <section class="section-card">
     <header class="section-card-header">
@@ -17,3 +9,11 @@ defineProps({
     <slot />
   </section>
 </template>
+
+<script setup>
+defineProps({
+  number: { type: [String, Number], required: true },
+  title: { type: String, required: true },
+  subtitle: { type: String, default: '' }
+})
+</script>

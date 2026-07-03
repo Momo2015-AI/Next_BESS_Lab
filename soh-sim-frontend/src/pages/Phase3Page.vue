@@ -100,8 +100,14 @@ function onApplySimulationConfig(payload) {
   font-weight: 600;
   transition: opacity 0.2s ease;
 }
-.run-btn:hover { opacity: 0.88; }
-.run-btn:disabled { background: var(--color-text-muted); opacity: 0.5; cursor: not-allowed; }
+.run-btn:hover {
+  opacity: 0.88;
+}
+.run-btn:disabled {
+  background: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .error {
   color: var(--color-danger);
   font-size: 13px;
