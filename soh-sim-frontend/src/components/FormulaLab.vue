@@ -522,7 +522,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(132, 204, 22, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #84cc16">
+      <div class="text-[11px] font-bold lime-text">
         {{ $t('formulaLab.op10Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">

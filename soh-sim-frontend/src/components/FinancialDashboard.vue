@@ -1225,7 +1225,7 @@ function renderCashFlowChart() {
         html += `<div>年净现金流: <span style="color:${row.cashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cashFlow >= 0 ? '+' : ''}${row.cashFlow.toFixed(0)} 万元</span></div>`
         html += `<div>累计现金流: <span style="color:${row.cumCashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cumCashFlow >= 0 ? '+' : ''}${row.cumCashFlow.toFixed(0)} 万元</span></div>`
         if (row.year > 0) {
-          html += '<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">'
+          html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
           html += `<div>总收入: ${row.revenue.toFixed(0)} 万元</div>`
           html += `<div>OPEX: ${row.opex.toFixed(0)} 万元</div>`
           html += `<div>EBITDA: ${row.ebitda.toFixed(0)} 万元</div>`
@@ -1337,7 +1337,7 @@ function renderRevenueChart() {
         html += `<div>套利收入: <span style="color:${colors.acLine};font-weight:bold;">${row.arbitrage.toFixed(0)} 万元</span></div>`
         html += `<div>容量收入: <span style="color:${colors.purple};font-weight:bold;">${row.capacity.toFixed(0)} 万元</span></div>`
         html += `<div>辅助服务: <span style="color:${colors.orange};font-weight:bold;">${row.ancillary.toFixed(0)} 万元</span></div>`
-        html += '<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">'
+        html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
         html += `<div>总收入: <span style="font-weight:bold;">${row.revenue.toFixed(0)} 万元</span></div>`
         const arbitragePct = row.revenue > 0 ? ((row.arbitrage / row.revenue) * 100).toFixed(1) : 0
         const capacityPct = row.revenue > 0 ? ((row.capacity / row.revenue) * 100).toFixed(1) : 0
@@ -1411,7 +1411,7 @@ function renderDscrChart() {
         html += `<div>EBITDA: <span style="color:${colors.cyan};font-weight:bold;">${row.ebitda.toFixed(0)} 万元</span></div>`
         html += `<div>还本付息: <span style="color:${colors.redLight};font-weight:bold;">${row.debtService.toFixed(0)} 万元</span></div>`
         if (row.debtService > 0) {
-          html += '<div style="border-top:1px solid #eee;margin-top:6px;padding-top:6px;">'
+          html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
           html += `<div>DSCR: <span style="font-weight:bold;font-size:16px;color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr.toFixed(2)}x</span></div>`
           html += `<div style="color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr >= 1.3 ? '✓ 满足银行要求' : '✗ 低于银行底线 1.3x'}</div>`
           html += `<div>利息支出: ${row.interest.toFixed(0)} 万元</div>`

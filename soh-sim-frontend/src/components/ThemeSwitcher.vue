@@ -7,19 +7,19 @@
       :aria-label="theme === 'light' ? $t('common.themeDark') : $t('common.themeLight')"
       @click="toggleTheme"
     >
-      <AppIcon v-if="theme === 'dark'" name="sun" :size="18" :stroke-width="1.8" color="var(--color-warning)" />
-      <AppIcon v-else name="moon" :size="18" :stroke-width="1.8" color="var(--text-secondary)" />
+      <AppIcon v-if="theme === 'dark'" name="sun" :size="18" :stroke-width="1.5" color="var(--color-warning)" />
+      <AppIcon v-else name="moon" :size="18" :stroke-width="1.5" color="var(--text-secondary)" />
     </button>
 
     <!-- Language switcher: pill with globe + current lang + chevron -->
     <div class="lang-switcher" ref="rootRef">
       <button class="lang-trigger" :aria-expanded="open" :title="$t('common.language')" @click="open = !open">
-        <AppIcon name="globe" :size="16" :stroke-width="1.8" color="var(--text-secondary)" />
+        <AppIcon name="globe" :size="16" :stroke-width="1.5" color="var(--text-secondary)" />
         <span class="lang-label">{{ currentLangLabel }}</span>
         <AppIcon
           name="chevron-down"
           :size="14"
-          :stroke-width="2"
+          :stroke-width="1.5"
           color="var(--text-secondary)"
           :class="['chev', { open }]"
         />
@@ -40,7 +40,7 @@
             v-if="locale === lang.value"
             name="check"
             :size="14"
-            :stroke-width="2.4"
+            :stroke-width="1.5"
             color="var(--color-accent)"
           />
         </li>
