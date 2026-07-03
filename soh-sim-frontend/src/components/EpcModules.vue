@@ -24,15 +24,20 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统功率 (MW)</label>
-            <input v-model.number="archForm.total_power_mw" type="number" class="form-input" placeholder="1400" />
+            <input v-model.number="archForm.total_power_mw" type="number" class="form-field-input" placeholder="1400" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统能量 (MWh)</label>
-            <input v-model.number="archForm.total_energy_mwh" type="number" class="form-input" placeholder="8400" />
+            <input
+              v-model.number="archForm.total_energy_mwh"
+              type="number"
+              class="form-field-input"
+              placeholder="8400"
+            />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">架构类型</label>
-            <select v-model="archForm.architecture_type" class="form-input">
+            <select v-model="archForm.architecture_type" class="form-field-select">
               <option value="central">集中式</option>
               <option value="string">组串式</option>
               <option value="hybrid">混合式</option>
@@ -40,7 +45,7 @@
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">耦合方式</label>
-            <select v-model="archForm.coupling_type" class="form-input">
+            <select v-model="archForm.coupling_type" class="form-field-select">
               <option value="AC">AC耦合</option>
               <option value="DC">DC耦合</option>
               <option value="hybrid">混合耦合</option>
@@ -54,13 +59,13 @@
               v-model.number="archForm.cell_voltage"
               type="number"
               step="0.1"
-              class="form-input"
+              class="form-field-input"
               placeholder="3.2"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电芯容量 (Ah)</label>
-            <input v-model.number="archForm.cell_capacity" type="number" class="form-input" placeholder="280" />
+            <input v-model.number="archForm.cell_capacity" type="number" class="form-field-input" placeholder="280" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS功率 (MW)</label>
@@ -68,13 +73,18 @@
               v-model.number="archForm.pcs_power_mw"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="3.45"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS最大DC电压 (V)</label>
-            <input v-model.number="archForm.pcs_max_dc_voltage" type="number" class="form-input" placeholder="1500" />
+            <input
+              v-model.number="archForm.pcs_max_dc_voltage"
+              type="number"
+              class="form-field-input"
+              placeholder="1500"
+            />
           </div>
         </div>
         <button
@@ -157,7 +167,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电网标准</label>
-            <select v-model="gcForm.grid_standard" class="form-input">
+            <select v-model="gcForm.grid_standard" class="form-field-select">
               <option v-for="s in gridStandards" :key="s.code" :value="s.code">
                 {{ s.name }}
               </option>
@@ -165,7 +175,7 @@
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点电压 (kV)</label>
-            <input v-model.number="gcForm.grid_voltage_kv" type="number" class="form-input" placeholder="33" />
+            <input v-model.number="gcForm.grid_voltage_kv" type="number" class="form-field-input" placeholder="33" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电网频率 (Hz)</label>
@@ -173,13 +183,13 @@
               v-model.number="gcForm.grid_frequency_hz"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="50"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
-            <input v-model.number="gcForm.pcs_count" type="number" class="form-input" placeholder="10" />
+            <input v-model.number="gcForm.pcs_count" type="number" class="form-field-input" placeholder="10" />
           </div>
         </div>
         <button
@@ -268,15 +278,20 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统容量 (MWh)</label>
-            <input v-model.number="sfForm.system_capacity_mwh" type="number" class="form-input" placeholder="100" />
+            <input
+              v-model.number="sfForm.system_capacity_mwh"
+              type="number"
+              class="form-field-input"
+              placeholder="100"
+            />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
-            <input v-model.number="sfForm.container_count" type="number" class="form-input" placeholder="20" />
+            <input v-model.number="sfForm.container_count" type="number" class="form-field-input" placeholder="20" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">化学体系</label>
-            <select v-model="sfForm.chemistry_type" class="form-input">
+            <select v-model="sfForm.chemistry_type" class="form-field-select">
               <option value="LFP">LFP (磷酸铁锂)</option>
               <option value="NCM">NCM (三元)</option>
               <option value="NCA">NCA</option>
@@ -285,7 +300,7 @@
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">灭火系统</label>
-            <select v-model="sfForm.suppression_type" class="form-input">
+            <select v-model="sfForm.suppression_type" class="form-field-select">
               <option value="Novec1230">Novec 1230</option>
               <option value="Aerosol">气溶胶</option>
               <option value="Water-mist">细水雾</option>
@@ -357,19 +372,29 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">项目寿命 (年)</label>
-            <input v-model.number="ippForm.project_life_years" type="number" class="form-input" placeholder="25" />
+            <input
+              v-model.number="ippForm.project_life_years"
+              type="number"
+              class="form-field-input"
+              placeholder="25"
+            />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">总CAPEX (USD)</label>
-            <input v-model.number="ippForm.total_capex_usd" type="number" class="form-input" placeholder="500000000" />
+            <input
+              v-model.number="ippForm.total_capex_usd"
+              type="number"
+              class="form-field-input"
+              placeholder="500000000"
+            />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">容量 (MW)</label>
-            <input v-model.number="ippForm.capacity_mw" type="number" class="form-input" placeholder="100" />
+            <input v-model.number="ippForm.capacity_mw" type="number" class="form-field-input" placeholder="100" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">能量 (MWh)</label>
-            <input v-model.number="ippForm.energy_mwh" type="number" class="form-input" placeholder="200" />
+            <input v-model.number="ippForm.energy_mwh" type="number" class="form-field-input" placeholder="200" />
           </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -379,7 +404,7 @@
               v-model.number="ippForm.capacity_price_usd_kw_month"
               type="number"
               step="0.1"
-              class="form-input"
+              class="form-field-input"
               placeholder="8.0"
             />
           </div>
@@ -389,7 +414,7 @@
               v-model.number="ippForm.energy_price_usd_kwh"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="0.05"
             />
           </div>
@@ -399,13 +424,19 @@
               v-model.number="ippForm.ppa_escalation_rate"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="0.02"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">贷款比例</label>
-            <input v-model.number="ippForm.debt_ratio" type="number" step="0.05" class="form-input" placeholder="0.7" />
+            <input
+              v-model.number="ippForm.debt_ratio"
+              type="number"
+              step="0.05"
+              class="form-field-input"
+              placeholder="0.7"
+            />
           </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -415,17 +446,22 @@
               v-model.number="ippForm.debt_interest_rate"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="0.05"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">贷款期限 (年)</label>
-            <input v-model.number="ippForm.debt_tenor_years" type="number" class="form-input" placeholder="15" />
+            <input v-model.number="ippForm.debt_tenor_years" type="number" class="form-field-input" placeholder="15" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">年OPEX (USD)</label>
-            <input v-model.number="ippForm.annual_opex_usd" type="number" class="form-input" placeholder="5000000" />
+            <input
+              v-model.number="ippForm.annual_opex_usd"
+              type="number"
+              class="form-field-input"
+              placeholder="5000000"
+            />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">可用率保证</label>
@@ -433,7 +469,7 @@
               v-model.number="ippForm.availability_guarantee"
               type="number"
               step="0.01"
-              class="form-input"
+              class="form-field-input"
               placeholder="0.98"
             />
           </div>
@@ -493,7 +529,7 @@
       <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
         <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">合规矩阵生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="matrixForm.template" class="form-input" style="max-width: 300px">
+          <select v-model="matrixForm.template" class="form-field-select" style="max-width: 300px">
             <option value="UAE_DEWA_VII_BESS">UAE DEWA VII BESS RFP</option>
           </select>
           <button
@@ -591,19 +627,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">最高环境温度 (°C)</label>
-            <input v-model.number="tmForm.ambient_max_c" type="number" class="form-input" placeholder="45" />
+            <input v-model.number="tmForm.ambient_max_c" type="number" class="form-field-input" placeholder="45" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电芯容量 (Ah)</label>
-            <input v-model.number="tmForm.cell_capacity_ah" type="number" class="form-input" placeholder="280" />
+            <input v-model.number="tmForm.cell_capacity_ah" type="number" class="form-field-input" placeholder="280" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">充放电倍率 (C)</label>
-            <input v-model.number="tmForm.c_rate" type="number" step="0.1" class="form-input" placeholder="0.5" />
+            <input v-model.number="tmForm.c_rate" type="number" step="0.1" class="form-field-input" placeholder="0.5" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">冷却方式</label>
-            <select v-model="tmForm.cooling_type" class="form-input">
+            <select v-model="tmForm.cooling_type" class="form-field-select">
               <option value="liquid">液冷</option>
               <option value="air">风冷</option>
             </select>
@@ -668,15 +704,15 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
-            <input v-model.number="seForm.container_count" type="number" class="form-input" placeholder="20" />
+            <input v-model.number="seForm.container_count" type="number" class="form-field-input" placeholder="20" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
-            <input v-model.number="seForm.pcs_count" type="number" class="form-input" placeholder="10" />
+            <input v-model.number="seForm.pcs_count" type="number" class="form-field-input" placeholder="10" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">通信协议</label>
-            <select v-model="seForm.communication_protocol" class="form-input">
+            <select v-model="seForm.communication_protocol" class="form-field-select">
               <option value="IEC_61850">IEC 61850</option>
               <option value="Modbus_TCP">Modbus TCP</option>
               <option value="DNP3">DNP3</option>
@@ -684,7 +720,7 @@
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">调度策略</label>
-            <select v-model="seForm.dispatch_strategy" class="form-input">
+            <select v-model="seForm.dispatch_strategy" class="form-field-select">
               <option value="peak_shaving">削峰填谷</option>
               <option value="arbitrage">套利</option>
               <option value="frequency_regulation">调频</option>
@@ -749,24 +785,24 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">总功率 (MW)</label>
-            <input v-model.number="hvForm.total_power_mw" type="number" class="form-input" placeholder="100" />
+            <input v-model.number="hvForm.total_power_mw" type="number" class="form-field-input" placeholder="100" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点电压 (kV)</label>
-            <input v-model.number="hvForm.poc_voltage_kv" type="number" class="form-input" placeholder="33" />
+            <input v-model.number="hvForm.poc_voltage_kv" type="number" class="form-field-input" placeholder="33" />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">短路容量 (MVA)</label>
             <input
               v-model.number="hvForm.short_circuit_capacity_mva"
               type="number"
-              class="form-input"
+              class="form-field-input"
               placeholder="500"
             />
           </div>
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点类型</label>
-            <select v-model="hvForm.poc_type" class="form-input">
+            <select v-model="hvForm.poc_type" class="form-field-select">
               <option value="substation">变电站</option>
               <option value="overhead_line">架空线</option>
               <option value="cable">电缆</option>
@@ -832,7 +868,7 @@
       <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
         <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">投标文档生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="bidForm.template" class="form-input" style="max-width: 300px">
+          <select v-model="bidForm.template" class="form-field-select" style="max-width: 300px">
             <option value="technical_proposal">技术方案</option>
           </select>
           <button
@@ -1137,17 +1173,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.form-input {
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid var(--color-input-border);
-  border-radius: 6px;
-  font-size: 13px;
-  outline: none;
-}
-.form-input:focus {
-  border-color: var(--color-accent);
-}
 .result-card {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);

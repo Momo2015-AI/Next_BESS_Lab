@@ -18,11 +18,15 @@
         <div class="grid grid-cols-4 gap-3">
           <div class="col-span-2">
             <label class="label-text">{{ $t('runningConditions.projectName') }}</label>
-            <input v-model="form.projectName" class="input-field" :placeholder="$t('runningConditions.projectName')" />
+            <input
+              v-model="form.projectName"
+              class="form-field-input"
+              :placeholder="$t('runningConditions.projectName')"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.projectType') }}</label>
-            <select v-model="form.projectType" class="input-field">
+            <select v-model="form.projectType" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -48,23 +52,23 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.location') }}</label>
-            <input v-model="form.location" class="input-field" :placeholder="$t('runningConditions.location')" />
+            <input v-model="form.location" class="form-field-input" :placeholder="$t('runningConditions.location')" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.ratedPower') }}</label>
-            <input v-model.number="form.totalMW" type="number" class="input-field" placeholder="200" />
+            <input v-model.number="form.totalMW" type="number" class="form-field-input" placeholder="200" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.ratedEnergy') }}</label>
-            <input v-model.number="form.totalMWh" type="number" class="input-field" placeholder="800" />
+            <input v-model.number="form.totalMWh" type="number" class="form-field-input" placeholder="800" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.chargeDuration') }}</label>
-            <input v-model.number="form.durationHours" type="number" class="input-field" placeholder="4" />
+            <input v-model.number="form.durationHours" type="number" class="form-field-input" placeholder="4" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.dayCycles') }}</label>
-            <input v-model.number="form.cyclesPerDay" type="number" class="input-field" placeholder="1" />
+            <input v-model.number="form.cyclesPerDay" type="number" class="form-field-input" placeholder="1" />
           </div>
         </div>
       </div>
@@ -86,27 +90,27 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.altitude') }}</label>
-            <input v-model.number="form.altitude" type="number" class="input-field" placeholder="≤2000" />
+            <input v-model.number="form.altitude" type="number" class="form-field-input" placeholder="≤2000" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.maxTemp') }}</label>
-            <input v-model.number="form.tempMax" type="number" class="input-field" placeholder="45" />
+            <input v-model.number="form.tempMax" type="number" class="form-field-input" placeholder="45" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.minTemp') }}</label>
-            <input v-model.number="form.tempMin" type="number" class="input-field" placeholder="-20" />
+            <input v-model.number="form.tempMin" type="number" class="form-field-input" placeholder="-20" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.avgTemp') }}</label>
-            <input v-model.number="form.tempAvg" type="number" class="input-field" placeholder="25" />
+            <input v-model.number="form.tempAvg" type="number" class="form-field-input" placeholder="25" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.humidity') }}</label>
-            <input v-model.number="form.humidity" type="number" class="input-field" placeholder="≤95" />
+            <input v-model.number="form.humidity" type="number" class="form-field-input" placeholder="≤95" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.seismicZone') }}</label>
-            <select v-model="form.seismicZone" class="input-field">
+            <select v-model="form.seismicZone" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -124,7 +128,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.corrosionLevel') }}</label>
-            <select v-model="form.corrosionClass" class="input-field">
+            <select v-model="form.corrosionClass" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -147,7 +151,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.installType') }}</label>
-            <select v-model="form.installationType" class="input-field">
+            <select v-model="form.installationType" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -182,7 +186,7 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.gridVoltage') }}</label>
-            <select v-model="form.gridVoltage" class="input-field">
+            <select v-model="form.gridVoltage" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -196,7 +200,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.gridFreq') }}</label>
-            <select v-model="form.gridFreq" class="input-field">
+            <select v-model="form.gridFreq" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -206,11 +210,11 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.shortCircuit') }}</label>
-            <input v-model.number="form.scCapacity" type="number" class="input-field" placeholder="5000" />
+            <input v-model.number="form.scCapacity" type="number" class="form-field-input" placeholder="5000" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.neutralGround') }}</label>
-            <select v-model="form.neutralGrounding" class="input-field">
+            <select v-model="form.neutralGrounding" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -230,19 +234,19 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.dcVoltage') }}</label>
-            <input v-model="form.dcVoltageRange" class="input-field" placeholder="1000-1500" />
+            <input v-model="form.dcVoltageRange" class="form-field-input" placeholder="1000-1500" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.acVoltage') }}</label>
-            <input v-model="form.acVoltage" class="input-field" placeholder="690" />
+            <input v-model="form.acVoltage" class="form-field-input" placeholder="690" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.pfRange') }}</label>
-            <input v-model="form.pfRange" class="input-field" placeholder="0.99leading-0.99lagging" />
+            <input v-model="form.pfRange" class="form-field-input" placeholder="0.99leading-0.99lagging" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.thdiReq') }}</label>
-            <input v-model.number="form.thdiLimit" type="number" class="input-field" placeholder="5" />
+            <input v-model.number="form.thdiLimit" type="number" class="form-field-input" placeholder="5" />
           </div>
         </div>
       </div>
@@ -264,7 +268,13 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.rteTarget') }}</label>
-            <input v-model.number="form.rteTarget" type="number" step="0.01" class="input-field" placeholder="85" />
+            <input
+              v-model.number="form.rteTarget"
+              type="number"
+              step="0.01"
+              class="form-field-input"
+              placeholder="85"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.acAvailability') }}</label>
@@ -272,33 +282,51 @@
               v-model.number="form.availabilityTarget"
               type="number"
               step="0.01"
-              class="input-field"
+              class="form-field-input"
               placeholder="99"
             />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.sohYear1') }}</label>
-            <input v-model.number="form.sohYear1" type="number" step="0.01" class="input-field" placeholder="93.2" />
+            <input
+              v-model.number="form.sohYear1"
+              type="number"
+              step="0.01"
+              class="form-field-input"
+              placeholder="93.2"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.sohYear25') }}</label>
-            <input v-model.number="form.sohYear25" type="number" step="0.01" class="input-field" placeholder="60" />
+            <input
+              v-model.number="form.sohYear25"
+              type="number"
+              step="0.01"
+              class="form-field-input"
+              placeholder="60"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.calendarLife') }}</label>
-            <input v-model.number="form.calendarLife" type="number" class="input-field" placeholder="25" />
+            <input v-model.number="form.calendarLife" type="number" class="form-field-input" placeholder="25" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cycleLife') }}</label>
-            <input v-model.number="form.cycleLife" type="number" class="input-field" placeholder="6000" />
+            <input v-model.number="form.cycleLife" type="number" class="form-field-input" placeholder="6000" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.auxConsumption') }}</label>
-            <input v-model.number="form.auxConsumption" type="number" step="0.01" class="input-field" placeholder="5" />
+            <input
+              v-model.number="form.auxConsumption"
+              type="number"
+              step="0.01"
+              class="form-field-input"
+              placeholder="5"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.responseTime') }}</label>
-            <input v-model.number="form.responseTime" type="number" class="input-field" placeholder="50" />
+            <input v-model.number="form.responseTime" type="number" class="form-field-input" placeholder="50" />
           </div>
         </div>
       </div>
@@ -320,7 +348,7 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.cellChemistry') }}</label>
-            <select v-model="form.cellChemistry" class="input-field">
+            <select v-model="form.cellChemistry" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -340,31 +368,43 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cellCapacity') }}</label>
-            <input v-model="form.cellCapacityRange" class="input-field" placeholder="280-700" />
+            <input v-model="form.cellCapacityRange" class="form-field-input" placeholder="280-700" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cellCycleLife') }}</label>
-            <input v-model.number="form.cellCycleLife" type="number" class="input-field" placeholder="6000" />
+            <input v-model.number="form.cellCycleLife" type="number" class="form-field-input" placeholder="6000" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.eolCriteria') }}</label>
-            <input v-model.number="form.eolThreshold" type="number" step="0.1" class="input-field" placeholder="70" />
+            <input
+              v-model.number="form.eolThreshold"
+              type="number"
+              step="0.1"
+              class="form-field-input"
+              placeholder="70"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cellTempRange') }}</label>
-            <input v-model="form.cellTempRange" class="input-field" placeholder="-20 ~ +55" />
+            <input v-model="form.cellTempRange" class="form-field-input" placeholder="-20 ~ +55" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cellVoltageDiff') }}</label>
-            <input v-model.number="form.cellVoltageDiff" type="number" class="input-field" placeholder="20" />
+            <input v-model.number="form.cellVoltageDiff" type="number" class="form-field-input" placeholder="20" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.cellTempDiff') }}</label>
-            <input v-model.number="form.cellTempDiff" type="number" step="0.5" class="input-field" placeholder="3" />
+            <input
+              v-model.number="form.cellTempDiff"
+              type="number"
+              step="0.5"
+              class="form-field-input"
+              placeholder="3"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.thermalRunaway') }}</label>
-            <select v-model="form.thermalRunawayPrev" class="input-field">
+            <select v-model="form.thermalRunawayPrev" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -405,7 +445,7 @@
         <div class="grid grid-cols-5 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.cellModel') }}</label>
-            <select v-model="selectedCellModel" class="input-field" @change="onCellChange">
+            <select v-model="selectedCellModel" class="form-field-select" @change="onCellChange">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -416,7 +456,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.packModel') }}</label>
-            <select v-model="selectedPackModel" class="input-field" @change="onPackChange">
+            <select v-model="selectedPackModel" class="form-field-select" @change="onPackChange">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -427,7 +467,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.rackModel') }}</label>
-            <select v-model="selectedRackModel" class="input-field" @change="onRackChange">
+            <select v-model="selectedRackModel" class="form-field-select" @change="onRackChange">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -438,7 +478,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.clusterModel') }}</label>
-            <select v-model="selectedClusterModel" class="input-field" @change="onClusterChange">
+            <select v-model="selectedClusterModel" class="form-field-select" @change="onClusterChange">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -449,7 +489,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.containerModel') }}</label>
-            <select v-model="selectedContainerModel" class="input-field">
+            <select v-model="selectedContainerModel" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -495,7 +535,7 @@
               v-model.number="form.pcsRatedPower"
               type="number"
               step="0.001"
-              class="input-field"
+              class="form-field-input"
               placeholder="2.5"
             />
           </div>
@@ -505,13 +545,13 @@
               v-model.number="form.pcsEfficiency"
               type="number"
               step="0.01"
-              class="input-field"
+              class="form-field-input"
               placeholder="98.5"
             />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.overload') }}</label>
-            <select v-model="form.pcsOverload" class="input-field">
+            <select v-model="form.pcsOverload" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -528,19 +568,19 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.thdiReq') }}</label>
-            <input v-model.number="form.pcsTHDi" type="number" step="0.1" class="input-field" placeholder="3" />
+            <input v-model.number="form.pcsTHDi" type="number" step="0.1" class="form-field-input" placeholder="3" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.pfRange') }}</label>
-            <input v-model="form.pcsPF" class="input-field" placeholder="-0.9 ~ +0.9" />
+            <input v-model="form.pcsPF" class="form-field-input" placeholder="-0.9 ~ +0.9" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.responseTime') }}</label>
-            <input v-model.number="form.pcsResponseTime" type="number" class="input-field" placeholder="50" />
+            <input v-model.number="form.pcsResponseTime" type="number" class="form-field-input" placeholder="50" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.gridSupport') }}</label>
-            <select v-model="form.pcsGridSupport" class="input-field">
+            <select v-model="form.pcsGridSupport" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -557,7 +597,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.coolingType') }}</label>
-            <select v-model="form.pcsCooling" class="input-field">
+            <select v-model="form.pcsCooling" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -682,7 +722,7 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('runningConditions.epcModel') }}</label>
-            <select v-model="form.epcModel" class="input-field">
+            <select v-model="form.epcModel" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -702,11 +742,11 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.omYears') }}</label>
-            <input v-model.number="form.omYears" type="number" class="input-field" placeholder="5" />
+            <input v-model.number="form.omYears" type="number" class="form-field-input" placeholder="5" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.performanceGuarantee') }}</label>
-            <select v-model="form.prRequirement" class="input-field">
+            <select v-model="form.prRequirement" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -726,11 +766,11 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.warrantyYears') }}</label>
-            <input v-model.number="form.warrantyYears" type="number" class="input-field" placeholder="5" />
+            <input v-model.number="form.warrantyYears" type="number" class="form-field-input" placeholder="5" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.scada') }}</label>
-            <select v-model="form.scadaReq" class="input-field">
+            <select v-model="form.scadaReq" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>
@@ -750,7 +790,7 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.spareParts') }}</label>
-            <select v-model="form.sparePartsStrategy" class="input-field">
+            <select v-model="form.sparePartsStrategy" class="form-field-select">
               <option value="">
                 {{ $t('common.select') }}
               </option>

@@ -457,41 +457,6 @@ function goToSimulation() {
   margin-top: 8px;
 }
 
-.btn-primary {
-  padding: 10px 24px;
-  border-radius: 8px;
-  border: none;
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-primary:hover {
-  opacity: 0.88;
-}
-.btn-primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  padding: 10px 24px;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  background: var(--color-card);
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-secondary:hover {
-  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-  border-color: var(--color-accent);
-}
-
 .btn-accent {
   padding: 10px 24px;
   border-radius: 8px;

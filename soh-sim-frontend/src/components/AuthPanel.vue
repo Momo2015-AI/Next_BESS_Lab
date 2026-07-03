@@ -17,12 +17,18 @@
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">用户名 / 邮箱</label>
-            <input v-model="form.username" type="text" required class="form-input" placeholder="输入用户名或邮箱" />
+            <input
+              v-model="form.username"
+              type="text"
+              required
+              class="form-field-input"
+              placeholder="输入用户名或邮箱"
+            />
           </div>
 
           <div v-if="!isLogin">
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">邮箱</label>
-            <input v-model="form.email" type="email" required class="form-input" placeholder="输入邮箱地址" />
+            <input v-model="form.email" type="email" required class="form-field-input" placeholder="输入邮箱地址" />
           </div>
 
           <div>
@@ -32,7 +38,7 @@
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="form-input"
+                class="form-field-input"
                 placeholder="输入密码"
               />
               <button type="button" class="toggle-password-btn" @click="showPassword = !showPassword">
@@ -303,27 +309,6 @@ defineExpose({ checkAuth, getCurrentUser, logout, getToken })
 <style scoped>
 .auth-panel {
   height: 100%;
-}
-
-.form-input {
-  width: 100%;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  background-color: var(--color-input-bg-dark);
-  border: 1px solid var(--color-input-border);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.form-input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.form-input:focus {
-  border-color: var(--color-accent-secondary);
 }
 
 .toggle-password-btn {

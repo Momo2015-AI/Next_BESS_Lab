@@ -89,7 +89,7 @@
           </div>
           <div class="form-group">
             <label>沙尘防护等级</label>
-            <select v-model="form.sand_protection" class="input-field">
+            <select v-model="form.sand_protection" class="form-field-select">
               <option value="">请选择</option>
               <option value="IP54">IP54 (一般防尘)</option>
               <option value="IP55">IP55 (防尘防喷水)</option>
@@ -98,7 +98,7 @@
           </div>
           <div class="form-group">
             <label>湿度循环等级</label>
-            <select v-model="form.humidity_cycle" class="input-field">
+            <select v-model="form.humidity_cycle" class="form-field-select">
               <option value="">请选择</option>
               <option value="low">低 (干燥气候)</option>
               <option value="medium">中 (沿海气候)</option>
@@ -130,7 +130,7 @@
           </div>
           <div class="form-group">
             <label>并网标准</label>
-            <select v-model="form.grid_code" class="input-field">
+            <select v-model="form.grid_code" class="form-field-select">
               <option value="">请选择</option>
               <option value="SEC">SEC (沙特)</option>
               <option value="ESMA">ESMA (阿联酋)</option>
@@ -148,7 +148,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label>电芯型号</label>
-            <select v-model="form.cell_model" class="input-field">
+            <select v-model="form.cell_model" class="form-field-select">
               <option value="">请选择电芯型号</option>
               <option v-for="cell in cells" :key="cell.id" :value="cell.model">
                 {{ cell.mfr }} - {{ cell.model }} ({{ cell.capacityAh }}Ah)
@@ -529,41 +529,6 @@ function fillTestData() {
   justify-content: center;
   gap: 16px;
   padding-top: 24px;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 12px 32px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  color: white;
-  border: none;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--color-accent-secondary);
-}
-
-.btn-primary:disabled {
-  background: var(--color-text-muted);
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: white;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-}
-
-.btn-secondary:hover {
-  background: var(--color-bg-secondary);
 }
 
 .success-modal {

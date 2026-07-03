@@ -113,40 +113,6 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.btn-primary {
-  padding: 8px 20px;
-  border-radius: var(--radius-md);
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-  border: none;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-.btn-primary:hover {
-  opacity: 0.88;
-}
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  padding: 8px 20px;
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.btn-secondary:hover {
-  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-}
-
 .empty-state {
   text-align: center;
   padding: 48px 24px;
