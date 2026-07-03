@@ -24,8 +24,11 @@ export default {
     themeLight: '浅色科技',
     themeDark: '深色暗夜',
     langEN: 'English',
-    langZH: '中文',
-    langAR: 'العربية'
+    langZH: '简体中文',
+    langAR: 'العربية',
+    login: '登录',
+    register: '注册',
+    logout: '退出'
   },
   app: {
     title: '储能电站 SOH 仿真计算与容量配置矩阵',

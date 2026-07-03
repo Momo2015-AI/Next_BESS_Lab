@@ -24,8 +24,11 @@ export default {
     themeLight: 'فاتح تقني',
     themeDark: 'داكن',
     langEN: 'English',
-    langZH: '中文',
-    langAR: 'العربية'
+    langZH: '简体中文',
+    langAR: 'العربية',
+    login: 'تسجيل الدخول',
+    register: 'تسجيل',
+    logout: 'خروج'
   },
   app: {
     title: 'محاكاة SOH لتخزين الطاقة ومصفوفة تكوين السعة',

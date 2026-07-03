@@ -25,6 +25,9 @@
     <template v-else-if="name === 'chevron-left'">
       <polyline points="15 18 9 12 15 6" />
     </template>
+    <template v-else-if="name === 'check'">
+      <polyline points="20 6 9 17 4 12" />
+    </template>
     <template v-else-if="name === 'sidebar'">
       <polyline points="4 17 10 11 4 5" />
       <line x1="12" y1="19" x2="20" y2="19" />
@@ -176,6 +179,22 @@
     </template>
     <template v-else-if="name === 'shield'">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </template>
+    <template v-else-if="name === 'user-plus'">
+      <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <line x1="19" y1="8" x2="19" y2="14" />
+      <line x1="22" y1="11" x2="16" y2="11" />
+    </template>
+    <template v-else-if="name === 'log-in'">
+      <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+      <polyline points="10 17 15 12 10 7" />
+      <line x1="15" y1="12" x2="3" y2="12" />
+    </template>
+    <template v-else-if="name === 'globe'">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
     </template>
 
     <!-- Misc -->
