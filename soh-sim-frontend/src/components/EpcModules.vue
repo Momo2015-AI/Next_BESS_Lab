@@ -932,13 +932,7 @@
           >
             {{ chartError }}
           </div>
-          <div
-            v-if="chartHtml"
-            ref="chartContainer"
-            class="border rounded-lg p-2"
-            style="border-color: var(--color-border); background-color: var(--color-card)"
-            v-html="chartHtml"
-          />
+          <div v-if="chartHtml" ref="chartContainer" class="chart-container-sm" v-html="chartHtml" />
           <div v-else-if="!chartLoading" class="text-xs text-center py-8" style="color: var(--color-text-muted)">
             点击上方按钮选择图表类型，预览投标方案交互式可视化
           </div>

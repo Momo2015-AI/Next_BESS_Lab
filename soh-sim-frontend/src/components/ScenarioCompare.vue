@@ -280,7 +280,11 @@
           </div>
         </div>
 
-        <div ref="chartContainer" class="h-64 rounded-lg" style="background-color: var(--color-card-dark)" />
+        <div
+          ref="chartContainer"
+          class="chart-container"
+          style="background-color: var(--color-card-dark); min-height: 256px"
+        />
       </div>
 
       <!-- 对比表格 -->

@@ -15,7 +15,7 @@
       <div>点击单元格查看详细信息</div>
     </div>
 
-    <div ref="heatmapRef" class="w-full" style="height: 300px" />
+    <div ref="heatmapRef" class="chart-container" />
 
     <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
       <div class="flex items-center">

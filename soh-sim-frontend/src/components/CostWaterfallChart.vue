@@ -25,7 +25,7 @@
       </select>
     </div>
 
-    <div ref="waterfallChartRef" class="w-full" style="height: 300px" />
+    <div ref="waterfallChartRef" class="chart-container" />
 
     <!-- 成本摘要 -->
     <div class="mt-3 border-t pt-2" style="border-color: var(--color-border)">

@@ -951,7 +951,7 @@
 
       <div class="rounded p-3" style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)">
         <h4 class="text-xs mb-2 font-medium" style="color: var(--color-text)">SOH衰减曲线</h4>
-        <div ref="chartContainer" class="h-48" />
+        <div ref="chartContainer" class="chart-container-sm" />
       </div>
 
       <div

@@ -32,28 +32,28 @@
           <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">
             现金流曲线与回收期 Cash Flow & Payback
           </h3>
-          <div ref="cashFlowChartRef" class="w-full" style="height: 280px" />
+          <div ref="cashFlowChartRef" class="chart-container" />
         </div>
         <div
           class="rounded-lg p-3"
           style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
         >
           <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">收入结构堆叠 Revenue Breakdown</h3>
-          <div ref="revenueChartRef" class="w-full" style="height: 280px" />
+          <div ref="revenueChartRef" class="chart-container" />
         </div>
         <div
           class="rounded-lg p-3"
           style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
         >
           <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
-          <div ref="dscrChartRef" class="w-full" style="height: 280px" />
+          <div ref="dscrChartRef" class="chart-container" />
         </div>
         <div
           class="rounded-lg p-3"
           style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
         >
           <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">CAPEX 成本结构与敏感性 Tornado</h3>
-          <div ref="capexChartRef" class="w-full" style="height: 280px" />
+          <div ref="capexChartRef" class="chart-container" />
         </div>
       </div>
 

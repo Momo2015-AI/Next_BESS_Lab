@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <div ref="sankeyChartRef" class="w-full" style="height: 350px" />
+    <div ref="sankeyChartRef" class="chart-container" />
 
     <!-- 参数控制 -->
     <div class="mt-3 grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
