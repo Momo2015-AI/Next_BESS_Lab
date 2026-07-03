@@ -135,19 +135,21 @@
     --section-title-weight: 700;
 
     /* ============================================
-       Form Field (Design Spec — 浅灰底 + 蓝色字)
+       Form Field (设计稿 Ant Design 风格)
        ============================================ */
-    --form-field-bg: #f1f5f9;
-    --form-field-bg-hover: #e8eef5;
-    --form-field-border: transparent;
-    --form-field-border-focus: #2563eb;
-    --form-field-text: #1e40af;
-    --form-field-placeholder: #1e40af;
-    --form-field-radius: 8px;
-    --form-field-height: 40px;
-    --form-label-color: #64748b;
-    --form-label-size: 12px;
-    --form-label-weight: 500;
+    --form-field-bg: #ffffff;
+    --form-field-bg-hover: #f5f5f5;
+    --form-field-border: #d9d9d9;
+    --form-field-border-focus: #1677ff;
+    --form-field-text: #1f1f1f;
+    --form-field-placeholder: #bfbfbf;
+    --form-field-radius: 6px;
+    --form-field-height: 36px;
+    --form-label-color: #595959;
+    --form-label-size: 13px;
+    --form-label-weight: 400;
+    --form-field-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23bfbfbf' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    --form-field-select-arrow-focus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%231677ff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
   }
 
   [data-theme='dark'] {
@@ -267,14 +269,20 @@
     --section-divider-color: rgba(47, 128, 237, 0.3);
     --section-title-color: #f5f7fa;
 
-    /* Form Field (dark) */
-    --form-field-bg: rgba(15, 23, 42, 0.6);
-    --form-field-bg-hover: rgba(30, 41, 59, 0.7);
-    --form-field-border: transparent;
-    --form-field-border-focus: #3a8bff;
-    --form-field-text: #93c5fd;
-    --form-field-placeholder: #93c5fd;
-    --form-label-color: #94a3b8;
+    /* Form Field (dark — Ant Design 深色) */
+    --form-field-bg: #141414;
+    --form-field-bg-hover: #1f1f1f;
+    --form-field-border: #303030;
+    --form-field-border-focus: #1677ff;
+    --form-field-text: #ffffff;
+    --form-field-placeholder: #595959;
+    --form-field-radius: 6px;
+    --form-field-height: 36px;
+    --form-label-color: #a6a6a6;
+    --form-label-size: 13px;
+    --form-label-weight: 400;
+    --form-field-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23595959' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    --form-field-select-arrow-focus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%231677ff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
   }
 
   body {
@@ -394,7 +402,7 @@
   .form-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
 
   .form-field-label {
@@ -424,58 +432,61 @@
   .form-field-textarea {
     width: 100%;
     height: var(--form-field-height);
-    padding: 0 14px;
+    padding: 0 12px;
     background-color: var(--form-field-bg);
     border: 1px solid var(--form-field-border);
     border-radius: var(--form-field-radius);
     color: var(--form-field-text);
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
     font-family: inherit;
-    transition: all 0.18s ease;
+    line-height: 36px;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      box-shadow 0.2s;
     outline: none;
+    box-sizing: border-box;
   }
 
   .form-field-textarea {
     height: auto;
     min-height: 80px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     line-height: 1.5;
     resize: vertical;
   }
 
   .form-field-select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%231e40af' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-image: var(--form-field-select-arrow);
     background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
+    background-position: right 12px center;
+    padding-right: 32px;
     cursor: pointer;
   }
 
   [data-theme='dark'] .form-field-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%2393c5fd' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-  }
-
-  .form-field-input::placeholder,
-  .form-field-textarea::placeholder {
-    color: var(--form-field-placeholder);
-    opacity: 0.55;
-    font-weight: 400;
-  }
-
-  .form-field-input:hover,
-  .form-field-select:hover,
-  .form-field-textarea:hover {
-    background-color: var(--form-field-bg-hover);
+    background-image: var(--form-field-select-arrow);
   }
 
   .form-field-input:focus-visible,
   .form-field-select:focus-visible,
   .form-field-textarea:focus-visible {
-    background-color: var(--form-field-bg-hover);
     border-color: var(--form-field-border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+  }
+
+  .form-field-input:hover,
+  .form-field-select:hover,
+  .form-field-textarea:hover {
+    border-color: var(--form-field-border-focus);
+  }
+
+  .form-field-input::placeholder,
+  .form-field-textarea::placeholder {
+    color: var(--form-field-placeholder);
+    font-weight: 400;
   }
 
   .form-field-error {
@@ -490,23 +501,47 @@
     margin-top: 2px;
   }
 
+  /* ── 表单区块卡片 ── */
+  .form-section {
+    background: var(--form-field-bg);
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  [data-theme='dark'] .form-section {
+    border-color: #262626;
+    background: var(--color-card);
+  }
+  .form-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--form-field-text);
+    margin: 0 0 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  [data-theme='dark'] .form-section-title {
+    border-bottom-color: #262626;
+  }
+
   /* 4 列固定网格 */
   .form-grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 18px 20px;
+    gap: 16px;
   }
 
   .form-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px 20px;
+    gap: 16px;
   }
 
   .form-grid-2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 18px 20px;
+    gap: 16px;
   }
 
   @media (max-width: 1024px) {
@@ -799,38 +834,60 @@
 
   /* ── 按钮 ── */
   .btn-primary {
-    padding: 8px 24px;
-    border-radius: var(--radius-md);
+    padding: 0 16px;
+    height: var(--form-field-height);
+    border-radius: var(--form-field-radius);
     border: none;
-    background: var(--color-accent);
-    color: var(--color-text-on-accent);
-    font-size: 13px;
-    font-weight: 600;
+    background: #1677ff;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition:
+      background-color 0.2s,
+      box-shadow 0.2s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+    line-height: 36px;
   }
   .btn-primary:hover {
-    opacity: 0.88;
+    background: #4096ff;
+  }
+  .btn-primary:active {
+    background: #0958d9;
   }
   .btn-primary:disabled {
-    opacity: 0.5;
+    background: #d9d9d9;
+    color: #ffffff;
     cursor: not-allowed;
   }
 
   .btn-secondary {
-    padding: 8px 24px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background: var(--color-card);
-    color: var(--color-text-secondary);
-    font-size: 13px;
+    padding: 0 16px;
+    height: var(--form-field-height);
+    border-radius: var(--form-field-radius);
+    border: 1px solid var(--form-field-border);
+    background: var(--form-field-bg);
+    color: var(--form-field-text);
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+    line-height: 36px;
   }
   .btn-secondary:hover {
-    background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-    border-color: var(--color-accent);
+    color: #4096ff;
+    border-color: #4096ff;
+  }
+  .btn-secondary:active {
+    color: #0958d9;
+    border-color: #0958d9;
+  }
+  .btn-secondary:disabled {
+    color: #d9d9d9;
+    border-color: #d9d9d9;
+    cursor: not-allowed;
   }
 
   .theme-btn-secondary {
