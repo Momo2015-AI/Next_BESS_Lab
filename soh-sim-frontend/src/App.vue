@@ -17,7 +17,13 @@
               <button class="user-trigger" @click="userMenuOpen = !userMenuOpen">
                 <div class="user-avatar">{{ authUser.username?.charAt(0)?.toUpperCase() || 'U' }}</div>
                 <span class="user-name">{{ authUser.username }}</span>
-                <AppIcon name="chevron-down" :size="12" :stroke-width="2" color="var(--text-secondary)" :class="['chev', { open: userMenuOpen }]" />
+                <AppIcon
+                  name="chevron-down"
+                  :size="12"
+                  :stroke-width="2"
+                  color="var(--text-secondary)"
+                  :class="['chev', { open: userMenuOpen }]"
+                />
               </button>
               <ul v-if="userMenuOpen" class="user-dropdown">
                 <li class="user-info">
@@ -215,7 +221,7 @@ onUnmounted(() => {
 }
 
 .auth-btn.register {
-  color: #ffffff;
+  color: var(--color-text-on-accent);
   background: var(--color-accent);
   border-color: var(--color-accent);
 }
@@ -224,7 +230,7 @@ onUnmounted(() => {
   opacity: 0.92;
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--color-text-on-accent);
   box-shadow: 0 4px 12px var(--color-accent-glow);
 }
 
@@ -276,7 +282,7 @@ onUnmounted(() => {
   height: 26px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--accent-blue) 100%);
-  color: #ffffff;
+  color: var(--color-text-on-accent);
   font-size: 12px;
   font-weight: 700;
   display: flex;

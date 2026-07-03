@@ -457,8 +457,8 @@ function fillTestData() {
 }
 
 .form-section {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
+  background: var(--color-text-on-accent);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 24px;
 }
@@ -490,7 +490,7 @@ function fillTestData() {
 
 .form-group.required label::after {
   content: ' *';
-  color: #ef4444;
+  color: var(--color-danger);
 }
 
 .form-group label {
@@ -558,12 +558,12 @@ function fillTestData() {
 
 .btn-secondary {
   background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background: #f5f7fa;
+  background: var(--color-bg-secondary);
 }
 
 .success-modal {
@@ -591,7 +591,7 @@ function fillTestData() {
 .success-icon {
   width: 64px;
   height: 64px;
-  background: #10b981;
+  background: var(--color-success);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -603,17 +603,17 @@ function fillTestData() {
 
 .modal-content h3 {
   font-size: 20px;
-  color: #1f2937;
+  color: var(--color-text);
   margin: 0 0 8px;
 }
 
 .modal-content p {
-  color: #6b7280;
+  color: var(--color-text-secondary);
   margin: 0 0 16px;
 }
 
 .info-box {
-  background: #f5f7fa;
+  background: var(--color-bg-secondary);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -623,10 +623,10 @@ function fillTestData() {
 .info-box p {
   margin: 4px 0;
   font-size: 13px;
-  color: #374151;
+  color: var(--color-text);
 }
 
 .info-box strong {
-  color: #1f2937;
+  color: var(--color-text);
 }
 </style>

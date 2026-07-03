@@ -337,7 +337,7 @@ function versionStyle(ver) {
   const active = store.boq.activeVersion === ver
   return {
     background: active ? 'var(--color-accent)' : 'var(--color-card)',
-    color: active ? '#fff' : 'var(--color-text-muted)',
+    color: active ? 'var(--color-text-on-accent)' : 'var(--color-text-muted)',
     border: active ? 'none' : '1px solid var(--color-border)'
   }
 }

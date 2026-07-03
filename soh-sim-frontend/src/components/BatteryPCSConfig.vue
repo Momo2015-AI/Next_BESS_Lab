@@ -698,7 +698,7 @@ const renderConnectionDiagram = () => {
     symbolSize: 42,
     category: 0,
     itemStyle: { color: colors.emerald, shadowBlur: 4, shadowColor: 'rgba(0,0,0,0.3)' },
-    label: { show: true, position: 'inside', formatter: '电网', fontSize: 10, color: '#fff' }
+    label: { show: true, position: 'inside', formatter: '电网', fontSize: 10, color: 'var(--color-text-on-accent)' }
   })
 
   nodes.push({
@@ -715,7 +715,14 @@ const renderConnectionDiagram = () => {
       shadowOffsetY: 2,
       shadowColor: 'rgba(0,0,0,0.25)'
     },
-    label: { show: true, position: 'inside', formatter: 'T', fontSize: 12, color: '#fff', fontWeight: 'bold' }
+    label: {
+      show: true,
+      position: 'inside',
+      formatter: 'T',
+      fontSize: 12,
+      color: 'var(--color-text-on-accent)',
+      fontWeight: 'bold'
+    }
   })
   links.push({ source: '电网', target: '变压器', lineStyle: { color: colors.amber, width: 3, type: 'solid' } })
 
@@ -740,7 +747,13 @@ const renderConnectionDiagram = () => {
         borderColor: style.getPropertyValue('--color-accent').trim() + '99',
         borderWidth: 1
       },
-      label: { show: true, position: 'inside', formatter: `PCS${i + 1}\n${pcs.power}MW`, fontSize: 9, color: '#fff' }
+      label: {
+        show: true,
+        position: 'inside',
+        formatter: `PCS${i + 1}\n${pcs.power}MW`,
+        fontSize: 9,
+        color: 'var(--color-text-on-accent)'
+      }
     })
     links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
   }
@@ -776,7 +789,7 @@ const renderConnectionDiagram = () => {
         position: 'inside',
         formatter: `舱${i + 1}\n${container.energy}MWh`,
         fontSize: 9,
-        color: '#fff'
+        color: 'var(--color-text-on-accent)'
       }
     })
 
@@ -794,7 +807,7 @@ const renderConnectionDiagram = () => {
       trigger: 'item',
       backgroundColor: 'rgba(30, 41, 59, 0.9)',
       borderColor: 'rgba(100, 116, 139, 0.3)',
-      textStyle: { color: '#e2e8f0', fontSize: 11 },
+      textStyle: { color: 'var(--color-border-light)', fontSize: 11 },
       formatter: (p) => {
         if (!p.data || !p.data.name) return ''
         const name = p.data.name
@@ -808,7 +821,7 @@ const renderConnectionDiagram = () => {
         type: 'graph',
         layout: 'none',
         roam: true,
-        label: { show: true, fontSize: 10, color: '#fff' },
+        label: { show: true, fontSize: 10, color: 'var(--color-text-on-accent)' },
         edgeSymbol: ['none', 'none'],
         edgeSymbolSize: [6, 8],
         data: nodes,
@@ -892,7 +905,15 @@ const renderSingleLineDiagram = () => {
   })
   graphicElements.push({
     type: 'text',
-    style: { text: '电网 10kV', x: 500, y: 34, fill: '#fff', fontSize: 12, textAlign: 'center', fontWeight: 'bold' }
+    style: {
+      text: '电网 10kV',
+      x: 500,
+      y: 34,
+      fill: 'var(--color-text-on-accent)',
+      fontSize: 12,
+      textAlign: 'center',
+      fontWeight: 'bold'
+    }
   })
 
   graphicElements.push({
@@ -916,7 +937,15 @@ const renderSingleLineDiagram = () => {
   })
   graphicElements.push({
     type: 'text',
-    style: { text: 'T', x: 500, y: 110, fill: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 'bold' }
+    style: {
+      text: 'T',
+      x: 500,
+      y: 110,
+      fill: 'var(--color-text-on-accent)',
+      fontSize: 14,
+      textAlign: 'center',
+      fontWeight: 'bold'
+    }
   })
 
   graphicElements.push({
@@ -970,7 +999,14 @@ const renderSingleLineDiagram = () => {
     })
     graphicElements.push({
       type: 'text',
-      style: { text: `PCS${i + 1}\n${pcs.power}MW`, x: x, y: 230, fill: '#fff', fontSize: 9, textAlign: 'center' }
+      style: {
+        text: `PCS${i + 1}\n${pcs.power}MW`,
+        x: x,
+        y: 230,
+        fill: 'var(--color-text-on-accent)',
+        fontSize: 9,
+        textAlign: 'center'
+      }
     })
 
     graphicElements.push({
@@ -1130,7 +1166,7 @@ const renderSingleLineDiagram = () => {
         text: `舱${i + 1}`,
         x: x,
         y: boxY + 20,
-        fill: '#fff',
+        fill: 'var(--color-text-on-accent)',
         fontSize: 10,
         textAlign: 'center',
         fontWeight: 'bold'
@@ -1138,7 +1174,14 @@ const renderSingleLineDiagram = () => {
     })
     graphicElements.push({
       type: 'text',
-      style: { text: `${container.energy}MWh`, x: x, y: boxY + 36, fill: '#fff', fontSize: 9, textAlign: 'center' }
+      style: {
+        text: `${container.energy}MWh`,
+        x: x,
+        y: boxY + 36,
+        fill: 'var(--color-text-on-accent)',
+        fontSize: 9,
+        textAlign: 'center'
+      }
     })
   }
 

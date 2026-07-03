@@ -525,7 +525,7 @@
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
             <span
               class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7"
+              style="background-color: rgba(168, 85, 247, 0.2); color: var(--color-info)"
             >
               IV
             </span>
@@ -834,20 +834,20 @@ const chartColors = computed(() => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   return {
     backgroundColor: 'transparent',
-    textStyle: { color: isDark ? '#94a3b8' : '#64748b', fontSize: 10 },
-    axisLabel: isDark ? '#64748b' : '#64748b',
-    legendText: isDark ? '#94a3b8' : '#64748b',
-    gridLine: isDark ? '#1e293b' : '#e2e8f0',
-    success: isDark ? '#10b981' : '#10b981',
-    danger: isDark ? '#ef4444' : '#ef4444',
-    warning: isDark ? '#f59e0b' : '#f59e0b',
+    textStyle: { color: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)', fontSize: 10 },
+    axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    gridLine: isDark ? '#1e293b' : 'var(--color-border-light)',
+    success: isDark ? 'var(--color-success)' : 'var(--color-success)',
+    danger: isDark ? 'var(--color-danger)' : 'var(--color-danger)',
+    warning: isDark ? 'var(--color-warning)' : 'var(--color-warning)',
     info: isDark ? '#0ea5e9' : '#0ea5e9',
     acLine: isDark ? '#14b8a6' : '#14b8a6',
-    purple: isDark ? '#a855f7' : '#8b5cf6',
-    orange: isDark ? '#f97316' : '#f97316',
-    cyan: isDark ? '#22d3ee' : '#06b6d4',
+    purple: isDark ? 'var(--color-info)' : 'var(--color-info)',
+    orange: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
+    cyan: isDark ? 'var(--color-chart-cyan)' : 'var(--color-chart-cyan)',
     redLight: isDark ? '#f87171' : '#f87171',
-    muted: isDark ? '#94a3b8' : '#94a3b8'
+    muted: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)'
   }
 })
 
@@ -909,7 +909,7 @@ const metrics = ref([
   { label: 'LCOS', value: '-', unit: `元/kWh (${displayCurrency})`, textColor: 'var(--color-info)' },
   { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)' },
   { label: 'Total CAPEX', value: '-', unit: `万元 (${displayCurrency})`, textColor: 'var(--color-danger)' },
-  { label: 'Min DSCR', value: '-', unit: 'x', textColor: '#f97316' }
+  { label: 'Min DSCR', value: '-', unit: 'x', textColor: 'var(--color-chart-orange)' }
 ])
 
 const cashFlowTable = ref([])
@@ -1266,7 +1266,7 @@ function renderCashFlowChart() {
         symbol: 'circle',
         symbolSize: 4,
         lineStyle: { color: colors.info, width: 2.5 },
-        itemStyle: { color: colors.info, borderWidth: 1, borderColor: '#fff' },
+        itemStyle: { color: colors.info, borderWidth: 1, borderColor: 'var(--color-text-on-accent)' },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             {
@@ -1470,7 +1470,7 @@ function renderDscrChart() {
         itemStyle: {
           color: (params) => (params.value >= 1.3 ? colors.success : colors.danger),
           borderWidth: 2,
-          borderColor: '#fff'
+          borderColor: 'var(--color-text-on-accent)'
         },
         markLine: {
           silent: true,
@@ -1518,9 +1518,9 @@ function renderCapexChart() {
     { value: containerCost, name: '集装箱', color: colors.info },
     { value: pcsCost, name: 'PCS', color: colors.purple },
     { value: bopCost, name: 'BOP配套', color: colors.warning },
-    { value: substationCost, name: '变电站', color: '#06b6d4' },
-    { value: transmissionCost, name: '输电线路', color: '#f97316' },
-    { value: landCost, name: '土地', color: '#10b981' },
+    { value: substationCost, name: '变电站', color: 'var(--color-chart-cyan)' },
+    { value: transmissionCost, name: '输电线路', color: 'var(--color-chart-orange)' },
+    { value: landCost, name: '土地', color: 'var(--color-success)' },
     { value: devCost, name: '开发费', color: colors.muted }
   ].filter((item) => item.value > 0)
 

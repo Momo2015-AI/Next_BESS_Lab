@@ -5,7 +5,9 @@
         class="p-3 rounded-lg flex flex-col"
         style="background: var(--color-bg-secondary); border: 1px solid var(--color-border)"
       >
-        <span class="text-xs font-bold mb-1" style="color: #f59e0b">{{ $t('dataInjection.sohTitle') }}</span>
+        <span class="text-xs font-bold mb-1" style="color: var(--color-warning)">
+          {{ $t('dataInjection.sohTitle') }}
+        </span>
         <p class="text-[10px] mb-2" style="color: var(--color-text-muted)">
           {{ $t('dataInjection.sohFormat') }}
         </p>

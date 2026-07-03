@@ -12,19 +12,19 @@
 
     <div class="mb-2 flex items-center gap-2 text-[10px]" style="color: var(--color-text-secondary)">
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: #3b82f6" />
+        <div class="w-3 h-3 rounded" style="background-color: var(--color-accent)" />
         <span>充电 Charging</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: #ef4444" />
+        <div class="w-3 h-3 rounded" style="background-color: var(--color-danger)" />
         <span>损失 Loss</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: #10b981" />
+        <div class="w-3 h-3 rounded" style="background-color: var(--color-success)" />
         <span>放电 Discharging</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: #f59e0b" />
+        <div class="w-3 h-3 rounded" style="background-color: var(--color-warning)" />
         <span>辅助 Auxiliary</span>
       </div>
     </div>
@@ -196,12 +196,12 @@ const formatEnergy = (energy) => {
 // 生成桑基图数据
 const generateSankeyData = () => {
   const nodes = [
-    { name: '充电输入', itemStyle: { color: '#3b82f6' } },
-    { name: '充电损失', itemStyle: { color: '#ef4444' } },
-    { name: '电池储能', itemStyle: { color: '#8b5cf6' } },
-    { name: '放电损失', itemStyle: { color: '#f59e0b' } },
-    { name: '放电输出', itemStyle: { color: '#10b981' } },
-    { name: '辅助消耗', itemStyle: { color: '#f59e0b' } }
+    { name: '充电输入', itemStyle: { color: 'var(--color-accent)' } },
+    { name: '充电损失', itemStyle: { color: 'var(--color-danger)' } },
+    { name: '电池储能', itemStyle: { color: 'var(--color-info)' } },
+    { name: '放电损失', itemStyle: { color: 'var(--color-warning)' } },
+    { name: '放电输出', itemStyle: { color: 'var(--color-success)' } },
+    { name: '辅助消耗', itemStyle: { color: 'var(--color-warning)' } }
   ]
 
   const links = [
@@ -209,31 +209,31 @@ const generateSankeyData = () => {
       source: 0,
       target: 1,
       value: totalCharging.value * (1 - chargingEfficiency.value / 100),
-      itemStyle: { color: '#ef4444' }
+      itemStyle: { color: 'var(--color-danger)' }
     },
     {
       source: 0,
       target: 2,
       value: (totalCharging.value * chargingEfficiency.value) / 100,
-      itemStyle: { color: '#3b82f6' }
+      itemStyle: { color: 'var(--color-accent)' }
     },
     {
       source: 2,
       target: 3,
       value: totalDischarging.value * (1 - dischargingEfficiency.value / 100),
-      itemStyle: { color: '#f59e0b' }
+      itemStyle: { color: 'var(--color-warning)' }
     },
     {
       source: 2,
       target: 4,
       value: (totalDischarging.value * dischargingEfficiency.value) / 100,
-      itemStyle: { color: '#10b981' }
+      itemStyle: { color: 'var(--color-success)' }
     },
     {
       source: 2,
       target: 5,
       value: totalCapacityMWh.value * 0.02 * operatingDays.value, // 2% auxiliary consumption
-      itemStyle: { color: '#f59e0b' }
+      itemStyle: { color: 'var(--color-warning)' }
     }
   ]
 
@@ -251,7 +251,8 @@ const updateChart = () => {
       text: '能量流分析 Energy Flow Analysis',
       left: 'center',
       textStyle: {
-        color: getComputedStyle(document.documentElement).getPropertyValue('--color-text') || '#64748b',
+        color:
+          getComputedStyle(document.documentElement).getPropertyValue('--color-text') || 'var(--color-text-secondary)',
         fontSize: 12,
         fontWeight: 'normal'
       }
@@ -282,7 +283,9 @@ const updateChart = () => {
           show: true,
           position: 'right',
           fontSize: 10,
-          color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b'
+          color:
+            getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') ||
+            'var(--color-text-secondary)'
         },
         levels: [
           {

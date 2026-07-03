@@ -20,7 +20,7 @@ app.config.errorHandler = (err, instance, info) => {
   if (el) {
     const banner = document.createElement('div')
     banner.style.cssText =
-      'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:12px 16px;font-size:13px;z-index:99999;font-family:monospace;white-space:pre-wrap;word-break:break-all;'
+      'position:fixed;top:0;left:0;right:0;background:var(--color-danger);color:white;padding:12px 16px;font-size:13px;z-index:99999;font-family:monospace;white-space:pre-wrap;word-break:break-all;'
     banner.textContent = '[Runtime Error] ' + (err.message || err)
     el.prepend(banner)
   }

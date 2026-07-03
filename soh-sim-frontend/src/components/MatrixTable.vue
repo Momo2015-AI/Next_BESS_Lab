@@ -212,7 +212,11 @@
             >
               {{ $t('matrixTable.initialStock') }}
             </th>
-            <th class="py-1.5" style="border-right: 1px solid var(--color-border); color: #ec4899" colspan="6">
+            <th
+              class="py-1.5"
+              style="border-right: 1px solid var(--color-border); color: var(--color-chart-pink)"
+              colspan="6"
+            >
               {{ $t('matrixTable.augStream') }}
             </th>
             <th class="py-1.5" style="color: var(--color-success)" colspan="3">
@@ -229,13 +233,13 @@
             <th class="p-1.5">
               {{ $t('matrixTable.nominalCapacity') }}
             </th>
-            <th class="p-1.5" style="color: #f59e0b">
+            <th class="p-1.5" style="color: var(--color-warning)">
               {{ $t('matrixTable.dod') }}
             </th>
             <th class="p-1.5" style="color: var(--color-accent-secondary)">
               {{ $t('matrixTable.rte') }}
             </th>
-            <th class="p-1.5" style="color: #eab308">
+            <th class="p-1.5" style="color: var(--color-warning)">
               {{ $t('matrixTable.soh') }}
             </th>
             <th class="p-1.5">
@@ -253,7 +257,7 @@
             <th class="p-1.5">
               {{ $t('matrixTable.augNominal') }}
             </th>
-            <th class="p-1.5 font-bold" style="color: #ec4899">
+            <th class="p-1.5 font-bold" style="color: var(--color-chart-pink)">
               {{ $t('matrixTable.augQty') }}
             </th>
             <th class="p-1.5">
@@ -262,10 +266,13 @@
             <th class="p-1.5" style="color: var(--color-danger)">
               {{ $t('matrixTable.augAux') }}
             </th>
-            <th class="p-1.5" style="color: #ec4899">
+            <th class="p-1.5" style="color: var(--color-chart-pink)">
               {{ $t('matrixTable.augGross') }}
             </th>
-            <th class="p-1.5 font-bold" style="border-right: 1px solid var(--color-border); color: #ec4899">
+            <th
+              class="p-1.5 font-bold"
+              style="border-right: 1px solid var(--color-border); color: var(--color-chart-pink)"
+            >
               {{ $t('matrixTable.augNetAc') }}
             </th>
             <th class="p-1.5 font-bold" style="color: var(--color-success)">
@@ -307,7 +314,7 @@
                 :value="dod[i - 1]"
                 step="0.1"
                 class="w-12 rounded text-center font-mono text-[11px]"
-                style="background: var(--color-bg); border: 1px solid var(--color-border); color: #f59e0b"
+                style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-warning)"
                 @input="updateDod(i - 1, $event.target.value)"
               />
             </td>
@@ -331,7 +338,7 @@
                 :value="(soh[i - 1] * 100).toFixed(2)"
                 step="0.01"
                 class="w-14 rounded text-center font-bold font-mono text-[11px]"
-                style="background: var(--color-bg); border: 1px solid var(--color-border); color: #eab308"
+                style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-warning)"
                 @input="updateSoh(i - 1, $event.target.value)"
               />
             </td>
@@ -366,7 +373,11 @@
                 step="1"
                 min="0"
                 class="w-10 rounded text-center font-bold text-[11px]"
-                style="background: var(--color-bg); border: 1px solid #be185d; color: #ec4899"
+                style="
+                  background: var(--color-bg);
+                  border: 1px solid var(--color-chart-pink);
+                  color: var(--color-chart-pink);
+                "
                 @input="updateAugQty(i - 1, $event.target.value)"
               />
             </td>
@@ -381,7 +392,11 @@
             </td>
             <td
               class="p-1 font-bold"
-              style="border-right: 1px solid var(--color-border); color: #ec4899; background: rgba(236, 72, 153, 0.05)"
+              style="
+                border-right: 1px solid var(--color-border);
+                color: var(--color-chart-pink);
+                background: rgba(236, 72, 153, 0.05);
+              "
             >
               {{ results.augAcUsable[i - 1]?.toFixed(2) }}
             </td>
@@ -402,7 +417,7 @@
             >
               {{ results.meetsReq[i - 1] ? $t('matrixTable.meetsYes') : $t('matrixTable.meetsNo') }}
             </td>
-            <td class="p-1 font-semibold" style="color: #f59e0b">
+            <td class="p-1 font-semibold" style="color: var(--color-warning)">
               {{ params.requiredEnergy.toFixed(2) }}
             </td>
           </tr>

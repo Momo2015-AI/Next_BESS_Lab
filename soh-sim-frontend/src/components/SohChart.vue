@@ -72,7 +72,7 @@
           存量净可用
         </div>
         <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: #f472b6" />
+          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
           补容净可用
         </div>
         <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
@@ -98,7 +98,7 @@
           存量净可用
         </div>
         <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: #ec4899" />
+          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
           补容净可用
         </div>
         <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
@@ -106,7 +106,7 @@
           存量自辅耗
         </div>
         <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: #ea580c" />
+          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-orange)" />
           补容自辅耗
         </div>
       </div>
@@ -204,26 +204,26 @@ let dashChart = null
 const chartColors = computed(() => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   return {
-    textStyle: { color: isDark ? '#94a3b8' : '#64748b' },
+    textStyle: { color: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)' },
     backgroundColor: 'transparent',
-    axisLabel: isDark ? '#64748b' : '#64748b',
-    legendText: isDark ? '#94a3b8' : '#64748b',
-    titleText: isDark ? '#facc15' : '#f59e0b',
-    sohLine: isDark ? '#facc15' : '#f59e0b',
+    axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    titleText: isDark ? '#facc15' : 'var(--color-warning)',
+    sohLine: isDark ? '#facc15' : 'var(--color-warning)',
     rteLine: isDark ? '#38bdf8' : '#0ea5e9',
     acLine: isDark ? '#2dd4bf' : '#14b8a6',
-    augLine: isDark ? '#f472b6' : '#ec4899',
+    augLine: isDark ? 'var(--color-chart-pink)' : 'var(--color-chart-pink)',
     totalLine: isDark ? '#38bdf8' : '#0ea5e9',
-    reqLine: isDark ? '#f59e0b' : '#f59e0b',
+    reqLine: isDark ? 'var(--color-warning)' : 'var(--color-warning)',
     initAux: isDark ? '#e11d48' : '#dc2626',
-    augAux: isDark ? '#ea580c' : '#f97316',
+    augAux: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
     initAc: isDark ? '#14b8a6' : '#14b8a6',
-    augAc: isDark ? '#ec4899' : '#ec4899',
-    degradation: isDark ? '#fb923c' : '#f97316',
-    dashboard: isDark ? '#c084fc' : '#8b5cf6',
-    success: isDark ? '#10b981' : '#10b981',
-    danger: isDark ? '#ef4444' : '#ef4444',
-    warning: isDark ? '#f59e0b' : '#f59e0b'
+    augAc: isDark ? 'var(--color-chart-pink)' : 'var(--color-chart-pink)',
+    degradation: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
+    dashboard: isDark ? '#c084fc' : 'var(--color-info)',
+    success: isDark ? 'var(--color-success)' : 'var(--color-success)',
+    danger: isDark ? 'var(--color-danger)' : 'var(--color-danger)',
+    warning: isDark ? 'var(--color-warning)' : 'var(--color-warning)'
   }
 })
 

@@ -393,7 +393,7 @@ function goToSimulation() {
   border-radius: var(--form-field-radius);
   border: none;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -448,7 +448,7 @@ function goToSimulation() {
   padding: 3px 10px;
   border-radius: 6px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
 }
 
 .actions {
@@ -462,7 +462,7 @@ function goToSimulation() {
   border-radius: 8px;
   border: none;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -497,7 +497,7 @@ function goToSimulation() {
   border-radius: 8px;
   border: none;
   background: var(--color-success);
-  color: #fff;
+  color: var(--color-text-on-accent);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;

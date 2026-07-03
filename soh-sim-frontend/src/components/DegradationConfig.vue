@@ -120,7 +120,11 @@
                   class="text-center py-1 px-2 font-bold"
                   :style="{
                     color:
-                      getSohAt8000(c) >= 80 ? 'var(--color-success)' : getSohAt8000(c) >= 60 ? '#f59e0b' : '#ef4444'
+                      getSohAt8000(c) >= 80
+                        ? 'var(--color-success)'
+                        : getSohAt8000(c) >= 60
+                          ? 'var(--color-warning)'
+                          : 'var(--color-danger)'
                   }"
                 >
                   {{ getSohAt8000(c).toFixed(1) }}%
@@ -351,7 +355,7 @@
                 <span
                   v-else-if="s >= 70"
                   class="text-xs px-1 rounded"
-                  style="background: rgba(245, 158, 11, 0.15); color: #f59e0b"
+                  style="background: rgba(245, 158, 11, 0.15); color: var(--color-warning)"
                 >
                   Warning
                 </span>

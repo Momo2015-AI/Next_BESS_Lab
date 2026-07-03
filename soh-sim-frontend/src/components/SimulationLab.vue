@@ -1622,10 +1622,10 @@ const renderChart = () => {
 
   const years = Array.from({ length: simulationResults.sohCurve.length }, (_, i) => i)
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  const textColor = isDark ? '#94a3b8' : '#64748b'
-  const accentColor = isDark ? '#2dd4bf' : '#3b82f6'
-  const secondaryColor = isDark ? '#38bdf8' : '#06b6d4'
-  const warningColor = '#f59e0b'
+  const textColor = isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)'
+  const accentColor = isDark ? '#2dd4bf' : 'var(--color-accent)'
+  const secondaryColor = isDark ? '#38bdf8' : 'var(--color-chart-cyan)'
+  const warningColor = 'var(--color-warning)'
 
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },

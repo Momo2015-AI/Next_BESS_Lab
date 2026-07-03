@@ -117,7 +117,7 @@ onMounted(() => {
   padding: 8px 20px;
   border-radius: var(--radius-md);
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
   border: none;
   font-size: 13px;
   font-weight: 600;

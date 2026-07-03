@@ -94,7 +94,9 @@
           </div>
         </div>
         <div class="p-2 rounded space-y-1" style="background: var(--color-bg); border: 1px solid var(--color-border)">
-          <span class="font-bold block text-[10px]" style="color: #f59e0b">B. {{ $t('paramPanel.auxPower') }}:</span>
+          <span class="font-bold block text-[10px]" style="color: var(--color-warning)">
+            B. {{ $t('paramPanel.auxPower') }}:
+          </span>
           <div class="grid grid-cols-2 gap-x-2 text-[10px]">
             <div>
               {{ $t('paramPanel.bessAuxRun') }}:
@@ -220,7 +222,7 @@
             :value="params.requiredEnergy"
             step="1"
             class="formula-input w-14"
-            style="color: #f59e0b"
+            style="color: var(--color-warning)"
             @input="$emit('update', 'requiredEnergy', Number($event.target.value))"
           />
           MWh ?
@@ -452,7 +454,7 @@
       class="p-3 rounded-lg space-y-1.5"
       style="background: var(--color-bg-secondary); border: 1px solid rgba(99, 102, 241, 0.2)"
     >
-      <div class="text-[11px] font-bold" style="color: #6366f1">
+      <div class="text-[11px] font-bold" style="color: var(--color-info)">
         {{ $t('formulaLab.op8Title') }}
       </div>
       <div class="text-[10px] mb-1.5 leading-relaxed" style="color: var(--color-text-muted)">

@@ -159,7 +159,12 @@
             class="total-value"
             style="font-weight: bold"
             :style="{
-              color: totalResult.rte >= 0.85 ? 'var(--color-success)' : totalResult.rte >= 0.8 ? '#f59e0b' : '#ef4444'
+              color:
+                totalResult.rte >= 0.85
+                  ? 'var(--color-success)'
+                  : totalResult.rte >= 0.8
+                    ? 'var(--color-warning)'
+                    : 'var(--color-danger)'
             }"
           >
             {{ (totalResult.rte * 100).toFixed(2) }}%

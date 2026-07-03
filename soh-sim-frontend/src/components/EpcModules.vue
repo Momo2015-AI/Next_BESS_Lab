@@ -645,7 +645,12 @@
                   class="w-full rounded-t"
                   :style="{
                     height: point.power_pct + '%',
-                    backgroundColor: point.power_pct > 80 ? '#10B981' : point.power_pct > 50 ? '#F59E0B' : '#EF4444'
+                    backgroundColor:
+                      point.power_pct > 80
+                        ? 'var(--color-success)'
+                        : point.power_pct > 50
+                          ? 'var(--color-warning)'
+                          : 'var(--color-danger)'
                   }"
                 />
                 <div class="text-xs mt-1" style="color: var(--color-text-muted)">{{ point.temp }}°C</div>

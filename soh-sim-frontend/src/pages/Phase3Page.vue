@@ -92,7 +92,7 @@ function onApplySimulationConfig(payload) {
 .run-btn {
   padding: 10px 24px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;

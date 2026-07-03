@@ -94,7 +94,7 @@ defineExpose({
 }
 
 ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: var(--color-text);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -103,6 +103,6 @@ defineExpose({
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: var(--color-text-secondary);
 }
 </style>

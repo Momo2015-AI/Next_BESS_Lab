@@ -387,7 +387,7 @@ async function submitSurvey() {
   right: 20px;
   padding: 10px 20px;
   border-radius: 8px;
-  color: #fff;
+  color: var(--color-text-on-accent);
   font-size: 14px;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -400,7 +400,7 @@ async function submitSurvey() {
   background: var(--color-danger);
 }
 .toast-info {
-  background: var(--color-info, #3b82f6);
+  background: var(--color-info, var(--color-accent));
 }
 .toast-warning {
   background: var(--color-warning);
@@ -464,7 +464,7 @@ async function submitSurvey() {
   border-radius: 10px;
   border: none;
   background: linear-gradient(135deg, var(--color-accent), var(--color-success));
-  color: #fff;
+  color: var(--color-text-on-accent);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;

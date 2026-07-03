@@ -19,23 +19,23 @@
 
     <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: #10b981" />
+        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-success)" />
         <span style="color: var(--color-success)">>90%</span>
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: #22c55e" />
+        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-success)" />
         <span style="color: var(--color-success)">80-90%</span>
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: #eab308" />
+        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-warning)" />
         <span style="color: var(--color-warning)">70-80%</span>
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: #f97316" />
+        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-chart-orange)" />
         <span style="color: var(--color-warning)">60-70%</span>
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: #ef4444" />
+        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-danger)" />
         <span style="color: var(--color-danger)">&lt;60%</span>
       </div>
     </div>
@@ -107,18 +107,18 @@ const renderHeatmap = () => {
   }
 
   const colors = {
-    success: '#10b981', // green-500
-    warning: '#f59e0b', // amber-500
-    danger: '#ef4444', // red-500
-    info: '#3b82f6', // blue-500
-    purple: '#8b5cf6', // violet-500
-    muted: '#94a3b8' // slate-400
+    success: 'var(--color-success)', // green-500
+    warning: 'var(--color-warning)', // amber-500
+    danger: 'var(--color-danger)', // red-500
+    info: 'var(--color-accent)', // blue-500
+    purple: 'var(--color-info)', // violet-500
+    muted: 'var(--color-text-secondary)' // slate-400
   }
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  const bgColor = isDark ? '#0f172a' : '#ffffff' // bg色
-  const textColor = isDark ? '#e2e8f0' : '#334155' // text色
-  const borderColor = isDark ? '#334155' : '#cbd5e1' // border色
+  const bgColor = isDark ? '#0f172a' : 'var(--color-text-on-accent)' // bg色
+  const textColor = isDark ? 'var(--color-border-light)' : 'var(--color-border)' // text色
+  const borderColor = isDark ? 'var(--color-border)' : '#cbd5e1' // border色
 
   heatmap = echarts.init(heatmapRef.value, null, {
     renderer: 'canvas'
@@ -181,7 +181,13 @@ const renderHeatmap = () => {
       left: 'right',
       top: 'center',
       inRange: {
-        color: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981']
+        color: [
+          'var(--color-danger)',
+          'var(--color-chart-orange)',
+          'var(--color-warning)',
+          'var(--color-success)',
+          'var(--color-success)'
+        ]
       },
       textStyle: {
         color: textColor
@@ -198,7 +204,7 @@ const renderHeatmap = () => {
             return params.value[2].toFixed(0) + '%'
           },
           fontSize: 8,
-          color: '#fff'
+          color: 'var(--color-text-on-accent)'
         },
         emphasis: {
           itemStyle: {

@@ -1048,9 +1048,9 @@ function statusClass(status) {
 }
 
 function getDeratingColor(pct) {
-  if (pct > 80) return '#10B981'
-  if (pct > 50) return '#F59E0B'
-  return '#EF4444'
+  if (pct > 80) return 'var(--color-success)'
+  if (pct > 50) return 'var(--color-warning)'
+  return 'var(--color-danger)'
 }
 
 onMounted(() => {
@@ -1072,7 +1072,7 @@ onMounted(() => {
   margin: 0 0 8px;
 }
 .epc-desc {
-  color: var(--text-secondary, #666);
+  color: var(--text-secondary, var(--color-text-secondary));
   font-size: 14px;
   margin: 0;
 }
@@ -1233,7 +1233,7 @@ onMounted(() => {
   padding: 8px 24px;
   border-radius: var(--radius-md);
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
   border: none;
   font-size: 13px;
   font-weight: 600;

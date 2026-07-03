@@ -214,9 +214,7 @@ async function handleSubmit() {
 
       // 显式广播 storage 事件，通知同窗口的 App.vue 刷新用户态
       // （同窗口 storage 事件默认不触发，需要手动派发）
-      window.dispatchEvent(
-        new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.user) })
-      )
+      window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.user) }))
 
       showToast(isLogin.value ? '登录成功' : '注册成功')
       emit('auth-success', result.user)
@@ -247,9 +245,7 @@ async function quickLogin(role) {
   localStorage.setItem('auth_token', mockToken)
   localStorage.setItem('user_info', JSON.stringify(mockUsers[role]))
 
-  window.dispatchEvent(
-    new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(mockUsers[role]) })
-  )
+  window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(mockUsers[role]) }))
 
   showToast(`${role === 'admin' ? '管理员' : role === 'engineer' ? '仿真工程师' : '访客'} 登录成功`)
   emit('auth-success', mockUsers[role])

@@ -572,14 +572,14 @@ function updateChart() {
     const colors = {
       tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
       tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
-      tooltipText: isDark ? '#e2e8f0' : '#1e293b',
-      legendText: isDark ? '#94a3b8' : '#64748b',
-      axisLabel: isDark ? '#64748b' : '#64748b',
-      axisLine: isDark ? '#334155' : '#e2e8f0',
+      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b',
+      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+      axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
       splitLine: isDark ? '#1e293b' : '#f1f5f9',
       colorList: isDark
-        ? ['#2dd4bf', '#38bdf8', '#fb923c', '#a78bfa', '#f472b6']
-        : ['#14b8a6', '#0ea5e9', '#f97316', '#8b5cf6', '#ec4899']
+        ? ['#2dd4bf', '#38bdf8', 'var(--color-chart-orange)', '#a78bfa', 'var(--color-chart-pink)']
+        : ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
     }
 
     const option = {

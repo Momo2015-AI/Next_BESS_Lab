@@ -106,6 +106,15 @@
     --radius-lg: 12px;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
+    /* ── 文本叠加色 (白色文字覆盖在强调色背景上) ── */
+    --color-text-on-accent: #ffffff;
+
+    /* ── 图表扩展色板 ── */
+    --color-chart-pink: #ec4899;
+    --color-chart-orange: #ea580c;
+    --color-chart-cyan: #06b6d4;
+    --color-chart-lime: #84cc16;
+
     /* ============================================
        Section Card (Design Spec — 序号徽章 + 标题)
        ============================================ */
@@ -236,6 +245,15 @@
     --radius-md: 10px;
     --radius-lg: 14px;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* ── 文本叠加色 (暗色模式同样用纯白，保证对比度) ── */
+    --color-text-on-accent: #ffffff;
+
+    /* ── 图表扩展色板 (暗色模式提亮) ── */
+    --color-chart-pink: #f472b6;
+    --color-chart-orange: #fb923c;
+    --color-chart-cyan: #22d3ee;
+    --color-chart-lime: #84cc16;
 
     /* Section Card (dark) */
     --section-card-bg: rgba(22, 24, 31, 0.6);

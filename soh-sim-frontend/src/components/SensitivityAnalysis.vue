@@ -388,12 +388,12 @@ function updateTornadoChart() {
   const colors = {
     success: 'var(--color-success)',
     danger: 'var(--color-danger)',
-    textMuted: isDark ? '#64748b' : '#64748b',
-    legendText: isDark ? '#94a3b8' : '#64748b',
-    axisLine: isDark ? '#334155' : '#e2e8f0',
+    textMuted: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
     splitLine: isDark ? '#1e293b' : '#f1f5f9',
     tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-    tooltipText: isDark ? '#e2e8f0' : '#1e293b'
+    tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b'
   }
 
   const sortedResults = [...analysisResults.value].sort((a, b) => b.sensitivityScore - a.sensitivityScore)
@@ -467,16 +467,16 @@ function updateSpiderChart() {
   const colors = {
     npvLine: isDark ? '#2dd4bf' : '#14b8a6',
     irrLine: isDark ? '#38bdf8' : '#0ea5e9',
-    lcosLine: isDark ? '#fb923c' : '#f97316',
+    lcosLine: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
     npvArea: isDark ? 'rgba(45, 212, 191, 0.1)' : 'rgba(20, 184, 166, 0.08)',
     irrArea: isDark ? 'rgba(56, 189, 248, 0.1)' : 'rgba(14, 165, 233, 0.08)',
     lcosArea: isDark ? 'rgba(251, 146, 60, 0.1)' : 'rgba(249, 115, 22, 0.08)',
-    legendText: isDark ? '#94a3b8' : '#64748b',
-    axisLine: isDark ? '#334155' : '#e2e8f0',
+    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+    axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
     splitLine: isDark ? '#1e293b' : '#f1f5f9',
     splitArea: isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(241, 245, 249, 0.5)',
     tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-    tooltipText: isDark ? '#e2e8f0' : '#1e293b'
+    tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b'
   }
 
   const topResults = [...analysisResults.value].sort((a, b) => b.sensitivityScore - a.sensitivityScore).slice(0, 3)

@@ -165,17 +165,17 @@ const generateWaterfallData = () => {
     {
       name: '初始CAPEX',
       value: initialCapex.value,
-      itemStyle: { color: '#ef4444' }
+      itemStyle: { color: 'var(--color-danger)' }
     },
     {
       name: '年度OPEX',
       value: annualOpex.value,
-      itemStyle: { color: '#f59e0b' }
+      itemStyle: { color: 'var(--color-warning)' }
     },
     {
       name: '维护成本',
       value: maintenanceCost.value,
-      itemStyle: { color: '#eab308' }
+      itemStyle: { color: 'var(--color-warning)' }
     },
     {
       name: '保险费用',
@@ -185,7 +185,7 @@ const generateWaterfallData = () => {
     {
       name: '土地租金',
       value: landLeaseCost.value,
-      itemStyle: { color: '#06b6d4' }
+      itemStyle: { color: 'var(--color-chart-cyan)' }
     }
   ]
 
@@ -200,7 +200,7 @@ const generateWaterfallData = () => {
     stack: 'total',
     emphasis: { focus: 'series' },
     data: [baseValue],
-    itemStyle: { color: '#ef4444' },
+    itemStyle: { color: 'var(--color-danger)' },
     barWidth: '40%'
   })
 
@@ -226,7 +226,7 @@ const generateWaterfallData = () => {
     type: 'line',
     yAxisIndex: 1,
     data: [baseValue, cumulative],
-    lineStyle: { color: '#3b82f6', width: 2 },
+    lineStyle: { color: 'var(--color-accent)', width: 2 },
     symbol: 'none',
     silent: true
   })
@@ -248,7 +248,8 @@ const updateChart = () => {
       text: `Year ${selectedYear.value} Cost Structure`,
       left: 'center',
       textStyle: {
-        color: getComputedStyle(document.documentElement).getPropertyValue('--color-text') || '#64748b',
+        color:
+          getComputedStyle(document.documentElement).getPropertyValue('--color-text') || 'var(--color-text-secondary)',
         fontSize: 12,
         fontWeight: 'normal'
       }
@@ -273,7 +274,9 @@ const updateChart = () => {
       type: 'category',
       data: categories,
       axisLabel: {
-        color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
+        color:
+          getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') ||
+          'var(--color-text-secondary)',
         fontSize: 9,
         interval: 0,
         rotate: 45
@@ -284,17 +287,23 @@ const updateChart = () => {
         type: 'value',
         name: '金额 (万元)',
         nameTextStyle: {
-          color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
+          color:
+            getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') ||
+            'var(--color-text-secondary)',
           fontSize: 10
         },
         axisLabel: {
-          color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#64748b',
+          color:
+            getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') ||
+            'var(--color-text-secondary)',
           fontSize: 9,
           formatter: (value) => formatCurrency(value)
         },
         splitLine: {
           lineStyle: {
-            color: getComputedStyle(document.documentElement).getPropertyValue('--color-border') || '#e2e8f0',
+            color:
+              getComputedStyle(document.documentElement).getPropertyValue('--color-border') ||
+              'var(--color-border-light)',
             type: 'dashed'
           }
         }
@@ -303,7 +312,7 @@ const updateChart = () => {
         type: 'value',
         name: '累计线',
         nameTextStyle: {
-          color: '#3b82f6',
+          color: 'var(--color-accent)',
           fontSize: 10
         },
         axisLine: { show: false },
