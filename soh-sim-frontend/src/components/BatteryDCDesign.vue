@@ -26,11 +26,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
                 @change="onCellChange"
               >
                 <option value="">-- 请选择电芯 --</option>
@@ -52,11 +47,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -70,11 +60,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
             </div>
@@ -91,11 +76,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -109,11 +89,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
             </div>
@@ -140,11 +115,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -158,11 +128,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
             </div>
@@ -224,11 +189,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent-secondary)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
             </div>
@@ -254,11 +214,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="20ft">20ft 标准集装箱</option>
               <option value="40ft">40ft 标准集装箱</option>
@@ -276,11 +231,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -295,11 +245,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -313,11 +258,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
         </div>
@@ -348,11 +288,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -366,11 +301,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -384,11 +314,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
         </div>
@@ -413,11 +338,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -433,11 +353,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -451,11 +366,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -485,8 +395,6 @@
           <button
             class="text-xs px-3 py-1 rounded transition-colors"
             style="background-color: var(--color-accent-secondary); color: white"
-            onmouseover="this.style.opacity = '0.9'"
-            onmouseout="this.style.opacity = '1'"
             @click="calculateBatteryConfig"
           >
             计算配置
@@ -558,8 +466,6 @@
               border: 1px solid var(--color-border);
               color: var(--color-text-secondary);
             "
-            onmouseover="this.style.borderColor = 'var(--color-accent)'"
-            onmouseout="this.style.borderColor = 'var(--color-border)'"
             @click="resetBatteryConfig"
           >
             重置
@@ -567,8 +473,6 @@
           <button
             class="text-xs px-4 py-1.5 rounded font-bold transition-colors"
             style="background-color: var(--color-accent-secondary); color: white"
-            onmouseover="this.style.opacity = '0.9'"
-            onmouseout="this.style.opacity = '1'"
             @click="applyBatteryConfig"
           >
             应用配置
@@ -801,5 +705,15 @@ defineExpose({ loadFromSurvey })
 <style scoped>
 .battery-dc-design {
   height: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
 }
 </style>

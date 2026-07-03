@@ -51,17 +51,10 @@
               placeholder="输入调研表ID或扫描二维码"
               class="flex-1 rounded px-3 py-1.5 text-xs"
               style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
             <button
               class="text-xs px-3 py-1.5 rounded transition-all"
               style="background-color: var(--color-accent); color: white"
-              onmouseover="this.style.opacity = '0.9'"
-              onmouseout="this.style.opacity = '1'"
               @click="loadSurveyData"
             >
               加载
@@ -78,17 +71,10 @@
               placeholder="输入项目名称搜索"
               class="flex-1 rounded px-3 py-1.5 text-xs"
               style="background-color: var(--color-input-bg-dark); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
             <button
               class="text-xs px-3 py-1.5 rounded transition-all"
               style="background-color: var(--color-info); color: white"
-              onmouseover="this.style.opacity = '0.9'"
-              onmouseout="this.style.opacity = '1'"
               @click="searchByProjectName"
             >
               搜索
@@ -109,14 +95,6 @@
             :key="item.id"
             class="flex justify-between items-center p-2 rounded cursor-pointer transition-all mb-1"
             style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-            onmouseover="
-              this.style.backgroundColor = 'var(--color-step-active)'
-              this.style.borderColor = 'var(--color-accent)'
-            "
-            onmouseout="
-              this.style.backgroundColor = 'var(--color-card)'
-              this.style.borderColor = 'var(--color-border)'
-            "
             @click="selectSurvey(item)"
           >
             <div>
@@ -150,11 +128,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -171,11 +144,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -192,11 +160,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -214,11 +177,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -236,11 +194,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -260,11 +213,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -284,11 +232,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
         <div
@@ -304,11 +247,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           >
             <option value="LFP">LFP (磷酸铁锂)</option>
             <option value="NCM">NCM (三元锂)</option>
@@ -329,11 +267,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-accent);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-input-focus)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
           />
         </div>
       </div>
@@ -342,8 +275,6 @@
         <button
           class="text-xs px-4 py-2 rounded transition-all"
           style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="nextStep"
         >
           下一步：补全仿真参数
@@ -374,11 +305,6 @@
                 v-model.number="simParams.simulationYears"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
                 @change="initYearlyCorrections"
               >
                 <option value="10">10年</option>
@@ -394,11 +320,6 @@
                 v-model.number="simParams.guaranteeYears"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               >
                 <option value="5">5年</option>
                 <option value="10">10年</option>
@@ -416,11 +337,6 @@
                 max="90"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -431,11 +347,6 @@
                 step="1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -457,11 +368,6 @@
                 max="95"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -474,11 +380,6 @@
                 max="99"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -491,11 +392,6 @@
                 max="99"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -508,11 +404,6 @@
                 max="5"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -532,11 +423,6 @@
                 step="0.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -547,11 +433,6 @@
                 step="0.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -562,11 +443,6 @@
                 step="0.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -577,11 +453,6 @@
                 step="0.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -596,8 +467,6 @@
             color: var(--color-text);
             border: 1px solid var(--color-border);
           "
-          onmouseover="this.style.backgroundColor = 'var(--color-tab-hover)'"
-          onmouseout="this.style.backgroundColor = 'var(--color-card-dark)'"
           @click="prevStep"
         >
           上一步
@@ -605,8 +474,6 @@
         <button
           class="text-xs px-4 py-2 rounded transition-all"
           style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="nextStep"
         >
           下一步：选择仿真算法
@@ -699,11 +566,6 @@
               :max="param.max"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
         </div>
@@ -726,11 +588,6 @@
               v-model="aiSimParams.manufacturerId"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="">选择厂家（使用通用模型）</option>
               <option v-for="mfr in manufacturers" :key="mfr.id" :value="mfr.id">
@@ -747,11 +604,6 @@
               max="40"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -764,11 +616,6 @@
               max="60"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -781,11 +628,6 @@
               max="3"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -798,11 +640,6 @@
               max="100"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
           <div>
@@ -815,11 +652,6 @@
               max="2"
               class="w-full rounded px-2 py-1 text-xs"
               style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-              onfocus="
-                this.style.borderColor = 'var(--color-input-focus)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
         </div>
@@ -855,8 +687,6 @@
             color: var(--color-text);
             border: 1px solid var(--color-border);
           "
-          onmouseover="this.style.backgroundColor = 'var(--color-tab-hover)'"
-          onmouseout="this.style.backgroundColor = 'var(--color-card-dark)'"
           @click="prevStep"
         >
           上一步
@@ -864,8 +694,6 @@
         <button
           class="text-xs px-4 py-2 rounded transition-all"
           style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="nextStep"
         >
           下一步：校正因子设置
@@ -900,11 +728,6 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
               <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">范围: 0.9-1.1，默认1.0</p>
             </div>
@@ -918,11 +741,6 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
               <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">范围: 0.9-1.1，默认1.0</p>
             </div>
@@ -936,11 +754,6 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
               <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">范围: 0.9-1.1，默认1.0</p>
             </div>
@@ -954,11 +767,6 @@
                 max="1.5"
                 class="w-full rounded px-2 py-1 text-xs"
                 style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                onfocus="
-                  this.style.borderColor = 'var(--color-input-focus)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
               <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">范围: 1.0-1.5，默认1.0</p>
             </div>
@@ -995,11 +803,6 @@
                       step="0.001"
                       class="w-16 rounded px-1 py-0.5 text-xs"
                       style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                      onfocus="
-                        this.style.borderColor = 'var(--color-input-focus)'
-                        this.style.outline = 'none'
-                      "
-                      onblur="this.style.borderColor = 'var(--color-input-border)'"
                     />
                   </td>
                   <td class="py-1 px-2">
@@ -1009,11 +812,6 @@
                       step="0.001"
                       class="w-16 rounded px-1 py-0.5 text-xs"
                       style="background-color: var(--color-input-bg); border: 1px solid var(--color-input-border)"
-                      onfocus="
-                        this.style.borderColor = 'var(--color-input-focus)'
-                        this.style.outline = 'none'
-                      "
-                      onblur="this.style.borderColor = 'var(--color-input-border)'"
                     />
                   </td>
                 </tr>
@@ -1046,8 +844,6 @@
             color: var(--color-text);
             border: 1px solid var(--color-border);
           "
-          onmouseover="this.style.backgroundColor = 'var(--color-tab-hover)'"
-          onmouseout="this.style.backgroundColor = 'var(--color-card-dark)'"
           @click="prevStep"
         >
           上一步
@@ -1095,8 +891,6 @@
         <button
           class="text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1"
           style="background-color: var(--color-info); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="saveSimulationResult"
         >
           <span>💾</span>
@@ -1214,8 +1008,6 @@
             color: var(--color-text);
             border: 1px solid var(--color-border);
           "
-          onmouseover="this.style.backgroundColor = 'var(--color-tab-hover)'"
-          onmouseout="this.style.backgroundColor = 'var(--color-card-dark)'"
           @click="resetSimulation"
         >
           重新仿真
@@ -1223,8 +1015,6 @@
         <button
           class="text-xs px-4 py-2 rounded transition-all"
           style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="exportResults"
         >
           导出结果
@@ -1996,3 +1786,16 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

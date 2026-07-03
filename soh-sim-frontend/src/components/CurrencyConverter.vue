@@ -95,8 +95,6 @@
           <button
             class="text-[9px] px-2 py-1 rounded transition-colors"
             style="background-color: var(--color-accent); color: white"
-            onmouseover="this.style.opacity = '0.9'"
-            onmouseout="this.style.opacity = '1'"
             @click="refreshRates"
           >
             刷新 Refresh
@@ -303,3 +301,16 @@ onUnmounted(() => {
 // 监听货币变化
 watch([baseCurrency, targetCurrency], updateRates)
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

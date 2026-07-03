@@ -25,15 +25,6 @@
                     color: 'var(--color-text)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('ratedEnergy', Number($event.target.value), validationRules.ratedEnergy)"
           />
           <p v-if="errors.ratedEnergy" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -61,15 +52,6 @@
                     border: '1px solid var(--color-input-border)',
                     color: 'var(--color-text)'
                   }
-            "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
             "
             @input="
               validateAndUpdate('initContainerQty', Number($event.target.value), validationRules.initContainerQty)
@@ -99,15 +81,6 @@
                     color: 'var(--color-text)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('initPcsQty', Number($event.target.value), validationRules.initPcsQty)"
           />
           <p v-if="errors.initPcsQty" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -133,15 +106,6 @@
                     border: '1px solid var(--color-input-border)',
                     color: 'var(--color-text)'
                   }
-            "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
             "
             @input="validateAndUpdate('duration', Number($event.target.value), validationRules.duration)"
           />
@@ -169,15 +133,6 @@
                     color: 'var(--color-text)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('cyclesPerDay', Number($event.target.value), validationRules.cyclesPerDay)"
           />
           <p v-if="errors.cyclesPerDay" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -203,15 +158,6 @@
                     border: '1px solid var(--color-input-border)',
                     color: 'var(--color-text)'
                   }
-            "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
             "
             @input="validateAndUpdate('acEfficiency', Number($event.target.value), validationRules.acEfficiency)"
           />
@@ -247,15 +193,6 @@
                     color: 'var(--color-warning)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('bessAuxRun', Number($event.target.value), validationRules.bessAuxRun)"
           />
           <p v-if="errors.bessAuxRun" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -281,15 +218,6 @@
                     border: '1px solid var(--color-input-border)',
                     color: 'var(--color-warning)'
                   }
-            "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
             "
             @input="validateAndUpdate('bessAuxStandby', Number($event.target.value), validationRules.bessAuxStandby)"
           />
@@ -317,15 +245,6 @@
                     color: 'var(--color-warning)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('pcsAuxRun', Number($event.target.value), validationRules.pcsAuxRun)"
           />
           <p v-if="errors.pcsAuxRun" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -351,15 +270,6 @@
                     border: '1px solid var(--color-input-border)',
                     color: 'var(--color-warning)'
                   }
-            "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
             "
             @input="validateAndUpdate('pcsAuxStandby', Number($event.target.value), validationRules.pcsAuxStandby)"
           />
@@ -529,8 +439,6 @@
         <button
           class="mt-3 text-xs px-4 py-2 rounded transition-colors"
           style="background-color: var(--color-accent); color: white"
-          onmouseover="this.style.opacity = '0.9'"
-          onmouseout="this.style.opacity = '1'"
           @click="autoMatchPCS"
         >
           根据配置规则自动匹配PCS
@@ -615,15 +523,6 @@
                     color: 'var(--color-text)'
                   }
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent)'
-              this.style.outline = 'none'
-            "
-            onblur="
-              this.style.borderColor = this.classList.contains('border-red-500')
-                ? 'var(--color-danger)'
-                : 'var(--color-input-border)'
-            "
             @input="validateAndUpdate('requiredEnergy', Number($event.target.value), validationRules.requiredEnergy)"
           />
           <p v-if="errors.requiredEnergy" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -699,3 +598,16 @@ const autoMatchPCS = () => {
   emit('update', 'initPcsQty', pcsQty)
 }
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

@@ -26,11 +26,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('cells')" :key="m" :value="m">
@@ -44,8 +39,6 @@
                 border: 1px solid var(--color-accent);
                 color: var(--color-accent-secondary);
               "
-              onmouseover="this.style.backgroundColor = 'var(--color-accent-dark)'"
-              onmouseout="this.style.backgroundColor = 'var(--color-accent-glow)'"
               @click="openAddModal('cell')"
             >
               + 新增电芯
@@ -62,21 +55,11 @@
                 ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
                 : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
             "
-            onmouseover="
-              if (this.style.borderColor !== 'var(--color-accent-secondary)')
-                this.style.borderColor = 'var(--color-input-border)'
-            "
-            onmouseout="
-              if (this.style.borderColor !== 'var(--color-accent-secondary)')
-                this.style.borderColor = 'var(--color-border)'
-            "
             @click="selectedCell = cell.id"
           >
             <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
               style="color: var(--color-text-muted)"
-              onmouseover="this.style.color = 'var(--color-danger)'"
-              onmouseout="this.style.color = 'var(--color-text-muted)'"
               @click.stop="deleteItem('cells', cell.id)"
             >
               ×
@@ -144,11 +127,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('containers')" :key="m" :value="m">
@@ -162,8 +140,6 @@
                 border: 1px solid var(--color-warning);
                 color: var(--color-warning);
               "
-              onmouseover="this.style.backgroundColor = 'rgba(234, 179, 8, 0.2)'"
-              onmouseout="this.style.backgroundColor = 'var(--color-warning-glow)'"
               @click="openAddModal('container')"
             >
               + 新增集装箱
@@ -180,20 +156,11 @@
                 ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' }
                 : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
             "
-            onmouseover="
-              if (this.style.borderColor !== 'var(--color-warning)')
-                this.style.borderColor = 'var(--color-input-border)'
-            "
-            onmouseout="
-              if (this.style.borderColor !== 'var(--color-warning)') this.style.borderColor = 'var(--color-border)'
-            "
             @click="selectedContainer = c.id"
           >
             <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
               style="color: var(--color-text-muted)"
-              onmouseover="this.style.color = 'var(--color-danger)'"
-              onmouseout="this.style.color = 'var(--color-text-muted)'"
               @click.stop="deleteItem('containers', c.id)"
             >
               ×
@@ -255,11 +222,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('pcs')" :key="m" :value="m">
@@ -274,11 +236,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             >
               <option value="0">全部功率</option>
               <option value="1.25">1.25 MW</option>
@@ -293,8 +250,6 @@
                 border: 1px solid var(--color-accent);
                 color: var(--color-accent);
               "
-              onmouseover="this.style.backgroundColor = 'var(--color-accent-dark)'"
-              onmouseout="this.style.backgroundColor = 'var(--color-accent-glow)'"
               @click="openAddModal('pcs')"
             >
               + 新增 PCS
@@ -311,19 +266,11 @@
                 ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
                 : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
             "
-            onmouseover="
-              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-input-border)'
-            "
-            onmouseout="
-              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-border)'
-            "
             @click="selectedPcs = p.id"
           >
             <button
               class="absolute top-1 right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
               style="color: var(--color-text-muted)"
-              onmouseover="this.style.color = 'var(--color-danger)'"
-              onmouseout="this.style.color = 'var(--color-text-muted)'"
               @click.stop="deleteItem('pcs', p.id)"
             >
               ×
@@ -384,12 +331,6 @@
               selectedCabinet === c.id
                 ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
                 : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
-            onmouseover="
-              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-input-border)'
-            "
-            onmouseout="
-              if (this.style.borderColor !== 'var(--color-accent)') this.style.borderColor = 'var(--color-border)'
             "
           >
             <div class="flex justify-between items-start mb-1">
@@ -457,14 +398,6 @@
                 ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
                 : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
             "
-            onmouseover="
-              if (this.style.borderColor !== 'var(--color-accent-secondary)')
-                this.style.borderColor = 'var(--color-input-border)'
-            "
-            onmouseout="
-              if (this.style.borderColor !== 'var(--color-accent-secondary)')
-                this.style.borderColor = 'var(--color-border)'
-            "
             @click="applyScenario(s)"
           >
             <div class="text-xs font-bold mb-1" style="color: var(--color-text)">
@@ -503,8 +436,6 @@
             <button
               class="text-xs px-6 py-1.5 rounded shadow-md transition-all active:scale-95"
               style="background-color: var(--color-accent-secondary); color: white"
-              onmouseover="this.style.opacity = '0.9'"
-              onmouseout="this.style.opacity = '1'"
               @click="applyToSimulation"
             >
               应用至仿真参数 Apply to Simulation
@@ -539,11 +470,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -556,11 +482,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -573,11 +494,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -591,11 +507,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -610,11 +521,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -628,11 +534,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -645,11 +546,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -662,11 +558,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
               </div>
@@ -683,11 +574,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -700,11 +586,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -718,11 +599,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -737,11 +613,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -756,11 +627,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -775,11 +641,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -793,11 +654,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -811,11 +667,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -828,11 +679,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -847,11 +693,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
               </div>
@@ -868,11 +709,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -885,11 +721,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -904,11 +735,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -923,11 +749,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -940,11 +761,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -957,11 +773,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
                 <div>
@@ -974,11 +785,6 @@
                       border: 1px solid var(--color-input-border);
                       color: var(--color-text);
                     "
-                    onfocus="
-                      this.style.borderColor = 'var(--color-accent)'
-                      this.style.outline = 'none'
-                    "
-                    onblur="this.style.borderColor = 'var(--color-input-border)'"
                   />
                 </div>
               </div>
@@ -1001,8 +807,6 @@
                     border: 1px solid var(--color-border);
                     color: var(--color-text-secondary);
                   "
-                  onmouseover="this.style.borderColor = 'var(--color-accent)'"
-                  onmouseout="this.style.borderColor = 'var(--color-border)'"
                   @click="$refs.specInput.click()"
                 >
                   上传规格书
@@ -1015,20 +819,12 @@
             </div>
           </div>
           <div class="flex justify-end gap-2 mt-4 pt-3 border-t" style="border-color: var(--color-border)">
-            <button
-              class="text-xs px-3 py-1.5"
-              style="color: var(--color-text-muted)"
-              onmouseover="this.style.color = 'var(--color-text-secondary)'"
-              onmouseout="this.style.color = 'var(--color-text-muted)'"
-              @click="showModal = false"
-            >
+            <button class="text-xs px-3 py-1.5" style="color: var(--color-text-muted)" @click="showModal = false">
               取消
             </button>
             <button
               class="text-xs px-4 py-1.5 rounded transition-colors"
               style="background-color: var(--color-accent-secondary); color: white"
-              onmouseover="this.style.opacity = '0.9'"
-              onmouseout="this.style.opacity = '1'"
               @click="saveProduct"
             >
               保存
@@ -1457,3 +1253,16 @@ onMounted(() => {
   loadLibraryData()
 })
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

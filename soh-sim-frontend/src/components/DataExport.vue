@@ -42,14 +42,12 @@
 
           <button
             :disabled="exporting"
-            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
             :style="
               exporting
                 ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
                 : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }
             "
-            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
-            onmouseout="if (!this.disabled) this.style.opacity = '1'"
             @click="exportCSV"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -65,14 +63,12 @@
 
           <button
             :disabled="exporting"
-            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
             :style="
               exporting
                 ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
                 : { backgroundColor: 'var(--color-accent)', color: 'white' }
             "
-            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
-            onmouseout="if (!this.disabled) this.style.opacity = '1'"
             @click="exportPNG"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -88,14 +84,12 @@
 
           <button
             :disabled="saving"
-            class="w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
+            class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
             :style="
               saving
                 ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
                 : { backgroundColor: 'var(--color-warning)', color: 'white' }
             "
-            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
-            onmouseout="if (!this.disabled) this.style.opacity = '1'"
             @click="saveSimulation"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,15 +109,7 @@
       <div class="mt-4 pt-4 border-t" style="border-color: var(--color-border)">
         <div class="flex items-center justify-between mb-3">
           <span class="text-xs" style="color: var(--color-text-muted)">历史仿真记录</span>
-          <button
-            class="text-xs"
-            style="color: var(--color-accent-secondary)"
-            onmouseover="this.style.color = 'var(--color-accent)'"
-            onmouseout="this.style.color = 'var(--color-accent-secondary)'"
-            @click="loadSimulations"
-          >
-            刷新
-          </button>
+          <button class="link-btn text-xs" @click="loadSimulations">刷新</button>
         </div>
 
         <div v-if="simulations.length === 0" class="text-xs text-center py-2" style="color: var(--color-text-muted)">
@@ -142,20 +128,8 @@
               <span style="color: var(--color-text-muted)" class="ml-2">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
-              <button
-                style="color: var(--color-accent-secondary)"
-                onmouseover="this.style.color = 'var(--color-accent)'"
-                onmouseout="this.style.color = 'var(--color-accent-secondary)'"
-                @click="loadSimulation(sim.id)"
-              >
-                加载
-              </button>
-              <button
-                style="color: var(--color-accent)"
-                onmouseover="this.style.color = 'var(--color-accent-secondary)'"
-                onmouseout="this.style.color = 'var(--color-accent)'"
-                @click="exportSimulationCSV(sim.id)"
-              >
+              <button class="link-btn" @click="loadSimulation(sim.id)">加载</button>
+              <button class="link-btn" style="color: var(--color-accent)" @click="exportSimulationCSV(sim.id)">
                 导出
               </button>
             </div>
@@ -438,5 +412,22 @@ loadSimulations()
 <style scoped>
 .export-panel {
   height: 100%;
+}
+
+.export-action-btn:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.link-btn {
+  color: var(--color-accent-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-btn:hover {
+  color: var(--color-accent);
 }
 </style>

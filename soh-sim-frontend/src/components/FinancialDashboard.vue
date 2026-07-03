@@ -81,11 +81,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -100,11 +95,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -119,11 +109,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -138,11 +123,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -157,11 +137,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -176,11 +151,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -195,11 +165,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -214,11 +179,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -246,11 +206,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -265,11 +220,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -284,11 +234,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -303,11 +248,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -322,11 +262,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -341,11 +276,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -360,11 +290,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -379,11 +304,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -398,11 +318,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -417,11 +332,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -436,11 +346,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -455,11 +360,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -490,11 +390,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -509,11 +404,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -528,11 +418,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -547,11 +432,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -566,11 +446,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -585,11 +460,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -604,11 +474,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -623,11 +488,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -642,11 +502,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -689,11 +544,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -708,11 +558,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -727,11 +572,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <div>
@@ -746,11 +586,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -794,11 +629,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -822,8 +652,6 @@
           <button
             class="text-[10px] px-3 py-1 rounded transition-colors"
             style="background-color: var(--color-accent); color: white"
-            onmouseover="this.style.opacity = '0.9'"
-            onmouseout="this.style.opacity = '1'"
             @click="recalc"
           >
             重新计算 Recalculate
@@ -1844,3 +1672,16 @@ _resizeHandler = () => {
 }
 window.addEventListener('resize', _resizeHandler)
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

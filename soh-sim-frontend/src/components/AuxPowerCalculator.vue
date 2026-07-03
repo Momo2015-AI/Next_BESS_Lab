@@ -72,11 +72,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
             <input
@@ -91,11 +86,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
           </div>
         </div>
@@ -130,11 +120,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -170,11 +155,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -210,11 +190,6 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
               />
             </div>
           </div>
@@ -534,3 +509,16 @@ const statusText = computed(() => {
   return '跌破年化保底红线！'
 })
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

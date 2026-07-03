@@ -15,8 +15,6 @@
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
               style="background-color: var(--color-accent); color: white"
-              onmouseover="this.style.opacity = '0.9'"
-              onmouseout="this.style.opacity = '1'"
               @click="createScenario"
             >
               + 新建
@@ -37,12 +35,7 @@
               <div class="flex items-center justify-between">
                 <span style="color: var(--color-text-secondary)" @click="selectScenario(idx)">{{ scenario.name }}</span>
                 <div class="flex gap-1">
-                  <button
-                    style="color: var(--color-text-muted)"
-                    onmouseover="this.style.color = 'var(--color-accent)'"
-                    onmouseout="this.style.color = 'var(--color-text-muted)'"
-                    @click.stop="editScenario(idx)"
-                  >
+                  <button style="color: var(--color-text-muted)" @click.stop="editScenario(idx)">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -52,12 +45,7 @@
                       />
                     </svg>
                   </button>
-                  <button
-                    style="color: var(--color-text-muted)"
-                    onmouseover="this.style.color = 'var(--color-danger)'"
-                    onmouseout="this.style.color = 'var(--color-text-muted)'"
-                    @click.stop="deleteScenario(idx)"
-                  >
+                  <button style="color: var(--color-text-muted)" @click.stop="deleteScenario(idx)">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -96,19 +84,12 @@
                   border: 1px solid var(--color-input-border);
                   color: var(--color-text);
                 "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
                 placeholder="场景名称"
               />
               <div class="flex gap-2">
                 <button
                   class="text-xs px-3 py-1 rounded transition-colors"
                   style="background-color: var(--color-accent); color: white"
-                  onmouseover="this.style.opacity = '0.9'"
-                  onmouseout="this.style.opacity = '1'"
                   @click="saveScenario"
                 >
                   保存
@@ -120,8 +101,6 @@
                     border: 1px solid var(--color-border);
                     color: var(--color-text-secondary);
                   "
-                  onmouseover="this.style.borderColor = 'var(--color-accent)'"
-                  onmouseout="this.style.borderColor = 'var(--color-border)'"
                   @click="cancelEdit"
                 >
                   取消
@@ -141,11 +120,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -159,11 +133,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -177,11 +146,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -195,11 +159,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -213,11 +172,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -231,11 +185,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -249,11 +198,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -267,11 +211,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div>
@@ -285,11 +224,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
             </div>
@@ -310,8 +244,6 @@
               <button
                 class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
                 style="background-color: var(--color-accent-secondary); color: white"
-                onmouseover="this.style.opacity = '0.9'"
-                onmouseout="this.style.opacity = '1'"
                 @click="useAsBase"
               >
                 设为基准
@@ -721,5 +653,15 @@ onUnmounted(() => {
 <style scoped>
 .scenario-compare {
   height: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
 }
 </style>

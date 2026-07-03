@@ -43,11 +43,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
                 <span class="text-xs" style="color: var(--color-text-muted)">至</span>
                 <input
@@ -60,11 +55,6 @@
                     border: 1px solid var(--color-input-border);
                     color: var(--color-text);
                   "
-                  onfocus="
-                    this.style.borderColor = 'var(--color-accent)'
-                    this.style.outline = 'none'
-                  "
-                  onblur="this.style.borderColor = 'var(--color-input-border)'"
                 />
               </div>
               <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">当前值: {{ param.current }}</div>
@@ -84,11 +74,6 @@
                 border: 1px solid var(--color-input-border);
                 color: var(--color-text);
               "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
             />
             <span class="text-xs" style="color: var(--color-text-muted)">(3-10步)</span>
             <button
@@ -584,5 +569,15 @@ onUnmounted(() => {
 <style scoped>
 .sensitivity-analysis {
   height: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
 }
 </style>

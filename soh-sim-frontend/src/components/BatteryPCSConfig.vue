@@ -20,11 +20,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-text);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent-secondary)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
             @change="onContainerChange"
           >
             <option value="">请选择集装箱型号</option>
@@ -50,11 +45,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-text);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent-secondary)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
             placeholder="输入目标总能量"
             @change="autoCalcQty"
           />
@@ -83,11 +73,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-text);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent-secondary)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
             @change="onPCSChange"
           >
             <option value="">请选择PCS型号</option>
@@ -113,11 +98,6 @@
               border: 1px solid var(--color-input-border);
               color: var(--color-text);
             "
-            onfocus="
-              this.style.borderColor = 'var(--color-accent-secondary)'
-              this.style.outline = 'none'
-            "
-            onblur="this.style.borderColor = 'var(--color-input-border)'"
             placeholder="输入目标总功率"
             @change="autoCalcQty"
           />
@@ -300,8 +280,6 @@
               v-for="(scheme, idx) in recommendedSchemes"
               :key="idx"
               style="border-bottom: 1px solid var(--color-border)"
-              onmouseover="this.style.backgroundColor = 'var(--color-card-dark)'"
-              onmouseout="this.style.backgroundColor = 'transparent'"
             >
               <td class="py-2 px-3" style="color: var(--color-text-muted)">
                 {{ scheme.id }}
@@ -323,8 +301,6 @@
                 <button
                   class="text-[10px] px-2 py-1 rounded transition-all"
                   style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary)"
-                  onmouseover="this.style.backgroundColor = 'var(--color-accent-dark)'"
-                  onmouseout="this.style.backgroundColor = 'var(--color-accent-glow)'"
                   @click="applyScheme(scheme)"
                 >
                   应用
@@ -344,8 +320,6 @@
           border: 1px solid var(--color-border);
           color: var(--color-text-secondary);
         "
-        onmouseover="this.style.borderColor = 'var(--color-accent)'"
-        onmouseout="this.style.borderColor = 'var(--color-border)'"
         @click="resetConfig"
       >
         重置配置
@@ -353,8 +327,6 @@
       <button
         class="text-xs px-6 py-2 rounded font-bold transition-colors"
         style="background-color: var(--color-accent-secondary); color: white"
-        onmouseover="this.style.opacity = '0.9'"
-        onmouseout="this.style.opacity = '1'"
         @click="applyConfig"
       >
         应用到仿真参数
@@ -1243,3 +1215,16 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<style scoped>
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+</style>

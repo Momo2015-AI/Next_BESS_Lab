@@ -1,7 +1,6 @@
 <template>
   <div class="auth-panel h-full flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-      <!-- 登录/注册表单 -->
       <div
         class="rounded-xl p-6 shadow-2xl"
         style="background-color: var(--color-card); border: 1px solid var(--color-border)"
@@ -18,44 +17,12 @@
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div>
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">用户名 / 邮箱</label>
-            <input
-              v-model="form.username"
-              type="text"
-              required
-              class="w-full rounded-lg px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
-              placeholder="输入用户名或邮箱"
-            />
+            <input v-model="form.username" type="text" required class="form-input" placeholder="输入用户名或邮箱" />
           </div>
 
           <div v-if="!isLogin">
             <label class="block text-xs mb-1" style="color: var(--color-text-muted)">邮箱</label>
-            <input
-              v-model="form.email"
-              type="email"
-              required
-              class="w-full rounded-lg px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-              onfocus="
-                this.style.borderColor = 'var(--color-accent-secondary)'
-                this.style.outline = 'none'
-              "
-              onblur="this.style.borderColor = 'var(--color-input-border)'"
-              placeholder="输入邮箱地址"
-            />
+            <input v-model="form.email" type="email" required class="form-input" placeholder="输入邮箱地址" />
           </div>
 
           <div>
@@ -65,27 +32,10 @@
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="w-full rounded-lg px-3 py-2 text-sm"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
-                onfocus="
-                  this.style.borderColor = 'var(--color-accent-secondary)'
-                  this.style.outline = 'none'
-                "
-                onblur="this.style.borderColor = 'var(--color-input-border)'"
+                class="form-input"
                 placeholder="输入密码"
               />
-              <button
-                type="button"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
-                style="color: var(--color-text-muted)"
-                onmouseover="this.style.color = 'var(--color-text-secondary)'"
-                onmouseout="this.style.color = 'var(--color-text-muted)'"
-                @click="showPassword = !showPassword"
-              >
+              <button type="button" class="toggle-password-btn" @click="showPassword = !showPassword">
                 <svg v-if="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -122,56 +72,28 @@
             />
             <span class="text-xs" style="color: var(--color-text-muted)">
               我已阅读并同意
-              <a
-                href="#"
-                style="color: var(--color-accent-secondary)"
-                onmouseover="this.style.textDecoration = 'underline'"
-                onmouseout="this.style.textDecoration = 'none'"
-              >
-                服务条款
-              </a>
+              <a href="#" class="terms-link">服务条款</a>
               和
-              <a
-                href="#"
-                style="color: var(--color-accent-secondary)"
-                onmouseover="this.style.textDecoration = 'underline'"
-                onmouseout="this.style.textDecoration = 'none'"
-              >
-                隐私政策
-              </a>
+              <a href="#" class="terms-link">隐私政策</a>
             </span>
           </div>
 
           <button
             type="submit"
             :disabled="loading || (!isLogin && !agreedToTerms)"
-            class="w-full font-bold text-sm py-2 rounded-lg transition-all shadow-lg"
-            :style="
-              loading || (!isLogin && !agreedToTerms)
-                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
-                : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }
-            "
-            onmouseover="if (!this.disabled) this.style.opacity = '0.9'"
-            onmouseout="if (!this.disabled) this.style.opacity = '1'"
+            class="submit-btn"
+            :class="{ active: !loading && (isLogin || agreedToTerms) }"
           >
             {{ loading ? '处理中...' : isLogin ? '登 录' : '注 册' }}
           </button>
 
           <div class="text-center">
-            <button
-              type="button"
-              class="text-xs"
-              style="color: var(--color-accent-secondary)"
-              onmouseover="this.style.color = 'var(--color-accent)'"
-              onmouseout="this.style.color = 'var(--color-accent-secondary)'"
-              @click="switchMode"
-            >
+            <button type="button" class="switch-mode-btn" @click="switchMode">
               {{ isLogin ? '还没有账号？立即注册' : '已有账号？立即登录' }}
             </button>
           </div>
         </form>
 
-        <!-- 错误提示 -->
         <div
           v-if="errorMessage"
           class="mt-4 p-3 rounded-lg"
@@ -183,57 +105,19 @@
         </div>
       </div>
 
-      <!-- 快捷登录（演示用） -->
       <div
         class="mt-4 p-3 rounded-lg"
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
         <div class="text-xs text-center mb-2" style="color: var(--color-text-muted)">快捷体验（无需注册）</div>
         <div class="flex gap-2">
-          <button
-            class="flex-1 text-xs py-1.5 rounded transition-colors"
-            style="
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-            "
-            onmouseover="this.style.borderColor = 'var(--color-accent)'"
-            onmouseout="this.style.borderColor = 'var(--color-border)'"
-            @click="quickLogin('admin')"
-          >
-            管理员
-          </button>
-          <button
-            class="flex-1 text-xs py-1.5 rounded transition-colors"
-            style="
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-            "
-            onmouseover="this.style.borderColor = 'var(--color-accent)'"
-            onmouseout="this.style.borderColor = 'var(--color-border)'"
-            @click="quickLogin('engineer')"
-          >
-            仿真工程师
-          </button>
-          <button
-            class="flex-1 text-xs py-1.5 rounded transition-colors"
-            style="
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-            "
-            onmouseover="this.style.borderColor = 'var(--color-accent)'"
-            onmouseout="this.style.borderColor = 'var(--color-border)'"
-            @click="quickLogin('guest')"
-          >
-            访客
-          </button>
+          <button class="quick-login-btn" @click="quickLogin('admin')">管理员</button>
+          <button class="quick-login-btn" @click="quickLogin('engineer')">仿真工程师</button>
+          <button class="quick-login-btn" @click="quickLogin('guest')">访客</button>
         </div>
       </div>
     </div>
 
-    <!-- Toast提示 -->
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
@@ -423,5 +307,112 @@ defineExpose({ checkAuth, getCurrentUser, logout, getToken })
 <style scoped>
 .auth-panel {
   height: 100%;
+}
+
+.form-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  background-color: var(--color-input-bg-dark);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--color-accent-secondary);
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toggle-password-btn:hover {
+  color: var(--color-text-secondary);
+}
+
+.terms-link {
+  color: var(--color-accent-secondary);
+  text-decoration: none;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+.submit-btn {
+  width: 100%;
+  font-weight: bold;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: none;
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.submit-btn.active {
+  background-color: var(--color-accent-secondary);
+  color: white;
+}
+
+.submit-btn:disabled {
+  cursor: not-allowed;
+}
+
+.submit-btn:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.switch-mode-btn {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--color-accent-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.switch-mode-btn:hover {
+  color: var(--color-accent);
+}
+
+.quick-login-btn {
+  flex: 1;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.375rem 0;
+  border-radius: 0.25rem;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quick-login-btn:hover {
+  border-color: var(--color-accent);
 }
 </style>
