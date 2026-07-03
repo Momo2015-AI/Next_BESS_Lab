@@ -4,44 +4,33 @@
       <h1>报告输出</h1>
       <p>生成仿真报告、导出 PDF/Excel</p>
     </div>
-    <div class="placeholder">
-      <p class="text-lg mb-2" style="color: var(--color-text-muted)">报告生成功能开发中</p>
-      <p style="color: var(--color-text-secondary); font-size: 14px">
+    <SectionCard number="00" title="报告生成" subtitle="功能开发中">
+      <p class="placeholder-text">
         请前往
-        <router-link to="/phase2" style="color: var(--color-accent)">Phase 2 分析页</router-link>
+        <router-link to="/phase2" class="inline-link">Phase 2 分析页</router-link>
         查看仿真结果，或使用
-        <router-link to="/tools/simulation-view" style="color: var(--color-accent)">仿真分析</router-link>
+        <router-link to="/tools/simulation-view" class="inline-link">仿真分析</router-link>
         运行仿真后导出 CSV。
       </p>
-    </div>
+    </SectionCard>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import SectionCard from '../components/SectionCard.vue'
+</script>
 
 <style scoped>
-.tool-page {
-  padding: 24px;
-}
-.tool-header {
-  margin-bottom: 24px;
-}
-.tool-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: var(--color-text);
-}
-.tool-header p {
-  color: #666;
+.placeholder-text {
+  color: var(--color-text-muted);
   font-size: 14px;
-  margin: 0;
-}
-.placeholder {
-  background: var(--color-card);
-  border-radius: 12px;
-  padding: 48px 24px;
   text-align: center;
-  border: 1px dashed var(--color-border);
+  padding: 16px 0;
 }
+.inline-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.inline-link:hover { text-decoration: underline; }
 </style>

@@ -52,43 +52,4 @@ const steps = [
 </script>
 
 <style scoped>
-.phase-page {
-  padding: 24px;
-}
-.phase-header {
-  margin-bottom: 24px;
-}
-.phase-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-}
-.phase-desc {
-  color: var(--text-secondary, #666);
-  font-size: 14px;
-  margin: 0;
-}
-.steps-nav {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.steps-nav button {
-  padding: 8px 16px;
-  border: 1px solid var(--border, #ddd);
-  border-radius: 6px;
-  background: var(--bg, #fff);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.steps-nav button.active {
-  background: var(--color-accent);
-  color: white;
-  border-color: var(--color-accent);
-}
-.step-content {
-  min-height: 400px;
-}
 </style>

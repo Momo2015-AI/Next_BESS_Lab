@@ -18,7 +18,7 @@
           <h3>成本汇总 (CAPEX + OPEX)</h3>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text)">CAPEX</h4>
+              <h4 class="text-sm font-bold mb-2 section-title">CAPEX</h4>
               <label>
                 设备采购 (USD)
                 <input v-model.number="store.financial.capex.equipment" type="number" />
@@ -31,12 +31,12 @@
                 前期开发 (USD)
                 <input v-model.number="store.financial.capex.development" type="number" />
               </label>
-              <div class="mt-2 text-sm font-bold" style="color: var(--color-accent)">
+              <div class="total-capex">
                 总 CAPEX: ${{ totalCapex.toLocaleString() }}
               </div>
             </div>
             <div>
-              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text)">OPEX</h4>
+              <h4 class="text-sm font-bold mb-2 section-title">OPEX</h4>
               <label>
                 固定 O&M ($/MW-yr)
                 <input v-model.number="store.financial.opex.fixedOpexPerMw" type="number" step="100" />
@@ -60,7 +60,7 @@
           <h3>收入模型与融资</h3>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text)">融资参数</h4>
+              <h4 class="text-sm font-bold mb-2 section-title">融资参数</h4>
               <label>
                 贷款比例 (%)
                 <input v-model.number="store.financial.financing.debtRatio" type="number" step="1" />
@@ -75,7 +75,7 @@
               </label>
             </div>
             <div>
-              <h4 class="text-sm font-bold mb-2" style="color: var(--color-text)">税收与折旧</h4>
+              <h4 class="text-sm font-bold mb-2 section-title">税收与折旧</h4>
               <label>
                 所得税率 (%)
                 <input v-model.number="store.financial.tax.corporateTaxRate" type="number" step="0.5" />
@@ -137,68 +137,61 @@ function onError(msg) {
 </script>
 
 <style scoped>
-.phase-page {
-  padding: 24px;
-}
-.phase-header {
-  margin-bottom: 24px;
-}
-.phase-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-}
-.phase-desc {
-  color: var(--text-secondary, #666);
-  font-size: 14px;
-  margin: 0;
-}
-.steps-nav {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.steps-nav button {
-  padding: 8px 16px;
-  border: 1px solid var(--border, #ddd);
-  border-radius: 6px;
-  background: var(--bg, #fff);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.steps-nav button.active {
-  background: var(--color-accent);
-  color: white;
-  border-color: var(--color-accent);
-}
-.step-content {
-  min-height: 400px;
-}
-.step-panel {
-  min-height: 500px;
-}
 .form-card {
-  background: var(--bg-card, #fff);
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid var(--border, #eee);
+  background: var(--section-card-bg);
+  padding: 24px 28px;
+  border-radius: var(--section-card-radius);
+  border: 1px solid var(--section-card-border);
+  box-shadow: var(--section-card-shadow);
 }
+
 .form-card h3 {
   margin: 0 0 16px;
-  font-size: 18px;
+  font-size: var(--section-title-size);
+  font-weight: var(--section-title-weight);
+  color: var(--section-title-color);
+  letter-spacing: -0.01em;
 }
+
+.form-card h4 {
+  color: var(--section-title-color);
+}
+
 .form-card label {
   display: block;
   margin-bottom: 12px;
-  font-size: 14px;
+  font-size: 13px;
+  color: var(--form-label-color);
 }
+
 .form-card input {
-  margin-left: 8px;
-  padding: 6px 10px;
-  border: 1px solid var(--border, #ddd);
-  border-radius: 4px;
-  width: 160px;
+  margin-left: 10px;
+  padding: 6px 12px;
+  height: var(--form-field-height);
+  background-color: var(--form-field-bg);
+  border: 1px solid var(--form-field-border);
+  border-radius: var(--form-field-radius);
+  color: var(--form-field-text);
+  font-size: 13px;
+  font-weight: 500;
+  width: 180px;
+  outline: none;
+  transition: all 0.18s ease;
+}
+
+.form-card input:hover { background-color: var(--form-field-bg-hover); }
+
+.form-card input:focus-visible {
+  border-color: var(--form-field-border-focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.total-capex {
+  color: var(--color-accent) !important;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
 }
 </style>

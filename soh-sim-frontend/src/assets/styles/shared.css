@@ -1,21 +1,67 @@
+/* =====  Phase & Tool Page Shared Layout ===== */
+.phase-page,
 .tool-page {
   padding: 24px;
 }
 
+.phase-header,
 .tool-header {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
+.phase-header h1,
 .tool-header h1 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0 0 8px;
+  color: var(--section-title-color);
+  letter-spacing: -0.02em;
 }
 
+.phase-desc,
 .tool-header p {
-  color: var(--color-text-muted, #666);
+  color: var(--color-text-muted);
   font-size: 14px;
   margin: 0;
+}
+
+/* Steps navigation (Phase 2/3/4/5) */
+.steps-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.steps-nav button {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.steps-nav button:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.steps-nav button.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.step-content {
+  min-height: 400px;
+}
+
+.step-panel {
+  min-height: 400px;
 }
 
 .base-input {
