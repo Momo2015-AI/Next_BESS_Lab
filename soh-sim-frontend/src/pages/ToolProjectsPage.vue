@@ -4,40 +4,21 @@
       <h1>历史项目</h1>
       <p>查看和管理历史项目记录</p>
     </div>
-    <div class="placeholder">
-      <p class="text-lg mb-2" style="color: var(--color-text-muted)">项目历史功能开发中</p>
-      <p style="color: var(--color-text-secondary); font-size: 14px">
-        项目数据将通过后端 API 持久化，支持版本管理和历史回溯。
-      </p>
-    </div>
+    <SectionCard number="00" title="项目历史" subtitle="功能开发中">
+      <p class="placeholder-text">项目数据将通过后端 API 持久化，支持版本管理和历史回溯。</p>
+    </SectionCard>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import SectionCard from '../components/SectionCard.vue'
+</script>
 
 <style scoped>
-.tool-page {
-  padding: 24px;
-}
-.tool-header {
-  margin-bottom: 24px;
-}
-.tool-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: var(--color-text);
-}
-.tool-header p {
-  color: #666;
+.placeholder-text {
+  color: var(--color-text-muted);
   font-size: 14px;
-  margin: 0;
-}
-.placeholder {
-  background: var(--color-card);
-  border-radius: 12px;
-  padding: 48px 24px;
   text-align: center;
-  border: 1px dashed var(--color-border);
+  padding: 16px 0;
 }
 </style>

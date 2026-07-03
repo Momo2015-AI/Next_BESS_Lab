@@ -156,79 +156,40 @@ async function saveProject() {
 </script>
 
 <style scoped>
-.phase-page {
-  padding: 24px;
-}
-.phase-header {
-  margin-bottom: 24px;
-}
-.phase-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-}
-.phase-desc {
-  color: var(--text-secondary, #666);
-  font-size: 14px;
-  margin: 0;
-}
-.steps-nav {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.steps-nav button {
-  padding: 8px 16px;
-  border: 1px solid var(--border, #ddd);
-  border-radius: 6px;
-  background: var(--bg, #fff);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.steps-nav button.active {
-  background: var(--color-accent);
-  color: white;
-  border-color: var(--color-accent);
-}
-.step-content {
-  min-height: 400px;
-}
 .card {
-  background: var(--bg-card, #fff);
-  padding: 24px;
-  border-radius: 8px;
-  border: 1px solid var(--border, #eee);
+  background: var(--section-card-bg);
+  padding: 24px 28px;
+  border-radius: var(--section-card-radius);
+  border: 1px solid var(--section-card-border);
+  box-shadow: var(--section-card-shadow);
 }
 .card h3 {
   margin: 0 0 8px;
-  font-size: 18px;
+  font-size: var(--section-title-size);
+  font-weight: var(--section-title-weight);
+  color: var(--section-title-color);
 }
 .card p {
   margin: 0 0 16px;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 .card button {
   padding: 10px 24px;
-  background: #409eff;
+  background: var(--color-accent);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  transition: opacity 0.2s ease;
 }
-.card button:hover {
-  background: #337ecc;
-}
-.card button:disabled {
-  background: #ccc;
-}
+.card button:hover { opacity: 0.88; }
+.card button:disabled { background: var(--color-text-muted); opacity: 0.5; cursor: not-allowed; }
 .msg {
   margin-top: 12px;
   font-size: 13px;
-  color: #67c23a;
+  color: var(--color-success);
 }
 </style>

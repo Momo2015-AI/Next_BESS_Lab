@@ -127,8 +127,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div v-for="stage in archResult.stages" :key="stage.stage" class="stage-card">
                 <div class="font-bold text-sm stage-title">{{ stage.stage }}期</div>
-                <div class="text-xs" style="color: #666">{{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh</div>
-                <div class="text-xs" style="color: #999">
+                <div class="text-xs tx-muted-dark">{{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh</div>
+                <div class="text-xs tx-muted">
                   {{ stage.estimated_date }}
                 </div>
               </div>
@@ -184,7 +184,7 @@
               <div class="font-bold" :class="gcResult.overall_pass ? 'pass-text' : 'fail-text'">
                 {{ gcResult.overall_pass ? '全部合规' : '存在不合规项' }}
               </div>
-              <div v-if="gcResult.failed_items.length" class="text-xs" style="color: #666">
+              <div v-if="gcResult.failed_items.length" class="text-xs tx-muted-dark">
                 不合规: {{ gcResult.failed_items.join(', ') }}
               </div>
             </div>
@@ -459,7 +459,7 @@
       <div class="panel-card">
         <h3 class="panel-title">合规矩阵生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="matrixForm.template" class="form-input" style="max-width: 300px">
+          <select v-model="matrixForm.template" class="form-input max-w-sm">
             <option value="UAE_DEWA_VII_BESS">UAE DEWA VII BESS RFP</option>
           </select>
           <button :disabled="loading" class="btn-primary" @click="generateMatrix">
@@ -513,7 +513,7 @@
                   <td class="px-3 py-2">
                     {{ item.requirement }}
                   </td>
-                  <td class="px-3 py-2 text-xs" style="color: #999">
+                  <td class="px-3 py-2 text-xs tx-muted">
                     {{ item.category }}
                   </td>
                   <td class="px-3 py-2">
@@ -521,7 +521,7 @@
                       {{ statusLabel(item.compliance_status) }}
                     </span>
                   </td>
-                  <td class="px-3 py-2 text-xs" style="color: #666">
+                  <td class="px-3 py-2 text-xs tx-muted-dark">
                     {{ item.response }}
                   </td>
                 </tr>
@@ -588,7 +588,7 @@
                   class="w-full rounded-t derating-bar"
                   :style="{ height: point.power_pct + '%', backgroundColor: getDeratingColor(point.power_pct) }"
                 />
-                <div class="text-xs mt-1" style="color: #999">{{ point.temp }}°C</div>
+                <div class="text-xs mt-1 tx-muted">{{ point.temp }}°C</div>
               </div>
             </div>
           </div>
@@ -737,7 +737,7 @@
                 <div class="font-bold">
                   {{ prot.name }}
                 </div>
-                <div style="color: #999">
+                <div class="tx-muted">
                   {{ prot.type }}
                 </div>
               </div>
@@ -752,7 +752,7 @@
       <div class="panel-card">
         <h3 class="panel-title">投标文档生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="bidForm.template" class="form-input" style="max-width: 300px">
+          <select v-model="bidForm.template" class="form-input max-w-sm">
             <option value="technical_proposal">技术方案</option>
           </select>
           <button :disabled="loading" class="btn-primary" @click="generateBidDoc">
@@ -765,10 +765,10 @@
             <div class="chapter-title">{{ chapter.num }}. {{ chapter.title }}</div>
             <div v-for="sec in chapter.sections" :key="sec.num" class="section-item">
               <div class="font-medium text-sm">{{ sec.num }} {{ sec.title }}</div>
-              <div class="text-xs mt-1 whitespace-pre-line" style="color: #666">
+              <div class="text-xs mt-1 whitespace-pre-line tx-muted-dark">
                 {{ sec.content }}
               </div>
-              <div class="text-xs mt-1" style="color: #999">数据来源: {{ sec.data_source }}</div>
+              <div class="text-xs mt-1 tx-muted">数据来源: {{ sec.data_source }}</div>
             </div>
           </div>
         </div>
@@ -777,7 +777,7 @@
         <div class="mt-6 pt-4 border-top">
           <div class="flex items-center justify-between mb-3">
             <h4 class="text-base font-bold section-title">交互式图表预览</h4>
-            <span class="text-xs" style="color: #999">基于 Plotly，支持缩放/悬停/导出</span>
+            <span class="text-xs tx-muted">基于 Plotly，支持缩放/悬停/导出</span>
           </div>
           <div class="flex flex-wrap gap-2 mb-3">
             <button
@@ -1168,20 +1168,22 @@ onMounted(() => {
   color: var(--color-text-secondary);
 }
 
-/* Panel card */
+/* Panel card — design spec */
 .panel-card {
-  background: var(--color-card);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid var(--color-border);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: var(--section-card-bg);
+  border-radius: var(--section-card-radius);
+  padding: 24px 28px;
+  border: 1px solid var(--section-card-border);
+  box-shadow: var(--section-card-shadow);
+  margin-bottom: var(--section-card-gap);
 }
 
 .panel-title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: var(--section-title-size);
+  font-weight: var(--section-title-weight);
   margin: 0 0 16px;
-  color: var(--color-accent);
+  color: var(--section-title-color);
+  letter-spacing: -0.01em;
 }
 
 .section-title {
@@ -1189,46 +1191,58 @@ onMounted(() => {
   font-size: 14px;
 }
 
-/* Form inputs */
+/* Form inputs — design spec */
 .field-label {
-  color: var(--color-text-muted);
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .form-input {
   width: 100%;
-  padding: 6px 10px;
-  border: 1px solid var(--color-input-border);
-  border-radius: 6px;
+  height: var(--form-field-height);
+  padding: 0 14px;
+  background-color: var(--form-field-bg);
+  border: 1px solid var(--form-field-border);
+  border-radius: var(--form-field-radius);
+  color: var(--form-field-text);
   font-size: 13px;
+  font-weight: 500;
   outline: none;
-  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.18s ease;
 }
 
-.form-input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-accent-glow);
+.form-input::placeholder {
+  color: var(--form-field-placeholder);
+  opacity: 0.55;
+  font-weight: 400;
+}
+
+.form-input:hover {
+  background-color: var(--form-field-bg-hover);
+}
+
+.form-input:focus-visible {
+  background-color: var(--form-field-bg-hover);
+  border-color: var(--form-field-border-focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 /* Buttons */
 .btn-primary {
   padding: 8px 24px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--color-accent);
-  color: white;
+  color: #fff;
   border: none;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.2s ease;
 }
 
-.btn-primary:hover {
-  background: var(--color-accent-secondary);
-}
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.btn-primary:hover { opacity: 0.88; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Metric cards */
 .metric-card {
@@ -1436,4 +1450,9 @@ onMounted(() => {
 .space-y-4 > * + * {
   margin-top: 16px;
 }
+
+/* Utility helpers */
+.tx-muted { color: var(--color-text-muted); }
+.tx-muted-dark { color: var(--color-text-secondary); }
+.max-w-sm { max-width: 300px; }
 </style>

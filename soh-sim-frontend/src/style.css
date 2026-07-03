@@ -105,6 +105,40 @@
     --radius-md: 8px;
     --radius-lg: 12px;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* ============================================
+       Section Card (Design Spec — 序号徽章 + 标题)
+       ============================================ */
+    --section-card-bg: #ffffff;
+    --section-card-border: rgba(15, 23, 42, 0.06);
+    --section-card-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    --section-card-radius: 14px;
+    --section-card-padding: 24px 28px;
+    --section-card-gap: 28px;
+
+    --section-badge-bg: #1e40af;
+    --section-badge-bg-2: #2563eb;
+    --section-badge-text: #ffffff;
+    --section-badge-radius: 8px;
+    --section-divider-color: #cbd5e1;
+    --section-title-color: #0f172a;
+    --section-title-size: 18px;
+    --section-title-weight: 700;
+
+    /* ============================================
+       Form Field (Design Spec — 浅灰底 + 蓝色字)
+       ============================================ */
+    --form-field-bg: #f1f5f9;
+    --form-field-bg-hover: #e8eef5;
+    --form-field-border: transparent;
+    --form-field-border-focus: #2563eb;
+    --form-field-text: #1e40af;
+    --form-field-placeholder: #1e40af;
+    --form-field-radius: 8px;
+    --form-field-height: 40px;
+    --form-label-color: #64748b;
+    --form-label-size: 12px;
+    --form-label-weight: 500;
   }
 
   [data-theme='dark'] {
@@ -202,6 +236,27 @@
     --radius-md: 10px;
     --radius-lg: 14px;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* Section Card (dark) */
+    --section-card-bg: rgba(22, 24, 31, 0.6);
+    --section-card-border: rgba(47, 128, 237, 0.16);
+    --section-card-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    --section-card-radius: 14px;
+
+    --section-badge-bg: #3a8bff;
+    --section-badge-bg-2: #38bdf8;
+    --section-badge-text: #0f172a;
+    --section-divider-color: rgba(47, 128, 237, 0.3);
+    --section-title-color: #f5f7fa;
+
+    /* Form Field (dark) */
+    --form-field-bg: rgba(15, 23, 42, 0.6);
+    --form-field-bg-hover: rgba(30, 41, 59, 0.7);
+    --form-field-border: transparent;
+    --form-field-border-focus: #3a8bff;
+    --form-field-text: #93c5fd;
+    --form-field-placeholder: #93c5fd;
+    --form-label-color: #94a3b8;
   }
 
   body {
@@ -251,6 +306,200 @@
   /* ==========================================================================
      SOH-SIM 精密微光卡片系统
      ========================================================================== */
+
+  /* ==========================================================================
+     Section Card (设计稿规范：序号徽章 + | 分隔 + 标题)
+     ========================================================================== */
+  .section-card {
+    background: var(--section-card-bg);
+    border: 1px solid var(--section-card-border);
+    border-radius: var(--section-card-radius);
+    box-shadow: var(--section-card-shadow);
+    padding: var(--section-card-padding);
+    margin-bottom: var(--section-card-gap);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .section-card:hover {
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  }
+
+  .section-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-number-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 28px;
+    padding: 0 10px;
+    background: linear-gradient(135deg, var(--section-badge-bg), var(--section-badge-bg-2));
+    color: var(--section-badge-text);
+    border-radius: var(--section-badge-radius);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .section-divider {
+    width: 1px;
+    height: 18px;
+    background-color: var(--section-divider-color);
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    color: var(--section-title-color);
+    font-size: var(--section-title-size);
+    font-weight: var(--section-title-weight);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .section-subtitle {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin: 4px 0 0;
+    margin-left: 49px;
+  }
+
+  /* ==========================================================================
+     Form Field (设计稿规范：浅灰底 + 蓝色字)
+     ========================================================================== */
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-field-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--form-label-color);
+    font-size: var(--form-label-size);
+    font-weight: var(--form-label-weight);
+    line-height: 1.4;
+  }
+
+  .form-field-label .required {
+    color: var(--color-danger);
+    font-size: 11px;
+  }
+
+  .form-field-label .optional {
+    color: var(--color-text-muted);
+    font-size: 10px;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  .form-field-input,
+  .form-field-select,
+  .form-field-textarea {
+    width: 100%;
+    height: var(--form-field-height);
+    padding: 0 14px;
+    background-color: var(--form-field-bg);
+    border: 1px solid var(--form-field-border);
+    border-radius: var(--form-field-radius);
+    color: var(--form-field-text);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.18s ease;
+    outline: none;
+  }
+
+  .form-field-textarea {
+    height: auto;
+    min-height: 80px;
+    padding: 10px 14px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  .form-field-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%231e40af' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  [data-theme='dark'] .form-field-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%2393c5fd' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  }
+
+  .form-field-input::placeholder,
+  .form-field-textarea::placeholder {
+    color: var(--form-field-placeholder);
+    opacity: 0.55;
+    font-weight: 400;
+  }
+
+  .form-field-input:hover,
+  .form-field-select:hover,
+  .form-field-textarea:hover {
+    background-color: var(--form-field-bg-hover);
+  }
+
+  .form-field-input:focus-visible,
+  .form-field-select:focus-visible,
+  .form-field-textarea:focus-visible {
+    background-color: var(--form-field-bg-hover);
+    border-color: var(--form-field-border-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+
+  .form-field-error {
+    color: var(--color-danger);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .form-field-hint {
+    color: var(--color-text-muted);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  /* 4 列固定网格 */
+  .form-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px 20px;
+  }
+
+  .form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 20px;
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .form-grid-4 { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .form-grid-4, .form-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .form-grid-4, .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
+  }
 
   .card {
     background: var(--bg-card-solid, var(--color-card));
