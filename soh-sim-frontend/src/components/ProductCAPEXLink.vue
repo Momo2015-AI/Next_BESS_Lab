@@ -17,12 +17,7 @@
           <label class="block mb-0.5" style="color: var(--color-text-muted)">电芯 Cell</label>
           <select
             v-model="selectedCell"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
             <option value="">选择电芯</option>
@@ -35,12 +30,7 @@
           <label class="block mb-0.5" style="color: var(--color-text-muted)">集装箱 Container</label>
           <select
             v-model="selectedContainer"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
             <option value="">选择集装箱</option>
@@ -55,12 +45,7 @@
           <label class="block mb-0.5" style="color: var(--color-text-muted)">PCS 变流器</label>
           <select
             v-model="selectedPcs"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
             <option value="">选择PCS</option>

@@ -100,12 +100,7 @@
             type="number"
             :value="params.ratedEnergy"
             step="0.1"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'ratedEnergy', Number($event.target.value))"
           />
         </div>
@@ -115,12 +110,7 @@
             type="number"
             :value="params.initContainerQty"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'initContainerQty', Number($event.target.value))"
           />
         </div>
@@ -130,12 +120,7 @@
             type="number"
             :value="params.initPcsQty"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'initPcsQty', Number($event.target.value))"
           />
         </div>
@@ -145,12 +130,7 @@
             type="number"
             :value="params.duration"
             step="0.5"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'duration', Number($event.target.value))"
           />
         </div>
@@ -160,12 +140,7 @@
             type="number"
             :value="params.cyclesPerDay"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'cyclesPerDay', Number($event.target.value))"
           />
         </div>
@@ -175,12 +150,7 @@
             type="number"
             :value="params.acEfficiency"
             step="0.01"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="form-field-input w-full rounded px-2 py-1 text-xs"
             @input="$emit('update:param', 'acEfficiency', Number($event.target.value))"
           />
         </div>
@@ -313,8 +283,7 @@
                 type="number"
                 :value="dod[i - 1]"
                 step="0.1"
-                class="w-12 rounded text-center font-mono text-[11px]"
-                style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-warning)"
+                class="form-field-input w-12 rounded text-center font-mono text-[11px]"
                 @input="updateDod(i - 1, $event.target.value)"
               />
             </td>
@@ -323,12 +292,7 @@
                 type="number"
                 :value="(rte[i - 1] * 100).toFixed(2)"
                 step="0.01"
-                class="w-14 rounded text-center font-mono text-[11px]"
-                style="
-                  background: var(--color-bg);
-                  border: 1px solid var(--color-border);
-                  color: var(--color-accent-secondary);
-                "
+                class="form-field-input w-14 rounded text-center font-mono text-[11px]"
                 @input="updateRte(i - 1, $event.target.value)"
               />
             </td>
@@ -337,8 +301,7 @@
                 type="number"
                 :value="(soh[i - 1] * 100).toFixed(2)"
                 step="0.01"
-                class="w-14 rounded text-center font-bold font-mono text-[11px]"
-                style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-warning)"
+                class="form-field-input w-14 rounded text-center font-bold font-mono text-[11px]"
                 @input="updateSoh(i - 1, $event.target.value)"
               />
             </td>
@@ -372,12 +335,7 @@
                 :value="augQty[i - 1]"
                 step="1"
                 min="0"
-                class="w-10 rounded text-center font-bold text-[11px]"
-                style="
-                  background: var(--color-bg);
-                  border: 1px solid var(--color-chart-pink);
-                  color: var(--color-chart-pink);
-                "
+                class="form-field-input w-10 rounded text-center font-bold text-[11px]"
                 @input="updateAugQty(i - 1, $event.target.value)"
               />
             </td>

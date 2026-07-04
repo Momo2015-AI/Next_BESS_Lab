@@ -15,7 +15,7 @@
             <label
               v-for="param in sensitivityParams"
               :key="param.key"
-              class="flex items-center gap-2 cursor-pointer text-xs"
+              class="flex items-center gap-2 cursor-pointer text-xs label-text"
             >
               <input v-model="param.enabled" type="checkbox" style="accent-color: var(--color-accent)" />
               <span style="color: var(--color-text-secondary)">{{ param.label }}</span>
@@ -37,24 +37,14 @@
                   v-model.number="param.min"
                   type="number"
                   step="0.01"
-                  class="w-16 rounded text-xs px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
                 <span class="text-xs" style="color: var(--color-text-muted)">至</span>
                 <input
                   v-model.number="param.max"
                   type="number"
                   step="0.01"
-                  class="w-16 rounded text-xs px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
               </div>
               <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">当前值: {{ param.current }}</div>
@@ -68,12 +58,7 @@
               type="number"
               min="3"
               max="10"
-              class="w-16 rounded text-xs px-2 py-1"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-16 rounded text-xs px-2 py-1 form-field-input"
             />
             <span class="text-xs" style="color: var(--color-text-muted)">(3-10步)</span>
             <button

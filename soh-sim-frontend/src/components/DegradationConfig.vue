@@ -29,9 +29,7 @@
     </div>
 
     <div class="rounded-lg p-3" style="background: var(--color-card-dark); border: 1px solid var(--color-border)">
-      <label class="text-xs" style="color: var(--color-text-muted); display: block; margin-bottom: 4px">
-        Degradation Model
-      </label>
+      <label class="label-text text-xs" style="display: block; margin-bottom: 4px">Degradation Model</label>
       <div class="flex gap-2">
         <button
           v-for="m in models"
@@ -52,20 +50,15 @@
     <template v-if="model === 'arrhenius'">
       <div class="rounded-lg p-3" style="background: var(--color-card-dark); border: 1px solid var(--color-border)">
         <div class="flex items-center gap-3 mb-2">
-          <label class="text-xs" style="color: var(--color-text-muted)">Correction Factor:</label>
+          <label class="label-text text-xs">Correction Factor:</label>
           <input
             v-model.number="correctionFactor"
             type="number"
             min="0.1"
             max="5"
             step="0.1"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 70px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 70px"
           />
         </div>
         <p class="text-xs" style="color: var(--color-text-muted); opacity: 0.6">
@@ -77,7 +70,7 @@
     <template v-if="model === 'gb36276'">
       <div class="rounded-lg p-3" style="background: var(--color-card-dark); border: 1px solid var(--color-border)">
         <div class="flex items-center justify-between mb-2">
-          <label class="text-xs font-bold" style="color: var(--color-text-muted)">GB/T 36276 Standard Curves</label>
+          <label class="label-text text-xs font-bold">GB/T 36276 Standard Curves</label>
           <div class="flex gap-2">
             <label
               class="text-xs px-2 py-1 rounded cursor-pointer transition-all"
@@ -137,9 +130,7 @@
     </template>
 
     <div class="rounded-lg p-3" style="background: var(--color-card-dark); border: 1px solid var(--color-border)">
-      <label class="text-xs font-bold block mb-2" style="color: var(--color-text-muted)">
-        Environmental Acceleration
-      </label>
+      <label class="label-text text-xs font-bold block mb-2">Environmental Acceleration</label>
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between">
           <span class="text-xs" style="color: var(--color-text)">Temperature (Arrhenius)</span>
@@ -156,13 +147,8 @@
             min="10000"
             max="50000"
             step="1000"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 80px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 80px"
             @change="markDirty"
           />
           <span class="text-xs" style="color: var(--color-text-muted)">Ref T [deg C]</span>
@@ -171,13 +157,8 @@
             type="number"
             min="10"
             max="40"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 50px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 50px"
             @change="markDirty"
           />
         </div>
@@ -197,13 +178,8 @@
             min="1.0"
             max="2.0"
             step="0.01"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 60px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 60px"
             @change="markDirty"
           />
         </div>
@@ -222,13 +198,8 @@
             type="number"
             min="10"
             max="90"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 50px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 50px"
             @change="markDirty"
           />
           <span class="text-xs" style="color: var(--color-text-muted)">Field RH%</span>
@@ -237,13 +208,8 @@
             type="number"
             min="10"
             max="100"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 50px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 50px"
             @change="markDirty"
           />
           <span class="text-xs" style="color: var(--color-text-muted)">n</span>
@@ -253,13 +219,8 @@
             min="1"
             max="5"
             step="0.5"
-            class="text-xs px-2 py-1 rounded"
-            style="
-              width: 40px;
-              background: var(--color-input-bg-dark);
-              color: var(--color-text);
-              border: 1px solid var(--color-input-border);
-            "
+            class="form-field-input text-xs px-2 py-1 rounded"
+            style="width: 40px"
             @change="markDirty"
           />
         </div>
@@ -274,13 +235,8 @@
           type="number"
           min="15"
           max="60"
-          class="text-xs px-2 py-1 rounded"
-          style="
-            width: 50px;
-            background: var(--color-input-bg-dark);
-            color: var(--color-text);
-            border: 1px solid var(--color-input-border);
-          "
+          class="form-field-input text-xs px-2 py-1 rounded"
+          style="width: 50px"
         />
         <span class="text-xs" style="color: var(--color-text-muted)">DOD:</span>
         <input
@@ -288,13 +244,8 @@
           type="number"
           min="50"
           max="100"
-          class="text-xs px-2 py-1 rounded"
-          style="
-            width: 50px;
-            background: var(--color-input-bg-dark);
-            color: var(--color-text);
-            border: 1px solid var(--color-input-border);
-          "
+          class="form-field-input text-xs px-2 py-1 rounded"
+          style="width: 50px"
         />
         <span class="text-xs" style="color: var(--color-text-muted)">Cyc/day:</span>
         <input
@@ -303,13 +254,8 @@
           min="0.5"
           max="3"
           step="0.5"
-          class="text-xs px-2 py-1 rounded"
-          style="
-            width: 45px;
-            background: var(--color-input-bg-dark);
-            color: var(--color-text);
-            border: 1px solid var(--color-input-border);
-          "
+          class="form-field-input text-xs px-2 py-1 rounded"
+          style="width: 45px"
         />
         <button
           class="text-xs px-3 py-1 rounded"

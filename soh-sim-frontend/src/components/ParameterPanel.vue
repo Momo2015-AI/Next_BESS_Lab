@@ -11,20 +11,7 @@
             type="number"
             :value="params.ratedEnergy"
             step="0.1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.ratedEnergy
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('ratedEnergy', Number($event.target.value), validationRules.ratedEnergy)"
           />
           <p v-if="errors.ratedEnergy" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -39,20 +26,7 @@
             type="number"
             :value="params.initContainerQty"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.initContainerQty
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="
               validateAndUpdate('initContainerQty', Number($event.target.value), validationRules.initContainerQty)
             "
@@ -67,20 +41,7 @@
             type="number"
             :value="params.initPcsQty"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.initPcsQty
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('initPcsQty', Number($event.target.value), validationRules.initPcsQty)"
           />
           <p v-if="errors.initPcsQty" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -93,20 +54,7 @@
             type="number"
             :value="params.duration"
             step="0.5"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.duration
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('duration', Number($event.target.value), validationRules.duration)"
           />
           <p v-if="errors.duration" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -119,20 +67,7 @@
             type="number"
             :value="params.cyclesPerDay"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.cyclesPerDay
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('cyclesPerDay', Number($event.target.value), validationRules.cyclesPerDay)"
           />
           <p v-if="errors.cyclesPerDay" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -145,20 +80,7 @@
             type="number"
             :value="params.acEfficiency"
             step="0.01"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.acEfficiency
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('acEfficiency', Number($event.target.value), validationRules.acEfficiency)"
           />
           <p v-if="errors.acEfficiency" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -179,20 +101,7 @@
             type="number"
             :value="params.bessAuxRun"
             step="0.001"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.bessAuxRun
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-warning)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-warning)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('bessAuxRun', Number($event.target.value), validationRules.bessAuxRun)"
           />
           <p v-if="errors.bessAuxRun" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -205,20 +114,7 @@
             type="number"
             :value="params.bessAuxStandby"
             step="0.1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.bessAuxStandby
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-warning)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-warning)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('bessAuxStandby', Number($event.target.value), validationRules.bessAuxStandby)"
           />
           <p v-if="errors.bessAuxStandby" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -231,20 +127,7 @@
             type="number"
             :value="params.pcsAuxRun"
             step="0.1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.pcsAuxRun
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-warning)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-warning)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('pcsAuxRun', Number($event.target.value), validationRules.pcsAuxRun)"
           />
           <p v-if="errors.pcsAuxRun" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -257,20 +140,7 @@
             type="number"
             :value="params.pcsAuxStandby"
             step="0.1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.pcsAuxStandby
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-warning)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-warning)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('pcsAuxStandby', Number($event.target.value), validationRules.pcsAuxStandby)"
           />
           <p v-if="errors.pcsAuxStandby" class="text-[10px] mt-0.5" style="color: var(--color-danger)">
@@ -458,14 +328,8 @@
             value="25"
             step="1"
             disabled
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text-muted);
-              opacity: 0.5;
-              cursor: not-allowed;
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
+            style="opacity: 0.5; cursor: not-allowed"
           />
         </div>
         <div>
@@ -477,14 +341,8 @@
             value="0.5"
             step="0.1"
             disabled
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text-muted);
-              opacity: 0.5;
-              cursor: not-allowed;
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
+            style="opacity: 0.5; cursor: not-allowed"
           />
         </div>
         <div>
@@ -493,14 +351,8 @@
             type="text"
             value="FOB + 6个月"
             disabled
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text-muted);
-              opacity: 0.5;
-              cursor: not-allowed;
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
+            style="opacity: 0.5; cursor: not-allowed"
           />
         </div>
         <div>
@@ -509,20 +361,7 @@
             type="number"
             :value="params.requiredEnergy"
             step="1"
-            class="w-full rounded px-2 py-1 text-xs"
-            :style="
-              errors.requiredEnergy
-                ? {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-danger)',
-                    color: 'var(--color-text)'
-                  }
-                : {
-                    backgroundColor: 'var(--color-input-bg-dark)',
-                    border: '1px solid var(--color-input-border)',
-                    color: 'var(--color-text)'
-                  }
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="validateAndUpdate('requiredEnergy', Number($event.target.value), validationRules.requiredEnergy)"
           />
           <p v-if="errors.requiredEnergy" class="text-[10px] mt-0.5" style="color: var(--color-danger)">

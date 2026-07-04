@@ -66,12 +66,7 @@
                 :min="param.min"
                 :max="param.max"
                 :step="param.step"
-                class="w-20 rounded px-2 py-1 text-xs text-right font-bold"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-20 rounded px-2 py-1 text-xs text-right font-bold form-field-input"
               />
             </div>
             <input
@@ -80,12 +75,7 @@
               type="number"
               :min="param.min"
               :max="param.max"
-              class="w-full rounded px-3 py-2 text-xs font-bold"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-3 py-2 text-xs font-bold form-field-input"
             />
           </div>
         </div>
@@ -114,12 +104,7 @@
                 :min="param.min"
                 :max="param.max"
                 :step="param.step"
-                class="w-20 rounded px-2 py-1 text-xs text-right font-bold"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-20 rounded px-2 py-1 text-xs text-right font-bold form-field-input"
               />
             </div>
           </div>
@@ -149,12 +134,7 @@
                 :min="param.min"
                 :max="param.max"
                 :step="param.step"
-                class="w-20 rounded px-2 py-1 text-xs text-right font-bold"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-20 rounded px-2 py-1 text-xs text-right font-bold form-field-input"
               />
             </div>
           </div>
@@ -184,12 +164,7 @@
                 :min="param.min"
                 :max="param.max"
                 :step="param.step"
-                class="w-20 rounded px-2 py-1 text-xs text-right font-bold"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-20 rounded px-2 py-1 text-xs text-right font-bold form-field-input"
               />
             </div>
           </div>

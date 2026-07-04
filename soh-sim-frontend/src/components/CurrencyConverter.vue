@@ -17,12 +17,7 @@
           <label class="block mb-0.5" style="color: var(--color-text-muted)">基础货币 Base</label>
           <select
             v-model="baseCurrency"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateRates"
           >
             <option v-for="code in Object.keys(supportedCurrencies)" :key="code" :value="code">
@@ -34,12 +29,7 @@
           <label class="block mb-0.5" style="color: var(--color-text-muted)">目标货币 Target</label>
           <select
             v-model="targetCurrency"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateRates"
           >
             <option v-for="code in Object.keys(supportedCurrencies)" :key="code" :value="code">
@@ -57,12 +47,7 @@
             v-model.number="amount"
             type="number"
             step="0.01"
-            class="w-full rounded px-2 py-1 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-2 py-1 text-xs form-field-input"
             @input="convert"
           />
         </div>
@@ -105,12 +90,7 @@
             <label class="block mb-0.5" style="color: var(--color-text-muted)">显示货币 Display</label>
             <select
               v-model="displayCurrency"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-select"
               @change="updateDisplayCurrency"
             >
               <option v-for="code in Object.keys(supportedCurrencies)" :key="code" :value="code">

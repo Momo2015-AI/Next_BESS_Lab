@@ -19,12 +19,7 @@
               <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">PCS型号</label>
               <select
                 v-model="selectedPcsId"
-                class="w-full rounded px-2 py-1.5 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1.5 text-xs form-field-select"
                 @change="onPcsChange"
               >
                 <option value="">-- 请选择PCS --</option>
@@ -41,12 +36,7 @@
                   v-model="pcsConfig.dcVoltageRange"
                   type="text"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-accent);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -54,12 +44,7 @@
                 <input
                   v-model.number="pcsConfig.maxDcCurrent"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -71,12 +56,7 @@
                   v-model.number="pcsConfig.acRatedPower"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-accent);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -85,12 +65,7 @@
                   v-model.number="pcsConfig.acRatedCurrent"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-accent);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -106,15 +81,7 @@
           <div class="space-y-3">
             <div>
               <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">PCS数量计算方式</label>
-              <select
-                v-model="pcsConfig.calcMode"
-                class="w-full rounded px-2 py-1.5 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
-              >
+              <select v-model="pcsConfig.calcMode" class="w-full rounded px-2 py-1.5 text-xs form-field-select">
                 <option value="ratio">按功率配比计算</option>
                 <option value="fixed">固定数量</option>
                 <option value="energy">按能量需求</option>
@@ -127,12 +94,7 @@
                 <input
                   v-model.number="pcsConfig.pcsQty"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -140,12 +102,7 @@
                 <input
                   v-model.number="pcsConfig.parallelCount"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -157,12 +114,7 @@
                   v-model.number="pcsConfig.totalPcsPower"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-accent);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -171,12 +123,7 @@
                   v-model.number="pcsConfig.powerRatio"
                   type="number"
                   step="0.1"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -194,15 +141,7 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">变压器类型</label>
-            <select
-              v-model="pcsConfig.transformerType"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="pcsConfig.transformerType" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="2w">两绕组变压器</option>
               <option value="3w">三绕组变压器</option>
               <option value="一体化">一体化升压装置</option>
@@ -213,12 +152,7 @@
             <input
               v-model.number="pcsConfig.transformerCapacity"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -226,12 +160,7 @@
             <input
               v-model.number="pcsConfig.transformerQty"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -239,12 +168,7 @@
             <input
               v-model.number="pcsConfig.hvVoltage"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
         </div>
@@ -255,12 +179,7 @@
             <input
               v-model.number="pcsConfig.lvVoltage"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -269,25 +188,12 @@
               v-model.number="pcsConfig.impedance"
               type="number"
               step="0.1"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
             <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">接线方式</label>
-            <select
-              v-model="pcsConfig.connection"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="pcsConfig.connection" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="Dynd11">Dyn11</option>
               <option value="Ynd11">Ynd11</option>
               <option value="Yyn0">Yyn0</option>
@@ -295,15 +201,7 @@
           </div>
           <div>
             <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">接地方式</label>
-            <select
-              v-model="pcsConfig.grounding"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="pcsConfig.grounding" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="直接接地">直接接地</option>
               <option value="消弧线圈">消弧线圈</option>
               <option value="电阻接地">电阻接地</option>
@@ -326,12 +224,7 @@
               v-model.number="pcsConfig.pcsEfficiency"
               type="number"
               step="0.1"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -339,12 +232,7 @@
             <input
               v-model.number="pcsConfig.auxConsumption"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -352,12 +240,7 @@
             <input
               v-model.number="pcsConfig.standbyConsumption"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -366,12 +249,7 @@
               v-model.number="pcsConfig.powerFactor"
               type="number"
               step="0.01"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
         </div>

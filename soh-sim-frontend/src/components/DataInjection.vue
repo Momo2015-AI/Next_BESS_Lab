@@ -13,12 +13,7 @@
         </p>
         <textarea
           v-model="sohText"
-          class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none"
-          style="
-            background: var(--color-input-bg);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-warning);
-          "
+          class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none form-field-textarea"
           placeholder="0.9925&#10;0.9318&#10;0.9014..."
         />
         <div class="flex gap-2 mt-2">
@@ -54,12 +49,7 @@
         </p>
         <textarea
           v-model="rteText"
-          class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none"
-          style="
-            background: var(--color-input-bg);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-accent-secondary);
-          "
+          class="flex-1 w-full min-h-[200px] rounded p-2 text-xs font-mono focus:outline-none resize-none form-field-textarea"
           placeholder="0.941&#10;0.9384&#10;0.9372..."
         />
         <div class="flex gap-2 mt-2">

@@ -27,101 +27,46 @@
       <div v-if="activeTab === 'area'" class="space-y-4">
         <div class="grid grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
-            <input
-              v-model.number="siteData.containerQty"
-              type="number"
-              min="1"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">集装箱数量</label>
+            <input v-model.number="siteData.containerQty" type="number" min="1" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
-            <input
-              v-model.number="siteData.pcsQty"
-              type="number"
-              min="1"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">PCS数量</label>
+            <input v-model.number="siteData.pcsQty" type="number" min="1" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">变压器数量</label>
-            <input
-              v-model.number="siteData.transformerQty"
-              type="number"
-              min="1"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">变压器数量</label>
+            <input v-model.number="siteData.transformerQty" type="number" min="1" class="form-field-input" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱尺寸 (长×宽×高 m)</label>
+            <label class="label-text">集装箱尺寸 (长×宽×高 m)</label>
             <div class="flex gap-2">
               <input
                 v-model.number="siteData.containerLength"
                 type="number"
                 placeholder="长"
-                class="w-full rounded px-3 py-2 text-sm"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="form-field-input"
               />
-              <input
-                v-model.number="siteData.containerWidth"
-                type="number"
-                placeholder="宽"
-                class="w-full rounded px-3 py-2 text-sm"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
-              />
+              <input v-model.number="siteData.containerWidth" type="number" placeholder="宽" class="form-field-input" />
               <input
                 v-model.number="siteData.containerHeight"
                 type="number"
                 placeholder="高"
-                class="w-full rounded px-3 py-2 text-sm"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="form-field-input"
               />
             </div>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">间距和通道系数</label>
+            <label class="label-text">间距和通道系数</label>
             <input
               v-model.number="siteData.spacingFactor"
               type="number"
               step="0.1"
               min="1.2"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="form-field-input"
             />
           </div>
         </div>
@@ -179,56 +124,20 @@
       <div v-if="activeTab === 'bom'" class="space-y-4">
         <div class="grid grid-cols-4 gap-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统能量 (MWh)</label>
-            <input
-              v-model.number="bomData.energy"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">系统能量 (MWh)</label>
+            <input v-model.number="bomData.energy" type="number" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
-            <input
-              v-model.number="bomData.containerQty"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">集装箱数量</label>
+            <input v-model.number="bomData.containerQty" type="number" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS总容量 (MW)</label>
-            <input
-              v-model.number="bomData.pcsCapacity"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">PCS总容量 (MW)</label>
+            <input v-model.number="bomData.pcsCapacity" type="number" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">变压器容量 (MVA)</label>
-            <input
-              v-model.number="bomData.transformerCapacity"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">变压器容量 (MVA)</label>
+            <input v-model.number="bomData.transformerCapacity" type="number" class="form-field-input" />
           </div>
         </div>
 
@@ -297,76 +206,36 @@
       <div v-if="activeTab === 'spare'" class="space-y-4">
         <div class="grid grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电池容量 (MWh)</label>
-            <input
-              v-model.number="spareData.batteryCapacity"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">电池容量 (MWh)</label>
+            <input v-model.number="spareData.batteryCapacity" type="number" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
-            <input
-              v-model.number="spareData.pcsQty"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">PCS数量</label>
+            <input v-model.number="spareData.pcsQty" type="number" class="form-field-input" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">运行年限</label>
-            <input
-              v-model.number="spareData.years"
-              type="number"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            />
+            <label class="label-text">运行年限</label>
+            <input v-model.number="spareData.years" type="number" class="form-field-input" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电池更换策略</label>
-            <select
-              v-model="spareData.batteryStrategy"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <label class="label-text">电池更换策略</label>
+            <select v-model="spareData.batteryStrategy" class="form-field-input">
               <option value="aggressive">激进型 (SOH&lt;80%即换)</option>
               <option value="moderate">均衡型 (SOH(SOH&lt;75%换)</option>
               <option value="conservative">保守型 (SOH(SOH&lt;70%换)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS备件系数</label>
+            <label class="label-text">PCS备件系数</label>
             <input
               v-model.number="spareData.pcsSpareFactor"
               type="number"
               step="0.01"
               min="0.02"
-              class="w-full rounded px-3 py-2 text-sm"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="form-field-input"
             />
           </div>
         </div>

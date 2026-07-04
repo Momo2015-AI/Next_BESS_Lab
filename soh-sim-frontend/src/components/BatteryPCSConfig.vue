@@ -14,12 +14,7 @@
           <label class="text-xs block mb-2" style="color: var(--color-text-muted)">储能集装箱型号</label>
           <select
             v-model="selectedContainer"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-3 py-2 text-xs form-field-select"
             @change="onContainerChange"
           >
             <option value="">请选择集装箱型号</option>
@@ -39,12 +34,7 @@
             type="number"
             min="1"
             step="1"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-3 py-2 text-xs form-field-input"
             placeholder="输入目标总能量"
             @change="autoCalcQty"
           />
@@ -67,12 +57,7 @@
           <label class="text-xs block mb-2" style="color: var(--color-text-muted)">PCS型号</label>
           <select
             v-model="selectedPCS"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-3 py-2 text-xs form-field-select"
             @change="onPCSChange"
           >
             <option value="">请选择PCS型号</option>
@@ -92,12 +77,7 @@
             type="number"
             min="0.1"
             step="0.1"
-            class="w-full rounded px-3 py-2 text-xs"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text);
-            "
+            class="w-full rounded px-3 py-2 text-xs form-field-input"
             placeholder="输入目标总功率"
             @change="autoCalcQty"
           />

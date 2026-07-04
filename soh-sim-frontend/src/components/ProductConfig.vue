@@ -18,15 +18,7 @@
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select
-              v-model="cellFilter"
-              class="text-xs rounded px-2 py-1"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="cellFilter" class="text-xs rounded px-2 py-1 form-field-select">
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('cells')" :key="m" :value="m">
                 {{ m }}
@@ -119,15 +111,7 @@
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select
-              v-model="containerFilter"
-              class="text-xs rounded px-2 py-1"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="containerFilter" class="text-xs rounded px-2 py-1 form-field-select">
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('containers')" :key="m" :value="m">
                 {{ m }}
@@ -214,29 +198,13 @@
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
-            <select
-              v-model="pcsFilter"
-              class="text-xs rounded px-2 py-1"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="pcsFilter" class="text-xs rounded px-2 py-1 form-field-select">
               <option value="">全部厂商</option>
               <option v-for="m in localMfrList('pcs')" :key="m" :value="m">
                 {{ m }}
               </option>
             </select>
-            <select
-              v-model="pcsPowerFilter"
-              class="text-xs rounded px-2 py-1"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="pcsPowerFilter" class="text-xs rounded px-2 py-1 form-field-select">
               <option value="0">全部功率</option>
               <option value="1.25">1.25 MW</option>
               <option value="1.725">1.725 MW</option>
@@ -462,51 +430,22 @@
               <div class="grid grid-cols-2 gap-2 text-[10px]">
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">厂商</label>
-                  <input
-                    v-model="modalForm.mfr"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">型号</label>
-                  <input
-                    v-model="modalForm.model"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">化学体系</label>
-                  <input
-                    v-model="modalForm.chemistry"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="modalForm.chemistry" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">容量 Ah</label>
                   <input
                     v-model.number="modalForm.capacityAh"
                     type="number"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
+                    class="w-full rounded px-2 py-1.5 text-xs form-field-input"
                   />
                 </div>
                 <div>
@@ -515,12 +454,7 @@
                     v-model.number="modalForm.voltageNominal"
                     type="number"
                     step="0.1"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
+                    class="w-full rounded px-2 py-1.5 text-xs form-field-input"
                   />
                 </div>
                 <div>
@@ -528,37 +462,16 @@
                   <input
                     v-model.number="modalForm.cycleLife"
                     type="number"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
+                    class="w-full rounded px-2 py-1.5 text-xs form-field-input"
                   />
                 </div>
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">尺寸</label>
-                  <input
-                    v-model="modalForm.dimensions"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
                   <label class="block mb-0.5" style="color: var(--color-text-muted)">重量 kg</label>
-                  <input
-                    v-model="modalForm.weight"
-                    class="w-full rounded px-2 py-1.5 text-xs"
-                    style="
-                      background-color: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="modalForm.weight" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
               </div>
             </template>

@@ -75,12 +75,7 @@
                 v-model.number="f.offPeakPrice"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -89,12 +84,7 @@
                 v-model.number="f.peakPrice"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -103,12 +93,7 @@
                 v-model.number="f.spreadCapture"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -117,12 +102,7 @@
                 v-model.number="f.operatingDays"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -131,12 +111,7 @@
                 v-model.number="f.capacityPrice"
                 type="number"
                 step="100"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -145,12 +120,7 @@
                 v-model.number="f.ancillaryPrice"
                 type="number"
                 step="100"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -159,12 +129,7 @@
                 v-model.number="f.priceEscalation"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -173,12 +138,7 @@
                 v-model.number="f.efficiencyLossPct"
                 type="number"
                 step="0.01"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
           </div>
@@ -200,12 +160,7 @@
                 v-model.number="f.containerCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -214,12 +169,7 @@
                 v-model.number="f.pcsCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -228,12 +178,7 @@
                 v-model.number="f.bopCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -242,12 +187,7 @@
                 v-model.number="f.substationCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -256,12 +196,7 @@
                 v-model.number="f.transmissionCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -270,12 +205,7 @@
                 v-model.number="f.landCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -284,12 +214,7 @@
                 v-model.number="f.developmentCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -298,12 +223,7 @@
                 v-model.number="f.fixedOpexPerKW"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -312,12 +232,7 @@
                 v-model.number="f.varOpexPerMWh"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -326,12 +241,7 @@
                 v-model.number="f.insuranceRate"
                 type="number"
                 step="0.01"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -340,12 +250,7 @@
                 v-model.number="f.opexEscalation"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -354,12 +259,7 @@
                 v-model.number="f.vatRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
           </div>
@@ -384,12 +284,7 @@
                 v-model.number="f.discountRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -398,12 +293,7 @@
                 v-model.number="f.debtRatio"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -412,12 +302,7 @@
                 v-model.number="f.equityRatio"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -426,12 +311,7 @@
                 v-model.number="f.interestRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -440,12 +320,7 @@
                 v-model.number="f.costOfEquity"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -454,12 +329,7 @@
                 v-model.number="f.loanTenure"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -468,12 +338,7 @@
                 v-model.number="f.taxRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -482,12 +347,7 @@
                 v-model.number="f.depreciationYears"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -496,25 +356,12 @@
                 v-model.number="f.residualRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
               <label class="block mb-0.5" style="color: var(--color-text-muted)">折旧方法</label>
-              <select
-                v-model="f.depreciationMethod"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
-              >
+              <select v-model="f.depreciationMethod" class="w-full rounded px-2 py-1 text-xs form-field-select">
                 <option value="straight-line">直线折旧</option>
                 <option value="double-declining">双倍余额递减</option>
               </select>
@@ -538,12 +385,7 @@
                 v-model.number="f.augContainerCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -552,12 +394,7 @@
                 v-model.number="f.costDeclineRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -566,12 +403,7 @@
                 v-model.number="f.augInstallCost"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
             <div>
@@ -580,12 +412,7 @@
                 v-model.number="f.decommissioningCost"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
           </div>
@@ -623,12 +450,7 @@
                 v-model.number="f.sensPct"
                 type="number"
                 step="5"
-                class="w-full rounded px-2 py-1 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1 text-xs form-field-input"
               />
             </div>
           </div>

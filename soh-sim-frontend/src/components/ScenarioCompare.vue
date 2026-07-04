@@ -64,12 +64,7 @@
             <div class="flex items-center justify-between mb-3">
               <input
                 v-model="editingScenario.name"
-                class="text-xs px-2 py-1 rounded"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="text-xs px-2 py-1 rounded form-field-input"
                 placeholder="场景名称"
               />
               <div class="flex gap-2">
@@ -96,120 +91,75 @@
 
             <div class="grid grid-cols-3 gap-2 text-xs">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">额定能量 (MWh)</label>
+                <label class="text-[10px] block mb-1 label-text">额定能量 (MWh)</label>
                 <input
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
+                <label class="text-[10px] block mb-1 label-text">集装箱数量</label>
                 <input
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">PCS数量</label>
+                <label class="text-[10px] block mb-1 label-text">PCS数量</label>
                 <input
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">储能时长 (h)</label>
+                <label class="text-[10px] block mb-1 label-text">储能时长 (h)</label>
                 <input
                   v-model.number="editingScenario.params.duration"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">每日循环</label>
+                <label class="text-[10px] block mb-1 label-text">每日循环</label>
                 <input
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">交流效率 (%)</label>
+                <label class="text-[10px] block mb-1 label-text">交流效率 (%)</label>
                 <input
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">BESS运行功耗</label>
+                <label class="text-[10px] block mb-1 label-text">BESS运行功耗</label>
                 <input
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">BESS待机功耗</label>
+                <label class="text-[10px] block mb-1 label-text">BESS待机功耗</label>
                 <input
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">需求能量 (MWh)</label>
+                <label class="text-[10px] block mb-1 label-text">需求能量 (MWh)</label>
                 <input
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 form-field-input"
                 />
               </div>
             </div>
@@ -644,12 +594,6 @@ onUnmounted(() => {
 <style scoped>
 .scenario-compare {
   height: 100%;
-}
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--color-input-focus);
-  outline: none;
 }
 
 button:not(:disabled):hover {

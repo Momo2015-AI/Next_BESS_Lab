@@ -20,12 +20,7 @@
               <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">电芯类型</label>
               <select
                 v-model="selectedCellId"
-                class="w-full rounded px-2 py-1.5 text-xs"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="w-full rounded px-2 py-1.5 text-xs form-field-select"
                 @change="onCellChange"
               >
                 <option value="">-- 请选择电芯 --</option>
@@ -41,12 +36,7 @@
                 <input
                   v-model.number="batteryConfig.cellCapacity"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -54,12 +44,7 @@
                 <input
                   v-model.number="batteryConfig.cellVoltage"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -70,12 +55,7 @@
                 <input
                   v-model.number="batteryConfig.energyDensity"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -83,12 +63,7 @@
                 <input
                   v-model.number="batteryConfig.cycleLife"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -109,12 +84,7 @@
                 <input
                   v-model.number="batteryConfig.seriesCount"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -122,12 +92,7 @@
                 <input
                   v-model.number="batteryConfig.parallelCount"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -139,12 +104,7 @@
                   v-model.number="batteryConfig.stringVoltage"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-card-dark);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-accent-secondary);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -153,12 +113,7 @@
                   v-model.number="batteryConfig.stringCapacity"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-card-dark);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-accent-secondary);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -170,12 +125,7 @@
                   v-model.number="batteryConfig.stringEnergy"
                   type="number"
                   readonly
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-card-dark);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-accent-secondary);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
               <div>
@@ -183,12 +133,7 @@
                 <input
                   v-model.number="batteryConfig.stringQty"
                   type="number"
-                  class="w-full rounded px-2 py-1 text-xs"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 text-xs form-field-input"
                 />
               </div>
             </div>
@@ -206,15 +151,7 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱规格</label>
-            <select
-              v-model="batteryConfig.containerSpec"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
-            >
+            <select v-model="batteryConfig.containerSpec" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="20ft">20ft 标准集装箱</option>
               <option value="40ft">40ft 标准集装箱</option>
               <option value="20ft-H">20ft 高柜集装箱</option>
@@ -225,12 +162,7 @@
             <input
               v-model.number="batteryConfig.clustersPerContainer"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -239,12 +171,7 @@
               v-model.number="batteryConfig.containerEnergy"
               type="number"
               step="0.1"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -252,12 +179,7 @@
             <input
               v-model.number="batteryConfig.containerQty"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
         </div>
@@ -269,12 +191,7 @@
               v-model.number="batteryConfig.totalDcEnergy"
               type="number"
               readonly
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-card-dark);
-                border: 1px solid var(--color-border);
-                color: var(--color-accent-secondary);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -282,12 +199,7 @@
             <input
               v-model="batteryConfig.dcVoltageRange"
               type="text"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -295,12 +207,7 @@
             <input
               v-model.number="batteryConfig.maxDcCurrent"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -308,12 +215,7 @@
             <input
               v-model.number="batteryConfig.dcBreaker"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
         </div>
@@ -332,12 +234,7 @@
             <input
               v-model.number="batteryConfig.operatingTemp"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -347,12 +244,7 @@
               type="number"
               min="0"
               max="100"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -360,12 +252,7 @@
             <input
               v-model.number="batteryConfig.cyclesPerDay"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
             />
           </div>
           <div>
@@ -373,12 +260,7 @@
             <input
               v-model.number="batteryConfig.actualDod"
               type="number"
-              class="w-full rounded px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-card-dark);
-                border: 1px solid var(--color-border);
-                color: var(--color-accent-secondary);
-              "
+              class="w-full rounded px-2 py-1 text-xs form-field-input"
               readonly
             />
           </div>
