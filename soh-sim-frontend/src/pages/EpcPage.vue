@@ -15,7 +15,7 @@
         :class="{ active: activeModule === tab.id }"
         @click="activeModule = tab.id"
       >
-        <span class="tab-icon" v-html="tab.svg" />
+        <AppIcon :name="tab.iconName" :size="18" class="tab-icon" />
         <span class="tab-label">{{ tab.label }}</span>
         <span class="tab-priority" :class="'pri-' + tab.priority">{{ tab.priority }}</span>
       </button>
@@ -495,7 +495,7 @@
       <div class="panel-card">
         <h3 class="panel-title">合规矩阵生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="matrixForm.template" class="form-input max-w-sm">
+          <select v-model="matrixForm.template" class="form-field-select max-w-sm">
             <option value="UAE_DEWA_VII_BESS">UAE DEWA VII BESS RFP</option>
           </select>
           <button :disabled="loading" class="btn-primary" @click="generateMatrix">
@@ -788,7 +788,7 @@
       <div class="panel-card">
         <h3 class="panel-title">投标文档生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="bidForm.template" class="form-input max-w-sm">
+          <select v-model="bidForm.template" class="form-field-select max-w-sm">
             <option value="technical_proposal">技术方案</option>
           </select>
           <button :disabled="loading" class="btn-primary" @click="generateBidDoc">
@@ -848,36 +848,16 @@ const emit = defineEmits(['error'])
 const loading = ref(false)
 const activeModule = ref('architecture')
 
-// SVG icons matching Sidebar style
-const icons = {
-  architecture:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-  gridCompliance:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m16.66-5.66l-4.24 4.24M6.58 17.42l-4.24 4.24m0-13.32l4.24 4.24m10.82 10.82l4.24 4.24"/></svg>',
-  safety:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-  ipp: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-  matrix:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>',
-  thermal:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
-  scada:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h5m5 0h5m5 0h5"/><path d="M7 7l5 5 5-5"/><path d="M7 17l5-5 5 5"/></svg>',
-  hv: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
-  bidDoc:
-    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'
-}
-
 const tabs = [
-  { id: 'architecture', label: '系统架构', priority: 'P0-3', svg: icons.architecture },
-  { id: 'gridCompliance', label: '电网合规', priority: 'P0-1', svg: icons.gridCompliance },
-  { id: 'safety', label: '安全消防', priority: 'P0-2', svg: icons.safety },
-  { id: 'ipp', label: 'IPP财务', priority: 'P0-4', svg: icons.ipp },
-  { id: 'matrix', label: '合规矩阵', priority: 'P0-5', svg: icons.matrix },
-  { id: 'thermal', label: '热管理', priority: 'P1-1', svg: icons.thermal },
-  { id: 'scada', label: 'SCADA/EMS', priority: 'P1-2', svg: icons.scada },
-  { id: 'hv', label: '高压接入', priority: 'P1-3', svg: icons.hv },
-  { id: 'bidDoc', label: '投标文档', priority: 'P1-4', svg: icons.bidDoc }
+  { id: 'architecture', label: '系统架构', priority: 'P0-3', iconName: 'home' },
+  { id: 'gridCompliance', label: '电网合规', priority: 'P0-1', iconName: 'target' },
+  { id: 'safety', label: '安全消防', priority: 'P0-2', iconName: 'shield' },
+  { id: 'ipp', label: 'IPP财务', priority: 'P0-4', iconName: 'dollar' },
+  { id: 'matrix', label: '合规矩阵', priority: 'P0-5', iconName: 'grid' },
+  { id: 'thermal', label: '热管理', priority: 'P1-1', iconName: 'thermometer' },
+  { id: 'scada', label: 'SCADA/EMS', priority: 'P1-2', iconName: 'data-flow' },
+  { id: 'hv', label: '高压接入', priority: 'P1-3', iconName: 'lightning' },
+  { id: 'bidDoc', label: '投标文档', priority: 'P1-4', iconName: 'document' }
 ]
 
 const gridStandards = ref([])

@@ -20,7 +20,7 @@
                 <AppIcon
                   name="chevron-down"
                   :size="12"
-                  :stroke-width="2"
+                  :stroke-width="1.5"
                   color="var(--text-secondary)"
                   :class="['chev', { open: userMenuOpen }]"
                 />
@@ -32,7 +32,7 @@
                 </li>
                 <li class="user-divider" />
                 <li class="user-item danger" @click="handleLogout">
-                  <AppIcon name="log-in" :size="14" :stroke-width="2" color="var(--color-danger)" />
+                  <AppIcon name="log-in" :size="14" :stroke-width="1.5" color="var(--color-danger)" />
                   <span>{{ $t('common.logout') }}</span>
                 </li>
               </ul>
@@ -40,11 +40,11 @@
           </template>
           <template v-else>
             <router-link to="/auth?mode=login" class="auth-btn login">
-              <AppIcon name="log-in" :size="14" :stroke-width="2" />
+              <AppIcon name="log-in" :size="14" :stroke-width="1.5" />
               <span>{{ $t('common.login') }}</span>
             </router-link>
             <router-link to="/auth?mode=register" class="auth-btn register">
-              <AppIcon name="user-plus" :size="14" :stroke-width="2" />
+              <AppIcon name="user-plus" :size="14" :stroke-width="1.5" />
               <span>{{ $t('common.register') }}</span>
             </router-link>
           </template>

@@ -306,6 +306,22 @@
       <polyline points="7 7 12 12 7 17" />
       <polyline points="12 7 17 12 12 17" />
     </template>
+
+    <!-- Grid / Table / Matrix -->
+    <template v-else-if="name === 'grid'">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+      <line x1="3" y1="15" x2="21" y2="15" />
+      <line x1="9" y1="3" x2="9" y2="21" />
+      <line x1="15" y1="3" x2="15" y2="21" />
+    </template>
+
+    <!-- Scada / Data Flow Arrows -->
+    <template v-else-if="name === 'data-flow'">
+      <path d="M2 12h5m5 0h5m5 0h5" />
+      <path d="M7 7l5 5 5-5" />
+      <path d="M7 17l5-5 5 5" />
+    </template>
   </svg>
 </template>
 
@@ -329,7 +345,7 @@ defineProps({
   },
   strokeWidth: {
     type: [Number, String],
-    default: 1.6
+    default: 1.5
   }
 })
 </script>
