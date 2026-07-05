@@ -103,7 +103,7 @@ const coreToolItems = computed(() => [
 
 const advToolItems = computed(() => [
   { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), iconName: 'settings' },
-  { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyView'), iconName: 'eye' },
+  { id: 'survey-view', path: '/tools/survey-view', label: t('toolSurveyViewTitle'), iconName: 'eye' },
   { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), iconName: 'bar-chart' },
   { id: 'report', path: '/tools/report', label: t('sidebar.toolReport'), iconName: 'document' },
   { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), iconName: 'folder' },

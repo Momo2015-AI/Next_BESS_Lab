@@ -29,7 +29,8 @@ from routes.survey import survey_bp
 from services.boq import seed_boq_sections
 
 app = Flask(__name__)
-CORS(app)
+allowed_origins = os.environ.get('CORS_ORIGINS', '').split(',')
+CORS(app, origins=[o.strip() for o in allowed_origins if o.strip()], supports_credentials=True)
 
 # 数据库配置
 app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -38,7 +39,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # JWT Secret Key (生产环境请使用环境变量)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "soh-sim-secret-key-change-in-production")
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
 # 初始化数据库
 init_db(app)

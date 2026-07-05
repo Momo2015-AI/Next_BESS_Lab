@@ -154,7 +154,7 @@ def create_simulation_result(version_id):
         return jsonify({"success": True, "id": result_id, "name": result.name, "message": "仿真结果保存成功"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"保存失败: {str(e)}"}), 500
+        return jsonify({"error": "保存失败，请重试"}), 500
 
 
 @simulation_bp.route("/api/results/<result_id>", methods=["GET"])
@@ -194,7 +194,7 @@ def delete_simulation_result(result_id):
         return jsonify({"success": True, "message": "删除成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"删除失败: {str(e)}"}), 500
+        return jsonify({"error": "删除失败，请重试"}), 500
 
 
 # ==================== 校正因子模板API ====================
@@ -287,7 +287,7 @@ def create_correction_template():
         return jsonify({"success": True, "id": template_id, "message": "模板创建成功"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"创建失败: {str(e)}"}), 500
+        return jsonify({"error": "创建失败，请重试"}), 500
 
 
 @simulation_bp.route("/api/correction-templates/<template_id>", methods=["GET"])
@@ -360,7 +360,7 @@ def update_correction_template(template_id):
         return jsonify({"success": True, "message": "模板更新成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"更新失败: {str(e)}"}), 500
+        return jsonify({"error": "更新失败，请重试"}), 500
 
 
 @simulation_bp.route("/api/correction-templates/<template_id>", methods=["DELETE"])
@@ -384,7 +384,7 @@ def delete_correction_template(template_id):
         return jsonify({"success": True, "message": "删除成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"删除失败: {str(e)}"}), 500
+        return jsonify({"error": "删除失败，请重试"}), 500
 
 
 @simulation_bp.route("/api/correction-templates/seed", methods=["POST"])
@@ -456,4 +456,4 @@ def seed_correction_templates():
         return jsonify({"success": True, "message": "默认模板初始化成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"初始化失败: {str(e)}"}), 500
+        return jsonify({"error": "初始化失败，请重试"}), 500

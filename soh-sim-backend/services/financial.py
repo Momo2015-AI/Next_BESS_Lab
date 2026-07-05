@@ -18,7 +18,7 @@ BOQ_TO_CAPEX_MAP = {
 
 def _aggregate_boq_to_capex(boq_items):
     """将 BOQ 条目按 7 分类汇总为 equipment / epc / development 三大 CAPEX 类别"""
-    result = {"equipment": 0, "epc": 0, "development": 0}
+    result = {"equipment": 0, "epc": 0, "development": 0, "unmapped": []}
     if not boq_items:
         return result
     for item in boq_items:
@@ -27,13 +27,20 @@ def _aggregate_boq_to_capex(boq_items):
         if capex_cat:
             total = float(item.get("total_price", 0) or 0)
             result[capex_cat] += total
+        else:
+            result["unmapped"].append({
+                "section_code": section_code,
+                "name": item.get("name", ""),
+                "total_price": float(item.get("total_price", 0) or 0),
+            })
     return result
 
 
 def _compute_irr(cash_flows, guess=0.1):
-    """Newton-Raphson IRR 求解"""
+    """Newton-Raphson IRR 求解，含收敛验证"""
     rate = guess
-    for _ in range(100):
+    converged = False
+    for i in range(100):
         npv = 0.0
         dnpv = 0.0
         for t, cf in enumerate(cash_flows):
@@ -44,7 +51,11 @@ def _compute_irr(cash_flows, guess=0.1):
             break
         rate -= npv / dnpv
         if abs(npv) < 1e-6:
+            converged = True
             break
+    # 未收敛时返回 None，调用方需处理
+    if not converged:
+        return None
     return rate
 
 
@@ -364,11 +375,12 @@ def calculate_full_financial(total_ac_usable, financial_params=None, boq_data=No
         npv += cf / ((1 + discount_rate) ** t)
 
     irr = _compute_irr(project_cashflows)
-    project_irr = round(irr * 100, 2)
+    project_irr = round(irr * 100, 2) if irr is not None else None
 
     equity_irr_val = 0
     try:
-        equity_irr_val = round(_compute_irr(equity_cashflows) * 100, 2)
+        eq_irr = _compute_irr(equity_cashflows)
+        equity_irr_val = round(eq_irr * 100, 2) if eq_irr is not None else 0
     except Exception:
         equity_irr_val = 0
 

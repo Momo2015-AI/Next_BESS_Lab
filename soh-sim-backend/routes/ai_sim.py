@@ -10,6 +10,7 @@ from datetime import datetime
 import numpy as np
 from flask import Blueprint, current_app, jsonify, request
 
+from routes.auth import token_required
 from database import AlgorithmModel, BatteryManufacturer, db
 
 ai_sim_bp = Blueprint("ai_sim", __name__)
@@ -268,6 +269,7 @@ def run_simulation(data):
 
 
 @ai_sim_bp.route("/api/ai-sim/manufacturers", methods=["GET"])
+@token_required
 def get_manufacturers_api():
     """前端 SimulationLab 使用的厂家列表端点。"""
     manufacturers = []
@@ -293,6 +295,7 @@ def get_manufacturers_api():
 
 
 @ai_sim_bp.route("/api/ai_sim/builtin_manufacturers", methods=["GET"])
+@token_required
 def get_builtin_manufacturers_api():
     manufacturers = []
     for mfr in MANUFACTURERS_DB:
@@ -317,6 +320,7 @@ def get_builtin_manufacturers_api():
 
 
 @ai_sim_bp.route("/api/ai_sim/simulation", methods=["POST"])
+@token_required
 def simulation_api():
     """AI 仿真端点 - 根据厂家模型预测 SOH/RTE 曲线。"""
     data = request.get_json()
@@ -327,10 +331,11 @@ def simulation_api():
         result = run_simulation(data)
         return jsonify({"success": True, "data": result})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": "操作失败，请重试"}), 500
 
 
 @ai_sim_bp.route("/api/ai_sim/calibrate", methods=["POST"])
+@token_required
 def calibrate_params_api():
     """参数校准端点 - 根据实测数据校准 Arrhenius 参数。"""
     data = request.get_json()
@@ -354,6 +359,7 @@ def calibrate_params_api():
 
 
 @ai_sim_bp.route("/api/ai_sim/predict", methods=["POST"])
+@token_required
 def predict_api():
     """预测端点 - 使用校准后的参数预测 SOH/RTE。"""
     data = request.get_json()
@@ -374,7 +380,7 @@ def predict_api():
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": "操作失败，请重试"}), 500
 
 
 def seed_manufacturers():

@@ -128,4 +128,17 @@ const router = createRouter({
   routes
 })
 
+const protectedRoutes = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5', 'survey', 'epc']
+
+router.beforeEach((to, from, next) => {
+  if (protectedRoutes.includes(to.name)) {
+    const token = localStorage.getItem('auth_token')
+    if (!token) {
+      next({ name: 'home' })
+      return
+    }
+  }
+  next()
+})
+
 export default router

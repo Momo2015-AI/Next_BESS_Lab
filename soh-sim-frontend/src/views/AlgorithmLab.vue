@@ -799,7 +799,7 @@ async function fetchAlgorithms() {
     console.error('获取公开算法列表失败:', e)
   }
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   if (token) {
     try {
       const res = await fetch('/api/algorithms', {
@@ -830,7 +830,7 @@ async function createAlgorithm() {
     return
   }
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   if (!token) return
 
   try {
@@ -871,7 +871,7 @@ async function createAlgorithm() {
 async function deleteAlgorithm(id) {
   if (!confirm('确定删除该算法模型吗？')) return
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   if (!token) return
 
   try {
@@ -892,7 +892,7 @@ async function deleteAlgorithm(id) {
 }
 
 async function initializeBuiltin() {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   if (!token) return
 
   try {

@@ -1,11 +1,13 @@
 from flask import Blueprint, jsonify, request
 
+from routes.auth import token_required
 from services.financial import _aggregate_boq_to_capex, calculate_full_financial
 
 financial_bp = Blueprint("financial", __name__)
 
 
 @financial_bp.route("/api/financial/calculate", methods=["POST"])
+@token_required
 def financial_calculate():
     data = request.get_json()
     if not data:
@@ -25,7 +27,7 @@ def financial_calculate():
         result = calculate_full_financial(total_ac_usable, financial_params, boq_data)
         return jsonify({"success": True, "data": result})
     except Exception as e:
-        return jsonify({"error": "calculation failed", "message": str(e)}), 500
+        return jsonify({"error": "计算失败，请重试"}), 500
 
 
 @financial_bp.route("/api/financial/capex-from-boq", methods=["POST"])

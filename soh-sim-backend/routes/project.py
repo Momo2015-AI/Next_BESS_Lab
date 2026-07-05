@@ -111,7 +111,7 @@ def create_project():
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"创建失败: {str(e)}"}), 500
+        return jsonify({"error": "创建失败，请重试"}), 500
 
 
 @project_bp.route("/api/projects/<project_id>", methods=["GET"])
@@ -199,7 +199,7 @@ def update_project(project_id):
         return jsonify({"success": True, "message": "项目更新成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"更新失败: {str(e)}"}), 500
+        return jsonify({"error": "更新失败，请重试"}), 500
 
 
 @project_bp.route("/api/projects/<project_id>", methods=["DELETE"])
@@ -219,7 +219,7 @@ def delete_project(project_id):
         return jsonify({"success": True, "message": "项目删除成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"删除失败: {str(e)}"}), 500
+        return jsonify({"error": "删除失败，请重试"}), 500
 
 
 # ==================== 版本API ====================
@@ -317,7 +317,7 @@ def create_version(project_id):
         )
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"创建失败: {str(e)}"}), 500
+        return jsonify({"error": "创建失败，请重试"}), 500
 
 
 @project_bp.route("/api/versions/<version_id>", methods=["GET"])
@@ -391,7 +391,7 @@ def update_version(version_id):
         return jsonify({"success": True, "message": "版本更新成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"更新失败: {str(e)}"}), 500
+        return jsonify({"error": "更新失败，请重试"}), 500
 
 
 @project_bp.route("/api/versions/<version_id>/activate", methods=["POST"])
@@ -425,7 +425,7 @@ def activate_version(version_id):
         return jsonify({"success": True, "message": "版本激活成功"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"激活失败: {str(e)}"}), 500
+        return jsonify({"error": "激活失败，请重试"}), 500
 
 
 # ==================== 参数同步API ====================
@@ -488,4 +488,4 @@ def sync_params():
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"同步失败: {str(e)}"}), 500
+        return jsonify({"error": "同步失败，请重试"}), 500

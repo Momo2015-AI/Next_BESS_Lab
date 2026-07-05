@@ -103,7 +103,7 @@ def submit_survey():
         )
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"提交失败: {str(e)}"}), 500
+        return jsonify({"error": "提交失败，请重试"}), 500
 
 
 @survey_bp.route("/api/survey/<survey_id>", methods=["GET"])
@@ -221,7 +221,7 @@ def update_survey(survey_id):
         return jsonify({"success": True, "survey": survey.to_dict(), "message": "调研表更新成功"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"更新失败: {str(e)}"}), 500
+        return jsonify({"error": "更新失败，请重试"}), 500
 
 
 @survey_bp.route("/api/survey/<survey_id>", methods=["DELETE"])
@@ -237,7 +237,7 @@ def delete_survey(survey_id):
         return jsonify({"success": True, "message": "调研表已删除"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"删除失败: {str(e)}"}), 500
+        return jsonify({"error": "删除失败，请重试"}), 500
 
 
 @survey_bp.route("/api/project/<project_id>", methods=["GET"])
@@ -310,7 +310,7 @@ def update_project(project_id):
         return jsonify({"success": True, "project": project.to_dict(), "message": "项目更新成功"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"更新失败: {str(e)}"}), 500
+        return jsonify({"error": "更新失败，请重试"}), 500
 
 
 @survey_bp.route("/api/project/<project_id>", methods=["DELETE"])
@@ -332,4 +332,4 @@ def delete_project(project_id):
         return jsonify({"success": True, "message": "项目及关联调研表已删除"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"删除失败: {str(e)}"}), 500
+        return jsonify({"error": "删除失败，请重试"}), 500

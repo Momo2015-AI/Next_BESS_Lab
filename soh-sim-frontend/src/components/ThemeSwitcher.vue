@@ -12,7 +12,7 @@
     </button>
 
     <!-- Language switcher: pill with globe + current lang + chevron -->
-    <div class="lang-switcher" ref="rootRef">
+    <div ref="rootRef" class="lang-switcher">
       <button class="lang-trigger" :aria-expanded="open" :title="$t('common.language')" @click="open = !open">
         <AppIcon name="globe" :size="16" :stroke-width="1.5" color="var(--text-secondary)" />
         <span class="lang-label">{{ currentLangLabel }}</span>

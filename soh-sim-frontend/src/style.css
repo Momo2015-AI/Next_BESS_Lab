@@ -501,6 +501,40 @@
     margin-top: 2px;
   }
 
+  /* ── BOQ 表格内联输入框（紧凑型） ── */
+  .boq-table-input {
+    width: 100%;
+    padding: 2px 4px;
+    background-color: var(--form-field-bg);
+    border: 1px solid var(--form-field-border);
+    border-radius: 4px;
+    color: var(--form-field-text);
+    font-size: 12px;
+    font-weight: 400;
+    font-family: inherit;
+    line-height: 1.4;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      box-shadow 0.2s;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .boq-table-input:focus-visible {
+    border-color: var(--form-field-border-focus);
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+  }
+
+  .boq-table-input:hover {
+    border-color: var(--form-field-border-focus);
+  }
+
+  .boq-table-input::placeholder {
+    color: var(--form-field-placeholder);
+    font-weight: 400;
+  }
+
   /* ── 表单区块卡片 ── */
   .form-section {
     background: var(--form-field-bg);
@@ -861,6 +895,28 @@
     cursor: not-allowed;
   }
 
+  .btn-primary-sm {
+    padding: 0 10px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: #1677ff;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      box-shadow 0.2s;
+    line-height: 28px;
+  }
+  .btn-primary-sm:hover {
+    background: #4096ff;
+  }
+  .btn-primary-sm:active {
+    background: #0958d9;
+  }
+
   .btn-secondary {
     padding: 0 16px;
     height: var(--form-field-height);
@@ -888,6 +944,45 @@
     color: #d9d9d9;
     border-color: #d9d9d9;
     cursor: not-allowed;
+  }
+
+  .btn-secondary-sm {
+    padding: 0 10px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--form-field-border);
+    background: var(--form-field-bg);
+    color: var(--form-field-text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+    line-height: 28px;
+  }
+  .btn-secondary-sm:hover {
+    color: #4096ff;
+    border-color: #4096ff;
+  }
+  .btn-secondary-sm:active {
+    color: #0958d9;
+    border-color: #0958d9;
+  }
+
+  .btn-accent {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--color-success);
+    color: var(--color-text-on-accent);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-accent:hover {
+    opacity: 0.85;
   }
 
   .theme-btn-secondary {

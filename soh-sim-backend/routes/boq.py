@@ -2,12 +2,14 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 
-from database import BoqItem, BoqSection, db
+from database import BoqItem, BoqSection, Project, db
+from routes.auth import token_required
 
 boq_bp = Blueprint("boq", __name__)
 
 
 @boq_bp.route("/api/boq/sections", methods=["GET"])
+@token_required
 def get_boq_sections():
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 50, type=int)
@@ -27,6 +29,7 @@ def get_boq_sections():
 
 
 @boq_bp.route("/api/boq/items", methods=["GET"])
+@token_required
 def get_boq_items():
     project_id = request.args.get("project_id")
     is_alternative = request.args.get("is_alternative", "false").lower() == "true"
@@ -54,6 +57,7 @@ def get_boq_items():
 
 
 @boq_bp.route("/api/boq/items", methods=["POST"])
+@token_required
 def save_boq_items():
     data = request.get_json()
     if not data:
@@ -101,10 +105,11 @@ def save_boq_items():
         )
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"保存失败: {str(e)}"}), 500
+        return jsonify({"error": "保存失败，请重试"}), 500
 
 
 @boq_bp.route("/api/boq/version", methods=["POST"])
+@token_required
 def create_boq_version():
     data = request.get_json()
     if not data:

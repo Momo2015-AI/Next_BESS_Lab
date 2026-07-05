@@ -580,7 +580,7 @@ def export_technical_report():
     try:
         pdf_buf = _build_technical_report(data)
     except Exception as e:
-        return jsonify({"error": f"PDF generation failed: {str(e)}"}), 500
+        return jsonify({"error": "PDF 生成失败，请重试"}), 500
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     response = make_response(pdf_buf.getvalue())
@@ -621,7 +621,7 @@ def export_bom_report():
     try:
         pdf_buf = _build_bom_report(data)
     except Exception as e:
-        return jsonify({"error": f"PDF generation failed: {str(e)}"}), 500
+        return jsonify({"error": "PDF 生成失败，请重试"}), 500
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     response = make_response(pdf_buf.getvalue())
@@ -868,7 +868,7 @@ def export_plotly_chart(chart_type):
         return jsonify({"success": True, "html": html, "div_id": div_id})
 
     except Exception as e:
-        return jsonify({"error": f"图表生成失败: {str(e)}"}), 500
+        return jsonify({"error": "图表生成失败，请重试"}), 500
 
 
 @report_bp.route("/api/report/charts", methods=["GET"])

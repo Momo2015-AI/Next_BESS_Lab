@@ -96,7 +96,7 @@ def _get_user_from_token():
     user_id = payload.get("user_id")
     from database import User
 
-    user = request.current_user
+    user = User.query.get(user_id)
     if not user:
         return None, ("用户不存在", 404)
 
@@ -351,9 +351,13 @@ def change_password():
 
 
 # 验证token的装饰器
-def token_required(f):
-    """验证token装饰器"""
+import functools
 
+
+def token_required(f):
+    """验证token装饰器，使用 functools.wraps 保留原函数名以避免 Flask 端点冲突"""
+
+    @functools.wraps(f)
     def decorated(*args, **kwargs):
         user, error = _get_user_from_token()
         if error:
@@ -362,24 +366,24 @@ def token_required(f):
         request.user_id = user.id
         return f(*args, **kwargs)
 
-    decorated.__name__ = f.__name__
     return decorated
 
 
-# 角色权限检查装饰器（复用 token_required）
+# 角色权限检查装饰器（不内嵌 token_required，调用方需自行确保已认证）
 def role_required(*roles):
     """角色权限装饰器"""
 
     def decorator(f):
-        @token_required
+        @functools.wraps(f)
         def decorated(*args, **kwargs):
             user = request.current_user
+            if not user:
+                return jsonify({"error": "请先登录"}), 401
             if user.role not in roles:
                 return jsonify({"error": "权限不足"}), 403
             request.user_role = user.role
             return f(*args, **kwargs)
 
-        decorated.__name__ = f.__name__
         return decorated
 
     return decorator

@@ -1670,7 +1670,7 @@ const handleResize = () => {
 }
 
 const saveSimulationResult = async () => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   if (!token) {
     showToast('请先登录', 'error')
     return

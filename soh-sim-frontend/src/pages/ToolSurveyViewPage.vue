@@ -1,160 +1,195 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>调研输入</h1>
-      <p>录入或搜索项目调研数据，作为仿真计算的输入参数</p>
+      <h1>{{ $t('toolSurveyViewTitle') }}</h1>
+      <p>{{ $t('toolSurveyViewDesc') }}</p>
     </div>
 
     <!-- 搜索区域 -->
-    <SectionCard number="01" title="查找调研数据">
+    <SectionCard number="01" :title="$t('toolSurveyView.searchTitle')">
       <div class="form-grid-2">
         <div class="search-field-row">
-          <FormField v-model="surveyId" label="调研表串码ID" type="text" placeholder="输入调研表ID" />
-          <button :disabled="loading" class="btn-search-inline" @click="loadSurveyById">
-            {{ loading ? '加载中...' : '加载' }}
+          <FormField
+            v-model="surveyId"
+            :label="$t('toolSurveyView.idLabel')"
+            type="text"
+            :placeholder="$t('toolSurveyView.idPlaceholder')"
+          />
+          <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="loadSurveyById">
+            {{ loading ? $t('toolSurveyView.loading') : $t('toolSurveyView.loadBtn') }}
           </button>
         </div>
         <div class="search-field-row">
-          <FormField v-model="searchKeyword" label="项目名称搜索" type="text" placeholder="输入项目名称搜索" />
-          <button :disabled="loading" class="btn-search-inline" @click="searchByProjectName">
-            {{ loading ? '搜索中...' : '搜索' }}
+          <FormField
+            v-model="searchKeyword"
+            :label="$t('toolSurveyView.nameSearchLabel')"
+            type="text"
+            :placeholder="$t('toolSurveyView.nameSearchPlaceholder')"
+          />
+          <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="searchByProjectName">
+            {{ loading ? $t('toolSurveyView.searching') : $t('toolSurveyView.searchBtn') }}
           </button>
         </div>
       </div>
       <div v-if="searchResults.length > 0" class="search-results mt-4">
-        <h4 class="section-title">搜索结果</h4>
+        <h4 class="section-title">{{ $t('toolSurveyView.searchResults') }}</h4>
         <div class="results-list">
           <div v-for="item in searchResults" :key="item.id" class="result-item" @click="selectSurvey(item)">
             <div class="result-info">
               <p class="result-name">{{ item.project_name }}</p>
               <p class="result-detail">{{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh</p>
             </div>
-            <span class="result-action">选择</span>
+            <span class="result-action">{{ $t('toolSurveyView.select') }}</span>
           </div>
         </div>
       </div>
     </SectionCard>
 
     <!-- 项目基本信息 -->
-    <SectionCard number="02" title="项目基本信息">
+    <SectionCard number="02" :title="$t('toolSurveyView.basicInfoTitle')">
       <div class="form-grid-3">
-        <FormField v-model="formData.projectName" label="项目名称" type="text" placeholder="项目名称" />
-        <FormField v-model="formData.location" label="项目地点" type="text" placeholder="项目地点" />
+        <FormField
+          v-model="formData.projectName"
+          :label="$t('toolSurveyView.projectName')"
+          type="text"
+          :placeholder="$t('toolSurveyView.projectName')"
+        />
+        <FormField
+          v-model="formData.location"
+          :label="$t('toolSurveyView.projectLocation')"
+          type="text"
+          :placeholder="$t('toolSurveyView.projectLocation')"
+        />
         <FormField
           v-model.number="formData.ratedEnergy"
-          label="额定能量 (MWh)"
+          :label="$t('toolSurveyView.ratedEnergy')"
           type="number"
           step="0.1"
-          placeholder="5"
+          :placeholder="5"
         />
-        <FormField v-model.number="formData.containerQty" label="集装箱数量" type="number" placeholder="1" />
-        <FormField v-model.number="formData.pcsQty" label="PCS数量" type="number" placeholder="1" />
+        <FormField
+          v-model.number="formData.containerQty"
+          :label="$t('toolSurveyView.containerQty')"
+          type="number"
+          :placeholder="1"
+        />
+        <FormField
+          v-model.number="formData.pcsQty"
+          :label="$t('toolSurveyView.pcsQty')"
+          type="number"
+          :placeholder="1"
+        />
       </div>
     </SectionCard>
 
     <!-- 运行条件 -->
-    <SectionCard number="03" title="运行条件">
+    <SectionCard number="03" :title="$t('toolSurveyView.operatingConditionsTitle')">
       <div class="form-grid-3">
         <FormField
           v-model.number="formData.temperature"
-          label="运行温度 (°C)"
+          :label="$t('toolSurveyView.temperature')"
           type="number"
           step="0.5"
-          placeholder="25"
+          :placeholder="25"
         />
         <FormField
           v-model.number="formData.cyclesPerDay"
-          label="每日循环次数"
+          :label="$t('toolSurveyView.cyclesPerDay')"
           type="number"
           step="0.5"
-          placeholder="1"
+          :placeholder="1"
         />
         <FormField
           v-model.number="formData.dod"
-          label="DOD (%)"
+          :label="$t('toolSurveyView.dod')"
           type="number"
           step="1"
           min="0"
           max="100"
-          placeholder="80"
+          :placeholder="80"
         />
         <FormField
           v-model.number="formData.cRate"
-          label="充放电倍率 (C)"
+          :label="$t('toolSurveyView.cRate')"
           type="number"
           step="0.1"
           min="0.1"
           max="2"
-          placeholder="0.5"
+          :placeholder="0.5"
         />
-        <FormField v-model="formData.batteryType" label="电池类型" type="select" :options="batteryTypeOptions" />
+        <FormField
+          v-model="formData.batteryType"
+          :label="$t('toolSurveyView.batteryType')"
+          type="select"
+          :options="batteryTypeOptions"
+        />
       </div>
     </SectionCard>
 
     <!-- 仿真参数 -->
-    <SectionCard number="04" title="仿真参数">
+    <SectionCard number="04" :title="$t('toolSurveyView.simulationParamsTitle')">
       <div class="form-grid-4">
         <FormField
           v-model.number="simParams.simulationYears"
-          label="仿真年限 (年)"
+          :label="$t('toolSurveyView.simYears')"
           type="select"
           :options="simYearOptions"
         />
         <FormField
           v-model.number="simParams.guaranteeYears"
-          label="最低保障年限 (年)"
+          :label="$t('toolSurveyView.guaranteeYears')"
           type="select"
           :options="guaranteeYearOptions"
         />
         <FormField
           v-model.number="simParams.guaranteeSoh"
-          label="保障SOH底线 (%)"
+          :label="$t('toolSurveyView.guaranteeSoh')"
           type="number"
           step="1"
           min="60"
           max="90"
-          placeholder="70"
+          :placeholder="70"
         />
         <FormField
           v-model.number="simParams.requiredEnergy"
-          label="承诺能量底线 (MWh)"
+          :label="$t('toolSurveyView.requiredEnergy')"
           type="number"
           step="1"
-          placeholder="100"
+          :placeholder="100"
         />
         <FormField
           v-model.number="simParams.initRte"
-          label="初始RTE (%)"
+          :label="$t('toolSurveyView.initRte')"
           type="number"
           step="0.1"
           min="85"
           max="95"
-          placeholder="92"
+          :placeholder="92"
         />
         <FormField
           v-model.number="simParams.acEfficiency"
-          label="AC效率 (%)"
+          :label="$t('toolSurveyView.acEfficiency')"
           type="number"
           step="0.1"
           min="95"
           max="99"
-          placeholder="97"
+          :placeholder="97"
         />
         <FormField
           v-model.number="simParams.dcEfficiency"
-          label="DC效率 (%)"
+          :label="$t('toolSurveyView.dcEfficiency')"
           type="number"
           step="0.1"
           min="95"
           max="99"
-          placeholder="97.5"
+          :placeholder="97.5"
         />
         <FormField
           v-model.number="simParams.auxPower"
-          label="自辅耗功率 (kW)"
+          :label="$t('toolSurveyView.auxPower')"
           type="number"
           step="0.1"
-          placeholder="5"
+          :placeholder="5"
         />
       </div>
     </SectionCard>
@@ -162,10 +197,10 @@
     <!-- 操作 -->
     <div class="actions">
       <button :disabled="loading" class="btn-primary" @click="saveSurvey">
-        {{ loading ? '保存中...' : '保存调研数据' }}
+        {{ loading ? $t('toolSurveyView.saving') : $t('toolSurveyView.saveBtn') }}
       </button>
-      <button class="btn-secondary" @click="resetForm">重置</button>
-      <button class="btn-accent" @click="goToSimulation">前往仿真分析</button>
+      <button class="btn-secondary" @click="resetForm">{{ $t('toolSurveyView.resetBtn') }}</button>
+      <button class="btn-accent" @click="goToSimulation">{{ $t('toolSurveyView.goSimBtn') }}</button>
     </div>
   </div>
 </template>
@@ -371,13 +406,6 @@ function goToSimulation() {
   margin: 0;
 }
 
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 12px;
-  color: var(--section-title-color);
-}
-
 .search-field-row {
   display: flex;
   align-items: flex-end;
@@ -385,28 +413,6 @@ function goToSimulation() {
 }
 .search-field-row .form-field {
   flex: 1;
-}
-
-.btn-search-inline {
-  padding: 0 14px;
-  height: var(--form-field-height);
-  border-radius: var(--form-field-radius);
-  border: none;
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: opacity 0.2s ease;
-}
-.btn-search-inline:hover {
-  opacity: 0.88;
-}
-.btn-search-inline:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 
 .search-results {
@@ -455,20 +461,5 @@ function goToSimulation() {
   display: flex;
   gap: 10px;
   margin-top: 8px;
-}
-
-.btn-accent {
-  padding: 10px 24px;
-  border-radius: 8px;
-  border: none;
-  background: var(--color-success);
-  color: var(--color-text-on-accent);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-accent:hover {
-  opacity: 0.85;
 }
 </style>

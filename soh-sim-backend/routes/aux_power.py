@@ -7,10 +7,13 @@ import math
 
 from flask import Blueprint, jsonify, request
 
+from routes.auth import token_required
+
 aux_power_bp = Blueprint("aux_power", __name__)
 
 
 @aux_power_bp.route("/api/aux-power/calculate", methods=["POST"])
+@token_required
 def calculate_aux_power():
     """
     计算辅助功耗
@@ -90,10 +93,11 @@ def calculate_aux_power():
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": "计算失败，请重试"}), 500
 
 
 @aux_power_bp.route("/api/aux-power/defaults", methods=["GET"])
+@token_required
 def get_defaults():
     """获取默认参数"""
     return jsonify(

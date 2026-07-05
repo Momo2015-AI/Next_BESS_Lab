@@ -9,7 +9,7 @@ import math
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 # 导入所有模型
 from database import (
@@ -18,6 +18,7 @@ from database import (
     GridComplianceAnalysis,
     HVInterconnection,
     IPPFinancialModel,
+    Project,
     SafetyFireDesign,
     ScadaEmsDesign,
     SystemArchitecture,
@@ -25,8 +26,31 @@ from database import (
     db,
 )
 
+# 导入认证模块
+from routes.auth import _get_user_from_token, token_required
+
 # 创建蓝图
 epc_bp = Blueprint("epc", __name__)
+
+
+def _get_current_user():
+    """从请求头获取当前用户（未认证返回 None）"""
+    user, _ = _get_user_from_token()
+    return user
+
+
+def _check_project_access(project_id, user):
+    """验证用户有权访问该项目（tenant_id 隔离）"""
+    if not user:
+        return False
+    proj = Project.query.get(project_id) if project_id else None
+    if not proj:
+        return False
+    # 超级管理员可访问所有项目
+    if getattr(user, "role", None) == "admin":
+        return True
+    # 检查 tenant_id 匹配
+    return getattr(proj, "tenant_id", None) == getattr(user, "tenant_id", None)
 
 
 # ===================== 通用CRUD =====================
@@ -46,13 +70,13 @@ def _paginated_query(model, args):
     query = model.query
     if project_id:
         query = query.filter_by(project_id=project_id)
-    query = query.order_by(model.created_at.desc())
-    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    pagination = query.order_by(model.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
     return {
         "items": [item.to_dict() for item in pagination.items],
         "total": pagination.total,
         "page": page,
         "per_page": per_page,
+        "pages": pagination.pages,
     }
 
 
@@ -60,22 +84,48 @@ def _paginated_query(model, args):
 
 
 @epc_bp.route("/api/system-architecture", methods=["GET"])
+@token_required
 def list_architectures():
-    return jsonify(_paginated_query(SystemArchitecture, request.args))
+    user = request.current_user
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 20))
+    project_id = request.args.get("project_id")
+    query = SystemArchitecture.query
+    if project_id:
+        query = query.filter_by(project_id=project_id)
+    if getattr(user, "role", None) != "admin":
+        query = query.filter_by(tenant_id=user.tenant_id)
+    pagination = query.order_by(SystemArchitecture.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    return jsonify({
+        "items": [item.to_dict() for item in pagination.items],
+        "total": pagination.total,
+        "page": page,
+        "per_page": per_page,
+        "pages": pagination.pages,
+    })
 
 
 @epc_bp.route("/api/system-architecture/<arch_id>", methods=["GET"])
+@token_required
 def get_architecture(arch_id):
+    user = request.current_user
     obj = _get_or_404(SystemArchitecture, arch_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
 @epc_bp.route("/api/system-architecture/design", methods=["POST"])
+@token_required
 def design_architecture():
     """自动设计系统架构"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     total_power_mw = float(data.get("total_power_mw", 100))
     total_energy_mwh = float(data.get("total_energy_mwh", 200))
     duration_hours = total_energy_mwh / total_power_mw if total_power_mw > 0 else 2
@@ -217,6 +267,7 @@ def design_architecture():
 
 
 @epc_bp.route("/api/grid-compliance/standards", methods=["GET"])
+@token_required
 def list_grid_standards():
     """获取支持的电网标准"""
     standards = [
@@ -230,9 +281,14 @@ def list_grid_standards():
 
 
 @epc_bp.route("/api/grid-compliance/analyze", methods=["POST"])
+@token_required
 def analyze_grid_compliance():
     """执行电网合规分析"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     standard = data.get("grid_standard", "UAE_S_5010")
     pcs_power_mw = float(data.get("pcs_power_mw", 3.45))
     pcs_count = int(data.get("pcs_count", 1))
@@ -355,10 +411,14 @@ def analyze_grid_compliance():
 
 
 @epc_bp.route("/api/grid-compliance/<gc_id>", methods=["GET"])
+@token_required
 def get_grid_compliance(gc_id):
+    user = request.current_user
     obj = _get_or_404(GridComplianceAnalysis, gc_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
@@ -366,9 +426,14 @@ def get_grid_compliance(gc_id):
 
 
 @epc_bp.route("/api/safety-design/analyze", methods=["POST"])
+@token_required
 def analyze_safety_design():
     """安全与消防设计分析"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     capacity_mwh = float(data.get("system_capacity_mwh", 100))
     container_count = int(data.get("container_count", 20))
     chemistry = data.get("chemistry_type", "LFP")
@@ -448,14 +513,19 @@ def analyze_safety_design():
 
 
 @epc_bp.route("/api/safety-design/<sf_id>", methods=["GET"])
+@token_required
 def get_safety_design(sf_id):
+    user = request.current_user
     obj = _get_or_404(SafetyFireDesign, sf_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
 @epc_bp.route("/api/safety-design/standards", methods=["GET"])
+@token_required
 def list_safety_standards():
     return jsonify(
         [
@@ -471,9 +541,14 @@ def list_safety_standards():
 
 
 @epc_bp.route("/api/ipp-financial/calculate", methods=["POST"])
+@token_required
 def calculate_ipp():
     """IPP财务模型计算"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     years = int(data.get("project_life_years", 25))
     capex = float(data.get("total_capex_usd", 500_000_000))
     capacity_mw = float(data.get("capacity_mw", 100))
@@ -660,10 +735,14 @@ def calculate_ipp():
 
 
 @epc_bp.route("/api/ipp-financial/<ipp_id>", methods=["GET"])
+@token_required
 def get_ipp(ipp_id):
+    user = request.current_user
     obj = _get_or_404(IPPFinancialModel, ipp_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
@@ -758,14 +837,20 @@ COMPLIANCE_TEMPLATES = {
 
 
 @epc_bp.route("/api/compliance-matrix/templates", methods=["GET"])
+@token_required
 def list_compliance_templates():
     return jsonify([{"code": k, "name": v["name"]} for k, v in COMPLIANCE_TEMPLATES.items()])
 
 
 @epc_bp.route("/api/compliance-matrix/generate", methods=["POST"])
+@token_required
 def generate_compliance_matrix():
     """生成合规矩阵"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     template_code = data.get("template", "UAE_DEWA_VII_BESS")
     template = COMPLIANCE_TEMPLATES.get(template_code)
 
@@ -826,19 +911,27 @@ def generate_compliance_matrix():
 
 
 @epc_bp.route("/api/compliance-matrix/<cm_id>", methods=["GET"])
+@token_required
 def get_compliance_matrix(cm_id):
+    user = request.current_user
     obj = _get_or_404(ComplianceMatrix, cm_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
 @epc_bp.route("/api/compliance-matrix/<cm_id>", methods=["PUT"])
+@token_required
 def update_compliance_matrix_item(cm_id):
     """更新合规矩阵中的单项"""
+    user = request.current_user
     obj = _get_or_404(ComplianceMatrix, cm_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
 
     data = request.get_json()
     matrix = json.loads(obj.matrix_data) if obj.matrix_data else []
@@ -894,9 +987,14 @@ def _auto_match_requirement(req, project_data):
 
 
 @epc_bp.route("/api/thermal-management/calculate", methods=["POST"])
+@token_required
 def calculate_thermal():
     """热管理设计计算"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     env_temp = float(data.get("ambient_max_c", 45))
     cell_ah = float(data.get("cell_capacity_ah", 280))
     cell_resistance = float(data.get("cell_resistance_ohm", 0.00025))
@@ -972,10 +1070,14 @@ def calculate_thermal():
 
 
 @epc_bp.route("/api/thermal-management/<tm_id>", methods=["GET"])
+@token_required
 def get_thermal(tm_id):
+    user = request.current_user
     obj = _get_or_404(ThermalManagement, tm_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
@@ -983,9 +1085,14 @@ def get_thermal(tm_id):
 
 
 @epc_bp.route("/api/scada-ems/design", methods=["POST"])
+@token_required
 def design_scada_ems():
     """SCADA/EMS设计"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     container_count = int(data.get("container_count", 20))
     pcs_count = int(data.get("pcs_count", 10))
 
@@ -1044,10 +1151,14 @@ def design_scada_ems():
 
 
 @epc_bp.route("/api/scada-ems/<se_id>", methods=["GET"])
+@token_required
 def get_scada_ems(se_id):
+    user = request.current_user
     obj = _get_or_404(ScadaEmsDesign, se_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
@@ -1055,9 +1166,14 @@ def get_scada_ems(se_id):
 
 
 @epc_bp.route("/api/hv-interconnection/design", methods=["POST"])
+@token_required
 def design_hv_interconnection():
     """高压接入设计"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     total_power_mw = float(data.get("total_power_mw", 100))
     poc_voltage = float(data.get("poc_voltage_kv", 33))
     s_sc = float(data.get("short_circuit_capacity_mva", 500))
@@ -1133,10 +1249,14 @@ def design_hv_interconnection():
 
 
 @epc_bp.route("/api/hv-interconnection/<hv_id>", methods=["GET"])
+@token_required
 def get_hv_interconnection(hv_id):
+    user = request.current_user
     obj = _get_or_404(HVInterconnection, hv_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
@@ -1231,14 +1351,20 @@ BID_DOCUMENT_TEMPLATES = {
 
 
 @epc_bp.route("/api/bid-document/templates", methods=["GET"])
+@token_required
 def list_bid_templates():
     return jsonify([{"code": k, "name": v["name"]} for k, v in BID_DOCUMENT_TEMPLATES.items()])
 
 
 @epc_bp.route("/api/bid-document/generate", methods=["POST"])
+@token_required
 def generate_bid_document():
     """生成投标文档"""
     data = request.get_json()
+    project_id = data.get("project_id")
+    user = request.current_user
+    if project_id and not _check_project_access(project_id, user):
+        return jsonify({"error": "无权访问该项目"}), 403
     template_code = data.get("template", "technical_proposal")
     template = BID_DOCUMENT_TEMPLATES.get(template_code)
 
@@ -1284,16 +1410,37 @@ def generate_bid_document():
 
 
 @epc_bp.route("/api/bid-document/<bd_id>", methods=["GET"])
+@token_required
 def get_bid_document(bd_id):
+    user = request.current_user
     obj = _get_or_404(BidDocument, bd_id)
     if not obj:
         return jsonify({"error": "未找到"}), 404
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+        return jsonify({"error": "无权访问该项目"}), 403
     return jsonify(obj.to_dict())
 
 
 @epc_bp.route("/api/bid-document", methods=["GET"])
+@token_required
 def list_bid_documents():
-    return jsonify(_paginated_query(BidDocument, request.args))
+    user = request.current_user
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 20))
+    project_id = request.args.get("project_id")
+    query = BidDocument.query
+    if project_id:
+        query = query.filter_by(project_id=project_id)
+    if getattr(user, "role", None) != "admin":
+        query = query.filter_by(tenant_id=user.tenant_id)
+    pagination = query.order_by(BidDocument.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    return jsonify({
+        "items": [item.to_dict() for item in pagination.items],
+        "total": pagination.total,
+        "page": page,
+        "per_page": per_page,
+        "pages": pagination.pages,
+    })
 
 
 def _generate_section_content(section_template, data):

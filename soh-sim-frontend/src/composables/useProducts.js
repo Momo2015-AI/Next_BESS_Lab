@@ -85,7 +85,7 @@ function toCamel(obj) {
 }
 
 function getAuthHeaders() {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('auth_token')
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 

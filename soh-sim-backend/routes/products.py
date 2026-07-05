@@ -24,7 +24,7 @@ from database import (
     User,
     db,
 )
-from routes.auth import _get_user_from_token
+from routes.auth import _get_user_from_token, token_required
 
 products_bp = Blueprint("products", __name__)
 
@@ -306,6 +306,7 @@ def seed_products():
 
 
 @products_bp.route("/api/products/seed", methods=["POST"])
+@token_required
 def seed_api():
     """手动触发种子数据初始化"""
     try:
@@ -313,10 +314,11 @@ def seed_api():
         return jsonify({"success": True, "message": "种子数据已初始化"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"初始化失败: {str(e)}"}), 500
+        return jsonify({"error": "初始化失败，请重试"}), 500
 
 
 @products_bp.route("/api/products/refresh", methods=["POST"])
+@token_required
 def refresh_products():
     """刷新产品库：清空现有数据并重新导入种子数据"""
     try:
@@ -330,7 +332,7 @@ def refresh_products():
         return jsonify({"success": True, "message": "产品库已刷新"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"刷新失败: {str(e)}"}), 500
+        return jsonify({"error": "刷新失败，请重试"}), 500
 
 
 @products_bp.route("/api/products/<category>", methods=["GET"])
@@ -657,7 +659,7 @@ def create_config_rule():
         return jsonify({"success": True, "id": rule.id}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"创建失败: {str(e)}"}), 500
+        return jsonify({"error": "创建失败，请重试"}), 500
 
 
 @products_bp.route("/api/products/config-rules/<rule_id>", methods=["PUT"])

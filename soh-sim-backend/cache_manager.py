@@ -2,62 +2,74 @@
 缓存管理器 - 用于缓存计算密集型结果
 """
 
+import logging
 import threading
 import time
 from functools import wraps
+
+logger = logging.getLogger(__name__)
 
 
 class LRUCache:
     """
     简单的LRU缓存实现
+    TTL 基于插入时间（insert_time）判断，不受访问频率影响。
+    热数据不会因为频繁访问而永不过期。
     """
 
     def __init__(self, capacity: int = 100, ttl: int = 3600):
         self.capacity = capacity
         self.ttl = ttl  # Time-to-live in seconds
         self.cache = {}
-        self.access_times = {}
+        self.insert_times = {}  # 用于 TTL 判断
+        self.access_times = {}  # 用于 LRU 淘汰
         self.lock = threading.Lock()
 
     def get(self, key):
         with self.lock:
             if key in self.cache:
-                # 检查是否过期
-                if time.time() - self.access_times[key] <= self.ttl:
-                    # 更新访问时间
+                # 基于插入时间检查是否过期
+                if time.time() - self.insert_times[key] <= self.ttl:
+                    # 更新访问时间（仅用于 LRU 淘汰排序）
                     self.access_times[key] = time.time()
                     return self.cache[key]
                 else:
                     # 过期，删除键值对
                     del self.cache[key]
+                    del self.insert_times[key]
                     del self.access_times[key]
             return None
 
     def put(self, key, value):
         with self.lock:
             if key in self.cache:
-                # 更新现有键的值和访问时间
+                # 更新现有键的值、插入时间和访问时间
                 self.cache[key] = value
+                self.insert_times[key] = time.time()
                 self.access_times[key] = time.time()
             else:
                 if len(self.cache) >= self.capacity:
-                    # 找到最久未使用的键
+                    # 找到最久未使用的键（基于 access_time）
                     oldest_key = min(self.access_times.keys(), key=lambda k: self.access_times[k])
                     del self.cache[oldest_key]
+                    del self.insert_times[oldest_key]
                     del self.access_times[oldest_key]
 
                 self.cache[key] = value
+                self.insert_times[key] = time.time()
                 self.access_times[key] = time.time()
 
     def invalidate(self, key):
         with self.lock:
             if key in self.cache:
                 del self.cache[key]
+                del self.insert_times[key]
                 del self.access_times[key]
 
     def clear(self):
         with self.lock:
             self.cache.clear()
+            self.insert_times.clear()
             self.access_times.clear()
 
 
@@ -79,7 +91,7 @@ def cached_function(ttl=3600):
             # 尝试从缓存获取结果
             cached_result = calculation_cache.get(cache_key)
             if cached_result is not None:
-                print(f"Cache hit for {func.__name__}")
+                logger.debug("Cache hit for %s", func.__name__)
                 return cached_result
 
             # 计算结果
@@ -87,7 +99,7 @@ def cached_function(ttl=3600):
 
             # 存储到缓存
             calculation_cache.put(cache_key, result)
-            print(f"Cache miss for {func.__name__}, cached result")
+            logger.debug("Cache miss for %s, cached result", func.__name__)
 
             return result
 

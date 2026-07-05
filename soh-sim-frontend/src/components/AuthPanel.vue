@@ -92,6 +92,7 @@
       </div>
 
       <div
+        v-if="isDev"
         class="mt-4 p-3 rounded-lg"
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
@@ -133,6 +134,7 @@ const showPassword = ref(false)
 const loading = ref(false)
 const agreedToTerms = ref(false)
 const errorMessage = ref('')
+const isDev = import.meta.env.DEV
 
 watch(
   () => props.defaultMode,

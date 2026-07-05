@@ -3,12 +3,14 @@
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-bold" style="color: var(--color-text)">工程量清单 BOQ</h2>
       <div class="flex gap-2">
-        <button class="px-3 py-1 text-xs rounded" :style="versionStyle('main')" @click="switchVersion('main')">
+        <button
+          :class="['px-3 py-1 text-xs rounded', versionActive === 'main' ? 'btn-primary' : 'btn-secondary']"
+          @click="switchVersion('main')"
+        >
           Main BOQ
         </button>
         <button
-          class="px-3 py-1 text-xs rounded"
-          :style="versionStyle('alternative')"
+          :class="['px-3 py-1 text-xs rounded', versionActive === 'alternative' ? 'btn-primary' : 'btn-secondary']"
           @click="switchVersion('alternative')"
         >
           Alternative
@@ -17,23 +19,11 @@
     </div>
 
     <div class="flex gap-2">
+      <button class="btn-primary-sm" @click="autoFillQuantities">自动预填数量</button>
+      <button class="btn-secondary-sm" @click="save">保存 BOQ</button>
       <button
-        class="px-3 py-1 text-xs rounded"
-        style="background: var(--color-accent); color: white"
-        @click="autoFillQuantities"
-      >
-        自动预填数量
-      </button>
-      <button
-        class="px-3 py-1 text-xs rounded"
-        style="background: var(--color-card); border: 1px solid var(--color-border); color: var(--color-text)"
-        @click="save"
-      >
-        保存 BOQ
-      </button>
-      <button
-        class="px-3 py-1 text-xs rounded"
-        style="background: var(--color-card); border: 1px solid var(--color-accent); color: var(--color-accent)"
+        class="btn-secondary-sm"
+        style="color: var(--color-accent); border-color: var(--color-accent)"
         @click="aggregateCapex"
       >
         汇总到 CAPEX
@@ -85,60 +75,23 @@
             <tbody>
               <tr v-for="(item, idx) in sectionItems(section.code)" :key="idx">
                 <td class="p-1">
-                  <input
-                    v-model.number="item.seq"
-                    class="w-full px-1 py-0.5 rounded text-xs"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model.number="item.seq" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1">
-                  <input
-                    v-model="item.name"
-                    class="w-full px-1 py-0.5 rounded text-xs"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="item.name" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1">
-                  <input
-                    v-model="item.spec"
-                    class="w-full px-1 py-0.5 rounded text-xs"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="item.spec" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1">
-                  <input
-                    v-model="item.unit"
-                    class="w-full px-1 py-0.5 rounded text-xs"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="item.unit" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1">
                   <input
                     v-model.number="item.quantity"
                     type="number"
                     step="1"
-                    class="w-full px-1 py-0.5 rounded text-xs text-right"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
+                    class="w-full px-1 py-0.5 rounded text-xs text-right boq-table-input"
                     @input="updateItemTotal(item)"
                   />
                 </td>
@@ -147,12 +100,7 @@
                     v-model.number="item.unitPrice"
                     type="number"
                     step="0.01"
-                    class="w-full px-1 py-0.5 rounded text-xs text-right"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
+                    class="w-full px-1 py-0.5 rounded text-xs text-right boq-table-input"
                     @input="updateItemTotal(item)"
                   />
                 </td>
@@ -160,15 +108,7 @@
                   {{ formatPrice(item.totalPrice || (item.quantity || 0) * (item.unitPrice || 0)) }}
                 </td>
                 <td class="p-1">
-                  <input
-                    v-model="item.note"
-                    class="w-full px-1 py-0.5 rounded text-xs"
-                    style="
-                      background: var(--color-input-bg-dark);
-                      border: 1px solid var(--color-input-border);
-                      color: var(--color-text);
-                    "
-                  />
+                  <input v-model="item.note" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1 text-center">
                   <button class="text-xs" style="color: var(--color-danger)" @click="removeItem(section.code, idx)">
@@ -212,6 +152,7 @@ const store = useBessStore()
 const sections = ref([])
 const openSections = reactive({})
 const items = reactive([])
+const versionActive = ref('main')
 
 const BOQ_CATEGORY_UNITS = {
   100: 'MWh',
@@ -329,17 +270,9 @@ function toggleSection(code) {
 }
 
 function switchVersion(ver) {
+  versionActive.value = ver
   store.boq.activeVersion = ver
   loadItems()
-}
-
-function versionStyle(ver) {
-  const active = store.boq.activeVersion === ver
-  return {
-    background: active ? 'var(--color-accent)' : 'var(--color-card)',
-    color: active ? 'var(--color-text-on-accent)' : 'var(--color-text-muted)',
-    border: active ? 'none' : '1px solid var(--color-border)'
-  }
 }
 
 function autoFillQuantities() {

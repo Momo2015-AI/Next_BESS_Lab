@@ -3,6 +3,7 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 
+from routes.auth import token_required
 from services.pipeline import calculate_full_pipeline, validate_pipeline_input
 
 pipeline_bp = Blueprint("pipeline", __name__)
@@ -13,6 +14,7 @@ _lock = threading.Lock()
 
 
 @pipeline_bp.route("/api/pipeline/calculate", methods=["POST"])
+@token_required
 def pipeline_calculate():
     data = request.get_json()
     if not data:
@@ -31,10 +33,11 @@ def pipeline_calculate():
         result = calculate_full_pipeline(system_params, degradation, algorithm, financial_params)
         return jsonify({"status": "completed", "result": result})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "计算失败，请重试"}), 500
 
 
 @pipeline_bp.route("/api/pipeline/task/<task_id>", methods=["GET"])
+@token_required
 def pipeline_task_status(task_id):
     with _lock:
         task = _pending_tasks.get(task_id)

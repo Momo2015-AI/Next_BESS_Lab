@@ -13,7 +13,7 @@
         <div class="header-actions">
           <!-- 已登录态：显示用户菜单；未登录：显示登录+注册两按钮 -->
           <template v-if="authUser">
-            <div class="user-menu" ref="userMenuRef">
+            <div ref="userMenuRef" class="user-menu">
               <button class="user-trigger" @click="userMenuOpen = !userMenuOpen">
                 <div class="user-avatar">{{ authUser.username?.charAt(0)?.toUpperCase() || 'U' }}</div>
                 <span class="user-name">{{ authUser.username }}</span>
