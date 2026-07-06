@@ -12,65 +12,48 @@
             borderTop: '3px solid ' + (metrics[idx]?.borderColor || 'var(--color-accent)')
           }"
         >
-          <div class="text-[9px] uppercase tracking-wider truncate" style="color: var(--color-text-muted)">
+          <div class="text-[9px] uppercase tracking-wider truncate text-muted">
             {{ m.label }}
           </div>
           <div class="text-base md:text-lg font-bold font-mono mt-1" :style="{ color: m.textColor }">
             {{ m.value }}
           </div>
-          <div class="text-[8px] mt-0.5" style="color: var(--color-text-muted)">
+          <div class="text-[8px] mt-0.5 text-muted">
             {{ m.unit }}
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div
-          class="rounded-lg p-3"
-          style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-        >
-          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">
-            现金流曲线与回收期 Cash Flow & Payback
-          </h3>
+        <div class="rounded-lg p-3 card-panel-chart">
+          <h3 class="font-bold text-xs mb-2 text-primary">现金流曲线与回收期 Cash Flow & Payback</h3>
           <div ref="cashFlowChartRef" class="chart-container" />
         </div>
-        <div
-          class="rounded-lg p-3"
-          style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-        >
-          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">收入结构堆叠 Revenue Breakdown</h3>
+        <div class="rounded-lg p-3 card-panel-chart">
+          <h3 class="font-bold text-xs mb-2 text-primary">收入结构堆叠 Revenue Breakdown</h3>
           <div ref="revenueChartRef" class="chart-container" />
         </div>
-        <div
-          class="rounded-lg p-3"
-          style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-        >
-          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
+        <div class="rounded-lg p-3 card-panel-chart">
+          <h3 class="font-bold text-xs mb-2 text-primary">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
           <div ref="dscrChartRef" class="chart-container" />
         </div>
-        <div
-          class="rounded-lg p-3"
-          style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-        >
-          <h3 class="font-bold text-xs mb-2" style="color: var(--color-text)">CAPEX 成本结构与敏感性 Tornado</h3>
+        <div class="rounded-lg p-3 card-panel-chart">
+          <h3 class="font-bold text-xs mb-2 text-primary">CAPEX 成本结构与敏感性 Tornado</h3>
           <div ref="capexChartRef" class="chart-container" />
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
-            <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: var(--color-accent-glow); color: var(--color-accent)"
-            >
+        <div class="rounded-lg p-3 card-panel">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-primary">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold tag-glow text-accent">
               I
             </span>
             收入模型 Revenue Stack
           </h3>
-          <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+          <div class="grid grid-cols-2 gap-2 text-[10px] text-secondary">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">低谷购电价 $/MWh</label>
+              <label class="block mb-0.5 text-muted">低谷购电价 $/MWh</label>
               <input
                 v-model.number="f.offPeakPrice"
                 type="number"
@@ -79,7 +62,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">高峰售电价 $/MWh</label>
+              <label class="block mb-0.5 text-muted">高峰售电价 $/MWh</label>
               <input
                 v-model.number="f.peakPrice"
                 type="number"
@@ -88,7 +71,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">价差捕获率 %</label>
+              <label class="block mb-0.5 text-muted">价差捕获率 %</label>
               <input
                 v-model.number="f.spreadCapture"
                 type="number"
@@ -97,7 +80,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">日历日可用天数</label>
+              <label class="block mb-0.5 text-muted">日历日可用天数</label>
               <input
                 v-model.number="f.operatingDays"
                 type="number"
@@ -106,7 +89,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">容量市场单价 $/MW-yr</label>
+              <label class="block mb-0.5 text-muted">容量市场单价 $/MW-yr</label>
               <input
                 v-model.number="f.capacityPrice"
                 type="number"
@@ -115,7 +98,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">辅助服务单价 $/MW-yr</label>
+              <label class="block mb-0.5 text-muted">辅助服务单价 $/MW-yr</label>
               <input
                 v-model.number="f.ancillaryPrice"
                 type="number"
@@ -124,7 +107,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">电价年涨幅 %</label>
+              <label class="block mb-0.5 text-muted">电价年涨幅 %</label>
               <input
                 v-model.number="f.priceEscalation"
                 type="number"
@@ -133,7 +116,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">充放电效率扣减 %</label>
+              <label class="block mb-0.5 text-muted">充放电效率扣减 %</label>
               <input
                 v-model.number="f.efficiencyLossPct"
                 type="number"
@@ -143,19 +126,16 @@
             </div>
           </div>
         </div>
-        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
-            <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: rgba(245, 158, 11, 0.2); color: var(--color-warning)"
-            >
+        <div class="rounded-lg p-3 card-panel">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-primary">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold badge-glow-warning">
               II
             </span>
             CAPEX & OPEX 成本结构
           </h3>
-          <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+          <div class="grid grid-cols-2 gap-2 text-[10px] text-secondary">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">集装箱单价 万元/MWh</label>
+              <label class="block mb-0.5 text-muted">集装箱单价 万元/MWh</label>
               <input
                 v-model.number="f.containerCostPerMWh"
                 type="number"
@@ -164,7 +144,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">PCS 单价 万元/MW</label>
+              <label class="block mb-0.5 text-muted">PCS 单价 万元/MW</label>
               <input
                 v-model.number="f.pcsCostPerMW"
                 type="number"
@@ -173,7 +153,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">BOP 配套 万元/MWh</label>
+              <label class="block mb-0.5 text-muted">BOP 配套 万元/MWh</label>
               <input
                 v-model.number="f.bopCostPerMWh"
                 type="number"
@@ -182,7 +162,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">变电站 万元/MW</label>
+              <label class="block mb-0.5 text-muted">变电站 万元/MW</label>
               <input
                 v-model.number="f.substationCostPerMW"
                 type="number"
@@ -191,7 +171,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">输电线路 万元/MW</label>
+              <label class="block mb-0.5 text-muted">输电线路 万元/MW</label>
               <input
                 v-model.number="f.transmissionCostPerMW"
                 type="number"
@@ -200,7 +180,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">土地成本 万元/MW</label>
+              <label class="block mb-0.5 text-muted">土地成本 万元/MW</label>
               <input
                 v-model.number="f.landCostPerMW"
                 type="number"
@@ -209,7 +189,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">开发费 万元/MW</label>
+              <label class="block mb-0.5 text-muted">开发费 万元/MW</label>
               <input
                 v-model.number="f.developmentCostPerMW"
                 type="number"
@@ -218,7 +198,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">固定 O&M 元/kW-年</label>
+              <label class="block mb-0.5 text-muted">固定 O&M 元/kW-年</label>
               <input
                 v-model.number="f.fixedOpexPerKW"
                 type="number"
@@ -227,7 +207,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">可变 O&M 元/MWh</label>
+              <label class="block mb-0.5 text-muted">可变 O&M 元/MWh</label>
               <input
                 v-model.number="f.varOpexPerMWh"
                 type="number"
@@ -236,7 +216,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">保险费率 % of CAPEX</label>
+              <label class="block mb-0.5 text-muted">保险费率 % of CAPEX</label>
               <input
                 v-model.number="f.insuranceRate"
                 type="number"
@@ -245,7 +225,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">O&M 年涨幅 %</label>
+              <label class="block mb-0.5 text-muted">O&M 年涨幅 %</label>
               <input
                 v-model.number="f.opexEscalation"
                 type="number"
@@ -254,7 +234,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">VAT 税率 %</label>
+              <label class="block mb-0.5 text-muted">VAT 税率 %</label>
               <input
                 v-model.number="f.vatRate"
                 type="number"
@@ -267,19 +247,18 @@
       </div>
 
       <div class="grid grid-cols-3 gap-3">
-        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+        <div class="rounded-lg p-3 card-panel">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-primary">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: rgba(59, 130, 246, 0.2); color: var(--color-accent-secondary)"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold badge-glow-info-secondary"
             >
               III
             </span>
             融资与税务 Financing & Tax
           </h3>
-          <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+          <div class="grid grid-cols-1 gap-2 text-[10px] text-secondary">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">折现率 %</label>
+              <label class="block mb-0.5 text-muted">折现率 %</label>
               <input
                 v-model.number="f.discountRate"
                 type="number"
@@ -288,7 +267,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">债务融资比例 %</label>
+              <label class="block mb-0.5 text-muted">债务融资比例 %</label>
               <input
                 v-model.number="f.debtRatio"
                 type="number"
@@ -297,7 +276,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">权益融资比例 %</label>
+              <label class="block mb-0.5 text-muted">权益融资比例 %</label>
               <input
                 v-model.number="f.equityRatio"
                 type="number"
@@ -306,7 +285,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">贷款利率 %</label>
+              <label class="block mb-0.5 text-muted">贷款利率 %</label>
               <input
                 v-model.number="f.interestRate"
                 type="number"
@@ -315,7 +294,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">权益成本 %</label>
+              <label class="block mb-0.5 text-muted">权益成本 %</label>
               <input
                 v-model.number="f.costOfEquity"
                 type="number"
@@ -324,7 +303,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">贷款年限</label>
+              <label class="block mb-0.5 text-muted">贷款年限</label>
               <input
                 v-model.number="f.loanTenure"
                 type="number"
@@ -333,7 +312,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">所得税率 %</label>
+              <label class="block mb-0.5 text-muted">所得税率 %</label>
               <input
                 v-model.number="f.taxRate"
                 type="number"
@@ -342,7 +321,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">折旧年限</label>
+              <label class="block mb-0.5 text-muted">折旧年限</label>
               <input
                 v-model.number="f.depreciationYears"
                 type="number"
@@ -351,7 +330,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">残值率 %</label>
+              <label class="block mb-0.5 text-muted">残值率 %</label>
               <input
                 v-model.number="f.residualRate"
                 type="number"
@@ -360,7 +339,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">折旧方法</label>
+              <label class="block mb-0.5 text-muted">折旧方法</label>
               <select v-model="f.depreciationMethod" class="w-full rounded px-2 py-1 text-xs form-field-select">
                 <option value="straight-line">直线折旧</option>
                 <option value="double-declining">双倍余额递减</option>
@@ -368,19 +347,16 @@
             </div>
           </div>
         </div>
-        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
-            <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: rgba(168, 85, 247, 0.2); color: var(--color-info)"
-            >
+        <div class="rounded-lg p-3 card-panel">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-primary">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold badge-glow-info">
               IV
             </span>
             增容与设备成本递减
           </h3>
-          <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+          <div class="grid grid-cols-1 gap-2 text-[10px] text-secondary">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">增容集装箱单价 万元/MWh</label>
+              <label class="block mb-0.5 text-muted">增容集装箱单价 万元/MWh</label>
               <input
                 v-model.number="f.augContainerCostPerMWh"
                 type="number"
@@ -389,7 +365,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">设备成本年降幅 (学习率) %</label>
+              <label class="block mb-0.5 text-muted">设备成本年降幅 (学习率) %</label>
               <input
                 v-model.number="f.costDeclineRate"
                 type="number"
@@ -398,7 +374,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">增容安装费 万元/台</label>
+              <label class="block mb-0.5 text-muted">增容安装费 万元/台</label>
               <input
                 v-model.number="f.augInstallCost"
                 type="number"
@@ -407,7 +383,7 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">退役成本 万元/MWh</label>
+              <label class="block mb-0.5 text-muted">退役成本 万元/MWh</label>
               <input
                 v-model.number="f.decommissioningCost"
                 type="number"
@@ -417,35 +393,32 @@
             </div>
           </div>
         </div>
-        <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-          <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
-            <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-              style="background-color: rgba(16, 185, 129, 0.2); color: var(--color-success)"
-            >
+        <div class="rounded-lg p-3 card-panel">
+          <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-primary">
+            <span class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold badge-glow-success">
               V
             </span>
             敏感性分析范围
           </h3>
-          <div class="text-[10px] space-y-1.5" style="color: var(--color-text-muted)">
+          <div class="text-[10px] space-y-1.5 text-muted">
             <div class="flex justify-between">
               <span>售电价波动范围</span>
-              <span style="color: var(--color-text-secondary)">+/-{{ f.sensPct }}%</span>
+              <span class="text-secondary">+/-{{ f.sensPct }}%</span>
             </div>
             <div class="flex justify-between">
               <span>衰减率波动范围</span>
-              <span style="color: var(--color-text-secondary)">+/-{{ f.sensPct }}%</span>
+              <span class="text-secondary">+/-{{ f.sensPct }}%</span>
             </div>
             <div class="flex justify-between">
               <span>融资利率波动</span>
-              <span style="color: var(--color-text-secondary)">+/-{{ f.sensPct }}%</span>
+              <span class="text-secondary">+/-{{ f.sensPct }}%</span>
             </div>
             <div class="flex justify-between">
               <span>CAPEX 波动</span>
-              <span style="color: var(--color-text-secondary)">+/-{{ f.sensPct }}%</span>
+              <span class="text-secondary">+/-{{ f.sensPct }}%</span>
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">波动幅度 %</label>
+              <label class="block mb-0.5 text-muted">波动幅度 %</label>
               <input
                 v-model.number="f.sensPct"
                 type="number"
@@ -468,96 +441,32 @@
         <CostWaterfallChart :params="params" :cash-flow-table="cashFlowTable" />
       </div>
 
-      <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
+      <div class="rounded-lg p-3 card-panel">
         <div class="flex justify-between items-center mb-2">
-          <h3 class="font-bold text-xs" style="color: var(--color-text)">年度现金流明细表 Annual Cash Flow</h3>
-          <button
-            class="text-[10px] px-3 py-1 rounded transition-colors"
-            style="background-color: var(--color-accent); color: white"
-            @click="recalc"
-          >
+          <h3 class="font-bold text-xs text-primary">年度现金流明细表 Annual Cash Flow</h3>
+          <button class="text-[10px] px-3 py-1 rounded transition-colors btn-accent-filled" @click="recalc">
             重新计算 Recalculate
           </button>
         </div>
         <div class="overflow-x-auto custom-scrollbar max-h-[300px]">
           <table class="w-full text-[10px] border-collapse">
             <thead>
-              <tr class="sticky top-0 z-10" style="background-color: var(--color-card)">
-                <th
-                  class="text-left py-1 px-2 sticky left-0 z-20"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  年份
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  发电量 MWh
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  套利收入
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  容量收入
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  辅助服务
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  总收入
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  OPEX
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  EBITDA
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  净现金流
-                </th>
-                <th
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  累计现金流
-                </th>
-                <th
-                  v-if="f.debtRatio > 0"
-                  class="text-right py-1 px-2"
-                  style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)"
-                >
-                  DSCR
-                </th>
+              <tr class="sticky top-0 z-10 bg-card">
+                <th class="text-left py-1 px-2 sticky left-0 z-20 text-muted border-b-border">年份</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">发电量 MWh</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">套利收入</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">容量收入</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">辅助服务</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">总收入</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">OPEX</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">EBITDA</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">净现金流</th>
+                <th class="text-right py-1 px-2 text-muted border-b-border">累计现金流</th>
+                <th v-if="f.debtRatio > 0" class="text-right py-1 px-2 text-muted border-b-border">DSCR</th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="row in cashFlowTable"
-                :key="'yr' + row.year"
-                style="border-bottom: 1px solid var(--color-border)"
-              >
+              <tr v-for="row in cashFlowTable" :key="'yr' + row.year" class="border-b-border">
                 <td
                   class="py-1 px-2 sticky left-0 font-bold"
                   :style="
@@ -568,22 +477,22 @@
                 >
                   {{ row.year === 0 ? '建设期' : row.year }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.energy) }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.arbitrage) }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.capacity) }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.ancillary) }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.revenue) }}
                 </td>
-                <td class="text-right py-1 px-2 font-mono" style="color: var(--color-text-secondary)">
+                <td class="text-right py-1 px-2 font-mono text-secondary">
                   {{ fmtNum(row.opex) }}
                 </td>
                 <td
@@ -606,11 +515,7 @@
                 >
                   {{ fmtNum(row.cumCashFlow) }}
                 </td>
-                <td
-                  v-if="f.debtRatio > 0"
-                  class="text-right py-1 px-2 font-mono"
-                  style="color: var(--color-text-secondary)"
-                >
+                <td v-if="f.debtRatio > 0" class="text-right py-1 px-2 font-mono text-secondary">
                   {{ row.dscr ? row.dscr.toFixed(2) : '-' }}
                 </td>
               </tr>
@@ -1033,11 +938,11 @@ function renderCashFlowChart() {
         const year = params[0].axisValue
         const row = rows.find((r) => r.year === parseInt(year))
         if (!row) return ''
-        let html = `<div style="font-weight:bold;margin-bottom:8px;">年份 ${year === 0 ? '建设期' : year + '年'}</div>`
-        html += `<div>年净现金流: <span style="color:${row.cashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cashFlow >= 0 ? '+' : ''}${row.cashFlow.toFixed(0)} 万元</span></div>`
-        html += `<div>累计现金流: <span style="color:${row.cumCashFlow >= 0 ? colors.success : colors.danger};font-weight:bold;">${row.cumCashFlow >= 0 ? '+' : ''}${row.cumCashFlow.toFixed(0)} 万元</span></div>`
+        let html = `<div class="tooltip-section-header">年份 ${year === 0 ? '建设期' : year + '年'}</div>`
+        html += `<div>年净现金流: <span class="tooltip-value-bold" style="color:${row.cashFlow >= 0 ? colors.success : colors.danger}">${row.cashFlow >= 0 ? '+' : ''}${row.cashFlow.toFixed(0)} 万元</span></div>`
+        html += `<div>累计现金流: <span class="tooltip-value-bold" style="color:${row.cumCashFlow >= 0 ? colors.success : colors.danger}">${row.cumCashFlow >= 0 ? '+' : ''}${row.cumCashFlow.toFixed(0)} 万元</span></div>`
         if (row.year > 0) {
-          html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
+          html += '<div class="tooltip-separator">'
           html += `<div>总收入: ${row.revenue.toFixed(0)} 万元</div>`
           html += `<div>OPEX: ${row.opex.toFixed(0)} 万元</div>`
           html += `<div>EBITDA: ${row.ebitda.toFixed(0)} 万元</div>`
@@ -1145,12 +1050,12 @@ function renderRevenueChart() {
         const year = params[0].axisValue
         const row = rows.find((r) => r.year === parseInt(year))
         if (!row) return ''
-        let html = `<div style="font-weight:bold;margin-bottom:8px;">第 ${year} 年</div>`
-        html += `<div>套利收入: <span style="color:${colors.acLine};font-weight:bold;">${row.arbitrage.toFixed(0)} 万元</span></div>`
-        html += `<div>容量收入: <span style="color:${colors.purple};font-weight:bold;">${row.capacity.toFixed(0)} 万元</span></div>`
-        html += `<div>辅助服务: <span style="color:${colors.orange};font-weight:bold;">${row.ancillary.toFixed(0)} 万元</span></div>`
-        html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
-        html += `<div>总收入: <span style="font-weight:bold;">${row.revenue.toFixed(0)} 万元</span></div>`
+        let html = `<div class="tooltip-section-header">第 ${year} 年</div>`
+        html += `<div>套利收入: <span class="tooltip-value-bold" style="color:${colors.acLine}">${row.arbitrage.toFixed(0)} 万元</span></div>`
+        html += `<div>容量收入: <span class="tooltip-value-bold" style="color:${colors.purple}">${row.capacity.toFixed(0)} 万元</span></div>`
+        html += `<div>辅助服务: <span class="tooltip-value-bold" style="color:${colors.orange}">${row.ancillary.toFixed(0)} 万元</span></div>`
+        html += '<div class="tooltip-separator">'
+        html += `<div>总收入: <span class="tooltip-value-bold">${row.revenue.toFixed(0)} 万元</span></div>`
         const arbitragePct = row.revenue > 0 ? ((row.arbitrage / row.revenue) * 100).toFixed(1) : 0
         const capacityPct = row.revenue > 0 ? ((row.capacity / row.revenue) * 100).toFixed(1) : 0
         const ancillaryPct = row.revenue > 0 ? ((row.ancillary / row.revenue) * 100).toFixed(1) : 0
@@ -1219,12 +1124,12 @@ function renderDscrChart() {
         const year = params[0].axisValue
         const row = rows.find((r) => r.year === parseInt(year))
         if (!row) return ''
-        let html = `<div style="font-weight:bold;margin-bottom:8px;">第 ${year} 年</div>`
-        html += `<div>EBITDA: <span style="color:${colors.cyan};font-weight:bold;">${row.ebitda.toFixed(0)} 万元</span></div>`
-        html += `<div>还本付息: <span style="color:${colors.redLight};font-weight:bold;">${row.debtService.toFixed(0)} 万元</span></div>`
+        let html = `<div class="tooltip-section-header">第 ${year} 年</div>`
+        html += `<div>EBITDA: <span class="tooltip-value-bold" style="color:${colors.cyan}">${row.ebitda.toFixed(0)} 万元</span></div>`
+        html += `<div>还本付息: <span class="tooltip-value-bold" style="color:${colors.redLight}">${row.debtService.toFixed(0)} 万元</span></div>`
         if (row.debtService > 0) {
-          html += '<div style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:6px;">'
-          html += `<div>DSCR: <span style="font-weight:bold;font-size:16px;color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr.toFixed(2)}x</span></div>`
+          html += '<div class="tooltip-separator">'
+          html += `<div>DSCR: <span class="tooltip-value-bold" style="font-size:16px;color:${row.dscr >= 1.3 ? colors.success : colors.danger}">${row.dscr.toFixed(2)}x</span></div>`
           html += `<div style="color:${row.dscr >= 1.3 ? colors.success : colors.danger};">${row.dscr >= 1.3 ? '✓ 满足银行要求' : '✗ 低于银行底线 1.3x'}</div>`
           html += `<div>利息支出: ${row.interest.toFixed(0)} 万元</div>`
           html += `<div>本金偿还: ${(row.debtService - row.interest).toFixed(0)} 万元</div>`

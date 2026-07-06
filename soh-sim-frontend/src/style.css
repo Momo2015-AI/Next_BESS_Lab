@@ -73,6 +73,8 @@
     --color-accent-secondary: #4a7bc4;
     --color-accent-glow: rgba(0, 102, 204, 0.12);
     --color-accent-dark: rgba(0, 102, 204, 0.2);
+    --color-success-glow: rgba(16, 185, 129, 0.12);
+    --color-warning-glow: rgba(247, 147, 30, 0.12);
     --color-success: #10b981;
     --color-warning: #f7931e;
     --color-danger: #ef4444;
@@ -215,6 +217,8 @@
     --color-accent-secondary: #38bdf8;
     --color-accent-glow: rgba(58, 139, 255, 0.12);
     --color-accent-dark: rgba(58, 139, 255, 0.2);
+    --color-success-glow: rgba(16, 185, 129, 0.12);
+    --color-warning-glow: rgba(245, 158, 11, 0.12);
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-danger: #ef4444;
@@ -789,11 +793,186 @@
 
   /* ── 边框色工具类 ── */
   .border-b-border { border-bottom: 1px solid var(--color-border); }
+  .border-t-border { border-top: 1px solid var(--color-border); }
+
+  /* ── 主文本颜色 ── */
+  .text-primary { color: var(--color-text); }
+  .text-white { color: white; }
+
+  /* ── 卡片背景 ── */
+  .bg-card { background-color: var(--color-card); }
+
+  /* ── 图表卡片容器 ── */
+  .card-panel-chart {
+    min-height: 300px;
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg, 8px);
+    padding: 12px;
+  }
+
+  /* ── Badge 高亮变体 ── */
+  .badge-glow-warning {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: var(--color-warning);
+  }
+
+  .badge-glow-info-secondary {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--color-accent-secondary);
+  }
+
+  .badge-glow-info {
+    background-color: rgba(168, 85, 247, 0.2);
+    color: var(--color-info);
+  }
+
+  .badge-glow-success {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+  }
+
+  /* ── 公式实验室区域边框高亮 ── */
+  .accent-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-accent-glow);
+  }
+  .warning-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  .pink-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+  }
+  .success-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+  .blue-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  .yellow-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+  }
+  .orange-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+  }
+  .danger-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(244, 63, 94, 0.2);
+  }
+  .indigo-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+  .cyan-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+  }
+  .lime-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(132, 204, 22, 0.2);
+  }
+  .purple-border-glow {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+  }
+
+  /* ── 算法面板 ── */
+  .algorithm-panel-header {
+    background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  }
+  .algorithm-panel-body {
+    background-color: var(--color-card);
+    border-color: var(--color-accent-glow);
+  }
+
+  /* ── 工具提示分隔线 ── */
+  .tooltip-section-header {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .tooltip-separator {
+    border-top: 1px solid var(--color-border);
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .tooltip-value-bold {
+    font-weight: bold;
+  }
 
   /* ── Accent 高亮卡片 ── */
   .card-accent {
     background-color: var(--color-accent-glow);
     border: 1px solid var(--color-accent-dark);
+  }
+
+  /* ── 最大宽度工具 ── */
+  .mw-300 {
+    max-width: 300px;
+  }
+
+  /* ── 背景色工具扩展 ── */
+  .bg-secondary { background-color: var(--color-bg-secondary); }
+  .bg-table-header { background-color: var(--color-table-header); }
+
+  /* ── 边框色工具 ── */
+  .border-color-muted {
+    border-color: var(--color-border);
+  }
+  .border-color-glow {
+    border-color: var(--color-accent-glow);
+  }
+
+  /* ── 深色卡片背景 ── */
+  .bg-card-dark {
+    background-color: var(--color-card-dark);
+  }
+
+  /* ── 标签 Glow 背景 ── */
+  .tag-glow {
+    background-color: var(--color-accent-glow);
+  }
+
+  /* ── 标签成功 ── */
+  .tag-success {
+    background-color: var(--color-success-glow);
+    color: var(--color-success);
+  }
+
+  /* ── 标签警告 ── */
+  .tag-warning {
+    background-color: var(--color-warning-glow);
+    color: var(--color-warning);
+  }
+
+  /* ── 遮罩层背景 ── */
+  .bg-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* ── 步骤导航卡片 ── */
+  .card-step {
+    background-color: var(--color-step-bg);
+    border: 1px solid var(--color-step-border);
+  }
+
+  /* ── 输入框卡片 ── */
+  .card-input {
+    background-color: var(--color-input-bg);
+    border: 1px solid var(--color-input-border);
+  }
+
+  /* ── 深色输入框卡片 ── */
+  .card-input-dark {
+    background-color: var(--color-input-bg-dark);
+    border: 1px solid var(--color-input-border);
   }
 
   /* ── 表头边框 ── */

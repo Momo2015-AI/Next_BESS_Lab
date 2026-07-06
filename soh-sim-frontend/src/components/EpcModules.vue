@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <!-- 模块标签页 -->
-    <div class="flex flex-wrap gap-2 border-b" style="border-color: var(--color-border)">
+    <div class="flex flex-wrap gap-2 border-b border-color-muted">
       <button
         v-for="tab in tabs"
         :key="tab.id"
@@ -19,15 +19,15 @@
 
     <!-- P0-3: 系统架构 -->
     <div v-show="activeModule === 'architecture'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">系统架构设计</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">系统架构设计</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统功率 (MW)</label>
+            <label class="block text-xs mb-1 text-muted">系统功率 (MW)</label>
             <input v-model.number="archForm.total_power_mw" type="number" class="form-field-input" placeholder="1400" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统能量 (MWh)</label>
+            <label class="block text-xs mb-1 text-muted">系统能量 (MWh)</label>
             <input
               v-model.number="archForm.total_energy_mwh"
               type="number"
@@ -36,7 +36,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">架构类型</label>
+            <label class="block text-xs mb-1 text-muted">架构类型</label>
             <select v-model="archForm.architecture_type" class="form-field-select">
               <option value="central">集中式</option>
               <option value="string">组串式</option>
@@ -44,7 +44,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">耦合方式</label>
+            <label class="block text-xs mb-1 text-muted">耦合方式</label>
             <select v-model="archForm.coupling_type" class="form-field-select">
               <option value="AC">AC耦合</option>
               <option value="DC">DC耦合</option>
@@ -54,7 +54,7 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电芯电压 (V)</label>
+            <label class="block text-xs mb-1 text-muted">电芯电压 (V)</label>
             <input
               v-model.number="archForm.cell_voltage"
               type="number"
@@ -64,11 +64,11 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电芯容量 (Ah)</label>
+            <label class="block text-xs mb-1 text-muted">电芯容量 (Ah)</label>
             <input v-model.number="archForm.cell_capacity" type="number" class="form-field-input" placeholder="280" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS功率 (MW)</label>
+            <label class="block text-xs mb-1 text-muted">PCS功率 (MW)</label>
             <input
               v-model.number="archForm.pcs_power_mw"
               type="number"
@@ -78,7 +78,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS最大DC电压 (V)</label>
+            <label class="block text-xs mb-1 text-muted">PCS最大DC电压 (V)</label>
             <input
               v-model.number="archForm.pcs_max_dc_voltage"
               type="number"
@@ -89,8 +89,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="designArchitecture"
         >
           {{ loading ? '计算中...' : '执行架构设计' }}
@@ -103,10 +102,10 @@
               :key="item.name"
               class="bg-gray-50 rounded-lg p-3 text-center"
             >
-              <div class="text-2xl font-bold" style="color: var(--color-accent)">
+              <div class="text-2xl font-bold text-accent">
                 {{ item.count }}
               </div>
-              <div class="text-xs" style="color: var(--color-text-muted)">{{ item.name }} ({{ item.unit }})</div>
+              <div class="text-xs text-muted">{{ item.name }} ({{ item.unit }})</div>
             </div>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -138,19 +137,16 @@
             </div>
           </div>
           <div v-if="archResult.stages" class="mt-4">
-            <h4 class="text-sm font-bold mb-2" style="color: var(--color-text-secondary)">分期建设方案</h4>
+            <h4 class="text-sm font-bold mb-2 text-secondary">分期建设方案</h4>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div
                 v-for="stage in archResult.stages"
                 :key="stage.stage"
-                class="bg-blue-50 rounded-lg p-3 border"
-                style="border-color: var(--color-accent-glow)"
+                class="bg-blue-50 rounded-lg p-3 border border-color-glow"
               >
-                <div class="font-bold text-sm" style="color: var(--color-accent)">第{{ stage.stage }}期</div>
-                <div class="text-xs" style="color: var(--color-text-secondary)">
-                  {{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh
-                </div>
-                <div class="text-xs" style="color: var(--color-text-muted)">
+                <div class="font-bold text-sm text-accent">第{{ stage.stage }}期</div>
+                <div class="text-xs text-secondary">{{ stage.power_mw }}MW / {{ stage.energy_mwh }}MWh</div>
+                <div class="text-xs text-muted">
                   {{ stage.estimated_date }}
                 </div>
               </div>
@@ -162,11 +158,11 @@
 
     <!-- P0-1: 电网合规 -->
     <div v-show="activeModule === 'gridCompliance'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">电网合规分析</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">电网合规分析</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电网标准</label>
+            <label class="block text-xs mb-1 text-muted">电网标准</label>
             <select v-model="gcForm.grid_standard" class="form-field-select">
               <option v-for="s in gridStandards" :key="s.code" :value="s.code">
                 {{ s.name }}
@@ -174,11 +170,11 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点电压 (kV)</label>
+            <label class="block text-xs mb-1 text-muted">并网点电压 (kV)</label>
             <input v-model.number="gcForm.grid_voltage_kv" type="number" class="form-field-input" placeholder="33" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电网频率 (Hz)</label>
+            <label class="block text-xs mb-1 text-muted">电网频率 (Hz)</label>
             <input
               v-model.number="gcForm.grid_frequency_hz"
               type="number"
@@ -188,14 +184,13 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
+            <label class="block text-xs mb-1 text-muted">PCS数量</label>
             <input v-model.number="gcForm.pcs_count" type="number" class="form-field-input" placeholder="10" />
           </div>
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="analyzeGridCompliance"
         >
           {{ loading ? '分析中...' : '执行合规分析' }}
@@ -218,7 +213,7 @@
               >
                 {{ gcResult.overall_pass ? '全部合规' : '存在不合规项' }}
               </div>
-              <div v-if="gcResult.failed_items.length" class="text-xs" style="color: var(--color-text-secondary)">
+              <div v-if="gcResult.failed_items.length" class="text-xs text-secondary">
                 不合规: {{ gcResult.failed_items.join(', ') }}
               </div>
             </div>
@@ -273,11 +268,11 @@
 
     <!-- P0-2: 安全消防 -->
     <div v-show="activeModule === 'safety'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">安全与消防设计</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">安全与消防设计</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">系统容量 (MWh)</label>
+            <label class="block text-xs mb-1 text-muted">系统容量 (MWh)</label>
             <input
               v-model.number="sfForm.system_capacity_mwh"
               type="number"
@@ -286,11 +281,11 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
+            <label class="block text-xs mb-1 text-muted">集装箱数量</label>
             <input v-model.number="sfForm.container_count" type="number" class="form-field-input" placeholder="20" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">化学体系</label>
+            <label class="block text-xs mb-1 text-muted">化学体系</label>
             <select v-model="sfForm.chemistry_type" class="form-field-select">
               <option value="LFP">LFP (磷酸铁锂)</option>
               <option value="NCM">NCM (三元)</option>
@@ -299,7 +294,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">灭火系统</label>
+            <label class="block text-xs mb-1 text-muted">灭火系统</label>
             <select v-model="sfForm.suppression_type" class="form-field-select">
               <option value="Novec1230">Novec 1230</option>
               <option value="Aerosol">气溶胶</option>
@@ -309,8 +304,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="analyzeSafety"
         >
           {{ loading ? '分析中...' : '执行安全分析' }}
@@ -367,11 +361,11 @@
 
     <!-- P0-4: IPP财务 -->
     <div v-show="activeModule === 'ipp'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">IPP财务模型</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">IPP财务模型</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">项目寿命 (年)</label>
+            <label class="block text-xs mb-1 text-muted">项目寿命 (年)</label>
             <input
               v-model.number="ippForm.project_life_years"
               type="number"
@@ -380,7 +374,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">总CAPEX (USD)</label>
+            <label class="block text-xs mb-1 text-muted">总CAPEX (USD)</label>
             <input
               v-model.number="ippForm.total_capex_usd"
               type="number"
@@ -389,17 +383,17 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">容量 (MW)</label>
+            <label class="block text-xs mb-1 text-muted">容量 (MW)</label>
             <input v-model.number="ippForm.capacity_mw" type="number" class="form-field-input" placeholder="100" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">能量 (MWh)</label>
+            <label class="block text-xs mb-1 text-muted">能量 (MWh)</label>
             <input v-model.number="ippForm.energy_mwh" type="number" class="form-field-input" placeholder="200" />
           </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">容量价格 ($/kW/月)</label>
+            <label class="block text-xs mb-1 text-muted">容量价格 ($/kW/月)</label>
             <input
               v-model.number="ippForm.capacity_price_usd_kw_month"
               type="number"
@@ -409,7 +403,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电量价格 ($/kWh)</label>
+            <label class="block text-xs mb-1 text-muted">电量价格 ($/kWh)</label>
             <input
               v-model.number="ippForm.energy_price_usd_kwh"
               type="number"
@@ -419,7 +413,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PPA递增率</label>
+            <label class="block text-xs mb-1 text-muted">PPA递增率</label>
             <input
               v-model.number="ippForm.ppa_escalation_rate"
               type="number"
@@ -429,7 +423,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">贷款比例</label>
+            <label class="block text-xs mb-1 text-muted">贷款比例</label>
             <input
               v-model.number="ippForm.debt_ratio"
               type="number"
@@ -441,7 +435,7 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">贷款利率</label>
+            <label class="block text-xs mb-1 text-muted">贷款利率</label>
             <input
               v-model.number="ippForm.debt_interest_rate"
               type="number"
@@ -451,11 +445,11 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">贷款期限 (年)</label>
+            <label class="block text-xs mb-1 text-muted">贷款期限 (年)</label>
             <input v-model.number="ippForm.debt_tenor_years" type="number" class="form-field-input" placeholder="15" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">年OPEX (USD)</label>
+            <label class="block text-xs mb-1 text-muted">年OPEX (USD)</label>
             <input
               v-model.number="ippForm.annual_opex_usd"
               type="number"
@@ -464,7 +458,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">可用率保证</label>
+            <label class="block text-xs mb-1 text-muted">可用率保证</label>
             <input
               v-model.number="ippForm.availability_guarantee"
               type="number"
@@ -476,8 +470,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="calculateIPP"
         >
           {{ loading ? '计算中...' : '执行财务计算' }}
@@ -486,19 +479,19 @@
         <div v-if="ippResult" class="mt-6 space-y-4">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="result-card">
-              <div class="result-value" style="color: var(--color-accent)">${{ formatNum(ippResult.npv_usd) }}</div>
+              <div class="result-value text-accent">${{ formatNum(ippResult.npv_usd) }}</div>
               <div class="result-label">NPV</div>
             </div>
             <div class="result-card">
-              <div class="result-value" style="color: var(--color-accent)">{{ ippResult.irr }}%</div>
+              <div class="result-value text-accent">{{ ippResult.irr }}%</div>
               <div class="result-label">项目IRR</div>
             </div>
             <div class="result-card">
-              <div class="result-value" style="color: var(--color-accent)">{{ ippResult.equity_irr }}%</div>
+              <div class="result-value text-accent">{{ ippResult.equity_irr }}%</div>
               <div class="result-label">股权IRR</div>
             </div>
             <div class="result-card">
-              <div class="result-value" style="color: var(--color-accent)">${{ ippResult.lcoe_usd_kwh }}/kWh</div>
+              <div class="result-value text-accent">${{ ippResult.lcoe_usd_kwh }}/kWh</div>
               <div class="result-label">LCOE</div>
             </div>
           </div>
@@ -526,16 +519,15 @@
 
     <!-- P0-5: 合规矩阵 -->
     <div v-show="activeModule === 'matrix'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">合规矩阵生成</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">合规矩阵生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="matrixForm.template" class="form-field-select" style="max-width: 300px">
+          <select v-model="matrixForm.template" class="form-field-select mw-300">
             <option value="UAE_DEWA_VII_BESS">UAE DEWA VII BESS RFP</option>
           </select>
           <button
             :disabled="loading"
-            class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-            style="background: var(--color-accent)"
+            class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
             @click="generateMatrix"
           >
             {{ loading ? '生成中...' : '生成合规矩阵' }}
@@ -572,7 +564,7 @@
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
-                <tr style="background-color: var(--color-table-header)">
+                <tr class="bg-table-header">
                   <th class="px-3 py-2 text-left">条款</th>
                   <th class="px-3 py-2 text-left">要求</th>
                   <th class="px-3 py-2 text-left">类别</th>
@@ -581,19 +573,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="item in matrixResult.matrix"
-                  :key="item.section"
-                  class="border-b"
-                  style="border-color: var(--color-border)"
-                >
+                <tr v-for="item in matrixResult.matrix" :key="item.section" class="border-b border-color-muted">
                   <td class="px-3 py-2 font-mono text-xs">
                     {{ item.section }}
                   </td>
                   <td class="px-3 py-2">
                     {{ item.requirement }}
                   </td>
-                  <td class="px-3 py-2 text-xs" style="color: var(--color-text-muted)">
+                  <td class="px-3 py-2 text-xs text-muted">
                     {{ item.category }}
                   </td>
                   <td class="px-3 py-2">
@@ -609,7 +596,7 @@
                       {{ statusLabel(item.compliance_status) }}
                     </span>
                   </td>
-                  <td class="px-3 py-2 text-xs" style="color: var(--color-text-secondary)">
+                  <td class="px-3 py-2 text-xs text-secondary">
                     {{ item.response }}
                   </td>
                 </tr>
@@ -622,23 +609,23 @@
 
     <!-- P1-1: 热管理 -->
     <div v-show="activeModule === 'thermal'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">热管理设计</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">热管理设计</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">最高环境温度 (°C)</label>
+            <label class="block text-xs mb-1 text-muted">最高环境温度 (°C)</label>
             <input v-model.number="tmForm.ambient_max_c" type="number" class="form-field-input" placeholder="45" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">电芯容量 (Ah)</label>
+            <label class="block text-xs mb-1 text-muted">电芯容量 (Ah)</label>
             <input v-model.number="tmForm.cell_capacity_ah" type="number" class="form-field-input" placeholder="280" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">充放电倍率 (C)</label>
+            <label class="block text-xs mb-1 text-muted">充放电倍率 (C)</label>
             <input v-model.number="tmForm.c_rate" type="number" step="0.1" class="form-field-input" placeholder="0.5" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">冷却方式</label>
+            <label class="block text-xs mb-1 text-muted">冷却方式</label>
             <select v-model="tmForm.cooling_type" class="form-field-select">
               <option value="liquid">液冷</option>
               <option value="air">风冷</option>
@@ -647,8 +634,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="calculateThermal"
         >
           {{ loading ? '计算中...' : '执行热管理计算' }}
@@ -674,7 +660,7 @@
             </div>
           </div>
           <div v-if="tmResult.derating_curve" class="mt-4">
-            <h4 class="text-sm font-bold mb-2" style="color: var(--color-text-secondary)">高温降额曲线</h4>
+            <h4 class="text-sm font-bold mb-2 text-secondary">高温降额曲线</h4>
             <div class="flex gap-1 items-end h-32">
               <div v-for="point in tmResult.derating_curve" :key="point.temp" class="flex-1 flex flex-col items-center">
                 <div
@@ -689,7 +675,7 @@
                           : 'var(--color-danger)'
                   }"
                 />
-                <div class="text-xs mt-1" style="color: var(--color-text-muted)">{{ point.temp }}°C</div>
+                <div class="text-xs mt-1 text-muted">{{ point.temp }}°C</div>
               </div>
             </div>
           </div>
@@ -699,19 +685,19 @@
 
     <!-- P1-2: SCADA/EMS -->
     <div v-show="activeModule === 'scada'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">SCADA/EMS设计</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">SCADA/EMS设计</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
+            <label class="block text-xs mb-1 text-muted">集装箱数量</label>
             <input v-model.number="seForm.container_count" type="number" class="form-field-input" placeholder="20" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">PCS数量</label>
+            <label class="block text-xs mb-1 text-muted">PCS数量</label>
             <input v-model.number="seForm.pcs_count" type="number" class="form-field-input" placeholder="10" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">通信协议</label>
+            <label class="block text-xs mb-1 text-muted">通信协议</label>
             <select v-model="seForm.communication_protocol" class="form-field-select">
               <option value="IEC_61850">IEC 61850</option>
               <option value="Modbus_TCP">Modbus TCP</option>
@@ -719,7 +705,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">调度策略</label>
+            <label class="block text-xs mb-1 text-muted">调度策略</label>
             <select v-model="seForm.dispatch_strategy" class="form-field-select">
               <option value="peak_shaving">削峰填谷</option>
               <option value="arbitrage">套利</option>
@@ -729,8 +715,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="designScada"
         >
           {{ loading ? '设计中...' : '执行SCADA设计' }}
@@ -764,8 +749,8 @@
             </div>
           </div>
           <div class="p-4 bg-gray-50 rounded-lg">
-            <div class="text-sm font-bold mb-2" style="color: var(--color-text-secondary)">系统架构</div>
-            <div class="text-sm space-y-1" style="color: var(--color-text-muted)">
+            <div class="text-sm font-bold mb-2 text-secondary">系统架构</div>
+            <div class="text-sm space-y-1 text-muted">
               <div>架构类型: {{ seResult.scada_architecture }}</div>
               <div>网络拓扑: {{ seResult.network_topology }}</div>
               <div>冗余等级: {{ seResult.redundancy_level }}</div>
@@ -780,19 +765,19 @@
 
     <!-- P1-3: 高压接入 -->
     <div v-show="activeModule === 'hv'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">高压接入设计</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">高压接入设计</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">总功率 (MW)</label>
+            <label class="block text-xs mb-1 text-muted">总功率 (MW)</label>
             <input v-model.number="hvForm.total_power_mw" type="number" class="form-field-input" placeholder="100" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点电压 (kV)</label>
+            <label class="block text-xs mb-1 text-muted">并网点电压 (kV)</label>
             <input v-model.number="hvForm.poc_voltage_kv" type="number" class="form-field-input" placeholder="33" />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">短路容量 (MVA)</label>
+            <label class="block text-xs mb-1 text-muted">短路容量 (MVA)</label>
             <input
               v-model.number="hvForm.short_circuit_capacity_mva"
               type="number"
@@ -801,7 +786,7 @@
             />
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">并网点类型</label>
+            <label class="block text-xs mb-1 text-muted">并网点类型</label>
             <select v-model="hvForm.poc_type" class="form-field-select">
               <option value="substation">变电站</option>
               <option value="overhead_line">架空线</option>
@@ -811,8 +796,7 @@
         </div>
         <button
           :disabled="loading"
-          class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-          style="background: var(--color-accent)"
+          class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
           @click="designHV"
         >
           {{ loading ? '设计中...' : '执行高压接入设计' }}
@@ -842,18 +826,17 @@
             </div>
           </div>
           <div v-if="hvResult.protection_scheme" class="p-4 bg-gray-50 rounded-lg">
-            <div class="text-sm font-bold mb-2" style="color: var(--color-text-secondary)">保护配置</div>
+            <div class="text-sm font-bold mb-2 text-secondary">保护配置</div>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
               <div
                 v-for="prot in hvResult.protection_scheme"
                 :key="prot.name"
-                class="text-xs bg-white rounded p-2 border"
-                style="border-color: var(--color-border)"
+                class="text-xs bg-white rounded p-2 border border-color-muted"
               >
                 <div class="font-bold">
                   {{ prot.name }}
                 </div>
-                <div style="color: var(--color-text-muted)">
+                <div class="text-muted">
                   {{ prot.type }}
                 </div>
               </div>
@@ -865,16 +848,15 @@
 
     <!-- P1-4: 投标文档 -->
     <div v-show="activeModule === 'bidDoc'" class="space-y-4">
-      <div class="bg-white rounded-lg p-6 shadow-sm border" style="border-color: var(--color-border)">
-        <h3 class="text-lg font-bold mb-4" style="color: var(--color-accent)">投标文档生成</h3>
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-color-muted">
+        <h3 class="text-lg font-bold mb-4 text-accent">投标文档生成</h3>
         <div class="flex gap-4 mb-4">
-          <select v-model="bidForm.template" class="form-field-select" style="max-width: 300px">
+          <select v-model="bidForm.template" class="form-field-select mw-300">
             <option value="technical_proposal">技术方案</option>
           </select>
           <button
             :disabled="loading"
-            class="px-6 py-2 rounded-lg text-white font-medium text-sm"
-            style="background: var(--color-accent)"
+            class="px-6 py-2 rounded-lg text-white font-medium text-sm bg-accent"
             @click="generateBidDoc"
           >
             {{ loading ? '生成中...' : '生成投标文档' }}
@@ -883,27 +865,24 @@
 
         <div v-if="bidResult" class="mt-4">
           <div v-for="chapter in bidResult.chapters" :key="chapter.num" class="mb-4">
-            <div
-              class="font-bold text-sm p-2 rounded"
-              style="background-color: var(--color-bg-secondary); color: var(--color-accent)"
-            >
+            <div class="font-bold text-sm p-2 rounded bg-secondary text-accent">
               {{ chapter.num }}. {{ chapter.title }}
             </div>
             <div v-for="sec in chapter.sections" :key="sec.num" class="ml-4 mt-2 p-3 bg-gray-50 rounded">
-              <div class="font-medium text-sm" style="color: var(--color-text)">{{ sec.num }} {{ sec.title }}</div>
-              <div class="text-xs mt-1 whitespace-pre-line" style="color: var(--color-text-secondary)">
+              <div class="font-medium text-sm">{{ sec.num }} {{ sec.title }}</div>
+              <div class="text-xs mt-1 whitespace-pre-line text-secondary">
                 {{ sec.content }}
               </div>
-              <div class="text-xs mt-1" style="color: var(--color-text-muted)">数据来源: {{ sec.data_source }}</div>
+              <div class="text-xs mt-1 text-muted">数据来源: {{ sec.data_source }}</div>
             </div>
           </div>
         </div>
 
         <!-- 交互式图表预览 -->
-        <div class="mt-6 pt-4 border-t" style="border-color: var(--color-border)">
+        <div class="mt-6 pt-4 border-t border-color-muted">
           <div class="flex items-center justify-between mb-3">
-            <h4 class="text-base font-bold" style="color: var(--color-accent)">交互式图表预览</h4>
-            <span class="text-xs" style="color: var(--color-text-muted)">基于 Plotly，支持缩放/悬停/导出</span>
+            <h4 class="text-base font-bold text-accent">交互式图表预览</h4>
+            <span class="text-xs text-muted">基于 Plotly，支持缩放/悬停/导出</span>
           </div>
           <div class="flex flex-wrap gap-2 mb-3">
             <button
@@ -925,15 +904,11 @@
               {{ chartLoading === c.id ? '加载中...' : c.label }}
             </button>
           </div>
-          <div
-            v-if="chartError"
-            class="text-xs p-2 rounded mb-3"
-            style="background-color: var(--color-accent-glow); color: var(--color-danger)"
-          >
+          <div v-if="chartError" class="text-xs p-2 rounded mb-3 tag-glow text-danger">
             {{ chartError }}
           </div>
           <div v-if="chartHtml" ref="chartContainer" class="chart-container-sm" v-html="chartHtml" />
-          <div v-else-if="!chartLoading" class="text-xs text-center py-8" style="color: var(--color-text-muted)">
+          <div v-else-if="!chartLoading" class="text-xs text-center py-8 text-muted">
             点击上方按钮选择图表类型，预览投标方案交互式可视化
           </div>
         </div>
