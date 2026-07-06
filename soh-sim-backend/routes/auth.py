@@ -4,6 +4,7 @@
 """
 
 import hashlib
+import hmac
 import re
 import secrets
 import uuid
@@ -48,7 +49,7 @@ def verify_password(password, hashed):
     """验证密码"""
     try:
         salt, _ = hashed.split("$")
-        return hash_password(password, salt) == hashed
+        return hmac.compare_digest(hash_password(password, salt), hashed)
     except (ValueError, IndexError):
         return False
 
@@ -123,7 +124,7 @@ def register():
     username = data.get("username", "").strip()
     email = data.get("email", "").strip()
     password = data.get("password", "")
-    tenant_id = data.get("tenant_id")
+    tenant_id = 1  # 默认租户，禁止客户端自选
 
     if not _validate_username(username):
         return jsonify({"error": "用户名需3-20位，仅允许字母/数字/下划线/中文"}), 400

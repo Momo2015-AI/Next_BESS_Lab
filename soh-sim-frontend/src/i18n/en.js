@@ -670,6 +670,33 @@ export default {
     confirm: 'OK',
     required: 'Project name is required'
   },
+  phase1: {
+    title: 'Phase 1: Project Setup',
+    desc: 'Survey, site evaluation, requirement confirmation'
+  },
+  phase2: {
+    title: 'Phase 2: System Design',
+    desc: 'Technology selection, DC-side design, AC-side design, system integration',
+    step1: '2.1 Equipment Library',
+    step2: '2.2 CAPEX Link',
+    step3: '2.3 DC-Side Design',
+    step4: '2.4 AC-Side Design',
+    step5: '2.5 System Integration',
+    step6: '2.6 Efficiency Chain',
+    step7: '2.7 Energy Flow',
+    step8: '2.8 Degradation Config',
+    step9: '2.9 Health Heatmap'
+  },
+  phase3: {
+    title: 'Phase 3: Performance Analysis',
+    desc: 'SOH/RTE degradation prediction, 25-year capacity accounting, visualization, scenario comparison',
+    calculating: 'Calculating...',
+    runPipeline: 'Run Pipeline',
+    step1: '3.1 Degradation Prediction',
+    step2: '3.2 Capacity Accounting',
+    step3: '3.3 Visualization',
+    step4: '3.4 Scenario Comparison'
+  },
   phase4: {
     costSummary: 'Cost Summary (CAPEX + OPEX)',
     capex: 'CAPEX',
@@ -692,6 +719,23 @@ export default {
     taxHolidayYears: 'Tax Holiday (years)',
     discountRate: 'Discount Rate (%)',
     depreciationYears: 'Depreciation Years'
+  },
+  phase5: {
+    title: 'Phase 5: Deliverables',
+    desc: 'Technical reports, equipment lists, data export, project archival',
+    step1: '5.1 Technical Report',
+    step2: '5.2 Equipment List',
+    step3: '5.3 Data Export',
+    step4: '5.4 Project Archive',
+    reportTitle: 'Technical Report (PDF)',
+    reportDesc: 'Integrate project overview, system configuration, performance analysis, and economic indicators into a complete technical report.',
+    reportBtn: 'Generate Technical Report',
+    bomTitle: 'Equipment List (BOM)',
+    bomDesc: 'Generate a list of models and quantities for cells, containers, PCS, and other equipment.',
+    bomBtn: 'Generate Equipment List',
+    archiveTitle: 'Project Archive',
+    archiveDesc: 'Save all current project data to the database.',
+    archiveBtn: 'Save Project'
   },
   sohChart: {
     sohCurve: 'SOH Degradation Curve',

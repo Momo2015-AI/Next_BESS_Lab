@@ -1,10 +1,10 @@
 <template>
   <div class="phase-page phase3-page">
     <div class="phase-header">
-      <h1>Phase 3: 性能分析</h1>
-      <p class="phase-desc">SOH/RTE 衰减预测、25 年容量对账、可视化分析、多场景对比</p>
+      <h1>{{ $t('phase3.title') }}</h1>
+      <p class="phase-desc">{{ $t('phase3.desc') }}</p>
       <button class="run-btn" :disabled="store.calculating" @click="runPipeline">
-        {{ store.calculating ? '计算中...' : '运行计算管道' }}
+        {{ store.calculating ? $t('phase3.calculating') : $t('phase3.runPipeline') }}
       </button>
       <p v-if="store.calculationError" class="error">
         {{ store.calculationError }}
@@ -47,7 +47,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import SimulationLab from '../components/SimulationLab.vue'
 import MatrixTable from '../components/MatrixTable.vue'
@@ -55,13 +56,14 @@ import SohChart from '../components/SohChart.vue'
 import ScenarioCompare from '../components/ScenarioCompare.vue'
 
 const store = useBessStore()
+const { t } = useI18n()
 const activeStep = ref(0)
-const steps = [
-  { label: '3.1 衰减预测' },
-  { label: '3.2 容量对账' },
-  { label: '3.3 可视化分析' },
-  { label: '3.4 多场景对比' }
-]
+const steps = computed(() => [
+  { label: t('phase3.step1') },
+  { label: t('phase3.step2') },
+  { label: t('phase3.step3') },
+  { label: t('phase3.step4') }
+])
 
 async function runPipeline() {
   await store.runPipeline()

@@ -669,6 +669,33 @@ export default {
     confirm: '确定',
     required: '请填写项目名称'
   },
+  phase1: {
+    title: 'Phase 1: 项目立项',
+    desc: '调研填表、选址评估、需求确认'
+  },
+  phase2: {
+    title: 'Phase 2: 系统设计',
+    desc: '技术选型、直流侧设计、交流侧设计、系统集成配置',
+    step1: '2.1 设备选型库',
+    step2: '2.2 CAPEX联动',
+    step3: '2.3 直流侧设计',
+    step4: '2.4 交流侧设计',
+    step5: '2.5 系统集成配置',
+    step6: '2.6 效率链配置',
+    step7: '2.7 能量流向图',
+    step8: '2.8 退化模型配置',
+    step9: '2.9 健康热力图'
+  },
+  phase3: {
+    title: 'Phase 3: 性能分析',
+    desc: 'SOH/RTE 衰减预测、25 年容量对账、可视化分析、多场景对比',
+    calculating: '计算中...',
+    runPipeline: '运行计算管道',
+    step1: '3.1 衰减预测',
+    step2: '3.2 容量对账',
+    step3: '3.3 可视化分析',
+    step4: '3.4 多场景对比'
+  },
   phase4: {
     costSummary: '成本汇总 (CAPEX + OPEX)',
     capex: 'CAPEX',
@@ -691,6 +718,23 @@ export default {
     taxHolidayYears: '免税期 (年)',
     discountRate: '折现率 (%)',
     depreciationYears: '折旧年限'
+  },
+  phase5: {
+    title: 'Phase 5: 成果输出',
+    desc: '技术报告、设备清单、数据导出、项目存档',
+    step1: '5.1 技术报告',
+    step2: '5.2 设备清单',
+    step3: '5.3 数据导出',
+    step4: '5.4 项目存档',
+    reportTitle: '技术报告 (PDF)',
+    reportDesc: '整合项目概览、系统配置、性能分析、经济指标生成完整技术报告。',
+    reportBtn: '生成技术报告',
+    bomTitle: '设备清单 (BOM)',
+    bomDesc: '生成电芯、集装箱、PCS 等设备的型号和数量清单。',
+    bomBtn: '生成设备清单',
+    archiveTitle: '项目存档',
+    archiveDesc: '将当前项目全部数据保存到数据库。',
+    archiveBtn: '保存项目'
   },
   sohChart: {
     sohCurve: 'SOH 衰减曲线',

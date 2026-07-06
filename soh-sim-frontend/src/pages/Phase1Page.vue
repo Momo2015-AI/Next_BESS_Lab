@@ -1,8 +1,8 @@
 <template>
   <div class="phase-page phase1-page">
     <div class="phase-header">
-      <h1>Phase 1: 项目立项</h1>
-      <p class="phase-desc">调研填表、选址评估、需求确认</p>
+      <h1>{{ $t('phase1.title') }}</h1>
+      <p class="phase-desc">{{ $t('phase1.desc') }}</p>
     </div>
     <div class="phase-body">
       <SurveyForm />

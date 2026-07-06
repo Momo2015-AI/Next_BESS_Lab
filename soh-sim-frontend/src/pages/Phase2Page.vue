@@ -1,8 +1,8 @@
 <template>
   <div class="phase-page phase2-page">
     <div class="phase-header">
-      <h1>Phase 2: 系统设计</h1>
-      <p class="phase-desc">技术选型、直流侧设计、交流侧设计、系统集成配置</p>
+      <h1>{{ $t('phase2.title') }}</h1>
+      <p class="phase-desc">{{ $t('phase2.desc') }}</p>
     </div>
     <div class="phase-body">
       <div class="steps-nav">
@@ -26,7 +26,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ProductConfig from '../components/ProductConfig.vue'
 import ProductCAPEXLink from '../components/ProductCAPEXLink.vue'
 import BatteryDCDesign from '../components/BatteryDCDesign.vue'
@@ -37,18 +38,19 @@ import EnergyFlowSankey from '../components/EnergyFlowSankey.vue'
 import DegradationConfig from '../components/DegradationConfig.vue'
 import BatteryHealthHeatmap from '../components/BatteryHealthHeatmap.vue'
 
+const { t } = useI18n()
 const activeStep = ref(0)
-const steps = [
-  { label: '2.1 设备选型库' },
-  { label: '2.2 CAPEX联动' },
-  { label: '2.3 直流侧设计' },
-  { label: '2.4 交流侧设计' },
-  { label: '2.5 系统集成配置' },
-  { label: '2.6 效率链配置' },
-  { label: '2.7 能量流向图' },
-  { label: '2.8 退化模型配置' },
-  { label: '2.9 健康热力图' }
-]
+const steps = computed(() => [
+  { label: t('phase2.step1') },
+  { label: t('phase2.step2') },
+  { label: t('phase2.step3') },
+  { label: t('phase2.step4') },
+  { label: t('phase2.step5') },
+  { label: t('phase2.step6') },
+  { label: t('phase2.step7') },
+  { label: t('phase2.step8') },
+  { label: t('phase2.step9') }
+])
 </script>
 
 <style scoped></style>

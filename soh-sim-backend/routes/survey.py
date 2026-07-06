@@ -6,14 +6,16 @@ import json
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from database import Project, Survey, db
+from routes.auth import token_required
 
 survey_bp = Blueprint("survey", __name__)
 
 
 @survey_bp.route("/api/survey/submit", methods=["POST"])
+@token_required
 def submit_survey():
     """
     提交调研表
@@ -107,6 +109,7 @@ def submit_survey():
 
 
 @survey_bp.route("/api/survey/<survey_id>", methods=["GET"])
+@token_required
 def get_survey(survey_id):
     """获取调研表详情"""
     survey = Survey.query.get(survey_id)
@@ -121,6 +124,7 @@ def get_survey(survey_id):
 
 
 @survey_bp.route("/api/survey/list", methods=["GET"])
+@token_required
 def list_surveys():
     """获取调研表列表"""
     page = request.args.get("page", 1, type=int)
@@ -151,6 +155,7 @@ def list_surveys():
 
 
 @survey_bp.route("/api/survey/search", methods=["GET"])
+@token_required
 def search_survey():
     """通过项目名称搜索调研表"""
     keyword = request.args.get("keyword", "")
@@ -164,6 +169,7 @@ def search_survey():
 
 
 @survey_bp.route("/api/survey/<survey_id>", methods=["PUT"])
+@token_required
 def update_survey(survey_id):
     """更新调研表"""
     survey = Survey.query.get(survey_id)
@@ -225,6 +231,7 @@ def update_survey(survey_id):
 
 
 @survey_bp.route("/api/survey/<survey_id>", methods=["DELETE"])
+@token_required
 def delete_survey(survey_id):
     """删除调研表"""
     survey = Survey.query.get(survey_id)
@@ -254,6 +261,7 @@ def get_project(project_id):
 
 
 @survey_bp.route("/api/project/list", methods=["GET"])
+@token_required
 def list_projects():
     """获取项目列表"""
     page = request.args.get("page", 1, type=int)
@@ -314,6 +322,7 @@ def update_project(project_id):
 
 
 @survey_bp.route("/api/project/<project_id>", methods=["DELETE"])
+@token_required
 def delete_project(project_id):
     """删除项目（级联删除关联调研表）
 

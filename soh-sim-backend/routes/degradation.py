@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from routes.auth import token_required
 from services.degradation import (
     ENV_DEFAULTS,
     _compute_environmental_acceleration,
@@ -15,11 +16,13 @@ _in_memory_env = get_default_environmental()
 
 
 @degradation_bp.route("/api/degradation/gb36276-curves", methods=["GET"])
+@token_required
 def get_curves():
     return jsonify({"curves": _in_memory_gb_curves})
 
 
 @degradation_bp.route("/api/degradation/gb36276-curves", methods=["PUT"])
+@token_required
 def update_curves():
     data = request.get_json()
     if not data or "curves" not in data:
@@ -37,6 +40,7 @@ def update_curves():
 
 
 @degradation_bp.route("/api/degradation/gb36276-curves/reset", methods=["POST"])
+@token_required
 def reset_curves():
     global _in_memory_gb_curves
     _in_memory_gb_curves = get_default_gb_curves()
@@ -49,6 +53,7 @@ def get_environmental():
 
 
 @degradation_bp.route("/api/degradation/environmental", methods=["PUT"])
+@token_required
 def update_environmental():
     data = request.get_json()
     if not data:

@@ -1,8 +1,8 @@
 <template>
   <div class="phase-page phase5-page">
     <div class="phase-header">
-      <h1>Phase 5: 成果输出</h1>
-      <p class="phase-desc">技术报告、设备清单、数据导出、项目存档</p>
+      <h1>{{ $t('phase5.title') }}</h1>
+      <p class="phase-desc">{{ $t('phase5.desc') }}</p>
     </div>
     <div class="phase-body">
       <div class="steps-nav">
@@ -12,17 +12,17 @@
       </div>
       <div class="step-content">
         <div v-if="activeStep === 0" class="card">
-          <h3>技术报告 (PDF)</h3>
-          <p>整合项目概览、系统配置、性能分析、经济指标生成完整技术报告。</p>
-          <button :disabled="generating" @click="generateReport">生成技术报告</button>
+          <h3>{{ $t('phase5.reportTitle') }}</h3>
+          <p>{{ $t('phase5.reportDesc') }}</p>
+          <button :disabled="generating" @click="generateReport">{{ $t('phase5.reportBtn') }}</button>
           <p v-if="reportMsg" class="msg">
             {{ reportMsg }}
           </p>
         </div>
         <div v-if="activeStep === 1" class="card">
-          <h3>设备清单 (BOM)</h3>
-          <p>生成电芯、集装箱、PCS 等设备的型号和数量清单。</p>
-          <button :disabled="generatingBom" @click="generateBom">生成设备清单</button>
+          <h3>{{ $t('phase5.bomTitle') }}</h3>
+          <p>{{ $t('phase5.bomDesc') }}</p>
+          <button :disabled="generatingBom" @click="generateBom">{{ $t('phase5.bomBtn') }}</button>
           <p v-if="bomMsg" class="msg">
             {{ bomMsg }}
           </p>
@@ -39,9 +39,9 @@
           :project-id="store.project.id"
         />
         <div v-if="activeStep === 3" class="card">
-          <h3>项目存档</h3>
-          <p>将当前项目全部数据保存到数据库。</p>
-          <button @click="saveProject">保存项目</button>
+          <h3>{{ $t('phase5.archiveTitle') }}</h3>
+          <p>{{ $t('phase5.archiveDesc') }}</p>
+          <button @click="saveProject">{{ $t('phase5.archiveBtn') }}</button>
           <p v-if="saveMsg" class="msg">
             {{ saveMsg }}
           </p>
@@ -52,18 +52,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import DataExport from '../components/DataExport.vue'
 
 const store = useBessStore()
+const { t } = useI18n()
 const activeStep = ref(0)
-const steps = [
-  { label: '5.1 技术报告' },
-  { label: '5.2 设备清单' },
-  { label: '5.3 数据导出' },
-  { label: '5.4 项目存档' }
-]
+const steps = computed(() => [
+  { label: t('phase5.step1') },
+  { label: t('phase5.step2') },
+  { label: t('phase5.step3') },
+  { label: t('phase5.step4') }
+])
 
 const generating = ref(false)
 const reportMsg = ref('')
