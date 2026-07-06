@@ -4,21 +4,18 @@
       <!-- 4.2 成本汇总 -->
       <div v-if="activeStep === 1" class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
-          >
+          <span class="phase4-badge">
             02
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title phase4-section-title">
               {{ $t('phase4.costSummary') }}
             </h3>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <h4 class="text-sm font-bold mb-3" style="color: var(--color-text)">{{ $t('phase4.capex') }}</h4>
+            <h4 class="phase4-subtitle">{{ $t('phase4.capex') }}</h4>
             <div class="space-y-3">
               <div>
                 <label class="label-text">{{ $t('phase4.equipment') }}</label>
@@ -32,16 +29,13 @@
                 <label class="label-text">{{ $t('phase4.development') }}</label>
                 <input v-model.number="store.financial.capex.development" type="number" class="form-field-input" />
               </div>
-              <div
-                class="font-bold pt-2 mt-2 border-t"
-                style="color: var(--color-accent); border-color: var(--color-border)"
-              >
+              <div class="phase4-total-row">
                 {{ $t('phase4.totalCapex') }}: ${{ totalCapex.toLocaleString() }}
               </div>
             </div>
           </div>
           <div>
-            <h4 class="text-sm font-bold mb-3" style="color: var(--color-text)">{{ $t('phase4.opex') }}</h4>
+            <h4 class="phase4-subtitle">{{ $t('phase4.opex') }}</h4>
             <div class="space-y-3">
               <div>
                 <label class="label-text">{{ $t('phase4.fixedOpex') }}</label>
@@ -87,21 +81,18 @@
       <!-- 4.3 收入模型与融资 -->
       <div v-if="activeStep === 2" class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
-          >
+          <span class="phase4-badge">
             03
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title phase4-section-title">
               {{ $t('phase4.revenueFinancing') }}
             </h3>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <h4 class="text-sm font-bold mb-3" style="color: var(--color-text)">{{ $t('phase4.financingParams') }}</h4>
+            <h4 class="phase4-subtitle">{{ $t('phase4.financingParams') }}</h4>
             <div class="space-y-3">
               <div>
                 <label class="label-text">{{ $t('phase4.debtRatio') }}</label>
@@ -133,7 +124,7 @@
             </div>
           </div>
           <div>
-            <h4 class="text-sm font-bold mb-3" style="color: var(--color-text)">{{ $t('phase4.taxDepreciation') }}</h4>
+            <h4 class="phase4-subtitle">{{ $t('phase4.taxDepreciation') }}</h4>
             <div class="space-y-3">
               <div>
                 <label class="label-text">{{ $t('phase4.corporateTaxRate') }}</label>
@@ -189,7 +180,7 @@
     </div>
 
     <!-- 步骤导航 -->
-    <div class="flex justify-center gap-2 py-3 sticky top-0 z-10" style="background: var(--color-bg)">
+    <div class="phase4-sticky-nav">
       <button
         v-for="(s, i) in steps"
         :key="i"
@@ -229,3 +220,45 @@ function onError(msg) {
   store.calculationError = msg
 }
 </script>
+
+<style scoped>
+.phase4-badge {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
+}
+.phase4-section-title {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.phase4-subtitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+.phase4-total-row {
+  font-weight: 700;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-accent);
+}
+.phase4-sticky-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-bg);
+}
+</style>

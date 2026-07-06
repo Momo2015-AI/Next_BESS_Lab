@@ -124,7 +124,7 @@ def register():
     username = data.get("username", "").strip()
     email = data.get("email", "").strip()
     password = data.get("password", "")
-    tenant_id = 1  # 默认租户，禁止客户端自选
+    tenant_id = "00000000-0000-0000-0000-000000000001"  # 默认租户UUID，禁止客户端自选
 
     if not _validate_username(username):
         return jsonify({"error": "用户名需3-20位，仅允许字母/数字/下划线/中文"}), 400

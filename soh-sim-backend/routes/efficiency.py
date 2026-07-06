@@ -13,11 +13,13 @@ def _reset_factors():
 
 
 @efficiency_bp.route("/api/efficiency/factors", methods=["GET"])
+@token_required
 def get_factors():
     return jsonify({"factors": _in_memory_factors})
 
 
 @efficiency_bp.route("/api/efficiency/factors", methods=["PUT"])
+@token_required
 def update_factors():
     data = request.get_json()
     if not data or "factors" not in data:
@@ -41,12 +43,14 @@ def update_factors():
 
 
 @efficiency_bp.route("/api/efficiency/factors/reset", methods=["POST"])
+@token_required
 def reset_factors():
     _reset_factors()
     return jsonify({"factors": _in_memory_factors})
 
 
 @efficiency_bp.route("/api/efficiency/preview", methods=["POST"])
+@token_required
 def preview_efficiency():
     data = request.get_json()
     if not data:
@@ -60,6 +64,7 @@ def preview_efficiency():
 
 
 @efficiency_bp.route("/api/efficiency/curves", methods=["POST"])
+@token_required
 def get_curves():
     data = request.get_json()
     if not data:

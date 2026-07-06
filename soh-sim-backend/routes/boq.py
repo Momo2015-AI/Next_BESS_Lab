@@ -105,6 +105,7 @@ def save_boq_items():
         )
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"BOQ保存失败: {e}", exc_info=True)
         return jsonify({"error": "保存失败，请重试"}), 500
 
 

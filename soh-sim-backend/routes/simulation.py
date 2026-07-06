@@ -7,7 +7,7 @@ import json
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from routes.auth import role_required, token_required
 
@@ -154,6 +154,7 @@ def create_simulation_result(version_id):
         return jsonify({"success": True, "id": result_id, "name": result.name, "message": "仿真结果保存成功"}), 201
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"保存仿真结果失败: {e}", exc_info=True)
         return jsonify({"error": "保存失败，请重试"}), 500
 
 
@@ -194,6 +195,7 @@ def delete_simulation_result(result_id):
         return jsonify({"success": True, "message": "删除成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除仿真结果失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败，请重试"}), 500
 
 
@@ -287,6 +289,7 @@ def create_correction_template():
         return jsonify({"success": True, "id": template_id, "message": "模板创建成功"}), 201
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"创建模板失败: {e}", exc_info=True)
         return jsonify({"error": "创建失败，请重试"}), 500
 
 
@@ -360,6 +363,7 @@ def update_correction_template(template_id):
         return jsonify({"success": True, "message": "模板更新成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"更新模板失败: {e}", exc_info=True)
         return jsonify({"error": "更新失败，请重试"}), 500
 
 
@@ -384,6 +388,7 @@ def delete_correction_template(template_id):
         return jsonify({"success": True, "message": "删除成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除模板失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败，请重试"}), 500
 
 
@@ -456,4 +461,5 @@ def seed_correction_templates():
         return jsonify({"success": True, "message": "默认模板初始化成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"初始化模板失败: {e}", exc_info=True)
         return jsonify({"error": "初始化失败，请重试"}), 500

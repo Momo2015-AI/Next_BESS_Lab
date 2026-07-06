@@ -105,6 +105,7 @@ def submit_survey():
         )
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"提交调研表失败: {e}", exc_info=True)
         return jsonify({"error": "提交失败，请重试"}), 500
 
 
@@ -227,6 +228,7 @@ def update_survey(survey_id):
         return jsonify({"success": True, "survey": survey.to_dict(), "message": "调研表更新成功"}), 200
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"更新调研表失败: {e}", exc_info=True)
         return jsonify({"error": "更新失败，请重试"}), 500
 
 
@@ -244,6 +246,7 @@ def delete_survey(survey_id):
         return jsonify({"success": True, "message": "调研表已删除"}), 200
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除调研表失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败，请重试"}), 500
 
 
@@ -318,6 +321,7 @@ def update_project(project_id):
         return jsonify({"success": True, "project": project.to_dict(), "message": "项目更新成功"}), 200
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"更新项目失败: {e}", exc_info=True)
         return jsonify({"error": "更新失败，请重试"}), 500
 
 
@@ -341,4 +345,5 @@ def delete_project(project_id):
         return jsonify({"success": True, "message": "项目及关联调研表已删除"}), 200
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除项目失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败，请重试"}), 500

@@ -1543,44 +1543,54 @@ class PinnModelWeights(db.Model):
         return f"<PinnModelWeights {self.model_name}>"
 
 
+# ==================== to_dict 显式声明（替代运行时动态注入） ====================
+Tenant.to_dict = _model_to_dict
+User.to_dict = _model_to_dict
+Survey.to_dict = _model_to_dict
+Project.to_dict = _model_to_dict
+ProjectVersion.to_dict = _model_to_dict
+Simulation.to_dict = _model_to_dict
+SimulationResult.to_dict = _model_to_dict
+CorrectionTemplate.to_dict = _model_to_dict
+BatteryPCSConfig.to_dict = _model_to_dict
+SohRteData.to_dict = _model_to_dict
+FinancialData.to_dict = _model_to_dict
+ProductConfig.to_dict = _model_to_dict
+FormulaConfig.to_dict = _model_to_dict
+AlgorithmModel.to_dict = _model_to_dict
+BoqSection.to_dict = _model_to_dict
+BoqItem.to_dict = _model_to_dict
+BatteryManufacturer.to_dict = _model_to_dict
+PinnModelWeights.to_dict = _model_to_dict
+SystemArchitecture.to_dict = _model_to_dict
+GridComplianceAnalysis.to_dict = _model_to_dict
+SafetyFireDesign.to_dict = _model_to_dict
+IPPFinancialModel.to_dict = _model_to_dict
+ComplianceMatrix.to_dict = _model_to_dict
+ThermalManagement.to_dict = _model_to_dict
+ScadaEmsDesign.to_dict = _model_to_dict
+HVInterconnection.to_dict = _model_to_dict
+BidDocument.to_dict = _model_to_dict
+
+
 def init_db(app):
-    """初始化数据库"""
+    """初始化数据库，同时种子默认租户"""
     db.init_app(app)
     with app.app_context():
         db.create_all()
-
-    # 给所有模型挂上 to_dict 方法（一次性，避免每类重复定义）
-    for model_cls in [
-        Tenant,
-        User,
-        Survey,
-        Project,
-        ProjectVersion,
-        Simulation,
-        SimulationResult,
-        CorrectionTemplate,
-        BatteryPCSConfig,
-        SohRteData,
-        FinancialData,
-        ProductConfig,
-        FormulaConfig,
-        AlgorithmModel,
-        BoqSection,
-        BoqItem,
-        BatteryManufacturer,
-        PinnModelWeights,
-        SystemArchitecture,
-        GridComplianceAnalysis,
-        SafetyFireDesign,
-        IPPFinancialModel,
-        ComplianceMatrix,
-        ThermalManagement,
-        ScadaEmsDesign,
-        HVInterconnection,
-        BidDocument,
-    ]:
-        model_cls.to_dict = _model_to_dict
-
+        # 种子默认租户
+        import uuid as _uuid
+        from sqlalchemy import inspect
+        default_tenant_id = "00000000-0000-0000-0000-000000000001"
+        existing = db.session.get(Tenant, default_tenant_id)
+        if not existing:
+            db.session.add(Tenant(
+                id=default_tenant_id,
+                name="Default Tenant",
+                code="default",
+                status="active",
+            ))
+            db.session.commit()
     return db
 
 
