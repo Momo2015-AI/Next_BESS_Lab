@@ -6,13 +6,8 @@
         :key="c.id"
         :class="[
           'px-3 py-1 text-[11px] rounded font-semibold transition-all',
-          activeChart === c.id ? 'text-white' : ''
+          activeChart === c.id ? 'soh-chart-switch active' : 'soh-chart-switch inactive'
         ]"
-        :style="
-          activeChart === c.id
-            ? { background: 'var(--color-accent)' }
-            : { background: 'var(--color-bg-secondary)', color: 'var(--color-text-secondary)' }
-        "
         @click="switchChart(c.id)"
       >
         {{ c.label }}
@@ -21,135 +16,77 @@
 
     <template v-if="activeChart === 'combined'">
       <div class="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div
-          ref="sohChartRef"
-          class="w-full min-h-0"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            min-height: 250px;
-          "
-        />
-        <div
-          ref="rteChartRef"
-          class="w-full min-h-0"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            min-height: 250px;
-          "
-        />
+        <div ref="sohChartRef" class="soh-chart-panel min-h-[250px]" />
+        <div ref="rteChartRef" class="soh-chart-panel min-h-[250px]" />
       </div>
     </template>
 
     <template v-if="activeChart === 'soh'">
-      <div
-        ref="sohChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-      />
+      <div ref="sohChartRef" class="soh-chart-panel" />
     </template>
 
     <template v-if="activeChart === 'rte'">
-      <div
-        ref="rteChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-      />
+      <div ref="rteChartRef" class="soh-chart-panel" />
     </template>
 
     <template v-if="activeChart === 'acusable'">
-      <div
-        ref="acChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-      />
+      <div ref="acChartRef" class="soh-chart-panel" />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-accent" />
           存量净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-chart-pink" />
           补容净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-warning)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-warning" />
           承诺底线
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent-secondary)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-accent-secondary" />
           总输出
         </div>
       </div>
     </template>
 
     <template v-if="activeChart === 'stacked'">
-      <div
-        ref="stackedChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-      />
+      <div ref="stackedChartRef" class="soh-chart-panel" />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-accent" />
           存量净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-chart-pink" />
           补容净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-danger)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-danger" />
           存量自辅耗
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-orange)" />
+        <div class="soh-legend-item">
+          <span class="soh-legend-dot bg-chart-orange" />
           补容自辅耗
         </div>
       </div>
     </template>
 
     <template v-if="activeChart === 'degradation'">
-      <div
-        ref="degradationChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
-      />
+      <div ref="degradationChartRef" class="soh-chart-panel" />
     </template>
 
     <template v-if="activeChart === 'dashboard'">
       <div class="flex-1 min-h-0 overflow-auto">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-          <div
-            v-for="m in metrics"
-            :key="m.label"
-            class="rounded-xl p-3 text-center"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-[10px] mb-1" style="color: var(--color-text-muted)">
-              {{ m.label }}
-            </div>
-            <div :class="['text-lg font-bold font-mono', m.color]">
-              {{ m.value }}
-            </div>
-            <div class="text-[10px] mt-0.5" style="color: var(--color-text-muted)">
-              {{ m.sub }}
-            </div>
+          <div v-for="m in metrics" :key="m.label" class="rounded-xl p-3 text-center soh-metric-card">
+            <div class="text-[10px] mb-1 text-muted">{{ m.label }}</div>
+            <div :class="['text-lg font-bold font-mono', m.color]">{{ m.value }}</div>
+            <div class="text-[10px] mt-0.5 text-muted">{{ m.sub }}</div>
           </div>
         </div>
-        <div
-          ref="dashChartRef"
-          class="w-full"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            height: 300px;
-          "
-        />
+        <div ref="dashChartRef" class="soh-chart-panel h-[300px]" />
       </div>
     </template>
   </div>

@@ -380,7 +380,7 @@ onUnmounted(() => {
 }
 
 .user-item.danger:hover {
-  background: rgba(239, 68, 68, 0.08);
+  background: var(--color-danger-glow, rgba(239, 68, 68, 0.08));
 }
 
 .icon-btn {
@@ -431,19 +431,19 @@ onUnmounted(() => {
   animation: slideIn 0.3s ease;
 }
 .toast-success {
-  background: rgba(16, 185, 129, 0.9);
+  background: var(--color-success);
   color: white;
 }
 .toast-error {
-  background: rgba(239, 68, 68, 0.9);
+  background: var(--color-danger);
   color: white;
 }
 .toast-warning {
-  background: rgba(245, 158, 11, 0.9);
+  background: var(--color-warning);
   color: white;
 }
 .toast-info {
-  background: rgba(0, 113, 227, 0.9);
+  background: var(--color-accent);
   color: white;
 }
 

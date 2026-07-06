@@ -124,6 +124,25 @@ const renderHeatmap = () => {
     renderer: 'canvas'
   })
 
+  const handleResize = () => {
+    heatmap?.resize()
+  }
+
+  onMounted(() => {
+    nextTick(() => {
+      renderHeatmap()
+    })
+    window.addEventListener('resize', handleResize)
+  })
+
+  onUnmounted(() => {
+    if (heatmap) {
+      heatmap.dispose()
+      heatmap = null
+    }
+    window.removeEventListener('resize', handleResize)
+  })
+
   const { data, rows, cols } = generateHeatmapData()
 
   const option = {
@@ -228,18 +247,6 @@ const renderHeatmap = () => {
     }
   })
 }
-
-onMounted(() => {
-  nextTick(() => {
-    renderHeatmap()
-  })
-})
-
-onUnmounted(() => {
-  if (heatmap) {
-    heatmap.dispose()
-  }
-})
 
 // 监听props变化重新渲染
 watch(

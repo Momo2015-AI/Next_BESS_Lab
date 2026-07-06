@@ -667,6 +667,140 @@
     padding: 12px;
   }
 
+  .chart-container-dark {
+    width: 100%;
+    min-height: 256px;
+    background: var(--color-card-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+
+  /* ── 卡片容器 ── */
+  .card-panel {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .card-panel-dark {
+    background-color: var(--color-card-dark);
+    border-radius: var(--radius-md);
+  }
+
+  .card-panel-bordered {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+
+  .card-panel-small {
+    background-color: var(--color-card-dark);
+    border-radius: var(--radius-md);
+    padding: 12px;
+  }
+
+  /* ── 文本颜色工具类 ── */
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .text-accent-secondary {
+    color: var(--color-accent-secondary);
+  }
+
+  .text-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .text-on-accent {
+    color: var(--color-text-on-accent);
+  }
+
+  /* ── 按钮工具类 ── */
+  .btn-accent-filled {
+    background-color: var(--color-accent);
+    color: white;
+    border-radius: var(--radius-sm);
+    transition: opacity 0.15s;
+  }
+
+  .btn-accent-filled:hover {
+    opacity: 0.9;
+  }
+
+  .btn-card-outline {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+    transition: opacity 0.15s;
+  }
+
+  .btn-card-outline:hover {
+    opacity: 0.85;
+  }
+
+  .btn-selected {
+    background-color: var(--color-accent-glow);
+    border: 1px solid var(--color-accent);
+  }
+
+  .btn-default {
+    background-color: var(--color-input-bg);
+    border: 1px solid transparent;
+  }
+
+  /* ── 徽章/指示点 ── */
+  .dot-accent {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+  }
+
+  /* ── 小标签背景 ── */
+  .tag-bg {
+    background-color: var(--color-card-dark);
+  }
+
+  /* ── 通用文本颜色工具类 ── */
+  .text-accent { color: var(--color-accent); }
+  .text-accent-secondary { color: var(--color-accent-secondary); }
+  .text-success { color: var(--color-success); }
+  .text-warning { color: var(--color-warning); }
+  .text-info { color: var(--color-info); }
+  .text-danger { color: var(--color-danger); }
+  .text-text-secondary { color: var(--color-text-secondary); }
+
+  /* ── 通用背景色工具类 ── */
+  .bg-accent { background-color: var(--color-accent); }
+  .bg-accent-secondary { background-color: var(--color-accent-secondary); }
+  .bg-success { background-color: var(--color-success); }
+  .bg-warning { background-color: var(--color-warning); }
+  .bg-info { background-color: var(--color-info); }
+  .bg-danger { background-color: var(--color-danger); }
+  .bg-muted { background-color: var(--color-text-muted); }
+
+  /* ── 边框色工具类 ── */
+  .border-b-border { border-bottom: 1px solid var(--color-border); }
+
+  /* ── Accent 高亮卡片 ── */
+  .card-accent {
+    background-color: var(--color-accent-glow);
+    border: 1px solid var(--color-accent-dark);
+  }
+
+  /* ── 表头边框 ── */
+  .thead-bordered {
+    border-bottom: 1px solid var(--color-border);
+  }
+
   /* ==========================================================================
      SOH-SIM 步骤/流程节点 (左侧蓝色状态条)
      ========================================================================== */
@@ -1384,6 +1518,18 @@
   .text-accent {
     color: var(--color-accent);
   }
+  .text-success {
+    color: var(--color-success);
+  }
+  .text-warning {
+    color: var(--color-warning);
+  }
+  .text-info {
+    color: var(--color-info);
+  }
+  .text-text-secondary {
+    color: var(--color-text-secondary);
+  }
   .text-center {
     text-align: center;
   }
@@ -1463,5 +1609,74 @@
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--color-text-muted);
+  }
+
+  /* ── SohChart 面板 ── */
+  .soh-chart-panel {
+    min-height: 300px;
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .soh-metric-card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .soh-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--color-text-secondary);
+  }
+
+  .soh-legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .soh-chart-switch {
+    padding: 4px 12px;
+    font-size: 11px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.15s;
+    color: white;
+  }
+
+  .soh-chart-switch.active {
+    background-color: var(--color-accent);
+  }
+
+  .soh-chart-switch.inactive {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+  }
+
+  .soh-legend-dot.bg-accent { background-color: var(--color-accent); }
+  .soh-legend-dot.bg-accent-secondary { background-color: var(--color-accent-secondary); }
+  .soh-legend-dot.bg-chart-pink { background-color: var(--color-chart-pink); }
+  .soh-legend-dot.bg-chart-orange { background-color: var(--color-chart-orange); }
+  .soh-legend-dot.bg-danger { background-color: var(--color-danger); }
+  .soh-legend-dot.bg-warning { background-color: var(--color-warning); }
+  .soh-legend-dot.bg-success { background-color: var(--color-success); }
+
+  /* ── AuthPanel 专用 ── */
+  .accent-checkbox {
+    accent-color: var(--color-accent-secondary);
+  }
+
+  .card-danger {
+    background-color: var(--color-danger-glow);
+    border: 1px solid var(--color-danger);
+  }
+
+  .text-danger {
+    color: var(--color-danger);
   }
 }

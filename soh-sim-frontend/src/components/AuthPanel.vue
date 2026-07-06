@@ -1,22 +1,19 @@
 <template>
   <div class="auth-panel h-full flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-      <div
-        class="rounded-xl p-6 shadow-2xl"
-        style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-      >
+      <div class="rounded-xl p-6 shadow-2xl card-panel">
         <div class="text-center mb-6">
-          <h2 class="text-xl font-bold mb-1" style="color: var(--color-accent-secondary)">
+          <h2 class="text-xl font-bold mb-1 text-accent-secondary">
             {{ isLogin ? '用户登录' : '用户注册' }}
           </h2>
-          <p class="text-xs" style="color: var(--color-text-muted)">
+          <p class="text-xs text-muted">
             {{ isLogin ? '欢迎回来' : '创建新账号' }}
           </p>
         </div>
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">用户名 / 邮箱</label>
+            <label class="block text-xs mb-1 text-muted">用户名 / 邮箱</label>
             <input
               v-model="form.username"
               type="text"
@@ -27,12 +24,12 @@
           </div>
 
           <div v-if="!isLogin">
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">邮箱</label>
+            <label class="block text-xs mb-1 text-muted">邮箱</label>
             <input v-model="form.email" type="email" required class="form-field-input" placeholder="输入邮箱地址" />
           </div>
 
           <div>
-            <label class="block text-xs mb-1" style="color: var(--color-text-muted)">密码</label>
+            <label class="block text-xs mb-1 text-muted">密码</label>
             <div class="relative">
               <input
                 v-model="form.password"
@@ -49,14 +46,8 @@
           </div>
 
           <div v-if="!isLogin" class="flex items-start gap-2">
-            <input
-              v-model="agreedToTerms"
-              type="checkbox"
-              required
-              style="accent-color: var(--color-accent-secondary)"
-              class="mt-0.5"
-            />
-            <span class="text-xs" style="color: var(--color-text-muted)">
+            <input v-model="agreedToTerms" type="checkbox" required class="mt-0.5 accent-checkbox" />
+            <span class="text-xs text-muted">
               我已阅读并同意
               <a href="#" class="terms-link">服务条款</a>
               和
@@ -80,23 +71,15 @@
           </div>
         </form>
 
-        <div
-          v-if="errorMessage"
-          class="mt-4 p-3 rounded-lg"
-          style="background-color: var(--color-danger-glow); border: 1px solid var(--color-danger)"
-        >
-          <p class="text-xs" style="color: var(--color-danger)">
+        <div v-if="errorMessage" class="mt-4 p-3 rounded-lg card-danger">
+          <p class="text-xs text-danger">
             {{ errorMessage }}
           </p>
         </div>
       </div>
 
-      <div
-        v-if="isDev"
-        class="mt-4 p-3 rounded-lg"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      >
-        <div class="text-xs text-center mb-2" style="color: var(--color-text-muted)">快捷体验（无需注册）</div>
+      <div v-if="isDev" class="mt-4 p-3 rounded-lg card-panel-bordered">
+        <div class="text-xs text-center mb-2 text-muted">快捷体验（无需注册）</div>
         <div class="flex gap-2">
           <button class="quick-login-btn" @click="quickLogin('admin')">管理员</button>
           <button class="quick-login-btn" @click="quickLogin('engineer')">仿真工程师</button>

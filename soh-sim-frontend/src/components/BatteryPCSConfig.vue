@@ -1,17 +1,15 @@
 <template>
   <div class="flex flex-col gap-4 h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <!-- 电池集装箱配置 -->
+    <div class="rounded-lg p-4 card-panel">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
+        <span class="w-2 h-2 rounded-full dot-accent" />
         电池集装箱配置
       </h3>
 
       <div class="grid grid-cols-3 gap-4">
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">储能集装箱型号</label>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">储能集装箱型号</label>
           <select
             v-model="selectedContainer"
             class="w-full rounded px-3 py-2 text-xs form-field-select"
@@ -24,11 +22,8 @@
           </select>
         </div>
 
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">目标总能量 (MWh)</label>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">目标总能量 (MWh)</label>
           <input
             v-model.number="targetEnergy"
             type="number"
@@ -40,21 +35,15 @@
           />
         </div>
 
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">集装箱数量 (自动计算)</label>
-          <p class="text-lg font-bold" style="color: var(--color-accent-secondary)">{{ containerQty }} 台</p>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">集装箱数量 (自动计算)</label>
+          <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} 台</p>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-4 mt-4">
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">PCS型号</label>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">PCS型号</label>
           <select
             v-model="selectedPCS"
             class="w-full rounded px-3 py-2 text-xs form-field-select"
@@ -67,11 +56,8 @@
           </select>
         </div>
 
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">目标总功率 (MW)</label>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">目标总功率 (MW)</label>
           <input
             v-model.number="targetPower"
             type="number"
@@ -83,168 +69,141 @@
           />
         </div>
 
-        <div
-          class="rounded p-3"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <label class="text-xs block mb-2" style="color: var(--color-text-muted)">PCS 数量 (自动)</label>
-          <p class="text-lg font-bold" style="color: var(--color-success)">{{ pcsQty }} 台</p>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-xs block mb-2 text-muted">PCS 数量 (自动)</label>
+          <p class="text-lg font-bold text-success">{{ pcsQty }} 台</p>
         </div>
       </div>
 
-      <div
-        class="mt-4 p-4 rounded-lg"
-        style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark)"
-      >
-        <h4 class="text-xs font-bold mb-3" style="color: var(--color-accent-secondary)">自动计算结果</h4>
+      <!-- 自动计算结果 -->
+      <div class="mt-4 p-4 rounded-lg card-accent">
+        <h4 class="text-xs font-bold mb-3 text-accent-secondary">自动计算结果</h4>
         <div class="grid grid-cols-6 gap-3">
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">集装箱数</p>
-            <p class="text-lg font-bold" style="color: var(--color-accent-secondary)">{{ containerQty }} 台</p>
+            <p class="text-[10px] text-muted">集装箱数</p>
+            <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} 台</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">总能量</p>
-            <p class="text-lg font-bold" style="color: var(--color-accent-secondary)">
-              {{ totalEnergy.toFixed(1) }} MWh
-            </p>
+            <p class="text-[10px] text-muted">总能量</p>
+            <p class="text-lg font-bold text-accent-secondary">{{ totalEnergy.toFixed(1) }} MWh</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">PCS数</p>
-            <p class="text-lg font-bold" style="color: var(--color-success)">{{ pcsQty }} 台</p>
+            <p class="text-[10px] text-muted">PCS数</p>
+            <p class="text-lg font-bold text-success">{{ pcsQty }} 台</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">总功率</p>
-            <p class="text-lg font-bold" style="color: var(--color-accent)">{{ totalPower.toFixed(1) }} MW</p>
+            <p class="text-[10px] text-muted">总功率</p>
+            <p class="text-lg font-bold text-accent">{{ totalPower.toFixed(1) }} MW</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">运行时长</p>
-            <p class="text-lg font-bold" style="color: var(--color-accent-secondary)">
+            <p class="text-[10px] text-muted">运行时长</p>
+            <p class="text-lg font-bold text-accent-secondary">
               {{ energyPowerRatio }}
             </p>
           </div>
           <div class="text-center">
-            <p class="text-[10px]" style="color: var(--color-text-muted)">配比方式</p>
-            <p class="text-lg font-bold" style="color: var(--color-warning)">
+            <p class="text-[10px] text-muted">配比方式</p>
+            <p class="text-lg font-bold text-warning">
               {{ pairingMode }}
             </p>
           </div>
         </div>
 
-        <div class="mt-3 text-[10px]" style="color: var(--color-text-muted)">
+        <div class="mt-3 text-[10px] text-muted">
           <p>
-            <strong style="color: var(--color-text-secondary)">配比说明：</strong>
+            <strong class="text-text-secondary">配比说明：</strong>
             {{ pairingDescription }}
           </p>
         </div>
       </div>
     </div>
 
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <!-- 系统连接图 -->
+    <div class="rounded-lg p-4 card-panel">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
+        <span class="w-2 h-2 rounded-full dot-accent" />
         系统连接图
       </h3>
 
-      <div
-        ref="connectionDiagram"
-        class="h-96 rounded"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      />
+      <div ref="connectionDiagram" class="h-96 rounded card-panel-bordered" />
 
       <div class="mt-3 flex gap-4 text-[10px]">
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded" style="background-color: var(--color-accent-secondary)" />
-          <span style="color: var(--color-text-muted)">电池集装箱</span>
+          <span class="w-3 h-3 rounded bg-accent-secondary" />
+          <span class="text-muted">电池集装箱</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded" style="background-color: var(--color-accent)" />
-          <span style="color: var(--color-text-muted)">PCS</span>
+          <span class="w-3 h-3 rounded bg-accent" />
+          <span class="text-muted">PCS</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded" style="background-color: var(--color-warning)" />
-          <span style="color: var(--color-text-muted)">变压器</span>
+          <span class="w-3 h-3 rounded bg-warning" />
+          <span class="text-muted">变压器</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-3 h-3 rounded" style="background-color: var(--color-success)" />
-          <span style="color: var(--color-text-muted)">电网</span>
+          <span class="w-3 h-3 rounded bg-success" />
+          <span class="text-muted">电网</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-2 h-0.5" style="background-color: var(--color-text-muted)" />
-          <span style="color: var(--color-text-muted)">DC连接</span>
+          <span class="w-2 h-0.5 bg-muted" />
+          <span class="text-muted">DC连接</span>
         </div>
         <div class="flex items-center gap-1">
-          <span class="w-2 h-0.5" style="background-color: var(--color-warning)" />
-          <span style="color: var(--color-text-muted)">AC连接</span>
+          <span class="w-2 h-0.5 bg-warning" />
+          <span class="text-muted">AC连接</span>
         </div>
       </div>
     </div>
 
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <!-- 电气单线图 -->
+    <div class="rounded-lg p-4 card-panel">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
+        <span class="w-2 h-2 rounded-full dot-accent" />
         电气单线图
       </h3>
 
-      <div
-        ref="singleLineDiagram"
-        class="h-[500px] rounded"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      />
+      <div ref="singleLineDiagram" class="h-[500px] rounded card-panel-bordered" />
 
       <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
-        <div
-          class="rounded p-2"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <p style="color: var(--color-text-muted)">DC电压范围</p>
-          <p class="font-bold" style="color: var(--color-accent-secondary)">
+        <div class="rounded p-2 card-panel-bordered">
+          <p class="text-muted">DC电压范围</p>
+          <p class="font-bold text-accent-secondary">
             {{ dcVoltageRange }}
           </p>
         </div>
-        <div
-          class="rounded p-2"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <p style="color: var(--color-text-muted)">AC输出电压</p>
-          <p class="font-bold" style="color: var(--color-accent)">
+        <div class="rounded p-2 card-panel-bordered">
+          <p class="text-muted">AC输出电压</p>
+          <p class="font-bold text-accent">
             {{ acVoltage }}
           </p>
         </div>
-        <div
-          class="rounded p-2"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <p style="color: var(--color-text-muted)">额定频率</p>
-          <p class="font-bold" style="color: var(--color-warning)">50 Hz</p>
+        <div class="rounded p-2 card-panel-bordered">
+          <p class="text-muted">额定频率</p>
+          <p class="font-bold text-warning">50 Hz</p>
         </div>
-        <div
-          class="rounded p-2"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <p style="color: var(--color-text-muted)">短路容量</p>
-          <p class="font-bold" style="color: var(--color-success)">
+        <div class="rounded p-2 card-panel-bordered">
+          <p class="text-muted">短路容量</p>
+          <p class="font-bold text-success">
             {{ shortCircuitCapacity }}
           </p>
         </div>
-        <div
-          class="rounded p-2"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <p style="color: var(--color-text-muted)">接地方式</p>
-          <p class="font-bold" style="color: var(--color-accent-secondary)">TN-S</p>
+        <div class="rounded p-2 card-panel-bordered">
+          <p class="text-muted">接地方式</p>
+          <p class="font-bold text-accent-secondary">TN-S</p>
         </div>
       </div>
     </div>
 
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <!-- 推荐配对方案 -->
+    <div class="rounded-lg p-4 card-panel">
+      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
+        <span class="w-2 h-2 rounded-full dot-accent" />
         推荐配对方案
       </h3>
 
       <div class="overflow-auto">
         <table class="w-full text-xs">
-          <thead style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+          <thead class="text-muted thead-bordered">
             <tr>
               <th class="py-2 px-3 text-left">方案编号</th>
               <th class="py-2 px-3 text-left">集装箱配置</th>
@@ -256,31 +215,26 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(scheme, idx) in recommendedSchemes"
-              :key="idx"
-              style="border-bottom: 1px solid var(--color-border)"
-            >
-              <td class="py-2 px-3" style="color: var(--color-text-muted)">
+            <tr v-for="(scheme, idx) in recommendedSchemes" :key="idx" class="border-b-border">
+              <td class="py-2 px-3 text-muted">
                 {{ scheme.id }}
               </td>
-              <td class="py-2 px-3" style="color: var(--color-accent-secondary)">
+              <td class="py-2 px-3 text-accent-secondary">
                 {{ scheme.containerConfig }}
               </td>
-              <td class="py-2 px-3" style="color: var(--color-accent)">
+              <td class="py-2 px-3 text-accent">
                 {{ scheme.pcsConfig }}
               </td>
-              <td class="py-2 px-3" style="color: var(--color-warning)">
+              <td class="py-2 px-3 text-warning">
                 {{ scheme.pairingMode }}
               </td>
-              <td class="py-2 px-3" style="color: var(--color-success)">
+              <td class="py-2 px-3 text-success">
                 {{ scheme.energyPowerRatio }}
               </td>
-              <td class="py-2 px-3" style="color: var(--color-accent-secondary)">{{ scheme.efficiency }}%</td>
+              <td class="py-2 px-3 text-accent-secondary">{{ scheme.efficiency }}%</td>
               <td class="py-2 px-3">
                 <button
-                  class="text-[10px] px-2 py-1 rounded transition-all"
-                  style="background-color: var(--color-accent-glow); color: var(--color-accent-secondary)"
+                  class="text-[10px] px-2 py-1 rounded transition-all btn-accent-filled"
                   @click="applyScheme(scheme)"
                 >
                   应用
@@ -292,21 +246,13 @@
       </div>
     </div>
 
+    <!-- 底部按钮 -->
     <div class="flex justify-end gap-3">
-      <button
-        class="text-xs px-4 py-2 rounded transition-colors"
-        style="
-          background-color: var(--color-card-dark);
-          border: 1px solid var(--color-border);
-          color: var(--color-text-secondary);
-        "
-        @click="resetConfig"
-      >
+      <button class="text-xs px-4 py-2 rounded transition-colors btn-card-outline" @click="resetConfig">
         重置配置
       </button>
       <button
-        class="text-xs px-6 py-2 rounded font-bold transition-colors"
-        style="background-color: var(--color-accent-secondary); color: white"
+        class="text-xs px-6 py-2 rounded font-bold transition-colors bg-accent-secondary text-white"
         @click="applyConfig"
       >
         应用到仿真参数
@@ -1225,6 +1171,11 @@ onMounted(() => {
     autoCalcQty()
     calculatePCS()
   })
+  const handleResize = () => {
+    connectionChart?.resize()
+    singleLineChart?.resize()
+  }
+  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {

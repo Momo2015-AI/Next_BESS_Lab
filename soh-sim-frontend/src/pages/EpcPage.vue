@@ -1160,11 +1160,11 @@ onMounted(() => {
   color: var(--color-accent);
 }
 .pri-P0-4 {
-  background: rgba(245, 158, 11, 0.15);
+  background: var(--color-warning-glow, rgba(245, 158, 11, 0.15));
   color: var(--color-warning);
 }
 .pri-P0-5 {
-  background: rgba(139, 92, 246, 0.15);
+  background: var(--color-info-glow, rgba(139, 92, 246, 0.15));
   color: var(--color-info);
 }
 .pri-P1-1 {
@@ -1259,12 +1259,12 @@ onMounted(() => {
 
 /* Banners */
 .pass-banner {
-  background: rgba(16, 185, 129, 0.15);
+  background: var(--color-success-glow, rgba(16, 185, 129, 0.15));
   border-radius: 8px;
 }
 
 .fail-banner {
-  background: rgba(239, 68, 68, 0.1);
+  background: var(--color-danger-glow-soft, rgba(239, 68, 68, 0.1));
   border-radius: 8px;
 }
 
