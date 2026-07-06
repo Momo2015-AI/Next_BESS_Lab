@@ -48,6 +48,7 @@ def reset_curves():
 
 
 @degradation_bp.route("/api/degradation/environmental", methods=["GET"])
+@token_required
 def get_environmental():
     return jsonify({"environmental": _in_memory_env})
 
@@ -75,6 +76,7 @@ def update_environmental():
 
 
 @degradation_bp.route("/api/degradation/environmental/reset", methods=["POST"])
+@token_required
 def reset_environmental():
     global _in_memory_env
     _in_memory_env = get_default_environmental()
@@ -82,6 +84,7 @@ def reset_environmental():
 
 
 @degradation_bp.route("/api/degradation/environmental/preview", methods=["POST"])
+@token_required
 def preview_acceleration():
     data = request.get_json()
     if not data:
@@ -105,6 +108,7 @@ def preview_acceleration():
 
 
 @degradation_bp.route("/api/degradation/preview", methods=["POST"])
+@token_required
 def preview_degradation():
     data = request.get_json()
     if not data:

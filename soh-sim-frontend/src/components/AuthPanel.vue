@@ -180,9 +180,9 @@ async function handleSubmit() {
     const result = await response.json()
 
     if (result.success) {
-      // 保存token和用户信息
-      localStorage.setItem('auth_token', result.token)
-      localStorage.setItem('user_info', JSON.stringify(result.user))
+      // 保存token和用户信息到sessionStorage（页面关闭后自动清除）
+      sessionStorage.setItem('auth_token', result.token)
+      sessionStorage.setItem('user_info', JSON.stringify(result.user))
 
       // 显式广播 storage 事件，通知同窗口的 App.vue 刷新用户态
       // （同窗口 storage 事件默认不触发，需要手动派发）
@@ -214,8 +214,8 @@ async function quickLogin(role) {
 
   const mockToken = `mock-token-${role}-${Date.now()}`
 
-  localStorage.setItem('auth_token', mockToken)
-  localStorage.setItem('user_info', JSON.stringify(mockUsers[role]))
+  sessionStorage.setItem('auth_token', mockToken)
+  sessionStorage.setItem('user_info', JSON.stringify(mockUsers[role]))
 
   window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(mockUsers[role]) }))
 
@@ -227,8 +227,8 @@ async function quickLogin(role) {
 
 // 检查是否已登录
 function checkAuth() {
-  const token = localStorage.getItem('auth_token')
-  const userInfo = localStorage.getItem('user_info')
+  const token = sessionStorage.getItem('auth_token')
+  const userInfo = sessionStorage.getItem('user_info')
 
   if (token && userInfo) {
     try {
@@ -236,8 +236,8 @@ function checkAuth() {
       emit('auth-success', user)
       return true
     } catch {
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('user_info')
+      sessionStorage.removeItem('auth_token')
+      sessionStorage.removeItem('user_info')
     }
   }
   return false
@@ -245,7 +245,7 @@ function checkAuth() {
 
 // 获取当前用户
 function getCurrentUser() {
-  const userInfo = localStorage.getItem('user_info')
+  const userInfo = sessionStorage.getItem('user_info')
   if (userInfo) {
     try {
       return JSON.parse(userInfo)
@@ -258,14 +258,14 @@ function getCurrentUser() {
 
 // 登出
 function logout() {
-  localStorage.removeItem('auth_token')
-  localStorage.removeItem('user_info')
+  sessionStorage.removeItem('auth_token')
+  sessionStorage.removeItem('user_info')
   showToast('已退出登录')
 }
 
 // 获取token
 function getToken() {
-  return localStorage.getItem('auth_token')
+  return sessionStorage.getItem('auth_token')
 }
 
 // 导出方法

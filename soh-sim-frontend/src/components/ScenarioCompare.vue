@@ -1,18 +1,22 @@
 <template>
   <div class="scenario-compare h-full overflow-auto p-4">
-    <div class="card-panel p-4">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent">
-        <span class="dot-accent" />
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent)">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent)" />
         多场景对比分析
       </h3>
 
       <!-- 场景管理 -->
       <div class="grid grid-cols-3 gap-4 mb-4">
         <!-- 场景列表 -->
-        <div class="col-span-1 card-panel-small">
+        <div class="col-span-1 rounded-lg p-3" style="background-color: var(--color-card-dark)">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs text-muted">场景列表</span>
-            <button class="text-xs px-2 py-1 rounded transition-colors btn-accent-filled" @click="createScenario">
+            <span class="text-xs" style="color: var(--color-text-muted)">场景列表</span>
+            <button
+              class="text-xs px-2 py-1 rounded transition-colors"
+              style="background-color: var(--color-accent); color: white"
+              @click="createScenario"
+            >
               + 新建
             </button>
           </div>
@@ -22,46 +26,83 @@
               v-for="(scenario, idx) in scenarios"
               :key="idx"
               class="p-2 rounded cursor-pointer transition-all text-xs"
-              :class="selectedScenarioIdx === idx ? 'btn-selected' : 'btn-default'"
+              :style="
+                selectedScenarioIdx === idx
+                  ? { backgroundColor: 'var(--color-accent-glow)', border: '1px solid var(--color-accent)' }
+                  : { backgroundColor: 'var(--color-input-bg)', border: '1px solid transparent' }
+              "
             >
               <div class="flex items-center justify-between">
-                <span class="text-secondary" @click="selectScenario(idx)">{{ scenario.name }}</span>
+                <span style="color: var(--color-text-secondary)" @click="selectScenario(idx)">{{ scenario.name }}</span>
                 <div class="flex gap-1">
-                  <button class="text-muted" @click.stop="editScenario(idx)">
-                    <AppIcon name="edit" size="12" />
+                  <button style="color: var(--color-text-muted)" @click.stop="editScenario(idx)">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
                   </button>
-                  <button class="text-muted" @click.stop="deleteScenario(idx)">
-                    <AppIcon name="trash" size="12" />
+                  <button style="color: var(--color-text-muted)" @click.stop="deleteScenario(idx)">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
-              <div class="text-[10px] mt-1 text-muted">
+              <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">
                 {{ scenario.params.ratedEnergy || '-' }} MWh | {{ scenario.params.acEfficiency || '-' }}%
               </div>
             </div>
 
-            <div v-if="scenarios.length === 0" class="text-xs text-center py-4 text-muted">
+            <div v-if="scenarios.length === 0" class="text-xs text-center py-4" style="color: var(--color-text-muted)">
               暂无场景，点击"新建"创建
             </div>
           </div>
         </div>
 
         <!-- 场景编辑器 -->
-        <div class="col-span-2 card-panel-small">
-          <div v-if="!editingScenario" class="text-xs text-center py-8 text-muted">选择或创建一个场景进行编辑</div>
+        <div class="col-span-2 rounded-lg p-3" style="background-color: var(--color-card-dark)">
+          <div v-if="!editingScenario" class="text-xs text-center py-8" style="color: var(--color-text-muted)">
+            选择或创建一个场景进行编辑
+          </div>
 
           <div v-else>
             <div class="flex items-center justify-between mb-3">
               <input
                 v-model="editingScenario.name"
-                class="text-xs px-2 py-1 rounded form-field-input"
+                class="text-xs px-2 py-1 rounded"
+                style="
+                  background-color: var(--color-input-bg-dark);
+                  border: 1px solid var(--color-input-border);
+                  color: var(--color-text);
+                "
                 placeholder="场景名称"
               />
               <div class="flex gap-2">
-                <button class="text-xs px-3 py-1 rounded transition-colors btn-accent-filled" @click="saveScenario">
+                <button
+                  class="text-xs px-3 py-1 rounded transition-colors"
+                  style="background-color: var(--color-accent); color: white"
+                  @click="saveScenario"
+                >
                   保存
                 </button>
-                <button class="text-xs px-3 py-1 rounded transition-colors btn-card-outline" @click="cancelEdit">
+                <button
+                  class="text-xs px-3 py-1 rounded transition-colors"
+                  style="
+                    background-color: var(--color-card);
+                    border: 1px solid var(--color-border);
+                    color: var(--color-text-secondary);
+                  "
+                  @click="cancelEdit"
+                >
                   取消
                 </button>
               </div>
@@ -69,75 +110,120 @@
 
             <div class="grid grid-cols-3 gap-2 text-xs">
               <div>
-                <label class="text-[10px] block mb-1 label-text">额定能量 (MWh)</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">额定能量 (MWh)</label>
                 <input
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">集装箱数量</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
                 <input
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">PCS数量</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">PCS数量</label>
                 <input
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">储能时长 (h)</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">储能时长 (h)</label>
                 <input
                   v-model.number="editingScenario.params.duration"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">每日循环</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">每日循环</label>
                 <input
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">交流效率 (%)</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">交流效率 (%)</label>
                 <input
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">BESS运行功耗</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">BESS运行功耗</label>
                 <input
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">BESS待机功耗</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">BESS待机功耗</label>
                 <input
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1 label-text">需求能量 (MWh)</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">需求能量 (MWh)</label>
                 <input
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1 form-field-input"
+                  class="w-full rounded px-2 py-1"
+                  style="
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                  "
                 />
               </div>
             </div>
@@ -145,13 +231,21 @@
             <div class="mt-3 flex gap-2">
               <button
                 :disabled="calculating"
-                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors btn-card-outline"
-                :class="calculating ? 'opacity-60 cursor-not-allowed' : ''"
+                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
+                :style="
+                  calculating
+                    ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }
+                    : { backgroundColor: 'var(--color-warning)', color: 'white' }
+                "
                 @click="calculateScenario"
               >
                 {{ calculating ? '计算中...' : '计算此场景' }}
               </button>
-              <button class="flex-1 text-xs px-3 py-1.5 rounded transition-colors btn-accent-filled" @click="useAsBase">
+              <button
+                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
+                style="background-color: var(--color-accent-secondary); color: white"
+                @click="useAsBase"
+              >
                 设为基准
               </button>
             </div>
@@ -162,25 +256,37 @@
       <!-- 对比图表 -->
       <div v-if="scenarios.length > 0" class="mt-4">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs text-muted">对比图表</span>
+          <span class="text-xs" style="color: var(--color-text-muted)">对比图表</span>
           <div class="flex gap-2">
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :class="showChart === 'soh' ? 'btn-accent-filled' : 'btn-card-outline'"
+              :style="
+                showChart === 'soh'
+                  ? { backgroundColor: 'var(--color-accent)', color: 'white' }
+                  : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }
+              "
               @click="showChart = 'soh'"
             >
               SOH曲线
             </button>
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :class="showChart === 'energy' ? 'btn-accent-filled' : 'btn-card-outline'"
+              :style="
+                showChart === 'energy'
+                  ? { backgroundColor: 'var(--color-accent)', color: 'white' }
+                  : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }
+              "
               @click="showChart = 'energy'"
             >
-              能量对比
+              净可用能量
             </button>
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :class="showChart === 'cost' ? 'btn-accent-filled' : 'btn-card-outline'"
+              :style="
+                showChart === 'cost'
+                  ? { backgroundColor: 'var(--color-accent)', color: 'white' }
+                  : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }
+              "
               @click="showChart = 'cost'"
             >
               成本对比
@@ -188,16 +294,16 @@
           </div>
         </div>
 
-        <div ref="chartContainer" class="chart-container-dark" />
+        <div ref="chartContainer" class="h-64 rounded-lg" style="background-color: var(--color-card-dark)" />
       </div>
 
       <!-- 对比表格 -->
       <div v-if="scenarios.length > 0" class="mt-4">
-        <div class="text-xs mb-2 text-muted">关键指标对比</div>
+        <div class="text-xs mb-2" style="color: var(--color-text-muted)">关键指标对比</div>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr class="text-muted border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
                 <th class="text-left py-2 px-2">指标</th>
                 <th v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.name }}
@@ -205,43 +311,43 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">额定能量 (MWh)</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.params.ratedEnergy || '-' }}
                 </td>
               </tr>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">交流效率 (%)</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.params.acEfficiency || '-' }}
                 </td>
               </tr>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">初始净可用 (MWh)</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.initAcUsable?.[0]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">第10年净可用 (MWh)</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.totalAcUsable?.[10]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">第25年净可用 (MWh)</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.totalAcUsable?.[25]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr class="text-secondary border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">25年累计扩容</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.augAccumQty?.[25] || '-' }}
                 </td>
               </tr>
-              <tr class="text-accent font-medium border-b border-[var(--color-border)]">
+              <tr style="color: var(--color-accent); font-weight: 500; border-bottom: 1px solid var(--color-border)">
                 <td class="py-2 px-2">是否满足需求</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.meetsReq?.[25] ? '✓' : '✗' }}
@@ -274,8 +380,6 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
-import { useChartTheme } from '../composables/useChartTheme'
-import AppIcon from './AppIcon.vue'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
 const props = defineProps({
@@ -464,29 +568,18 @@ function updateChart() {
       })
     }
 
-    const { colors: tc } = useChartTheme({
-      tooltipBg: 'rgba(255, 255, 255, 0.95)',
-      tooltipBorder: 'rgba(226, 232, 240, 0.5)',
-      tooltipText: '#1e293b',
-      legendText: 'var(--color-text-secondary)',
-      axisLabel: 'var(--color-text-secondary)',
-      axisLine: 'var(--color-border-light)',
-      splitLine: '#f1f5f9',
-      colorList: ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
-    })
-
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const colors = {
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : tc.tooltipBg,
-      tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : tc.tooltipBorder,
-      tooltipText: isDark ? 'var(--color-border-light)' : tc.tooltipText,
-      legendText: isDark ? 'var(--color-text-secondary)' : tc.legendText,
-      axisLabel: isDark ? 'var(--color-text-secondary)' : tc.axisLabel,
-      axisLine: isDark ? 'var(--color-border)' : tc.axisLine,
-      splitLine: isDark ? '#1e293b' : tc.splitLine,
+      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
+      tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
+      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b',
+      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+      axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
+      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
+      splitLine: isDark ? '#1e293b' : '#f1f5f9',
       colorList: isDark
         ? ['#2dd4bf', '#38bdf8', 'var(--color-chart-orange)', '#a78bfa', 'var(--color-chart-pink)']
-        : tc.colorList
+        : ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
     }
 
     const option = {
@@ -560,6 +653,12 @@ onUnmounted(() => {
 <style scoped>
 .scenario-compare {
   height: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
 }
 
 button:not(:disabled):hover {

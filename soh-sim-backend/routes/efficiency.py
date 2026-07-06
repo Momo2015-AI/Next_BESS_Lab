@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from routes.auth import token_required
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
 
 efficiency_bp = Blueprint("efficiency", __name__)

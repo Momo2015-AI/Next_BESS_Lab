@@ -132,7 +132,7 @@ const protectedRoutes = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5', 'surv
 
 router.beforeEach((to, from, next) => {
   if (protectedRoutes.includes(to.name)) {
-    const token = localStorage.getItem('auth_token')
+    const token = sessionStorage.getItem('auth_token')
     if (!token) {
       next({ name: 'home' })
       return

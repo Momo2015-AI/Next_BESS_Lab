@@ -12,7 +12,7 @@ from flask_cors import CORS
 from database import Project, Survey, db, init_db
 from routes.ai_sim import ai_sim_bp, seed_manufacturers
 from routes.algorithm import algorithm_bp, seed_algorithms
-from routes.auth import auth_bp
+from routes.auth import auth_bp, limiter
 from routes.aux_power import aux_power_bp
 from routes.boq import boq_bp
 from routes.degradation import degradation_bp
@@ -43,6 +43,9 @@ app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
 # 初始化数据库
 init_db(app)
+
+# 初始化速率限制器
+limiter.init_app(app)
 
 # 注册路由
 app.register_blueprint(survey_bp)

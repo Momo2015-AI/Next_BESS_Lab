@@ -12,23 +12,30 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from flask import Blueprint, current_app, jsonify, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from sqlalchemy.exc import IntegrityError
 
 auth_bp = Blueprint("auth", __name__)
 
+# 速率限制器（延迟初始化，避免在模块导入时访问 current_app）
+limiter = Limiter(key_func=get_remote_address, default_limits=[])
+
 # JWT token 黑名单（内存存储，生产环境应使用 Redis）
-_token_blacklist = set()
+_token_blacklist = {}
 
 
 def _clean_blacklist():
-    """清理过期的黑名单条目（仅保留最多1万条）"""
-    if len(_token_blacklist) > 10000:
-        _token_blacklist.clear()
+    """清理超过24小时的黑名单条目"""
+    now = datetime.now(timezone.utc)
+    expired = [jti for jti, ts in _token_blacklist.items() if (now - ts).total_seconds() > 86400]
+    for jti in expired:
+        del _token_blacklist[jti]
 
 
 def add_to_blacklist(token):
     """将 token 加入黑名单"""
-    _token_blacklist.add(token)
+    _token_blacklist[token] = datetime.now(timezone.utc)
     _clean_blacklist()
 
 
@@ -114,6 +121,7 @@ def _validate_username(username):
 
 
 @auth_bp.route("/api/auth/register", methods=["POST"])
+@limiter.limit("5/hour")
 def register():
     """用户注册"""
     data = request.get_json()
@@ -191,6 +199,7 @@ def register():
 
 
 @auth_bp.route("/api/auth/login", methods=["POST"])
+@limiter.limit("10/hour")
 def login():
     """用户登录"""
     data = request.get_json()

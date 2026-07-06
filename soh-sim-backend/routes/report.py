@@ -812,6 +812,7 @@ _CHART_BUILDERS = {
 
 
 @report_bp.route("/api/report/charts/<chart_type>", methods=["POST"])
+@token_required
 def export_plotly_chart(chart_type):
     """
     生成 Plotly 交互式图表
@@ -872,6 +873,7 @@ def export_plotly_chart(chart_type):
 
 
 @report_bp.route("/api/report/charts", methods=["GET"])
+@token_required
 def list_chart_types():
     """列出可用的图表类型"""
     return jsonify(

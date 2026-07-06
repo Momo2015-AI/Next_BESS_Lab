@@ -251,6 +251,7 @@ def delete_survey(survey_id):
 
 
 @survey_bp.route("/api/project/<project_id>", methods=["GET"])
+@token_required
 def get_project(project_id):
     """获取项目详情"""
     project = Project.query.get(project_id)
@@ -295,6 +296,7 @@ def list_projects():
 
 
 @survey_bp.route("/api/project/<project_id>", methods=["PUT"])
+@token_required
 def update_project(project_id):
     """更新项目"""
     project = Project.query.get(project_id)

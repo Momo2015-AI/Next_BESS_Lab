@@ -92,7 +92,7 @@ const userMenuOpen = ref(false)
 const userMenuRef = ref(null)
 
 function loadAuthUser() {
-  const raw = localStorage.getItem('user_info')
+  const raw = sessionStorage.getItem('user_info')
   if (!raw) {
     authUser.value = null
     return
@@ -105,8 +105,8 @@ function loadAuthUser() {
 }
 
 function handleLogout() {
-  localStorage.removeItem('auth_token')
-  localStorage.removeItem('user_info')
+  sessionStorage.removeItem('auth_token')
+  sessionStorage.removeItem('user_info')
   authUser.value = null
   userMenuOpen.value = false
   showToast('已退出登录', 'info')
