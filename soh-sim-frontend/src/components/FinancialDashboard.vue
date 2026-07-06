@@ -646,31 +646,21 @@ import CostWaterfallChart from './CostWaterfallChart.vue'
 import EnergyFlowSankey from './EnergyFlowSankey.vue'
 import ProductCAPEXLink from './ProductCAPEXLink.vue'
 import { useExchangeRate } from '../composables/useExchangeRate.js'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })
 
 // 使用汇率管理
 const { displayCurrency, formatAmount, convert } = useExchangeRate()
 
-const chartColors = computed(() => {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  return {
-    backgroundColor: 'transparent',
-    textStyle: { color: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)', fontSize: 10 },
-    axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-    gridLine: isDark ? '#1e293b' : 'var(--color-border-light)',
-    success: isDark ? 'var(--color-success)' : 'var(--color-success)',
-    danger: isDark ? 'var(--color-danger)' : 'var(--color-danger)',
-    warning: isDark ? 'var(--color-warning)' : 'var(--color-warning)',
-    info: isDark ? '#0ea5e9' : '#0ea5e9',
-    acLine: isDark ? '#14b8a6' : '#14b8a6',
-    purple: isDark ? 'var(--color-info)' : 'var(--color-info)',
-    orange: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
-    cyan: isDark ? 'var(--color-chart-cyan)' : 'var(--color-chart-cyan)',
-    redLight: isDark ? '#f87171' : '#f87171',
-    muted: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)'
-  }
+const { colors: chartColors } = useChartTheme({
+  gridLine: 'var(--color-border-light)',
+  info: '#0ea5e9',
+  acLine: '#14b8a6',
+  purple: 'var(--color-info)',
+  orange: 'var(--color-chart-orange)',
+  cyan: 'var(--color-chart-cyan)',
+  redLight: '#f87171'
 })
 
 const { state: f, clearDraft: clearFDraft } = useDraft('financial-params', {

@@ -12,10 +12,7 @@
         <div class="col-span-1 card-panel-small">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs text-muted">场景列表</span>
-            <button
-              class="text-xs px-2 py-1 rounded transition-colors btn-accent-filled"
-              @click="createScenario"
-            >
+            <button class="text-xs px-2 py-1 rounded transition-colors btn-accent-filled" @click="createScenario">
               + 新建
             </button>
           </div>
@@ -51,9 +48,7 @@
 
         <!-- 场景编辑器 -->
         <div class="col-span-2 card-panel-small">
-          <div v-if="!editingScenario" class="text-xs text-center py-8 text-muted">
-            选择或创建一个场景进行编辑
-          </div>
+          <div v-if="!editingScenario" class="text-xs text-center py-8 text-muted">选择或创建一个场景进行编辑</div>
 
           <div v-else>
             <div class="flex items-center justify-between mb-3">
@@ -63,16 +58,10 @@
                 placeholder="场景名称"
               />
               <div class="flex gap-2">
-                <button
-                  class="text-xs px-3 py-1 rounded transition-colors btn-accent-filled"
-                  @click="saveScenario"
-                >
+                <button class="text-xs px-3 py-1 rounded transition-colors btn-accent-filled" @click="saveScenario">
                   保存
                 </button>
-                <button
-                  class="text-xs px-3 py-1 rounded transition-colors btn-card-outline"
-                  @click="cancelEdit"
-                >
+                <button class="text-xs px-3 py-1 rounded transition-colors btn-card-outline" @click="cancelEdit">
                   取消
                 </button>
               </div>
@@ -162,10 +151,7 @@
               >
                 {{ calculating ? '计算中...' : '计算此场景' }}
               </button>
-              <button
-                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors btn-accent-filled"
-                @click="useAsBase"
-              >
+              <button class="flex-1 text-xs px-3 py-1.5 rounded transition-colors btn-accent-filled" @click="useAsBase">
                 设为基准
               </button>
             </div>
@@ -288,6 +274,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
+import { useChartTheme } from '../composables/useChartTheme'
 import AppIcon from './AppIcon.vue'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
@@ -477,18 +464,29 @@ function updateChart() {
       })
     }
 
+    const { colors: tc } = useChartTheme({
+      tooltipBg: 'rgba(255, 255, 255, 0.95)',
+      tooltipBorder: 'rgba(226, 232, 240, 0.5)',
+      tooltipText: '#1e293b',
+      legendText: 'var(--color-text-secondary)',
+      axisLabel: 'var(--color-text-secondary)',
+      axisLine: 'var(--color-border-light)',
+      splitLine: '#f1f5f9',
+      colorList: ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
+    })
+
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const colors = {
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-      tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
-      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b',
-      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
-      splitLine: isDark ? '#1e293b' : '#f1f5f9',
+      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : tc.tooltipBg,
+      tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : tc.tooltipBorder,
+      tooltipText: isDark ? 'var(--color-border-light)' : tc.tooltipText,
+      legendText: isDark ? 'var(--color-text-secondary)' : tc.legendText,
+      axisLabel: isDark ? 'var(--color-text-secondary)' : tc.axisLabel,
+      axisLine: isDark ? 'var(--color-border)' : tc.axisLine,
+      splitLine: isDark ? '#1e293b' : tc.splitLine,
       colorList: isDark
         ? ['#2dd4bf', '#38bdf8', 'var(--color-chart-orange)', '#a78bfa', 'var(--color-chart-pink)']
-        : ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
+        : tc.colorList
     }
 
     const option = {

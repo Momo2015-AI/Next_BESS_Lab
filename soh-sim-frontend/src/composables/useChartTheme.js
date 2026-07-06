@@ -3,8 +3,9 @@ import { computed } from 'vue'
 /**
  * 统一 ECharts 主题 composable
  * 替代各组件独立的 chartColors computed，自动适配 light/dark 模式
+ * @param {Object} overrides - 组件特定的颜色覆盖映射
  */
-export function useChartTheme() {
+export function useChartTheme(overrides = {}) {
   const isDark = computed(() => document.documentElement.getAttribute('data-theme') === 'dark')
 
   const palette = computed(() =>
@@ -54,6 +55,7 @@ export function useChartTheme() {
 
   /**
    * 快速色值映射 — 兼容原有 chartColors 用法
+   * overrides 参数允许组件传入自己的颜色键值对
    */
   const colors = computed(() => ({
     backgroundColor: 'transparent',
@@ -66,7 +68,8 @@ export function useChartTheme() {
     accent: 'var(--color-accent)',
     chartOrange: 'var(--color-chart-orange)',
     chartPink: 'var(--color-chart-pink)',
-    chartCyan: 'var(--color-chart-cyan)'
+    chartCyan: 'var(--color-chart-cyan)',
+    ...overrides
   }))
 
   return { theme, colors, palette, isDark }
