@@ -111,7 +111,7 @@
         <div class="flex justify-between">
           <span>状态</span>
           <span
-            :style="rateStatus === 'online' ? { color: 'var(--color-success)' } : { color: 'var(--color-warning)' }"
+            :class="rateStatus === 'online' ? 'text-success' : 'text-warning'"
           >
             {{ rateStatus === 'online' ? '在线 Online' : '缓存 Cached' }}
           </span>

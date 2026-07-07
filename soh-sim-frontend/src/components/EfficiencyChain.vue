@@ -17,7 +17,7 @@
         </button>
         <button
           class="text-xs px-4 py-1 rounded font-bold transition-all"
-          :style="modified ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }"
+          :class="modified ? 'btn-modified' : 'btn-unmodified'"
           @click="applyFactors"
         >
           Apply
@@ -51,7 +51,7 @@
             :key="'ac-' + f.id"
             class="formula-block"
             :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+            :class="{ linking: f.degrade, 'border-degrade': f.degrade }"
           >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_c * 100).toFixed(2) }}</span>
@@ -67,8 +67,7 @@
             v-for="f in acFactors"
             :key="'acd-' + f.id"
             class="formula-block"
-            :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+            :class="{ linking: f.degrade, 'border-degrade': f.degrade }"
           >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_d * 100).toFixed(2) }}</span>
@@ -87,8 +86,7 @@
             v-for="f in dcFactors"
             :key="'dc-' + f.id"
             class="formula-block"
-            :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+            :class="{ linking: f.degrade, 'border-degrade': f.degrade }"
           >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_c * 100).toFixed(2) }}</span>
@@ -104,8 +102,7 @@
             v-for="f in dcFactors"
             :key="'dcd-' + f.id"
             class="formula-block"
-            :class="{ linking: f.degrade }"
-            :style="f.degrade ? { border: '1px solid rgba(245,158,11,0.5)' } : {}"
+            :class="{ linking: f.degrade, 'border-degrade': f.degrade }"
           >
             <span class="block-name">{{ f.abbr }}</span>
             <span class="block-value">{{ (f._eta_d * 100).toFixed(2) }}</span>
@@ -139,14 +136,7 @@
           <span class="total-label u-font-weight-bold">RTE</span>
           <span
             class="total-value u-font-weight-bold"
-            :style="{
-              color:
-                totalResult.rte >= 0.85
-                  ? 'var(--color-success)'
-                  : totalResult.rte >= 0.8
-                    ? 'var(--color-warning)'
-                    : 'var(--color-danger)'
-            }"
+            :class="totalResult.rte >= 0.85 ? 'text-success' : totalResult.rte >= 0.8 ? 'text-warning' : 'text-danger'"
           >
             {{ (totalResult.rte * 100).toFixed(2) }}%
           </span>
@@ -176,7 +166,7 @@
         </thead>
         <tbody>
           <template v-for="f in acFactors" :key="f.id">
-            <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
+            <tr class="border-b" :class="{ 'opacity-85': !f.degrade }">
               <td class="py-1.5 px-2 text-muted">
                 {{ f.id }}
               </td>
@@ -224,7 +214,7 @@
         </thead>
         <tbody>
           <template v-for="f in dcFactors" :key="f.id">
-            <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
+            <tr class="border-b" :class="{ 'opacity-85': !f.degrade }">
               <td class="py-1.5 px-2 text-muted">
                 {{ f.id }}
               </td>

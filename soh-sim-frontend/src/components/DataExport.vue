@@ -43,7 +43,7 @@
           <button
             :disabled="exporting"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }"
+            :class="exporting ? 'btn-disabled' : 'bg-accent-2 text-white'"
             @click="exportCSV"
           >
             <AppIcon name="download" size="16" />
@@ -53,7 +53,7 @@
           <button
             :disabled="exporting"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent)', color: 'white' }"
+            :class="exporting ? 'btn-disabled' : 'bg-accent text-white'"
             @click="exportPNG"
           >
             <AppIcon name="image" size="16" />
@@ -63,7 +63,7 @@
           <button
             :disabled="saving"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="saving ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
+            :class="saving ? 'btn-disabled' : 'bg-warning text-white'"
             @click="saveSimulation"
           >
             <AppIcon name="save" size="16" />
@@ -108,7 +108,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } : { backgroundColor: 'var(--color-danger)', color: 'white' }"
+      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
     >
       {{ toast.message }}
     </div>

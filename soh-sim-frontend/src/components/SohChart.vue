@@ -6,9 +6,8 @@
         :key="c.id"
         :class="[
           'px-3 py-1 text-[11px] rounded font-semibold transition-all',
-          activeChart === c.id ? 'text-white' : ''
+          activeChart === c.id ? 'chart-btn-active text-white' : 'chart-btn-inactive'
         ]"
-        :style="activeChart === c.id ? { background: 'var(--color-accent)' } : { background: 'var(--color-bg-secondary)', color: 'var(--color-text-secondary)' }"
         @click="switchChart(c.id)"
       >
         {{ c.label }}

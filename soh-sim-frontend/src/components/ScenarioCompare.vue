@@ -25,7 +25,7 @@
               v-for="(scenario, idx) in scenarios"
               :key="idx"
               class="p-2 rounded cursor-pointer transition-all text-xs"
-              :style="selectedScenarioIdx === idx ? { backgroundColor: 'var(--color-accent-glow)', border: '1px solid var(--color-accent)' } : { backgroundColor: 'var(--color-input-bg)', border: '1px solid transparent' }"
+              :class="selectedScenarioIdx === idx ? 'card-selected' : 'bg-input'"
             >
               <div class="flex items-center justify-between">
                 <span @click="selectScenario(idx)">{{ scenario.name }}</span>class="text-secondary"
@@ -171,7 +171,7 @@
               <button
                 :disabled="calculating"
                 class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
-                :style="calculating ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
+                :class="calculating ? 'btn-disabled' : 'bg-warning text-white'"
                 @click="calculateScenario"
               >
                 {{ calculating ? '计算中...' : '计算此场景' }}
@@ -194,21 +194,21 @@
           <div class="flex gap-2">
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :style="showChart === 'soh' ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
+              :class="showChart === 'soh' ? 'bg-accent text-white' : 'bg-card-dark text-secondary'"
               @click="showChart = 'soh'"
             >
               SOH曲线
             </button>
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :style="showChart === 'energy' ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
+              :class="showChart === 'energy' ? 'bg-accent text-white' : 'bg-card-dark text-secondary'"
               @click="showChart = 'energy'"
             >
               净可用能量
             </button>
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
-              :style="showChart === 'cost' ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
+              :class="showChart === 'cost' ? 'bg-accent text-white' : 'bg-card-dark text-secondary'"
               @click="showChart = 'cost'"
             >
               成本对比
@@ -285,10 +285,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="{
-        backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
-        color: 'white'
-      }"
+      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
     >
       {{ toast.message }}
     </div>

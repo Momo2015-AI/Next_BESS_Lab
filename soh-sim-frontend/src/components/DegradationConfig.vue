@@ -11,7 +11,7 @@
         </button>
         <button
           class="text-xs px-4 py-1 rounded font-bold transition-all"
-          :style="dirty ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }"
+          :class="dirty ? 'btn-modified' : 'btn-unmodified'"
           @click="applyConfig"
         >
           Apply
@@ -26,7 +26,7 @@
           v-for="m in models"
           :key="m.value"
           class="text-xs px-3 py-1 rounded transition-all"
-          :style="model === m.value ? { background: 'var(--color-accent)', color: 'white' } : { background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }"
+          :class="model === m.value ? 'bg-accent text-white' : 'u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border'"
           @click="model = m.value"
         >
           {{ m.label }}
@@ -95,14 +95,7 @@
                 </td>
                 <td
                   class="text-center py-1 px-2 font-bold"
-                  :style="{
-                    color:
-                      getSohAt8000(c) >= 80
-                        ? 'var(--color-success)'
-                        : getSohAt8000(c) >= 60
-                          ? 'var(--color-warning)'
-                          : 'var(--color-danger)'
-                  }"
+                  :class="getSohAt8000(c) >= 80 ? 'text-success' : getSohAt8000(c) >= 60 ? 'text-warning' : 'text-danger'"
                 >
                   {{ getSohAt8000(c).toFixed(1) }}%
                 </td>
@@ -255,9 +248,7 @@
               <td class="py-1 px-2 text-default">Year {{ y }}</td>
               <td
                 class="text-center py-1 px-2 font-bold"
-                :style="{
-                  color: s >= 80 ? 'var(--color-success)' : s >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'
-                }"
+                :class="s >= 80 ? 'text-success' : s >= 60 ? 'text-warning' : 'text-danger'"
               >
                 {{ s.toFixed(2) }}%
               </td>

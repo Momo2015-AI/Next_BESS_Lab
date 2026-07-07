@@ -174,7 +174,7 @@
               <span class="w-1 h-4 rounded bg-accent-2" />
               公式沙盒与实时账本推导
             </h3>
-            <span class="text-xs px-2 py-1 rounded-full font-bold" :style="statusStyle">{{ statusText }}</span>
+            <span class="text-xs px-2 py-1 rounded-full font-bold" :class="statusStyle">{{ statusText }}</span>
           </div>
 
           <div class="rounded-lg p-3 mb-3 bg-card-dark">
@@ -454,12 +454,12 @@ const { state, results, strategyParams, efficiencyParams, auxParams, externalPar
 
 const statusStyle = computed(() => {
   if (state.days < 365) {
-    return { backgroundColor: 'var(--color-success)', color: 'white' }
+    return 'toast-success'
   }
   if (results.value.annualNetDischarge >= 210000) {
-    return { backgroundColor: 'var(--color-success)', color: 'white' }
+    return 'toast-success'
   }
-  return { backgroundColor: 'var(--color-danger)', color: 'white' }
+  return 'toast-error'
 })
 
 const statusText = computed(() => {

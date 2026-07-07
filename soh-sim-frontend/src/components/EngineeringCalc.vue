@@ -12,7 +12,7 @@
           v-for="tab in tabs"
           :key="tab.id"
           class="px-3 py-1.5 rounded text-xs transition-all"
-          :style="activeTab === tab.id ? { backgroundColor: 'var(--color-accent-secondary)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
+          :class="activeTab === tab.id ? 'tab-active' : 'tab-inactive'"
           @click="activeTab = tab.id"
         >
           {{ tab.label }}
@@ -287,10 +287,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="{
-        backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
-        color: 'white'
-      }"
+      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
     >
       {{ toast.message }}
     </div>

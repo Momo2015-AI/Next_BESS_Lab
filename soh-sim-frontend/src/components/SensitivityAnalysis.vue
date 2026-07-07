@@ -64,7 +64,7 @@
             <button
               :disabled="analyzing || enabledParams.length === 0"
               class="ml-auto text-xs px-4 py-1.5 rounded transition-colors"
-              :style="analyzing || enabledParams.length === 0 ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
+              :class="analyzing || enabledParams.length === 0 ? 'btn-disabled' : 'bg-warning text-white'"
               @click="runAnalysis"
             >
               {{ analyzing ? '分析中...' : '运行分析' }}
@@ -110,7 +110,7 @@
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :style="result.npvImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+                  :class="result.npvImpact > 0 ? 'text-result-pos' : 'text-result-neg'"
                 >
                   {{ result.npvImpact > 0 ? '+' : '' }}{{ result.npvImpact.toFixed(2) }}%
                 </td>
@@ -121,7 +121,7 @@
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :style="result.irrImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+                  :class="result.irrImpact > 0 ? 'text-result-pos' : 'text-result-neg'"
                 >
                   {{ result.irrImpact > 0 ? '+' : '' }}{{ result.irrImpact.toFixed(2) }}%
                 </td>
@@ -132,7 +132,7 @@
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :style="result.paybackImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+                  :class="result.paybackImpact < 0 ? 'text-result-pos' : 'text-result-neg'"
                 >
                   {{ result.paybackImpact > 0 ? '+' : '' }}{{ result.paybackImpact.toFixed(2) }}年
                 </td>
@@ -143,7 +143,7 @@
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :style="result.lcosImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+                  :class="result.lcosImpact < 0 ? 'text-result-pos' : 'text-result-neg'"
                 >
                   {{ result.lcosImpact > 0 ? '+' : '' }}{{ result.lcosImpact.toFixed(2) }}%
                 </td>
@@ -169,10 +169,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="{
-        backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
-        color: 'white'
-      }"
+      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
     >
       {{ toast.message }}
     </div>

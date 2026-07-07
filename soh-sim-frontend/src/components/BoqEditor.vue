@@ -101,7 +101,7 @@
                     @input="updateItemTotal(item)"
                   />
                 </td>
-                <td class="p-1 text-right font-mono" :style="{ color: 'var(--color-accent)' }">
+                <td class="p-1 text-right font-mono text-accent">
                   {{ formatPrice(item.totalPrice || (item.quantity || 0) * (item.unitPrice || 0)) }}
                 </td>
                 <td class="p-1">

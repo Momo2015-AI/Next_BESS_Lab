@@ -309,16 +309,13 @@
             <!-- Total Accounting -->
             <td
               class="p-1 font-bold text-xs"
-              :style="{ color: results.meetsReq[i - 1] ? 'var(--color-accent)' : 'var(--color-danger)' }"
+              :class="results.meetsReq[i - 1] ? 'matrix-pass' : 'matrix-fail'"
             >
               {{ results.totalAcUsable[i - 1]?.toFixed(2) }}
             </td>
             <td
               class="p-1 font-bold"
-              :style="{
-                color: results.meetsReq[i - 1] ? 'var(--color-success)' : 'var(--color-danger)',
-                background: results.meetsReq[i - 1] ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'
-              }"
+              :class="results.meetsReq[i - 1] ? 'text-success bg-success-10' : 'text-danger bg-danger-10'"
             >
               {{ results.meetsReq[i - 1] ? $t('matrixTable.meetsYes') : $t('matrixTable.meetsNo') }}
             </td>

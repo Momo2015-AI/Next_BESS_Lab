@@ -6,13 +6,12 @@
         :key="idx"
         :class="[
           'flex items-center gap-1 px-3 py-1 rounded text-xs transition-all',
-          currentStep >= idx ? 'text-teal-400' : 'text-slate-500'
+          currentStep >= idx ? 'text-teal-400 step-active' : 'text-slate-500'
         ]"
-        :style="currentStep >= idx ? { backgroundColor: 'var(--color-step-active)', border: '1px solid var(--color-accent)' } : {}"
       >
         <span
           class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-          :style="currentStep >= idx ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
+          :class="currentStep >= idx ? 'step-num-active' : 'step-num-inactive'"
         >
           {{ idx + 1 }}
         </span>
@@ -337,17 +336,17 @@
           v-for="algo in algorithms"
           :key="algo.id"
           class="rounded-lg p-4 border-2 cursor-pointer transition-all"
-          :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-step-active)', borderColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-card-dark)', borderColor: 'var(--color-border)' }"
+          :class="selectedAlgorithm === algo.id ? 'algo-selected' : 'algo-default'"
           @click="selectAlgorithm(algo)"
         >
           <div class="flex items-center gap-2 mb-2">
             <span
               class="w-4 h-4 rounded-full"
-              :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-text-muted)' }"
+              :class="selectedAlgorithm === algo.id ? 'algo-dot-selected' : 'algo-dot-default'"
             />
             <h4
               class="text-xs font-bold"
-              :style="selectedAlgorithm === algo.id ? { color: 'var(--color-accent)' } : { color: 'var(--color-text)' }"
+              :class="selectedAlgorithm === algo.id ? 'algo-name-selected' : 'algo-name-default'"
             >
               {{ algo.name }}
             </h4>
@@ -609,7 +608,7 @@
         <button
           :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
-          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
+          :class="selectedAlgorithm ? 'btn-gradient-ready' : 'btn-disabled-muted'"
           @click="runSimulation"
         >
           前端计算
@@ -617,7 +616,7 @@
         <button
           :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
-          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
+          :class="selectedAlgorithm ? 'btn-gradient-accent' : 'btn-disabled-muted'"
           @click="runBackendSimulation"
         >
           后端引擎计算
@@ -649,7 +648,7 @@
           <p class="text-[10px] text-muted">保障年限末SOH</p>
           <p
             class="text-lg font-bold"
-            :style="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+            :class="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? 'text-success' : 'text-danger'"
           >
             {{ simulationResults.guaranteeEndSoh?.toFixed(2) || '--' }}%
           </p>
@@ -662,7 +661,7 @@
           <p class="text-[10px] text-muted">保障判定</p>
           <p
             class="text-lg font-bold"
-            :style="simulationResults.meetsGuarantee ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+            :class="simulationResults.meetsGuarantee ? 'text-success' : 'text-danger'"
           >
             {{ simulationResults.meetsGuarantee ? '达标' : '未达标' }}
           </p>
@@ -689,10 +688,7 @@
             <tr
               v-for="(row, idx) in simulationResults.tableData"
               :key="idx"
-              :style="[
-                { borderTop: '1px solid var(--color-border)' },
-                row.meetsReq ? {} : { backgroundColor: 'rgba(239, 68, 68, 0.1)' }
-              ]"
+              :class="['border-t', { 'bg-danger-10': !row.meetsReq }]"
             >
               <td class="py-1 px-2 text-secondary">
                 {{ row.year }}
@@ -708,7 +704,7 @@
               </td>
               <td
                 class="py-1 px-2"
-                :style="row.meetsReq ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
+                :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'"
               >
                 {{ row.meetsReq ? '达标' : '未达标' }}
               </td>

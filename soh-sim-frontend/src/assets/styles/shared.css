@@ -572,3 +572,188 @@
   border: 1px solid var(--color-input-border);
   color: var(--color-text);
 }
+
+/* ===== 语义化状态类（替代内联 style 三元表达式） ===== */
+
+/* 选中/激活边框 */
+.border-accent {
+  border-color: var(--color-accent);
+}
+.border-accent-secondary {
+  border-color: var(--color-accent-secondary);
+}
+.border-warning {
+  border-color: var(--color-warning);
+}
+
+/* 选中卡片（用于 ProductConfig / ScenarioCompare 等选择列表） */
+.card-selected {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-glow);
+}
+.card-selected-accent2 {
+  border-color: var(--color-accent-secondary);
+  background-color: var(--color-accent-glow);
+}
+.card-selected-warning {
+  border-color: var(--color-warning);
+  background-color: var(--color-warning-glow);
+}
+.card-default {
+  border-color: var(--color-border);
+  background-color: var(--color-card-dark);
+}
+
+/* 步骤指示器 */
+.step-active {
+  background-color: var(--color-step-active);
+  border: 1px solid var(--color-accent);
+}
+.step-inactive {
+  /* 默认空状态 */;
+}
+.step-num-active {
+  background-color: var(--color-accent);
+  color: white;
+}
+.step-num-inactive {
+  background-color: var(--color-text-muted);
+  color: var(--color-text-light);
+}
+
+/* 算法卡片选择 */
+.algo-selected {
+  background-color: var(--color-step-active);
+  border-color: var(--color-accent);
+}
+.algo-default {
+  background-color: var(--color-card-dark);
+  border-color: var(--color-border);
+}
+.algo-dot-selected {
+  background-color: var(--color-accent);
+}
+.algo-dot-default {
+  background-color: var(--color-text-muted);
+}
+.algo-name-selected {
+  color: var(--color-accent);
+}
+.algo-name-default {
+  color: var(--color-text);
+}
+
+/* Toast */
+.toast-success {
+  background-color: var(--color-success);
+  color: white;
+}
+.toast-error {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+/* 按钮：已修改/可操作 */
+.btn-modified {
+  background: linear-gradient(135deg, var(--color-success), var(--color-accent));
+  color: white;
+}
+.btn-unmodified {
+  background: var(--color-card-dark);
+  color: var(--color-text-muted);
+}
+
+/* 按钮：禁用态 */
+.btn-disabled {
+  background-color: var(--color-card-dark);
+  color: var(--color-text-muted);
+}
+.btn-disabled-accent {
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+/* Tab 切换 */
+.tab-active {
+  background-color: var(--color-accent-secondary);
+  color: white;
+}
+.tab-inactive {
+  background-color: var(--color-card-dark);
+  color: var(--color-text-secondary);
+}
+
+/* Chart 切换按钮 */
+.chart-btn-active {
+  background: var(--color-accent);
+}
+.chart-btn-inactive {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+/* 状态标签（ProductConfig 等） */
+.tag-production {
+  background-color: var(--color-success-glow);
+  color: var(--color-success);
+}
+.tag-rd {
+  background-color: var(--color-warning-glow);
+  color: var(--color-warning);
+}
+
+/* 退化标记边框 */
+.border-degrade {
+  border: 1px solid rgba(245, 158, 11, 0.5);
+}
+
+/* 状态文字颜色（动态切换用） */
+.text-result-pos { color: var(--color-success); }
+.text-result-neg { color: var(--color-danger); }
+
+/* 上传区 hover */
+.upload-zone-hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+/* 矩阵表格通过/不通过 */
+.matrix-pass { color: var(--color-accent); }
+.matrix-fail { color: var(--color-danger); }
+
+/* 仿真结果行 */
+.sim-row-pass { color: var(--color-success); }
+.sim-row-fail { color: var(--color-danger); }
+
+/* 渐变按钮 */
+.btn-gradient-ready {
+  background: linear-gradient(135deg, var(--color-success), var(--color-accent));
+  color: white;
+}
+.btn-gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+  color: white;
+}
+.btn-disabled-muted {
+  background: var(--color-text-muted);
+  color: var(--color-text-light);
+}
+
+/* 背景辅助 */
+.bg-success-10 { background: rgba(16, 185, 129, 0.1); }
+.bg-danger-10 { background: rgba(239, 68, 68, 0.1); }
+
+/* 上传区 */
+.upload-zone-hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+.border-color-var-color-input-border {
+  border-color: var(--color-input-border);
+}
+
+/* 行透明度 */
+.opacity-85 { opacity: 0.85; }
+
+/* bg-input 背景（ScenarioCompare） */
+.bg-input { background: var(--color-input-bg); }

@@ -266,7 +266,7 @@
               >
                 <td
                   class="py-1 px-2 sticky left-0 font-bold"
-                  :style="row.year === 0 ? { backgroundColor: 'var(--color-card)', color: 'var(--color-warning)' } : { backgroundColor: 'var(--color-card)', color: 'var(--color-text-secondary)' }"
+                  :class="row.year === 0 ? 'text-warning' : 'text-secondary'"
                 >
                   {{ row.year === 0 ? '建设期' : row.year }}
                 </td>
@@ -290,19 +290,19 @@
                 </td>
                 <td
                   class="text-right py-1 px-2 font-mono"
-                  :style="row.ebitda < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-text-secondary)' }"
+                  :class="row.ebitda < 0 ? 'text-danger' : 'text-secondary'"
                 >
                   {{ fmtNum(row.ebitda) }}
                 </td>
                 <td
                   class="text-right py-1 px-2 font-mono font-bold"
-                  :style="row.cashFlow < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-success)' }"
+                  :class="row.cashFlow < 0 ? 'text-danger' : 'text-success'"
                 >
                   {{ fmtNum(row.cashFlow) }}
                 </td>
                 <td
                   class="text-right py-1 px-2 font-mono"
-                  :style="row.cumCashFlow < 0 ? { color: 'var(--color-danger)' } : { color: 'var(--color-text-secondary)' }"
+                  :class="row.cumCashFlow < 0 ? 'text-danger' : 'text-secondary'"
                 >
                   {{ fmtNum(row.cumCashFlow) }}
                 </td>
