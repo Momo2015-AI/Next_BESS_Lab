@@ -1,81 +1,81 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>{{ $t('toolSurveyViewTitle') }}</h1>
-      <p>{{ $t('toolSurveyViewDesc') }}</p>
+      <h1>{{ $t('sidebar.toolSurveyViewTitle') }}</h1>
+      <p>{{ $t('sidebar.toolSurveyViewDesc') }}</p>
     </div>
 
     <!-- 搜索区域 -->
-    <SectionCard number="01" :title="$t('toolSurveyView.searchTitle')">
+    <SectionCard number="01" :title="$t('sidebar.toolSurveyView.searchTitle')">
       <div class="form-grid-2">
         <div class="search-field-row">
           <FormField
             v-model="surveyId"
-            :label="$t('toolSurveyView.idLabel')"
+            :label="$t('sidebar.toolSurveyView.idLabel')"
             type="text"
-            :placeholder="$t('toolSurveyView.idPlaceholder')"
+            :placeholder="$t('sidebar.toolSurveyView.idPlaceholder')"
           />
           <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="loadSurveyById">
-            {{ loading ? $t('toolSurveyView.loading') : $t('toolSurveyView.loadBtn') }}
+            {{ loading ? $t('sidebar.toolSurveyView.loading') : $t('sidebar.toolSurveyView.loadBtn') }}
           </button>
         </div>
         <div class="search-field-row">
           <FormField
             v-model="searchKeyword"
-            :label="$t('toolSurveyView.nameSearchLabel')"
+            :label="$t('sidebar.toolSurveyView.nameSearchLabel')"
             type="text"
-            :placeholder="$t('toolSurveyView.nameSearchPlaceholder')"
+            :placeholder="$t('sidebar.toolSurveyView.nameSearchPlaceholder')"
           />
           <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="searchByProjectName">
-            {{ loading ? $t('toolSurveyView.searching') : $t('toolSurveyView.searchBtn') }}
+            {{ loading ? $t('sidebar.toolSurveyView.searching') : $t('sidebar.toolSurveyView.searchBtn') }}
           </button>
         </div>
       </div>
       <div v-if="searchResults.length > 0" class="search-results mt-4">
-        <h4 class="section-title">{{ $t('toolSurveyView.searchResults') }}</h4>
+        <h4 class="section-title">{{ $t('sidebar.toolSurveyView.searchResults') }}</h4>
         <div class="results-list">
           <div v-for="item in searchResults" :key="item.id" class="result-item" @click="selectSurvey(item)">
             <div class="result-info">
               <p class="result-name">{{ item.project_name }}</p>
               <p class="result-detail">{{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh</p>
             </div>
-            <span class="result-action">{{ $t('toolSurveyView.select') }}</span>
+            <span class="result-action">{{ $t('sidebar.toolSurveyView.select') }}</span>
           </div>
         </div>
       </div>
     </SectionCard>
 
     <!-- 项目基本信息 -->
-    <SectionCard number="02" :title="$t('toolSurveyView.basicInfoTitle')">
+    <SectionCard number="02" :title="$t('sidebar.toolSurveyView.basicInfoTitle')">
       <div class="form-grid-3">
         <FormField
           v-model="formData.projectName"
-          :label="$t('toolSurveyView.projectName')"
+          :label="$t('sidebar.toolSurveyView.projectName')"
           type="text"
-          :placeholder="$t('toolSurveyView.projectName')"
+          :placeholder="$t('sidebar.toolSurveyView.projectName')"
         />
         <FormField
           v-model="formData.location"
-          :label="$t('toolSurveyView.projectLocation')"
+          :label="$t('sidebar.toolSurveyView.projectLocation')"
           type="text"
-          :placeholder="$t('toolSurveyView.projectLocation')"
+          :placeholder="$t('sidebar.toolSurveyView.projectLocation')"
         />
         <FormField
           v-model.number="formData.ratedEnergy"
-          :label="$t('toolSurveyView.ratedEnergy')"
+          :label="$t('sidebar.toolSurveyView.ratedEnergy')"
           type="number"
           step="0.1"
           :placeholder="5"
         />
         <FormField
           v-model.number="formData.containerQty"
-          :label="$t('toolSurveyView.containerQty')"
+          :label="$t('sidebar.toolSurveyView.containerQty')"
           type="number"
           :placeholder="1"
         />
         <FormField
           v-model.number="formData.pcsQty"
-          :label="$t('toolSurveyView.pcsQty')"
+          :label="$t('sidebar.toolSurveyView.pcsQty')"
           type="number"
           :placeholder="1"
         />
@@ -83,25 +83,25 @@
     </SectionCard>
 
     <!-- 运行条件 -->
-    <SectionCard number="03" :title="$t('toolSurveyView.operatingConditionsTitle')">
+    <SectionCard number="03" :title="$t('sidebar.toolSurveyView.operatingConditionsTitle')">
       <div class="form-grid-3">
         <FormField
           v-model.number="formData.temperature"
-          :label="$t('toolSurveyView.temperature')"
+          :label="$t('sidebar.toolSurveyView.temperature')"
           type="number"
           step="0.5"
           :placeholder="25"
         />
         <FormField
           v-model.number="formData.cyclesPerDay"
-          :label="$t('toolSurveyView.cyclesPerDay')"
+          :label="$t('sidebar.toolSurveyView.cyclesPerDay')"
           type="number"
           step="0.5"
           :placeholder="1"
         />
         <FormField
           v-model.number="formData.dod"
-          :label="$t('toolSurveyView.dod')"
+          :label="$t('sidebar.toolSurveyView.dod')"
           type="number"
           step="1"
           min="0"
@@ -110,7 +110,7 @@
         />
         <FormField
           v-model.number="formData.cRate"
-          :label="$t('toolSurveyView.cRate')"
+          :label="$t('sidebar.toolSurveyView.cRate')"
           type="number"
           step="0.1"
           min="0.1"
@@ -119,7 +119,7 @@
         />
         <FormField
           v-model="formData.batteryType"
-          :label="$t('toolSurveyView.batteryType')"
+          :label="$t('sidebar.toolSurveyView.batteryType')"
           type="select"
           :options="batteryTypeOptions"
         />
@@ -127,23 +127,23 @@
     </SectionCard>
 
     <!-- 仿真参数 -->
-    <SectionCard number="04" :title="$t('toolSurveyView.simulationParamsTitle')">
+    <SectionCard number="04" :title="$t('sidebar.toolSurveyView.simulationParamsTitle')">
       <div class="form-grid-4">
         <FormField
           v-model.number="simParams.simulationYears"
-          :label="$t('toolSurveyView.simYears')"
+          :label="$t('sidebar.toolSurveyView.simYears')"
           type="select"
           :options="simYearOptions"
         />
         <FormField
           v-model.number="simParams.guaranteeYears"
-          :label="$t('toolSurveyView.guaranteeYears')"
+          :label="$t('sidebar.toolSurveyView.guaranteeYears')"
           type="select"
           :options="guaranteeYearOptions"
         />
         <FormField
           v-model.number="simParams.guaranteeSoh"
-          :label="$t('toolSurveyView.guaranteeSoh')"
+          :label="$t('sidebar.toolSurveyView.guaranteeSoh')"
           type="number"
           step="1"
           min="60"
@@ -152,14 +152,14 @@
         />
         <FormField
           v-model.number="simParams.requiredEnergy"
-          :label="$t('toolSurveyView.requiredEnergy')"
+          :label="$t('sidebar.toolSurveyView.requiredEnergy')"
           type="number"
           step="1"
           :placeholder="100"
         />
         <FormField
           v-model.number="simParams.initRte"
-          :label="$t('toolSurveyView.initRte')"
+          :label="$t('sidebar.toolSurveyView.initRte')"
           type="number"
           step="0.1"
           min="85"
@@ -168,7 +168,7 @@
         />
         <FormField
           v-model.number="simParams.acEfficiency"
-          :label="$t('toolSurveyView.acEfficiency')"
+          :label="$t('sidebar.toolSurveyView.acEfficiency')"
           type="number"
           step="0.1"
           min="95"
@@ -177,7 +177,7 @@
         />
         <FormField
           v-model.number="simParams.dcEfficiency"
-          :label="$t('toolSurveyView.dcEfficiency')"
+          :label="$t('sidebar.toolSurveyView.dcEfficiency')"
           type="number"
           step="0.1"
           min="95"
@@ -186,7 +186,7 @@
         />
         <FormField
           v-model.number="simParams.auxPower"
-          :label="$t('toolSurveyView.auxPower')"
+          :label="$t('sidebar.toolSurveyView.auxPower')"
           type="number"
           step="0.1"
           :placeholder="5"
@@ -197,10 +197,10 @@
     <!-- 操作 -->
     <div class="actions">
       <button :disabled="loading" class="btn-primary" @click="saveSurvey">
-        {{ loading ? $t('toolSurveyView.saving') : $t('toolSurveyView.saveBtn') }}
+        {{ loading ? $t('sidebar.toolSurveyView.saving') : $t('sidebar.toolSurveyView.saveBtn') }}
       </button>
-      <button class="btn-secondary" @click="resetForm">{{ $t('toolSurveyView.resetBtn') }}</button>
-      <button class="btn-accent" @click="goToSimulation">{{ $t('toolSurveyView.goSimBtn') }}</button>
+      <button class="btn-secondary" @click="resetForm">{{ $t('sidebar.toolSurveyView.resetBtn') }}</button>
+      <button class="btn-accent" @click="goToSimulation">{{ $t('sidebar.toolSurveyView.goSimBtn') }}</button>
     </div>
   </div>
 </template>
