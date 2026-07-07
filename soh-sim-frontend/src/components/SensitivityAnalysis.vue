@@ -1,35 +1,35 @@
 <template>
   <div class="sensitivity-analysis h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent)" />
+    <div class="rounded-lg p-4 card-bordered">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent">
+        <span class="w-2 h-2 rounded-full bg-accent" />
         敏感性分析
       </h3>
 
       <!-- 敏感性参数设置 -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <!-- 参数选择 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">选择敏感性参数</div>
+        <div class="rounded-lg p-3 bg-card-dark">
+          <div class="text-xs mb-3 text-muted">选择敏感性参数</div>
           <div class="space-y-2">
             <label
               v-for="param in sensitivityParams"
               :key="param.key"
               class="flex items-center gap-2 cursor-pointer text-xs label-text"
             >
-              <input v-model="param.enabled" type="checkbox" style="accent-color: var(--color-accent)" />
-              <span style="color: var(--color-text-secondary)">{{ param.label }}</span>
+              <input v-model="param.enabled" type="checkbox" />class="u-accent-color-var-color-accent"
+              <span>{{ param.label }}</span>class="text-secondary"
             </label>
           </div>
         </div>
 
         <!-- 参数范围设置 -->
-        <div class="col-span-3 rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">参数变化范围</div>
+        <div class="col-span-3 rounded-lg p-3 bg-card-dark">
+          <div class="text-xs mb-3 text-muted">参数变化范围</div>
 
           <div class="grid grid-cols-3 gap-3">
             <div v-for="param in enabledParams" :key="param.key">
-              <div class="text-xs mb-1" style="color: var(--color-text-secondary)">
+              <div class="text-xs mb-1 text-secondary">
                 {{ param.label }}
               </div>
               <div class="flex items-center gap-1">
@@ -39,7 +39,7 @@
                   step="0.01"
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
-                <span class="text-xs" style="color: var(--color-text-muted)">至</span>
+                <span class="text-xs text-muted">至</span>
                 <input
                   v-model.number="param.max"
                   type="number"
@@ -47,12 +47,12 @@
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
               </div>
-              <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">当前值: {{ param.current }}</div>
+              <div class="text-[10px] mt-1 text-muted">当前值: {{ param.current }}</div>
             </div>
           </div>
 
           <div class="mt-3 flex items-center gap-2">
-            <span class="text-xs" style="color: var(--color-text-muted)">变化步数:</span>
+            <span class="text-xs text-muted">变化步数:</span>
             <input
               v-model.number="steps"
               type="number"
@@ -60,15 +60,11 @@
               max="10"
               class="w-16 rounded text-xs px-2 py-1 form-field-input"
             />
-            <span class="text-xs" style="color: var(--color-text-muted)">(3-10步)</span>
+            <span class="text-xs text-muted">(3-10步)</span>
             <button
               :disabled="analyzing || enabledParams.length === 0"
               class="ml-auto text-xs px-4 py-1.5 rounded transition-colors"
-              :style="
-                analyzing || enabledParams.length === 0
-                  ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }
-                  : { backgroundColor: 'var(--color-warning)', color: 'white' }
-              "
+              :style="analyzing || enabledParams.length === 0 ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
               @click="runAnalysis"
             >
               {{ analyzing ? '分析中...' : '运行分析' }}
@@ -80,25 +76,25 @@
       <!-- 分析结果 -->
       <div v-if="analysisResults.length > 0" class="grid grid-cols-2 gap-4">
         <!-- 龙卷风图 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">敏感性排名 (龙卷风图)</div>
+        <div class="rounded-lg p-3 bg-card-dark">
+          <div class="text-xs mb-3 text-muted">敏感性排名 (龙卷风图)</div>
           <div ref="tornadoChart" class="h-64" />
         </div>
 
         <!-- 蜘蛛图 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">多参数蜘蛛图</div>
+        <div class="rounded-lg p-3 bg-card-dark">
+          <div class="text-xs mb-3 text-muted">多参数蜘蛛图</div>
           <div ref="spiderChart" class="h-64" />
         </div>
       </div>
 
       <!-- 详细数据表 -->
       <div v-if="analysisResults.length > 0" class="mt-4">
-        <div class="text-xs mb-2" style="color: var(--color-text-muted)">敏感性分析详细数据</div>
+        <div class="text-xs mb-2 text-muted">敏感性分析详细数据</div>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-muted border-b"
                 <th class="text-left py-2 px-2">参数</th>
                 <th v-for="(result, idx) in analysisResults" :key="idx" class="text-right py-2 px-2">
                   {{ result.param }} ({{ (result.minValue * 100).toFixed(0) }}%~{{
@@ -108,7 +104,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-secondary border-b"
                 <td class="py-2 px-2">NPV变化</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -119,7 +115,7 @@
                   {{ result.npvImpact > 0 ? '+' : '' }}{{ result.npvImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-secondary border-b"
                 <td class="py-2 px-2">IRR变化</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -130,20 +126,18 @@
                   {{ result.irrImpact > 0 ? '+' : '' }}{{ result.irrImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-secondary border-b"
                 <td class="py-2 px-2">回收期变化</td>
                 <td
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :style="
-                    result.paybackImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }
-                  "
+                  :style="result.paybackImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
                   {{ result.paybackImpact > 0 ? '+' : '' }}{{ result.paybackImpact.toFixed(2) }}年
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-secondary border-b"
                 <td class="py-2 px-2">LCOS变化</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -160,9 +154,9 @@
       </div>
 
       <!-- 财务指标敏感性说明 -->
-      <div class="mt-4 p-3 rounded-lg" style="background-color: var(--color-card-dark)">
-        <div class="font-medium mb-2" style="color: var(--color-text-secondary)">敏感性分析说明</div>
-        <ul class="list-disc list-inside space-y-1 text-xs" style="color: var(--color-text-muted)">
+      <div class="mt-4 p-3 rounded-lg bg-card-dark">
+        <div class="font-medium mb-2 text-secondary">敏感性分析说明</div>
+        <ul class="list-disc list-inside space-y-1 text-xs text-muted">
           <li>NPV (净现值): 对电价、补贴政策敏感，影响项目投资回报</li>
           <li>IRR (内部收益率): 反映项目盈利能力，对成本和收入变化敏感</li>
           <li>回收期: 投资回收所需时间，影响资金周转</li>

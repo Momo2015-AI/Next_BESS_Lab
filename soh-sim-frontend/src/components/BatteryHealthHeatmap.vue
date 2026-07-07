@@ -1,16 +1,16 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+  <div class="rounded-lg p-3 card-bordered">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
         class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(139, 92, 246, 0.2); color: var(--color-accent)"
+ class="u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
       >
         BH
       </span>
       电池健康状态热力图 Battery Health Heatmap
     </h3>
 
-    <div class="mb-3 flex justify-between text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="mb-3 flex justify-between text-[10px] text-secondary">
       <div>单元格颜色表示健康状态：绿色(>90%) - 红色(&lt;70%)</div>
       <div>点击单元格查看详细信息</div>
     </div>
@@ -19,24 +19,24 @@
 
     <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-success)" />
-        <span style="color: var(--color-success)">>90%</span>
+        <div class="w-3 h-3 rounded mr-1 bg-success" />
+        <span>>90%</span>class="text-success"
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-success)" />
-        <span style="color: var(--color-success)">80-90%</span>
+        <div class="w-3 h-3 rounded mr-1 bg-success" />
+        <span>80-90%</span>class="text-success"
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-warning)" />
-        <span style="color: var(--color-warning)">70-80%</span>
+        <div class="w-3 h-3 rounded mr-1 bg-warning" />
+        <span>70-80%</span>class="text-warning"
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-chart-orange)" />
-        <span style="color: var(--color-warning)">60-70%</span>
+        <div class="w-3 h-3 rounded mr-1 u-background-color-var-color-chart-orange" />
+        <span>60-70%</span>class="text-warning"
       </div>
       <div class="flex items-center">
-        <div class="w-3 h-3 rounded mr-1" style="background-color: var(--color-danger)" />
-        <span style="color: var(--color-danger)">&lt;60%</span>
+        <div class="w-3 h-3 rounded mr-1 bg-danger" />
+        <span>&lt;60%</span>class="text-danger"
       </div>
     </div>
   </div>

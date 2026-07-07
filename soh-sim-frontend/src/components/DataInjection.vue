@@ -3,12 +3,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div
         class="p-3 rounded-lg flex flex-col"
-        style="background: var(--color-bg-secondary); border: 1px solid var(--color-border)"
+ class="bg-secondary border-card"
       >
-        <span class="text-xs font-bold mb-1" style="color: var(--color-warning)">
+        <span class="text-xs font-bold mb-1 text-warning">
           {{ $t('dataInjection.sohTitle') }}
         </span>
-        <p class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+        <p class="text-[10px] mb-2 text-muted">
           {{ $t('dataInjection.sohFormat') }}
         </p>
         <textarea
@@ -19,18 +19,14 @@
         <div class="flex gap-2 mt-2">
           <button
             class="flex-1 font-bold py-1.5 rounded text-xs transition-all"
-            style="background: var(--color-warning); color: white"
+ class="u-background-var-color-warning-color-white"
             @click="parseSoh"
           >
             {{ $t('dataInjection.parseSoh') }}
           </button>
           <button
             class="px-3 py-1.5 rounded text-xs transition-all"
-            style="
-              background: var(--color-bg-secondary);
-              color: var(--color-text-secondary);
-              border: 1px solid var(--color-border);
-            "
+            class="u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
             @click="resetSoh"
           >
             {{ $t('dataInjection.resetDefault') }}
@@ -39,12 +35,12 @@
       </div>
       <div
         class="p-3 rounded-lg flex flex-col"
-        style="background: var(--color-bg-secondary); border: 1px solid var(--color-border)"
+ class="bg-secondary border-card"
       >
-        <span class="text-xs font-bold mb-1" style="color: var(--color-accent-secondary)">
+        <span class="text-xs font-bold mb-1 text-accent-2">
           {{ $t('dataInjection.rteTitle') }}
         </span>
-        <p class="text-[10px] mb-2" style="color: var(--color-text-muted)">
+        <p class="text-[10px] mb-2 text-muted">
           {{ $t('dataInjection.rteFormat') }}
         </p>
         <textarea
@@ -55,18 +51,14 @@
         <div class="flex gap-2 mt-2">
           <button
             class="flex-1 font-bold py-1.5 rounded text-xs transition-all"
-            style="background: var(--color-accent-secondary); color: white"
+ class="u-background-var-color-accent-secondary-color-white"
             @click="parseRte"
           >
             {{ $t('dataInjection.parseRte') }}
           </button>
           <button
             class="px-3 py-1.5 rounded text-xs transition-all"
-            style="
-              background: var(--color-bg-secondary);
-              color: var(--color-text-secondary);
-              border: 1px solid var(--color-border);
-            "
+            class="u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
             @click="resetRte"
           >
             {{ $t('dataInjection.resetDefault') }}
@@ -74,27 +66,27 @@
         </div>
       </div>
     </div>
-    <div class="p-3 rounded-lg" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border)">
-      <span class="text-xs font-bold" style="color: var(--color-text-secondary)">
+    <div class="p-3 rounded-lg bg-secondary border-card">
+      <span class="text-xs font-bold text-secondary">
         {{ $t('dataInjection.currentPreview') }}
       </span>
       <div class="grid grid-cols-2 gap-4 mt-2 text-[11px] font-mono">
         <div class="overflow-auto max-h-32">
-          <div class="font-bold mb-1" style="color: var(--color-warning)">
+          <div class="font-bold mb-1 text-warning">
             {{ $t('dataInjection.sohLabel') }}
           </div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in soh" :key="'s-' + i" style="color: var(--color-warning)">
+            <div v-for="(v, i) in soh" :key="'s-' + i">class="text-warning"
               {{ 'Y' + i }}:{{ (v * 100).toFixed(1) }}%
             </div>
           </div>
         </div>
         <div class="overflow-auto max-h-32">
-          <div class="font-bold mb-1" style="color: var(--color-accent-secondary)">
+          <div class="font-bold mb-1 text-accent-2">
             {{ $t('dataInjection.rteLabel') }}
           </div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in rte" :key="'r-' + i" style="color: var(--color-accent-secondary)">
+            <div v-for="(v, i) in rte" :key="'r-' + i">class="text-accent-2"
               {{ 'Y' + i }}:{{ (v * 100).toFixed(1) }}%
             </div>
           </div>

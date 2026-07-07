@@ -1,8 +1,8 @@
 <template>
   <div class="engineering-calc h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <div class="rounded-lg p-4 card-bordered">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-2">
+        <span class="w-2 h-2 rounded-full bg-accent-2" />
         工程计算模块
       </h3>
 
@@ -12,11 +12,7 @@
           v-for="tab in tabs"
           :key="tab.id"
           class="px-3 py-1.5 rounded text-xs transition-all"
-          :style="
-            activeTab === tab.id
-              ? { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }
-              : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }
-          "
+          :style="activeTab === tab.id ? { backgroundColor: 'var(--color-accent-secondary)', color: 'white' } : { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-secondary)' }"
           @click="activeTab = tab.id"
         >
           {{ tab.label }}
@@ -73,47 +69,47 @@
 
         <button
           class="text-xs px-4 py-2 rounded transition-colors"
-          style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
           @click="calculateSiteArea"
         >
           计算场地面积
         </button>
 
         <!-- 计算结果 -->
-        <div v-if="siteAreaResult" class="mt-4 p-4 rounded-lg" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">场地面积计算结果</div>
+        <div v-if="siteAreaResult" class="mt-4 p-4 rounded-lg bg-card-dark">
+          <div class="text-xs mb-3 text-muted">场地面积计算结果</div>
           <div class="grid grid-cols-3 gap-4 text-sm">
             <div class="text-center">
-              <div class="text-2xl font-bold" style="color: var(--color-accent-secondary)">
+              <div class="text-2xl font-bold text-accent-2">
                 {{ siteAreaResult.containerArea }}
               </div>
-              <div class="text-xs" style="color: var(--color-text-muted)">集装箱占地面积 (m²)</div>
+              <div class="text-xs text-muted">集装箱占地面积 (m²)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold" style="color: var(--color-accent)">
+              <div class="text-2xl font-bold text-accent">
                 {{ siteAreaResult.pcsArea }}
               </div>
-              <div class="text-xs" style="color: var(--color-text-muted)">PCS占地面积 (m²)</div>
+              <div class="text-xs text-muted">PCS占地面积 (m²)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold" style="color: var(--color-warning)">
+              <div class="text-2xl font-bold text-warning">
                 {{ siteAreaResult.totalArea }}
               </div>
-              <div class="text-xs" style="color: var(--color-text-muted)">总占地面积 (m²)</div>
+              <div class="text-xs text-muted">总占地面积 (m²)</div>
             </div>
           </div>
           <div
             class="mt-3 pt-3 border-t border-slate-700 text-xs"
-            style="border-color: var(--color-border); color: var(--color-text-muted)"
+ class="u-border-color-var-color-border-color-var-color-text-muted"
           >
             <div>
               考虑间距和通道后的实际占地面积:
-              <span style="color: var(--color-text)">{{ siteAreaResult.actualArea }}</span>
+              <span>{{ siteAreaResult.actualArea }}</span>class="text-default"
               m²
             </div>
             <div>
               约等于
-              <span style="color: var(--color-text)">{{ siteAreaResult.landAcres }}</span>
+              <span>{{ siteAreaResult.landAcres }}</span>class="text-default"
               亩
             </div>
           </div>
@@ -143,7 +139,7 @@
 
         <button
           class="text-xs px-4 py-2 rounded transition-colors"
-          style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
           @click="generateBOM"
         >
           生成BOM清单
@@ -153,7 +149,7 @@
         <div v-if="bomResult.length > 0" class="mt-4 overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+              <tr>class="text-muted border-b"
                 <th class="text-left py-2 px-2">序号</th>
                 <th class="text-left py-2 px-2">设备名称</th>
                 <th class="text-left py-2 px-2">规格型号</th>
@@ -166,7 +162,7 @@
               <tr
                 v-for="(item, idx) in bomResult"
                 :key="idx"
-                style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)"
+ class="text-secondary border-b"
               >
                 <td class="py-2 px-2">
                   {{ idx + 1 }}
@@ -183,7 +179,7 @@
                 <td class="text-right py-2 px-2">
                   {{ item.qty }}
                 </td>
-                <td class="py-2 px-2" style="color: var(--color-text-muted)">
+                <td class="py-2 px-2 text-muted">
                   {{ item.note }}
                 </td>
               </tr>
@@ -193,7 +189,7 @@
           <div class="mt-3 flex gap-2">
             <button
               class="text-xs px-3 py-1.5 rounded transition-colors"
-              style="background-color: var(--color-accent); color: white"
+ class="bg-accent text-white"
               @click="exportBOM"
             >
               导出BOM
@@ -242,7 +238,7 @@
 
         <button
           class="text-xs px-4 py-2 rounded transition-colors"
-          style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
           @click="calculateSpare"
         >
           计算备品备件
@@ -250,44 +246,44 @@
 
         <!-- 备品备件结果 -->
         <div v-if="spareResult.length > 0" class="mt-4">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">备品备件清单</div>
+          <div class="text-xs mb-3 text-muted">备品备件清单</div>
 
           <div class="grid grid-cols-2 gap-4">
             <!-- 电池备件 -->
-            <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-              <div class="text-xs mb-2" style="color: var(--color-warning)">电池系统备件</div>
+            <div class="rounded-lg p-3 bg-card-dark">
+              <div class="text-xs mb-2 text-warning">电池系统备件</div>
               <div
                 v-for="(item, idx) in spareResult.filter((i) => i.type === 'battery')"
                 :key="idx"
                 class="flex justify-between text-xs py-1"
-                style="border-bottom: 1px solid var(--color-border)"
+ class="border-b"
               >
-                <span style="color: var(--color-text-secondary)">{{ item.name }}</span>
-                <span style="color: var(--color-text)">{{ item.qty }} {{ item.unit }}</span>
+                <span>{{ item.name }}</span>class="text-secondary"
+                <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
               </div>
             </div>
 
             <!-- PCS备件 -->
-            <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-              <div class="text-xs mb-2" style="color: var(--color-accent)">PCS系统备件</div>
+            <div class="rounded-lg p-3 bg-card-dark">
+              <div class="text-xs mb-2 text-accent">PCS系统备件</div>
               <div
                 v-for="(item, idx) in spareResult.filter((i) => i.type === 'pcs')"
                 :key="idx"
                 class="flex justify-between text-xs py-1"
-                style="border-bottom: 1px solid var(--color-border)"
+ class="border-b"
               >
-                <span style="color: var(--color-text-secondary)">{{ item.name }}</span>
-                <span style="color: var(--color-text)">{{ item.qty }} {{ item.unit }}</span>
+                <span>{{ item.name }}</span>class="text-secondary"
+                <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
               </div>
             </div>
           </div>
 
           <div
             class="mt-4 p-3 rounded-lg"
-            style="background-color: var(--color-accent-glow); border: 1px solid var(--color-accent-dark)"
+ class="u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
           >
-            <div class="text-xs" style="color: var(--color-accent-secondary)">预计备件库存总价值</div>
-            <div class="text-xl font-bold mt-1" style="color: var(--color-accent-secondary)">
+            <div class="text-xs text-accent-2">预计备件库存总价值</div>
+            <div class="text-xl font-bold mt-1 text-accent-2">
               ¥ {{ spareTotalValue.toLocaleString() }}
             </div>
           </div>

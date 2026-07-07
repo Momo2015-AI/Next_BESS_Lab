@@ -1,33 +1,25 @@
 <template>
   <div class="h-full flex flex-col gap-3">
     <div class="flex items-center justify-between">
-      <h3 class="text-sm font-bold" style="color: var(--color-accent)">Efficiency Chain (10-Factor Model)</h3>
+      <h3 class="text-sm font-bold text-accent">Efficiency Chain (10-Factor Model)</h3>
       <div class="flex gap-2">
         <button
           class="text-xs px-3 py-1 rounded transition-all"
-          style="background: var(--color-card-dark); color: var(--color-text); border: 1px solid var(--color-border)"
+ class="u-background-var-color-card-dark-color-var-color-text-border-1px-solid-var-color-border"
           @click="setRfpMode"
         >
           RFP Mode
         </button>
         <button
           class="text-xs px-3 py-1 rounded transition-all"
-          style="
-            background: var(--color-card-dark);
-            color: var(--color-text-muted);
-            border: 1px solid var(--color-border);
-          "
+          class="u-background-var-color-card-dark-color-var-color-text-muted-border-1px-solid-var-color-border"
           @click="resetDefaults"
         >
           Reset
         </button>
         <button
           class="text-xs px-4 py-1 rounded font-bold transition-all"
-          :style="
-            modified
-              ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' }
-              : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }
-          "
+          :style="modified ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }"
           @click="applyFactors"
         >
           Apply
@@ -37,32 +29,27 @@
 
     <div
       class="rounded-lg p-3 flex items-center gap-3"
-      style="background: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
     >
-      <span class="text-xs" style="color: var(--color-text-muted)">SOH:</span>
+      <span class="text-xs text-muted">SOH:</span>
       <input
         v-model.number="previewSoh"
         type="number"
         min="60"
         max="100"
         class="text-xs px-2 py-1 rounded"
-        style="
-          width: 56px;
-          background: var(--color-input-bg-dark);
-          color: var(--color-text);
-          border: 1px solid var(--color-input-border);
-        "
+        class="u-width-56px-background-var-color-input-bg-dark-color-var-color-text-border-1px-solid-var-color-input-border"
       />
-      <span class="text-xs" style="color: var(--color-text-muted)">%</span>
+      <span class="text-xs text-muted">%</span>
     </div>
 
     <div
       class="rounded-lg p-3 flex flex-col gap-2.5"
-      style="background: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
     >
       <div class="formula-row">
         <span class="formula-label">AC Side</span>
-        <span class="formula-label" style="color: var(--color-accent)">Charge:</span>
+        <span class="formula-label text-accent">Charge:</span>
         <div class="formula-chain">
           <span
             v-for="f in acFactors"
@@ -79,7 +66,7 @@
       </div>
       <div class="formula-row">
         <span class="formula-label" />
-        <span class="formula-label" style="color: var(--color-text-muted)">Disch:</span>
+        <span class="formula-label text-muted">Disch:</span>
         <div class="formula-chain">
           <span
             v-for="f in acFactors"
@@ -99,7 +86,7 @@
 
       <div class="formula-row">
         <span class="formula-label">DC Side</span>
-        <span class="formula-label" style="color: var(--color-accent)">Charge:</span>
+        <span class="formula-label text-accent">Charge:</span>
         <div class="formula-chain">
           <span
             v-for="f in dcFactors"
@@ -116,7 +103,7 @@
       </div>
       <div class="formula-row">
         <span class="formula-label" />
-        <span class="formula-label" style="color: var(--color-text-muted)">Disch:</span>
+        <span class="formula-label text-muted">Disch:</span>
         <div class="formula-chain">
           <span
             v-for="f in dcFactors"
@@ -137,27 +124,27 @@
       <div class="total-bar">
         <div class="total-item">
           <span class="total-label">η Charge</span>
-          <span class="total-value" style="color: var(--color-accent)">
+          <span class="total-value text-accent">
             {{ (totalResult.charge * 100).toFixed(2) }}%
           </span>
-          <span class="total-formula" style="color: var(--color-text-muted)">
+          <span class="total-formula text-muted">
             = AC-c {{ (acResult.charge * 100).toFixed(1) }}% x DC-c {{ (dcResult.charge * 100).toFixed(1) }}%
           </span>
         </div>
         <div class="total-item">
           <span class="total-label">η Discharge</span>
-          <span class="total-value" style="color: var(--color-text-muted)">
+          <span class="total-value text-muted">
             {{ (totalResult.discharge * 100).toFixed(2) }}%
           </span>
-          <span class="total-formula" style="color: var(--color-text-muted)">
+          <span class="total-formula text-muted">
             = AC-d {{ (acResult.discharge * 100).toFixed(1) }}% x DC-d {{ (dcResult.discharge * 100).toFixed(1) }}%
           </span>
         </div>
         <div class="total-item rte">
-          <span class="total-label" style="font-weight: bold">RTE</span>
+          <span class="total-label u-font-weight-bold">RTE</span>
           <span
             class="total-value"
-            style="font-weight: bold"
+ class="u-font-weight-bold"
             :style="{
               color:
                 totalResult.rte >= 0.85
@@ -169,37 +156,37 @@
           >
             {{ (totalResult.rte * 100).toFixed(2) }}%
           </span>
-          <span class="total-formula" style="color: var(--color-text-muted)">
+          <span class="total-formula text-muted">
             = {{ (totalResult.charge * 100).toFixed(1) }}% x {{ (totalResult.discharge * 100).toFixed(1) }}%
           </span>
         </div>
       </div>
     </div>
 
-    <div class="overflow-auto flex-1" style="min-height: 0">
-      <table class="w-full text-xs" style="border-collapse: collapse">
+    <div class="overflow-auto flex-1 u-min-height-0">
+      <table class="w-full text-xs border-collapse">
         <thead>
-          <tr class="section-header" style="background: rgba(64, 158, 255, 0.08)">
-            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-accent); font-size: 11px">
+          <tr class="section-header u-background-rgba-64-158-255-0-08">
+            <th colspan="6" class="text-left py-1.5 px-2 u-color-var-color-accent-font-size-11px">
               AC Side (Grid → PCS)
             </th>
           </tr>
-          <tr style="border-bottom: 2px solid var(--color-border)">
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px">#</th>
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted)">Component</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Charge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Discharge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px">SOH Link</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px">Rate</th>
+          <tr>class="u-border-bottom-2px-solid-var-color-border"
+            <th class="text-left py-2 px-2 u-color-var-color-text-muted-width-22px">#</th>
+            <th class="text-left py-2 px-2 text-muted">Component</th>
+            <th class="text-center py-2 px-2 text-muted w-72">η Charge</th>
+            <th class="text-center py-2 px-2 text-muted w-72">η Discharge</th>
+            <th class="text-center py-2 px-2 u-color-var-color-text-muted-width-52px">SOH Link</th>
+            <th class="text-center py-2 px-2 u-color-var-color-text-muted-width-56px">Rate</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="f in acFactors" :key="f.id">
             <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
-              <td class="py-1.5 px-2" style="color: var(--color-text-muted)">
+              <td class="py-1.5 px-2 text-muted">
                 {{ f.id }}
               </td>
-              <td class="py-1.5 px-2" style="color: var(--color-text)">
+              <td class="py-1.5 px-2 text-default">
                 {{ f.name }}
               </td>
               <td class="py-1.5 px-2 text-center">
@@ -209,7 +196,7 @@
                 <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-accent)" />
+                <input v-model="f.degrade" type="checkbox" />class="u-accent-color-var-color-accent"
               </td>
               <td class="py-1.5 px-2 text-center">
                 <input
@@ -220,35 +207,35 @@
                   max="1"
                   step="0.01"
                   class="cell-input"
-                  style="width: 48px"
+ class="u-width-48px"
                 />
-                <span v-else style="color: var(--color-text-muted)">-</span>
+                <span v-else>-</span>class="text-muted"
               </td>
             </tr>
           </template>
         </tbody>
         <thead>
-          <tr class="section-header" style="background: rgba(16, 185, 129, 0.08)">
-            <th colspan="6" class="text-left py-1.5 px-2" style="color: var(--color-success); font-size: 11px">
+          <tr class="section-header u-background-rgba-16-185-129-0-08">
+            <th colspan="6" class="text-left py-1.5 px-2 u-color-var-color-success-font-size-11px">
               DC Side (PCS → Cell)
             </th>
           </tr>
-          <tr style="border-bottom: 2px solid var(--color-border)">
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted); width: 22px">#</th>
-            <th class="text-left py-2 px-2" style="color: var(--color-text-muted)">Component</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Charge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 72px">η Discharge</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 52px">SOH Link</th>
-            <th class="text-center py-2 px-2" style="color: var(--color-text-muted); width: 56px">Rate</th>
+          <tr>class="u-border-bottom-2px-solid-var-color-border"
+            <th class="text-left py-2 px-2 u-color-var-color-text-muted-width-22px">#</th>
+            <th class="text-left py-2 px-2 text-muted">Component</th>
+            <th class="text-center py-2 px-2 text-muted w-72">η Charge</th>
+            <th class="text-center py-2 px-2 text-muted w-72">η Discharge</th>
+            <th class="text-center py-2 px-2 u-color-var-color-text-muted-width-52px">SOH Link</th>
+            <th class="text-center py-2 px-2 u-color-var-color-text-muted-width-56px">Rate</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="f in dcFactors" :key="f.id">
             <tr :style="{ borderBottom: '1px solid var(--color-border)', opacity: f.degrade ? 1 : 0.85 }">
-              <td class="py-1.5 px-2" style="color: var(--color-text-muted)">
+              <td class="py-1.5 px-2 text-muted">
                 {{ f.id }}
               </td>
-              <td class="py-1.5 px-2" style="color: var(--color-text)">
+              <td class="py-1.5 px-2 text-default">
                 {{ f.name }}
               </td>
               <td class="py-1.5 px-2 text-center">
@@ -258,7 +245,7 @@
                 <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" style="accent-color: var(--color-success)" />
+                <input v-model="f.degrade" type="checkbox" />class="u-accent-color-var-color-success"
               </td>
               <td class="py-1.5 px-2 text-center">
                 <input
@@ -269,9 +256,9 @@
                   max="1"
                   step="0.01"
                   class="cell-input"
-                  style="width: 48px"
+ class="u-width-48px"
                 />
-                <span v-else style="color: var(--color-text-muted)">-</span>
+                <span v-else>-</span>class="text-muted"
               </td>
             </tr>
           </template>
@@ -279,7 +266,7 @@
       </table>
     </div>
 
-    <div class="text-xs" style="color: var(--color-text-muted)">
+    <div class="text-xs text-muted">
       SOH-linked factors degrade as: η(t) = η₀ x (1 - rate x (1 - SOH(t)/100))
     </div>
   </div>

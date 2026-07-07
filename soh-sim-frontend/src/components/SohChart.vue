@@ -8,11 +8,7 @@
           'px-3 py-1 text-[11px] rounded font-semibold transition-all',
           activeChart === c.id ? 'text-white' : ''
         ]"
-        :style="
-          activeChart === c.id
-            ? { background: 'var(--color-accent)' }
-            : { background: 'var(--color-bg-secondary)', color: 'var(--color-text-secondary)' }
-        "
+        :style="activeChart === c.id ? { background: 'var(--color-accent)' } : { background: 'var(--color-bg-secondary)', color: 'var(--color-text-secondary)' }"
         @click="switchChart(c.id)"
       >
         {{ c.label }}
@@ -24,22 +20,12 @@
         <div
           ref="sohChartRef"
           class="w-full min-h-0"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            min-height: 250px;
-          "
+          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
         />
         <div
           ref="rteChartRef"
           class="w-full min-h-0"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            min-height: 250px;
-          "
+          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
         />
       </div>
     </template>
@@ -48,7 +34,7 @@
       <div
         ref="sohChartRef"
         class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="min-h-300 card-bordered"
       />
     </template>
 
@@ -56,7 +42,7 @@
       <div
         ref="rteChartRef"
         class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="min-h-300 card-bordered"
       />
     </template>
 
@@ -64,23 +50,23 @@
       <div
         ref="acChartRef"
         class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="min-h-300 card-bordered"
       />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
           存量净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-pink" />
           补容净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-warning)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm bg-warning" />
           承诺底线
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent-secondary)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm bg-accent-2" />
           总输出
         </div>
       </div>
@@ -90,23 +76,23 @@
       <div
         ref="stackedChartRef"
         class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="min-h-300 card-bordered"
       />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-accent)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
           存量净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-pink)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-pink" />
           补容净可用
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-danger)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm bg-danger" />
           存量自辅耗
         </div>
-        <div class="flex items-center gap-1 text-[10px]" style="color: var(--color-text-secondary)">
-          <span class="inline-block w-3 h-3 rounded-sm" style="background-color: var(--color-chart-orange)" />
+        <div class="flex items-center gap-1 text-[10px] text-secondary">
+          <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-orange" />
           补容自辅耗
         </div>
       </div>
@@ -116,7 +102,7 @@
       <div
         ref="degradationChartRef"
         class="flex-1 min-h-0 w-full rounded-xl"
-        style="min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="min-h-300 card-bordered"
       />
     </template>
 
@@ -127,15 +113,15 @@
             v-for="m in metrics"
             :key="m.label"
             class="rounded-xl p-3 text-center"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-[10px] mb-1" style="color: var(--color-text-muted)">
+            <div class="text-[10px] mb-1 text-muted">
               {{ m.label }}
             </div>
             <div :class="['text-lg font-bold font-mono', m.color]">
               {{ m.value }}
             </div>
-            <div class="text-[10px] mt-0.5" style="color: var(--color-text-muted)">
+            <div class="text-[10px] mt-0.5 text-muted">
               {{ m.sub }}
             </div>
           </div>
@@ -143,12 +129,7 @@
         <div
           ref="dashChartRef"
           class="w-full"
-          style="
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            height: 300px;
-          "
+          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-height-300px"
         />
       </div>
     </template>

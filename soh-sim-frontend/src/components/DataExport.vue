@@ -1,53 +1,49 @@
 <template>
   <div class="export-panel p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <div class="rounded-lg p-4 card-bordered">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-2">
+        <span class="w-2 h-2 rounded-full bg-accent-2" />
         数据导出
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <!-- 导出类型选择 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2" style="color: var(--color-text-muted)">选择导出内容</div>
+          <div class="text-xs mb-2 text-muted">选择导出内容</div>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.matrix" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
-            <span class="text-xs" style="color: var(--color-text-secondary)">25年生命周期矩阵</span>
+            <input v-model="exportOptions.matrix" type="checkbox" />class="accent-accent-2"
+            <span class="text-xs text-secondary">25年生命周期矩阵</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.soh" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
-            <span class="text-xs" style="color: var(--color-text-secondary)">SOH/RTE数据序列</span>
+            <input v-model="exportOptions.soh" type="checkbox" />class="accent-accent-2"
+            <span class="text-xs text-secondary">SOH/RTE数据序列</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.params" type="checkbox" style="accent-color: var(--color-accent-secondary)" />
-            <span class="text-xs" style="color: var(--color-text-secondary)">参数配置</span>
+            <input v-model="exportOptions.params" type="checkbox" />class="accent-accent-2"
+            <span class="text-xs text-secondary">参数配置</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
             <input
               v-model="exportOptions.financial"
               type="checkbox"
-              style="accent-color: var(--color-accent-secondary)"
+ class="accent-accent-2"
             />
-            <span class="text-xs" style="color: var(--color-text-secondary)">财务分析数据</span>
+            <span class="text-xs text-secondary">财务分析数据</span>
           </label>
         </div>
 
         <!-- 导出操作 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2" style="color: var(--color-text-muted)">导出格式</div>
+          <div class="text-xs mb-2 text-muted">导出格式</div>
 
           <button
             :disabled="exporting"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="
-              exporting
-                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
-                : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }
-            "
+            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent-secondary)', color: 'white' }"
             @click="exportCSV"
           >
             <AppIcon name="download" size="16" />
@@ -57,11 +53,7 @@
           <button
             :disabled="exporting"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="
-              exporting
-                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
-                : { backgroundColor: 'var(--color-accent)', color: 'white' }
-            "
+            :style="exporting ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-accent)', color: 'white' }"
             @click="exportPNG"
           >
             <AppIcon name="image" size="16" />
@@ -71,11 +63,7 @@
           <button
             :disabled="saving"
             class="export-action-btn w-full text-xs px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2"
-            :style="
-              saving
-                ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' }
-                : { backgroundColor: 'var(--color-warning)', color: 'white' }
-            "
+            :style="saving ? { backgroundColor: 'var(--color-border)', color: 'var(--color-text-muted)' } : { backgroundColor: 'var(--color-warning)', color: 'white' }"
             @click="saveSimulation"
           >
             <AppIcon name="save" size="16" />
@@ -85,13 +73,13 @@
       </div>
 
       <!-- 历史仿真记录 -->
-      <div class="mt-4 pt-4 border-t" style="border-color: var(--color-border)">
+      <div class="mt-4 pt-4 border-t border-default">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs" style="color: var(--color-text-muted)">历史仿真记录</span>
+          <span class="text-xs text-muted">历史仿真记录</span>
           <button class="link-btn text-xs" @click="loadSimulations">刷新</button>
         </div>
 
-        <div v-if="simulations.length === 0" class="text-xs text-center py-2" style="color: var(--color-text-muted)">
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">
           暂无保存的仿真记录
         </div>
 
@@ -100,15 +88,15 @@
             v-for="sim in simulations"
             :key="sim.id"
             class="flex items-center justify-between rounded px-3 py-2 text-xs"
-            style="background-color: var(--color-card-dark)"
+ class="bg-card-dark"
           >
             <div>
-              <span style="color: var(--color-text-secondary)">{{ sim.name }}</span>
-              <span style="color: var(--color-text-muted)" class="ml-2">{{ sim.created_at }}</span>
+              <span>{{ sim.name }}</span>class="text-secondary"
+              <span class="ml-2 text-muted">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
               <button class="link-btn" @click="loadSimulation(sim.id)">加载</button>
-              <button class="link-btn" style="color: var(--color-accent)" @click="exportSimulationCSV(sim.id)">
+              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">
                 导出
               </button>
             </div>
@@ -121,11 +109,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="
-        toast.type === 'success'
-          ? { backgroundColor: 'var(--color-success)', color: 'white' }
-          : { backgroundColor: 'var(--color-danger)', color: 'white' }
-      "
+      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } : { backgroundColor: 'var(--color-danger)', color: 'white' }"
     >
       {{ toast.message }}
     </div>

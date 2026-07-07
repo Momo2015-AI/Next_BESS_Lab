@@ -1,25 +1,21 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+  <div class="rounded-lg p-3 card-bordered">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
         class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(139, 92, 246, 0.2); color: var(--color-accent)"
+ class="u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
       >
         IX
       </span>
       成本构成瀑布图 Cost Structure Waterfall
     </h3>
 
-    <div class="mb-2 flex items-center justify-between text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="mb-2 flex items-center justify-between text-[10px] text-secondary">
       <div>年度成本分析 Annual Cost Breakdown</div>
       <select
         v-model="selectedYear"
         class="rounded px-2 py-1 text-xs"
-        style="
-          background-color: var(--color-input-bg-dark);
-          border: 1px solid var(--color-input-border);
-          color: var(--color-text);
-        "
+        class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
       >
         <option v-for="year in availableYears" :key="year" :value="year">Year {{ year }}</option>
       </select>
@@ -28,17 +24,17 @@
     <div ref="waterfallChartRef" class="chart-container" />
 
     <!-- 成本摘要 -->
-    <div class="mt-3 border-t pt-2" style="border-color: var(--color-border)">
+    <div class="mt-3 border-t pt-2 border-default">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">总成本</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-danger)">
+        <div class="rounded p-2 bg-card-dark">
+          <div>总成本</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-danger">
             {{ formatCurrency(totalCost) }}
           </div>
         </div>
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">单位成本</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-warning)">
+        <div class="rounded p-2 bg-card-dark">
+          <div>单位成本</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-warning">
             {{ formatCostPerMWh(costPerMWh) }}
           </div>
         </div>
@@ -46,7 +42,7 @@
     </div>
 
     <!-- 成本明细 -->
-    <div class="mt-2 space-y-1 text-[9x]" style="color: var(--color-text-muted)">
+    <div class="mt-2 space-y-1 text-[9x] text-muted">
       <div class="flex justify-between">
         <span>初始CAPEX</span>
         <span>{{ formatCurrency(initialCapex) }}</span>

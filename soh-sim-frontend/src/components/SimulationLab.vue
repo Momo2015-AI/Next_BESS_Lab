@@ -8,19 +8,11 @@
           'flex items-center gap-1 px-3 py-1 rounded text-xs transition-all',
           currentStep >= idx ? 'text-teal-400' : 'text-slate-500'
         ]"
-        :style="
-          currentStep >= idx
-            ? { backgroundColor: 'var(--color-step-active)', border: '1px solid var(--color-accent)' }
-            : {}
-        "
+        :style="currentStep >= idx ? { backgroundColor: 'var(--color-step-active)', border: '1px solid var(--color-accent)' } : {}"
       >
         <span
           class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-          :style="
-            currentStep >= idx
-              ? { backgroundColor: 'var(--color-accent)', color: 'white' }
-              : { backgroundColor: 'var(--color-text-muted)', color: 'var(--color-text-light)' }
-          "
+          :style="currentStep >= idx ? { backgroundColor: 'var(--color-accent)', color: 'white' } : { backgroundColor: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
         >
           {{ idx + 1 }}
         </span>
@@ -345,21 +337,13 @@
           v-for="algo in algorithms"
           :key="algo.id"
           class="rounded-lg p-4 border-2 cursor-pointer transition-all"
-          :style="
-            selectedAlgorithm === algo.id
-              ? { backgroundColor: 'var(--color-step-active)', borderColor: 'var(--color-accent)' }
-              : { backgroundColor: 'var(--color-card-dark)', borderColor: 'var(--color-border)' }
-          "
+          :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-step-active)', borderColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-card-dark)', borderColor: 'var(--color-border)' }"
           @click="selectAlgorithm(algo)"
         >
           <div class="flex items-center gap-2 mb-2">
             <span
               class="w-4 h-4 rounded-full"
-              :style="
-                selectedAlgorithm === algo.id
-                  ? { backgroundColor: 'var(--color-accent)' }
-                  : { backgroundColor: 'var(--color-text-muted)' }
-              "
+              :style="selectedAlgorithm === algo.id ? { backgroundColor: 'var(--color-accent)' } : { backgroundColor: 'var(--color-text-muted)' }"
             />
             <h4
               class="text-xs font-bold"
@@ -625,11 +609,7 @@
         <button
           :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
-          :style="
-            selectedAlgorithm
-              ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' }
-              : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }
-          "
+          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
           @click="runSimulation"
         >
           前端计算
@@ -637,14 +617,7 @@
         <button
           :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
-          :style="
-            selectedAlgorithm
-              ? {
-                  background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary))',
-                  color: 'white'
-                }
-              : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }
-          "
+          :style="selectedAlgorithm ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary))', color: 'white' } : { background: 'var(--color-text-muted)', color: 'var(--color-text-light)' }"
           @click="runBackendSimulation"
         >
           后端引擎计算
@@ -676,11 +649,7 @@
           <p class="text-[10px] text-muted">保障年限末SOH</p>
           <p
             class="text-lg font-bold"
-            :style="
-              simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh
-                ? { color: 'var(--color-success)' }
-                : { color: 'var(--color-danger)' }
-            "
+            :style="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
           >
             {{ simulationResults.guaranteeEndSoh?.toFixed(2) || '--' }}%
           </p>
@@ -693,9 +662,7 @@
           <p class="text-[10px] text-muted">保障判定</p>
           <p
             class="text-lg font-bold"
-            :style="
-              simulationResults.meetsGuarantee ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }
-            "
+            :style="simulationResults.meetsGuarantee ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
           >
             {{ simulationResults.meetsGuarantee ? '达标' : '未达标' }}
           </p>

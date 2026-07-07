@@ -1,20 +1,20 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+  <div class="rounded-lg p-3 card-bordered">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
         class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(239, 68, 68, 0.2); color: var(--color-danger)"
+ class="u-background-color-rgba-239-68-68-0-2-color-var-color-danger"
       >
         VI
       </span>
       货币转换 Currency Converter
     </h3>
 
-    <div class="space-y-2 text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="space-y-2 text-[10px] text-secondary">
       <!-- 快速转换 -->
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">基础货币 Base</label>
+          <label class="block mb-0.5 text-muted">基础货币 Base</label>
           <select
             v-model="baseCurrency"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -26,7 +26,7 @@
           </select>
         </div>
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">目标货币 Target</label>
+          <label class="block mb-0.5 text-muted">目标货币 Target</label>
           <select
             v-model="targetCurrency"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -42,7 +42,7 @@
       <!-- 转换输入 -->
       <div class="grid grid-cols-3 gap-2">
         <div class="col-span-2">
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">金额 Amount</label>
+          <label class="block mb-0.5 text-muted">金额 Amount</label>
           <input
             v-model.number="amount"
             type="number"
@@ -52,14 +52,10 @@
           />
         </div>
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">汇率 Rate</label>
+          <label class="block mb-0.5 text-muted">汇率 Rate</label>
           <div
             class="px-2 py-1 text-xs font-mono"
-            style="
-              background-color: var(--color-input-bg-dark);
-              border: 1px solid var(--color-input-border);
-              color: var(--color-text-secondary);
-            "
+            class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
           >
             {{ rate ? rate.toFixed(6) : '---' }}
           </div>
@@ -67,19 +63,19 @@
       </div>
 
       <!-- 转换结果 -->
-      <div class="flex justify-between items-center p-2 rounded" style="background-color: var(--color-input-bg-dark)">
-        <span style="color: var(--color-text-secondary)">{{ amount }} {{ baseCurrency }}</span>
-        <span class="text-xs" style="color: var(--color-muted)">→</span>
-        <span class="font-bold" style="color: var(--color-accent)">{{ result }} {{ targetCurrency }}</span>
+      <div class="flex justify-between items-center p-2 rounded bg-input-dark">
+        <span>{{ amount }} {{ baseCurrency }}</span>class="text-secondary"
+        <span class="text-xs u-color-var-color-muted">→</span>
+        <span class="font-bold text-accent">{{ result }} {{ targetCurrency }}</span>
       </div>
 
       <!-- 项目货币设置 -->
       <div class="border-t pt-2 mt-2">
         <div class="flex justify-between items-center mb-1">
-          <span class="text-xs" style="color: var(--color-text-muted)">项目货币 Project Currency</span>
+          <span class="text-xs text-muted">项目货币 Project Currency</span>
           <button
             class="text-[9px] px-2 py-1 rounded transition-colors"
-            style="background-color: var(--color-accent); color: white"
+ class="bg-accent text-white"
             @click="refreshRates"
           >
             刷新 Refresh
@@ -87,7 +83,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block mb-0.5" style="color: var(--color-text-muted)">显示货币 Display</label>
+            <label class="block mb-0.5 text-muted">显示货币 Display</label>
             <select
               v-model="displayCurrency"
               class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -99,14 +95,10 @@
             </select>
           </div>
           <div>
-            <label class="block mb-0.5" style="color: var(--color-text-muted)">汇率来源 Source</label>
+            <label class="block mb-0.5 text-muted">汇率来源 Source</label>
             <div
               class="px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text-secondary);
-              "
+              class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
             >
               {{ rateSource || '---' }}
             </div>
@@ -115,7 +107,7 @@
       </div>
 
       <!-- 汇率信息 -->
-      <div class="text-[9px] space-y-1" style="color: var(--color-text-muted)">
+      <div class="text-[9px] space-y-1 text-muted">
         <div class="flex justify-between">
           <span>更新时间</span>
           <span>{{ lastUpdated || '---' }}</span>

@@ -6,12 +6,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             01
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section01') }}
             </h3>
           </div>
@@ -57,12 +57,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             02
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section02') }}
             </h3>
           </div>
@@ -122,12 +122,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             03
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section03') }}
             </h3>
           </div>
@@ -207,12 +207,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             04
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section04') }}
             </h3>
           </div>
@@ -277,12 +277,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             05
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section05') }}
             </h3>
           </div>
@@ -370,12 +370,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             06
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section06') }}
             </h3>
           </div>
@@ -439,12 +439,12 @@
         <div class="flex items-center gap-2 mb-3">
           <span
             class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+ class="bg-accent-glow text-accent"
           >
             07
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title text-accent border-accent">
               {{ $t('surveyForm.section07') }}
             </h3>
           </div>
@@ -477,27 +477,27 @@
       <div
         v-if="showSuccess"
         class="fixed inset-0 z-50 flex items-center justify-center"
-        style="background: rgba(0, 0, 0, 0.5)"
+ class="u-background-rgba-0-0-0-0-5"
       >
         <div class="card p-8 text-center max-w-sm w-11/12">
           <div
             class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl font-bold"
-            style="background: var(--color-success); color: #fff"
+ class="u-background-var-color-success-color-fff"
           >
             &#10003;
           </div>
-          <h3 class="text-xl font-semibold mb-2" style="color: var(--color-text)">
+          <h3 class="text-xl font-semibold mb-2 text-default">
             {{ $t('surveyForm.successTitle') }}
           </h3>
-          <p class="mb-4" style="color: var(--color-text-secondary)">
+          <p class="mb-4 text-secondary">
             {{ $t('surveyForm.successDesc') }}
           </p>
-          <div class="p-4 rounded-lg mb-5 text-left" style="background: var(--color-card-dark)">
-            <p class="text-sm mb-1" style="color: var(--color-text)">
+          <div class="p-4 rounded-lg mb-5 text-left u-background-var-color-card-dark">
+            <p class="text-sm mb-1 text-default">
               <strong>{{ $t('surveyForm.surveyId') }}:</strong>
               {{ submittedData.survey_id }}
             </p>
-            <p class="text-sm" style="color: var(--color-text)">
+            <p class="text-sm text-default">
               <strong>{{ $t('surveyForm.projectCode') }}:</strong>
               {{ submittedData.project_code }}
             </p>

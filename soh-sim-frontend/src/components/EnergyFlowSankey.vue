@@ -1,30 +1,30 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+  <div class="rounded-lg p-3 card-bordered">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
         class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(16, 185, 129, 0.2); color: var(--color-success)"
+ class="u-background-color-rgba-16-185-129-0-2-color-var-color-success"
       >
         VIII
       </span>
       能量流桑基图 Energy Flow Sankey
     </h3>
 
-    <div class="mb-2 flex items-center gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="mb-2 flex items-center gap-2 text-[10px] text-secondary">
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: var(--color-accent)" />
+        <div class="w-3 h-3 rounded bg-accent" />
         <span>充电 Charging</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: var(--color-danger)" />
+        <div class="w-3 h-3 rounded bg-danger" />
         <span>损失 Loss</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: var(--color-success)" />
+        <div class="w-3 h-3 rounded bg-success" />
         <span>放电 Discharging</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 rounded" style="background-color: var(--color-warning)" />
+        <div class="w-3 h-3 rounded bg-warning" />
         <span>辅助 Auxiliary</span>
       </div>
     </div>
@@ -32,9 +32,9 @@
     <div ref="sankeyChartRef" class="chart-container" />
 
     <!-- 参数控制 -->
-    <div class="mt-3 grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="mt-3 grid grid-cols-2 gap-2 text-[10px] text-secondary">
       <div>
-        <label class="block mb-0.5" style="color: var(--color-text-muted)">循环次数/天</label>
+        <label class="block mb-0.5 text-muted">循环次数/天</label>
         <input
           v-model.number="cyclesPerDay"
           type="number"
@@ -42,16 +42,12 @@
           min="0.1"
           max="10"
           class="w-full rounded px-2 py-1 text-xs"
-          style="
-            background-color: var(--color-input-bg-dark);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text);
-          "
+          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
       <div>
-        <label class="block mb-0.5" style="color: var(--color-text-muted)">可用天数/年</label>
+        <label class="block mb-0.5 text-muted">可用天数/年</label>
         <input
           v-model.number="operatingDays"
           type="number"
@@ -59,16 +55,12 @@
           min="1"
           max="365"
           class="w-full rounded px-2 py-1 text-xs"
-          style="
-            background-color: var(--color-input-bg-dark);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text);
-          "
+          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
       <div>
-        <label class="block mb-0.5" style="color: var(--color-text-muted)">充电效率 %</label>
+        <label class="block mb-0.5 text-muted">充电效率 %</label>
         <input
           v-model.number="chargingEfficiency"
           type="number"
@@ -76,16 +68,12 @@
           min="50"
           max="100"
           class="w-full rounded px-2 py-1 text-xs"
-          style="
-            background-color: var(--color-input-bg-dark);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text);
-          "
+          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
       <div>
-        <label class="block mb-0.5" style="color: var(--color-text-muted)">放电效率 %</label>
+        <label class="block mb-0.5 text-muted">放电效率 %</label>
         <input
           v-model.number="dischargingEfficiency"
           type="number"
@@ -93,40 +81,36 @@
           min="50"
           max="100"
           class="w-full rounded px-2 py-1 text-xs"
-          style="
-            background-color: var(--color-input-bg-dark);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text);
-          "
+          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
     </div>
 
     <!-- 能量摘要 -->
-    <div class="mt-3 border-t pt-2" style="border-color: var(--color-border)">
+    <div class="mt-3 border-t pt-2 border-default">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">总充电量</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-accent)">
+        <div class="rounded p-2 bg-card-dark">
+          <div>总充电量</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-accent">
             {{ formatEnergy(totalCharging) }}
           </div>
         </div>
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">总放电量</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-success)">
+        <div class="rounded p-2 bg-card-dark">
+          <div>总放电量</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-success">
             {{ formatEnergy(totalDischarging) }}
           </div>
         </div>
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">能量损失</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-danger)">
+        <div class="rounded p-2 bg-card-dark">
+          <div>能量损失</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-danger">
             {{ formatEnergy(totalLoss) }}
           </div>
         </div>
-        <div class="rounded p-2" style="background-color: var(--color-card-dark)">
-          <div style="color: var(--color-text-muted)">系统效率</div>
-          <div class="font-mono mt-0.5" style="color: var(--color-warning)">{{ systemEfficiency.toFixed(1) }}%</div>
+        <div class="rounded p-2 bg-card-dark">
+          <div>系统效率</div>class="text-muted"
+          <div class="font-mono mt-0.5 text-warning">{{ systemEfficiency.toFixed(1) }}%</div>
         </div>
       </div>
     </div>

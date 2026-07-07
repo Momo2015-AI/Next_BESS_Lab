@@ -2,92 +2,68 @@
   <div class="flex-1 min-h-0 flex flex-col">
     <div
       class="rounded-xl p-3 flex-shrink-0 mb-3"
-      style="background-color: var(--color-bg-secondary); border: 1px solid var(--color-border)"
+ class="u-background-color-var-color-bg-secondary-border-1px-solid-var-color-border"
     >
       <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-2">
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-accent);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">AC-RTE 不带辅耗</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-accent)">
+          <div class="text-[9px] uppercase text-muted">AC-RTE 不带辅耗</div>
+          <div class="text-sm font-bold font-mono mt-0.5 text-accent">
             {{ dashboardMetrics.acRteNoAux }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">%</div>
+          <div class="text-[8px] text-muted">%</div>
         </div>
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-success);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-success"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">AC-RTE 带辅耗</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-success)">
+          <div class="text-[9px] uppercase text-muted">AC-RTE 带辅耗</div>
+          <div class="text-sm font-bold font-mono mt-0.5 text-success">
             {{ dashboardMetrics.acRteWithAux }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">%</div>
+          <div class="text-[8px] text-muted">%</div>
         </div>
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-accent-secondary);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent-secondary"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">总装机容量</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-accent-secondary)">
+          <div class="text-[9px] uppercase text-muted">总装机容量</div>
+          <div class="text-sm font-bold font-mono mt-0.5 text-accent-2">
             {{ dashboardMetrics.totalCapacity }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">MWh</div>
+          <div class="text-[8px] text-muted">MWh</div>
         </div>
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-info);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">总装机功率</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-info)">
+          <div class="text-[9px] uppercase text-muted">总装机功率</div>
+          <div class="text-sm font-bold font-mono mt-0.5 u-color-var-color-info">
             {{ dashboardMetrics.totalPower }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">MW</div>
+          <div class="text-[8px] text-muted">MW</div>
         </div>
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-warning);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-warning"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">年吞吐量</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-warning)">
+          <div class="text-[9px] uppercase text-muted">年吞吐量</div>
+          <div class="text-sm font-bold font-mono mt-0.5 text-warning">
             {{ dashboardMetrics.annualThroughput }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">MWh/yr</div>
+          <div class="text-[8px] text-muted">MWh/yr</div>
         </div>
         <div
           class="rounded-lg p-2 text-center"
-          style="
-            background-color: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-top: 2px solid var(--color-danger);
-          "
+          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-danger"
         >
-          <div class="text-[9px] uppercase" style="color: var(--color-text-muted)">E/P 配比</div>
-          <div class="text-sm font-bold font-mono mt-0.5" style="color: var(--color-danger)">
+          <div class="text-[9px] uppercase text-muted">E/P 配比</div>
+          <div class="text-sm font-bold font-mono mt-0.5 text-danger">
             {{ dashboardMetrics.epRatio }}
           </div>
-          <div class="text-[8px]" style="color: var(--color-text-muted)">h</div>
+          <div class="text-[8px] text-muted">h</div>
         </div>
       </div>
     </div>
@@ -164,52 +140,52 @@
 
     <div
       class="flex-1 min-h-0 overflow-auto rounded-xl"
-      style="border: 1px solid var(--color-border); background: var(--color-bg-secondary)"
+ class="u-border-1px-solid-var-color-border-background-var-color-bg-secondary"
     >
       <table class="w-full text-left border-collapse min-w-[1500px]">
         <thead>
           <tr
             class="text-center border-b text-[10px] font-bold sticky top-0 z-30"
-            style="background: var(--color-bg); color: var(--color-text-secondary); border-color: var(--color-border)"
+ class="u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
           >
-            <th class="py-1.5" style="border-right: 1px solid var(--color-border)" colspan="1">
+            <th class="py-1.5 u-border-right-1px-solid-var-color-border" colspan="1">
               {{ $t('matrixTable.time') }}
             </th>
             <th
               class="py-1.5"
-              style="border-right: 1px solid var(--color-border); color: var(--color-accent)"
+ class="u-border-right-1px-solid-var-color-border-color-var-color-accent"
               colspan="8"
             >
               {{ $t('matrixTable.initialStock') }}
             </th>
             <th
               class="py-1.5"
-              style="border-right: 1px solid var(--color-border); color: var(--color-chart-pink)"
+ class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
               colspan="6"
             >
               {{ $t('matrixTable.augStream') }}
             </th>
-            <th class="py-1.5" style="color: var(--color-success)" colspan="3">
+            <th class="py-1.5 text-success" colspan="3">
               {{ $t('matrixTable.totalAccounting') }}
             </th>
           </tr>
           <tr
             class="text-[10px] font-semibold text-center border-b sticky top-[31px] z-30"
-            style="background: var(--color-bg); color: var(--color-text-secondary); border-color: var(--color-border)"
+ class="u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
           >
-            <th class="p-1.5" style="border-right: 1px solid var(--color-border); background: var(--color-bg)">
+            <th class="p-1.5 u-border-right-1px-solid-var-color-border-background-var-color-bg">
               {{ $t('matrixTable.year') }}
             </th>
             <th class="p-1.5">
               {{ $t('matrixTable.nominalCapacity') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-warning)">
+            <th class="p-1.5 text-warning">
               {{ $t('matrixTable.dod') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-accent-secondary)">
+            <th class="p-1.5 text-accent-2">
               {{ $t('matrixTable.rte') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-warning)">
+            <th class="p-1.5 text-warning">
               {{ $t('matrixTable.soh') }}
             </th>
             <th class="p-1.5">
@@ -218,34 +194,34 @@
             <th class="p-1.5">
               {{ $t('matrixTable.grossDischarge') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-danger)">
+            <th class="p-1.5 text-danger">
               {{ $t('matrixTable.cycleAux') }}
             </th>
-            <th class="p-1.5 font-bold" style="border-right: 1px solid var(--color-border); color: var(--color-accent)">
+            <th class="p-1.5 font-bold u-border-right-1px-solid-var-color-border-color-var-color-accent">
               {{ $t('matrixTable.initNetAc') }}
             </th>
             <th class="p-1.5">
               {{ $t('matrixTable.augNominal') }}
             </th>
-            <th class="p-1.5 font-bold" style="color: var(--color-chart-pink)">
+            <th class="p-1.5 font-bold u-color-var-color-chart-pink">
               {{ $t('matrixTable.augQty') }}
             </th>
             <th class="p-1.5">
               {{ $t('matrixTable.augAccum') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-danger)">
+            <th class="p-1.5 text-danger">
               {{ $t('matrixTable.augAux') }}
             </th>
-            <th class="p-1.5" style="color: var(--color-chart-pink)">
+            <th class="p-1.5 u-color-var-color-chart-pink">
               {{ $t('matrixTable.augGross') }}
             </th>
             <th
               class="p-1.5 font-bold"
-              style="border-right: 1px solid var(--color-border); color: var(--color-chart-pink)"
+ class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
             >
               {{ $t('matrixTable.augNetAc') }}
             </th>
-            <th class="p-1.5 font-bold" style="color: var(--color-success)">
+            <th class="p-1.5 font-bold text-success">
               {{ $t('matrixTable.totalNetAc') }}
             </th>
             <th class="p-1.5">
@@ -256,29 +232,25 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y text-[11px] font-mono" style="border-color: var(--color-border)">
+        <tbody class="divide-y text-[11px] font-mono border-default">
           <tr
             v-for="i in 26"
             :key="i - 1"
             class="hover:opacity-80 transition-all text-center"
-            style="background: var(--color-card)"
+ class="u-background-var-color-card"
           >
             <td
               class="p-1 font-bold sticky left-0 z-10"
-              style="
-                color: var(--color-text-muted);
-                border-right: 1px solid var(--color-border);
-                background: var(--color-bg);
-              "
+              class="u-color-var-color-text-muted-border-right-1px-solid-var-color-border-background-var-color-bg"
             >
               {{ i - 1 }}
             </td>
 
             <!-- Initial Stock -->
-            <td class="p-1" style="color: var(--color-text-secondary)">
+            <td class="p-1 text-secondary">
               {{ params.ratedEnergy.toFixed(1) }}
             </td>
-            <td class="p-0.5" style="background: var(--color-input-bg)">
+            <td class="p-0.5 bg-input">
               <input
                 type="number"
                 :value="dod[i - 1]"
@@ -287,7 +259,7 @@
                 @input="updateDod(i - 1, $event.target.value)"
               />
             </td>
-            <td class="p-0.5" style="background: var(--color-input-bg)">
+            <td class="p-0.5 bg-input">
               <input
                 type="number"
                 :value="(rte[i - 1] * 100).toFixed(2)"
@@ -296,7 +268,7 @@
                 @input="updateRte(i - 1, $event.target.value)"
               />
             </td>
-            <td class="p-0.5" style="background: var(--color-input-bg)">
+            <td class="p-0.5 bg-input">
               <input
                 type="number"
                 :value="(soh[i - 1] * 100).toFixed(2)"
@@ -305,31 +277,27 @@
                 @input="updateSoh(i - 1, $event.target.value)"
               />
             </td>
-            <td class="p-1" style="color: var(--color-text-secondary)">
+            <td class="p-1 text-secondary">
               {{ params.initContainerQty }}
             </td>
-            <td class="p-1" style="color: var(--color-text)">
+            <td class="p-1 text-default">
               {{ results.initGross[i - 1]?.toFixed(2) }}
             </td>
-            <td class="p-1 font-semibold" style="color: var(--color-danger)">
+            <td class="p-1 font-semibold text-danger">
               {{ results.initAux[i - 1]?.toFixed(2) }}
             </td>
             <td
               class="p-1 font-bold"
-              style="
-                border-right: 1px solid var(--color-border);
-                color: var(--color-accent);
-                background: var(--color-accent-glow);
-              "
+              class="u-border-right-1px-solid-var-color-border-color-var-color-accent-background-var-color-accent-glow"
             >
               {{ results.initAcUsable[i - 1]?.toFixed(2) }}
             </td>
 
             <!-- Augmentation Stream -->
-            <td class="p-1" style="color: var(--color-text-muted)">
+            <td class="p-1 text-muted">
               {{ params.ratedEnergy.toFixed(1) }}
             </td>
-            <td class="p-0.5" style="background: var(--color-input-bg)">
+            <td class="p-0.5 bg-input">
               <input
                 type="number"
                 :value="augQty[i - 1]"
@@ -339,22 +307,18 @@
                 @input="updateAugQty(i - 1, $event.target.value)"
               />
             </td>
-            <td class="p-1" style="color: var(--color-text-muted)">
+            <td class="p-1 text-muted">
               {{ results.augAccumQty[i - 1] }}
             </td>
-            <td class="p-1 font-semibold" style="color: var(--color-danger)">
+            <td class="p-1 font-semibold text-danger">
               {{ results.augAux[i - 1]?.toFixed(2) }}
             </td>
-            <td class="p-1" style="color: var(--color-text-secondary)">
+            <td class="p-1 text-secondary">
               {{ results.augGross[i - 1]?.toFixed(2) }}
             </td>
             <td
               class="p-1 font-bold"
-              style="
-                border-right: 1px solid var(--color-border);
-                color: var(--color-chart-pink);
-                background: rgba(236, 72, 153, 0.05);
-              "
+              class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink-background-rgba-236-72-153-0-05"
             >
               {{ results.augAcUsable[i - 1]?.toFixed(2) }}
             </td>
@@ -375,7 +339,7 @@
             >
               {{ results.meetsReq[i - 1] ? $t('matrixTable.meetsYes') : $t('matrixTable.meetsNo') }}
             </td>
-            <td class="p-1 font-semibold" style="color: var(--color-warning)">
+            <td class="p-1 font-semibold text-warning">
               {{ params.requiredEnergy.toFixed(2) }}
             </td>
           </tr>

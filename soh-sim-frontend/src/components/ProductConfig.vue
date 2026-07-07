@@ -34,11 +34,7 @@
             v-for="cell in localFiltered('cells', cellFilter)"
             :key="cell.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="
-              selectedCell === cell.id
-                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
-                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
+            :style="selectedCell === cell.id ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
             @click="selectedCell = cell.id"
           >
             <button
@@ -51,11 +47,7 @@
               <span class="text-xs font-bold">{{ cell.model }}</span>
               <span
                 class="text-[10px] px-1.5 py-0.5 rounded"
-                :style="
-                  cell.status === 'mass-production'
-                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
-                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
-                "
+                :style="cell.status === 'mass-production' ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' } : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }"
               >
                 {{ cell.status === 'mass-production' ? '量产' : '预研' }}
               </span>
@@ -110,11 +102,7 @@
             v-for="c in localFiltered('containers', containerFilter)"
             :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="
-              selectedContainer === c.id
-                ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' }
-                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
+            :style="selectedContainer === c.id ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
             @click="selectedContainer = c.id"
           >
             <button
@@ -127,11 +115,7 @@
               <span class="text-xs font-bold">{{ c.model }}</span>
               <span
                 class="text-[10px] px-1.5 py-0.5 rounded"
-                :style="
-                  c.status === 'mass-production'
-                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
-                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
-                "
+                :style="c.status === 'mass-production' ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' } : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }"
               >
                 {{ c.status === 'mass-production' ? '量产' : '预研' }}
               </span>
@@ -193,11 +177,7 @@
             v-for="p in localFiltered('pcs', pcsFilter, pcsPowerFilter)"
             :key="p.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="
-              selectedPcs === p.id
-                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
-                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
+            :style="selectedPcs === p.id ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
             @click="selectedPcs = p.id"
           >
             <button
@@ -246,11 +226,7 @@
             v-for="c in cabinets"
             :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :style="
-              selectedCabinet === c.id
-                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
-                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
+            :style="selectedCabinet === c.id ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
           >
             <div class="flex justify-between items-start mb-1">
               <span class="text-xs font-bold">{{ c.model }}</span>
@@ -303,11 +279,7 @@
             v-for="s in scenarios"
             :key="s.id"
             class="border rounded-lg p-3 cursor-pointer transition-all text-center"
-            :style="
-              selectedScenario === s.id
-                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
-                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
-            "
+            :style="selectedScenario === s.id ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' } : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }"
             @click="applyScenario(s)"
           >
             <div class="text-xs font-bold mb-1">

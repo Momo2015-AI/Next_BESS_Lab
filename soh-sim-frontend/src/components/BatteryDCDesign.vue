@@ -1,8 +1,8 @@
 <template>
   <div class="battery-dc-design h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <div class="rounded-lg p-4 card-bordered">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-2">
+        <span class="w-2 h-2 rounded-full bg-accent-2" />
         直流侧设计（电池系统）
       </h3>
 
@@ -11,13 +11,13 @@
         <!-- 电芯选型 -->
         <div
           class="rounded-lg p-4"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
         >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">电芯型号</h4>
+          <h4 class="text-xs mb-3 font-medium text-secondary">电芯型号</h4>
 
           <div class="space-y-3">
             <div>
-              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">电芯类型</label>
+              <label class="text-[10px] block mb-1 text-muted">电芯类型</label>
               <select
                 v-model="selectedCellId"
                 class="w-full rounded px-2 py-1.5 text-xs form-field-select"
@@ -32,7 +32,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">额定容量 (Ah)</label>
+                <label class="text-[10px] block mb-1 text-muted">额定容量 (Ah)</label>
                 <input
                   v-model.number="batteryConfig.cellCapacity"
                   type="number"
@@ -40,7 +40,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">额定电压 (V)</label>
+                <label class="text-[10px] block mb-1 text-muted">额定电压 (V)</label>
                 <input
                   v-model.number="batteryConfig.cellVoltage"
                   type="number"
@@ -51,7 +51,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">能量密度 (Wh/kg)</label>
+                <label class="text-[10px] block mb-1 text-muted">能量密度 (Wh/kg)</label>
                 <input
                   v-model.number="batteryConfig.energyDensity"
                   type="number"
@@ -59,7 +59,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">循环寿命 (次)</label>
+                <label class="text-[10px] block mb-1 text-muted">循环寿命 (次)</label>
                 <input
                   v-model.number="batteryConfig.cycleLife"
                   type="number"
@@ -73,14 +73,14 @@
         <!-- 电池簇配置 -->
         <div
           class="rounded-lg p-4"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
         >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">电池簇配置</h4>
+          <h4 class="text-xs mb-3 font-medium text-secondary">电池簇配置</h4>
 
           <div class="space-y-3">
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">串联数量 (S)</label>
+                <label class="text-[10px] block mb-1 text-muted">串联数量 (S)</label>
                 <input
                   v-model.number="batteryConfig.seriesCount"
                   type="number"
@@ -88,7 +88,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">并联数量 (P)</label>
+                <label class="text-[10px] block mb-1 text-muted">并联数量 (P)</label>
                 <input
                   v-model.number="batteryConfig.parallelCount"
                   type="number"
@@ -99,7 +99,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">簇电压 (V)</label>
+                <label class="text-[10px] block mb-1 text-muted">簇电压 (V)</label>
                 <input
                   v-model.number="batteryConfig.stringVoltage"
                   type="number"
@@ -108,7 +108,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">簇容量 (Ah)</label>
+                <label class="text-[10px] block mb-1 text-muted">簇容量 (Ah)</label>
                 <input
                   v-model.number="batteryConfig.stringCapacity"
                   type="number"
@@ -120,7 +120,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">簇能量 (kWh)</label>
+                <label class="text-[10px] block mb-1 text-muted">簇能量 (kWh)</label>
                 <input
                   v-model.number="batteryConfig.stringEnergy"
                   type="number"
@@ -129,7 +129,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">簇数量</label>
+                <label class="text-[10px] block mb-1 text-muted">簇数量</label>
                 <input
                   v-model.number="batteryConfig.stringQty"
                   type="number"
@@ -144,13 +144,13 @@
       <!-- 集装箱配置 -->
       <div
         class="rounded-lg p-4 mb-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
       >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">集装箱配置</h4>
+        <h4 class="text-xs mb-3 font-medium text-secondary">集装箱配置</h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱规格</label>
+            <label class="text-[10px] block mb-1 text-muted">集装箱规格</label>
             <select v-model="batteryConfig.containerSpec" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="20ft">20ft 标准集装箱</option>
               <option value="40ft">40ft 标准集装箱</option>
@@ -158,7 +158,7 @@
             </select>
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱内簇数</label>
+            <label class="text-[10px] block mb-1 text-muted">集装箱内簇数</label>
             <input
               v-model.number="batteryConfig.clustersPerContainer"
               type="number"
@@ -166,7 +166,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">单个集装箱能量 (MWh)</label>
+            <label class="text-[10px] block mb-1 text-muted">单个集装箱能量 (MWh)</label>
             <input
               v-model.number="batteryConfig.containerEnergy"
               type="number"
@@ -175,7 +175,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">集装箱数量</label>
+            <label class="text-[10px] block mb-1 text-muted">集装箱数量</label>
             <input
               v-model.number="batteryConfig.containerQty"
               type="number"
@@ -186,7 +186,7 @@
 
         <div class="grid grid-cols-4 gap-3 mt-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">总直流能量 (MWh)</label>
+            <label class="text-[10px] block mb-1 text-muted">总直流能量 (MWh)</label>
             <input
               v-model.number="batteryConfig.totalDcEnergy"
               type="number"
@@ -195,7 +195,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">直流电压范围 (V)</label>
+            <label class="text-[10px] block mb-1 text-muted">直流电压范围 (V)</label>
             <input
               v-model="batteryConfig.dcVoltageRange"
               type="text"
@@ -203,7 +203,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">最大直流电流 (A)</label>
+            <label class="text-[10px] block mb-1 text-muted">最大直流电流 (A)</label>
             <input
               v-model.number="batteryConfig.maxDcCurrent"
               type="number"
@@ -211,7 +211,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">直流断路器 (A)</label>
+            <label class="text-[10px] block mb-1 text-muted">直流断路器 (A)</label>
             <input
               v-model.number="batteryConfig.dcBreaker"
               type="number"
@@ -224,13 +224,13 @@
       <!-- 运行参数 -->
       <div
         class="rounded-lg p-4 mb-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
       >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">运行参数（从调研表获取）</h4>
+        <h4 class="text-xs mb-3 font-medium text-secondary">运行参数（从调研表获取）</h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">运行温度 (°C)</label>
+            <label class="text-[10px] block mb-1 text-muted">运行温度 (°C)</label>
             <input
               v-model.number="batteryConfig.operatingTemp"
               type="number"
@@ -238,7 +238,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">DOD设置 (%)</label>
+            <label class="text-[10px] block mb-1 text-muted">DOD设置 (%)</label>
             <input
               v-model.number="batteryConfig.dodSet"
               type="number"
@@ -248,7 +248,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">设计循环次数/天</label>
+            <label class="text-[10px] block mb-1 text-muted">设计循环次数/天</label>
             <input
               v-model.number="batteryConfig.cyclesPerDay"
               type="number"
@@ -256,7 +256,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">放电深度实际 (%)</label>
+            <label class="text-[10px] block mb-1 text-muted">放电深度实际 (%)</label>
             <input
               v-model.number="batteryConfig.actualDod"
               type="number"
@@ -270,13 +270,13 @@
       <!-- 计算结果 -->
       <div
         class="rounded-lg p-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
+ class="bg-card-dark border-card"
       >
         <div class="flex items-center justify-between mb-3">
-          <h4 class="text-xs font-medium" style="color: var(--color-text-secondary)">电池系统配置结果</h4>
+          <h4 class="text-xs font-medium text-secondary">电池系统配置结果</h4>
           <button
             class="text-xs px-3 py-1 rounded transition-colors"
-            style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
             @click="calculateBatteryConfig"
           >
             计算配置
@@ -286,75 +286,71 @@
         <div class="grid grid-cols-6 gap-3">
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-accent-secondary)">
+            <div class="text-lg font-bold text-accent-2">
               {{ batteryConfig.totalDcEnergy.toFixed(1) }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">总直流能量 (MWh)</div>
+            <div class="text-[10px] text-muted">总直流能量 (MWh)</div>
           </div>
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-accent)">
+            <div class="text-lg font-bold text-accent">
               {{ batteryConfig.containerQty }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">集装箱数量</div>
+            <div class="text-[10px] text-muted">集装箱数量</div>
           </div>
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-success)">
+            <div class="text-lg font-bold text-success">
               {{ totalStrings }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">电池簇总数</div>
+            <div class="text-[10px] text-muted">电池簇总数</div>
           </div>
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-warning)">
+            <div class="text-lg font-bold text-warning">
               {{ batteryConfig.dcVoltageRange }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">电压范围</div>
+            <div class="text-[10px] text-muted">电压范围</div>
           </div>
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-danger)">
+            <div class="text-lg font-bold text-danger">
               {{ batteryConfig.maxDcCurrent }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">最大电流 (A)</div>
+            <div class="text-[10px] text-muted">最大电流 (A)</div>
           </div>
           <div
             class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
+ class="card-bordered"
           >
-            <div class="text-lg font-bold" style="color: var(--color-accent)">
+            <div class="text-lg font-bold text-accent">
               {{ batteryConfig.clustersPerContainer }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">簇/集装箱</div>
+            <div class="text-[10px] text-muted">簇/集装箱</div>
           </div>
         </div>
 
         <div class="mt-4 flex justify-end gap-2">
           <button
             class="text-xs px-3 py-1.5 rounded transition-colors"
-            style="
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-            "
+            class="u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
             @click="resetBatteryConfig"
           >
             重置
           </button>
           <button
             class="text-xs px-4 py-1.5 rounded font-bold transition-colors"
-            style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
             @click="applyBatteryConfig"
           >
             应用配置
@@ -367,11 +363,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="
-        toast.type === 'success'
-          ? { backgroundColor: 'var(--color-success)', color: 'white' }
-          : { backgroundColor: 'var(--color-danger)', color: 'white' }
-      "
+      :style="toast.type === 'success' ? { backgroundColor: 'var(--color-success)', color: 'white' } : { backgroundColor: 'var(--color-danger)', color: 'white' }"
     >
       {{ toast.message }}
     </div>

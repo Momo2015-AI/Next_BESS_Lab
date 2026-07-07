@@ -1,20 +1,20 @@
 <template>
-  <div class="rounded-lg p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-    <h3 class="font-bold text-xs mb-2 flex items-center gap-2" style="color: var(--color-text)">
+  <div class="rounded-lg p-3 card-bordered">
+    <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
         class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(245, 158, 11, 0.2); color: var(--color-warning)"
+ class="u-background-color-rgba-245-158-11-0-2-color-var-color-warning"
       >
         VII
       </span>
       产品库→CAPEX 自动联动 Product Library → CAPEX Auto-Link
     </h3>
 
-    <div class="space-y-3 text-[10px]" style="color: var(--color-text-secondary)">
+    <div class="space-y-3 text-[10px] text-secondary">
       <!-- 产品选择 -->
       <div class="grid grid-cols-3 gap-2">
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">电芯 Cell</label>
+          <label class="block mb-0.5 text-muted">电芯 Cell</label>
           <select
             v-model="selectedCell"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -27,7 +27,7 @@
           </select>
         </div>
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">集装箱 Container</label>
+          <label class="block mb-0.5 text-muted">集装箱 Container</label>
           <select
             v-model="selectedContainer"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -42,7 +42,7 @@
           </select>
         </div>
         <div>
-          <label class="block mb-0.5" style="color: var(--color-text-muted)">PCS 变流器</label>
+          <label class="block mb-0.5 text-muted">PCS 变流器</label>
           <select
             v-model="selectedPcs"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
@@ -60,36 +60,36 @@
       <div
         v-if="hasSelection"
         class="border rounded p-2"
-        style="border-color: var(--color-border); background-color: var(--color-card-dark)"
+ class="u-border-color-var-color-border-background-color-var-color-card-dark"
       >
-        <h4 class="text-xs font-bold mb-2" style="color: var(--color-text-secondary)">
+        <h4 class="text-xs font-bold mb-2 text-secondary">
           当前配置 Current Configuration
         </h4>
         <div class="grid grid-cols-3 gap-2 text-xs">
           <div>
-            <div style="color: var(--color-text-muted)">电芯</div>
-            <div class="font-mono mt-0.5" style="color: var(--color-text)">
+            <div>电芯</div>class="text-muted"
+            <div class="font-mono mt-0.5 text-default">
               {{ selectedCellInfo?.mfr }} {{ selectedCellInfo?.model }}
             </div>
-            <div class="text-[9px]" style="color: var(--color-text-muted)">
+            <div class="text-[9px] text-muted">
               {{ selectedCellInfo?.capacityAh }}Ah @ ¥{{ selectedCellInfo?.unitPrice }}/Ah
             </div>
           </div>
           <div>
-            <div style="color: var(--color-text-muted)">集装箱</div>
-            <div class="font-mono mt-0.5" style="color: var(--color-text)">
+            <div>集装箱</div>class="text-muted"
+            <div class="font-mono mt-0.5 text-default">
               {{ selectedContainerInfo?.mfr }} {{ selectedContainerInfo?.model }}
             </div>
-            <div class="text-[9px]" style="color: var(--color-text-muted)">
+            <div class="text-[9px] text-muted">
               {{ selectedContainerInfo?.ratedEnergyMWh }}MWh @ ¥{{ selectedContainerInfo?.unitPrice }}/MWh
             </div>
           </div>
           <div>
-            <div style="color: var(--color-text-muted)">PCS</div>
-            <div class="font-mono mt-0.5" style="color: var(--color-text)">
+            <div>PCS</div>class="text-muted"
+            <div class="font-mono mt-0.5 text-default">
               {{ selectedPcsInfo?.mfr }} {{ selectedPcsInfo?.model }}
             </div>
-            <div class="text-[9px]" style="color: var(--color-text-muted)">
+            <div class="text-[9px] text-muted">
               {{ selectedPcsInfo?.ratedPowerMW }}MW @ ¥{{ selectedPcsInfo?.unitPrice }}/MW
             </div>
           </div>
@@ -98,35 +98,35 @@
 
       <!-- CAPEX 计算 -->
       <div v-if="hasSelection" class="border-t pt-2">
-        <h4 class="text-xs font-bold mb-2" style="color: var(--color-text-secondary)">
+        <h4 class="text-xs font-bold mb-2 text-secondary">
           CAPEX 成本计算 CAPEX Cost Calculation
         </h4>
         <div class="space-y-1 text-xs">
           <div class="flex justify-between">
-            <span style="color: var(--color-text-muted)">电芯成本</span>
-            <span class="font-mono" style="color: var(--color-text-secondary)">{{ formatCurrency(cellCost) }}</span>
+            <span>电芯成本</span>class="text-muted"
+            <span class="font-mono text-secondary">{{ formatCurrency(cellCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span style="color: var(--color-text-muted)">集装箱成本</span>
-            <span class="font-mono" style="color: var(--color-text-secondary)">
+            <span>集装箱成本</span>class="text-muted"
+            <span class="font-mono text-secondary">
               {{ formatCurrency(containerCost) }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span style="color: var(--color-text-muted)">PCS成本</span>
-            <span class="font-mono" style="color: var(--color-text-secondary)">{{ formatCurrency(pcsCost) }}</span>
+            <span>PCS成本</span>class="text-muted"
+            <span class="font-mono text-secondary">{{ formatCurrency(pcsCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span style="color: var(--color-text-muted)">BOP配套</span>
-            <span class="font-mono" style="color: var(--color-text-secondary)">{{ formatCurrency(bopCost) }}</span>
+            <span>BOP配套</span>class="text-muted"
+            <span class="font-mono text-secondary">{{ formatCurrency(bopCost) }}</span>
           </div>
           <div class="border-t pt-1 mt-1 flex justify-between font-bold">
-            <span style="color: var(--color-text)">总CAPEX</span>
-            <span class="font-mono" style="color: var(--color-accent)">{{ formatCurrency(totalCAPEX) }}</span>
+            <span>总CAPEX</span>class="text-default"
+            <span class="font-mono text-accent">{{ formatCurrency(totalCAPEX) }}</span>
           </div>
           <div class="flex justify-between text-[9x]">
-            <span style="color: var(--color-text-muted)">单价</span>
-            <span style="color: var(--color-text-secondary)">{{ capexPerMWh.toFixed(0) }} 万元/MWh</span>
+            <span>单价</span>class="text-muted"
+            <span>{{ capexPerMWh.toFixed(0) }} 万元/MWh</span>class="text-secondary"
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@
       <div v-if="hasSelection" class="flex justify-end mt-3">
         <button
           class="text-xs px-4 py-1.5 rounded transition-colors"
-          style="background-color: var(--color-accent-secondary); color: white"
+ class="bg-accent-2 text-white"
           @click="applyToSimulation"
         >
           应用到仿真 Apply to Simulation
@@ -143,7 +143,7 @@
       </div>
 
       <!-- 提示信息 -->
-      <div v-if="!hasSelection" class="text-[9x] text-center py-2" style="color: var(--color-text-muted)">
+      <div v-if="!hasSelection" class="text-[9x] text-center py-2 text-muted">
         请选择产品以自动计算CAPEX
       </div>
     </div>
