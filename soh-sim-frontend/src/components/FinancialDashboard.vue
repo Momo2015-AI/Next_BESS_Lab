@@ -64,78 +64,14 @@
             收入模型 Revenue Stack
           </h3>
           <div class="grid grid-cols-2 gap-2 text-[10px] text-secondary">
-            <div>
-              <label class="block mb-0.5 text-muted">低谷购电价 $/MWh</label>
-              <input
-                v-model.number="f.offPeakPrice"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">高峰售电价 $/MWh</label>
-              <input
-                v-model.number="f.peakPrice"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">价差捕获率 %</label>
-              <input
-                v-model.number="f.spreadCapture"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">日历日可用天数</label>
-              <input
-                v-model.number="f.operatingDays"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">容量市场单价 $/MW-yr</label>
-              <input
-                v-model.number="f.capacityPrice"
-                type="number"
-                step="100"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">辅助服务单价 $/MW-yr</label>
-              <input
-                v-model.number="f.ancillaryPrice"
-                type="number"
-                step="100"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">电价年涨幅 %</label>
-              <input
-                v-model.number="f.priceEscalation"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">充放电效率扣减 %</label>
-              <input
-                v-model.number="f.efficiencyLossPct"
-                type="number"
-                step="0.01"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
+            <ParamInput v-model="f.offPeakPrice" :label="'低谷购电价 $/MWh'" :step="0.1" />
+            <ParamInput v-model="f.peakPrice" :label="'高峰售电价 $/MWh'" :step="0.1" />
+            <ParamInput v-model="f.spreadCapture" :label="'价差捕获率 %'" :step="0.1" />
+            <ParamInput v-model="f.operatingDays" :label="'日历日可用天数'" :step="1" />
+            <ParamInput v-model="f.capacityPrice" :label="'容量市场单价 $/MW-yr'" :step="100" />
+            <ParamInput v-model="f.ancillaryPrice" :label="'辅助服务单价 $/MW-yr'" :step="100" />
+            <ParamInput v-model="f.priceEscalation" :label="'电价年涨幅 %'" :step="0.1" />
+            <ParamInput v-model="f.efficiencyLossPct" :label="'充放电效率扣减 %'" :step="0.01" />
           </div>
         </div>
         <div class="rounded-lg p-3 card-bordered">
@@ -148,114 +84,18 @@
             CAPEX & OPEX 成本结构
           </h3>
           <div class="grid grid-cols-2 gap-2 text-[10px] text-secondary">
-            <div>
-              <label class="block mb-0.5 text-muted">集装箱单价 万元/MWh</label>
-              <input
-                v-model.number="f.containerCostPerMWh"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">PCS 单价 万元/MW</label>
-              <input
-                v-model.number="f.pcsCostPerMW"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">BOP 配套 万元/MWh</label>
-              <input
-                v-model.number="f.bopCostPerMWh"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">变电站 万元/MW</label>
-              <input
-                v-model.number="f.substationCostPerMW"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">输电线路 万元/MW</label>
-              <input
-                v-model.number="f.transmissionCostPerMW"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">土地成本 万元/MW</label>
-              <input
-                v-model.number="f.landCostPerMW"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">开发费 万元/MW</label>
-              <input
-                v-model.number="f.developmentCostPerMW"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">固定 O&M 元/kW-年</label>
-              <input
-                v-model.number="f.fixedOpexPerKW"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">可变 O&M 元/MWh</label>
-              <input
-                v-model.number="f.varOpexPerMWh"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">保险费率 % of CAPEX</label>
-              <input
-                v-model.number="f.insuranceRate"
-                type="number"
-                step="0.01"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">O&M 年涨幅 %</label>
-              <input
-                v-model.number="f.opexEscalation"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">VAT 税率 %</label>
-              <input
-                v-model.number="f.vatRate"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
+            <ParamInput v-model="f.containerCostPerMWh" :label="'集装箱单价 万元/MWh'" :step="1" />
+            <ParamInput v-model="f.pcsCostPerMW" :label="'PCS 单价 万元/MW'" :step="1" />
+            <ParamInput v-model="f.bopCostPerMWh" :label="'BOP 配套 万元/MWh'" :step="1" />
+            <ParamInput v-model="f.substationCostPerMW" :label="'变电站 万元/MW'" :step="1" />
+            <ParamInput v-model="f.transmissionCostPerMW" :label="'输电线路 万元/MW'" :step="1" />
+            <ParamInput v-model="f.landCostPerMW" :label="'土地成本 万元/MW'" :step="1" />
+            <ParamInput v-model="f.developmentCostPerMW" :label="'开发费 万元/MW'" :step="1" />
+            <ParamInput v-model="f.fixedOpexPerKW" :label="'固定 O&M 元/kW-年'" :step="0.5" />
+            <ParamInput v-model="f.varOpexPerMWh" :label="'可变 O&M 元/MWh'" :step="0.1" />
+            <ParamInput v-model="f.insuranceRate" :label="'保险费率 % of CAPEX'" :step="0.01" />
+            <ParamInput v-model="f.opexEscalation" :label="'O&M 年涨幅 %'" :step="0.1" />
+            <ParamInput v-model="f.vatRate" :label="'VAT 税率 %'" :step="0.5" />
           </div>
         </div>
       </div>
@@ -271,97 +111,21 @@
             融资与税务 Financing & Tax
           </h3>
           <div class="grid grid-cols-1 gap-2 text-[10px] text-secondary">
-            <div>
-              <label class="block mb-0.5 text-muted">折现率 %</label>
-              <input
-                v-model.number="f.discountRate"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">债务融资比例 %</label>
-              <input
-                v-model.number="f.debtRatio"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">权益融资比例 %</label>
-              <input
-                v-model.number="f.equityRatio"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">贷款利率 %</label>
-              <input
-                v-model.number="f.interestRate"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">权益成本 %</label>
-              <input
-                v-model.number="f.costOfEquity"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">贷款年限</label>
-              <input
-                v-model.number="f.loanTenure"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">所得税率 %</label>
-              <input
-                v-model.number="f.taxRate"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">折旧年限</label>
-              <input
-                v-model.number="f.depreciationYears"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">残值率 %</label>
-              <input
-                v-model.number="f.residualRate"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">折旧方法</label>
-              <select
-                v-model="f.depreciationMethod"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              >
-                <option value="straight-line">直线折旧</option>
-                <option value="double-declining">双倍余额递减</option>
-              </select>
-            </div>
+            <ParamInput v-model="f.discountRate" :label="'折现率 %'" :step="0.1" />
+            <ParamInput v-model="f.debtRatio" :label="'债务融资比例 %'" :step="1" />
+            <ParamInput v-model="f.equityRatio" :label="'权益融资比例 %'" :step="1" />
+            <ParamInput v-model="f.interestRate" :label="'贷款利率 %'" :step="0.1" />
+            <ParamInput v-model="f.costOfEquity" :label="'权益成本 %'" :step="0.5" />
+            <ParamInput v-model="f.loanTenure" :label="'贷款年限'" :step="1" />
+            <ParamInput v-model="f.taxRate" :label="'所得税率 %'" :step="0.5" />
+            <ParamInput v-model="f.depreciationYears" :label="'折旧年限'" :step="1" />
+            <ParamInput v-model="f.residualRate" :label="'残值率 %'" :step="0.5" />
+            <ParamInput
+              v-model="f.depreciationMethod"
+              :label="'折旧方法'"
+              type="select"
+              :options="[{ value: 'straight-line', label: '直线折旧' }, { value: 'double-declining', label: '双倍余额递减' }]"
+            />
           </div>
         </div>
         <div class="rounded-lg p-3 card-bordered">
@@ -374,42 +138,10 @@
             增容与设备成本递减
           </h3>
           <div class="grid grid-cols-1 gap-2 text-[10px] text-secondary">
-            <div>
-              <label class="block mb-0.5 text-muted">增容集装箱单价 万元/MWh</label>
-              <input
-                v-model.number="f.augContainerCostPerMWh"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">设备成本年降幅 (学习率) %</label>
-              <input
-                v-model.number="f.costDeclineRate"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">增容安装费 万元/台</label>
-              <input
-                v-model.number="f.augInstallCost"
-                type="number"
-                step="0.5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
-            <div>
-              <label class="block mb-0.5 text-muted">退役成本 万元/MWh</label>
-              <input
-                v-model.number="f.decommissioningCost"
-                type="number"
-                step="1"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
+            <ParamInput v-model="f.augContainerCostPerMWh" :label="'增容集装箱单价 万元/MWh'" :step="1" />
+            <ParamInput v-model="f.costDeclineRate" :label="'设备成本年降幅 (学习率) %'" :step="0.1" />
+            <ParamInput v-model="f.augInstallCost" :label="'增容安装费 万元/台'" :step="0.5" />
+            <ParamInput v-model="f.decommissioningCost" :label="'退役成本 万元/MWh'" :step="1" />
           </div>
         </div>
         <div class="rounded-lg p-3 card-bordered">
@@ -438,15 +170,7 @@
               <span>CAPEX 波动</span>
               <span>+/-{{ f.sensPct }}%</span>class="text-secondary"
             </div>
-            <div>
-              <label class="block mb-0.5 text-muted">波动幅度 %</label>
-              <input
-                v-model.number="f.sensPct"
-                type="number"
-                step="5"
-                class="w-full rounded px-2 py-1 text-xs input-dark"
-              />
-            </div>
+            <ParamInput v-model="f.sensPct" :label="'波动幅度 %'" :step="5" />
           </div>
         </div>
       </div>
@@ -606,6 +330,7 @@ import { BarChart, LineChart, PieChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
 import CurrencyConverter from './CurrencyConverter.vue'
+import ParamInput from './ParamInput.vue'
 echarts.use([
   CanvasRenderer,
   BarChart,
