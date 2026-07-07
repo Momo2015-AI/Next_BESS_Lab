@@ -9,9 +9,29 @@ import os
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Index, text
+from sqlalchemy import Index, event, text
+from sqlalchemy.orm import Session as _OrmSession
 
 db = SQLAlchemy()
+
+# 租户隔离模型：flush 前自动从父项目继承 tenant_id
+_TENANT_PROJECT_MODELS = {
+    "SystemArchitecture", "GridComplianceAnalysis", "SafetyFireDesign",
+    "IPPFinancialModel", "ComplianceMatrix", "ThermalManagement",
+    "ScadaEmsDesign", "HVInterconnection", "BidDocument",
+}
+
+
+@event.listens_for(_OrmSession, "before_flush")
+def _inherit_tenant_from_project(session, flush_context, instances):
+    """新建 EPC 对象若未显式设置 tenant_id，则从所属项目继承，确保租户隔离。"""
+    for obj in session.new:
+        if type(obj).__name__ in _TENANT_PROJECT_MODELS:
+            if getattr(obj, "tenant_id", None) is None and getattr(obj, "project_id", None):
+                with session.no_autoflush:
+                    proj = session.get(Project, obj.project_id)
+                if proj is not None:
+                    obj.tenant_id = proj.tenant_id
 
 # 这些列存储 JSON 字符串，序列化时需要解析回对象
 _JSON_COLUMNS = {
@@ -1328,6 +1348,7 @@ class SystemArchitecture(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1338,6 +1359,7 @@ class SystemArchitecture(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1351,6 +1373,7 @@ class GridComplianceAnalysis(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1361,6 +1384,7 @@ class GridComplianceAnalysis(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1374,6 +1398,7 @@ class SafetyFireDesign(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1384,6 +1409,7 @@ class SafetyFireDesign(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1397,6 +1423,7 @@ class IPPFinancialModel(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1407,6 +1434,7 @@ class IPPFinancialModel(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1420,6 +1448,7 @@ class ComplianceMatrix(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1430,6 +1459,7 @@ class ComplianceMatrix(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1443,6 +1473,7 @@ class ThermalManagement(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1453,6 +1484,7 @@ class ThermalManagement(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1466,6 +1498,7 @@ class ScadaEmsDesign(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1476,6 +1509,7 @@ class ScadaEmsDesign(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1489,6 +1523,7 @@ class HVInterconnection(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1499,6 +1534,7 @@ class HVInterconnection(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1512,6 +1548,7 @@ class BidDocument(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
+    tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -1522,6 +1559,7 @@ class BidDocument(db.Model):
         return {
             "id": self.id,
             "project_id": self.project_id,
+            "tenant_id": self.tenant_id,
             "data": self.data,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -1578,9 +1616,21 @@ def init_db(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        # 兼容旧库：为已存在的 EPC 表补充 tenant_id 列
+        inspector = inspect(db.engine)
+        with db.engine.begin() as conn:
+            for table in (
+                "system_architectures", "grid_compliance_analyses",
+                "safety_fire_designs", "ipp_financial_models",
+                "compliance_matrices", "thermal_managements",
+                "scada_ems_designs", "hv_interconnections", "bid_documents",
+            ):
+                if table in inspector.get_table_names():
+                    cols = {c["name"] for c in inspector.get_columns(table)}
+                    if "tenant_id" not in cols:
+                        conn.execute(text(f"ALTER TABLE {table} ADD COLUMN tenant_id VARCHAR(36)"))
         # 种子默认租户
         import uuid as _uuid
-        from sqlalchemy import inspect
         default_tenant_id = "00000000-0000-0000-0000-000000000001"
         existing = db.session.get(Tenant, default_tenant_id)
         if not existing:

@@ -280,6 +280,7 @@ def seed_products():
         if category not in _MODELS:
             continue
         model_cls = _MODELS[category]
+        existing_map = {str(o.id): o for o in model_cls.query.all()}
         for item in items:
             # 种子数据：标记为系统内置（对所有企业可见）
             if "is_builtin" not in item:
@@ -292,7 +293,7 @@ def seed_products():
             if mfr_name and hasattr(model_cls, "manufacturer_id"):
                 item["manufacturer_id"] = _get_manufacturer_id(mfr_name)
 
-            existing = model_cls.query.get(item.get("id"))
+            existing = existing_map.get(item.get("id"))
             if existing:
                 for k, v in item.items():
                     key = _camel_to_snake(k, category)
@@ -314,6 +315,7 @@ def seed_api():
         return jsonify({"success": True, "message": "种子数据已初始化"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"种子产品数据失败: {e}", exc_info=True)
         return jsonify({"error": "初始化失败，请重试"}), 500
 
 
@@ -332,6 +334,7 @@ def refresh_products():
         return jsonify({"success": True, "message": "产品库已刷新"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"刷新产品库失败: {e}", exc_info=True)
         return jsonify({"error": "刷新失败，请重试"}), 500
 
 
@@ -473,8 +476,9 @@ def update_product(category, item_id):
     try:
         db.session.commit()
         return jsonify({"success": True})
-    except Exception:
+    except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"更新产品失败: {e}", exc_info=True)
         return jsonify({"error": "更新失败"}), 500
 
 
@@ -659,6 +663,7 @@ def create_config_rule():
         return jsonify({"success": True, "id": rule.id}), 201
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"创建配置规则失败: {e}", exc_info=True)
         return jsonify({"error": "创建失败，请重试"}), 500
 
 
@@ -717,8 +722,9 @@ def delete_config_rule(rule_id):
     try:
         db.session.commit()
         return jsonify({"success": True})
-    except Exception:
+    except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除配置规则失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败"}), 500
 
 

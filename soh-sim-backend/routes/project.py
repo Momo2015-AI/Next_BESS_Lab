@@ -111,6 +111,7 @@ def create_project():
 
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"创建项目失败: {e}", exc_info=True)
         return jsonify({"error": "创建失败，请重试"}), 500
 
 
@@ -199,6 +200,7 @@ def update_project(project_id):
         return jsonify({"success": True, "message": "项目更新成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"更新项目失败: {e}", exc_info=True)
         return jsonify({"error": "更新失败，请重试"}), 500
 
 
@@ -219,6 +221,7 @@ def delete_project(project_id):
         return jsonify({"success": True, "message": "项目删除成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"删除项目失败: {e}", exc_info=True)
         return jsonify({"error": "删除失败，请重试"}), 500
 
 
@@ -317,6 +320,7 @@ def create_version(project_id):
         )
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"创建版本失败: {e}", exc_info=True)
         return jsonify({"error": "创建失败，请重试"}), 500
 
 
@@ -425,6 +429,7 @@ def activate_version(version_id):
         return jsonify({"success": True, "message": "版本激活成功"})
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"激活版本失败: {e}", exc_info=True)
         return jsonify({"error": "激活失败，请重试"}), 500
 
 
@@ -488,4 +493,5 @@ def sync_params():
 
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"参数同步失败: {e}", exc_info=True)
         return jsonify({"error": "同步失败，请重试"}), 500

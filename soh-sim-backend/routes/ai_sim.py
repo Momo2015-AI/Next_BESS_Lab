@@ -385,9 +385,9 @@ def predict_api():
 
 def seed_manufacturers():
     """初始化电池厂家种子数据到数据库。"""
+    existing_ids = {m.id for m in BatteryManufacturer.query.with_entities(BatteryManufacturer.id).all()}
     for mfr_data in MANUFACTURERS_DB:
-        existing = BatteryManufacturer.query.filter_by(id=mfr_data["id"]).first()
-        if existing:
+        if mfr_data["id"] in existing_ids:
             continue
         mfr = BatteryManufacturer(
             id=mfr_data["id"],
@@ -400,5 +400,6 @@ def seed_manufacturers():
         db.session.add(mfr)
     try:
         db.session.commit()
-    except Exception:
+    except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"种子厂家数据失败: {e}", exc_info=True)
