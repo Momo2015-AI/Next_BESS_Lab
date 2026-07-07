@@ -40,6 +40,7 @@ def _make_csv_response(output, filename_prefix):
 
 @export_bp.route("/api/export/csv", methods=["POST"])
 @token_required
+@limiter.limit("20/minute")
 def export_csv():
     """导出计算结果为CSV格式"""
     data = request.get_json()
@@ -164,6 +165,7 @@ def export_csv():
 
 @export_bp.route("/api/export/financial-csv", methods=["POST"])
 @token_required
+@limiter.limit("20/minute")
 def export_financial_csv():
     """导出财务分析结果为CSV格式"""
     data = request.get_json()
@@ -224,6 +226,7 @@ def export_financial_csv():
 
 @export_bp.route("/api/export/simulation", methods=["POST"])
 @token_required
+@limiter.limit("20/minute")
 def export_simulation():
     """保存完整仿真结果到数据库"""
     data = request.get_json()

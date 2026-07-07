@@ -830,7 +830,7 @@
           <div v-if="chartError" class="text-xs p-2 rounded mb-3 error-box">
             {{ chartError }}
           </div>
-          <div v-if="chartHtml" ref="chartContainer" class="border rounded-lg p-2 chart-container" v-html="chartHtml" />
+          <div v-if="chartReady" ref="chartContainer" class="border rounded-lg p-2 chart-container" />
           <div v-else-if="!chartLoading" class="text-xs text-center py-8 empty-state">
             点击上方按钮选择图表类型，预览投标方案交互式可视化
           </div>
@@ -841,7 +841,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
+import { renderPlotly, purgePlotly } from '../composables/usePlotly.js'
 
 const emit = defineEmits(['error'])
 
@@ -1011,7 +1012,7 @@ const chartTypes = [
   { id: 'grid_compliance', label: 'LVRT/HVRT 曲线' },
   { id: 'ipp_cashflow', label: 'IPP 现金流瀑布图' }
 ]
-const chartHtml = ref('')
+const chartReady = ref(false)
 const chartLoading = ref('')
 const chartError = ref('')
 const activeChart = ref('')
@@ -1020,7 +1021,10 @@ const chartContainer = ref(null)
 async function previewChart(chartType) {
   chartLoading.value = chartType
   chartError.value = ''
-  chartHtml.value = ''
+  chartReady.value = false
+  if (chartContainer.value) {
+    purgePlotly(chartContainer.value)
+  }
   try {
     const body = { ...bidForm, chart_type: chartType }
     if (bidResult.value) {
@@ -1032,9 +1036,11 @@ async function previewChart(chartType) {
       body: JSON.stringify(body)
     })
     const result = await resp.json()
-    if (result.success) {
-      chartHtml.value = result.html
+    if (result.success && result.chart) {
       activeChart.value = chartType
+      chartReady.value = true
+      await nextTick()
+      await renderPlotly(chartContainer.value, result.chart, result.div_id)
     } else {
       chartError.value = result.error || '图表生成失败'
     }
@@ -1071,6 +1077,12 @@ function getDeratingColor(pct) {
 
 onMounted(() => {
   loadStandards()
+})
+
+onUnmounted(() => {
+  if (chartContainer.value) {
+    purgePlotly(chartContainer.value)
+  }
 })
 </script>
 

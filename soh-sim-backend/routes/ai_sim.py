@@ -10,7 +10,7 @@ from datetime import datetime
 import numpy as np
 from flask import Blueprint, current_app, jsonify, request
 
-from routes.auth import token_required
+from routes.auth import token_required, limiter
 from database import AlgorithmModel, BatteryManufacturer, db
 
 ai_sim_bp = Blueprint("ai_sim", __name__)
@@ -336,6 +336,7 @@ def simulation_api():
 
 @ai_sim_bp.route("/api/ai_sim/calibrate", methods=["POST"])
 @token_required
+@limiter.limit("10/minute")
 def calibrate_params_api():
     """参数校准端点 - 根据实测数据校准 Arrhenius 参数。"""
     data = request.get_json()
@@ -360,6 +361,7 @@ def calibrate_params_api():
 
 @ai_sim_bp.route("/api/ai_sim/predict", methods=["POST"])
 @token_required
+@limiter.limit("10/minute")
 def predict_api():
     """预测端点 - 使用校准后的参数预测 SOH/RTE。"""
     data = request.get_json()

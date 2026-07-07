@@ -15,8 +15,19 @@ const BASE_URL = import.meta.env.VITE_API_BASE || ''
  * 获取认证 token
  * @returns {string|null}
  */
+// token 统一从 sessionStorage 读取（与 AuthPanel 写入处一致），
+// 并缓存到内存，避免每次请求访问存储。
+// 注意：sessionStorage 在标签页关闭后即清除，相比 localStorage 降低 XSS 长期窃取风险。
+let _memoryToken = null
+
 function getAuthToken() {
-  return localStorage.getItem('auth_token')
+  if (_memoryToken) return _memoryToken
+  try {
+    _memoryToken = sessionStorage.getItem('auth_token')
+  } catch (e) {
+    _memoryToken = null
+  }
+  return _memoryToken
 }
 
 /**
@@ -65,8 +76,13 @@ async function request(url, options = {}, config = {}) {
 
     // 401 未认证 — 清除 token 并跳登录
     if (resp.status === 401) {
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('user_info')
+      _memoryToken = null
+      try {
+        sessionStorage.removeItem('auth_token')
+        sessionStorage.removeItem('user_info')
+      } catch (e) {
+        // 忽略存储清理异常
+      }
       window.dispatchEvent(new StorageEvent('storage', { key: 'auth_token', newValue: null }))
       if (window.location.pathname !== '/auth' && !skipErrorToast) {
         window.location.href = '/auth'

@@ -859,16 +859,24 @@ def export_plotly_chart(chart_type):
         if fig is None:
             return jsonify({"error": f"数据不足，无法生成 {chart_type} 图表"}), 422
 
+        # 返回结构化图表数据（data/layout），由前端 Plotly.newPlot 渲染。
+        # 不再返回 to_html() 字符串，避免 v-html 注入与 </script> 提前闭合导致的 XSS。
+        plot_json = fig.to_plotly_json()
         div_id = f'plotly-{chart_type}-{datetime.now().strftime("%H%M%S")}'
-        html = fig.to_html(
-            full_html=False,
-            include_plotlyjs="cdn",
-            div_id=div_id,
-            config={"displaylogo": False, "responsive": True},
+        return jsonify(
+            {
+                "success": True,
+                "chart": {
+                    "data": plot_json.get("data", []),
+                    "layout": plot_json.get("layout", {}),
+                    "config": {"displaylogo": False, "responsive": True},
+                },
+                "div_id": div_id,
+            }
         )
-        return jsonify({"success": True, "html": html, "div_id": div_id})
 
     except Exception as e:
+        current_app.logger.error("图表生成失败: %s", e, exc_info=True)
         return jsonify({"error": "图表生成失败，请重试"}), 500
 
 

@@ -515,33 +515,57 @@ def delete_product(category, item_id):
 
 @products_bp.route("/api/products/mfrs/<category>", methods=["GET"])
 def list_manufacturers(category):
-    """获取某类产品的厂商列表（受企业隔离影响）"""
+    """获取某类产品的厂商列表（受企业隔离影响，分页返回）"""
     if category not in _MODELS:
         return jsonify({"error": f"未知产品类别: {category}"}), 400
 
     user = _get_current_user()
     model_cls = _MODELS[category]
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 50, type=int)
     query = _apply_tenant_filter(db.session.query(model_cls.mfr), model_cls, user)
-    mfrs = query.distinct().all()
-    return jsonify({"mfrs": [m[0] for m in mfrs if m[0]]})
+    total = query.distinct().count()
+    rows = query.distinct().offset((page - 1) * per_page).limit(per_page).all()
+    mfrs = [r[0] for r in rows if r[0]]
+    return jsonify(
+        {
+            "items": mfrs,
+            "total": total,
+            "page": page,
+            "per_page": per_page,
+            "pages": (total + per_page - 1) // per_page if per_page else 0,
+        }
+    )
 
 
 @products_bp.route("/api/products/models/<category>", methods=["GET"])
 def list_models(category):
-    """获取某类产品的型号列表（受企业隔离影响）"""
+    """获取某类产品的型号列表（受企业隔离影响，分页返回）"""
     if category not in _MODELS:
         return jsonify({"error": f"未知产品类别: {category}"}), 400
 
     user = _get_current_user()
     model_cls = _MODELS[category]
     mfr = request.args.get("mfr")
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 50, type=int)
 
     query = _apply_tenant_filter(db.session.query(model_cls.model), model_cls, user)
     if mfr:
         query = query.filter(model_cls.mfr == mfr)
 
-    models = query.distinct().all()
-    return jsonify({"models": [m[0] for m in models if m[0]]})
+    total = query.distinct().count()
+    rows = query.distinct().offset((page - 1) * per_page).limit(per_page).all()
+    models = [r[0] for r in rows if r[0]]
+    return jsonify(
+        {
+            "items": models,
+            "total": total,
+            "page": page,
+            "per_page": per_page,
+            "pages": (total + per_page - 1) // per_page if per_page else 0,
+        }
+    )
 
 
 @products_bp.route("/api/products/match-config", methods=["POST"])
@@ -573,7 +597,7 @@ def match_config_rule():
     if container_model:
         query = query.filter(BatteryConfigRule.container_model == container_model)
 
-    rules = query.all()
+    rules = query.limit(100).all()
 
     if rules:
         default_rule = next((r for r in rules if r.is_default), rules[0])

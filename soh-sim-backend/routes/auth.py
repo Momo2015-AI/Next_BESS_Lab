@@ -21,26 +21,85 @@ auth_bp = Blueprint("auth", __name__)
 # 速率限制器（延迟初始化，避免在模块导入时访问 current_app）
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
-# JWT token 黑名单（内存存储，生产环境应使用 Redis）
+# JWT token 黑名单
+# 默认进程内 dict；若设置环境变量 REDIS_URL 则改用 Redis（多 worker / 多进程部署可共享）。
+import base64 as _base64
+import json as _json
+import os as _os
+
 _token_blacklist = {}
 
 
+def _extract_jti(token):
+    """从 JWT 中解码 jti（仅解 payload 段，无需密钥）"""
+    try:
+        parts = token.split(".")
+        if len(parts) != 3:
+            return None
+        payload = parts[1]
+        payload += "=" * (-len(payload) % 4)
+        data = _json.loads(_base64.urlsafe_b64decode(payload))
+        return data.get("jti")
+    except Exception:
+        return None
+
+
+_redis_client = None
+
+
+def _get_redis():
+    """延迟初始化 Redis 客户端；未配置或连接失败时返回 None（降级为内存）。"""
+    global _redis_client
+    if _redis_client is not None:
+        return _redis_client
+    redis_url = _os.environ.get("REDIS_URL")
+    if redis_url:
+        try:
+            import redis
+
+            _redis_client = redis.from_url(redis_url, socket_timeout=2, socket_connect_timeout=2)
+            return _redis_client
+        except Exception:
+            _redis_client = False
+            return None
+    _redis_client = False
+    return None
+
+
 def _clean_blacklist():
-    """清理超过24小时的黑名单条目"""
+    """清理超过24小时的进程内黑名单条目"""
     now = datetime.now(timezone.utc)
-    expired = [jti for jti, ts in _token_blacklist.items() if (now - ts).total_seconds() > 86400]
-    for jti in expired:
-        del _token_blacklist[jti]
+    expired = [t for t, ts in _token_blacklist.items() if (now - ts).total_seconds() > 86400]
+    for t in expired:
+        del _token_blacklist[t]
 
 
 def add_to_blacklist(token):
-    """将 token 加入黑名单"""
+    """将 token 加入黑名单（按 jti 存储，多实例可共享）"""
+    jti = _extract_jti(token)
+    r = _get_redis()
+    if r is not None:
+        try:
+            if jti:
+                r.set(f"bl:{jti}", 1, ex=86400)
+            return
+        except Exception:
+            pass
     _token_blacklist[token] = datetime.now(timezone.utc)
     _clean_blacklist()
 
 
 def is_blacklisted(token):
     """检查 token 是否在黑名单中"""
+    jti = _extract_jti(token)
+    if jti:
+        r = _get_redis()
+        if r is not None:
+            try:
+                if r.exists(f"bl:{jti}"):
+                    return True
+            except Exception:
+                pass
     return token in _token_blacklist
 
 
