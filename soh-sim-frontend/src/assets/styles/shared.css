@@ -565,3 +565,10 @@
 .u-border-right-1px-solid-var-color-border-color-var-color-chart-pink-background-rgba-236-72-153-0-05 { border-right: 1px solid var(--color-border); color: var(--color-chart-pink); background: rgba(236, 72, 153, 0.05) }
 .u-color-var-color-text-muted-border-right-1px-solid-var-color-border-background-var-color-bg { color: var(--color-text-muted); border-right: 1px solid var(--color-border); background: var(--color-bg) }
 .u-width-56px-background-var-color-input-bg-dark-color-var-color-text-border-1px-solid-var-color-input-border { width: 56px; background: var(--color-input-bg-dark); color: var(--color-text); border: 1px solid var(--color-input-border) }
+
+/* ===== 语义化输入控件类（手写，替代机器生成的长类名） ===== */
+.input-dark {
+  background-color: var(--color-input-bg-dark);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text);
+}
