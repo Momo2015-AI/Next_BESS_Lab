@@ -9,7 +9,7 @@ import json
 import os
 import uuid
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, request
 from sqlalchemy import or_
 
 from database import (
@@ -24,7 +24,8 @@ from database import (
     User,
     db,
 )
-from routes.auth import _get_user_from_token, token_required
+from routes.auth import token_required
+from utils.api_response import error_response, paginated_response, success_response
 
 products_bp = Blueprint("products", __name__)
 
@@ -192,12 +193,6 @@ def _json_to_model(item, category):
     return model_cls(**kwargs)
 
 
-def _get_current_user():
-    """从请求中获取当前用户（如未认证则返回 None）"""
-    user, _ = _get_user_from_token()
-    return user
-
-
 def _is_super_admin(user):
     """判断是否为超级管理员：role == 'admin'"""
     return user is not None and getattr(user, "role", None) == "admin"
@@ -312,11 +307,11 @@ def seed_api():
     """手动触发种子数据初始化"""
     try:
         seed_products()
-        return jsonify({"success": True, "message": "种子数据已初始化"})
+        return success_response(message="种子数据已初始化")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"种子产品数据失败: {e}", exc_info=True)
-        return jsonify({"error": "初始化失败，请重试"}), 500
+        return error_response("初始化失败，请重试", status_code=500)
 
 
 @products_bp.route("/api/products/refresh", methods=["POST"])
@@ -331,20 +326,21 @@ def refresh_products():
             else:
                 model_cls.query.delete()
         seed_products()
-        return jsonify({"success": True, "message": "产品库已刷新"})
+        return success_response(message="产品库已刷新")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"刷新产品库失败: {e}", exc_info=True)
-        return jsonify({"error": "刷新失败，请重试"}), 500
+        return error_response("刷新失败，请重试", status_code=500)
 
 
 @products_bp.route("/api/products/<category>", methods=["GET"])
+@token_required
 def list_products(category):
     """获取产品列表（支持企业隔离）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
+    user = request.current_user
     model_cls = _MODELS[category]
     mfr = request.args.get("mfr")
     model_name = request.args.get("model")
@@ -376,52 +372,44 @@ def list_products(category):
     per_page = request.args.get("per_page", 20, type=int)
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
-    items = pagination.items
-    return jsonify(
-        {
-            "items": [item.to_dict() for item in items],
-            "total": pagination.total,
-            "page": pagination.page,
-            "per_page": pagination.per_page,
-            "pages": pagination.pages,
-        }
-    )
+    items = [item.to_dict() for item in pagination.items]
+    return paginated_response(items=items, page=pagination.page, page_size=pagination.per_page, total=pagination.total)
 
 
 @products_bp.route("/api/products/<category>/<item_id>", methods=["GET"])
+@token_required
 def get_product(category, item_id):
     """获取单个产品详情"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
+    user = request.current_user
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
-        return jsonify({"error": "产品不存在"}), 404
+        return error_response("产品不存在", status_code=404)
 
     # 权限检查
     if not _is_super_admin(user):
         if hasattr(item, "tenant_id") and hasattr(item, "is_builtin"):
             if not item.is_builtin and (not user or item.tenant_id != user.tenant_id):
-                return jsonify({"error": "无权访问"}), 403
+                return error_response("无权访问", status_code=403)
 
-    return jsonify(item.to_dict())
+    return success_response(data=item.to_dict())
 
 
 @products_bp.route("/api/products/<category>", methods=["POST"])
+@token_required
 def create_product(category):
     """新增产品（自动归属到当前用户的企业）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
     # 自动设置 tenant_id 与 is_builtin
     data["tenant_id"] = user.tenant_id
@@ -436,37 +424,36 @@ def create_product(category):
 
     try:
         db.session.commit()
-        return jsonify({"success": True, "id": obj.id, "item": obj.to_dict()}), 201
+        return success_response(data={"id": obj.id, "item": obj.to_dict()}, status_code=201)
     except Exception:
         db.session.rollback()
-        return jsonify({"error": "创建失败，ID可能已存在"}), 500
+        return error_response("创建失败，ID可能已存在", status_code=500)
 
 
 @products_bp.route("/api/products/<category>/<item_id>", methods=["PUT"])
+@token_required
 def update_product(category, item_id):
     """更新产品（仅能修改自己企业的非系统内置数据）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
-        return jsonify({"error": "产品不存在"}), 404
+        return error_response("产品不存在", status_code=404)
 
     # 权限检查：仅超级管理员可改系统内置数据；普通用户仅能改自己企业数据
     if not _is_super_admin(user):
         if hasattr(item, "is_builtin") and item.is_builtin:
-            return jsonify({"error": "无权修改系统内置数据"}), 403
+            return error_response("无权修改系统内置数据", status_code=403)
         if hasattr(item, "tenant_id") and item.tenant_id != user.tenant_id:
-            return jsonify({"error": "无权修改其他企业的数据"}), 403
+            return error_response("无权修改其他企业的数据", status_code=403)
 
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
     for k, v in data.items():
         key = _camel_to_snake(k, category)
@@ -475,51 +462,51 @@ def update_product(category, item_id):
 
     try:
         db.session.commit()
-        return jsonify({"success": True})
+        return success_response()
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"更新产品失败: {e}", exc_info=True)
-        return jsonify({"error": "更新失败"}), 500
+        return error_response("更新失败", status_code=500)
 
 
 @products_bp.route("/api/products/<category>/<item_id>", methods=["DELETE"])
+@token_required
 def delete_product(category, item_id):
     """删除产品（仅能删除自己企业的非系统内置数据）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     model_cls = _MODELS[category]
     item = model_cls.query.get(item_id)
     if not item:
-        return jsonify({"error": "产品不存在"}), 404
+        return error_response("产品不存在", status_code=404)
 
     # 权限检查
     if not _is_super_admin(user):
         if hasattr(item, "is_builtin") and item.is_builtin:
-            return jsonify({"error": "无权删除系统内置数据"}), 403
+            return error_response("无权删除系统内置数据", status_code=403)
         if hasattr(item, "tenant_id") and item.tenant_id != user.tenant_id:
-            return jsonify({"error": "无权删除其他企业的数据"}), 403
+            return error_response("无权删除其他企业的数据", status_code=403)
 
     db.session.delete(item)
     try:
         db.session.commit()
-        return jsonify({"success": True})
+        return success_response()
     except Exception:
         db.session.rollback()
-        return jsonify({"error": "删除失败"}), 500
+        return error_response("删除失败", status_code=500)
 
 
 @products_bp.route("/api/products/mfrs/<category>", methods=["GET"])
+@token_required
 def list_manufacturers(category):
     """获取某类产品的厂商列表（受企业隔离影响，分页返回）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
+    user = request.current_user
     model_cls = _MODELS[category]
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 50, type=int)
@@ -527,24 +514,17 @@ def list_manufacturers(category):
     total = query.distinct().count()
     rows = query.distinct().offset((page - 1) * per_page).limit(per_page).all()
     mfrs = [r[0] for r in rows if r[0]]
-    return jsonify(
-        {
-            "items": mfrs,
-            "total": total,
-            "page": page,
-            "per_page": per_page,
-            "pages": (total + per_page - 1) // per_page if per_page else 0,
-        }
-    )
+    return paginated_response(items=mfrs, page=page, page_size=per_page, total=total)
 
 
 @products_bp.route("/api/products/models/<category>", methods=["GET"])
+@token_required
 def list_models(category):
     """获取某类产品的型号列表（受企业隔离影响，分页返回）"""
     if category not in _MODELS:
-        return jsonify({"error": f"未知产品类别: {category}"}), 400
+        return error_response(f"未知产品类别: {category}", status_code=400)
 
-    user = _get_current_user()
+    user = request.current_user
     model_cls = _MODELS[category]
     mfr = request.args.get("mfr")
     page = request.args.get("page", 1, type=int)
@@ -557,25 +537,18 @@ def list_models(category):
     total = query.distinct().count()
     rows = query.distinct().offset((page - 1) * per_page).limit(per_page).all()
     models = [r[0] for r in rows if r[0]]
-    return jsonify(
-        {
-            "items": models,
-            "total": total,
-            "page": page,
-            "per_page": per_page,
-            "pages": (total + per_page - 1) // per_page if per_page else 0,
-        }
-    )
+    return paginated_response(items=models, page=page, page_size=per_page, total=total)
 
 
 @products_bp.route("/api/products/match-config", methods=["POST"])
+@token_required
 def match_config_rule():
     """根据电芯/电池型号自动匹配配置规则（受企业隔离影响）"""
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
-    user = _get_current_user()
+    user = request.current_user
     cell_model = data.get("cellModel")
     pack_model = data.get("packModel")
     rack_model = data.get("rackModel")
@@ -601,31 +574,30 @@ def match_config_rule():
 
     if rules:
         default_rule = next((r for r in rules if r.is_default), rules[0])
-        return jsonify(
-            {
-                "success": True,
+        return success_response(
+            data={
                 "matched": True,
                 "rule": default_rule.to_dict(),
                 "all_rules_count": len(rules),
             }
         )
     else:
-        return jsonify(
-            {
-                "success": True,
+        return success_response(
+            data={
                 "matched": False,
                 "rule": None,
                 "all_rules": [],
-                "message": "未找到匹配的配置规则，请手动配置",
-            }
+            },
+            message="未找到匹配的配置规则，请手动配置",
         )
 
 
 @products_bp.route("/api/products/config-rules", methods=["GET"])
+@token_required
 def list_config_rules():
     """获取所有配置规则列表（受企业隔离影响）"""
     status = request.args.get("status", "active")
-    user = _get_current_user()
+    user = request.current_user
     query = _apply_tenant_filter(BatteryConfigRule.query, BatteryConfigRule, user)
 
     if status:
@@ -635,43 +607,36 @@ def list_config_rules():
     per_page = request.args.get("per_page", 20, type=int)
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
-    return jsonify(
-        {
-            "items": [r.to_dict() for r in pagination.items],
-            "total": pagination.total,
-            "page": pagination.page,
-            "per_page": pagination.per_page,
-            "pages": pagination.pages,
-        }
-    )
+    items = [r.to_dict() for r in pagination.items]
+    return paginated_response(items=items, page=pagination.page, page_size=pagination.per_page, total=pagination.total)
 
 
 @products_bp.route("/api/products/config-rules/<rule_id>", methods=["GET"])
+@token_required
 def get_config_rule(rule_id):
     """获取单个配置规则详情"""
-    user = _get_current_user()
+    user = request.current_user
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
-        return jsonify({"error": "配置规则不存在"}), 404
+        return error_response("配置规则不存在", status_code=404)
 
     if not _is_super_admin(user):
         if hasattr(rule, "is_builtin") and hasattr(rule, "tenant_id"):
             if not rule.is_builtin and (not user or rule.tenant_id != user.tenant_id):
-                return jsonify({"error": "无权访问"}), 403
+                return error_response("无权访问", status_code=403)
 
-    return jsonify(rule.to_dict())
+    return success_response(data=rule.to_dict())
 
 
 @products_bp.route("/api/products/config-rules", methods=["POST"])
+@token_required
 def create_config_rule():
     """创建配置规则（归属当前用户企业）"""
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
     if "id" not in data:
         data["id"] = str(uuid.uuid4())
@@ -684,33 +649,32 @@ def create_config_rule():
 
     try:
         db.session.commit()
-        return jsonify({"success": True, "id": rule.id}), 201
+        return success_response(data={"id": rule.id}, status_code=201)
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"创建配置规则失败: {e}", exc_info=True)
-        return jsonify({"error": "创建失败，请重试"}), 500
+        return error_response("创建失败，请重试", status_code=500)
 
 
 @products_bp.route("/api/products/config-rules/<rule_id>", methods=["PUT"])
+@token_required
 def update_config_rule(rule_id):
     """更新配置规则"""
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
-        return jsonify({"error": "配置规则不存在"}), 404
+        return error_response("配置规则不存在", status_code=404)
 
     if not _is_super_admin(user):
         if hasattr(rule, "is_builtin") and rule.is_builtin:
-            return jsonify({"error": "无权修改系统内置数据"}), 403
+            return error_response("无权修改系统内置数据", status_code=403)
         if hasattr(rule, "tenant_id") and rule.tenant_id != user.tenant_id:
-            return jsonify({"error": "无权修改其他企业的数据"}), 403
+            return error_response("无权修改其他企业的数据", status_code=403)
 
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
     for k, v in data.items():
         key = _camel_to_snake(k, "config_rules")
@@ -719,46 +683,46 @@ def update_config_rule(rule_id):
 
     try:
         db.session.commit()
-        return jsonify({"success": True})
+        return success_response()
     except Exception:
         db.session.rollback()
-        return jsonify({"error": "更新失败"}), 500
+        return error_response("更新失败", status_code=500)
 
 
 @products_bp.route("/api/products/config-rules/<rule_id>", methods=["DELETE"])
+@token_required
 def delete_config_rule(rule_id):
     """删除配置规则"""
-    user = _get_current_user()
-    if not user:
-        return jsonify({"error": "请先登录"}), 401
+    user = request.current_user
 
     rule = BatteryConfigRule.query.get(rule_id)
     if not rule:
-        return jsonify({"error": "配置规则不存在"}), 404
+        return error_response("配置规则不存在", status_code=404)
 
     if not _is_super_admin(user):
         if hasattr(rule, "is_builtin") and rule.is_builtin:
-            return jsonify({"error": "无权删除系统内置数据"}), 403
+            return error_response("无权删除系统内置数据", status_code=403)
         if hasattr(rule, "tenant_id") and rule.tenant_id != user.tenant_id:
-            return jsonify({"error": "无权删除其他企业的数据"}), 403
+            return error_response("无权删除其他企业的数据", status_code=403)
 
     db.session.delete(rule)
     try:
         db.session.commit()
-        return jsonify({"success": True})
+        return success_response()
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"删除配置规则失败: {e}", exc_info=True)
-        return jsonify({"error": "删除失败"}), 500
+        return error_response("删除失败", status_code=500)
 
 
 @products_bp.route("/api/products/hierarchy", methods=["POST"])
+@token_required
 def get_hierarchy():
     """获取完整的电池层级配置信息（受企业隔离影响）"""
-    user = _get_current_user()
+    user = request.current_user
     data = request.get_json()
     if not data:
-        return jsonify({"error": "无效请求数据"}), 400
+        return error_response("无效请求数据", status_code=400)
 
     cell_model = data.get("cellModel")
     pack_model = data.get("packModel")
@@ -850,9 +814,4 @@ def get_hierarchy():
     if rule_match:
         result["config_rule"] = rule_match.to_dict()
 
-    return jsonify(
-        {
-            "success": True,
-            "data": result,
-        }
-    )
+    return success_response(data=result)

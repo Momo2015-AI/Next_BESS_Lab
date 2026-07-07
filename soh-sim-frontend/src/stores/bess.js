@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { get, post, put } from '../services/api.js'
 import { NUM_YEARS } from '../constants.js'
 
 function create26Array(defaultVal = 0) {
@@ -151,8 +152,7 @@ export const useBessStore = defineStore('bess', {
 
     async loadEfficiencyFactors() {
       try {
-        const resp = await fetch('/api/efficiency/factors')
-        const data = await resp.json()
+        const data = await get('/api/efficiency/factors')
         this.efficiencyFactors = data.factors
       } catch (e) {
         console.error('Failed to load efficiency factors:', e)
@@ -161,67 +161,43 @@ export const useBessStore = defineStore('bess', {
 
     async loadDegradationConfig() {
       try {
-        const [curvesRes, envRes] = await Promise.all([
-          fetch('/api/degradation/gb36276-curves'),
-          fetch('/api/degradation/environmental')
+        const [curvesData, envData] = await Promise.all([
+          get('/api/degradation/gb36276-curves'),
+          get('/api/degradation/environmental')
         ])
-        const curves = await curvesRes.json()
-        const env = await envRes.json()
-        this.gb36276Curves = curves.curves
-        this.environmental = env.environmental
+        this.gb36276Curves = curvesData.curves
+        this.environmental = envData.environmental
       } catch (e) {
         console.error('Failed to load degradation config:', e)
       }
     },
 
     async updateGb36276Curves(curves) {
-      const res = await fetch('/api/degradation/gb36276-curves', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curves })
-      })
-      const data = await res.json()
+      const data = await put('/api/degradation/gb36276-curves', { curves })
       this.gb36276Curves = data.curves
     },
 
     async resetGb36276Curves() {
-      const res = await fetch('/api/degradation/gb36276-curves/reset', { method: 'POST' })
-      const data = await res.json()
+      const data = await post('/api/degradation/gb36276-curves/reset')
       this.gb36276Curves = data.curves
     },
 
     async updateEnvironmental(env) {
-      const res = await fetch('/api/degradation/environmental', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(env)
-      })
-      const data = await res.json()
+      const data = await put('/api/degradation/environmental', env)
       this.environmental = data.environmental
     },
 
     async resetEnvironmental() {
-      const res = await fetch('/api/degradation/environmental/reset', { method: 'POST' })
-      const data = await res.json()
+      const data = await post('/api/degradation/environmental/reset')
       this.environmental = data.environmental
     },
 
     async previewDegradation(params) {
-      const res = await fetch('/api/degradation/preview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params)
-      })
-      return await res.json()
+      return await post('/api/degradation/preview', params)
     },
 
     async previewAcceleration(params) {
-      const res = await fetch('/api/degradation/environmental/preview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params)
-      })
-      return await res.json()
+      return await post('/api/degradation/environmental/preview', params)
     },
 
     async runPipeline() {
@@ -256,16 +232,7 @@ export const useBessStore = defineStore('bess', {
             systemParams: { ...this.systemParams }
           }
         }
-        const res = await fetch('/api/pipeline/calculate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        })
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Calculation failed')
-        }
-        const data = await res.json()
+        const data = await post('/api/pipeline/calculate', body)
         if (data.result) {
           this.results = {
             initGross: data.result.initGross,
@@ -326,16 +293,7 @@ export const useBessStore = defineStore('bess', {
             systemParams: { ...this.systemParams }
           }
         }
-        const res = await fetch('/api/financial/calculate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        })
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.message || 'Financial calculation failed')
-        }
-        const json = await res.json()
+        const json = await post('/api/financial/calculate', body)
         if (json.success && json.data) {
           this.financial.metrics = { ...json.data.metrics }
           this.financial.cashflowTable = json.data.cashflowTable || []
@@ -351,13 +309,10 @@ export const useBessStore = defineStore('bess', {
     async fetchBoqItems(projectId) {
       try {
         const isAlt = this.boq.activeVersion === 'alternative'
-        const res = await fetch(`/api/boq/items?project_id=${projectId}&is_alternative=${isAlt}`)
-        if (res.ok) {
-          const json = await res.json()
-          if (json.success) {
-            this.boq.items = json.data
-            this.boq.totalPrice = json.data.reduce((sum, item) => sum + (item.total_price || 0), 0)
-          }
+        const json = await get(`/api/boq/items?project_id=${projectId}&is_alternative=${isAlt}`)
+        if (json.success) {
+          this.boq.items = json.data
+          this.boq.totalPrice = json.data.reduce((sum, item) => sum + (item.total_price || 0), 0)
         }
       } catch (e) {
         console.error('Failed to fetch BOQ items:', e)
@@ -383,13 +338,7 @@ export const useBessStore = defineStore('bess', {
             version: item.version || 1
           }))
         }
-        const res = await fetch('/api/boq/items', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-        if (!res.ok) throw new Error('Failed to save BOQ items')
-        const json = await res.json()
+        const json = await post('/api/boq/items', payload)
         if (json.success) {
           this.boq.items = json.data
           this.boq.totalPrice = json.data.reduce((sum, item) => sum + (item.total_price || 0), 0)
@@ -408,16 +357,9 @@ export const useBessStore = defineStore('bess', {
               item.total_price || item.totalPrice || (item.quantity || 0) * (item.unit_price || item.unitPrice || 0)
           }))
         }
-        const res = await fetch('/api/financial/capex-from-boq', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-        if (res.ok) {
-          const json = await res.json()
-          if (json.success) {
-            this.financial.capex = { ...json.data }
-          }
+        const json = await post('/api/financial/capex-from-boq', payload)
+        if (json.success) {
+          this.financial.capex = { ...json.data }
         }
       } catch (e) {
         console.error('Failed to aggregate CAPEX from BOQ:', e)
@@ -426,11 +368,8 @@ export const useBessStore = defineStore('bess', {
 
     async loadProject(id) {
       try {
-        const res = await fetch(`/api/projects/${id}`)
-        if (res.ok) {
-          const data = await res.json()
-          this.project = data.project || this.project
-        }
+        const data = await get(`/api/projects/${id}`)
+        this.project = data.project || this.project
       } catch (e) {
         console.error('Failed to load project:', e)
       }
@@ -447,5 +386,5 @@ export const useBessStore = defineStore('bess', {
       }
     }
   },
-  persist: true
+  persist: { storage: sessionStorage }
 })
