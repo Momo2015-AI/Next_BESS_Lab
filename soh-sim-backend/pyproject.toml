@@ -22,3 +22,8 @@ known_first_party = ["services", "routes", "models"]
 max-line-length = 120
 extend-ignore = "E203,E501"
 exclude = [".git,__pycache__,.venv,venv,migrations"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short --strict-markers"
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]

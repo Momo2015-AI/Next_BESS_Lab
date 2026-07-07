@@ -1,0 +1,28 @@
+{
+  "name": "p2-refactor",
+  "leadAgentId": "fca4f6762bda457493510f583bd041cd",
+  "workspacePath": "e:/Code/Test-0619",
+  "createdAt": "2026-07-07T05:15:07.270Z",
+  "options": {
+    "workspacePath": "e:/Code/Test-0619",
+    "isAutoTeam": false
+  },
+  "members": [
+    {
+      "memberId": "team-lead@p2-refactor",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    },
+    {
+      "memberId": "backend-dev@p2-refactor",
+      "name": "backend-dev",
+      "role": "Backend service extraction"
+    },
+    {
+      "memberId": "frontend-dev@p2-refactor",
+      "name": "frontend-dev",
+      "role": "Frontend EPC component split"
+    }
+  ],
+  "isAutoTeam": false
+}

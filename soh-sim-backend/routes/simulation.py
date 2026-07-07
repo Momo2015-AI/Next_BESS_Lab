@@ -3,13 +3,17 @@
 仿真结果完整存储带日期戳，支持多模板管理
 """
 
-import json
-import uuid
-from datetime import datetime
+from flask import Blueprint, current_app, request
 
-from flask import Blueprint, current_app, jsonify, request
-
+from database import CorrectionTemplate, Project, ProjectVersion, SimulationResult, db
 from routes.auth import role_required, token_required
+from services.simulation import (
+    create_simulation_result_service,
+    create_template_service,
+    seed_templates_service,
+    update_template_service,
+)
+from utils.api_response import error_response, paginated_response, success_response
 
 simulation_bp = Blueprint("simulation", __name__)
 
@@ -23,11 +27,9 @@ def get_simulation_results(version_id):
     """获取版本的所有仿真结果"""
     user = request.current_user
 
-    from database import AlgorithmModel, CorrectionTemplate, ProjectVersion, SimulationResult, db
-
     version = ProjectVersion.query.get(version_id)
     if not version:
-        return jsonify({"error": "版本不存在"}), 404
+        return error_response("版本不存在", 404)
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
@@ -37,15 +39,11 @@ def get_simulation_results(version_id):
         .paginate(page=page, per_page=per_page, error_out=False)
     )
 
-    return jsonify(
-        {
-            "success": True,
-            "data": [r.to_dict() for r in pagination.items],
-            "total": pagination.total,
-            "page": pagination.page,
-            "per_page": pagination.per_page,
-            "pages": pagination.pages,
-        }
+    return paginated_response(
+        items=[r.to_dict() for r in pagination.items],
+        page=pagination.page,
+        page_size=pagination.per_page,
+        total=pagination.total,
     )
 
 
@@ -53,129 +51,33 @@ def get_simulation_results(version_id):
 @token_required
 def create_simulation_result(version_id):
     """保存仿真结果"""
-    user_id = request.user_id
     data = request.get_json()
-
-    from database import Project, ProjectVersion, SimulationResult, User, db
 
     user = request.current_user
     if not user:
-        return jsonify({"error": "用户不存在"}), 404
-
-    # 检查权限（客户不能保存仿真结果）
-    if user.role == "customer":
-        return jsonify({"error": "权限不足"}), 403
-
-    # 支持默认版本路径
-    actual_version_id = version_id
-    if version_id == "default":
-        # 查找用户的第一个项目的活跃版本
-        project = Project.query.filter_by(tenant_id=user.tenant_id).first()
-        if project:
-            version = ProjectVersion.query.filter_by(project_id=project.id, is_active=True).first()
-            if version:
-                actual_version_id = version.id
-            else:
-                # 创建默认版本
-                actual_version_id = str(uuid.uuid4())
-                version = ProjectVersion(
-                    id=actual_version_id,
-                    project_id=project.id,
-                    version_num=1,
-                    name="默认版本",
-                    is_active=True,
-                    config_data="{}",
-                    created_by=user_id,
-                    status="in-use",
-                    created_at=datetime.utcnow(),
-                )
-                db.session.add(version)
-        else:
-            # 创建默认项目和版本
-            project_id = str(uuid.uuid4())
-            project = Project(
-                id=project_id,
-                tenant_id=user.tenant_id,
-                name="默认项目",
-                code=f"DEF-{user_id[:8]}",
-                status="draft",
-                stage="survey",
-                created_at=datetime.utcnow(),
-            )
-            db.session.add(project)
-
-            actual_version_id = str(uuid.uuid4())
-            version = ProjectVersion(
-                id=actual_version_id,
-                project_id=project_id,
-                version_num=1,
-                name="默认版本",
-                is_active=True,
-                config_data="{}",
-                created_by=user_id,
-                status="in-use",
-                created_at=datetime.utcnow(),
-            )
-            db.session.add(version)
-    else:
-        version = ProjectVersion.query.get(version_id)
-        if not version:
-            return jsonify({"error": "版本不存在"}), 404
-
-    # 生成名称（项目名称+时间戳）
-    project = Project.query.get(version.project_id)
-    project_name = project.name if project else "未命名项目"
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    default_name = f"{project_name}_{timestamp}"
-
-    result_id = str(uuid.uuid4())
-    result = SimulationResult(
-        id=result_id,
-        version_id=actual_version_id,
-        name=data.get("name", default_name),
-        description=data.get("description"),
-        simulation_type=data.get("simulation_type", "comprehensive"),
-        algorithm_model_id=data.get("algorithm_model_id"),
-        correction_template_id=data.get("correction_template_id"),
-        params=json.dumps(data.get("params", {})) if isinstance(data.get("params"), dict) else data.get("params"),
-        results=json.dumps(data.get("results", {})) if isinstance(data.get("results"), dict) else data.get("results"),
-        summary=json.dumps(data.get("summary", {})) if isinstance(data.get("summary"), dict) else data.get("summary"),
-        status=data.get("status", "completed"),
-        executed_at=data.get("executed_at", datetime.utcnow()),
-        execution_time_ms=data.get("execution_time_ms"),
-        created_by=user_id,
-        created_at=datetime.utcnow(),
-    )
-
-    db.session.add(result)
+        return error_response("用户不存在", 404)
 
     try:
-        db.session.commit()
-        return jsonify({"success": True, "id": result_id, "name": result.name, "message": "仿真结果保存成功"}), 201
+        result, err = create_simulation_result_service(db, Project, ProjectVersion, SimulationResult, data, version_id, user)
+        if err:
+            status_code = 403 if err == "权限不足" else 404
+            return error_response(err, status_code)
+        return success_response(data=result, message="仿真结果保存成功", status_code=201)
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"保存仿真结果失败: {e}", exc_info=True)
-        return jsonify({"error": "保存失败，请重试"}), 500
+        return error_response("保存失败，请重试", 500)
 
 
 @simulation_bp.route("/api/results/<result_id>", methods=["GET"])
 @token_required
 def get_simulation_result(result_id):
     """获取单条仿真结果详情"""
-    user = request.current_user
-
-    from database import CorrectionTemplate, SimulationResult
-
     result = SimulationResult.query.get(result_id)
     if not result:
-        return jsonify({"error": "仿真结果不存在"}), 404
+        return error_response("仿真结果不存在", 404)
 
-    return jsonify(
-        {
-            "success": True,
-            "data": result.to_dict(),
-        }
-    )
+    return success_response(data=result.to_dict())
 
 
 @simulation_bp.route("/api/results/<result_id>", methods=["DELETE"])
@@ -183,20 +85,18 @@ def get_simulation_result(result_id):
 @role_required("engineer", "admin")
 def delete_simulation_result(result_id):
     """删除仿真结果"""
-    from database import SimulationResult, db
-
     result = SimulationResult.query.get(result_id)
     if not result:
-        return jsonify({"error": "仿真结果不存在"}), 404
+        return error_response("仿真结果不存在", 404)
 
     try:
         db.session.delete(result)
         db.session.commit()
-        return jsonify({"success": True, "message": "删除成功"})
+        return success_response(message="删除成功")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"删除仿真结果失败: {e}", exc_info=True)
-        return jsonify({"error": "删除失败，请重试"}), 500
+        return error_response("删除失败，请重试", 500)
 
 
 # ==================== 校正因子模板API ====================
@@ -208,14 +108,11 @@ def get_correction_templates():
     """获取校正因子模板列表"""
     user = request.current_user
 
-    from database import CorrectionTemplate, db
-
     query = CorrectionTemplate.query.filter_by(status="active")
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
 
-    # 如果有租户筛选
     if user.tenant_id:
         query = query.filter(
             (CorrectionTemplate.tenant_id == user.tenant_id) | (CorrectionTemplate.tenant_id.is_(None))
@@ -225,15 +122,11 @@ def get_correction_templates():
         page=page, per_page=per_page, error_out=False
     )
 
-    return jsonify(
-        {
-            "success": True,
-            "data": [t.to_dict() for t in pagination.items],
-            "total": pagination.total,
-            "page": pagination.page,
-            "per_page": pagination.per_page,
-            "pages": pagination.pages,
-        }
+    return paginated_response(
+        items=[t.to_dict() for t in pagination.items],
+        page=pagination.page,
+        page_size=pagination.per_page,
+        total=pagination.total,
     )
 
 
@@ -241,130 +134,55 @@ def get_correction_templates():
 @token_required
 def create_correction_template():
     """创建校正因子模板"""
-    user_id = request.user_id
     data = request.get_json()
-
-    from database import CorrectionTemplate, User, db
 
     user = request.current_user
     if not user:
-        return jsonify({"error": "用户不存在"}), 404
-
-    # 检查权限（客户不能创建模板）
-    if user.role == "customer":
-        return jsonify({"error": "权限不足"}), 403
-
-    name = data.get("name", "").strip()
-    if not name:
-        return jsonify({"error": "模板名称不能为空"}), 400
-
-    template_id = str(uuid.uuid4())
-    template = CorrectionTemplate(
-        id=template_id,
-        tenant_id=user.tenant_id,
-        name=name,
-        description=data.get("description"),
-        template_type=data.get("template_type", "comprehensive"),
-        global_soh_factor=data.get("global_soh_factor", 1.0),
-        global_rte_factor=data.get("global_rte_factor", 1.0),
-        annual_corrections=(
-            json.dumps(data.get("annual_corrections", {}))
-            if isinstance(data.get("annual_corrections"), dict)
-            else json.dumps({})
-        ),
-        is_default=data.get("is_default", False),
-        status="active",
-        created_by=user_id,
-        created_at=datetime.utcnow(),
-    )
-
-    # 如果设为默认，取消其他默认
-    if template.is_default:
-        CorrectionTemplate.query.filter_by(tenant_id=user.tenant_id).update({"is_default": False})
-
-    db.session.add(template)
+        return error_response("用户不存在", 404)
 
     try:
-        db.session.commit()
-        return jsonify({"success": True, "id": template_id, "message": "模板创建成功"}), 201
+        result, err = create_template_service(db, CorrectionTemplate, data, user)
+        if err:
+            status_code = 403 if err == "权限不足" else 400
+            return error_response(err, status_code)
+        return success_response(data=result, message="模板创建成功", status_code=201)
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"创建模板失败: {e}", exc_info=True)
-        return jsonify({"error": "创建失败，请重试"}), 500
+        return error_response("创建失败，请重试", 500)
 
 
 @simulation_bp.route("/api/correction-templates/<template_id>", methods=["GET"])
 @token_required
 def get_correction_template(template_id):
     """获取校正因子模板详情"""
-    from database import CorrectionTemplate
-
     template = CorrectionTemplate.query.get(template_id)
     if not template:
-        return jsonify({"error": "模板不存在"}), 404
+        return error_response("模板不存在", 404)
 
-    return jsonify(
-        {
-            "success": True,
-            "data": template.to_dict(),
-        }
-    )
+    return success_response(data=template.to_dict())
 
 
 @simulation_bp.route("/api/correction-templates/<template_id>", methods=["PUT"])
 @token_required
 def update_correction_template(template_id):
     """更新校正因子模板"""
-    user_id = request.user_id
     data = request.get_json()
-
-    from database import CorrectionTemplate, User, db
 
     user = request.current_user
     if not user:
-        return jsonify({"error": "用户不存在"}), 404
-
-    # 检查权限（客户不能更新模板）
-    if user.role == "customer":
-        return jsonify({"error": "权限不足"}), 403
-
-    template = CorrectionTemplate.query.get(template_id)
-    if not template:
-        return jsonify({"error": "模板不存在"}), 404
-
-    # 更新字段
-    if "name" in data:
-        template.name = data["name"]
-    if "description" in data:
-        template.description = data["description"]
-    if "template_type" in data:
-        template.template_type = data["template_type"]
-    if "global_soh_factor" in data:
-        template.global_soh_factor = data["global_soh_factor"]
-    if "global_rte_factor" in data:
-        template.global_rte_factor = data["global_rte_factor"]
-    if "annual_corrections" in data:
-        template.annual_corrections = (
-            json.dumps(data["annual_corrections"])
-            if isinstance(data["annual_corrections"], dict)
-            else data["annual_corrections"]
-        )
-    if "is_default" in data:
-        if data["is_default"]:
-            CorrectionTemplate.query.filter_by(tenant_id=user.tenant_id).update({"is_default": False})
-        template.is_default = data["is_default"]
-    if "status" in data:
-        template.status = data["status"]
-
-    template.updated_at = datetime.utcnow()
+        return error_response("用户不存在", 404)
 
     try:
-        db.session.commit()
-        return jsonify({"success": True, "message": "模板更新成功"})
+        template, err = update_template_service(db, CorrectionTemplate, template_id, data, user)
+        if err:
+            status_code = 403 if err == "权限不足" else 404
+            return error_response(err, status_code)
+        return success_response(message="模板更新成功")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"更新模板失败: {e}", exc_info=True)
-        return jsonify({"error": "更新失败，请重试"}), 500
+        return error_response("更新失败，请重试", 500)
 
 
 @simulation_bp.route("/api/correction-templates/<template_id>", methods=["DELETE"])
@@ -372,94 +190,37 @@ def update_correction_template(template_id):
 @role_required("engineer", "admin")
 def delete_correction_template(template_id):
     """删除校正因子模板"""
-    from database import CorrectionTemplate, db
-
     template = CorrectionTemplate.query.get(template_id)
     if not template:
-        return jsonify({"error": "模板不存在"}), 404
+        return error_response("模板不存在", 404)
 
-    # 不能删除默认模板
     if template.is_default:
-        return jsonify({"error": "不能删除默认模板"}), 400
+        return error_response("不能删除默认模板", 400)
 
     try:
         db.session.delete(template)
         db.session.commit()
-        return jsonify({"success": True, "message": "删除成功"})
+        return success_response(message="删除成功")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"删除模板失败: {e}", exc_info=True)
-        return jsonify({"error": "删除失败，请重试"}), 500
+        return error_response("删除失败，请重试", 500)
 
 
 @simulation_bp.route("/api/correction-templates/seed", methods=["POST"])
 @token_required
 def seed_correction_templates():
     """初始化默认校正因子模板"""
-    user_id = request.user_id
-
-    from database import CorrectionTemplate, User, db
-
     user = request.current_user
     if not user:
-        return jsonify({"error": "用户不存在"}), 404
-
-    # 检查是否已有模板
-    if CorrectionTemplate.query.first():
-        return jsonify({"error": "模板已存在，请勿重复初始化"}), 400
-
-    # 创建默认模板
-    default_templates = [
-        {
-            "name": "标准校正",
-            "description": "标准校正因子，适用于常规项目",
-            "template_type": "comprehensive",
-            "global_soh_factor": 1.0,
-            "global_rte_factor": 1.0,
-            "annual_corrections": {1: 0.98, 5: 0.95, 10: 0.88, 15: 0.80, 20: 0.72, 25: 0.65},
-            "is_default": True,
-        },
-        {
-            "name": "乐观校正",
-            "description": "乐观场景校正因子，适用于实验室条件",
-            "template_type": "comprehensive",
-            "global_soh_factor": 1.02,
-            "global_rte_factor": 1.01,
-            "annual_corrections": {1: 0.99, 5: 0.97, 10: 0.92, 15: 0.85, 20: 0.78, 25: 0.70},
-            "is_default": False,
-        },
-        {
-            "name": "保守校正",
-            "description": "保守场景校正因子，适用于极端环境",
-            "template_type": "comprehensive",
-            "global_soh_factor": 0.98,
-            "global_rte_factor": 0.99,
-            "annual_corrections": {1: 0.96, 5: 0.92, 10: 0.82, 15: 0.72, 20: 0.62, 25: 0.55},
-            "is_default": False,
-        },
-    ]
+        return error_response("用户不存在", 404)
 
     try:
-        for t_data in default_templates:
-            template = CorrectionTemplate(
-                id=str(uuid.uuid4()),
-                tenant_id=user.tenant_id,
-                name=t_data["name"],
-                description=t_data["description"],
-                template_type=t_data["template_type"],
-                global_soh_factor=t_data["global_soh_factor"],
-                global_rte_factor=t_data["global_rte_factor"],
-                annual_corrections=json.dumps(t_data["annual_corrections"]),
-                is_default=t_data["is_default"],
-                status="active",
-                created_by=user_id,
-                created_at=datetime.utcnow(),
-            )
-            db.session.add(template)
-
-        db.session.commit()
-        return jsonify({"success": True, "message": "默认模板初始化成功"})
+        result, err = seed_templates_service(db, CorrectionTemplate, user)
+        if err:
+            return error_response(err, 400)
+        return success_response(message="默认模板初始化成功")
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"初始化模板失败: {e}", exc_info=True)
-        return jsonify({"error": "初始化失败，请重试"}), 500
+        return error_response("初始化失败，请重试", 500)

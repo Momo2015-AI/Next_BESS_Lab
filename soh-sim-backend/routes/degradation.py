@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 
 from routes.auth import token_required
 from services.degradation import (
@@ -8,6 +8,7 @@ from services.degradation import (
     get_default_gb_curves,
     predict_soh,
 )
+from utils.api_response import error_response, success_response
 
 degradation_bp = Blueprint("degradation", __name__)
 
@@ -18,7 +19,7 @@ _in_memory_env = get_default_environmental()
 @degradation_bp.route("/api/degradation/gb36276-curves", methods=["GET"])
 @token_required
 def get_curves():
-    return jsonify({"curves": _in_memory_gb_curves})
+    return success_response(data={"curves": _in_memory_gb_curves})
 
 
 @degradation_bp.route("/api/degradation/gb36276-curves", methods=["PUT"])
@@ -26,17 +27,17 @@ def get_curves():
 def update_curves():
     data = request.get_json()
     if not data or "curves" not in data:
-        return jsonify({"error": "Missing 'curves' in request body"}), 400
+        return error_response("Missing 'curves' in request body", 400)
 
     curves = data["curves"]
     for c in curves:
         for key in ("label", "p_rate", "temperature", "data"):
             if key not in c:
-                return jsonify({"error": f"Each curve must have '{key}'"}), 400
+                return error_response(f"Each curve must have '{key}'", 400)
 
     global _in_memory_gb_curves
     _in_memory_gb_curves = curves
-    return jsonify({"curves": _in_memory_gb_curves})
+    return success_response(data={"curves": _in_memory_gb_curves})
 
 
 @degradation_bp.route("/api/degradation/gb36276-curves/reset", methods=["POST"])
@@ -44,13 +45,13 @@ def update_curves():
 def reset_curves():
     global _in_memory_gb_curves
     _in_memory_gb_curves = get_default_gb_curves()
-    return jsonify({"curves": _in_memory_gb_curves})
+    return success_response(data={"curves": _in_memory_gb_curves})
 
 
 @degradation_bp.route("/api/degradation/environmental", methods=["GET"])
 @token_required
 def get_environmental():
-    return jsonify({"environmental": _in_memory_env})
+    return success_response(data={"environmental": _in_memory_env})
 
 
 @degradation_bp.route("/api/degradation/environmental", methods=["PUT"])
@@ -58,7 +59,7 @@ def get_environmental():
 def update_environmental():
     data = request.get_json()
     if not data:
-        return jsonify({"error": "Request body required"}), 400
+        return error_response("Request body required", 400)
 
     global _in_memory_env
     _in_memory_env = {
@@ -72,7 +73,7 @@ def update_environmental():
         "humidity_exponent": float(data.get("humidity_exponent", ENV_DEFAULTS["humidity_exponent"])),
         "activation_energy": float(data.get("activation_energy", ENV_DEFAULTS["activation_energy"])),
     }
-    return jsonify({"environmental": _in_memory_env})
+    return success_response(data={"environmental": _in_memory_env})
 
 
 @degradation_bp.route("/api/degradation/environmental/reset", methods=["POST"])
@@ -80,7 +81,7 @@ def update_environmental():
 def reset_environmental():
     global _in_memory_env
     _in_memory_env = get_default_environmental()
-    return jsonify({"environmental": _in_memory_env})
+    return success_response(data={"environmental": _in_memory_env})
 
 
 @degradation_bp.route("/api/degradation/environmental/preview", methods=["POST"])
@@ -88,23 +89,21 @@ def reset_environmental():
 def preview_acceleration():
     data = request.get_json()
     if not data:
-        return jsonify({"error": "Request body required"}), 400
+        return error_response("Request body required", 400)
 
     temperature = float(data.get("temperature", 25))
     env = data.get("environmental", _in_memory_env)
 
     accel = _compute_environmental_acceleration(temperature, env)
-    return jsonify(
-        {
-            "accelerationFactor": round(accel, 4),
-            "temperature": temperature,
-            "details": {
-                "temperature_enabled": env.get("accelerate_temperature", True),
-                "dust_enabled": env.get("accelerate_dust", False),
-                "humidity_enabled": env.get("accelerate_humidity", False),
-            },
-        }
-    )
+    return success_response(data={
+        "accelerationFactor": round(accel, 4),
+        "temperature": temperature,
+        "details": {
+            "temperature_enabled": env.get("accelerate_temperature", True),
+            "dust_enabled": env.get("accelerate_dust", False),
+            "humidity_enabled": env.get("accelerate_humidity", False),
+        },
+    })
 
 
 @degradation_bp.route("/api/degradation/preview", methods=["POST"])
@@ -112,7 +111,7 @@ def preview_acceleration():
 def preview_degradation():
     data = request.get_json()
     if not data:
-        return jsonify({"error": "Request body required"}), 400
+        return error_response("Request body required", 400)
 
     model_type = data.get("model", "arrhenius")
     temperature = float(data.get("temperature", 25))
@@ -138,16 +137,14 @@ def preview_degradation():
         gb_curves,
     )
 
-    return jsonify(
-        {
-            "model": model_type,
-            "soh": soh,
-            "rte": rte,
-            "parameters": {
-                "temperature": temperature,
-                "cyclesPerDay": cycles_per_day,
-                "dod": dod,
-                "cRate": c_rate,
-            },
-        }
-    )
+    return success_response(data={
+        "model": model_type,
+        "soh": soh,
+        "rte": rte,
+        "parameters": {
+            "temperature": temperature,
+            "cyclesPerDay": cycles_per_day,
+            "dod": dod,
+            "cRate": c_rate,
+        },
+    })

@@ -1,0 +1,421 @@
+/**
+ * EPC 模块共享样式
+ *
+ * 从 EpcPage.vue 抽取的通用样式（约 330 行）。
+ * 所有 EPC 子组件通过 :global 或在父组件 EpcPage.vue 中 import 后生效。
+ * 类名 kebab-case，使用 CSS 变量，无内联 style。
+ */
+
+/* ---------- 页面布局 ---------- */
+.epc-page {
+  padding: 24px;
+}
+
+.epc-header {
+  margin-bottom: 24px;
+}
+.epc-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.epc-desc {
+  color: var(--text-secondary, var(--color-text-secondary));
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- Tab 导航 ---------- */
+.epc-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.epc-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  border-bottom: none;
+  background: var(--color-card);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--color-text-secondary);
+  position: relative;
+  top: 1px;
+}
+
+.epc-tabs button.active {
+  background: var(--color-card);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-card);
+}
+
+.tab-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.tab-label {
+  font-size: 13px;
+}
+
+.tab-priority {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+/* Priority badges - semantic status colors */
+.pri-P0-1 {
+  background: var(--color-success);
+  color: white;
+}
+.pri-P0-2 {
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
+}
+.pri-P0-3 {
+  background: var(--color-accent-dark);
+  color: var(--color-accent);
+}
+.pri-P0-4 {
+  background: var(--color-warning-glow, rgba(245, 158, 11, 0.15));
+  color: var(--color-warning);
+}
+.pri-P0-5 {
+  background: var(--color-info-glow, rgba(139, 92, 246, 0.15));
+  color: var(--color-info);
+}
+.pri-P1-1 {
+  background: var(--color-tab-hover);
+  color: var(--color-text-secondary);
+}
+.pri-P1-2 {
+  background: var(--color-card-dark);
+  color: var(--color-text-secondary);
+}
+.pri-P1-3 {
+  background: var(--color-step-bg);
+  color: var(--color-text-secondary);
+}
+.pri-P1-4 {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- 面板卡片 ---------- */
+.panel-card {
+  background: var(--section-card-bg);
+  border-radius: var(--section-card-radius);
+  padding: 24px 28px;
+  border: 1px solid var(--section-card-border);
+  box-shadow: var(--section-card-shadow);
+  margin-bottom: var(--section-card-gap);
+}
+
+.panel-title {
+  font-size: var(--section-title-size);
+  font-weight: var(--section-title-weight);
+  margin: 0 0 16px;
+  color: var(--section-title-color);
+  letter-spacing: -0.01em;
+}
+
+.section-title {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* ---------- 表单输入 ---------- */
+.field-label {
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+}
+
+/* ---------- 指标卡片 ---------- */
+.metric-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.primary-text {
+  color: var(--color-accent) !important;
+}
+.pass-text {
+  color: var(--color-success) !important;
+}
+.fail-text {
+  color: var(--color-danger) !important;
+}
+.warn-text {
+  color: var(--color-warning) !important;
+}
+
+/* ---------- 分期卡片 ---------- */
+.stage-card {
+  background: var(--color-accent-glow);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-accent-dark);
+}
+
+/* ---------- 横幅 ---------- */
+.pass-banner {
+  background: var(--color-success-glow, rgba(16, 185, 129, 0.15));
+  border-radius: 8px;
+}
+
+.fail-banner {
+  background: var(--color-danger-glow-soft, rgba(239, 68, 68, 0.1));
+  border-radius: 8px;
+}
+
+.status-icon {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ---------- 数据表格 ---------- */
+.data-table {
+  border-collapse: collapse;
+}
+
+.header-cell {
+  background: var(--color-table-header);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.border-row {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.pass {
+  background: var(--color-success);
+  color: white;
+}
+.status-badge.fail {
+  background: var(--color-danger);
+  color: white;
+}
+.status-badge.warn {
+  background: var(--color-warning);
+  color: white;
+}
+.status-badge.neutral {
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- 降额曲线 ---------- */
+.derating-chart {
+  background: var(--color-card);
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.derating-bar {
+  min-height: 4px;
+  transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* derating bar 颜色通过 class 控制，避免内联 style */
+.derating-bar.bar-success {
+  background-color: var(--color-success);
+}
+.derating-bar.bar-warning {
+  background-color: var(--color-warning);
+}
+.derating-bar.bar-danger {
+  background-color: var(--color-danger);
+}
+
+/* ---------- 信息盒子 ---------- */
+.info-box {
+  background: var(--color-card);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+}
+
+.info-list div {
+  color: var(--color-text-secondary);
+}
+
+/* ---------- 保护项 ---------- */
+.protection-item {
+  background: var(--color-card);
+  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+/* ---------- 章节 / 小节 ---------- */
+.chapter-title {
+  background: var(--color-bg-secondary);
+  color: var(--color-accent);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.section-item {
+  margin-left: 16px;
+  padding: 12px;
+  background: var(--color-card);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* ---------- 图表按钮 ---------- */
+.chart-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--color-accent);
+  background: var(--color-card);
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-btn:hover {
+  background: var(--color-accent-glow);
+}
+
+.chart-btn.active {
+  background: var(--color-accent);
+  color: white;
+}
+
+.chart-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- 图表容器 ---------- */
+.chart-container {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-card);
+  min-height: 300px;
+}
+
+/* ---------- 错误盒子 ---------- */
+.error-box {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+  border-radius: 6px;
+}
+
+/* ---------- 空状态 ---------- */
+.empty-state {
+  color: var(--color-text-muted);
+}
+
+/* ---------- 边框 ---------- */
+.border-top {
+  border-top: 1px solid var(--color-border);
+}
+
+.space-y-4 > * + * {
+  margin-top: 16px;
+}
+
+/* ---------- 工具类 ---------- */
+.tx-muted {
+  color: var(--color-text-muted);
+}
+.tx-muted-dark {
+  color: var(--color-text-secondary);
+}
+.max-w-sm {
+  max-width: 300px;
+}
+
+/* ---------- 表单输入框统一样式（原 EpcPage 未定义，补齐共享） ---------- */
+.form-field-input,
+.form-field-select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.form-field-input:focus-visible,
+.form-field-select:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* ---------- 主按钮（共享） ---------- */
+.btn-primary {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--color-accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- EPC 面板（v-show 容器） ---------- */
+.epc-panel {
+  /* 占位，便于子组件继承布局 */
+}

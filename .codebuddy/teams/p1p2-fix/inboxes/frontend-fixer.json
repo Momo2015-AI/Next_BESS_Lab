@@ -1,0 +1,11 @@
+[
+  {
+    "id": "msg-1783326111798-sdscug",
+    "from": "team-lead",
+    "to": "frontend-fixer",
+    "type": "message",
+    "content": "进度如何？完成后请汇报每个任务的完成情况和 lint 检查结果。",
+    "timestamp": "2026-07-06T08:21:51.798Z",
+    "read": true
+  }
+]

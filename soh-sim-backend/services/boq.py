@@ -1,5 +1,7 @@
 """BOQ 业务逻辑"""
 
+import uuid
+
 BOQ_CATEGORIES = [
     {"code": "100", "name": "Battery System", "name_zh": "电池系统", "unit": "MWh", "sort_order": 1},
     {"code": "200", "name": "PCS", "name_zh": "PCS 变流系统", "unit": "MW", "sort_order": 2},
@@ -31,3 +33,40 @@ def seed_boq_sections(db):
             )
             db.session.add(section)
     db.session.commit()
+
+
+def save_boq_items(db, BoqItem, project_id, items_data, is_alternative=False):
+    """保存BOQ清单项：先删除已有项，再批量写入"""
+    BoqItem.query.filter_by(project_id=project_id, is_alternative=is_alternative).delete()
+
+    saved = []
+    for item in items_data:
+        boq_item = BoqItem(
+            id=item.get("id") or str(uuid.uuid4()),
+            project_id=project_id,
+            section_code=item.get("sectionCode", ""),
+            seq=item.get("seq", 0),
+            name=item.get("name", ""),
+            spec=item.get("spec", ""),
+            unit=item.get("unit", ""),
+            quantity=float(item.get("quantity", 0) or 0),
+            unit_price=float(item.get("unitPrice", 0) or 0),
+            total_price=float(item.get("totalPrice", 0) or item.get("quantity", 0) * item.get("unitPrice", 0) or 0),
+            note=item.get("note", ""),
+            is_alternative=is_alternative,
+            version=item.get("version", 1),
+        )
+        db.session.add(boq_item)
+        saved.append(boq_item)
+
+    db.session.commit()
+    return saved
+
+
+def bump_boq_version(db, BoqItem, project_id):
+    """BOQ版本号递增"""
+    items = BoqItem.query.filter_by(project_id=project_id, is_alternative=False).all()
+    for item in items:
+        item.version += 1
+    db.session.commit()
+    return items[0].version if items else 1

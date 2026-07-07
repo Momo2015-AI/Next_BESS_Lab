@@ -11,10 +11,11 @@ import uuid
 from datetime import datetime, timedelta, timezone
 
 import jwt
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from sqlalchemy.exc import IntegrityError
+
+from utils.api_response import error_response, success_response
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -85,22 +86,24 @@ def add_to_blacklist(token):
             return
         except Exception:
             pass
-    _token_blacklist[token] = datetime.now(timezone.utc)
+    if jti:
+        _token_blacklist[jti] = datetime.now(timezone.utc)
     _clean_blacklist()
 
 
 def is_blacklisted(token):
-    """检查 token 是否在黑名单中"""
+    """检查 token 是否在黑名单中（按 jti 查询，内存+Redis 均基于 jti）"""
     jti = _extract_jti(token)
-    if jti:
-        r = _get_redis()
-        if r is not None:
-            try:
-                if r.exists(f"bl:{jti}"):
-                    return True
-            except Exception:
-                pass
-    return token in _token_blacklist
+    if not jti:
+        return False
+    r = _get_redis()
+    if r is not None:
+        try:
+            if r.exists(f"bl:{jti}"):
+                return True
+        except Exception:
+            pass
+    return jti in _token_blacklist
 
 
 def hash_password(password, salt=None):
@@ -186,75 +189,28 @@ def register():
     data = request.get_json()
 
     if not data:
-        return jsonify({"error": "无效的请求数据"}), 400
+        return error_response("无效的请求数据", status_code=400)
 
     username = data.get("username", "").strip()
     email = data.get("email", "").strip()
     password = data.get("password", "")
-    tenant_id = "00000000-0000-0000-0000-000000000001"  # 默认租户UUID，禁止客户端自选
 
     if not _validate_username(username):
-        return jsonify({"error": "用户名需3-20位，仅允许字母/数字/下划线/中文"}), 400
+        return error_response("用户名需3-20位，仅允许字母/数字/下划线/中文", status_code=400)
 
     if not email or "@" not in email:
-        return jsonify({"error": "请输入有效的邮箱地址"}), 400
+        return error_response("请输入有效的邮箱地址", status_code=400)
 
     if not password or len(password) < 6:
-        return jsonify({"error": "密码至少需要6个字符"}), 400
+        return error_response("密码至少需要6个字符", status_code=400)
 
-    from database import User
+    from services.users import register_user as do_register
 
-    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+    result, error, status_code = do_register(username, email, password)
+    if error:
+        return error_response(error, status_code=status_code)
 
-    if existing_user:
-        return jsonify({"error": "用户名或邮箱已存在"}), 409
-
-    from database import db
-
-    user_id = str(uuid.uuid4())
-
-    user = User(
-        id=user_id,
-        username=username,
-        email=email,
-        password_hash=hash_password(password),
-        tenant_id=tenant_id,
-        role="user",
-        is_active=True,
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
-    )
-
-    db.session.add(user)
-
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        return jsonify({"error": "用户名或邮箱已存在"}), 409
-    except Exception:
-        db.session.rollback()
-        current_app.logger.error("注册失败", exc_info=True)
-        return jsonify({"error": "注册失败，请稍后重试"}), 500
-
-    token = generate_token(user_id)
-
-    return (
-        jsonify(
-            {
-                "success": True,
-                "message": "注册成功",
-                "token": token,
-                "user": {
-                    "id": user_id,
-                    "username": username,
-                    "email": email,
-                    "role": "user",
-                },
-            }
-        ),
-        201,
-    )
+    return success_response(data={"token": result["token"], "user": result["user"]}, message="注册成功", status_code=201)
 
 
 @auth_bp.route("/api/auth/login", methods=["POST"])
@@ -264,56 +220,23 @@ def login():
     data = request.get_json()
 
     if not data:
-        return jsonify({"error": "无效的请求数据"}), 400
+        return error_response("无效的请求数据", status_code=400)
 
     username = data.get("username", "").strip()
     password = data.get("password", "")
 
     if not username or not password:
-        return jsonify({"error": "请输入用户名和密码"}), 400
+        return error_response("请输入用户名和密码", status_code=400)
 
-    from database import User
+    from services.users import authenticate_user
 
-    user = User.query.filter((User.username == username) | (User.email == username)).first()
+    result, error, status_code = authenticate_user(username, password)
+    if error:
+        return error_response(error, status_code=status_code)
 
-    if not user:
-        return jsonify({"error": "用户名或密码错误"}), 401
-
-    if not user.is_active:
-        return jsonify({"error": "用户名或密码错误"}), 401
-
-    if not verify_password(password, user.password_hash):
-        return jsonify({"error": "用户名或密码错误"}), 401
-
-    user.last_login = datetime.now(timezone.utc)
-    user.login_count = (user.login_count or 0) + 1
-
-    from database import db
-
-    try:
-        db.session.commit()
-    except Exception:
-        db.session.rollback()
-        current_app.logger.error("登录记录更新失败", exc_info=True)
-
-    token = generate_token(user.id)
-
-    return (
-        jsonify(
-            {
-                "success": True,
-                "message": "登录成功",
-                "token": token,
-                "user": {
-                    "id": user.id,
-                    "username": user.username,
-                    "email": user.email,
-                    "role": user.role,
-                    "tenant_id": user.tenant_id,
-                },
-            }
-        ),
-        200,
+    return success_response(
+        data={"token": result["token"], "user": result["user"]},
+        message="登录成功",
     )
 
 
@@ -325,7 +248,7 @@ def logout():
         token = auth_header[7:]
         add_to_blacklist(token)
 
-    return jsonify({"success": True, "message": "已退出登录"}), 200
+    return success_response(message="已退出登录")
 
 
 @auth_bp.route("/api/auth/me", methods=["GET"])
@@ -333,22 +256,19 @@ def get_current_user():
     """获取当前用户信息"""
     user, error = _get_user_from_token()
     if error:
-        return jsonify({"error": error[0]}), error[1]
+        return error_response(error[0], status_code=error[1])
 
-    return (
-        jsonify(
-            {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "role": user.role,
-                "tenant_id": user.tenant_id,
-                "is_active": user.is_active,
-                "created_at": user.created_at.isoformat() if user.created_at else None,
-                "last_login": user.last_login.isoformat() if user.last_login else None,
-            }
-        ),
-        200,
+    return success_response(
+        data={
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "tenant_id": user.tenant_id,
+            "is_active": user.is_active,
+            "created_at": user.created_at.isoformat() if user.created_at else None,
+            "last_login": user.last_login.isoformat() if user.last_login else None,
+        }
     )
 
 
@@ -357,7 +277,7 @@ def refresh_token():
     """刷新token，要求 token 在 1 小时内过期才允许刷新"""
     user, error = _get_user_from_token()
     if error:
-        return jsonify({"error": error[0]}), error[1]
+        return error_response(error[0], status_code=error[1])
 
     new_token = generate_token(user.id)
 
@@ -366,15 +286,7 @@ def refresh_token():
     if auth_header.startswith("Bearer "):
         add_to_blacklist(auth_header[7:])
 
-    return (
-        jsonify(
-            {
-                "success": True,
-                "token": new_token,
-            }
-        ),
-        200,
-    )
+    return success_response(data={"token": new_token})
 
 
 @auth_bp.route("/api/auth/change-password", methods=["POST"])
@@ -382,41 +294,24 @@ def change_password():
     """修改密码"""
     user, error = _get_user_from_token()
     if error:
-        return jsonify({"error": error[0]}), error[1]
+        return error_response(error[0], status_code=error[1])
 
     data = request.get_json()
-
     old_password = data.get("old_password", "")
     new_password = data.get("new_password", "")
 
-    if not old_password:
-        return jsonify({"error": "请输入原密码"}), 400
+    from services.users import change_user_password
 
-    if not new_password or len(new_password) < 6:
-        return jsonify({"error": "新密码至少需要6个字符"}), 400
-
-    if not verify_password(old_password, user.password_hash):
-        return jsonify({"error": "原密码错误"}), 401
-
-    from database import db
-
-    # 若密码哈希使用旧迭代次数（100k），登录时自动升级到 600k
-    user.password_hash = hash_password(new_password)
-    user.updated_at = datetime.now(timezone.utc)
-
-    try:
-        db.session.commit()
-    except Exception:
-        db.session.rollback()
-        current_app.logger.error("密码修改失败", exc_info=True)
-        return jsonify({"error": "密码修改失败，请稍后重试"}), 500
+    success, err, status_code = change_user_password(user, old_password, new_password)
+    if not success:
+        return error_response(err, status_code=status_code)
 
     # 加入黑名单使旧 token 失效
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         add_to_blacklist(auth_header[7:])
 
-    return jsonify({"success": True, "message": "密码修改成功，请重新登录"}), 200
+    return success_response(message="密码修改成功，请重新登录")
 
 
 # 验证token的装饰器
@@ -430,7 +325,7 @@ def token_required(f):
     def decorated(*args, **kwargs):
         user, error = _get_user_from_token()
         if error:
-            return jsonify({"error": error[0]}), error[1]
+            return error_response(error[0], status_code=error[1])
         request.current_user = user
         request.user_id = user.id
         return f(*args, **kwargs)
@@ -447,9 +342,9 @@ def role_required(*roles):
         def decorated(*args, **kwargs):
             user = request.current_user
             if not user:
-                return jsonify({"error": "请先登录"}), 401
+                return error_response("请先登录", status_code=401)
             if user.role not in roles:
-                return jsonify({"error": "权限不足"}), 403
+                return error_response("权限不足", status_code=403)
             request.user_role = user.role
             return f(*args, **kwargs)
 

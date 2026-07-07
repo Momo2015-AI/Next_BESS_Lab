@@ -1,0 +1,18 @@
+{
+  "name": "p1p2-fix-2",
+  "leadAgentId": "fca4f6762bda457493510f583bd041cd",
+  "workspacePath": "e:/Code/Test-0619",
+  "createdAt": "2026-07-06T09:08:35.507Z",
+  "options": {
+    "workspacePath": "e:/Code/Test-0619",
+    "isAutoTeam": false
+  },
+  "members": [
+    {
+      "memberId": "team-lead@p1p2-fix-2",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    }
+  ],
+  "isAutoTeam": false
+}

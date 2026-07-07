@@ -6,10 +6,13 @@
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
+
+# 统一使用 timezone-aware UTC 时间，替代已弃用的 _utcnow
+_utcnow = lambda: datetime.now(timezone.utc)
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Index, event, text
+from sqlalchemy import Index, event, inspect, text
 from sqlalchemy.orm import Session as _OrmSession
 
 db = SQLAlchemy()
@@ -97,7 +100,7 @@ class Tenant(db.Model):
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(50), unique=True)
     status = db.Column(db.String(20), default="active")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
 
     # 关联
     users = db.relationship("User", back_populates="tenant")
@@ -123,8 +126,8 @@ class User(db.Model):
     status = db.Column(db.String(20), default="active")
     is_active = db.Column(db.Boolean, default=True)
     login_count = db.Column(db.Integer, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
     last_login = db.Column(db.DateTime)
 
     # 关联
@@ -208,8 +211,8 @@ class Survey(db.Model):
 
     # 状态与时间
     status = db.Column(db.String(20), default="pending")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
@@ -285,8 +288,8 @@ class Project(db.Model):
     config = db.Column(db.Text)
 
     # 时间信息
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     tenant = db.relationship("Tenant", back_populates="projects")
@@ -344,8 +347,8 @@ class ProjectVersion(db.Model):
     status = db.Column(db.String(20), default="draft")  # draft/in-use/archived
 
     # 时间信息
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="versions")
@@ -406,8 +409,8 @@ class Simulation(db.Model):
     completed_at = db.Column(db.DateTime)
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="simulations")
@@ -475,14 +478,14 @@ class SimulationResult(db.Model):
     status = db.Column(db.String(20), default="completed")  # pending/completed/failed
 
     # 执行时间
-    executed_at = db.Column(db.DateTime, default=datetime.utcnow)  # 实际执行时间戳
+    executed_at = db.Column(db.DateTime, default=_utcnow)  # 实际执行时间戳
     execution_time_ms = db.Column(db.Integer)  # 执行耗时
 
     # 创建者
     created_by = db.Column(db.String(36), db.ForeignKey("users.id"))
 
     # 时间信息
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
 
     # 关联
     version = db.relationship("ProjectVersion", back_populates="simulation_results")
@@ -546,8 +549,8 @@ class CorrectionTemplate(db.Model):
     created_by = db.Column(db.String(36), db.ForeignKey("users.id"))
 
     # 时间信息
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     tenant = db.relationship("Tenant", back_populates="correction_templates")
@@ -608,8 +611,8 @@ class BatteryPCSConfig(db.Model):
     single_line_diagram = db.Column(db.Text)  # JSON格式单线图数据
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="battery_configs")
@@ -672,8 +675,8 @@ class SohRteData(db.Model):
     import_file = db.Column(db.String(200))  # 导入文件名
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="soh_rte_data")
@@ -744,8 +747,8 @@ class FinancialData(db.Model):
     cashflow_data = db.Column(db.Text)  # JSON格式
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="financial_data")
@@ -818,8 +821,8 @@ class ProductConfig(db.Model):
     epc_contract_type = db.Column(db.String(50))  # turnkey/performance
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     project = db.relationship("Project", back_populates="product_configs")
@@ -874,8 +877,8 @@ class CellProduct(db.Model):
     unit_price = db.Column(db.Float)  # 元/Wh
     remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default="mass-production")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         return _model_to_dict(self)
@@ -1004,8 +1007,8 @@ class ContainerProduct(db.Model):
     unit_price = db.Column(db.Float)  # 万元/台
     remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default="mass-production")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         return _model_to_dict(self)
@@ -1041,8 +1044,8 @@ class PcsProduct(db.Model):
     unit_price = db.Column(db.Float)  # 万元/台
     remarks = db.Column(db.Text)
     status = db.Column(db.String(50), default="mass-production")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         return _model_to_dict(self)
@@ -1097,8 +1100,8 @@ class BatteryConfigRule(db.Model):
 
     is_default = db.Column(db.Boolean, default=False)
     status = db.Column(db.String(50), default="active")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         return _model_to_dict(self)
@@ -1133,8 +1136,8 @@ class FormulaConfig(db.Model):
     is_public = db.Column(db.Boolean, default=False)
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     user = db.relationship("User", back_populates="formula_configs")
@@ -1207,8 +1210,8 @@ class AlgorithmModel(db.Model):
     created_by = db.Column(db.String(36), db.ForeignKey("users.id"))
 
     # 时间
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
     tenant = db.relationship("Tenant", back_populates="algorithm_models")
@@ -1279,8 +1282,8 @@ class BoqItem(db.Model):
     note = db.Column(db.String(500))
     is_alternative = db.Column(db.Boolean, default=False)
     version = db.Column(db.Integer, default=1)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         return {
@@ -1322,8 +1325,8 @@ class BatteryManufacturer(db.Model):
     country = db.Column(db.String(100))
     chemistry_type = db.Column(db.String(50))
     calibrated_params = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def __repr__(self):
         return f"<BatteryManufacturer {self.name}>"
@@ -1350,8 +1353,8 @@ class SystemArchitecture(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_sa_project_id", "project_id"),)
 
@@ -1375,8 +1378,8 @@ class GridComplianceAnalysis(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_gca_project_id", "project_id"),)
 
@@ -1400,8 +1403,8 @@ class SafetyFireDesign(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_sfd_project_id", "project_id"),)
 
@@ -1425,8 +1428,8 @@ class IPPFinancialModel(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_ifm_project_id", "project_id"),)
 
@@ -1450,8 +1453,8 @@ class ComplianceMatrix(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_cm_project_id", "project_id"),)
 
@@ -1475,8 +1478,8 @@ class ThermalManagement(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_tm_project_id", "project_id"),)
 
@@ -1500,8 +1503,8 @@ class ScadaEmsDesign(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_sed_project_id", "project_id"),)
 
@@ -1525,8 +1528,8 @@ class HVInterconnection(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_hvi_project_id", "project_id"),)
 
@@ -1550,8 +1553,8 @@ class BidDocument(db.Model):
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.Index("idx_bd_project_id", "project_id"),)
 
@@ -1574,8 +1577,8 @@ class PinnModelWeights(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     model_name = db.Column(db.String(255), nullable=False)
     weights = db.Column(db.LargeBinary, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def __repr__(self):
         return f"<PinnModelWeights {self.model_name}>"
@@ -1647,11 +1650,3 @@ def init_db(app):
 def get_db_path():
     """获取数据库文件路径"""
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "soh_sim.db")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "model_name": self.model_name,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
