@@ -68,8 +68,7 @@
         </div>
 
         <button
-          class="text-xs px-4 py-2 rounded transition-colors"
- class="bg-accent-2 text-white"
+          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
           @click="calculateSiteArea"
         >
           计算场地面积
@@ -99,8 +98,7 @@
             </div>
           </div>
           <div
-            class="mt-3 pt-3 border-t border-slate-700 text-xs"
- class="u-border-color-var-color-border-color-var-color-text-muted"
+            class="mt-3 pt-3 border-t border-slate-700 text-xs u-border-color-var-color-border-color-var-color-text-muted"
           >
             <div>
               考虑间距和通道后的实际占地面积:
@@ -138,8 +136,7 @@
         </div>
 
         <button
-          class="text-xs px-4 py-2 rounded transition-colors"
- class="bg-accent-2 text-white"
+          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
           @click="generateBOM"
         >
           生成BOM清单
@@ -188,8 +185,7 @@
 
           <div class="mt-3 flex gap-2">
             <button
-              class="text-xs px-3 py-1.5 rounded transition-colors"
- class="bg-accent text-white"
+              class="text-xs px-3 py-1.5 rounded transition-colors bg-accent text-white"
               @click="exportBOM"
             >
               导出BOM
@@ -237,8 +233,7 @@
         </div>
 
         <button
-          class="text-xs px-4 py-2 rounded transition-colors"
- class="bg-accent-2 text-white"
+          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
           @click="calculateSpare"
         >
           计算备品备件
@@ -255,8 +250,7 @@
               <div
                 v-for="(item, idx) in spareResult.filter((i) => i.type === 'battery')"
                 :key="idx"
-                class="flex justify-between text-xs py-1"
- class="border-b"
+                class="flex justify-between text-xs py-1 border-b"
               >
                 <span>{{ item.name }}</span>class="text-secondary"
                 <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
@@ -269,8 +263,7 @@
               <div
                 v-for="(item, idx) in spareResult.filter((i) => i.type === 'pcs')"
                 :key="idx"
-                class="flex justify-between text-xs py-1"
- class="border-b"
+                class="flex justify-between text-xs py-1 border-b"
               >
                 <span>{{ item.name }}</span>class="text-secondary"
                 <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
@@ -279,8 +272,7 @@
           </div>
 
           <div
-            class="mt-4 p-3 rounded-lg"
- class="u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
+            class="mt-4 p-3 rounded-lg u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
           >
             <div class="text-xs text-accent-2">预计备件库存总价值</div>
             <div class="text-xl font-bold mt-1 text-accent-2">

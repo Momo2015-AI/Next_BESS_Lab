@@ -44,8 +44,7 @@
 
         <div class="mb-4">
           <div
-            class="text-[10px] font-bold uppercase mb-3 pb-2"
- class="text-muted border-b"
+            class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b"
           >
             1. 运行策略、时间与容量
           </div>
@@ -82,8 +81,7 @@
 
         <div class="mb-4">
           <div
-            class="text-[10px] font-bold uppercase mb-3 pb-2"
- class="text-muted border-b"
+            class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b"
           >
             2. 效率拓扑边界
           </div>
@@ -112,8 +110,7 @@
 
         <div class="mb-4">
           <div
-            class="text-[10px] font-bold uppercase mb-3 pb-2"
- class="text-muted border-b"
+            class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b"
           >
             3. 4象限动静态辅助功率
           </div>
@@ -142,8 +139,7 @@
 
         <div>
           <div
-            class="text-[10px] font-bold uppercase mb-3 pb-2"
- class="text-muted border-b"
+            class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b"
           >
             4. 外部固定自耗
           </div>
@@ -187,15 +183,13 @@
                 1. 直流侧总能耗 (DC Total Aux)
               </span>
               <span
-                class="text-xs px-2 py-0.5 rounded font-bold"
- class="bg-accent-2 text-white"
+                class="text-xs px-2 py-0.5 rounded font-bold bg-accent-2 text-white"
               >
                 {{ results.dcTotalAux.toFixed(2) }} MWh
               </span>
             </div>
             <div
-              class="text-xs font-mono rounded p-2"
- class="bg-input-dark text-default"
+              class="text-xs font-mono rounded p-2 bg-input-dark text-default"
             >
               DC_Aux = [(
               <input
@@ -275,15 +269,13 @@
                 2. 交流侧总能耗 (AC Total Aux)
               </span>
               <span
-                class="text-xs px-2 py-0.5 rounded font-bold"
- class="bg-accent-2 text-white"
+                class="text-xs px-2 py-0.5 rounded font-bold bg-accent-2 text-white"
               >
                 {{ results.acTotalAux.toFixed(2) }} MWh
               </span>
             </div>
             <div
-              class="text-xs font-mono rounded p-2"
- class="bg-input-dark text-default"
+              class="text-xs font-mono rounded p-2 bg-input-dark text-default"
             >
               AC_Aux = [(
               <input
@@ -373,15 +365,13 @@
                 3. 全系统总辅助能耗 (Total System Aux)
               </span>
               <span
-                class="text-xs px-2 py-0.5 rounded font-bold"
- class="bg-accent-2 text-white"
+                class="text-xs px-2 py-0.5 rounded font-bold bg-accent-2 text-white"
               >
                 {{ results.totalSystemAux.toFixed(2) }} MWh
               </span>
             </div>
             <div
-              class="text-xs font-mono rounded p-2"
- class="bg-input-dark text-default"
+              class="text-xs font-mono rounded p-2 bg-input-dark text-default"
             >
               Total_Aux = {{ results.dcTotalAux.toFixed(2) }} MWh + {{ results.acTotalAux.toFixed(2) }} MWh
             </div>
@@ -396,15 +386,13 @@
                 4. POI并网点期末净可用电量 (POI Net Delivery)
               </span>
               <span
-                class="text-xs px-2 py-0.5 rounded font-bold"
- class="bg-accent-2 text-white"
+                class="text-xs px-2 py-0.5 rounded font-bold bg-accent-2 text-white"
               >
                 {{ results.annualNetDischarge.toFixed(2) }} MWh
               </span>
             </div>
             <div
-              class="text-xs font-mono rounded p-2"
- class="bg-input-dark text-default"
+              class="text-xs font-mono rounded p-2 bg-input-dark text-default"
             >
               POI_Net = (
               <input

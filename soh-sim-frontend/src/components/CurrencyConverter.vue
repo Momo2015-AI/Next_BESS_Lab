@@ -2,8 +2,7 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-239-68-68-0-2-color-var-color-danger"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-239-68-68-0-2-color-var-color-danger"
       >
         VI
       </span>
@@ -54,8 +53,7 @@
         <div>
           <label class="block mb-0.5 text-muted">汇率 Rate</label>
           <div
-            class="px-2 py-1 text-xs font-mono"
-            class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
+            class="px-2 py-1 text-xs font-mono u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
           >
             {{ rate ? rate.toFixed(6) : '---' }}
           </div>
@@ -74,8 +72,7 @@
         <div class="flex justify-between items-center mb-1">
           <span class="text-xs text-muted">项目货币 Project Currency</span>
           <button
-            class="text-[9px] px-2 py-1 rounded transition-colors"
- class="bg-accent text-white"
+            class="text-[9px] px-2 py-1 rounded transition-colors bg-accent text-white"
             @click="refreshRates"
           >
             刷新 Refresh
@@ -97,8 +94,7 @@
           <div>
             <label class="block mb-0.5 text-muted">汇率来源 Source</label>
             <div
-              class="px-2 py-1 text-xs"
-              class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
+              class="px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
             >
               {{ rateSource || '---' }}
             </div>

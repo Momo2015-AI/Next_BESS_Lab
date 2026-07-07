@@ -9,8 +9,7 @@
       <!-- PCS选型 -->
       <div class="grid grid-cols-2 gap-4 mb-4">
         <div
-          class="rounded-lg p-4"
- class="bg-card-dark border-card"
+          class="rounded-lg p-4 bg-card-dark border-card"
         >
           <h4 class="text-xs mb-3 font-medium text-secondary">PCS功率选型</h4>
 
@@ -73,8 +72,7 @@
         </div>
 
         <div
-          class="rounded-lg p-4"
- class="bg-card-dark border-card"
+          class="rounded-lg p-4 bg-card-dark border-card"
         >
           <h4 class="text-xs mb-3 font-medium text-secondary">PCS数量配置</h4>
 
@@ -133,8 +131,7 @@
 
       <!-- 变压器配置 -->
       <div
-        class="rounded-lg p-4 mb-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 mb-4 bg-card-dark border-card"
       >
         <h4 class="text-xs mb-3 font-medium text-secondary">变压器与电网连接</h4>
 
@@ -212,8 +209,7 @@
 
       <!-- 运行参数 -->
       <div
-        class="rounded-lg p-4 mb-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 mb-4 bg-card-dark border-card"
       >
         <h4 class="text-xs mb-3 font-medium text-secondary">PCS运行参数</h4>
 
@@ -257,8 +253,7 @@
 
       <!-- 配置规则 -->
       <div
-        class="rounded-lg p-4 mb-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 mb-4 bg-card-dark border-card"
       >
         <h4 class="text-xs mb-3 font-medium text-warning">⚡ PCS与电池配置规则</h4>
 
@@ -293,8 +288,7 @@
         </div>
 
         <button
-          class="mt-3 text-xs px-3 py-1.5 rounded transition-colors"
- class="u-background-color-var-color-warning-color-white"
+          class="mt-3 text-xs px-3 py-1.5 rounded transition-colors u-background-color-var-color-warning-color-white"
           @click="applyConfigRules"
         >
           根据电池配置自动计算PCS
@@ -303,14 +297,12 @@
 
       <!-- 配置结果 -->
       <div
-        class="rounded-lg p-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 bg-card-dark border-card"
       >
         <div class="flex items-center justify-between mb-3">
           <h4 class="text-xs font-medium text-secondary">PCS系统配置结果</h4>
           <button
-            class="text-xs px-3 py-1 rounded transition-colors"
- class="bg-accent text-white"
+            class="text-xs px-3 py-1 rounded transition-colors bg-accent text-white"
             @click="calculatePcsConfig"
           >
             计算配置
@@ -356,15 +348,13 @@
 
         <div class="mt-4 flex justify-end gap-2">
           <button
-            class="text-xs px-3 py-1.5 rounded transition-colors"
-            class="u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
+            class="text-xs px-3 py-1.5 rounded transition-colors u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
             @click="resetPcsConfig"
           >
             重置
           </button>
           <button
-            class="text-xs px-4 py-1.5 rounded transition-colors"
- class="bg-accent text-white"
+            class="text-xs px-4 py-1.5 rounded transition-colors bg-accent text-white"
             @click="applyPcsConfig"
           >
             应用配置

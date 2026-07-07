@@ -1,13 +1,11 @@
 <template>
   <div class="flex-1 min-h-0 flex flex-col">
     <div
-      class="rounded-xl p-3 flex-shrink-0 mb-3"
- class="u-background-color-var-color-bg-secondary-border-1px-solid-var-color-border"
+      class="rounded-xl p-3 flex-shrink-0 mb-3 u-background-color-var-color-bg-secondary-border-1px-solid-var-color-border"
     >
       <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-2">
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent"
         >
           <div class="text-[9px] uppercase text-muted">AC-RTE 不带辅耗</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-accent">
@@ -16,8 +14,7 @@
           <div class="text-[8px] text-muted">%</div>
         </div>
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-success"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-success"
         >
           <div class="text-[9px] uppercase text-muted">AC-RTE 带辅耗</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-success">
@@ -26,8 +23,7 @@
           <div class="text-[8px] text-muted">%</div>
         </div>
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent-secondary"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent-secondary"
         >
           <div class="text-[9px] uppercase text-muted">总装机容量</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-accent-2">
@@ -36,8 +32,7 @@
           <div class="text-[8px] text-muted">MWh</div>
         </div>
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
         >
           <div class="text-[9px] uppercase text-muted">总装机功率</div>
           <div class="text-sm font-bold font-mono mt-0.5 u-color-var-color-info">
@@ -46,8 +41,7 @@
           <div class="text-[8px] text-muted">MW</div>
         </div>
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-warning"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-warning"
         >
           <div class="text-[9px] uppercase text-muted">年吞吐量</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-warning">
@@ -56,8 +50,7 @@
           <div class="text-[8px] text-muted">MWh/yr</div>
         </div>
         <div
-          class="rounded-lg p-2 text-center"
-          class="u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-danger"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-danger"
         >
           <div class="text-[9px] uppercase text-muted">E/P 配比</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-danger">
@@ -139,28 +132,24 @@
     </div>
 
     <div
-      class="flex-1 min-h-0 overflow-auto rounded-xl"
- class="u-border-1px-solid-var-color-border-background-var-color-bg-secondary"
+      class="flex-1 min-h-0 overflow-auto rounded-xl u-border-1px-solid-var-color-border-background-var-color-bg-secondary"
     >
       <table class="w-full text-left border-collapse min-w-[1500px]">
         <thead>
           <tr
-            class="text-center border-b text-[10px] font-bold sticky top-0 z-30"
- class="u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
+            class="text-center border-b text-[10px] font-bold sticky top-0 z-30 u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
           >
             <th class="py-1.5 u-border-right-1px-solid-var-color-border" colspan="1">
               {{ $t('matrixTable.time') }}
             </th>
             <th
-              class="py-1.5"
- class="u-border-right-1px-solid-var-color-border-color-var-color-accent"
+              class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-accent"
               colspan="8"
             >
               {{ $t('matrixTable.initialStock') }}
             </th>
             <th
-              class="py-1.5"
- class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
+              class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
               colspan="6"
             >
               {{ $t('matrixTable.augStream') }}
@@ -170,8 +159,7 @@
             </th>
           </tr>
           <tr
-            class="text-[10px] font-semibold text-center border-b sticky top-[31px] z-30"
- class="u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
+            class="text-[10px] font-semibold text-center border-b sticky top-[31px] z-30 u-background-var-color-bg-color-var-color-text-secondary-border-color-var-color-border"
           >
             <th class="p-1.5 u-border-right-1px-solid-var-color-border-background-var-color-bg">
               {{ $t('matrixTable.year') }}
@@ -216,8 +204,7 @@
               {{ $t('matrixTable.augGross') }}
             </th>
             <th
-              class="p-1.5 font-bold"
- class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
+              class="p-1.5 font-bold u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
             >
               {{ $t('matrixTable.augNetAc') }}
             </th>
@@ -236,12 +223,10 @@
           <tr
             v-for="i in 26"
             :key="i - 1"
-            class="hover:opacity-80 transition-all text-center"
- class="u-background-var-color-card"
+            class="hover:opacity-80 transition-all text-center u-background-var-color-card"
           >
             <td
-              class="p-1 font-bold sticky left-0 z-10"
-              class="u-color-var-color-text-muted-border-right-1px-solid-var-color-border-background-var-color-bg"
+              class="p-1 font-bold sticky left-0 z-10 u-color-var-color-text-muted-border-right-1px-solid-var-color-border-background-var-color-bg"
             >
               {{ i - 1 }}
             </td>
@@ -287,8 +272,7 @@
               {{ results.initAux[i - 1]?.toFixed(2) }}
             </td>
             <td
-              class="p-1 font-bold"
-              class="u-border-right-1px-solid-var-color-border-color-var-color-accent-background-var-color-accent-glow"
+              class="p-1 font-bold u-border-right-1px-solid-var-color-border-color-var-color-accent-background-var-color-accent-glow"
             >
               {{ results.initAcUsable[i - 1]?.toFixed(2) }}
             </td>
@@ -317,8 +301,7 @@
               {{ results.augGross[i - 1]?.toFixed(2) }}
             </td>
             <td
-              class="p-1 font-bold"
-              class="u-border-right-1px-solid-var-color-border-color-var-color-chart-pink-background-rgba-236-72-153-0-05"
+              class="p-1 font-bold u-border-right-1px-solid-var-color-border-color-var-color-chart-pink-background-rgba-236-72-153-0-05"
             >
               {{ results.augAcUsable[i - 1]?.toFixed(2) }}
             </td>

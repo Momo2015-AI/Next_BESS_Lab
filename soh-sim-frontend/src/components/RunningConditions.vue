@@ -4,8 +4,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             01
           </span>
@@ -76,8 +75,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             02
           </span>
@@ -172,8 +170,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             03
           </span>
@@ -254,8 +251,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             04
           </span>
@@ -334,8 +330,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             05
           </span>
@@ -425,8 +420,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             06
           </span>
@@ -517,8 +511,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             07
           </span>
@@ -618,8 +611,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             08
           </span>
@@ -636,8 +628,7 @@
               <label
                 v-for="opt in certOptions.cell"
                 :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer"
- class="text-secondary"
+                class="flex items-center gap-1.5 cursor-pointer text-secondary"
               >
                 <input v-model="form.certCell" type="checkbox" :value="opt" class="accent-teal-500" />
                 {{ opt }}
@@ -650,8 +641,7 @@
               <label
                 v-for="opt in certOptions.system"
                 :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer"
- class="text-secondary"
+                class="flex items-center gap-1.5 cursor-pointer text-secondary"
               >
                 <input v-model="form.certSystem" type="checkbox" :value="opt" class="accent-amber-500" />
                 {{ opt }}
@@ -664,8 +654,7 @@
               <label
                 v-for="opt in certOptions.grid"
                 :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer"
- class="text-secondary"
+                class="flex items-center gap-1.5 cursor-pointer text-secondary"
               >
                 <input v-model="form.certGrid" type="checkbox" :value="opt" class="accent-blue-500" />
                 {{ opt }}
@@ -680,8 +669,7 @@
               <label
                 v-for="opt in certOptions.extra"
                 :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer"
- class="text-secondary"
+                class="flex items-center gap-1.5 cursor-pointer text-secondary"
               >
                 <input v-model="form.certExtra" type="checkbox" :value="opt" class="accent-purple-500" />
                 {{ opt }}
@@ -694,8 +682,7 @@
               <label
                 v-for="opt in certOptions.gridCode"
                 :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer"
- class="text-secondary"
+                class="flex items-center gap-1.5 cursor-pointer text-secondary"
               >
                 <input v-model="form.certGridCode" type="checkbox" :value="opt" class="accent-emerald-500" />
                 {{ opt }}
@@ -708,8 +695,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             09
           </span>
@@ -814,8 +800,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             10
           </span>
@@ -845,8 +830,7 @@
           />
           <div v-if="uploading" class="text-xs text-accent">
             <div
-              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2"
- class="u-border-color-var-color-accent-border-top-color-transparent"
+              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2 u-border-color-var-color-accent-border-top-color-transparent"
             />
             {{ $t('runningConditions.uploading') }}
           </div>
@@ -859,8 +843,7 @@
               {{ $t('runningConditions.applyForm') }}
             </button>
             <button
-              class="ml-3 underline text-xs"
- class="text-muted"
+              class="ml-3 underline text-xs text-muted"
               @click.stop="uploadResult = null"
             >
               {{ $t('runningConditions.clearForm') }}
@@ -886,8 +869,7 @@
           {{ $t('runningConditions.resetAll') }}
         </button>
         <button
-          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors"
-          class="u-background-var-color-input-bg-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
+          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors u-background-var-color-input-bg-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
           @click="exportCSV"
         >
           {{ $t('runningConditions.exportCSV') }}

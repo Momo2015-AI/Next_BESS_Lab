@@ -2,8 +2,7 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-16-185-129-0-2-color-var-color-success"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-16-185-129-0-2-color-var-color-success"
       >
         VIII
       </span>
@@ -41,8 +40,7 @@
           step="0.1"
           min="0.1"
           max="10"
-          class="w-full rounded px-2 py-1 text-xs"
-          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+          class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
@@ -54,8 +52,7 @@
           step="1"
           min="1"
           max="365"
-          class="w-full rounded px-2 py-1 text-xs"
-          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+          class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
@@ -67,8 +64,7 @@
           step="1"
           min="50"
           max="100"
-          class="w-full rounded px-2 py-1 text-xs"
-          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+          class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>
@@ -80,8 +76,7 @@
           step="1"
           min="50"
           max="100"
-          class="w-full rounded px-2 py-1 text-xs"
-          class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+          class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
           @input="updateChart"
         />
       </div>

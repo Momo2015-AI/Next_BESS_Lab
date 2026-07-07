@@ -13,8 +13,7 @@
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs text-muted">场景列表</span>
             <button
-              class="text-xs px-2 py-1 rounded transition-colors"
- class="bg-accent text-white"
+              class="text-xs px-2 py-1 rounded transition-colors bg-accent text-white"
               @click="createScenario"
             >
               + 新建
@@ -74,21 +73,18 @@
             <div class="flex items-center justify-between mb-3">
               <input
                 v-model="editingScenario.name"
-                class="text-xs px-2 py-1 rounded"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="text-xs px-2 py-1 rounded u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 placeholder="场景名称"
               />
               <div class="flex gap-2">
                 <button
-                  class="text-xs px-3 py-1 rounded transition-colors"
- class="bg-accent text-white"
+                  class="text-xs px-3 py-1 rounded transition-colors bg-accent text-white"
                   @click="saveScenario"
                 >
                   保存
                 </button>
                 <button
-                  class="text-xs px-3 py-1 rounded transition-colors"
-                  class="u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
+                  class="text-xs px-3 py-1 rounded transition-colors u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
                   @click="cancelEdit"
                 >
                   取消
@@ -102,8 +98,7 @@
                 <input
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -111,8 +106,7 @@
                 <input
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -120,8 +114,7 @@
                 <input
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -129,8 +122,7 @@
                 <input
                   v-model.number="editingScenario.params.duration"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -138,8 +130,7 @@
                 <input
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -147,8 +138,7 @@
                 <input
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -156,8 +146,7 @@
                 <input
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -165,8 +154,7 @@
                 <input
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
               <div>
@@ -174,8 +162,7 @@
                 <input
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                  class="w-full rounded px-2 py-1 u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
                 />
               </div>
             </div>
@@ -190,8 +177,7 @@
                 {{ calculating ? '计算中...' : '计算此场景' }}
               </button>
               <button
-                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
- class="bg-accent-2 text-white"
+                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors bg-accent-2 text-white"
                 @click="useAsBase"
               >
                 设为基准

@@ -26,8 +26,7 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div
-          class="rounded-lg p-3"
- class="min-h-300 card-bordered"
+          class="rounded-lg p-3 min-h-300 card-bordered"
         >
           <h3 class="font-bold text-xs mb-2 text-default">
             现金流曲线与回收期 Cash Flow & Payback
@@ -35,22 +34,19 @@
           <div ref="cashFlowChartRef" class="w-full h-280" />
         </div>
         <div
-          class="rounded-lg p-3"
- class="min-h-300 card-bordered"
+          class="rounded-lg p-3 min-h-300 card-bordered"
         >
           <h3 class="font-bold text-xs mb-2 text-default">收入结构堆叠 Revenue Breakdown</h3>
           <div ref="revenueChartRef" class="w-full h-280" />
         </div>
         <div
-          class="rounded-lg p-3"
- class="min-h-300 card-bordered"
+          class="rounded-lg p-3 min-h-300 card-bordered"
         >
           <h3 class="font-bold text-xs mb-2 text-default">EBITDA vs 还本付息 & DSCR DSCR Trend</h3>
           <div ref="dscrChartRef" class="w-full h-280" />
         </div>
         <div
-          class="rounded-lg p-3"
- class="min-h-300 card-bordered"
+          class="rounded-lg p-3 min-h-300 card-bordered"
         >
           <h3 class="font-bold text-xs mb-2 text-default">CAPEX 成本结构与敏感性 Tornado</h3>
           <div ref="capexChartRef" class="w-full h-280" />
@@ -61,8 +57,7 @@
         <div class="rounded-lg p-3 card-bordered">
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-var-color-accent-glow-color-var-color-accent"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-var-color-accent-glow-color-var-color-accent"
             >
               I
             </span>
@@ -75,8 +70,7 @@
                 v-model.number="f.offPeakPrice"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -85,8 +79,7 @@
                 v-model.number="f.peakPrice"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -95,8 +88,7 @@
                 v-model.number="f.spreadCapture"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -105,8 +97,7 @@
                 v-model.number="f.operatingDays"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -115,8 +106,7 @@
                 v-model.number="f.capacityPrice"
                 type="number"
                 step="100"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -125,8 +115,7 @@
                 v-model.number="f.ancillaryPrice"
                 type="number"
                 step="100"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -135,8 +124,7 @@
                 v-model.number="f.priceEscalation"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -145,8 +133,7 @@
                 v-model.number="f.efficiencyLossPct"
                 type="number"
                 step="0.01"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
           </div>
@@ -154,8 +141,7 @@
         <div class="rounded-lg p-3 card-bordered">
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-245-158-11-0-2-color-var-color-warning"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-245-158-11-0-2-color-var-color-warning"
             >
               II
             </span>
@@ -168,8 +154,7 @@
                 v-model.number="f.containerCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -178,8 +163,7 @@
                 v-model.number="f.pcsCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -188,8 +172,7 @@
                 v-model.number="f.bopCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -198,8 +181,7 @@
                 v-model.number="f.substationCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -208,8 +190,7 @@
                 v-model.number="f.transmissionCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -218,8 +199,7 @@
                 v-model.number="f.landCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -228,8 +208,7 @@
                 v-model.number="f.developmentCostPerMW"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -238,8 +217,7 @@
                 v-model.number="f.fixedOpexPerKW"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -248,8 +226,7 @@
                 v-model.number="f.varOpexPerMWh"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -258,8 +235,7 @@
                 v-model.number="f.insuranceRate"
                 type="number"
                 step="0.01"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -268,8 +244,7 @@
                 v-model.number="f.opexEscalation"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -278,8 +253,7 @@
                 v-model.number="f.vatRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
           </div>
@@ -290,8 +264,7 @@
         <div class="rounded-lg p-3 card-bordered">
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-59-130-246-0-2-color-var-color-accent-secondary"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-59-130-246-0-2-color-var-color-accent-secondary"
             >
               III
             </span>
@@ -304,8 +277,7 @@
                 v-model.number="f.discountRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -314,8 +286,7 @@
                 v-model.number="f.debtRatio"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -324,8 +295,7 @@
                 v-model.number="f.equityRatio"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -334,8 +304,7 @@
                 v-model.number="f.interestRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -344,8 +313,7 @@
                 v-model.number="f.costOfEquity"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -354,8 +322,7 @@
                 v-model.number="f.loanTenure"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -364,8 +331,7 @@
                 v-model.number="f.taxRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -374,8 +340,7 @@
                 v-model.number="f.depreciationYears"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -384,16 +349,14 @@
                 v-model.number="f.residualRate"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
               <label class="block mb-0.5 text-muted">折旧方法</label>
               <select
                 v-model="f.depreciationMethod"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               >
                 <option value="straight-line">直线折旧</option>
                 <option value="double-declining">双倍余额递减</option>
@@ -404,8 +367,7 @@
         <div class="rounded-lg p-3 card-bordered">
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-168-85-247-0-2-color-var-color-info"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-168-85-247-0-2-color-var-color-info"
             >
               IV
             </span>
@@ -418,8 +380,7 @@
                 v-model.number="f.augContainerCostPerMWh"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -428,8 +389,7 @@
                 v-model.number="f.costDeclineRate"
                 type="number"
                 step="0.1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -438,8 +398,7 @@
                 v-model.number="f.augInstallCost"
                 type="number"
                 step="0.5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
             <div>
@@ -448,8 +407,7 @@
                 v-model.number="f.decommissioningCost"
                 type="number"
                 step="1"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
           </div>
@@ -457,8 +415,7 @@
         <div class="rounded-lg p-3 card-bordered">
           <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
             <span
-              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-16-185-129-0-2-color-var-color-success"
+              class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-16-185-129-0-2-color-var-color-success"
             >
               V
             </span>
@@ -487,8 +444,7 @@
                 v-model.number="f.sensPct"
                 type="number"
                 step="5"
-                class="w-full rounded px-2 py-1 text-xs"
-                class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+                class="w-full rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
               />
             </div>
           </div>
@@ -510,8 +466,7 @@
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-bold text-xs text-default">年度现金流明细表 Annual Cash Flow</h3>
           <button
-            class="text-[10px] px-3 py-1 rounded transition-colors"
- class="bg-accent text-white"
+            class="text-[10px] px-3 py-1 rounded transition-colors bg-accent text-white"
             @click="recalc"
           >
             重新计算 Recalculate
@@ -522,69 +477,58 @@
             <thead>
               <tr class="sticky top-0 z-10 u-background-color-var-color-card">
                 <th
-                  class="text-left py-1 px-2 sticky left-0 z-20"
- class="text-muted border-b"
+                  class="text-left py-1 px-2 sticky left-0 z-20 text-muted border-b"
                 >
                   年份
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   发电量 MWh
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   套利收入
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   容量收入
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   辅助服务
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   总收入
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   OPEX
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   EBITDA
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   净现金流
                 </th>
                 <th
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   累计现金流
                 </th>
                 <th
                   v-if="f.debtRatio > 0"
-                  class="text-right py-1 px-2"
- class="text-muted border-b"
+                  class="text-right py-1 px-2 text-muted border-b"
                 >
                   DSCR
                 </th>
@@ -640,8 +584,7 @@
                 </td>
                 <td
                   v-if="f.debtRatio > 0"
-                  class="text-right py-1 px-2 font-mono"
- class="text-secondary"
+                  class="text-right py-1 px-2 font-mono text-secondary"
                 >
                   {{ row.dscr ? row.dscr.toFixed(2) : '-' }}
                 </td>

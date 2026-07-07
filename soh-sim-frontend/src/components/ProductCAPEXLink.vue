@@ -2,8 +2,7 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-245-158-11-0-2-color-var-color-warning"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-245-158-11-0-2-color-var-color-warning"
       >
         VII
       </span>
@@ -59,8 +58,7 @@
       <!-- 配置摘要 -->
       <div
         v-if="hasSelection"
-        class="border rounded p-2"
- class="u-border-color-var-color-border-background-color-var-color-card-dark"
+        class="border rounded p-2 u-border-color-var-color-border-background-color-var-color-card-dark"
       >
         <h4 class="text-xs font-bold mb-2 text-secondary">
           当前配置 Current Configuration
@@ -134,8 +132,7 @@
       <!-- 应用到仿真 -->
       <div v-if="hasSelection" class="flex justify-end mt-3">
         <button
-          class="text-xs px-4 py-1.5 rounded transition-colors"
- class="bg-accent-2 text-white"
+          class="text-xs px-4 py-1.5 rounded transition-colors bg-accent-2 text-white"
           @click="applyToSimulation"
         >
           应用到仿真 Apply to Simulation

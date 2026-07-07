@@ -22,8 +22,7 @@
       <button class="btn-primary-sm" @click="autoFillQuantities">自动预填数量</button>
       <button class="btn-secondary-sm" @click="save">保存 BOQ</button>
       <button
-        class="btn-secondary-sm"
- class="text-accent border-accent"
+        class="btn-secondary-sm text-accent border-accent"
         @click="aggregateCapex"
       >
         汇总到 CAPEX
@@ -34,12 +33,10 @@
       <div
         v-for="section in sections"
         :key="section.code"
-        class="rounded"
- class="u-border-1px-solid-var-color-border"
+        class="rounded u-border-1px-solid-var-color-border"
       >
         <div
-          class="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
- class="u-background-var-color-card"
+          class="flex items-center justify-between px-3 py-2 cursor-pointer select-none u-background-var-color-card"
           @click="toggleSection(section.code)"
         >
           <div class="flex items-center gap-2">
@@ -119,8 +116,7 @@
             </tbody>
           </table>
           <button
-            class="mt-2 text-xs px-2 py-1 rounded"
-            class="u-background-var-color-card-border-1px-dashed-var-color-border-color-var-color-text-muted"
+            class="mt-2 text-xs px-2 py-1 rounded u-background-var-color-card-border-1px-dashed-var-color-border-color-var-color-text-muted"
             @click="addItem(section.code)"
           >
             + 添加条目
@@ -130,8 +126,7 @@
     </div>
 
     <div
-      class="flex items-center justify-between px-3 py-2 rounded"
- class="u-background-var-color-accent-color-white"
+      class="flex items-center justify-between px-3 py-2 rounded u-background-var-color-accent-color-white"
     >
       <span class="text-sm font-bold">BOQ 总价</span>
       <span class="text-lg font-mono font-bold">{{ formatPrice(totalPrice) }} USD</span>

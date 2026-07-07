@@ -4,15 +4,13 @@
       <h3 class="text-sm font-bold text-accent">Efficiency Chain (10-Factor Model)</h3>
       <div class="flex gap-2">
         <button
-          class="text-xs px-3 py-1 rounded transition-all"
- class="u-background-var-color-card-dark-color-var-color-text-border-1px-solid-var-color-border"
+          class="text-xs px-3 py-1 rounded transition-all u-background-var-color-card-dark-color-var-color-text-border-1px-solid-var-color-border"
           @click="setRfpMode"
         >
           RFP Mode
         </button>
         <button
-          class="text-xs px-3 py-1 rounded transition-all"
-          class="u-background-var-color-card-dark-color-var-color-text-muted-border-1px-solid-var-color-border"
+          class="text-xs px-3 py-1 rounded transition-all u-background-var-color-card-dark-color-var-color-text-muted-border-1px-solid-var-color-border"
           @click="resetDefaults"
         >
           Reset
@@ -28,8 +26,7 @@
     </div>
 
     <div
-      class="rounded-lg p-3 flex items-center gap-3"
- class="bg-card-dark border-card"
+      class="rounded-lg p-3 flex items-center gap-3 bg-card-dark border-card"
     >
       <span class="text-xs text-muted">SOH:</span>
       <input
@@ -37,15 +34,13 @@
         type="number"
         min="60"
         max="100"
-        class="text-xs px-2 py-1 rounded"
-        class="u-width-56px-background-var-color-input-bg-dark-color-var-color-text-border-1px-solid-var-color-input-border"
+        class="text-xs px-2 py-1 rounded u-width-56px-background-var-color-input-bg-dark-color-var-color-text-border-1px-solid-var-color-input-border"
       />
       <span class="text-xs text-muted">%</span>
     </div>
 
     <div
-      class="rounded-lg p-3 flex flex-col gap-2.5"
- class="bg-card-dark border-card"
+      class="rounded-lg p-3 flex flex-col gap-2.5 bg-card-dark border-card"
     >
       <div class="formula-row">
         <span class="formula-label">AC Side</span>
@@ -143,8 +138,7 @@
         <div class="total-item rte">
           <span class="total-label u-font-weight-bold">RTE</span>
           <span
-            class="total-value"
- class="u-font-weight-bold"
+            class="total-value u-font-weight-bold"
             :style="{
               color:
                 totalResult.rte >= 0.85
@@ -206,8 +200,7 @@
                   min="0"
                   max="1"
                   step="0.01"
-                  class="cell-input"
- class="u-width-48px"
+                  class="cell-input u-width-48px"
                 />
                 <span v-else>-</span>class="text-muted"
               </td>
@@ -255,8 +248,7 @@
                   min="0"
                   max="1"
                   step="0.01"
-                  class="cell-input"
- class="u-width-48px"
+                  class="cell-input u-width-48px"
                 />
                 <span v-else>-</span>class="text-muted"
               </td>

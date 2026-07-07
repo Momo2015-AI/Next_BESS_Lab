@@ -87,8 +87,7 @@
           <div
             v-for="sim in simulations"
             :key="sim.id"
-            class="flex items-center justify-between rounded px-3 py-2 text-xs"
- class="bg-card-dark"
+            class="flex items-center justify-between rounded px-3 py-2 text-xs bg-card-dark"
           >
             <div>
               <span>{{ sim.name }}</span>class="text-secondary"

@@ -4,8 +4,7 @@
       <h3 class="text-sm font-bold text-accent">Degradation Model Configuration</h3>
       <div class="flex gap-2">
         <button
-          class="text-xs px-3 py-1 rounded transition-all"
-          class="u-background-var-color-card-dark-color-var-color-text-muted-border-1px-solid-var-color-border"
+          class="text-xs px-3 py-1 rounded transition-all u-background-var-color-card-dark-color-var-color-text-muted-border-1px-solid-var-color-border"
           @click="resetAll"
         >
           Reset
@@ -45,8 +44,7 @@
             min="0.1"
             max="5"
             step="0.1"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="u-width-70px"
+            class="form-field-input text-xs px-2 py-1 rounded u-width-70px"
           />
         </div>
         <p class="text-xs u-color-var-color-text-muted-opacity-0-6">
@@ -61,15 +59,13 @@
           <label class="label-text text-xs font-bold">GB/T 36276 Standard Curves</label>
           <div class="flex gap-2">
             <label
-              class="text-xs px-2 py-1 rounded cursor-pointer transition-all"
- class="u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border"
+              class="text-xs px-2 py-1 rounded cursor-pointer transition-all u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border"
             >
               Import CSV
               <input type="file" accept=".csv" @change="handleCsvImport" />class="u-display-none"
             </label>
             <button
-              class="text-xs px-2 py-1 rounded"
- class="u-background-var-color-bg-color-var-color-text-muted-border-1px-solid-var-color-border"
+              class="text-xs px-2 py-1 rounded u-background-var-color-bg-color-var-color-text-muted-border-1px-solid-var-color-border"
               @click="resetCurves"
             >
               Reset
@@ -135,8 +131,7 @@
             min="10000"
             max="50000"
             step="1000"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="u-width-80px"
+            class="form-field-input text-xs px-2 py-1 rounded u-width-80px"
             @change="markDirty"
           />
           <span class="text-xs text-muted">Ref T [deg C]</span>
@@ -145,8 +140,7 @@
             type="number"
             min="10"
             max="40"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="w-50"
+            class="form-field-input text-xs px-2 py-1 rounded w-50"
             @change="markDirty"
           />
         </div>
@@ -166,8 +160,7 @@
             min="1.0"
             max="2.0"
             step="0.01"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="u-width-60px"
+            class="form-field-input text-xs px-2 py-1 rounded u-width-60px"
             @change="markDirty"
           />
         </div>
@@ -186,8 +179,7 @@
             type="number"
             min="10"
             max="90"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="w-50"
+            class="form-field-input text-xs px-2 py-1 rounded w-50"
             @change="markDirty"
           />
           <span class="text-xs text-muted">Field RH%</span>
@@ -196,8 +188,7 @@
             type="number"
             min="10"
             max="100"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="w-50"
+            class="form-field-input text-xs px-2 py-1 rounded w-50"
             @change="markDirty"
           />
           <span class="text-xs text-muted">n</span>
@@ -207,8 +198,7 @@
             min="1"
             max="5"
             step="0.5"
-            class="form-field-input text-xs px-2 py-1 rounded"
- class="u-width-40px"
+            class="form-field-input text-xs px-2 py-1 rounded u-width-40px"
             @change="markDirty"
           />
         </div>
@@ -223,8 +213,7 @@
           type="number"
           min="15"
           max="60"
-          class="form-field-input text-xs px-2 py-1 rounded"
- class="w-50"
+          class="form-field-input text-xs px-2 py-1 rounded w-50"
         />
         <span class="text-xs text-muted">DOD:</span>
         <input
@@ -232,8 +221,7 @@
           type="number"
           min="50"
           max="100"
-          class="form-field-input text-xs px-2 py-1 rounded"
- class="w-50"
+          class="form-field-input text-xs px-2 py-1 rounded w-50"
         />
         <span class="text-xs text-muted">Cyc/day:</span>
         <input
@@ -242,12 +230,10 @@
           min="0.5"
           max="3"
           step="0.5"
-          class="form-field-input text-xs px-2 py-1 rounded"
- class="u-width-45px"
+          class="form-field-input text-xs px-2 py-1 rounded u-width-45px"
         />
         <button
-          class="text-xs px-3 py-1 rounded"
- class="u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border"
+          class="text-xs px-3 py-1 rounded u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border"
           @click="runPreview"
         >
           Refresh
@@ -281,22 +267,19 @@
               <td class="text-center py-1 px-2">
                 <span
                   v-if="s >= 85"
-                  class="text-xs px-1 rounded"
- class="u-background-rgba-16-185-129-0-15-color-var-color-success"
+                  class="text-xs px-1 rounded u-background-rgba-16-185-129-0-15-color-var-color-success"
                 >
                   Healthy
                 </span>
                 <span
                   v-else-if="s >= 70"
-                  class="text-xs px-1 rounded"
- class="u-background-rgba-245-158-11-0-15-color-var-color-warning"
+                  class="text-xs px-1 rounded u-background-rgba-245-158-11-0-15-color-var-color-warning"
                 >
                   Warning
                 </span>
                 <span
                   v-else
-                  class="text-xs px-1 rounded"
- class="u-background-rgba-239-68-68-0-15-color-var-color-danger"
+                  class="text-xs px-1 rounded u-background-rgba-239-68-68-0-15-color-var-color-danger"
                 >
                   Critical
                 </span>

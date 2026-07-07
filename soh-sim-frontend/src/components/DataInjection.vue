@@ -2,8 +2,7 @@
   <div class="flex-1 overflow-auto rounded-xl p-4 space-y-4 card">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div
-        class="p-3 rounded-lg flex flex-col"
- class="bg-secondary border-card"
+        class="p-3 rounded-lg flex flex-col bg-secondary border-card"
       >
         <span class="text-xs font-bold mb-1 text-warning">
           {{ $t('dataInjection.sohTitle') }}
@@ -18,15 +17,13 @@
         />
         <div class="flex gap-2 mt-2">
           <button
-            class="flex-1 font-bold py-1.5 rounded text-xs transition-all"
- class="u-background-var-color-warning-color-white"
+            class="flex-1 font-bold py-1.5 rounded text-xs transition-all u-background-var-color-warning-color-white"
             @click="parseSoh"
           >
             {{ $t('dataInjection.parseSoh') }}
           </button>
           <button
-            class="px-3 py-1.5 rounded text-xs transition-all"
-            class="u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
+            class="px-3 py-1.5 rounded text-xs transition-all u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
             @click="resetSoh"
           >
             {{ $t('dataInjection.resetDefault') }}
@@ -34,8 +31,7 @@
         </div>
       </div>
       <div
-        class="p-3 rounded-lg flex flex-col"
- class="bg-secondary border-card"
+        class="p-3 rounded-lg flex flex-col bg-secondary border-card"
       >
         <span class="text-xs font-bold mb-1 text-accent-2">
           {{ $t('dataInjection.rteTitle') }}
@@ -50,15 +46,13 @@
         />
         <div class="flex gap-2 mt-2">
           <button
-            class="flex-1 font-bold py-1.5 rounded text-xs transition-all"
- class="u-background-var-color-accent-secondary-color-white"
+            class="flex-1 font-bold py-1.5 rounded text-xs transition-all u-background-var-color-accent-secondary-color-white"
             @click="parseRte"
           >
             {{ $t('dataInjection.parseRte') }}
           </button>
           <button
-            class="px-3 py-1.5 rounded text-xs transition-all"
-            class="u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
+            class="px-3 py-1.5 rounded text-xs transition-all u-background-var-color-bg-secondary-color-var-color-text-secondary-border-1px-solid-var-color-border"
             @click="resetRte"
           >
             {{ $t('dataInjection.resetDefault') }}

@@ -150,8 +150,7 @@
       </div>
 
       <div
-        class="mt-3 p-3 rounded-lg font-mono text-[11px] space-y-1"
-        class="u-background-var-color-bg-secondary-border-1px-solid-var-color-border-color-var-color-text-secondary"
+        class="mt-3 p-3 rounded-lg font-mono text-[11px] space-y-1 u-background-var-color-bg-secondary-border-1px-solid-var-color-border-color-var-color-text-secondary"
       >
         <div class="font-bold text-[10px] text-warning">
           {{ $t('paramPanel.auxDerivation') }}
@@ -212,14 +211,12 @@
     <!-- 配置规则区域 -->
     <div>
       <h2
-        class="text-sm font-bold mb-3 flex items-center gap-2"
- class="u-color-var-color-accent-border-left-4px-solid-var-color-accent-padding-left-8px"
+        class="text-sm font-bold mb-3 flex items-center gap-2 u-color-var-color-accent-border-left-4px-solid-var-color-accent-padding-left-8px"
       >
         ⚡ 电池与PCS配置规则
       </h2>
       <div
-        class="rounded-lg p-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 bg-card-dark border-card"
       >
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="rounded p-3 bg-input-dark">
@@ -266,8 +263,7 @@
         </div>
 
         <div
-          class="flex items-center gap-4 p-3 rounded"
- class="u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
+          class="flex items-center gap-4 p-3 rounded u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
         >
           <div class="text-xs text-accent-2">
             当前:
@@ -303,8 +299,7 @@
         </div>
 
         <button
-          class="mt-3 text-xs px-4 py-2 rounded transition-colors"
- class="bg-accent text-white"
+          class="mt-3 text-xs px-4 py-2 rounded transition-colors bg-accent text-white"
           @click="autoMatchPCS"
         >
           根据配置规则自动匹配PCS
@@ -324,8 +319,7 @@
             value="25"
             step="1"
             disabled
-            class="w-full rounded px-2 py-1 text-xs form-field-input"
- class="opacity-50 not-allowed"
+            class="w-full rounded px-2 py-1 text-xs form-field-input opacity-50 not-allowed"
           />
         </div>
         <div>
@@ -337,8 +331,7 @@
             value="0.5"
             step="0.1"
             disabled
-            class="w-full rounded px-2 py-1 text-xs form-field-input"
- class="opacity-50 not-allowed"
+            class="w-full rounded px-2 py-1 text-xs form-field-input opacity-50 not-allowed"
           />
         </div>
         <div>
@@ -347,8 +340,7 @@
             type="text"
             value="FOB + 6个月"
             disabled
-            class="w-full rounded px-2 py-1 text-xs form-field-input"
- class="opacity-50 not-allowed"
+            class="w-full rounded px-2 py-1 text-xs form-field-input opacity-50 not-allowed"
           />
         </div>
         <div>

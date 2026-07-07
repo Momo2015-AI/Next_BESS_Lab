@@ -2,8 +2,7 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
       >
         BH
       </span>

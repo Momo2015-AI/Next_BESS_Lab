@@ -19,13 +19,11 @@
       <div class="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-3">
         <div
           ref="sohChartRef"
-          class="w-full min-h-0"
-          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
+          class="w-full min-h-0 u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
         />
         <div
           ref="rteChartRef"
-          class="w-full min-h-0"
-          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
+          class="w-full min-h-0 u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-min-height-250px"
         />
       </div>
     </template>
@@ -33,24 +31,21 @@
     <template v-if="activeChart === 'soh'">
       <div
         ref="sohChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
- class="min-h-300 card-bordered"
+        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
       />
     </template>
 
     <template v-if="activeChart === 'rte'">
       <div
         ref="rteChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
- class="min-h-300 card-bordered"
+        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
       />
     </template>
 
     <template v-if="activeChart === 'acusable'">
       <div
         ref="acChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
- class="min-h-300 card-bordered"
+        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
       />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
@@ -75,8 +70,7 @@
     <template v-if="activeChart === 'stacked'">
       <div
         ref="stackedChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
- class="min-h-300 card-bordered"
+        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
       />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
@@ -101,8 +95,7 @@
     <template v-if="activeChart === 'degradation'">
       <div
         ref="degradationChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl"
- class="min-h-300 card-bordered"
+        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
       />
     </template>
 
@@ -112,8 +105,7 @@
           <div
             v-for="m in metrics"
             :key="m.label"
-            class="rounded-xl p-3 text-center"
- class="card-bordered"
+            class="rounded-xl p-3 text-center card-bordered"
           >
             <div class="text-[10px] mb-1 text-muted">
               {{ m.label }}
@@ -128,8 +120,7 @@
         </div>
         <div
           ref="dashChartRef"
-          class="w-full"
-          class="u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-height-300px"
+          class="w-full u-background-var-color-card-border-1px-solid-var-color-border-border-radius-var-radius-md-height-300px"
         />
       </div>
     </template>

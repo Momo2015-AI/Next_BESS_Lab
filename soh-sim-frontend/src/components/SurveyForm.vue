@@ -5,8 +5,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             01
           </span>
@@ -56,8 +55,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             02
           </span>
@@ -121,8 +119,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             03
           </span>
@@ -206,8 +203,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             04
           </span>
@@ -276,8 +272,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             05
           </span>
@@ -369,8 +364,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             06
           </span>
@@ -438,8 +432,7 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
- class="bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
           >
             07
           </span>
@@ -476,13 +469,11 @@
       <!-- 提交成功弹窗 -->
       <div
         v-if="showSuccess"
-        class="fixed inset-0 z-50 flex items-center justify-center"
- class="u-background-rgba-0-0-0-0-5"
+        class="fixed inset-0 z-50 flex items-center justify-center u-background-rgba-0-0-0-0-5"
       >
         <div class="card p-8 text-center max-w-sm w-11/12">
           <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl font-bold"
- class="u-background-var-color-success-color-fff"
+            class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl font-bold u-background-var-color-success-color-fff"
           >
             &#10003;
           </div>

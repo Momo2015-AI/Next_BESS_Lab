@@ -10,8 +10,7 @@
       <div class="grid grid-cols-2 gap-4 mb-4">
         <!-- 电芯选型 -->
         <div
-          class="rounded-lg p-4"
- class="bg-card-dark border-card"
+          class="rounded-lg p-4 bg-card-dark border-card"
         >
           <h4 class="text-xs mb-3 font-medium text-secondary">电芯型号</h4>
 
@@ -72,8 +71,7 @@
 
         <!-- 电池簇配置 -->
         <div
-          class="rounded-lg p-4"
- class="bg-card-dark border-card"
+          class="rounded-lg p-4 bg-card-dark border-card"
         >
           <h4 class="text-xs mb-3 font-medium text-secondary">电池簇配置</h4>
 
@@ -143,8 +141,7 @@
 
       <!-- 集装箱配置 -->
       <div
-        class="rounded-lg p-4 mb-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 mb-4 bg-card-dark border-card"
       >
         <h4 class="text-xs mb-3 font-medium text-secondary">集装箱配置</h4>
 
@@ -223,8 +220,7 @@
 
       <!-- 运行参数 -->
       <div
-        class="rounded-lg p-4 mb-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 mb-4 bg-card-dark border-card"
       >
         <h4 class="text-xs mb-3 font-medium text-secondary">运行参数（从调研表获取）</h4>
 
@@ -269,14 +265,12 @@
 
       <!-- 计算结果 -->
       <div
-        class="rounded-lg p-4"
- class="bg-card-dark border-card"
+        class="rounded-lg p-4 bg-card-dark border-card"
       >
         <div class="flex items-center justify-between mb-3">
           <h4 class="text-xs font-medium text-secondary">电池系统配置结果</h4>
           <button
-            class="text-xs px-3 py-1 rounded transition-colors"
- class="bg-accent-2 text-white"
+            class="text-xs px-3 py-1 rounded transition-colors bg-accent-2 text-white"
             @click="calculateBatteryConfig"
           >
             计算配置
@@ -285,8 +279,7 @@
 
         <div class="grid grid-cols-6 gap-3">
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-accent-2">
               {{ batteryConfig.totalDcEnergy.toFixed(1) }}
@@ -294,8 +287,7 @@
             <div class="text-[10px] text-muted">总直流能量 (MWh)</div>
           </div>
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-accent">
               {{ batteryConfig.containerQty }}
@@ -303,8 +295,7 @@
             <div class="text-[10px] text-muted">集装箱数量</div>
           </div>
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-success">
               {{ totalStrings }}
@@ -312,8 +303,7 @@
             <div class="text-[10px] text-muted">电池簇总数</div>
           </div>
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-warning">
               {{ batteryConfig.dcVoltageRange }}
@@ -321,8 +311,7 @@
             <div class="text-[10px] text-muted">电压范围</div>
           </div>
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-danger">
               {{ batteryConfig.maxDcCurrent }}
@@ -330,8 +319,7 @@
             <div class="text-[10px] text-muted">最大电流 (A)</div>
           </div>
           <div
-            class="text-center rounded p-2"
- class="card-bordered"
+            class="text-center rounded p-2 card-bordered"
           >
             <div class="text-lg font-bold text-accent">
               {{ batteryConfig.clustersPerContainer }}
@@ -342,15 +330,13 @@
 
         <div class="mt-4 flex justify-end gap-2">
           <button
-            class="text-xs px-3 py-1.5 rounded transition-colors"
-            class="u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
+            class="text-xs px-3 py-1.5 rounded transition-colors u-background-color-var-color-card-border-1px-solid-var-color-border-color-var-color-text-secondary"
             @click="resetBatteryConfig"
           >
             重置
           </button>
           <button
-            class="text-xs px-4 py-1.5 rounded font-bold transition-colors"
- class="bg-accent-2 text-white"
+            class="text-xs px-4 py-1.5 rounded font-bold transition-colors bg-accent-2 text-white"
             @click="applyBatteryConfig"
           >
             应用配置

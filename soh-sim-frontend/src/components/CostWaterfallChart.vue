@@ -2,8 +2,7 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
- class="u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold u-background-color-rgba-139-92-246-0-2-color-var-color-accent"
       >
         IX
       </span>
@@ -14,8 +13,7 @@
       <div>年度成本分析 Annual Cost Breakdown</div>
       <select
         v-model="selectedYear"
-        class="rounded px-2 py-1 text-xs"
-        class="u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
+        class="rounded px-2 py-1 text-xs u-background-color-var-color-input-bg-dark-border-1px-solid-var-color-input-border-color-var-color-text"
       >
         <option v-for="year in availableYears" :key="year" :value="year">Year {{ year }}</option>
       </select>
