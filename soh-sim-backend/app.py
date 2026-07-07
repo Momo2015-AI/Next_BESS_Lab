@@ -17,7 +17,7 @@ from routes.aux_power import aux_power_bp
 from routes.boq import boq_bp
 from routes.degradation import degradation_bp
 from routes.efficiency import efficiency_bp
-from routes.epc_modules import epc_bp
+from routes.epc import register_epc_blueprints
 from routes.export import export_bp
 from routes.financial import financial_bp
 from routes.pipeline import pipeline_bp
@@ -41,7 +41,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # JWT Secret Key（生产环境必须设置环境变量，开发环境使用 fallback）
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
+_secret_key = os.environ.get("SECRET_KEY")
+if not _secret_key:
+    import logging
+    logging.warning("⚠ SECRET_KEY 未设置，使用默认开发密钥。生产环境请设置环境变量 SECRET_KEY！")
+    _secret_key = "dev-secret-change-in-production"
+app.config["SECRET_KEY"] = _secret_key
 
 # 初始化数据库
 init_db(app)
@@ -61,7 +66,7 @@ app.register_blueprint(report_bp)
 app.register_blueprint(aux_power_bp)
 
 app.register_blueprint(ai_sim_bp)
-app.register_blueprint(epc_bp)
+register_epc_blueprints(app)
 
 app.register_blueprint(pipeline_bp)
 app.register_blueprint(financial_bp)

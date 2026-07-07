@@ -332,6 +332,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import api from '../services/api.js'
 
 const algorithms = ref([])
 const showAddModal = ref(false)
@@ -790,8 +791,7 @@ async function fetchAlgorithms() {
   const allAlgorithms = []
 
   try {
-    const res = await fetch('/api/algorithms/public')
-    const data = await res.json()
+    const data = await api.get('/api/algorithms/public')
     if (data.success && data.data && data.data.length > 0) {
       allAlgorithms.push(...data.data.map((a) => ({ ...a, is_builtin: true })))
     }
@@ -802,10 +802,7 @@ async function fetchAlgorithms() {
   const token = sessionStorage.getItem('auth_token')
   if (token) {
     try {
-      const res = await fetch('/api/algorithms', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await res.json()
+      const data = await api.get('/api/algorithms')
       if (data.success && data.data) {
         const builtinIds = new Set(allAlgorithms.map((a) => a.id))
         data.data.forEach((a) => {
@@ -834,15 +831,7 @@ async function createAlgorithm() {
   if (!token) return
 
   try {
-    const res = await fetch('/api/algorithms', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(newAlg)
-    })
-    const data = await res.json()
+    const data = await api.post('/api/algorithms', newAlg)
     if (data.success) {
       showToast('算法模型创建成功')
       showAddModal.value = false
@@ -875,11 +864,7 @@ async function deleteAlgorithm(id) {
   if (!token) return
 
   try {
-    const res = await fetch(`/api/algorithms/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const data = await res.json()
+    const data = await api.del(`/api/algorithms/${id}`)
     if (data.success) {
       showToast('删除成功')
       await fetchAlgorithms()
@@ -896,11 +881,7 @@ async function initializeBuiltin() {
   if (!token) return
 
   try {
-    const res = await fetch('/api/algorithms/initialize', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const data = await res.json()
+    const data = await api.post('/api/algorithms/initialize')
     if (data.success) {
       showToast(`成功初始化${data.count}个内置算法`)
       await fetchAlgorithms()
