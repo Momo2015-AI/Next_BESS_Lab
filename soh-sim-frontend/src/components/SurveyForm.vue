@@ -505,6 +505,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
+import api from '../services/api.js'
 
 const emit = defineEmits(['error'])
 
@@ -564,15 +565,7 @@ async function submitForm() {
   submitting.value = true
 
   try {
-    const response = await fetch('/api/survey/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(form)
-    })
-
-    const result = await response.json()
+    const result = await api.post('/api/survey/submit', form)
 
     if (result.success) {
       submittedData.value = result

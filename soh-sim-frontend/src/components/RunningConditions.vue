@@ -887,6 +887,7 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+import api from '../services/api.js'
 
 const { t } = useI18n()
 const emit = defineEmits(['applyParams'])
@@ -1045,8 +1046,7 @@ async function parseFile(file) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
-    const data = await resp.json()
+    const data = await api.request('/api/upload/extract', { method: 'POST', body: formData, headers: {} })
     if (data.extracted) {
       uploadResult.value = { extracted: data.extracted, fieldsExtracted: Object.keys(data.extracted).length }
     } else {

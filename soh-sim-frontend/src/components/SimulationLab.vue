@@ -743,6 +743,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+import api from '../services/api.js'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const emit = defineEmits(['applyConfig', 'error'])
@@ -851,15 +852,14 @@ const loadSurveyData = async () => {
     return
   }
   try {
-    const resp = await fetch(`/api/survey/${surveyId.value}`)
-    if (resp.ok) {
-      const data = await resp.json()
-      mapSurveyData(data)
-    } else {
+    const data = await api.get(`/api/survey/${surveyId.value}`)
+    mapSurveyData(data)
+  } catch (e) {
+    if (e.status === 404) {
       emit('error', '调研表ID不存在，请手动填写数据', 'warning')
+    } else {
+      emit('error', '网络错误，请手动填写数据', 'error')
     }
-  } catch {
-    emit('error', '网络错误，请手动填写数据', 'error')
   }
 }
 
@@ -869,8 +869,7 @@ const searchByProjectName = async () => {
     return
   }
   try {
-    const resp = await fetch(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
-    const data = await resp.json()
+    const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
     if (data.success) {
       searchResults.value = data.surveys
       if (data.surveys.length === 0) {
@@ -922,11 +921,10 @@ const prevStep = () => {
 
 const fetchAlgorithms = async () => {
   try {
-    const resp = await fetch('/api/algorithms/public?category=degradation')
-    const simResp = await fetch('/api/algorithms/public?category=simulation')
-
-    const data = await resp.json()
-    const simData = await simResp.json()
+    const [data, simData] = await Promise.all([
+      api.get('/api/algorithms/public?category=degradation'),
+      api.get('/api/algorithms/public?category=simulation')
+    ])
 
     let allAlgs = []
     if (data.success && data.data.length > 0) {
@@ -967,8 +965,7 @@ const fetchAlgorithms = async () => {
 
 const fetchManufacturers = async () => {
   try {
-    const resp = await fetch('/api/ai-sim/manufacturers')
-    const data = await resp.json()
+    const data = await api.get('/api/ai-sim/manufacturers')
     if (data.success && data.data.length > 0) {
       manufacturers.value = data.data
     }
@@ -1164,13 +1161,7 @@ const runAISimulation = async () => {
       rte_initial: simParams.initRte
     }
 
-    const resp = await fetch('/api/ai-sim/simulation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    })
-
-    const result = await resp.json()
+    const result = await api.post('/api/ai-sim/simulation', data)
 
     if (result.success && result.data) {
       const aiData = result.data
@@ -1273,13 +1264,7 @@ const runBackendSimulation = async () => {
         modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined
       }
     }
-    const res = await fetch('/api/pipeline/calculate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-    if (!res.ok) throw new Error('Backend simulation failed')
-    const data = await res.json()
+    const data = await api.post('/api/pipeline/calculate', body)
     if (data.result) {
       const sohArr = data.result.soh || []
       const rteArr = data.result.rte || []
@@ -1411,15 +1396,7 @@ const saveSimulationResult = async () => {
   }
 
   try {
-    const resp = await fetch('http://localhost:5001/api/versions/default/results', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
-    const respData = await resp.json()
+    const respData = await api.post('/api/versions/default/results', data)
     if (respData.success) {
       showToast('仿真结果保存成功')
     } else {

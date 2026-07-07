@@ -157,6 +157,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
+import api from '../services/api.js'
 
 const router = useRouter()
 
@@ -301,12 +302,7 @@ async function submitSurvey() {
     }
     let apiSuccess = false
     try {
-      const response = await fetch('/api/survey/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(mappedData)
-      })
-      const result = await response.json()
+      const result = await api.post('/api/survey/submit', mappedData)
       if (result.success) {
         apiSuccess = true
         surveyData.id = result.data?.survey_id || surveyId

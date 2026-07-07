@@ -123,6 +123,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
+import api from '../services/api.js'
 
 // 支持的货币
 const supportedCurrencies = reactive({
@@ -191,8 +192,7 @@ const savePreferences = () => {
 // 获取汇率
 const fetchRate = async () => {
   try {
-    const response = await fetch(`/api/exchange-rates/latest?currency=${targetCurrency.value}`)
-    const data = await response.json()
+    const data = await api.get(`/api/exchange-rates/latest?currency=${targetCurrency.value}`)
 
     if (data.success) {
       rate.value = data.rate
@@ -222,8 +222,7 @@ const convert = () => {
 // 刷新汇率
 const refreshRates = async () => {
   try {
-    const response = await fetch('/api/exchange-rates/refresh', { method: 'POST' })
-    const data = await response.json()
+    const data = await api.post('/api/exchange-rates/refresh')
 
     if (data.success) {
       await fetchRate() // 重新获取最新汇率

@@ -210,6 +210,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
+import api from '../services/api.js'
 
 const router = useRouter()
 const emit = defineEmits(['error'])
@@ -259,8 +260,7 @@ async function loadSurveyById() {
   }
   loading.value = true
   try {
-    const resp = await fetch(`/api/survey/${surveyId.value}`)
-    const data = await resp.json()
+    const data = await api.get(`/api/survey/${surveyId.value}`)
     if (data.success) {
       mapSurveyData(data.data)
     } else {
@@ -280,8 +280,7 @@ async function searchByProjectName() {
   }
   loading.value = true
   try {
-    const resp = await fetch(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
-    const data = await resp.json()
+    const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
     if (data.success) {
       searchResults.value = data.surveys
       if (data.surveys.length === 0) emit('error', '未找到匹配的项目', 'warning')
@@ -336,12 +335,7 @@ async function saveSurvey() {
       dc_efficiency: simParams.dcEfficiency,
       aux_power: simParams.auxPower
     }
-    const resp = await fetch('/api/survey/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    const result = await resp.json()
+    const result = await api.post('/api/survey/create', payload)
     if (result.success) {
       emit('error', '调研数据保存成功', 'success')
       surveyId.value = result.data.id

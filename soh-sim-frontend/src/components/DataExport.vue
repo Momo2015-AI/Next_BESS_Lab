@@ -118,6 +118,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import AppIcon from './AppIcon.vue'
+import api from '../services/api.js'
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -179,23 +180,15 @@ async function exportCSV() {
       exportType = 'params'
     }
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: exportType,
-        results: props.results,
-        params: props.params,
-        soh: props.soh,
-        rte: props.rte,
-        dod: props.dod,
-        augQty: props.augQty
-      })
+    const blob = await api.download(endpoint, {
+      type: exportType,
+      results: props.results,
+      params: props.params,
+      soh: props.soh,
+      rte: props.rte,
+      dod: props.dod,
+      augQty: props.augQty
     })
-
-    if (!response.ok) throw new Error('导出失败')
-
-    const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -259,23 +252,17 @@ async function saveSimulation() {
   saving.value = true
 
   try {
-    const response = await fetch('/api/export/simulation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_id: props.projectId,
-        name: `仿真_${new Date().toLocaleString()}`,
-        params: props.params,
-        results: props.results,
-        soh: props.soh,
-        rte: props.rte,
-        dod: props.dod,
-        augQty: props.augQty,
-        financial: props.financial
-      })
+    const result = await api.post('/api/export/simulation', {
+      project_id: props.projectId,
+      name: `仿真_${new Date().toLocaleString()}`,
+      params: props.params,
+      results: props.results,
+      soh: props.soh,
+      rte: props.rte,
+      dod: props.dod,
+      augQty: props.augQty,
+      financial: props.financial
     })
-
-    const result = await response.json()
 
     if (result.success) {
       showToast('仿真结果已保存')
@@ -294,8 +281,7 @@ async function saveSimulation() {
 // 加载仿真列表
 async function loadSimulations() {
   try {
-    const response = await fetch('/api/simulation/list')
-    const data = await response.json()
+    const data = await api.get('/api/simulation/list')
     simulations.value = data.simulations || []
   } catch (error) {
     console.error('加载仿真列表失败:', error)
@@ -305,8 +291,7 @@ async function loadSimulations() {
 // 加载仿真结果
 async function loadSimulation(simulationId) {
   try {
-    const response = await fetch(`/api/simulation/${simulationId}`)
-    const data = await response.json()
+    const data = await api.get(`/api/simulation/${simulationId}`)
 
     emit('load-simulation', data)
     showToast('仿真结果已加载')
@@ -319,8 +304,7 @@ async function loadSimulation(simulationId) {
 // 导出历史仿真CSV
 async function exportSimulationCSV(simulationId) {
   try {
-    const response = await fetch(`/api/simulation/${simulationId}`)
-    const data = await response.json()
+    const data = await api.get(`/api/simulation/${simulationId}`)
 
     if (data) {
       const csvContent = generateCSV(data) // 传入完整data对象

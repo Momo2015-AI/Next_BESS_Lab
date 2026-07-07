@@ -183,6 +183,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, RadarChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, RadarComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+import api from '../services/api.js'
 echarts.use([
   CanvasRenderer,
   BarChart,
@@ -286,13 +287,7 @@ async function analyzeSingleParam(param) {
     const testParams = { ...props.params, [param.key]: value }
 
     try {
-      const response = await fetch('/api/soh/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testParams)
-      })
-
-      const result = await response.json()
+      const result = await api.post('/api/soh/calculate', testParams)
 
       if (result.success) {
         const financial = result.data.financial || {}

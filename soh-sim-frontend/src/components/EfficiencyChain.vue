@@ -257,6 +257,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { debounce } from 'lodash-es'
+import api from '../services/api.js'
 
 const ABBR_MAP = {
   1: 'HV',
@@ -298,8 +299,7 @@ onMounted(async () => {
 
 async function loadFactors() {
   try {
-    const resp = await fetch('/api/efficiency/factors')
-    const data = await resp.json()
+    const data = await api.get('/api/efficiency/factors')
     factors.value = data.factors.map((f) => ({
       ...f,
       abbr: ABBR_MAP[f.id] || `F${f.id}`,
@@ -359,11 +359,7 @@ async function applyFactors() {
       degrade: f.degrade,
       degrade_rate: f.degrade_rate
     }))
-    await fetch('/api/efficiency/factors', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ factors: payload })
-    })
+    await api.put('/api/efficiency/factors', { factors: payload })
     modified.value = false
   } catch (e) {
     console.error('Failed to apply factors:', e)
@@ -380,7 +376,7 @@ function setRfpMode() {
 }
 
 async function resetDefaults() {
-  await fetch('/api/efficiency/factors/reset', { method: 'POST' })
+  await api.post('/api/efficiency/factors/reset')
   await loadFactors()
 }
 </script>

@@ -150,6 +150,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useExchangeRate } from '../composables/useExchangeRate.js'
+import api from '../services/api.js'
 
 const props = defineProps({
   params: Object,
@@ -227,16 +228,10 @@ const formatCurrency = (amount) => {
 const loadProducts = async () => {
   try {
     // 尝试从API加载
-    const [cellsRes, containersRes, pcsRes] = await Promise.all([
-      fetch('/api/library/cells'),
-      fetch('/api/library/containers'),
-      fetch('/api/library/pcs')
-    ])
-
     const [cellsData, containersData, pcsData] = await Promise.all([
-      cellsRes.json(),
-      containersRes.json(),
-      pcsRes.json()
+      api.get('/api/library/cells'),
+      api.get('/api/library/containers'),
+      api.get('/api/library/pcs')
     ])
 
     if (cellsData.success) availableCells.value = cellsData.data || []
@@ -288,8 +283,8 @@ const loadProducts = async () => {
 
 // 更新CAPEX
 const updateCAPEX = () => {
-  // 这里可以触发重新计算或更新父组件
-  console.log('CAPEX updated:', {
+  // 触发重新计算或更新父组件
+  // console.log('CAPEX updated:', {
     cellCost: cellCost.value,
     containerCost: containerCost.value,
     pcsCost: pcsCost.value,

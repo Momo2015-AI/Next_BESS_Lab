@@ -299,6 +299,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
+import api from '../services/api.js'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
 const props = defineProps({
@@ -418,13 +419,7 @@ async function calculateScenario() {
   calculating.value = true
 
   try {
-    const response = await fetch('/api/soh/calculate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editingScenario.value.params)
-    })
-
-    const result = await response.json()
+    const result = await api.post('/api/soh/calculate', editingScenario.value.params)
 
     if (result.success) {
       editingScenario.value.results = result.data

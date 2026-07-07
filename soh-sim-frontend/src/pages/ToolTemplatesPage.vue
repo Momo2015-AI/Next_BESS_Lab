@@ -61,6 +61,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import api from '../services/api.js'
 
 const templates = ref([])
 const loading = ref(false)
@@ -68,8 +69,7 @@ const loading = ref(false)
 async function loadTemplates() {
   loading.value = true
   try {
-    const resp = await fetch('/api/correction-templates')
-    const data = await resp.json()
+    const data = await api.get('/api/correction-templates')
     if (data.success) {
       templates.value = data.data
     }
@@ -83,8 +83,7 @@ async function loadTemplates() {
 async function seedTemplates() {
   loading.value = true
   try {
-    const resp = await fetch('/api/correction-templates/seed', { method: 'POST' })
-    const data = await resp.json()
+    const data = await api.post('/api/correction-templates/seed')
     if (data.success) {
       loadTemplates()
     }

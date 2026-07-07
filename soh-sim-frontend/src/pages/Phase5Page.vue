@@ -56,6 +56,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import DataExport from '../components/DataExport.vue'
+import api from '../services/api.js'
 
 const store = useBessStore()
 const { t } = useI18n()
@@ -77,29 +78,20 @@ async function generateReport() {
   generating.value = true
   reportMsg.value = ''
   try {
-    const res = await fetch('/api/report/technical', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        projectId: store.project.id,
-        results: store.results,
-        systemParams: store.systemParams,
-        financial: store.financial.metrics
-      })
+    const blob = await api.download('/api/report/technical', {
+      projectId: store.project.id,
+      results: store.results,
+      systemParams: store.systemParams,
+      financial: store.financial.metrics
     })
-    if (res.ok) {
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'technical-report.pdf'
-      a.click()
-      URL.revokeObjectURL(url)
-      store.exports.reportGenerated = true
-      reportMsg.value = '报告已生成并下载'
-    } else {
-      reportMsg.value = '报告生成失败'
-    }
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'technical-report.pdf'
+    a.click()
+    URL.revokeObjectURL(url)
+    store.exports.reportGenerated = true
+    reportMsg.value = '报告已生成并下载'
   } catch (e) {
     reportMsg.value = '错误: ' + e.message
   } finally {
@@ -111,24 +103,15 @@ async function generateBom() {
   generatingBom.value = true
   bomMsg.value = ''
   try {
-    const res = await fetch('/api/report/bom', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectId: store.project.id, products: store.selectedProducts })
-    })
-    if (res.ok) {
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
+    const blob = await api.download('/api/report/bom', { projectId: store.project.id, products: store.selectedProducts })
+    const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
-      a.href = url
-      a.download = 'bom-list.pdf'
-      a.click()
-      URL.revokeObjectURL(url)
-      store.exports.bomGenerated = true
-      bomMsg.value = 'BOM 清单已生成并下载'
-    } else {
-      bomMsg.value = 'BOM 生成失败'
-    }
+    a.href = url
+    a.download = 'bom-list.pdf'
+    a.click()
+    URL.revokeObjectURL(url)
+    store.exports.bomGenerated = true
+    bomMsg.value = 'BOM 清单已生成并下载'
   } catch (e) {
     bomMsg.value = '错误: ' + e.message
   } finally {
@@ -139,16 +122,12 @@ async function generateBom() {
 async function saveProject() {
   saveMsg.value = ''
   try {
-    await fetch('/api/project/sync-params', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        params: store.systemParams,
-        soh: store.degradation.soh,
-        rte: store.degradation.rte,
-        dod: store.degradation.dod,
-        augQty: store.degradation.augQty
-      })
+    await api.post('/api/project/sync-params', {
+      params: store.systemParams,
+      soh: store.degradation.soh,
+      rte: store.degradation.rte,
+      dod: store.degradation.dod,
+      augQty: store.degradation.augQty
     })
     saveMsg.value = '项目已保存'
   } catch (e) {

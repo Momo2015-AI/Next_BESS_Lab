@@ -137,6 +137,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted, computed } from 'vue'
 import { useBessStore } from '../stores/bess.js'
+import api from '../services/api.js'
 
 const store = useBessStore()
 
@@ -170,8 +171,7 @@ onMounted(async () => {
 
 async function loadSections() {
   try {
-    const res = await fetch('/api/boq/sections')
-    const json = await res.json()
+    const json = await api.get('/api/boq/sections')
     if (json.success) {
       sections.value = json.data
       json.data.forEach((s) => {

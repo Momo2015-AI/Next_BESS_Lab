@@ -101,6 +101,7 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import AppIcon from './AppIcon.vue'
+import api from '../services/api.js'
 
 const props = defineProps({
   defaultMode: { type: String, default: 'login' }
@@ -167,13 +168,7 @@ async function handleSubmit() {
     : { username: form.username, email: form.email, password: form.password }
 
   try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-
-    const result = await response.json()
+    const result = await api.post(endpoint, payload, { skipAuth: true })
 
     if (result.success) {
       // 保存token和用户信息到sessionStorage（页面关闭后自动清除）
@@ -191,7 +186,7 @@ async function handleSubmit() {
     }
   } catch (error) {
     console.error('认证失败:', error)
-    errorMessage.value = '网络错误，请稍后重试'
+    errorMessage.value = error.message || '网络错误，请稍后重试'
   } finally {
     loading.value = false
   }

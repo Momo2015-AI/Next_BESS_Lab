@@ -544,6 +544,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
 import baseProducts from '../data/products.json'
+import api from '../services/api.js'
 const emit = defineEmits(['applyConfig'])
 const selectedCell = ref('')
 const selectedContainer = ref('')
@@ -586,8 +587,7 @@ async function loadLibraryData() {
 // 初始化产品库
 async function seedLibrary() {
   try {
-    const response = await fetch('/api/products/seed', { method: 'POST' })
-    const data = await response.json()
+    const data = await api.post('/api/products/seed')
     if (data.success) {
       await loadLibraryData()
     }
@@ -825,8 +825,7 @@ async function onSpecUpload(e) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
-    const data = await resp.json()
+    const data = await api.request('/api/upload/extract', { method: 'POST', body: formData, headers: {} })
     if (data.extracted) {
       const ext = data.extracted
       if (modalType.value === 'cell') {
