@@ -1,9 +1,10 @@
 import { ref, computed, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useDraft } from './useDraft'
 import { useExchangeRate } from './useExchangeRate.js'
 
 export function useFinancialModel(props) {
-  // 汇率管理
+  const { t } = useI18n()
   const { displayCurrency, convert } = useExchangeRate()
 
   const chartColors = computed(() => {
@@ -78,14 +79,14 @@ export function useFinancialModel(props) {
   )
 
   const metrics = ref([
-    { label: 'Project IRR', value: '-', unit: '%', textColor: 'var(--color-accent-secondary)' },
-    { label: 'Equity IRR', value: '-', unit: '%', textColor: 'var(--color-success)' },
+    { label: t('financialDashboard.projectIRR'), value: '-', unit: '%', textColor: 'var(--color-accent-secondary)' },
+    { label: t('financialDashboard.equityIRR'), value: '-', unit: '%', textColor: 'var(--color-success)' },
     { label: 'WACC', value: '-', unit: '%', textColor: '#0ea5e9' },
-    { label: 'NPV (7%)', value: '-', unit: `万元 (${displayCurrency})`, textColor: 'var(--color-accent)' },
-    { label: 'LCOS', value: '-', unit: `元/kWh (${displayCurrency})`, textColor: 'var(--color-info)' },
-    { label: 'Payback', value: '-', unit: '年', textColor: 'var(--color-warning)' },
-    { label: 'Total CAPEX', value: '-', unit: `万元 (${displayCurrency})`, textColor: 'var(--color-danger)' },
-    { label: 'Min DSCR', value: '-', unit: 'x', textColor: 'var(--color-chart-orange)' }
+    { label: t('financialDashboard.npv'), value: '-', unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`, textColor: 'var(--color-accent)' },
+    { label: t('financialDashboard.lcos'), value: '-', unit: `${t('financialDashboard.energyPriceUnit')} (${displayCurrency})`, textColor: 'var(--color-info)' },
+    { label: t('financialDashboard.payback'), value: '-', unit: t('financialDashboard.yearUnit'), textColor: 'var(--color-warning)' },
+    { label: t('financialDashboard.totalCAPEX'), value: '-', unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`, textColor: 'var(--color-danger)' },
+    { label: t('financialDashboard.minDscr'), value: '-', unit: 'x', textColor: 'var(--color-chart-orange)' }
   ])
 
   const cashFlowTable = ref([])
