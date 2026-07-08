@@ -4,10 +4,13 @@
 """
 
 from flask import Blueprint, make_response, request
-from datetime import datetime
 
 from routes.auth import limiter, token_required
-from utils.api_response import error_response, paginated_response, success_response
+from utils.api_response import (
+    error_response,
+    paginated_response,
+    success_response,
+)
 from services.export import (
     build_csv_output,
     build_financial_csv_output,
@@ -43,7 +46,9 @@ def export_financial_csv():
         return error_response("无效的请求数据", status_code=400)
 
     output = build_financial_csv_output(data)
-    return make_csv_response(output, "financial_export", make_response)
+    return make_csv_response(
+        output, "financial_export", make_response
+    )
 
 
 @export_bp.route("/api/export/simulation", methods=["POST"])
@@ -55,10 +60,16 @@ def export_simulation():
     if not data:
         return error_response("无效的请求数据", status_code=400)
 
-    result, error, status_code = save_simulation(data, request.current_user)
+    result, error, status_code = save_simulation(
+        data, request.current_user
+    )
     if error:
         return error_response(error, status_code=status_code)
-    return success_response(data={"simulation_id": result["simulation_id"]}, message=result.get("message", ""), status_code=status_code)
+    return success_response(
+        data={"simulation_id": result["simulation_id"]},
+        message=result.get("message", ""),
+        status_code=status_code,
+    )
 
 
 @export_bp.route("/api/simulation/list", methods=["GET"])
@@ -69,15 +80,24 @@ def list_simulations():
     per_page = request.args.get("per_page", 20, type=int)
     project_id = request.args.get("project_id")
 
-    items, ret_page, ret_per_page, total = svc_list_simulations(page, per_page, project_id, request.current_user)
-    return paginated_response(items=items, page=ret_page, page_size=ret_per_page, total=total)
+    items, ret_page, ret_per_page, total = svc_list_simulations(
+        page, per_page, project_id, request.current_user
+    )
+    return paginated_response(
+        items=items,
+        page=ret_page,
+        page_size=ret_per_page,
+        total=total,
+    )
 
 
 @export_bp.route("/api/simulation/<simulation_id>", methods=["GET"])
 @token_required
 def get_simulation(simulation_id):
     """获取仿真详情（含租户隔离校验）"""
-    result, error, status_code = get_simulation_detail(simulation_id, request.current_user)
+    result, error, status_code = get_simulation_detail(
+        simulation_id, request.current_user
+    )
     if error:
         return error_response(error, status_code=status_code)
     return success_response(data=result)

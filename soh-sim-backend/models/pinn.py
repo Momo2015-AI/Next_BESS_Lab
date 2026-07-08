@@ -1,4 +1,6 @@
 from . import db, _utcnow
+
+
 class PinnModelWeights(db.Model):
     """PINN 神经网络权重存储模型"""
 
@@ -12,5 +14,3 @@ class PinnModelWeights(db.Model):
 
     def __repr__(self):
         return f"<PinnModelWeights {self.model_name}>"
-
-

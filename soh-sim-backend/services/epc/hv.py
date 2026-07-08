@@ -1,14 +1,22 @@
 # ===================== 高压接入 =====================
 
+import math
+
 
 def design_hv_interconnection_service(data):
     """高压接入设计"""
-    total_power_mw = float(data.get("total_power_mw", 100))
+    total_power_mw = float(
+        data.get("total_power_mw", 100)
+    )
     poc_voltage = float(data.get("poc_voltage_kv", 33))
-    s_sc = float(data.get("short_circuit_capacity_mva", 500))
+    s_sc = float(
+        data.get("short_circuit_capacity_mva", 500)
+    )
 
     trans_capacity = total_power_mw * 1.1
-    trans_count = max(1, math.ceil(trans_capacity / 100))
+    trans_count = max(
+        1, math.ceil(trans_capacity / 100)
+    )
     capacity_each = trans_capacity / trans_count
 
     if poc_voltage <= 33:
@@ -19,9 +27,15 @@ def design_hv_interconnection_service(data):
         ratio = f"{int(poc_voltage)}/132/33/0.69"
 
     i_sc = s_sc / (1.732 * poc_voltage)
-    breaker_rating = math.ceil(i_sc * 1.2 / 5) * 5
-    i_rated = trans_capacity * 1000 / (1.732 * poc_voltage)
-    cable_section = math.ceil(i_rated / 1.5 / 50) * 50
+    breaker_rating = (
+        math.ceil(i_sc * 1.2 / 5) * 5
+    )
+    i_rated = (
+        trans_capacity * 1000 / (1.732 * poc_voltage)
+    )
+    cable_section = (
+        math.ceil(i_rated / 1.5 / 50) * 50
+    )
 
     protections = [
         {"name": "过流保护", "type": "50/51"},
@@ -33,11 +47,15 @@ def design_hv_interconnection_service(data):
 
     return {
         "poc_voltage_kv": poc_voltage,
-        "poc_type": data.get("poc_type", "substation"),
+        "poc_type": data.get(
+            "poc_type", "substation"
+        ),
         "short_circuit_capacity_mva": s_sc,
         "x_r_ratio": 10.0,
         "transformer_count": trans_count,
-        "transformer_capacity_mva": round(capacity_each, 1),
+        "transformer_capacity_mva": round(
+            capacity_each, 1
+        ),
         "transformer_ratio": ratio,
         "transformer_vector_group": "Dyn11",
         "transformer_impedance": 10.5,
@@ -54,5 +72,3 @@ def design_hv_interconnection_service(data):
             "cable_cross_section_mm2": cable_section,
         },
     }
-
-

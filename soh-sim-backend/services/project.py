@@ -65,7 +65,11 @@ def update_project_service(db, Project, project_id, data, user):
     if "stage" in data:
         project.stage = data["stage"]
     if "config" in data:
-        project.config = json.dumps(data["config"]) if isinstance(data["config"], dict) else data["config"]
+        project.config = (
+            json.dumps(data["config"])
+            if isinstance(data["config"], dict)
+            else data["config"]
+        )
 
     project.updated_at = datetime.now(timezone.utc)
     db.session.commit()
@@ -73,7 +77,9 @@ def update_project_service(db, Project, project_id, data, user):
     return project, None
 
 
-def create_version_service(db, Project, ProjectVersion, project_id, data, user):
+def create_version_service(
+    db, Project, ProjectVersion, project_id, data, user
+):
     """创建新版本（另存为）"""
     if user.role == "customer":
         return None, "权限不足"
@@ -83,11 +89,17 @@ def create_version_service(db, Project, ProjectVersion, project_id, data, user):
         return None, "项目不存在"
 
     latest_version = (
-        ProjectVersion.query.filter_by(project_id=project_id)
+        ProjectVersion.query.filter_by(
+            project_id=project_id
+        )
         .order_by(ProjectVersion.version_num.desc())
         .first()
     )
-    new_version_num = (latest_version.version_num + 1) if latest_version else 1
+    new_version_num = (
+        (latest_version.version_num + 1)
+        if latest_version
+        else 1
+    )
 
     version_id = str(uuid.uuid4())
     version = ProjectVersion(
@@ -96,21 +108,35 @@ def create_version_service(db, Project, ProjectVersion, project_id, data, user):
         version_num=new_version_num,
         name=data.get("name", f"方案v{new_version_num}"),
         description=data.get("description", ""),
-        config_data=data.get("config_data", latest_version.config_data if latest_version else None),
+        config_data=data.get(
+            "config_data",
+            (
+                latest_version.config_data
+                if latest_version
+                else None
+            ),
+        ),
         is_active=True,
         created_by=user.id,
         status="draft",
         created_at=datetime.now(timezone.utc),
     )
 
-    ProjectVersion.query.filter_by(project_id=project_id, is_active=True).update({"is_active": False})
+    ProjectVersion.query.filter_by(
+        project_id=project_id, is_active=True
+    ).update({"is_active": False})
     db.session.add(version)
     db.session.commit()
 
-    return {"id": version_id, "version_num": new_version_num}, None
+    return {
+        "id": version_id,
+        "version_num": new_version_num,
+    }, None
 
 
-def update_version_service(db, ProjectVersion, version_id, data, user):
+def update_version_service(
+    db, ProjectVersion, version_id, data, user
+):
     """更新版本配置"""
     if user.role == "customer":
         return None, "权限不足"
@@ -125,15 +151,21 @@ def update_version_service(db, ProjectVersion, version_id, data, user):
         version.description = data["description"]
     if "config_data" in data:
         version.config_data = (
-            json.dumps(data["config_data"]) if isinstance(data["config_data"], dict) else data["config_data"]
+            json.dumps(data["config_data"])
+            if isinstance(data["config_data"], dict)
+            else data["config_data"]
         )
     if "status" in data:
         version.status = data["status"]
     if "is_active" in data:
         if data["is_active"]:
-            ProjectVersion.query.filter_by(project_id=version.project_id).filter(
+            ProjectVersion.query.filter_by(
+                project_id=version.project_id
+            ).filter(
                 ProjectVersion.id != version_id
-            ).update({"is_active": False})
+            ).update(
+                {"is_active": False}
+            )
         version.is_active = data["is_active"]
 
     version.updated_at = datetime.now(timezone.utc)
@@ -142,7 +174,9 @@ def update_version_service(db, ProjectVersion, version_id, data, user):
     return version, None
 
 
-def activate_version_service(db, ProjectVersion, version_id, user):
+def activate_version_service(
+    db, ProjectVersion, version_id, user
+):
     """激活版本"""
     if user.role == "customer":
         return None, "权限不足"
@@ -151,7 +185,9 @@ def activate_version_service(db, ProjectVersion, version_id, user):
     if not version:
         return None, "版本不存在"
 
-    ProjectVersion.query.filter_by(project_id=version.project_id).update({"is_active": False})
+    ProjectVersion.query.filter_by(
+        project_id=version.project_id
+    ).update({"is_active": False})
     version.is_active = True
     version.updated_at = datetime.now(timezone.utc)
     db.session.commit()
@@ -171,7 +207,11 @@ def sync_params_service(db, Project, SohRteData, data):
     if project_id:
         project = Project.query.get(project_id)
         if project:
-            config = json.loads(project.config) if project.config else {}
+            config = (
+                json.loads(project.config)
+                if project.config
+                else {}
+            )
             config["params"] = params_data
             config["soh"] = soh_data
             config["rte"] = rte_data
@@ -183,18 +223,36 @@ def sync_params_service(db, Project, SohRteData, data):
 
     soh_rte_record = SohRteData.query.first()
     if soh_rte_record:
-        soh_rte_record.soh_values = json.dumps(soh_data) if soh_data else None
-        soh_rte_record.rte_values = json.dumps(rte_data) if rte_data else None
-        soh_rte_record.dod_values = json.dumps(dod_data) if dod_data else None
-        soh_rte_record.aug_qty_values = json.dumps(aug_qty_data) if aug_qty_data else None
+        soh_rte_record.soh_values = (
+            json.dumps(soh_data) if soh_data else None
+        )
+        soh_rte_record.rte_values = (
+            json.dumps(rte_data) if rte_data else None
+        )
+        soh_rte_record.dod_values = (
+            json.dumps(dod_data) if dod_data else None
+        )
+        soh_rte_record.aug_qty_values = (
+            json.dumps(aug_qty_data) if aug_qty_data else None
+        )
         soh_rte_record.updated_at = datetime.now(timezone.utc)
     else:
         soh_rte_record = SohRteData(
             id=str(uuid.uuid4()),
-            soh_values=json.dumps(soh_data) if soh_data else None,
-            rte_values=json.dumps(rte_data) if rte_data else None,
-            dod_values=json.dumps(dod_data) if dod_data else None,
-            aug_qty_values=json.dumps(aug_qty_data) if aug_qty_data else None,
+            soh_values=(
+                json.dumps(soh_data) if soh_data else None
+            ),
+            rte_values=(
+                json.dumps(rte_data) if rte_data else None
+            ),
+            dod_values=(
+                json.dumps(dod_data) if dod_data else None
+            ),
+            aug_qty_values=(
+                json.dumps(aug_qty_data)
+                if aug_qty_data
+                else None
+            ),
             created_at=datetime.now(timezone.utc),
             updated_at=datetime.now(timezone.utc),
         )

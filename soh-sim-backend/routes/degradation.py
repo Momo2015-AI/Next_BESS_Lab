@@ -22,7 +22,9 @@ def get_curves():
     return success_response(data={"curves": _in_memory_gb_curves})
 
 
-@degradation_bp.route("/api/degradation/gb36276-curves", methods=["PUT"])
+@degradation_bp.route(
+    "/api/degradation/gb36276-curves", methods=["PUT"]
+)
 @token_required
 def update_curves():
     data = request.get_json()
@@ -33,14 +35,18 @@ def update_curves():
     for c in curves:
         for key in ("label", "p_rate", "temperature", "data"):
             if key not in c:
-                return error_response(f"Each curve must have '{key}'", 400)
+                return error_response(
+                    f"Each curve must have '{key}'", 400
+                )
 
     global _in_memory_gb_curves
     _in_memory_gb_curves = curves
     return success_response(data={"curves": _in_memory_gb_curves})
 
 
-@degradation_bp.route("/api/degradation/gb36276-curves/reset", methods=["POST"])
+@degradation_bp.route(
+    "/api/degradation/gb36276-curves/reset", methods=["POST"]
+)
 @token_required
 def reset_curves():
     global _in_memory_gb_curves
@@ -54,7 +60,9 @@ def get_environmental():
     return success_response(data={"environmental": _in_memory_env})
 
 
-@degradation_bp.route("/api/degradation/environmental", methods=["PUT"])
+@degradation_bp.route(
+    "/api/degradation/environmental", methods=["PUT"]
+)
 @token_required
 def update_environmental():
     data = request.get_json()
@@ -63,20 +71,54 @@ def update_environmental():
 
     global _in_memory_env
     _in_memory_env = {
-        "accelerate_temperature": bool(data.get("accelerate_temperature", ENV_DEFAULTS["accelerate_temperature"])),
-        "accelerate_dust": bool(data.get("accelerate_dust", ENV_DEFAULTS["accelerate_dust"])),
-        "accelerate_humidity": bool(data.get("accelerate_humidity", ENV_DEFAULTS["accelerate_humidity"])),
-        "ref_temperature": float(data.get("ref_temperature", ENV_DEFAULTS["ref_temperature"])),
-        "ref_humidity": float(data.get("ref_humidity", ENV_DEFAULTS["ref_humidity"])),
-        "field_humidity": float(data.get("field_humidity", ENV_DEFAULTS["field_humidity"])),
-        "dust_factor": float(data.get("dust_factor", ENV_DEFAULTS["dust_factor"])),
-        "humidity_exponent": float(data.get("humidity_exponent", ENV_DEFAULTS["humidity_exponent"])),
-        "activation_energy": float(data.get("activation_energy", ENV_DEFAULTS["activation_energy"])),
+        "accelerate_temperature": bool(
+            data.get(
+                "accelerate_temperature",
+                ENV_DEFAULTS["accelerate_temperature"],
+            )
+        ),
+        "accelerate_dust": bool(
+            data.get("accelerate_dust", ENV_DEFAULTS["accelerate_dust"])
+        ),
+        "accelerate_humidity": bool(
+            data.get(
+                "accelerate_humidity",
+                ENV_DEFAULTS["accelerate_humidity"],
+            )
+        ),
+        "ref_temperature": float(
+            data.get("ref_temperature", ENV_DEFAULTS["ref_temperature"])
+        ),
+        "ref_humidity": float(
+            data.get("ref_humidity", ENV_DEFAULTS["ref_humidity"])
+        ),
+        "field_humidity": float(
+            data.get(
+                "field_humidity", ENV_DEFAULTS["field_humidity"]
+            )
+        ),
+        "dust_factor": float(
+            data.get("dust_factor", ENV_DEFAULTS["dust_factor"])
+        ),
+        "humidity_exponent": float(
+            data.get(
+                "humidity_exponent",
+                ENV_DEFAULTS["humidity_exponent"],
+            )
+        ),
+        "activation_energy": float(
+            data.get(
+                "activation_energy",
+                ENV_DEFAULTS["activation_energy"],
+            )
+        ),
     }
     return success_response(data={"environmental": _in_memory_env})
 
 
-@degradation_bp.route("/api/degradation/environmental/reset", methods=["POST"])
+@degradation_bp.route(
+    "/api/degradation/environmental/reset", methods=["POST"]
+)
 @token_required
 def reset_environmental():
     global _in_memory_env
@@ -84,7 +126,9 @@ def reset_environmental():
     return success_response(data={"environmental": _in_memory_env})
 
 
-@degradation_bp.route("/api/degradation/environmental/preview", methods=["POST"])
+@degradation_bp.route(
+    "/api/degradation/environmental/preview", methods=["POST"]
+)
 @token_required
 def preview_acceleration():
     data = request.get_json()
@@ -95,15 +139,21 @@ def preview_acceleration():
     env = data.get("environmental", _in_memory_env)
 
     accel = _compute_environmental_acceleration(temperature, env)
-    return success_response(data={
-        "accelerationFactor": round(accel, 4),
-        "temperature": temperature,
-        "details": {
-            "temperature_enabled": env.get("accelerate_temperature", True),
-            "dust_enabled": env.get("accelerate_dust", False),
-            "humidity_enabled": env.get("accelerate_humidity", False),
-        },
-    })
+    return success_response(
+        data={
+            "accelerationFactor": round(accel, 4),
+            "temperature": temperature,
+            "details": {
+                "temperature_enabled": env.get(
+                    "accelerate_temperature", True
+                ),
+                "dust_enabled": env.get("accelerate_dust", False),
+                "humidity_enabled": env.get(
+                    "accelerate_humidity", False
+                ),
+            },
+        }
+    )
 
 
 @degradation_bp.route("/api/degradation/preview", methods=["POST"])
@@ -137,14 +187,16 @@ def preview_degradation():
         gb_curves,
     )
 
-    return success_response(data={
-        "model": model_type,
-        "soh": soh,
-        "rte": rte,
-        "parameters": {
-            "temperature": temperature,
-            "cyclesPerDay": cycles_per_day,
-            "dod": dod,
-            "cRate": c_rate,
-        },
-    })
+    return success_response(
+        data={
+            "model": model_type,
+            "soh": soh,
+            "rte": rte,
+            "parameters": {
+                "temperature": temperature,
+                "cyclesPerDay": cycles_per_day,
+                "dod": dod,
+                "cRate": c_rate,
+            },
+        }
+    )

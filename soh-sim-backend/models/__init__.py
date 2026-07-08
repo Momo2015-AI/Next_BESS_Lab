@@ -20,9 +20,15 @@ db = SQLAlchemy()
 
 # 租户隔离模型：flush 前自动从父项目继承 tenant_id
 _TENANT_PROJECT_MODELS = {
-    "SystemArchitecture", "GridComplianceAnalysis", "SafetyFireDesign",
-    "IPPFinancialModel", "ComplianceMatrix", "ThermalManagement",
-    "ScadaEmsDesign", "HVInterconnection", "BidDocument",
+    "SystemArchitecture",
+    "GridComplianceAnalysis",
+    "SafetyFireDesign",
+    "IPPFinancialModel",
+    "ComplianceMatrix",
+    "ThermalManagement",
+    "ScadaEmsDesign",
+    "HVInterconnection",
+    "BidDocument",
 }
 
 # 这些列存储 JSON 字符串，序列化时需要解析回对象
@@ -34,7 +40,12 @@ _JSON_COLUMNS = {
     "SimulationResult": {"params", "results", "summary"},
     "CorrectionTemplate": {"annual_corrections"},
     "BatteryPCSConfig": {"connection_diagram", "single_line_diagram"},
-    "SohRteData": {"soh_values", "rte_values", "dod_values", "aug_qty_values"},
+    "SohRteData": {
+        "soh_values",
+        "rte_values",
+        "dod_values",
+        "aug_qty_values",
+    },
     "FinancialData": {"cashflow_data"},
     "ProductConfig": {"certifications"},
     "CellProduct": {"certifications"},
@@ -59,7 +70,10 @@ def _serialize_value(model_name, column_name, value):
     """序列化单个字段值：datetime→ISO 字符串，JSON 列→解析回对象"""
     if value is None:
         return None
-    if model_name in _JSON_COLUMNS and column_name in _JSON_COLUMNS[model_name]:
+    if (
+        model_name in _JSON_COLUMNS
+        and column_name in _JSON_COLUMNS[model_name]
+    ):
         if isinstance(value, str):
             try:
                 return json.loads(value)
@@ -75,7 +89,9 @@ def _model_to_dict(self):
     """通用 to_dict：遍历所有列，按需序列化"""
     model_name = type(self).__name__
     return {
-        column.name: _serialize_value(model_name, column.name, getattr(self, column.name))
+        column.name: _serialize_value(
+            model_name, column.name, getattr(self, column.name)
+        )
         for column in self.__table__.columns
     }
 
@@ -87,33 +103,70 @@ from .project import Project, ProjectVersion
 from .simulation import Simulation, SimulationResult, CorrectionTemplate
 from .config_data import BatteryPCSConfig, SohRteData, FinancialData
 from .product import (
-    ProductConfig, CellProduct, PackProduct, RackProduct,
-    ClusterProduct, ContainerProduct, PcsProduct,
-    BatteryConfigRule, BatteryManufacturer,
+    ProductConfig,
+    CellProduct,
+    PackProduct,
+    RackProduct,
+    ClusterProduct,
+    ContainerProduct,
+    PcsProduct,
+    BatteryConfigRule,
+    BatteryManufacturer,
 )
 from .algorithm import FormulaConfig, AlgorithmModel
 from .boq import BoqSection, BoqItem
 from .epc import (
-    SystemArchitecture, GridComplianceAnalysis, SafetyFireDesign,
-    IPPFinancialModel, ComplianceMatrix, ThermalManagement,
-    ScadaEmsDesign, HVInterconnection, BidDocument,
+    SystemArchitecture,
+    GridComplianceAnalysis,
+    SafetyFireDesign,
+    IPPFinancialModel,
+    ComplianceMatrix,
+    ThermalManagement,
+    ScadaEmsDesign,
+    HVInterconnection,
+    BidDocument,
 )
 from .pinn import PinnModelWeights
 
 # 所有公共导出（确保 from database import * 兼容）
 __all__ = [
-    "db", "init_db", "_model_to_dict", "_serialize_value",
-    "Tenant", "User", "Survey", "Project", "ProjectVersion",
-    "Simulation", "SimulationResult", "CorrectionTemplate",
-    "BatteryPCSConfig", "SohRteData", "FinancialData",
-    "ProductConfig", "CellProduct", "PackProduct", "RackProduct",
-    "ClusterProduct", "ContainerProduct", "PcsProduct",
-    "BatteryConfigRule", "BatteryManufacturer",
-    "FormulaConfig", "AlgorithmModel",
-    "BoqSection", "BoqItem",
-    "SystemArchitecture", "GridComplianceAnalysis", "SafetyFireDesign",
-    "IPPFinancialModel", "ComplianceMatrix", "ThermalManagement",
-    "ScadaEmsDesign", "HVInterconnection", "BidDocument",
+    "db",
+    "init_db",
+    "_model_to_dict",
+    "_serialize_value",
+    "Tenant",
+    "User",
+    "Survey",
+    "Project",
+    "ProjectVersion",
+    "Simulation",
+    "SimulationResult",
+    "CorrectionTemplate",
+    "BatteryPCSConfig",
+    "SohRteData",
+    "FinancialData",
+    "ProductConfig",
+    "CellProduct",
+    "PackProduct",
+    "RackProduct",
+    "ClusterProduct",
+    "ContainerProduct",
+    "PcsProduct",
+    "BatteryConfigRule",
+    "BatteryManufacturer",
+    "FormulaConfig",
+    "AlgorithmModel",
+    "BoqSection",
+    "BoqItem",
+    "SystemArchitecture",
+    "GridComplianceAnalysis",
+    "SafetyFireDesign",
+    "IPPFinancialModel",
+    "ComplianceMatrix",
+    "ThermalManagement",
+    "ScadaEmsDesign",
+    "HVInterconnection",
+    "BidDocument",
     "PinnModelWeights",
 ]
 
@@ -153,7 +206,9 @@ def _inherit_tenant_from_project(session, flush_context, instances):
     """新建 EPC 对象若未显式设置 tenant_id，则从所属项目继承，确保租户隔离。"""
     for obj in session.new:
         if type(obj).__name__ in _TENANT_PROJECT_MODELS:
-            if getattr(obj, "tenant_id", None) is None and getattr(obj, "project_id", None):
+            if getattr(obj, "tenant_id", None) is None and getattr(
+                obj, "project_id", None
+            ):
                 with session.no_autoflush:
                     proj = session.get(Project, obj.project_id)
                 if proj is not None:
@@ -169,25 +224,40 @@ def init_db(app):
         inspector = inspect(db.engine)
         with db.engine.begin() as conn:
             for table in (
-                "system_architectures", "grid_compliance_analyses",
-                "safety_fire_designs", "ipp_financial_models",
-                "compliance_matrices", "thermal_managements",
-                "scada_ems_designs", "hv_interconnections", "bid_documents",
+                "system_architectures",
+                "grid_compliance_analyses",
+                "safety_fire_designs",
+                "ipp_financial_models",
+                "compliance_matrices",
+                "thermal_managements",
+                "scada_ems_designs",
+                "hv_interconnections",
+                "bid_documents",
             ):
                 if table in inspector.get_table_names():
-                    cols = {c["name"] for c in inspector.get_columns(table)}
+                    cols = {
+                        c["name"] for c in inspector.get_columns(table)
+                    }
                     if "tenant_id" not in cols:
-                        conn.execute(text(f"ALTER TABLE {table} ADD COLUMN tenant_id VARCHAR(36)"))
+                        conn.execute(
+                            text(
+                                f"ALTER TABLE {table} "
+                                "ADD COLUMN tenant_id VARCHAR(36)"
+                            )
+                        )
         # 种子默认租户
         import uuid as _uuid
+
         default_tenant_id = "00000000-0000-0000-0000-000000000001"
         existing = db.session.get(Tenant, default_tenant_id)
         if not existing:
-            db.session.add(Tenant(
-                id=default_tenant_id,
-                name="Default Tenant",
-                code="default",
-                status="active",
-            ))
+            db.session.add(
+                Tenant(
+                    id=default_tenant_id,
+                    name="Default Tenant",
+                    code="default",
+                    status="active",
+                )
+            )
             db.session.commit()
     return db

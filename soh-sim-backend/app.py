@@ -30,13 +30,20 @@ from services.boq import seed_boq_sections
 from utils.api_response import error_response
 
 app = Flask(__name__)
-allowed_origins = os.environ.get('CORS_ORIGINS', '').split(',')
-CORS(app, origins=[o.strip() for o in allowed_origins if o.strip()], supports_credentials=True)
+allowed_origins = os.environ.get("CORS_ORIGINS", "").split(",")
+CORS(
+    app,
+    origins=[o.strip() for o in allowed_origins if o.strip()],
+    supports_credentials=True,
+)
 
 # 数据库配置
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "TEST_DATABASE_URI",
-    f"sqlite:///{os.path.join(os.path.dirname(os.path.abspath(__file__)), 'soh_sim.db')}",
+    "sqlite:///"
+    + os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "soh_sim.db"
+    ),
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -44,7 +51,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 _secret_key = os.environ.get("SECRET_KEY")
 if not _secret_key:
     import logging
-    logging.warning("⚠ SECRET_KEY 未设置，使用默认开发密钥。生产环境请设置环境变量 SECRET_KEY！")
+
+    logging.warning(
+        "⚠ SECRET_KEY 未设置，使用默认开发密钥。"
+        "生产环境请设置环境变量 SECRET_KEY！"
+    )
     _secret_key = "dev-secret-change-in-production"
 app.config["SECRET_KEY"] = _secret_key
 
@@ -111,6 +122,7 @@ def rate_limited(e):
 @app.errorhandler(500)
 def internal_error(e):
     import traceback
+
     app.logger.error(f"服务器内部错误: {traceback.format_exc()}")
     return error_response("服务器内部错误", status_code=500)
 

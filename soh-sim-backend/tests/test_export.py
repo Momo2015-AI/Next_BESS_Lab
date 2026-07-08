@@ -28,13 +28,15 @@ class TestExport:
         """正确参数应返回 CSV 文件"""
         resp = auth_client.post(
             "/api/export/csv",
-            data=json.dumps({
-                "type": "matrix",
-                "results": {"key": "val"},
-                "params": {},
-                "soh": [0.95, 0.93],
-                "rte": [0.94, 0.92],
-            }),
+            data=json.dumps(
+                {
+                    "type": "matrix",
+                    "results": {"key": "val"},
+                    "params": {},
+                    "soh": [0.95, 0.93],
+                    "rte": [0.94, 0.92],
+                }
+            ),
             content_type="application/json",
         )
         # 可返回 200 (CSV) 或依赖初始状态

@@ -2,11 +2,36 @@
 
 
 GRID_STANDARDS = [
-    {"code": "UAE_S_5010", "name": "UAE.S 5010-1", "country": "阿联酋", "voltage_kv": 33},
-    {"code": "IEEE_2800", "name": "IEEE 2800-2022", "country": "美国", "voltage_kv": 33},
-    {"code": "IEC_61400", "name": "IEC 61400-27", "country": "国际", "voltage_kv": 33},
-    {"code": "GB_19964", "name": "GB/T 19964-2024", "country": "中国", "voltage_kv": 35},
-    {"code": "CUSTOM", "name": "自定义标准", "country": "-", "voltage_kv": 33},
+    {
+        "code": "UAE_S_5010",
+        "name": "UAE.S 5010-1",
+        "country": "阿联酋",
+        "voltage_kv": 33,
+    },
+    {
+        "code": "IEEE_2800",
+        "name": "IEEE 2800-2022",
+        "country": "美国",
+        "voltage_kv": 33,
+    },
+    {
+        "code": "IEC_61400",
+        "name": "IEC 61400-27",
+        "country": "国际",
+        "voltage_kv": 33,
+    },
+    {
+        "code": "GB_19964",
+        "name": "GB/T 19964-2024",
+        "country": "中国",
+        "voltage_kv": 35,
+    },
+    {
+        "code": "CUSTOM",
+        "name": "自定义标准",
+        "country": "-",
+        "voltage_kv": 33,
+    },
 ]
 
 
@@ -15,7 +40,9 @@ def analyze_grid_compliance_service(data):
     standard = data.get("grid_standard", "UAE_S_5010")
     pcs_power_mw = float(data.get("pcs_power_mw", 3.45))
     pcs_count = int(data.get("pcs_count", 1))
-    grid_voltage_kv = float(data.get("grid_voltage_kv", 33))
+    grid_voltage_kv = float(
+        data.get("grid_voltage_kv", 33)
+    )
     grid_freq = float(data.get("grid_frequency_hz", 50))
     total_power_mw = pcs_power_mw * pcs_count
 
@@ -53,15 +80,32 @@ def analyze_grid_compliance_service(data):
     comm_pass = True
     reactive_capacity = total_power_mw * 0.33
 
-    overall = all([lvrt_pass, hvrt_pass, freq_pass, reactive_pass, pq_pass, anti_island_pass, comm_pass])
+    overall = all(
+        [
+            lvrt_pass,
+            hvrt_pass,
+            freq_pass,
+            reactive_pass,
+            pq_pass,
+            anti_island_pass,
+            comm_pass,
+        ]
+    )
     failed = []
-    if not lvrt_pass: failed.append("LVRT低电压穿越")
-    if not hvrt_pass: failed.append("HVRT高电压穿越")
-    if not freq_pass: failed.append("频率响应")
-    if not reactive_pass: failed.append("无功功率能力")
-    if not pq_pass: failed.append("电能质量")
-    if not anti_island_pass: failed.append("防孤岛保护")
-    if not comm_pass: failed.append("通信合规")
+    if not lvrt_pass:
+        failed.append("LVRT低电压穿越")
+    if not hvrt_pass:
+        failed.append("HVRT高电压穿越")
+    if not freq_pass:
+        failed.append("频率响应")
+    if not reactive_pass:
+        failed.append("无功功率能力")
+    if not pq_pass:
+        failed.append("电能质量")
+    if not anti_island_pass:
+        failed.append("防孤岛保护")
+    if not comm_pass:
+        failed.append("通信合规")
 
     return {
         "grid_standard": standard,
@@ -76,7 +120,9 @@ def analyze_grid_compliance_service(data):
         "freq_response_pass": freq_pass,
         "pf_lag": 0.95,
         "pf_lead": 0.95,
-        "reactive_capacity_mvar": round(reactive_capacity, 2),
+        "reactive_capacity_mvar": round(
+            reactive_capacity, 2
+        ),
         "reactive_pass": reactive_pass,
         "thd": thd,
         "dc_injection": dc_inj,
@@ -85,11 +131,11 @@ def analyze_grid_compliance_service(data):
         "power_quality_pass": pq_pass,
         "anti_islanding_time_s": anti_island_time,
         "anti_islanding_pass": anti_island_pass,
-        "comm_protocol": data.get("comm_protocol", "IEC_61850"),
+        "comm_protocol": data.get(
+            "comm_protocol", "IEC_61850"
+        ),
         "remote_response_s": 0.1,
         "comm_pass": comm_pass,
         "overall_pass": overall,
         "failed_items": failed,
     }
-
-

@@ -11,8 +11,12 @@ import os
 import uuid
 
 # Must be set BEFORE importing app so that app.py reads the in-memory DB URI
-os.environ.setdefault("TEST_DATABASE_URI", "sqlite:///:memory:")
-os.environ.setdefault("SECRET_KEY", "test-secret-for-pytest-2026")
+os.environ.setdefault(
+    "TEST_DATABASE_URI", "sqlite:///:memory:"
+)
+os.environ.setdefault(
+    "SECRET_KEY", "test-secret-for-pytest-2026"
+)
 os.environ.setdefault("CORS_ORIGINS", "*")
 
 import pytest  # noqa: E402
@@ -67,7 +71,12 @@ def seed_tenant(db_session):
     tid = "00000000-0000-0000-0000-000000000001"
     t = db_session.get(Tenant, tid)
     if not t:
-        t = Tenant(id=tid, name="Default Tenant", code="default", status="active")
+        t = Tenant(
+            id=tid,
+            name="Default Tenant",
+            code="default",
+            status="active",
+        )
         db_session.add(t)
         db_session.flush()
     return t
@@ -75,7 +84,9 @@ def seed_tenant(db_session):
 
 @pytest.fixture()
 def seed_user(db_session, seed_tenant):
-    """Create a unique test engineer user per test; returns dict with id/tenant_id/username."""
+    """Create a unique test engineer user per test;
+    returns dict with id/tenant_id/username.
+    """
     from routes.auth import hash_password
 
     # Use unique email per test fixture call to avoid UNIQUE constraint
@@ -95,7 +106,12 @@ def seed_user(db_session, seed_tenant):
     )
     db_session.add(user)
     db_session.flush()
-    return {"id": uid, "tenant_id": seed_tenant.id, "username": username, "email": email}
+    return {
+        "id": uid,
+        "tenant_id": seed_tenant.id,
+        "username": username,
+        "email": email,
+    }
 
 
 # ---------- Auth helpers ----------
@@ -120,6 +136,7 @@ def auth_client(client, auth_headers):
     Usage:
         resp = auth_client.get("/api/products/list")
     """
+
     # Use a small wrapper so each call gets fresh headers
     class AuthenticatedClient:
         def __init__(self, base, headers):

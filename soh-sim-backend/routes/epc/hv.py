@@ -32,11 +32,15 @@ def design_hv_interconnection():
         **{
             k: v
             for k, v in result.items()
-            if hasattr(HVInterconnection, k) and k not in ["protection_scheme", "single_line_diagram"]
+            if hasattr(HVInterconnection, k)
+            and k
+            not in ["protection_scheme", "single_line_diagram"]
         },
     )
     hv.protection_scheme = json.dumps(protections)
-    hv.single_line_diagram = json.dumps(result["single_line_diagram"])
+    hv.single_line_diagram = json.dumps(
+        result["single_line_diagram"]
+    )
     db.session.add(hv)
     db.session.commit()
 
@@ -50,6 +54,9 @@ def get_hv_interconnection(hv_id):
     obj = get_or_404(HVInterconnection, hv_id)
     if not obj:
         return error_response("未找到", 404)
-    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
+    if (
+        getattr(user, "role", None) != "admin"
+        and getattr(obj, "tenant_id", None) != user.tenant_id
+    ):
         return error_response("无权访问该项目", 403)
     return success_response(data=obj.to_dict())

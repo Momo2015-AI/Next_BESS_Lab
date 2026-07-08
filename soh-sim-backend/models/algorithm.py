@@ -1,4 +1,6 @@
 from . import db, _utcnow
+
+
 class FormulaConfig(db.Model):
     """算法公式配置模型 - 支持自定义公式"""
 
@@ -44,8 +46,12 @@ class FormulaConfig(db.Model):
             "parameters": self.parameters,
             "description": self.description,
             "is_public": self.is_public,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
 
 
@@ -70,18 +76,24 @@ class AlgorithmModel(db.Model):
     )  # 模型类型: double_exponential/linear_log/arrhenius/rainflow/semi_empirical/custom
 
     # 适用场景
-    applicable_scenarios = db.Column(db.Text)  # JSON数组，如 ["LFP日历衰减", "循环衰减"]
+    applicable_scenarios = db.Column(
+        db.Text
+    )  # JSON数组，如 ["LFP日历衰减", "循环衰减"]
 
     # 数学形式/公式表达式
     mathematical_form = db.Column(db.Text)  # 数学形式描述
     formula_expression = db.Column(db.Text)  # 可执行的公式表达式
 
     # 参数定义（JSON格式）
-    parameters = db.Column(db.Text)  # 参数定义 {"param_name": {"label": "", "default": 0.0, "min": 0, "max": 100}}
+    parameters = db.Column(
+        db.Text
+    )  # 参数定义 {"param_name": {"label": "", "default": 0.0, "min": 0, "max": 100}}
 
     # 精度等级
     accuracy_level = db.Column(db.String(20))  # low/medium/high
-    accuracy_desc = db.Column(db.String(200))  # 精度描述，如 "R²>0.999"
+    accuracy_desc = db.Column(
+        db.String(200)
+    )  # 精度描述，如 "R²>0.999"
 
     # 模型分类
     category = db.Column(db.String(50))  # soh/rte/comprehensive
@@ -107,8 +119,12 @@ class AlgorithmModel(db.Model):
 
     # 关联
     tenant = db.relationship("Tenant", back_populates="algorithm_models")
-    created_by_user = db.relationship("User", back_populates="algorithm_models")
-    simulation_results = db.relationship("SimulationResult", back_populates="algorithm_model")
+    created_by_user = db.relationship(
+        "User", back_populates="algorithm_models"
+    )
+    simulation_results = db.relationship(
+        "SimulationResult", back_populates="algorithm_model"
+    )
 
     def to_dict(self):
         return {
@@ -129,8 +145,10 @@ class AlgorithmModel(db.Model):
             "sort_order": self.sort_order,
             "description": self.description,
             "created_by": self.created_by,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
-
-

@@ -1,4 +1,6 @@
 from . import db, _utcnow
+
+
 class Simulation(db.Model):
     """仿真配置与结果模型"""
 
@@ -18,7 +20,9 @@ class Simulation(db.Model):
     description = db.Column(db.Text)
 
     # 仿真参数
-    algorithm_type = db.Column(db.String(50), default="arrhenius")  # arrhenius/custom
+    algorithm_type = db.Column(
+        db.String(50), default="arrhenius"
+    )  # arrhenius/custom
     duration_years = db.Column(db.Integer, default=25)
     correction_factor = db.Column(db.Float, default=1.0)
 
@@ -32,7 +36,9 @@ class Simulation(db.Model):
     manual_corrections = db.Column(db.Text)  # JSON格式
 
     # 状态
-    status = db.Column(db.String(20), default="pending")  # pending/running/completed/failed
+    status = db.Column(
+        db.String(20), default="pending"
+    )  # pending/running/completed/failed
     started_at = db.Column(db.DateTime)
     completed_at = db.Column(db.DateTime)
 
@@ -58,10 +64,18 @@ class Simulation(db.Model):
             "results": self.results,
             "manual_corrections": self.manual_corrections,
             "status": self.status,
-            "started_at": self.started_at.isoformat() if self.started_at else None,
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "started_at": (
+                self.started_at.isoformat() if self.started_at else None
+            ),
+            "completed_at": (
+                self.completed_at.isoformat() if self.completed_at else None
+            ),
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
 
 
@@ -71,27 +85,45 @@ class SimulationResult(db.Model):
     __tablename__ = "simulation_results"
 
     __table_args__ = (
-        db.Index("idx_simulation_results_version_id", "version_id"),
-        db.Index("idx_simulation_results_algorithm_model_id", "algorithm_model_id"),
-        db.Index("idx_simulation_results_correction_template_id", "correction_template_id"),
-        db.Index("idx_simulation_results_created_by", "created_by"),
+        db.Index(
+            "idx_simulation_results_version_id", "version_id"
+        ),
+        db.Index(
+            "idx_simulation_results_algorithm_model_id",
+            "algorithm_model_id",
+        ),
+        db.Index(
+            "idx_simulation_results_correction_template_id",
+            "correction_template_id",
+        ),
+        db.Index(
+            "idx_simulation_results_created_by", "created_by"
+        ),
     )
 
     id = db.Column(db.String(36), primary_key=True)
-    version_id = db.Column(db.String(36), db.ForeignKey("project_versions.id"))
+    version_id = db.Column(
+        db.String(36), db.ForeignKey("project_versions.id")
+    )
 
     # 结果名称（项目名称+时间戳）
     name = db.Column(db.String(200))
     description = db.Column(db.Text)
 
     # 仿真类型
-    simulation_type = db.Column(db.String(50))  # soh/rte/comprehensive/financial
+    simulation_type = db.Column(
+        db.String(50)
+    )  # soh/rte/comprehensive/financial
 
     # 使用的算法模型ID
-    algorithm_model_id = db.Column(db.String(36), db.ForeignKey("algorithm_models.id"))
+    algorithm_model_id = db.Column(
+        db.String(36), db.ForeignKey("algorithm_models.id")
+    )
 
     # 使用的校正因子模板ID
-    correction_template_id = db.Column(db.String(36), db.ForeignKey("correction_templates.id"))
+    correction_template_id = db.Column(
+        db.String(36), db.ForeignKey("correction_templates.id")
+    )
 
     # 仿真参数（输入参数快照）
     params = db.Column(db.Text)  # JSON格式
@@ -103,10 +135,14 @@ class SimulationResult(db.Model):
     summary = db.Column(db.Text)  # JSON格式，关键指标摘要
 
     # 状态
-    status = db.Column(db.String(20), default="completed")  # pending/completed/failed
+    status = db.Column(
+        db.String(20), default="completed"
+    )  # pending/completed/failed
 
     # 执行时间
-    executed_at = db.Column(db.DateTime, default=_utcnow)  # 实际执行时间戳
+    executed_at = db.Column(
+        db.DateTime, default=_utcnow
+    )  # 实际执行时间戳
     execution_time_ms = db.Column(db.Integer)  # 执行耗时
 
     # 创建者
@@ -116,9 +152,15 @@ class SimulationResult(db.Model):
     created_at = db.Column(db.DateTime, default=_utcnow)
 
     # 关联
-    version = db.relationship("ProjectVersion", back_populates="simulation_results")
-    algorithm_model = db.relationship("AlgorithmModel", back_populates="simulation_results")
-    correction_template = db.relationship("CorrectionTemplate", back_populates="simulation_results")
+    version = db.relationship(
+        "ProjectVersion", back_populates="simulation_results"
+    )
+    algorithm_model = db.relationship(
+        "AlgorithmModel", back_populates="simulation_results"
+    )
+    correction_template = db.relationship(
+        "CorrectionTemplate", back_populates="simulation_results"
+    )
 
     def to_dict(self):
         return {
@@ -133,10 +175,14 @@ class SimulationResult(db.Model):
             "results": self.results,
             "summary": self.summary,
             "status": self.status,
-            "executed_at": self.executed_at.isoformat() if self.executed_at else None,
+            "executed_at": (
+                self.executed_at.isoformat() if self.executed_at else None
+            ),
             "execution_time_ms": self.execution_time_ms,
             "created_by": self.created_by,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
         }
 
 
@@ -146,8 +192,12 @@ class CorrectionTemplate(db.Model):
     __tablename__ = "correction_templates"
 
     __table_args__ = (
-        db.Index("idx_correction_templates_tenant_id", "tenant_id"),
-        db.Index("idx_correction_templates_created_by", "created_by"),
+        db.Index(
+            "idx_correction_templates_tenant_id", "tenant_id"
+        ),
+        db.Index(
+            "idx_correction_templates_created_by", "created_by"
+        ),
     )
 
     id = db.Column(db.String(36), primary_key=True)
@@ -158,20 +208,30 @@ class CorrectionTemplate(db.Model):
     description = db.Column(db.Text)
 
     # 模板类型
-    template_type = db.Column(db.String(50))  # soh/rte/comprehensive/custom
+    template_type = db.Column(
+        db.String(50)
+    )  # soh/rte/comprehensive/custom
 
     # 全局校正因子
-    global_soh_factor = db.Column(db.Float, default=1.0)  # SOH全局校正系数
-    global_rte_factor = db.Column(db.Float, default=1.0)  # RTE全局校正系数
+    global_soh_factor = db.Column(
+        db.Float, default=1.0
+    )  # SOH全局校正系数
+    global_rte_factor = db.Column(
+        db.Float, default=1.0
+    )  # RTE全局校正系数
 
     # 年度校正表（JSON格式存储）
-    annual_corrections = db.Column(db.Text)  # JSON格式 {"year_1": 0.98, "year_5": 0.95, ...}
+    annual_corrections = db.Column(
+        db.Text
+    )  # JSON格式 {"year_1": 0.98, "year_5": 0.95, ...}
 
     # 是否默认模板
     is_default = db.Column(db.Boolean, default=False)
 
     # 状态
-    status = db.Column(db.String(20), default="active")  # active/archived
+    status = db.Column(
+        db.String(20), default="active"
+    )  # active/archived
 
     # 创建者
     created_by = db.Column(db.String(36), db.ForeignKey("users.id"))
@@ -181,9 +241,15 @@ class CorrectionTemplate(db.Model):
     updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     # 关联
-    tenant = db.relationship("Tenant", back_populates="correction_templates")
-    created_by_user = db.relationship("User", back_populates="correction_templates")
-    simulation_results = db.relationship("SimulationResult", back_populates="correction_template")
+    tenant = db.relationship(
+        "Tenant", back_populates="correction_templates"
+    )
+    created_by_user = db.relationship(
+        "User", back_populates="correction_templates"
+    )
+    simulation_results = db.relationship(
+        "SimulationResult", back_populates="correction_template"
+    )
 
     def to_dict(self):
         return {
@@ -198,8 +264,10 @@ class CorrectionTemplate(db.Model):
             "is_default": self.is_default,
             "status": self.status,
             "created_by": self.created_by,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
-
-

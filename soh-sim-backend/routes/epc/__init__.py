@@ -1,7 +1,9 @@
 """
 EPC模块路由（按子模块拆分为独立 Blueprint）
 
-注册到 app 时只需: from routes.epc import register_epc_blueprints; register_epc_blueprints(app)
+注册到 app 时只需:
+  from routes.epc import register_epc_blueprints
+  register_epc_blueprints(app)
 """
 from .architecture import architecture_bp
 from .grid_compliance import grid_compliance_bp

@@ -3,6 +3,7 @@
 支持注册、登录、JWT token验证
 """
 
+import functools
 import hashlib
 import hmac
 import re
@@ -23,7 +24,8 @@ auth_bp = Blueprint("auth", __name__)
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 # JWT token 黑名单
-# 默认进程内 dict；若设置环境变量 REDIS_URL 则改用 Redis（多 worker / 多进程部署可共享）。
+# 默认进程内 dict；若设置环境变量 REDIS_URL 则改用 Redis
+# （多 worker / 多进程部署可共享）。
 import base64 as _base64
 import json as _json
 import os as _os
@@ -58,7 +60,9 @@ def _get_redis():
         try:
             import redis
 
-            _redis_client = redis.from_url(redis_url, socket_timeout=2, socket_connect_timeout=2)
+            _redis_client = redis.from_url(
+                redis_url, socket_timeout=2, socket_connect_timeout=2
+            )
             return _redis_client
         except Exception:
             _redis_client = False
@@ -70,7 +74,11 @@ def _get_redis():
 def _clean_blacklist():
     """清理超过24小时的进程内黑名单条目"""
     now = datetime.now(timezone.utc)
-    expired = [t for t, ts in _token_blacklist.items() if (now - ts).total_seconds() > 86400]
+    expired = [
+        t
+        for t, ts in _token_blacklist.items()
+        if (now - ts).total_seconds() > 86400
+    ]
     for t in expired:
         del _token_blacklist[t]
 
@@ -110,7 +118,12 @@ def hash_password(password, salt=None):
     """密码哈希，PBKDF2-SHA256，600,000 次迭代"""
     if salt is None:
         salt = secrets.token_hex(16)
-    hashed = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 600000)
+    hashed = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt.encode("utf-8"),
+        600000,
+    )
     return f"{salt}${hashed.hex()}"
 
 
@@ -144,7 +157,9 @@ def decode_token(token):
     if is_blacklisted(token):
         return None
     try:
-        payload = jwt.decode(token, _get_secret_key(), algorithms=["HS256"])
+        payload = jwt.decode(
+            token, _get_secret_key(), algorithms=["HS256"]
+        )
         return payload
     except jwt.ExpiredSignatureError:
         return None
@@ -196,7 +211,10 @@ def register():
     password = data.get("password", "")
 
     if not _validate_username(username):
-        return error_response("用户名需3-20位，仅允许字母/数字/下划线/中文", status_code=400)
+        return error_response(
+            "用户名需3-20位，仅允许字母/数字/下划线/中文",
+            status_code=400,
+        )
 
     if not email or "@" not in email:
         return error_response("请输入有效的邮箱地址", status_code=400)
@@ -210,7 +228,11 @@ def register():
     if error:
         return error_response(error, status_code=status_code)
 
-    return success_response(data={"token": result["token"], "user": result["user"]}, message="注册成功", status_code=201)
+    return success_response(
+        data={"token": result["token"], "user": result["user"]},
+        message="注册成功",
+        status_code=201,
+    )
 
 
 @auth_bp.route("/api/auth/login", methods=["POST"])
@@ -266,8 +288,12 @@ def get_current_user():
             "role": user.role,
             "tenant_id": user.tenant_id,
             "is_active": user.is_active,
-            "created_at": user.created_at.isoformat() if user.created_at else None,
-            "last_login": user.last_login.isoformat() if user.last_login else None,
+            "created_at": (
+                user.created_at.isoformat() if user.created_at else None
+            ),
+            "last_login": (
+                user.last_login.isoformat() if user.last_login else None
+            ),
         }
     )
 
@@ -302,7 +328,9 @@ def change_password():
 
     from services.users import change_user_password
 
-    success, err, status_code = change_user_password(user, old_password, new_password)
+    success, err, status_code = change_user_password(
+        user, old_password, new_password
+    )
     if not success:
         return error_response(err, status_code=status_code)
 
@@ -315,7 +343,6 @@ def change_password():
 
 
 # 验证token的装饰器
-import functools
 
 
 def token_required(f):

@@ -1,10 +1,14 @@
 from . import db, _utcnow
+
+
 class BatteryPCSConfig(db.Model):
     """电池与PCS配置模型"""
 
     __tablename__ = "battery_pcs_configs"
 
-    __table_args__ = (db.Index("idx_battery_pcs_configs_project_id", "project_id"),)
+    __table_args__ = (
+        db.Index("idx_battery_pcs_configs_project_id", "project_id"),
+    )
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
@@ -60,8 +64,12 @@ class BatteryPCSConfig(db.Model):
             "connection_type": self.connection_type,
             "connection_diagram": self.connection_diagram,
             "single_line_diagram": self.single_line_diagram,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
 
 
@@ -77,7 +85,9 @@ class SohRteData(db.Model):
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
-    simulation_id = db.Column(db.String(36), db.ForeignKey("simulations.id"))
+    simulation_id = db.Column(
+        db.String(36), db.ForeignKey("simulations.id")
+    )
 
     # 数据名称
     name = db.Column(db.String(200))
@@ -117,8 +127,12 @@ class SohRteData(db.Model):
             "aug_qty_values": self.aug_qty_values,
             "source": self.source,
             "import_file": self.import_file,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
 
 
@@ -127,7 +141,9 @@ class FinancialData(db.Model):
 
     __tablename__ = "financial_data"
 
-    __table_args__ = (db.Index("idx_financial_data_project_id", "project_id"),)
+    __table_args__ = (
+        db.Index("idx_financial_data_project_id", "project_id"),
+    )
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
@@ -205,8 +221,10 @@ class FinancialData(db.Model):
             "currency": self.currency,
             "unit_system": self.unit_system,
             "cashflow_data": self.cashflow_data,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
-
-

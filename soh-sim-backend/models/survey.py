@@ -1,4 +1,6 @@
 from . import db, _utcnow
+
+
 class Survey(db.Model):
     """调研表模型 - 存储客户填写的调研信息"""
 
@@ -104,8 +106,10 @@ class Survey(db.Model):
             "remarks": self.remarks,
             "attachments": self.attachments,
             "status": self.status,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "created_at": (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
-
-

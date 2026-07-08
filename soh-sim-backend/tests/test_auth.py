@@ -10,24 +10,39 @@ import pytest
 
 class TestUnauthenticated:
     def test_login_returns_token(self, client, seed_user):
-        """正确用户名密码应返回 token + user info（统一响应格式 {success, data, error, message}）"""
+        """正确用户名密码应返回 token + user info
+        （统一响应格式 {success, data, error, message}）
+        """
         resp = client.post(
             "/api/auth/login",
-            data=json.dumps({"username": seed_user["username"], "password": "testpass123"}),
+            data=json.dumps(
+                {
+                    "username": seed_user["username"],
+                    "password": "testpass123",
+                }
+            ),
             content_type="application/json",
         )
         assert resp.status_code == 200
         data = resp.get_json()
         assert data["success"] is True
         assert "token" in data["data"]
-        assert data["data"]["user"]["username"] == seed_user["username"]
+        assert (
+            data["data"]["user"]["username"]
+            == seed_user["username"]
+        )
         assert data["data"]["user"]["role"] == "engineer"
 
     def test_login_wrong_password(self, client, seed_user):
         """错误密码应返回 401"""
         resp = client.post(
             "/api/auth/login",
-            data=json.dumps({"username": seed_user["username"], "password": "WRONG_PASS"}),
+            data=json.dumps(
+                {
+                    "username": seed_user["username"],
+                    "password": "WRONG_PASS",
+                }
+            ),
             content_type="application/json",
         )
         assert resp.status_code == 401
@@ -36,7 +51,12 @@ class TestUnauthenticated:
         """不存在用户返回 401"""
         resp = client.post(
             "/api/auth/login",
-            data=json.dumps({"username": "ghost_zzzz", "password": "testpass123"}),
+            data=json.dumps(
+                {
+                    "username": "ghost_zzzz",
+                    "password": "testpass123",
+                }
+            ),
             content_type="application/json",
         )
         assert resp.status_code == 401
@@ -55,13 +75,18 @@ class TestUnauthenticated:
 
 
 class TestAuthenticated:
-    def test_me_returns_user_info(self, auth_client, seed_user):
+    def test_me_returns_user_info(
+        self, auth_client, seed_user
+    ):
         """GET /api/auth/me 返回当前认证用户信息（统一响应格式）"""
         resp = auth_client.get("/api/auth/me")
         assert resp.status_code == 200
         data = resp.get_json()
         assert data["success"] is True
-        assert data["data"]["username"] == seed_user["username"]
+        assert (
+            data["data"]["username"]
+            == seed_user["username"]
+        )
         assert data["data"]["role"] == "engineer"
 
     def test_protected_route_without_token(self, client):
@@ -71,7 +96,12 @@ class TestAuthenticated:
 
     def test_protected_route_invalid_token(self, client):
         """无效 token 返回 401"""
-        resp = client.get("/api/auth/me", headers={"Authorization": "Bearer invalid.jwt.token"})
+        resp = client.get(
+            "/api/auth/me",
+            headers={
+                "Authorization": "Bearer invalid.jwt.token"
+            },
+        )
         assert resp.status_code == 401
 
 
@@ -80,10 +110,17 @@ class TestAuthenticated:
 
 class TestResponseContract:
     def test_login_success_format(self, client, seed_user):
-        """登录成功响应包含 success/data.user/data.token 字段（统一响应格式）"""
+        """登录成功响应包含 success/data.user/data.token 字段
+        （统一响应格式）
+        """
         resp = client.post(
             "/api/auth/login",
-            data=json.dumps({"username": seed_user["username"], "password": "testpass123"}),
+            data=json.dumps(
+                {
+                    "username": seed_user["username"],
+                    "password": "testpass123",
+                }
+            ),
             content_type="application/json",
         )
         data = resp.get_json()
@@ -96,7 +133,12 @@ class TestResponseContract:
         """登录失败响应包含 error 字段"""
         resp = client.post(
             "/api/auth/login",
-            data=json.dumps({"username": seed_user["username"], "password": "WRONG"}),
+            data=json.dumps(
+                {
+                    "username": seed_user["username"],
+                    "password": "WRONG",
+                }
+            ),
             content_type="application/json",
         )
         data = resp.get_json()

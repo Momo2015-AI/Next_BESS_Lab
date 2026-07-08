@@ -6,5 +6,5 @@
 """
 # flake8: noqa: F401, F403
 
-from models import *
+from models import *  # noqa: F403
 from models import db, init_db, _model_to_dict, _serialize_value
