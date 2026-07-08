@@ -424,7 +424,27 @@ export default {
     uploadSpec: '或上传规格书自动提取 (支持 PDF/CSV)',
     uploadSpecBtn: '上传规格书',
     parsing: '解析中...',
-    applyToParams: '应用至仿真参数 Apply to Simulation'
+    applyToParams: '应用至仿真参数 Apply to Simulation',
+    voltageRange: '电压范围',
+    energyDensity: '密度',
+    cycleCalendar: '循环/日历',
+    voltageMaxV: '最高电压 V',
+    voltageMinV: '最低电压 V',
+    calendarLifeY: '日历寿命 年',
+    ciCabinet: '工商业储能柜 C&I Cabinet',
+    inDevelopment: '在研',
+    power1_25: '1.25 MW',
+    power1_725: '1.725 MW',
+    power2_5: '2.5 MW',
+    power3_45: '3.45 MW',
+    loadFailed: '加载产品库失败',
+    seedFailed: '初始化产品库失败',
+    deleteFailed: 'API删除失败',
+    saveFailed: '保存失败',
+    unknownError: '未知错误',
+    extractedFields: '已提取 {count} 个字段',
+    extractFailed: '未能自动提取，请手动填写',
+    uploadFailed: '上传失败'
   },
   financialDashboard: {
     projectIRR: 'Project IRR',
@@ -780,5 +800,23 @@ export default {
     totalOutput: '总输出',
     initAux: '存量自辅耗',
     augAux: '补容自辅耗'
+  },
+  financial: {
+    capexContainer: '集装箱',
+    capexPcs: 'PCS',
+    capexBop: 'BOP配套',
+    capexSubstation: '变电站',
+    capexTransmission: '输电线路',
+    capexLand: '土地',
+    capexDev: '开发费',
+    bankMinDscr: '银行底线 1.3x',
+    idealDscr: '理想值 1.5x',
+    dscrSatisfied: '满足银行要求',
+    dscrBelowMin: '低于银行底线 1.3x',
+    noDebtService: '无债务偿还',
+    tooltipPrincipal: '本金',
+    wanSuffix: '万',
+    yAxisUnit: '万元',
+    yAxisMultiplier: '倍率'
   }
 }

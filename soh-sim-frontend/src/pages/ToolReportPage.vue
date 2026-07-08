@@ -1,16 +1,16 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>报告输出</h1>
-      <p>生成仿真报告、导出 PDF/Excel</p>
+      <h1>{{ $t('tools.reportTitle') }}</h1>
+      <p>{{ $t('tools.reportDesc') }}</p>
     </div>
-    <SectionCard number="00" title="报告生成" subtitle="功能开发中">
+    <SectionCard number="00" :title="$t('tools.reportSectionTitle')" :subtitle="$t('tools.reportSectionSubtitle')">
       <p class="placeholder-text">
-        请前往
-        <router-link to="/phase2" class="inline-link">Phase 2 分析页</router-link>
-        查看仿真结果，或使用
-        <router-link to="/tools/simulation-view" class="inline-link">仿真分析</router-link>
-        运行仿真后导出 CSV。
+        {{ $t('tools.reportGuidePrefix') }}
+        <router-link to="/phase2" class="inline-link">{{ $t('tools.reportGuidePhase2') }}</router-link>
+        {{ $t('tools.reportGuideMiddle') }}
+        <router-link to="/tools/simulation-view" class="inline-link">{{ $t('tools.reportGuideSim') }}</router-link>
+        {{ $t('tools.reportGuideSuffix') }}
       </p>
     </SectionCard>
   </div>

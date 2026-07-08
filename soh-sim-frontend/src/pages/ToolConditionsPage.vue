@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>运行工况</h1>
-      <p>配置运行条件和电网参数</p>
+      <h1>{{ $t('tools.conditionsTitle') }}</h1>
+      <p>{{ $t('tools.conditionsDesc') }}</p>
     </div>
     <RunningConditions @apply-params="onApply" @error="(msg) => (store.calculationError = msg)" />
   </div>

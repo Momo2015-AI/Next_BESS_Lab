@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>方案设计</h1>
-      <p>电池系统配置（电池集装箱 + DC侧 + PCS/AC侧）</p>
+      <h1>{{ $t('tools.configTitle') }}</h1>
+      <p>{{ $t('tools.configDesc') }}</p>
     </div>
     <BatteryPCSConfig />
     <BatteryDCDesign class="mt-4" />

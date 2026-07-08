@@ -4,18 +4,18 @@
     <div class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
         <span class="w-2 h-2 rounded-full dot-accent" />
-        电池集装箱配置
+        {{ $t('batteryPcs.sectionBatteryContainer') }}
       </h3>
 
       <div class="grid grid-cols-3 gap-4">
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">储能集装箱型号</label>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelContainerModel') }}</label>
           <select
             v-model="selectedContainer"
             class="w-full rounded px-3 py-2 text-xs form-field-select"
             @change="onContainerChange"
           >
-            <option value="">请选择集装箱型号</option>
+            <option value="">{{ $t('batteryPcs.placeholderSelectContainer') }}</option>
             <option v-for="container in containers" :key="container.id" :value="container.id">
               {{ container.name }} - {{ container.energy }}MWh / {{ container.power }}MW
             </option>
@@ -23,33 +23,33 @@
         </div>
 
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">目标总能量 (MWh)</label>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelTargetEnergy') }}</label>
           <input
             v-model.number="targetEnergy"
             type="number"
             min="1"
             step="1"
             class="w-full rounded px-3 py-2 text-xs form-field-input"
-            placeholder="输入目标总能量"
+            :placeholder="$t('batteryPcs.placeholderTargetEnergy')"
             @change="autoCalcQty"
           />
         </div>
 
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">集装箱数量 (自动计算)</label>
-          <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} 台</p>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelContainerQtyAuto') }}</label>
+          <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} {{ $t('batteryPcs.unitCount') }}</p>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-4 mt-4">
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">PCS型号</label>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelPcsModel') }}</label>
           <select
             v-model="selectedPCS"
             class="w-full rounded px-3 py-2 text-xs form-field-select"
             @change="onPCSChange"
           >
-            <option value="">请选择PCS型号</option>
+            <option value="">{{ $t('batteryPcs.placeholderSelectPcs') }}</option>
             <option v-for="pcs in pcsList" :key="pcs.id" :value="pcs.id">
               {{ pcs.name }} - {{ pcs.power }}MW / {{ pcs.voltage }}V
             </option>
@@ -57,52 +57,52 @@
         </div>
 
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">目标总功率 (MW)</label>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelTargetPower') }}</label>
           <input
             v-model.number="targetPower"
             type="number"
             min="0.1"
             step="0.1"
             class="w-full rounded px-3 py-2 text-xs form-field-input"
-            placeholder="输入目标总功率"
+            :placeholder="$t('batteryPcs.placeholderTargetPower')"
             @change="autoCalcQty"
           />
         </div>
 
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-xs block mb-2 text-muted">PCS 数量 (自动)</label>
-          <p class="text-lg font-bold text-success">{{ pcsQty }} 台</p>
+          <label class="text-xs block mb-2 text-muted">{{ $t('batteryPcs.labelPcsQtyAuto') }}</label>
+          <p class="text-lg font-bold text-success">{{ pcsQty }} {{ $t('batteryPcs.unitCount') }}</p>
         </div>
       </div>
 
       <!-- 自动计算结果 -->
       <div class="mt-4 p-4 rounded-lg card-accent">
-        <h4 class="text-xs font-bold mb-3 text-accent-secondary">自动计算结果</h4>
+        <h4 class="text-xs font-bold mb-3 text-accent-secondary">{{ $t('batteryPcs.sectionAutoCalc') }}</h4>
         <div class="grid grid-cols-6 gap-3">
           <div class="text-center">
-            <p class="text-[10px] text-muted">集装箱数</p>
-            <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} 台</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelContainerCount') }}</p>
+            <p class="text-lg font-bold text-accent-secondary">{{ containerQty }} {{ $t('batteryPcs.unitCount') }}</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-muted">总能量</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelTotalEnergy') }}</p>
             <p class="text-lg font-bold text-accent-secondary">{{ totalEnergy.toFixed(1) }} MWh</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-muted">PCS数</p>
-            <p class="text-lg font-bold text-success">{{ pcsQty }} 台</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelPcsCount') }}</p>
+            <p class="text-lg font-bold text-success">{{ pcsQty }} {{ $t('batteryPcs.unitCount') }}</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-muted">总功率</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelTotalPower') }}</p>
             <p class="text-lg font-bold text-accent">{{ totalPower.toFixed(1) }} MW</p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-muted">运行时长</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelRuntime') }}</p>
             <p class="text-lg font-bold text-accent-secondary">
               {{ energyPowerRatio }}
             </p>
           </div>
           <div class="text-center">
-            <p class="text-[10px] text-muted">配比方式</p>
+            <p class="text-[10px] text-muted">{{ $t('batteryPcs.labelPairingMode') }}</p>
             <p class="text-lg font-bold text-warning">
               {{ pairingMode }}
             </p>
@@ -111,7 +111,7 @@
 
         <div class="mt-3 text-[10px] text-muted">
           <p>
-            <strong class="text-text-secondary">配比说明：</strong>
+            <strong class="text-text-secondary">{{ $t('batteryPcs.labelPairingDescription') }}</strong>
             {{ pairingDescription }}
           </p>
         </div>
@@ -122,7 +122,7 @@
     <div class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
         <span class="w-2 h-2 rounded-full dot-accent" />
-        系统连接图
+        {{ $t('batteryPcs.sectionConnectionDiagram') }}
       </h3>
 
       <div ref="connectionDiagram" class="h-96 rounded card-panel-bordered" />
@@ -130,27 +130,27 @@
       <div class="mt-3 flex gap-4 text-[10px]">
         <div class="flex items-center gap-1">
           <span class="w-3 h-3 rounded bg-accent-secondary" />
-          <span class="text-muted">电池集装箱</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendBatteryContainer') }}</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="w-3 h-3 rounded bg-accent" />
-          <span class="text-muted">PCS</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendPCS') }}</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="w-3 h-3 rounded bg-warning" />
-          <span class="text-muted">变压器</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendTransformer') }}</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="w-3 h-3 rounded bg-success" />
-          <span class="text-muted">电网</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendGrid') }}</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="w-2 h-0.5 bg-muted" />
-          <span class="text-muted">DC连接</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendDcConnection') }}</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="w-2 h-0.5 bg-warning" />
-          <span class="text-muted">AC连接</span>
+          <span class="text-muted">{{ $t('batteryPcs.legendAcConnection') }}</span>
         </div>
       </div>
     </div>
@@ -159,36 +159,36 @@
     <div class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
         <span class="w-2 h-2 rounded-full dot-accent" />
-        电气单线图
+        {{ $t('batteryPcs.sectionSingleLine') }}
       </h3>
 
       <div ref="singleLineDiagram" class="h-[500px] rounded card-panel-bordered" />
 
       <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
         <div class="rounded p-2 card-panel-bordered">
-          <p class="text-muted">DC电压范围</p>
+          <p class="text-muted">{{ $t('batteryPcs.labelDcVoltageRange') }}</p>
           <p class="font-bold text-accent-secondary">
             {{ dcVoltageRange }}
           </p>
         </div>
         <div class="rounded p-2 card-panel-bordered">
-          <p class="text-muted">AC输出电压</p>
+          <p class="text-muted">{{ $t('batteryPcs.labelAcOutputVoltage') }}</p>
           <p class="font-bold text-accent">
             {{ acVoltage }}
           </p>
         </div>
         <div class="rounded p-2 card-panel-bordered">
-          <p class="text-muted">额定频率</p>
+          <p class="text-muted">{{ $t('batteryPcs.labelRatedFrequency') }}</p>
           <p class="font-bold text-warning">50 Hz</p>
         </div>
         <div class="rounded p-2 card-panel-bordered">
-          <p class="text-muted">短路容量</p>
+          <p class="text-muted">{{ $t('batteryPcs.labelShortCircuitCapacity') }}</p>
           <p class="font-bold text-success">
             {{ shortCircuitCapacity }}
           </p>
         </div>
         <div class="rounded p-2 card-panel-bordered">
-          <p class="text-muted">接地方式</p>
+          <p class="text-muted">{{ $t('batteryPcs.labelGroundingMethod') }}</p>
           <p class="font-bold text-accent-secondary">TN-S</p>
         </div>
       </div>
@@ -198,20 +198,20 @@
     <div class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent-secondary">
         <span class="w-2 h-2 rounded-full dot-accent" />
-        推荐配对方案
+        {{ $t('batteryPcs.sectionRecommendedSchemes') }}
       </h3>
 
       <div class="overflow-auto">
         <table class="w-full text-xs">
           <thead class="text-muted thead-bordered">
             <tr>
-              <th class="py-2 px-3 text-left">方案编号</th>
-              <th class="py-2 px-3 text-left">集装箱配置</th>
-              <th class="py-2 px-3 text-left">PCS配置</th>
-              <th class="py-2 px-3 text-left">配比方式</th>
-              <th class="py-2 px-3 text-left">能量/功率比</th>
-              <th class="py-2 px-3 text-left">效率预估</th>
-              <th class="py-2 px-3 text-left">操作</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tableSchemeId') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tableContainerConfig') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tablePcsConfig') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tablePairingMode') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tableEnergyPowerRatio') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tableEfficiencyEstimate') }}</th>
+              <th class="py-2 px-3 text-left">{{ $t('batteryPcs.tableAction') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -237,7 +237,7 @@
                   class="text-[10px] px-2 py-1 rounded transition-all btn-accent-filled"
                   @click="applyScheme(scheme)"
                 >
-                  应用
+                  {{ $t('batteryPcs.btnApply') }}
                 </button>
               </td>
             </tr>
@@ -249,13 +249,13 @@
     <!-- 底部按钮 -->
     <div class="flex justify-end gap-3">
       <button class="text-xs px-4 py-2 rounded transition-colors btn-card-outline" @click="resetConfig">
-        重置配置
+        {{ $t('batteryPcs.btnResetConfig') }}
       </button>
       <button
         class="text-xs px-6 py-2 rounded font-bold transition-colors bg-accent-secondary text-white"
         @click="applyConfig"
       >
-        应用到仿真参数
+        {{ $t('batteryPcs.btnApplyToSim') }}
       </button>
     </div>
   </div>
@@ -263,6 +263,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
@@ -278,6 +279,8 @@ echarts.use([
   LegendComponent,
   GraphicComponent
 ])
+
+const { t } = useI18n()
 
 const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])
@@ -317,10 +320,10 @@ async function loadLibraryData() {
     // 如果没有数据，使用默认值
     if (containers.value.length === 0 || pcsList.value.length === 0) {
       containers.value = [
-        { id: 'container-5mwh', name: '5MWh标准舱', energy: 5, power: 2.5, voltage: 600, cells: 120 },
-        { id: 'container-3mwh', name: '3MWh紧凑舱', energy: 3, power: 1.5, voltage: 600, cells: 72 },
-        { id: 'container-10mwh', name: '10MWh大容量舱', energy: 10, power: 5, voltage: 800, cells: 240 },
-        { id: 'container-2mwh', name: '2MWh小型舱', energy: 2, power: 1, voltage: 400, cells: 48 }
+        { id: 'container-5mwh', name: t('batteryPcs.defaultNames.standardCabin'), energy: 5, power: 2.5, voltage: 600, cells: 120 },
+        { id: 'container-3mwh', name: t('batteryPcs.defaultNames.compactCabin'), energy: 3, power: 1.5, voltage: 600, cells: 72 },
+        { id: 'container-10mwh', name: t('batteryPcs.defaultNames.largeCabin'), energy: 10, power: 5, voltage: 800, cells: 240 },
+        { id: 'container-2mwh', name: t('batteryPcs.defaultNames.smallCabin'), energy: 2, power: 1, voltage: 400, cells: 48 }
       ]
       pcsList.value = [
         { id: 'pcs-2mw', name: '2MW PCS', power: 2, voltage: 380, dcVoltage: '600-900V', efficiency: 98 },
@@ -330,12 +333,12 @@ async function loadLibraryData() {
       ]
     }
   } catch (error) {
-    console.error('加载产品库失败:', error)
+    console.error(t('batteryPcs.errorLoadLibrary'), error)
     containers.value = [
-      { id: 'container-5mwh', name: '5MWh标准舱', energy: 5, power: 2.5, voltage: 600, cells: 120 },
-      { id: 'container-3mwh', name: '3MWh紧凑舱', energy: 3, power: 1.5, voltage: 600, cells: 72 },
-      { id: 'container-10mwh', name: '10MWh大容量舱', energy: 10, power: 5, voltage: 800, cells: 240 },
-      { id: 'container-2mwh', name: '2MWh小型舱', energy: 2, power: 1, voltage: 400, cells: 48 }
+      { id: 'container-5mwh', name: t('batteryPcs.defaultNames.standardCabin'), energy: 5, power: 2.5, voltage: 600, cells: 120 },
+      { id: 'container-3mwh', name: t('batteryPcs.defaultNames.compactCabin'), energy: 3, power: 1.5, voltage: 600, cells: 72 },
+      { id: 'container-10mwh', name: t('batteryPcs.defaultNames.largeCabin'), energy: 10, power: 5, voltage: 800, cells: 240 },
+      { id: 'container-2mwh', name: t('batteryPcs.defaultNames.smallCabin'), energy: 2, power: 1, voltage: 400, cells: 48 }
     ]
     pcsList.value = [
       { id: 'pcs-2mw', name: '2MW PCS', power: 2, voltage: 380, dcVoltage: '600-900V', efficiency: 98 },
@@ -446,9 +449,9 @@ const pairingMode = computed(() => {
   const ctn = containerQty.value
   const pn = pcsQty.value
   if (ctn === 0 || pn === 0) return '--'
-  if (ctn === pn) return '1:1 配对'
-  if (ctn > pn) return '多舱并联'
-  return '单舱多PCS'
+  if (ctn === pn) return t('batteryPcs.pairingOneToOne')
+  if (ctn > pn) return t('batteryPcs.pairingMultiContainerParallel')
+  return t('batteryPcs.pairingMultiPcsSingleCabin')
 })
 
 const containersPerPCS = computed(() => {
@@ -459,21 +462,21 @@ const containersPerPCS = computed(() => {
 })
 
 const pairingDescription = computed(() => {
-  if (!selectedContainer.value || !selectedPCS.value) return '请选择集装箱和PCS型号'
+  if (!selectedContainer.value || !selectedPCS.value) return t('batteryPcs.msgSelectContainerAndPcs')
   const ctn = containerQty.value
   const pn = pcsQty.value
-  if (ctn === 0 || pn === 0) return '请选择集装箱和PCS型号'
+  if (ctn === 0 || pn === 0) return t('batteryPcs.msgSelectContainerAndPcs')
   const container = containers.value.find((c) => c.id === selectedContainer.value)
   const pcs = pcsList.value.find((p) => p.id === selectedPCS.value)
-  if (!container || !pcs) return '请选择集装箱和PCS型号'
+  if (!container || !pcs) return t('batteryPcs.msgSelectContainerAndPcs')
 
   if (ctn === pn) {
-    return `每个${container.name}配置1台${pcs.name}，共${pn}台PCS，独立运行。`
+    return t('batteryPcs.pairingDescOneToOne', { container: container.name, pcs: pcs.name, pcsCount: pn })
   } else if (ctn > pn) {
-    return `每${containersPerPCS.value}个${container.name}并联后接入1台${pcs.name}，共${pn}台PCS。`
+    return t('batteryPcs.pairingDescMultiContainer', { ratio: containersPerPCS.value, container: container.name, pcs: pcs.name, pcsCount: pn })
   } else {
     const pcsPerContainer = Math.ceil(pn / ctn)
-    return `每个${container.name}配置${pcsPerContainer}台${pcs.name}，共${pn}台PCS，并联输出。`
+    return t('batteryPcs.pairingDescMultiPcs', { container: container.name, pcsPerContainer, pcs: pcs.name, pcsCount: pn })
   }
 })
 
@@ -512,10 +515,10 @@ const recommendedSchemes = computed(() => {
         const eff = (pcs.efficiency || 97) - Math.abs(ratio - 1) * 0.5
 
         schemes.push({
-          id: `方案${schemes.length + 1}`,
+          id: t('batteryPcs.schemePrefix') + (schemes.length + 1),
           containerConfig: `${qty}×${container.name}`,
           pcsConfig: `${pcsCount}×${pcs.name}`,
-          pairingMode: qty === pcsCount ? '1:1' : qty > pcsCount ? '多舱并联' : '单舱多PCS',
+          pairingMode: qty === pcsCount ? '1:1' : qty > pcsCount ? t('batteryPcs.pairingMultiContainerParallel') : t('batteryPcs.pairingMultiPcsSingleCabin'),
           energyPowerRatio: `${energy}/${(pcsCount * pcs.power).toFixed(1)}`,
           efficiency: eff.toFixed(1),
           containerQty: qty,
@@ -540,12 +543,12 @@ const calculatePCS = () => {
     try {
       renderConnectionDiagram()
     } catch (e) {
-      console.error('连接图渲染失败:', e)
+      console.error('Connection diagram render failed:', e)
     }
     try {
       renderSingleLineDiagram()
     } catch (e) {
-      console.error('单线图渲染失败:', e)
+      console.error('Single line diagram render failed:', e)
     }
   })
 }
@@ -565,7 +568,7 @@ const renderConnectionDiagram = () => {
   try {
     connectionChart = echarts.init(connectionDiagram.value)
   } catch (e) {
-    console.error('初始化连接图echarts失败:', e)
+    console.error('Failed to init connection diagram echarts:', e)
     return
   }
   if (!connectionChart) return
@@ -576,7 +579,7 @@ const renderConnectionDiagram = () => {
   if (!container || !pcs) {
     connectionChart.setOption({
       title: {
-        text: '请选择集装箱和PCS型号',
+        text: t('batteryPcs.msgSelectContainerAndPcs'),
         left: 'center',
         top: 'center',
         textStyle: { color: 'var(--color-text-muted)', fontSize: 14 }
@@ -590,7 +593,7 @@ const renderConnectionDiagram = () => {
   if (ctn <= 0 || pn <= 0) {
     connectionChart.setOption({
       title: {
-        text: '请设置集装箱数量和PCS数量',
+        text: t('batteryPcs.msgSetContainerPcsQty'),
         left: 'center',
         top: 'center',
         textStyle: { color: 'var(--color-text-muted)', fontSize: 14 }
@@ -617,18 +620,18 @@ const renderConnectionDiagram = () => {
   const startX = (1000 - span) / 2
 
   nodes.push({
-    name: '电网',
+    name: t('batteryPcs.legendGrid'),
     x: 500,
     y: 30,
     symbol: 'circle',
     symbolSize: 42,
     category: 0,
     itemStyle: { color: colors.emerald, shadowBlur: 4, shadowColor: 'rgba(0,0,0,0.3)' },
-    label: { show: true, position: 'inside', formatter: '电网', fontSize: 10, color: 'var(--color-text-on-accent)' }
+    label: { show: true, position: 'inside', formatter: t('batteryPcs.legendGrid').replace(/\n/g, ' '), fontSize: 10, color: 'var(--color-text-on-accent)' }
   })
 
   nodes.push({
-    name: '变压器',
+    name: t('batteryPcs.legendTransformer'),
     x: 500,
     y: 110,
     symbol: 'diamond',
@@ -650,7 +653,7 @@ const renderConnectionDiagram = () => {
       fontWeight: 'bold'
     }
   })
-  links.push({ source: '电网', target: '变压器', lineStyle: { color: colors.amber, width: 3, type: 'solid' } })
+  links.push({ source: t('batteryPcs.legendGrid'), target: t('batteryPcs.legendTransformer'), lineStyle: { color: colors.amber, width: 3, type: 'solid' } })
 
   const pcsUnitWidth = Math.min(80, span / Math.max(pn, 1))
   for (let i = 0; i < pn; i++) {
@@ -681,13 +684,13 @@ const renderConnectionDiagram = () => {
         color: 'var(--color-text-on-accent)'
       }
     })
-    links.push({ source: '变压器', target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
+    links.push({ source: t('batteryPcs.legendTransformer'), target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
   }
 
   const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
   const containerUnitWidth = Math.min(80, (span / Math.max(containersPerPCSVal, 1) / Math.max(pn, 1)) * 0.9)
   for (let i = 0; i < ctn; i++) {
-    const containerName = `电池舱${i + 1}`
+    const containerName = t('batteryPcs.chartBatteryCabin') + (i + 1)
     const pcsGroupIdx = Math.min(Math.floor(i / Math.max(containersPerPCSVal, 1)), pn - 1)
     const pcsX = startX + (pcsGroupIdx * span) / Math.max(pn - 1, 1) + pcsUnitWidth / 2
     const containerInGroup = i % containersPerPCSVal
@@ -713,7 +716,7 @@ const renderConnectionDiagram = () => {
       label: {
         show: true,
         position: 'inside',
-        formatter: `舱${i + 1}\n${container.energy}MWh`,
+        formatter: t('batteryPcs.cabinLabel') + (i + 1) + '\n' + container.energy + 'MWh',
         fontSize: 9,
         color: 'var(--color-text-on-accent)'
       }
@@ -739,7 +742,8 @@ const renderConnectionDiagram = () => {
         const name = p.data.name
         const info = nodes.find((n) => n.name === name)
         if (!info) return name
-        return `<b>${name}</b><br/>类型: ${['电网', 'PCS', '电池舱', '变压器'][info.category || 0]}`
+        const catNames = [t('batteryPcs.legendGrid'), 'PCS', t('batteryPcs.chartBatteryCabin'), t('batteryPcs.legendTransformer')]
+        return '<b>' + name + '</b><br/>' + t('batteryPcs.chartType') + ': ' + (catNames[info.category || 0] || '')
       }
     },
     series: [
@@ -752,7 +756,7 @@ const renderConnectionDiagram = () => {
         edgeSymbolSize: [6, 8],
         data: nodes,
         links: links,
-        categories: [{ name: '电网' }, { name: 'PCS' }, { name: '电池舱' }, { name: '变压器' }],
+        categories: [{ name: t('batteryPcs.legendGrid') }, { name: 'PCS' }, { name: t('batteryPcs.chartBatteryCabin') }, { name: t('batteryPcs.legendTransformer') }],
         lineStyle: { opacity: 0.9, curveness: 0, width: 2 }
       }
     ]
@@ -774,7 +778,7 @@ const renderSingleLineDiagram = () => {
   try {
     singleLineChart = echarts.init(singleLineDiagram.value)
   } catch (e) {
-    console.error('初始化单线图echarts失败:', e)
+    console.error('Failed to init single line diagram echarts:', e)
     return
   }
   if (!singleLineChart) return
@@ -785,7 +789,7 @@ const renderSingleLineDiagram = () => {
   if (!container || !pcs) {
     singleLineChart.setOption({
       title: {
-        text: '请选择集装箱和PCS型号',
+        text: t('batteryPcs.msgSelectContainerAndPcs'),
         left: 'center',
         top: 'center',
         textStyle: { color: 'var(--color-text-muted)', fontSize: 14 }
@@ -799,7 +803,7 @@ const renderSingleLineDiagram = () => {
   if (ctn <= 0 || pn <= 0) {
     singleLineChart.setOption({
       title: {
-        text: '请设置集装箱数量和PCS数量',
+        text: t('batteryPcs.msgSetContainerPcsQty'),
         left: 'center',
         top: 'center',
         textStyle: { color: 'var(--color-text-muted)', fontSize: 14 }
@@ -832,7 +836,7 @@ const renderSingleLineDiagram = () => {
   graphicElements.push({
     type: 'text',
     style: {
-      text: '电网 10kV',
+      text: t('batteryPcs.singleLineGridLabel'),
       x: 500,
       y: 34,
       fill: 'var(--color-text-on-accent)',
@@ -888,7 +892,7 @@ const renderSingleLineDiagram = () => {
   graphicElements.push({
     type: 'text',
     style: {
-      text: `AC母线 ${pcs.voltage}V`,
+      text: t('batteryPcs.singleLineAcBusPrefix') + ' ' + pcs.voltage + 'V',
       x: 500,
       y: 155,
       fill: colors.amber,
@@ -973,7 +977,7 @@ const renderSingleLineDiagram = () => {
     })
     graphicElements.push({
       type: 'text',
-      style: { text: 'DC', x: pcsX, y: dcJunctionY - 12, fill: colors.slate, fontSize: 8, textAlign: 'center' }
+      style: { text: t('batteryPcs.chartDc'), x: pcsX, y: dcJunctionY - 12, fill: colors.slate, fontSize: 8, textAlign: 'center' }
     })
 
     const group = groupContainers[i]
@@ -1089,7 +1093,7 @@ const renderSingleLineDiagram = () => {
     graphicElements.push({
       type: 'text',
       style: {
-        text: `舱${i + 1}`,
+        text: t('batteryPcs.cabinLabel') + (i + 1),
         x: x,
         y: boxY + 20,
         fill: 'var(--color-text-on-accent)',
@@ -1140,7 +1144,7 @@ const applyConfig = () => {
   const pcs = pcsList.value.find((p) => p.id === selectedPCS.value)
 
   if (!container || !pcs) {
-    emit('error', '请先选择集装箱和PCS型号', 'warning')
+    emit('error', t('batteryPcs.msgErrorSelectFirst'), 'warning')
     return
   }
 

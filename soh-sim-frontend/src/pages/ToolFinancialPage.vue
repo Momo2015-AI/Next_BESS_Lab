@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>财务看板</h1>
-      <p>CAPEX/OPEX/IRR/LCOS/DSCR 全景财务指标</p>
+      <h1>{{ $t('tools.financialTitle') }}</h1>
+      <p>{{ $t('tools.financialDesc') }}</p>
     </div>
     <FinancialDashboard
       :params="store.systemParams"

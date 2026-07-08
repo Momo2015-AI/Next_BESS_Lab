@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>参数配置面板</h1>
-      <p>统一管理系统参数</p>
+      <h1>{{ $t('tools.paramsTitle') }}</h1>
+      <p>{{ $t('tools.paramsDesc') }}</p>
     </div>
     <ParameterPanel
       :params="store.systemParams"

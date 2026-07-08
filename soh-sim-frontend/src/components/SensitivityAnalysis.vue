@@ -1,36 +1,36 @@
 <template>
   <div class="sensitivity-analysis h-full overflow-auto p-4">
-    <div class="rounded-lg p-4 card-bordered">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent">
-        <span class="w-2 h-2 rounded-full bg-accent" />
-        敏感性分析
+    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent)">
+        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent)" />
+        {{ $t('sensitivity.title') }}
       </h3>
 
       <!-- 敏感性参数设置 -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <!-- 参数选择 -->
-        <div class="rounded-lg p-3 bg-card-dark">
-          <div class="text-xs mb-3 text-muted">选择敏感性参数</div>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
+          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.selectParam') }}</div>
           <div class="space-y-2">
             <label
               v-for="param in sensitivityParams"
               :key="param.key"
               class="flex items-center gap-2 cursor-pointer text-xs label-text"
             >
-              <input v-model="param.enabled" type="checkbox" />class="u-accent-color-var-color-accent"
-              <span>{{ param.label }}</span>class="text-secondary"
+              <input v-model="param.enabled" type="checkbox" style="accent-color: var(--color-accent)" />
+              <span style="color: var(--color-text-secondary)">{{ $t('sensitivity.paramLabel', { label: param.label }) }}</span>
             </label>
           </div>
         </div>
 
         <!-- 参数范围设置 -->
-        <div class="col-span-3 rounded-lg p-3 bg-card-dark">
-          <div class="text-xs mb-3 text-muted">参数变化范围</div>
+        <div class="col-span-3 rounded-lg p-3" style="background-color: var(--color-card-dark)">
+          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.range') }}</div>
 
           <div class="grid grid-cols-3 gap-3">
             <div v-for="param in enabledParams" :key="param.key">
-              <div class="text-xs mb-1 text-secondary">
-                {{ param.label }}
+              <div class="text-xs mb-1" style="color: var(--color-text-secondary)">
+                {{ $t('sensitivity.paramLabel', { label: param.label }) }}
               </div>
               <div class="flex items-center gap-1">
                 <input
@@ -39,7 +39,7 @@
                   step="0.01"
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
-                <span class="text-xs text-muted">至</span>
+                <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('sensitivity.to') }}</span>
                 <input
                   v-model.number="param.max"
                   type="number"
@@ -47,12 +47,12 @@
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
               </div>
-              <div class="text-[10px] mt-1 text-muted">当前值: {{ param.current }}</div>
+              <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">{{ $t('sensitivity.currentValue') }}: {{ param.current }}</div>
             </div>
           </div>
 
           <div class="mt-3 flex items-center gap-2">
-            <span class="text-xs text-muted">变化步数:</span>
+            <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('sensitivity.stepsLabel') }}</span>
             <input
               v-model.number="steps"
               type="number"
@@ -60,14 +60,18 @@
               max="10"
               class="w-16 rounded text-xs px-2 py-1 form-field-input"
             />
-            <span class="text-xs text-muted">(3-10步)</span>
+            <span class="text-xs" style="color: var(--color-text-muted)">({{ $t('sensitivity.stepsRange') }})</span>
             <button
               :disabled="analyzing || enabledParams.length === 0"
               class="ml-auto text-xs px-4 py-1.5 rounded transition-colors"
-              :class="analyzing || enabledParams.length === 0 ? 'btn-disabled' : 'bg-warning text-white'"
+              :style="
+                analyzing || enabledParams.length === 0
+                  ? { backgroundColor: 'var(--color-card-dark)', color: 'var(--color-text-muted)' }
+                  : { backgroundColor: 'var(--color-warning)', color: 'white' }
+              "
               @click="runAnalysis"
             >
-              {{ analyzing ? '分析中...' : '运行分析' }}
+              {{ analyzing ? $t('sensitivity.analyzing') : $t('sensitivity.runAnalysis') }}
             </button>
           </div>
         </div>
@@ -76,26 +80,26 @@
       <!-- 分析结果 -->
       <div v-if="analysisResults.length > 0" class="grid grid-cols-2 gap-4">
         <!-- 龙卷风图 -->
-        <div class="rounded-lg p-3 bg-card-dark">
-          <div class="text-xs mb-3 text-muted">敏感性排名 (龙卷风图)</div>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
+          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.tornadoRank') }}</div>
           <div ref="tornadoChart" class="h-64" />
         </div>
 
         <!-- 蜘蛛图 -->
-        <div class="rounded-lg p-3 bg-card-dark">
-          <div class="text-xs mb-3 text-muted">多参数蜘蛛图</div>
+        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
+          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.spiderChart') }}</div>
           <div ref="spiderChart" class="h-64" />
         </div>
       </div>
 
       <!-- 详细数据表 -->
       <div v-if="analysisResults.length > 0" class="mt-4">
-        <div class="text-xs mb-2 text-muted">敏感性分析详细数据</div>
+        <div class="text-xs mb-2" style="color: var(--color-text-muted)">{{ $t('sensitivity.detailData') }}</div>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr>class="text-muted border-b"
-                <th class="text-left py-2 px-2">参数</th>
+              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+                <th class="text-left py-2 px-2">{{ $t('sensitivity.parameter') }}</th>
                 <th v-for="(result, idx) in analysisResults" :key="idx" class="text-right py-2 px-2">
                   {{ result.param }} ({{ (result.minValue * 100).toFixed(0) }}%~{{
                     (result.maxValue * 100).toFixed(0)
@@ -104,46 +108,48 @@
               </tr>
             </thead>
             <tbody>
-              <tr>class="text-secondary border-b"
-                <td class="py-2 px-2">NPV变化</td>
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+                <td class="py-2 px-2">{{ $t('sensitivity.npvChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :class="result.npvImpact > 0 ? 'text-result-pos' : 'text-result-neg'"
+                  :style="result.npvImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
                   {{ result.npvImpact > 0 ? '+' : '' }}{{ result.npvImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr>class="text-secondary border-b"
-                <td class="py-2 px-2">IRR变化</td>
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+                <td class="py-2 px-2">{{ $t('sensitivity.irrChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :class="result.irrImpact > 0 ? 'text-result-pos' : 'text-result-neg'"
+                  :style="result.irrImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
                   {{ result.irrImpact > 0 ? '+' : '' }}{{ result.irrImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr>class="text-secondary border-b"
-                <td class="py-2 px-2">回收期变化</td>
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+                <td class="py-2 px-2">{{ $t('sensitivity.paybackChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :class="result.paybackImpact < 0 ? 'text-result-pos' : 'text-result-neg'"
+                  :style="
+                    result.paybackImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }
+                  "
                 >
-                  {{ result.paybackImpact > 0 ? '+' : '' }}{{ result.paybackImpact.toFixed(2) }}年
+                  {{ result.paybackImpact > 0 ? '+' : '' }}{{ result.paybackImpact.toFixed(2) }}{{ $t('sensitivity.yearUnit') }}
                 </td>
               </tr>
-              <tr>class="text-secondary border-b"
-                <td class="py-2 px-2">LCOS变化</td>
+              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+                <td class="py-2 px-2">{{ $t('sensitivity.lcosChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
                   :key="idx"
                   class="text-right py-2 px-2"
-                  :class="result.lcosImpact < 0 ? 'text-result-pos' : 'text-result-neg'"
+                  :style="result.lcosImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
                   {{ result.lcosImpact > 0 ? '+' : '' }}{{ result.lcosImpact.toFixed(2) }}%
                 </td>
@@ -154,13 +160,13 @@
       </div>
 
       <!-- 财务指标敏感性说明 -->
-      <div class="mt-4 p-3 rounded-lg bg-card-dark">
-        <div class="font-medium mb-2 text-secondary">敏感性分析说明</div>
-        <ul class="list-disc list-inside space-y-1 text-xs text-muted">
-          <li>NPV (净现值): 对电价、补贴政策敏感，影响项目投资回报</li>
-          <li>IRR (内部收益率): 反映项目盈利能力，对成本和收入变化敏感</li>
-          <li>回收期: 投资回收所需时间，影响资金周转</li>
-          <li>LCOS (储能度电成本): 核心竞争指标，对电池价格、效率敏感</li>
+      <div class="mt-4 p-3 rounded-lg" style="background-color: var(--color-card-dark)">
+        <div class="font-medium mb-2" style="color: var(--color-text-secondary)">{{ $t('sensitivity.explanationTitle') }}</div>
+        <ul class="list-disc list-inside space-y-1 text-xs" style="color: var(--color-text-muted)">
+          <li>{{ $t('sensitivity.explanationNpv') }}</li>
+          <li>{{ $t('sensitivity.explanationIrr') }}</li>
+          <li>{{ $t('sensitivity.explanationPayback') }}</li>
+          <li>{{ $t('sensitivity.explanationLcos') }}</li>
         </ul>
       </div>
     </div>
@@ -169,7 +175,10 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
+      :style="{
+        backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
+        color: 'white'
+      }"
     >
       {{ toast.message }}
     </div>
@@ -178,12 +187,13 @@
 
 <script setup>
 import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, RadarChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, RadarComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
-import api from '../services/api.js'
+const { t } = useI18n()
 echarts.use([
   CanvasRenderer,
   BarChart,
@@ -203,12 +213,12 @@ const props = defineProps({
 const emit = defineEmits(['error'])
 
 const { state: sensitivityParams, clearDraft: clearSensitivityDraft } = useDraft('sensitivity-params', [
-  { key: 'electricityPrice', label: '电价', enabled: true, min: 0.3, max: 0.8, current: 0.5, unit: '元/kWh' },
-  { key: 'inflationRate', label: '通货膨胀率', enabled: true, min: 0.01, max: 0.05, current: 0.03, unit: '' },
-  { key: 'discountRate', label: '折现率', enabled: false, min: 0.05, max: 0.12, current: 0.08, unit: '' },
-  { key: 'bessCost', label: '电池成本', enabled: true, min: 0.8, max: 1.5, current: 1.0, unit: '元/Wh' },
-  { key: 'efficiency', label: '系统效率', enabled: false, min: 0.85, max: 0.99, current: 0.92, unit: '' },
-  { key: 'subsidy', label: '补贴系数', enabled: false, min: 0.5, max: 1.5, current: 1.0, unit: '' }
+  { key: 'electricityPrice', labelKey: 'sensitivity.params.electricityPrice', enabled: true, min: 0.3, max: 0.8, current: 0.5, unit: 'sensitivity.params.unitPrice' },
+  { key: 'inflationRate', labelKey: 'sensitivity.params.inflationRate', enabled: true, min: 0.01, max: 0.05, current: 0.03, unit: '' },
+  { key: 'discountRate', labelKey: 'sensitivity.params.discountRate', enabled: false, min: 0.05, max: 0.12, current: 0.08, unit: '' },
+  { key: 'bessCost', labelKey: 'sensitivity.params.bessCost', enabled: true, min: 0.8, max: 1.5, current: 1.0, unit: 'sensitivity.params.unitCost' },
+  { key: 'efficiency', labelKey: 'sensitivity.params.efficiency', enabled: false, min: 0.85, max: 0.99, current: 0.92, unit: '' },
+  { key: 'subsidy', labelKey: 'sensitivity.params.subsidy', enabled: false, min: 0.5, max: 1.5, current: 1.0, unit: '' }
 ])
 
 const steps = useDraftRef('sensitivity-steps', 5).state
@@ -228,6 +238,13 @@ const toast = reactive({
 
 const enabledParams = computed(() => sensitivityParams.filter((p) => p.enabled))
 
+const paramLabels = computed(() =>
+  sensitivityParams.value.map((p) => ({
+    key: p.key,
+    label: p.labelKey ? t(p.labelKey) : p.label
+  }))
+)
+
 const showToast = (message, type = 'success') => {
   toast.message = message
   toast.type = type
@@ -240,7 +257,7 @@ const showToast = (message, type = 'success') => {
 // 运行敏感性分析
 async function runAnalysis() {
   if (enabledParams.value.length === 0) {
-    showToast('请选择至少一个敏感性参数', 'error')
+    showToast(t('sensitivity.selectParamMsg'), 'error')
     return
   }
 
@@ -260,10 +277,10 @@ async function runAnalysis() {
       updateSpiderChart()
     })
 
-    showToast('敏感性分析完成')
+    showToast(t('sensitivity.analysisComplete'))
   } catch (error) {
-    console.error('分析失败:', error)
-    showToast('分析失败: ' + error.message, 'error')
+    console.error(t('sensitivity.analysisFailed'), error)
+    showToast(t('sensitivity.analysisFailed') + ': ' + error.message, 'error')
   } finally {
     analyzing.value = false
   }
@@ -287,7 +304,13 @@ async function analyzeSingleParam(param) {
     const testParams = { ...props.params, [param.key]: value }
 
     try {
-      const result = await api.post('/api/soh/calculate', testParams)
+      const response = await fetch('/api/soh/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testParams)
+      })
+
+      const result = await response.json()
 
       if (result.success) {
         const financial = result.data.financial || {}
@@ -329,8 +352,8 @@ async function analyzeSingleParam(param) {
   const lcosImpact = baseLcos !== 0 ? (lcosRange / Math.abs(baseLcos)) * 100 : 0
 
   return {
-    param: param.label,
-    paramKey: param.key,
+    param: param.labelKey ? t(param.labelKey) : param.label,
+    paramKey: param.labelKey || param.label,
     minValue,
     maxValue,
     values,
@@ -369,7 +392,7 @@ function updateTornadoChart() {
 
   const sortedResults = [...analysisResults.value].sort((a, b) => b.sensitivityScore - a.sensitivityScore)
 
-  const categories = sortedResults.map((r) => r.param)
+  const categories = sortedResults.map((r) => (r.paramKey ? t(r.paramKey) : r.param))
   const npvData = sortedResults.map((r) => ({
     value: r.npvImpact,
     itemStyle: { color: r.npvImpact > 0 ? colors.success : colors.danger }
@@ -384,7 +407,8 @@ function updateTornadoChart() {
       formatter: (params) => {
         const idx = params[0].dataIndex
         const result = sortedResults[idx]
-        return `${result.param}<br/>NPV影响: ${result.npvImpact.toFixed(2)}%<br/>IRR影响: ${result.irrImpact.toFixed(2)}%<br/>LCOS影响: ${result.lcosImpact.toFixed(2)}%`
+        const paramName = result.paramKey ? t(result.paramKey) : result.param
+        return `${paramName}<br/>${t('sensitivity.npvImpact')}: ${result.npvImpact.toFixed(2)}%<br/>${t('sensitivity.irrImpact')}: ${result.irrImpact.toFixed(2)}%<br/>${t('sensitivity.lcosImpact')}: ${result.lcosImpact.toFixed(2)}%`
       }
     },
     grid: {
@@ -395,7 +419,7 @@ function updateTornadoChart() {
     },
     xAxis: {
       type: 'value',
-      name: '影响程度 (%)',
+      name: t('sensitivity.impactDegree'),
       nameTextStyle: { color: colors.textMuted, fontSize: 10 },
       axisLabel: { color: colors.textMuted, fontSize: 10 },
       axisLine: { lineStyle: { color: colors.axisLine } },
@@ -455,27 +479,27 @@ function updateSpiderChart() {
   if (topResults.length === 0) return
 
   const indicators = topResults.map((r) => ({
-    name: r.param,
+    name: r.paramKey ? t(r.paramKey) : r.param,
     max: Math.max(Math.abs(r.npvImpact), Math.abs(r.irrImpact), Math.abs(r.lcosImpact)) * 1.2
   }))
 
   const seriesData = [
     {
-      name: 'NPV',
+      name: t('sensitivity.seriesNpv'),
       value: topResults.map((r) => Math.abs(r.npvImpact)),
       lineStyle: { color: colors.npvLine },
       areaStyle: { color: colors.npvArea },
       itemStyle: { color: colors.npvLine }
     },
     {
-      name: 'IRR',
+      name: t('sensitivity.seriesIrr'),
       value: topResults.map((r) => Math.abs(r.irrImpact)),
       lineStyle: { color: colors.irrLine },
       areaStyle: { color: colors.irrArea },
       itemStyle: { color: colors.irrLine }
     },
     {
-      name: 'LCOS',
+      name: t('sensitivity.seriesLcos'),
       value: topResults.map((r) => Math.abs(r.lcosImpact)),
       lineStyle: { color: colors.lcosLine },
       areaStyle: { color: colors.lcosArea },
@@ -490,7 +514,7 @@ function updateSpiderChart() {
       textStyle: { color: colors.tooltipText, fontSize: 11 }
     },
     legend: {
-      data: ['NPV', 'IRR', 'LCOS'],
+      data: [t('sensitivity.seriesNpv'), t('sensitivity.seriesIrr'), t('sensitivity.seriesLcos')],
       textStyle: { color: colors.legendText, fontSize: 10 },
       top: 5
     },

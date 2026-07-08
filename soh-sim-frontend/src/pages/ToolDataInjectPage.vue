@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>数据注入</h1>
-      <p>手工注入/修正 SOH、RTE 数据序列</p>
+      <h1>{{ $t('tools.dataInjectTitle') }}</h1>
+      <p>{{ $t('tools.dataInjectDesc') }}</p>
     </div>
     <DataInjection
       :soh="store.degradation.soh"

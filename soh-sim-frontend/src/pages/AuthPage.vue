@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>系统认证</h1>
-      <p>登录与权限管理</p>
+      <h1>{{ $t('auth.pageTitle') }}</h1>
+      <p>{{ $t('auth.pageSubtitle') }}</p>
     </div>
     <AuthPanel :default-mode="defaultMode" @auth-success="onAuthSuccess" @error="onError" />
   </div>

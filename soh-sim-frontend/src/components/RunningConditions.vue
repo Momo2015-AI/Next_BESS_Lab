@@ -4,12 +4,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             01
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section01') }}
             </h3>
           </div>
@@ -75,12 +76,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             02
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section02') }}
             </h3>
           </div>
@@ -170,12 +172,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             03
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section03') }}
             </h3>
           </div>
@@ -251,12 +254,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             04
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section04') }}
             </h3>
           </div>
@@ -330,12 +334,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             05
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section05') }}
             </h3>
           </div>
@@ -420,17 +425,18 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             06
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section06') }}
             </h3>
           </div>
           <div class="ml-auto">
-            <label class="flex items-center gap-2 text-xs cursor-pointer text-secondary">
+            <label class="flex items-center gap-2 text-xs cursor-pointer" style="color: var(--color-text-secondary)">
               <input v-model="autoMatchEnabled" type="checkbox" class="accent-teal-500" />
               {{ $t('runningConditions.autoMatch') }}
             </label>
@@ -493,11 +499,11 @@
             </select>
           </div>
         </div>
-        <div v-if="matchedConfig" class="mt-3 p-3 rounded u-background-var-color-accent-glow">
-          <div class="text-xs font-bold mb-1 text-accent">
+        <div v-if="matchedConfig" class="mt-3 p-3 rounded" style="background: var(--color-accent-glow)">
+          <div class="text-xs font-bold mb-1" style="color: var(--color-accent)">
             {{ $t('runningConditions.matchedConfig') }}: {{ matchedConfig.name }}
           </div>
-          <div class="text-[10px] space-y-0.5 text-secondary">
+          <div class="text-[10px] space-y-0.5" style="color: var(--color-text-secondary)">
             <div>{{ $t('runningConditions.packEnergy') }}: {{ matchedConfig.packNominalEnergyKwh }} kWh</div>
             <div>
               {{ $t('runningConditions.rackEnergy') }}: {{ (matchedConfig.rackNominalEnergyKwh / 1000).toFixed(2) }} MWh
@@ -511,13 +517,14 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             07
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
-              PCS 变流器参数
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+              {{ $t('runningConditions.pcsSectionTitle') }}
             </h3>
           </div>
         </div>
@@ -611,12 +618,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             08
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section07') }}
             </h3>
           </div>
@@ -624,39 +632,42 @@
         <div class="grid grid-cols-3 gap-3 text-[10px]">
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.cell') }}</span>
-            <div class="rounded p-2 space-y-1.5 bg-input">
+            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
               <label
-                v-for="opt in certOptions.cell"
-                :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer text-secondary"
+                v-for="(opt, idx) in certOptionsI18n.cell"
+                :key="certKeys.cell[idx]"
+                class="flex items-center gap-1.5 cursor-pointer"
+                style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certCell" type="checkbox" :value="opt" class="accent-teal-500" />
+                <input v-model="form.certCell" type="checkbox" :value="certKeys.cell[idx]" class="accent-teal-500" />
                 {{ opt }}
               </label>
             </div>
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.system') }}</span>
-            <div class="rounded p-2 space-y-1.5 bg-input">
+            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
               <label
-                v-for="opt in certOptions.system"
-                :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer text-secondary"
+                v-for="(opt, idx) in certOptionsI18n.system"
+                :key="certKeys.system[idx]"
+                class="flex items-center gap-1.5 cursor-pointer"
+                style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certSystem" type="checkbox" :value="opt" class="accent-amber-500" />
+                <input v-model="form.certSystem" type="checkbox" :value="certKeys.system[idx]" class="accent-amber-500" />
                 {{ opt }}
               </label>
             </div>
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.grid') }}</span>
-            <div class="rounded p-2 space-y-1.5 bg-input">
+            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
               <label
-                v-for="opt in certOptions.grid"
-                :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer text-secondary"
+                v-for="(opt, idx) in certOptionsI18n.grid"
+                :key="certKeys.grid[idx]"
+                class="flex items-center gap-1.5 cursor-pointer"
+                style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certGrid" type="checkbox" :value="opt" class="accent-blue-500" />
+                <input v-model="form.certGrid" type="checkbox" :value="certKeys.grid[idx]" class="accent-blue-500" />
                 {{ opt }}
               </label>
             </div>
@@ -665,26 +676,28 @@
         <div class="mt-2 grid grid-cols-2 gap-3 text-[10px]">
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.extra') }}</span>
-            <div class="rounded p-2 space-y-1.5 bg-input">
+            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
               <label
-                v-for="opt in certOptions.extra"
-                :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer text-secondary"
+                v-for="(opt, idx) in certOptionsI18n.extra"
+                :key="certKeys.extra[idx]"
+                class="flex items-center gap-1.5 cursor-pointer"
+                style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certExtra" type="checkbox" :value="opt" class="accent-purple-500" />
+                <input v-model="form.certExtra" type="checkbox" :value="certKeys.extra[idx]" class="accent-purple-500" />
                 {{ opt }}
               </label>
             </div>
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.gridCode') }}</span>
-            <div class="rounded p-2 space-y-1.5 bg-input">
+            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
               <label
-                v-for="opt in certOptions.gridCode"
-                :key="opt"
-                class="flex items-center gap-1.5 cursor-pointer text-secondary"
+                v-for="(opt, idx) in certOptionsI18n.gridCode"
+                :key="certKeys.gridCode[idx]"
+                class="flex items-center gap-1.5 cursor-pointer"
+                style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certGridCode" type="checkbox" :value="opt" class="accent-emerald-500" />
+                <input v-model="form.certGridCode" type="checkbox" :value="certKeys.gridCode[idx]" class="accent-emerald-500" />
                 {{ opt }}
               </label>
             </div>
@@ -695,12 +708,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             09
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section08') }}
             </h3>
           </div>
@@ -800,12 +814,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
+            style="background: var(--color-accent-glow); color: var(--color-accent)"
           >
             10
           </span>
           <div>
-            <h3 class="section-title text-accent border-accent">
+            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
               {{ $t('runningConditions.section09') }}
             </h3>
           </div>
@@ -815,7 +830,11 @@
         </p>
         <div
           class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
-          :class="uploadHover ? 'upload-zone-hover' : 'border-color-var-color-input-border'"
+          :style="
+            uploadHover
+              ? 'border-color: var(--color-accent); background: var(--color-accent-glow);'
+              : 'border-color: var(--color-input-border);'
+          "
           @dragover.prevent="uploadHover = true"
           @dragleave.prevent="uploadHover = false"
           @drop.prevent="onDrop"
@@ -828,22 +847,24 @@
             class="hidden"
             @change="onFileChange"
           />
-          <div v-if="uploading" class="text-xs text-accent">
+          <div v-if="uploading" style="color: var(--color-accent)" class="text-xs">
             <div
-              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2 u-border-color-var-color-accent-border-top-color-transparent"
+              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2"
+              style="border-color: var(--color-accent); border-top-color: transparent"
             />
             {{ $t('runningConditions.uploading') }}
           </div>
           <div v-else-if="uploadResult" class="text-xs">
-            <span class="font-bold text-success">{{ $t('common.done') }}</span>
-            <span class="ml-2 text-muted">
+            <span style="color: var(--color-success)" class="font-bold">{{ $t('common.done') }}</span>
+            <span style="color: var(--color-text-muted)" class="ml-2">
               {{ uploadResult.fieldsExtracted }} {{ $t('runningConditions.uploadDone') }}
             </span>
-            <button class="ml-3 underline text-xs text-accent" @click.stop="applyExtracted">
+            <button class="ml-3 underline text-xs" style="color: var(--color-accent)" @click.stop="applyExtracted">
               {{ $t('runningConditions.applyForm') }}
             </button>
             <button
-              class="ml-3 underline text-xs text-muted"
+              class="ml-3 underline text-xs"
+              style="color: var(--color-text-muted)"
               @click.stop="uploadResult = null"
             >
               {{ $t('runningConditions.clearForm') }}
@@ -851,13 +872,13 @@
           </div>
           <div v-else>
             <div class="text-2xl mb-1 opacity-40">📄</div>
-            <p class="text-xs text-secondary">
+            <p class="text-xs" style="color: var(--color-text-secondary)">
               {{ $t('runningConditions.dragDrop') }}
-              <span class="underline text-accent">
+              <span style="color: var(--color-accent)" class="underline">
                 {{ $t('runningConditions.clickSelect') }}
               </span>
             </p>
-            <p class="text-[10px] mt-1 text-muted">
+            <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">
               {{ $t('runningConditions.uploadSupport') }}
             </p>
           </div>
@@ -865,11 +886,16 @@
       </div>
 
       <div class="text-right pb-4">
-        <button class="text-xs underline mr-4 text-muted" @click="clearAll">
+        <button class="text-xs underline mr-4" style="color: var(--color-text-muted)" @click="clearAll">
           {{ $t('runningConditions.resetAll') }}
         </button>
         <button
-          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors u-background-var-color-input-bg-border-1px-solid-var-color-input-border-color-var-color-text-secondary"
+          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors"
+          style="
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-input-border);
+            color: var(--color-text-secondary);
+          "
           @click="exportCSV"
         >
           {{ $t('runningConditions.exportCSV') }}
@@ -887,7 +913,6 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
-import api from '../services/api.js'
 
 const { t } = useI18n()
 const emit = defineEmits(['applyParams'])
@@ -979,46 +1004,21 @@ const { state: form, clearDraft: clearFormDraft } = useDraft('rc-form', {
   sparePartsStrategy: ''
 })
 
-const certOptions = {
-  cell: [
-    'IEC 62619 (锂电安全)',
-    'IEC 62620 (性能测试)',
-    'UL 1642 (电芯安全)',
-    'UN 38.3 (运输安全)',
-    'GB/T 36276 (中国国标)'
-  ],
-  system: [
-    'UL 9540 (系统级安全)',
-    'UL 9540A (火烧蔓延测试)',
-    'UL 1973 (模组标准)',
-    'IEC 62933-5-2 (并网安全)',
-    'NFPA 855 (消防规范)',
-    'IEC 62477-1 (PCS安全)'
-  ],
-  grid: [
-    'IEEE 1547 (并网互联)',
-    'IEC 61000-6-2/4 (EMC抗扰/发射)',
-    'UL 1741 (逆变器)',
-    'IEC 62933-4-2 (环境评估)',
-    'IEC 60730 (自动控制)'
-  ],
-  extra: [
-    'ISO 14001 (环境管理)',
-    'ISO 45001 (职业健康)',
-    'ISO 9001 (质量管理)',
-    'CE Marking (欧盟)',
-    'UKCA (英国)',
-    'RCM (澳大利亚)'
-  ],
-  gridCode: [
-    'UK G99 (英国)',
-    'VDE-AR-N 4110 (德国)',
-    'EN 50549-1 (欧盟)',
-    'IEEE 2800 (美国 BPS)',
-    'AEMO Grid Code (澳大利亚)',
-    'SASO/IEC (中东/沙特)'
-  ]
+const certKeys = {
+  cell: ['IEC 62619', 'IEC 62620', 'UL 1642', 'UN 38.3', 'GB/T 36276'],
+  system: ['UL 9540', 'UL 9540A', 'UL 1973', 'IEC 62933-5-2', 'NFPA 855', 'IEC 62477-1'],
+  grid: ['IEEE 1547', 'IEC 61000-6-2/4', 'UL 1741', 'IEC 62933-4-2', 'IEC 60730'],
+  extra: ['ISO 14001', 'ISO 45001', 'ISO 9001', 'CE Marking', 'UKCA', 'RCM'],
+  gridCode: ['UK G99', 'VDE-AR-N 4110', 'EN 50549-1', 'IEEE 2800', 'AEMO Grid Code', 'SASO/IEC']
 }
+
+const certOptionsI18n = computed(() => ({
+  cell: certKeys.cell.map((c) => t(`runningConditions.certificates.${c}`)),
+  system: certKeys.system.map((s) => t(`runningConditions.certificates.${s}`)),
+  grid: certKeys.grid.map((g) => t(`runningConditions.certificates.${g}`)),
+  extra: certKeys.extra.map((e) => t(`runningConditions.certificates.${e}`)),
+  gridCode: certKeys.gridCode.map((gc) => t(`runningConditions.certificates.${gc}`))
+}))
 
 const fileInput = ref(null)
 const uploadHover = ref(false)
@@ -1046,14 +1046,15 @@ async function parseFile(file) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const data = await api.request('/api/upload/extract', { method: 'POST', body: formData, headers: {} })
+    const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
+    const data = await resp.json()
     if (data.extracted) {
       uploadResult.value = { extracted: data.extracted, fieldsExtracted: Object.keys(data.extracted).length }
     } else {
-      uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: data.error || '未能提取参数' }
+      uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: data.error || t('runningConditions.extractFailed') }
     }
   } catch {
-    uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: '解析服务不可用' }
+    uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: t('runningConditions.parseUnavailable') }
   }
   uploading.value = false
 }

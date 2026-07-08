@@ -122,9 +122,9 @@
             <span>总CAPEX</span>class="text-default"
             <span class="font-mono text-accent">{{ formatCurrency(totalCAPEX) }}</span>
           </div>
-          <div class="flex justify-between text-[9x]">
-            <span>单价</span>class="text-muted"
-            <span>{{ capexPerMWh.toFixed(0) }} 万元/MWh</span>class="text-secondary"
+          <div class="flex justify-between text-[9px]">
+            <span class="text-muted">单价</span>
+            <span class="text-secondary">{{ capexPerMWh.toFixed(0) }} 万元/MWh</span>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
       </div>
 
       <!-- 提示信息 -->
-      <div v-if="!hasSelection" class="text-[9x] text-center py-2 text-muted">
+      <div v-if="!hasSelection" class="text-[9px] text-center py-2 text-muted">
         请选择产品以自动计算CAPEX
       </div>
     </div>
@@ -284,14 +284,6 @@ const loadProducts = async () => {
 // 更新CAPEX
 const updateCAPEX = () => {
   // 触发重新计算或更新父组件
-  // console.log('CAPEX updated:', {
-    cellCost: cellCost.value,
-    containerCost: containerCost.value,
-    pcsCost: pcsCost.value,
-    bopCost: bopCost.value,
-    totalCAPEX: totalCAPEX.value,
-    capexPerMWh: capexPerMWh.value
-  })
 }
 
 // 应用到仿真

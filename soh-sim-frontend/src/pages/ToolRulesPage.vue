@@ -1,11 +1,11 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>配置规则</h1>
-      <p>管理系统配置规则与约束</p>
+      <h1>{{ $t('tools.rulesTitle') }}</h1>
+      <p>{{ $t('tools.rulesDesc') }}</p>
     </div>
-    <SectionCard number="00" title="规则引擎" subtitle="功能开发中">
-      <p class="placeholder-text">Grid Code 合规规则、电池配置约束、财务计算规则等将集中在此管理。</p>
+    <SectionCard number="00" :title="$t('tools.rulesSectionTitle')" :subtitle="$t('tools.rulesSectionSubtitle')">
+      <p class="placeholder-text">{{ $t('tools.rulesPlaceholder') }}</p>
     </SectionCard>
   </div>
 </template>

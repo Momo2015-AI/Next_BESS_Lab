@@ -208,12 +208,14 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
 const emit = defineEmits(['error'])
+const { t } = useI18n()
 
 const loading = ref(false)
 const surveyId = ref('')
@@ -245,17 +247,17 @@ const simParams = reactive({
 })
 
 const batteryTypeOptions = [
-  { value: 'LFP', label: 'LFP (磷酸铁锂)' },
-  { value: 'NCM', label: 'NCM (三元锂)' },
-  { value: 'LTO', label: 'LTO (钛酸锂)' }
+  { value: 'LFP', label: t('tools.batteryTypeLFP') },
+  { value: 'NCM', label: t('tools.batteryTypeNCM') },
+  { value: 'LTO', label: t('tools.batteryTypeLTO') }
 ]
 
-const simYearOptions = [10, 15, 20, 25, 30].map((v) => ({ value: v, label: v + '年' }))
-const guaranteeYearOptions = [5, 10, 15, 20].map((v) => ({ value: v, label: v + '年' }))
+const simYearOptions = [10, 15, 20, 25, 30].map((v) => ({ value: v, label: v + t('tools.simYearUnit') }))
+const guaranteeYearOptions = [5, 10, 15, 20].map((v) => ({ value: v, label: v + t('tools.yearUnit') }))
 
 async function loadSurveyById() {
   if (!surveyId.value) {
-    emit('error', '请输入调研表ID', 'warning')
+    emit('error', t('tools.errorIdRequired'), 'warning')
     return
   }
   loading.value = true
@@ -264,10 +266,10 @@ async function loadSurveyById() {
     if (data.success) {
       mapSurveyData(data.data)
     } else {
-      emit('error', '调研表ID不存在，请手动填写数据', 'warning')
+      emit('error', t('tools.errorIdNotFound'), 'warning')
     }
   } catch (e) {
-    emit('error', '网络错误: ' + e.message, 'error')
+    emit('error', t('tools.errorNetwork') + ': ' + e.message, 'error')
   } finally {
     loading.value = false
   }
@@ -275,7 +277,7 @@ async function loadSurveyById() {
 
 async function searchByProjectName() {
   if (!searchKeyword.value.trim()) {
-    emit('error', '请输入项目名称', 'warning')
+    emit('error', t('tools.errorNameRequired'), 'warning')
     return
   }
   loading.value = true
@@ -283,10 +285,10 @@ async function searchByProjectName() {
     const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
     if (data.success) {
       searchResults.value = data.surveys
-      if (data.surveys.length === 0) emit('error', '未找到匹配的项目', 'warning')
+      if (data.surveys.length === 0) emit('error', t('tools.errorNoMatch'), 'warning')
     }
   } catch (e) {
-    emit('error', '网络错误: ' + e.message, 'error')
+    emit('error', t('tools.errorNetwork') + ': ' + e.message, 'error')
   } finally {
     loading.value = false
   }
@@ -337,13 +339,13 @@ async function saveSurvey() {
     }
     const result = await api.post('/api/survey/create', payload)
     if (result.success) {
-      emit('error', '调研数据保存成功', 'success')
+      emit('error', t('tools.saveSuccess'), 'success')
       surveyId.value = result.data.id
     } else {
-      emit('error', result.error || '保存失败', 'error')
+      emit('error', result.error || t('tools.saveFailed'), 'error')
     }
   } catch (e) {
-    emit('error', '网络错误: ' + e.message, 'error')
+    emit('error', t('tools.errorNetwork') + ': ' + e.message, 'error')
   } finally {
     loading.value = false
   }

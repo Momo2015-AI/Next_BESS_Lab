@@ -10,13 +10,13 @@
           </span>
           <div>
             <h3 class="font-bold text-sm">
-              电芯选型库
+              {{ $t('productConfig.cellLibrary') }}
               <span class="text-[10px] font-normal ml-1 text-muted">Battery Cell Library</span>
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
             <select v-model="cellFilter" class="text-xs rounded px-2 py-1 form-field-select">
-              <option value="">全部厂商</option>
+              <option value="">{{ $t('productConfig.allVendors') }}</option>
               <option v-for="m in localMfrList('cells')" :key="m" :value="m">
                 {{ m }}
               </option>
@@ -25,7 +25,7 @@
               class="text-[10px] px-2 py-1 rounded transition-colors tag-glow border-accent text-accent-secondary"
               @click="openAddModal('cell')"
             >
-              + 新增电芯
+              {{ $t('productConfig.addCell') }}
             </button>
           </div>
         </div>
@@ -34,7 +34,11 @@
             v-for="cell in localFiltered('cells', cellFilter)"
             :key="cell.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :class="selectedCell === cell.id ? 'card-selected-accent2' : 'card-default'"
+            :style="
+              selectedCell === cell.id
+                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
             @click="selectedCell = cell.id"
           >
             <button
@@ -47,26 +51,30 @@
               <span class="text-xs font-bold">{{ cell.model }}</span>
               <span
                 class="text-[10px] px-1.5 py-0.5 rounded"
-                :class="cell.status === 'mass-production' ? 'tag-production' : 'tag-rd'"
+                :style="
+                  cell.status === 'mass-production'
+                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
+                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
+                "
               >
-                {{ cell.status === 'mass-production' ? '量产' : '预研' }}
+                {{ cell.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.preResearch') }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
               {{ cell.mfr }}
             </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div class="text-muted">容量</div>
+              <div class="text-muted">{{ $t('productConfig.capacity') }}</div>
               <div class="text-secondary text-right">{{ cell.capacityAh }} Ah</div>
-              <div class="text-muted">标压</div>
+              <div class="text-muted">{{ $t('productConfig.nominalVoltage') }}</div>
               <div class="text-secondary text-right">{{ cell.voltageNominal }} V</div>
-              <div class="text-muted">电压范围</div>
+              <div class="text-muted">{{ $t('productConfig.voltageRange') }}</div>
               <div class="text-secondary text-right">{{ cell.voltageMin }}~{{ cell.voltageMax }}V</div>
-              <div class="text-muted">能量</div>
+              <div class="text-muted">{{ $t('productConfig.energy') }}</div>
               <div class="text-secondary text-right">{{ cell.ratedEnergyMWh }} MWh</div>
-              <div class="text-muted">密度</div>
+              <div class="text-muted">{{ $t('productConfig.energyDensity') }}</div>
               <div class="text-secondary text-right">{{ cell.energyDensity ?? '--' }} Wh/kg</div>
-              <div class="text-muted">循环/日历</div>
+              <div class="text-muted">{{ $t('productConfig.cycleCalendar') }}</div>
               <div class="text-secondary text-right">{{ cell.cycleLife }}/{{ cell.calendarLife }}y</div>
             </div>
           </div>
@@ -78,13 +86,13 @@
           <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs tag-warning">B</span>
           <div>
             <h3 class="font-bold text-sm">
-              集装箱库
+              {{ $t('productConfig.containerLibrary') }}
               <span class="text-[10px] font-normal ml-1 text-muted">Container Library</span>
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
             <select v-model="containerFilter" class="text-xs rounded px-2 py-1 form-field-select">
-              <option value="">全部厂商</option>
+              <option value="">{{ $t('productConfig.allVendors') }}</option>
               <option v-for="m in localMfrList('containers')" :key="m" :value="m">
                 {{ m }}
               </option>
@@ -93,7 +101,7 @@
               class="text-[10px] px-2 py-1 rounded transition-colors tag-warning border-warning text-warning"
               @click="openAddModal('container')"
             >
-              + 新增集装箱
+              {{ $t('productConfig.addContainer') }}
             </button>
           </div>
         </div>
@@ -102,7 +110,11 @@
             v-for="c in localFiltered('containers', containerFilter)"
             :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :class="selectedContainer === c.id ? 'card-selected-warning' : 'card-default'"
+            :style="
+              selectedContainer === c.id
+                ? { borderColor: 'var(--color-warning)', backgroundColor: 'var(--color-warning-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
             @click="selectedContainer = c.id"
           >
             <button
@@ -115,24 +127,28 @@
               <span class="text-xs font-bold">{{ c.model }}</span>
               <span
                 class="text-[10px] px-1.5 py-0.5 rounded"
-                :class="c.status === 'mass-production' ? 'tag-production' : 'tag-rd'"
+                :style="
+                  c.status === 'mass-production'
+                    ? { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
+                    : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
+                "
               >
-                {{ c.status === 'mass-production' ? '量产' : '预研' }}
+                {{ c.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.preResearch') }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
               {{ c.mfr }}
             </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div class="text-muted">能量</div>
+              <div class="text-muted">{{ $t('productConfig.energy') }}</div>
               <div class="text-secondary text-right">{{ c.ratedEnergyMWh }} MWh</div>
-              <div class="text-muted">功率</div>
+              <div class="text-muted">{{ $t('productConfig.power') }}</div>
               <div class="text-secondary text-right">{{ c.ratedPowerMW }} MW</div>
-              <div class="text-muted">电芯</div>
+              <div class="text-muted">{{ $t('productConfig.cellModel') }}</div>
               <div class="text-secondary text-right">
                 {{ c.cellModel }}
               </div>
-              <div class="text-muted">散热</div>
+              <div class="text-muted">{{ $t('productConfig.coolingMethod') }}</div>
               <div class="text-secondary text-right">
                 {{ c.cooling }}
               </div>
@@ -146,29 +162,29 @@
           <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs tag-glow text-accent">C</span>
           <div>
             <h3 class="font-bold text-sm">
-              PCS 变流器库
+              {{ $t('productConfig.pcsLibrary') }}
               <span class="text-[10px] font-normal ml-1 text-muted">PCS Library</span>
             </h3>
           </div>
           <div class="ml-auto flex gap-2">
             <select v-model="pcsFilter" class="text-xs rounded px-2 py-1 form-field-select">
-              <option value="">全部厂商</option>
+              <option value="">{{ $t('productConfig.allVendors') }}</option>
               <option v-for="m in localMfrList('pcs')" :key="m" :value="m">
                 {{ m }}
               </option>
             </select>
             <select v-model="pcsPowerFilter" class="text-xs rounded px-2 py-1 form-field-select">
-              <option value="0">全部功率</option>
-              <option value="1.25">1.25 MW</option>
-              <option value="1.725">1.725 MW</option>
-              <option value="2.5">2.5 MW</option>
-              <option value="3.45">3.45 MW</option>
+              <option value="0">{{ $t('productConfig.allPower') }}</option>
+              <option value="1.25">{{ $t('productConfig.power1_25') }}</option>
+              <option value="1.725">{{ $t('productConfig.power1_725') }}</option>
+              <option value="2.5">{{ $t('productConfig.power2_5') }}</option>
+              <option value="3.45">{{ $t('productConfig.power3_45') }}</option>
             </select>
             <button
               class="text-[10px] px-2 py-1 rounded transition-colors tag-glow border-accent text-accent"
               @click="openAddModal('pcs')"
             >
-              + 新增 PCS
+              {{ $t('productConfig.addPCS') }}
             </button>
           </div>
         </div>
@@ -177,7 +193,11 @@
             v-for="p in localFiltered('pcs', pcsFilter, pcsPowerFilter)"
             :key="p.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :class="selectedPcs === p.id ? 'card-selected' : 'card-default'"
+            :style="
+              selectedPcs === p.id
+                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
             @click="selectedPcs = p.id"
           >
             <button
@@ -188,21 +208,21 @@
             </button>
             <div class="flex justify-between items-start mb-1">
               <span class="text-xs font-bold">{{ p.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">量产</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">{{ $t('productConfig.massProduction') }}</span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
               {{ p.mfr }}
             </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div class="text-muted">功率</div>
+              <div class="text-muted">{{ $t('productConfig.power') }}</div>
               <div class="text-secondary text-right">{{ p.ratedPowerMW }} MW</div>
-              <div class="text-muted">效率</div>
+              <div class="text-muted">{{ $t('productConfig.efficiency') }}</div>
               <div class="text-secondary text-right">{{ p.efficiency }}%</div>
-              <div class="text-muted">AC电压</div>
+              <div class="text-muted">{{ $t('productConfig.acVoltage') }}</div>
               <div class="text-secondary text-right">
                 {{ p.acVoltage }}
               </div>
-              <div class="text-muted">散热</div>
+              <div class="text-muted">{{ $t('productConfig.coolingMethod') }}</div>
               <div class="text-secondary text-right">
                 {{ p.cooling }}
               </div>
@@ -216,7 +236,7 @@
           <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs tag-glow text-accent">D</span>
           <div>
             <h3 class="font-bold text-sm">
-              工商业储能柜 C&I Cabinet
+              {{ $t('productConfig.ciCabinet') }}
               <span class="text-[10px] font-normal ml-1 text-muted">Commercial & Industrial</span>
             </h3>
           </div>
@@ -226,27 +246,31 @@
             v-for="c in cabinets"
             :key="c.id"
             class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-            :class="selectedCabinet === c.id ? 'card-selected' : 'card-default'"
+            :style="
+              selectedCabinet === c.id
+                ? { borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
           >
             <div class="flex justify-between items-start mb-1">
               <span class="text-xs font-bold">{{ c.model }}</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">
-                {{ c.status === 'mass-production' ? '量产' : '在研' }}
+                {{ c.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.inDevelopment') }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
               {{ c.mfr }}
             </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
-              <div class="text-muted">容量</div>
+              <div class="text-muted">{{ $t('productConfig.capacity') }}</div>
               <div class="text-secondary text-right">{{ c.ratedEnergyKwh }} kWh</div>
-              <div class="text-muted">功率</div>
+              <div class="text-muted">{{ $t('productConfig.power') }}</div>
               <div class="text-secondary text-right">{{ c.ratedPowerKw }} kW</div>
-              <div class="text-muted">AC电压</div>
+              <div class="text-muted">{{ $t('productConfig.acVoltage') }}</div>
               <div class="text-secondary text-right">
                 {{ c.acVoltage }}
               </div>
-              <div class="text-muted">散热</div>
+              <div class="text-muted">{{ $t('productConfig.coolingMethod') }}</div>
               <div class="text-secondary text-right">
                 {{ c.cooling }}
               </div>
@@ -269,7 +293,7 @@
           </span>
           <div>
             <h3 class="font-bold text-sm">
-              典型场景方案 Template
+              {{ $t('productConfig.scenarioTemplate') }}
               <span class="text-[10px] font-normal ml-1 text-muted">Scenario Templates</span>
             </h3>
           </div>
@@ -279,7 +303,11 @@
             v-for="s in scenarios"
             :key="s.id"
             class="border rounded-lg p-3 cursor-pointer transition-all text-center"
-            :class="selectedScenario === s.id ? 'card-selected-accent2' : 'card-default'"
+            :style="
+              selectedScenario === s.id
+                ? { borderColor: 'var(--color-accent-secondary)', backgroundColor: 'var(--color-accent-glow)' }
+                : { borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-dark)' }
+            "
             @click="applyScenario(s)"
           >
             <div class="text-xs font-bold mb-1">
@@ -291,24 +319,24 @@
           </div>
         </div>
         <div v-if="configSummary" class="border-t pt-3 border-color-muted">
-          <h4 class="text-xs font-bold mb-2 text-secondary">当前方案摘要 Current Selection</h4>
+          <h4 class="text-xs font-bold mb-2 text-secondary">{{ $t('productConfig.currentSelection') }}</h4>
           <div class="grid grid-cols-3 gap-3 text-[10px]">
             <div class="rounded p-2 bg-card-dark">
-              <span class="text-muted">电芯</span>
+              <span class="text-muted">{{ $t('productConfig.cellSelected') }}</span>
               <div class="font-mono mt-0.5">
-                {{ configSummary.cell || '未选择' }}
+                {{ configSummary.cell || $t('productConfig.notSelected') }}
               </div>
             </div>
             <div class="rounded p-2 bg-card-dark">
-              <span class="text-muted">集装箱</span>
+              <span class="text-muted">{{ $t('productConfig.containerSelected') }}</span>
               <div class="font-mono mt-0.5">
-                {{ configSummary.container || '未选择' }}
+                {{ configSummary.container || $t('productConfig.notSelected') }}
               </div>
             </div>
             <div class="rounded p-2 bg-card-dark">
-              <span class="text-muted">PCS</span>
+              <span class="text-muted">{{ $t('productConfig.pcsSelected') }}</span>
               <div class="font-mono mt-0.5">
-                {{ configSummary.pcs || '未选择' }}
+                {{ configSummary.pcs || $t('productConfig.notSelected') }}
               </div>
             </div>
           </div>
@@ -317,7 +345,7 @@
               class="text-xs px-6 py-1.5 rounded shadow-md transition-all active:scale-95 bg-accent-secondary text-white"
               @click="applyToSimulation"
             >
-              应用至仿真参数 Apply to Simulation
+              {{ $t('productConfig.applyToParams') }}
             </button>
           </div>
         </div>
@@ -336,19 +364,19 @@
             <template v-if="modalType === 'cell'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
                 <div>
-                  <label class="block mb-0.5 text-muted">厂商</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.vendor') }}</label>
                   <input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">型号</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.model') }}</label>
                   <input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">化学体系</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.chemistry') }}</label>
                   <input v-model="modalForm.chemistry" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">容量 Ah</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.capacityAh') }}</label>
                   <input
                     v-model.number="modalForm.capacityAh"
                     type="number"
@@ -356,7 +384,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">标称电压 V</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.nominalVoltageV') }}</label>
                   <input
                     v-model.number="modalForm.voltageNominal"
                     type="number"
@@ -365,7 +393,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">循环寿命</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.cycleLife') }}</label>
                   <input
                     v-model.number="modalForm.cycleLife"
                     type="number"
@@ -373,11 +401,11 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">尺寸</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.dimensions') }}</label>
                   <input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">重量 kg</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.weightKg') }}</label>
                   <input v-model="modalForm.weight" class="w-full rounded px-2 py-1.5 text-xs form-field-input" />
                 </div>
               </div>
@@ -385,15 +413,15 @@
             <template v-else-if="modalType === 'container'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
                 <div>
-                  <label class="block mb-0.5 text-muted">厂商</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.vendor') }}</label>
                   <input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">型号</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.model') }}</label>
                   <input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">容量 Ah</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.capacityAh') }}</label>
                   <input
                     v-model.number="modalForm.capacityAh"
                     type="number"
@@ -401,7 +429,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">标称电压 V</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.nominalVoltageV') }}</label>
                   <input
                     v-model.number="modalForm.voltageNominal"
                     type="number"
@@ -410,7 +438,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">最高电压 V</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.voltageMaxV') }}</label>
                   <input
                     v-model.number="modalForm.voltageMax"
                     type="number"
@@ -419,7 +447,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">最低电压 V</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.voltageMinV') }}</label>
                   <input
                     v-model.number="modalForm.voltageMin"
                     type="number"
@@ -428,7 +456,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">循环寿命</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.cycleLife') }}</label>
                   <input
                     v-model.number="modalForm.cycleLife"
                     type="number"
@@ -436,7 +464,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">日历寿命 年</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.calendarLifeY') }}</label>
                   <input
                     v-model.number="modalForm.calendarLife"
                     type="number"
@@ -444,11 +472,11 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">尺寸</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.dimensions') }}</label>
                   <input v-model="modalForm.dimensions" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">重量 kg</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.weightKg') }}</label>
                   <input
                     v-model.number="modalForm.weight"
                     type="number"
@@ -461,15 +489,15 @@
             <template v-else-if="modalType === 'pcs'">
               <div class="grid grid-cols-2 gap-2 text-[10px]">
                 <div>
-                  <label class="block mb-0.5 text-muted">厂商</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.vendor') }}</label>
                   <input v-model="modalForm.mfr" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">型号</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.model') }}</label>
                   <input v-model="modalForm.model" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">额定功率 MW</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.ratedPowerMW') }}</label>
                   <input
                     v-model.number="modalForm.ratedPowerMW"
                     type="number"
@@ -478,7 +506,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">效率 %</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.efficiencyPct') }}</label>
                   <input
                     v-model.number="modalForm.efficiency"
                     type="number"
@@ -487,25 +515,25 @@
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">AC电压</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.acVoltage') }}</label>
                   <input v-model="modalForm.acVoltage" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">DC范围</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.dcRange') }}</label>
                   <input
                     v-model="modalForm.dcVoltageRange"
                     class="w-full rounded px-2 py-1.5 text-xs card-input-dark"
                   />
                 </div>
                 <div>
-                  <label class="block mb-0.5 text-muted">散热</label>
+                  <label class="block mb-0.5 text-muted">{{ $t('productConfig.coolingMethod') }}</label>
                   <input v-model="modalForm.cooling" class="w-full rounded px-2 py-1.5 text-xs card-input-dark" />
                 </div>
               </div>
             </template>
 
             <div class="border-t pt-3 border-color-muted">
-              <p class="text-[10px] mb-2 text-muted">或上传规格书自动提取 (支持 PDF/CSV)</p>
+              <p class="text-[10px] mb-2 text-muted">{{ $t('productConfig.uploadSpec') }}</p>
               <div class="flex gap-2 text-[10px]">
                 <input
                   ref="specInput"
@@ -518,20 +546,20 @@
                   class="px-3 py-1.5 rounded transition-colors bg-card-dark border-color-muted text-secondary"
                   @click="$refs.specInput.click()"
                 >
-                  上传规格书
+                  {{ $t('productConfig.uploadSpecBtn') }}
                 </button>
-                <span v-if="specUploading" class="self-center text-accent-secondary">解析中...</span>
+                <span v-if="specUploading" class="self-center text-accent-secondary">{{ $t('productConfig.parsing') }}</span>
                 <span v-if="specResult" class="self-center text-success">{{ specResult }}</span>
               </div>
             </div>
           </div>
           <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-color-muted">
-            <button class="text-xs px-3 py-1.5 text-muted" @click="showModal = false">取消</button>
+            <button class="text-xs px-3 py-1.5 text-muted" @click="showModal = false">{{ $t('common.cancel') }}</button>
             <button
               class="text-xs px-4 py-1.5 rounded transition-colors bg-accent-secondary text-white"
               @click="saveProduct"
             >
-              保存
+              {{ $t('common.save') }}
             </button>
           </div>
         </div>
@@ -544,7 +572,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useProducts } from '../composables/useProducts'
 import baseProducts from '../data/products.json'
-import api from '../services/api.js'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const emit = defineEmits(['applyConfig'])
 const selectedCell = ref('')
 const selectedContainer = ref('')
@@ -579,7 +608,7 @@ async function loadLibraryData() {
       await seedLibrary()
     }
   } catch (error) {
-    console.error('加载产品库失败:', error)
+    console.error(t('productConfig.loadFailed'))
     // 降级使用本地数据
     localData.value = JSON.parse(JSON.stringify(baseProducts))
   }
@@ -587,12 +616,13 @@ async function loadLibraryData() {
 // 初始化产品库
 async function seedLibrary() {
   try {
-    const data = await api.post('/api/products/seed')
+    const response = await fetch('/api/products/seed', { method: 'POST' })
+    const data = await response.json()
     if (data.success) {
       await loadLibraryData()
     }
   } catch (error) {
-    console.error('初始化产品库失败:', error)
+    console.error(t('productConfig.seedFailed'))
   }
 }
 function localMfrList(key) {
@@ -695,7 +725,7 @@ async function deleteItem(key, id) {
     // 重新加载数据（useProducts 内部已自动 loadAll(true)）
     return
   } catch (error) {
-    console.error('API删除失败:', error)
+    console.error(t('productConfig.deleteFailed'))
   }
   // 降级使用本地删除
   localData.value[key] = localData.value[key].filter((item) => item.id !== id)
@@ -788,8 +818,8 @@ async function saveProduct() {
     showModal.value = false
     return
   } catch (error) {
-    console.error('API保存失败:', error)
-    alert('保存失败：' + (error.message || '未知错误'))
+    console.error(t('productConfig.saveFailed'))
+    alert(t('productConfig.saveFailed') + ': ' + (error.message || t('productConfig.unknownError')))
   }
   // 降级使用本地保存
   const id = type + '-' + f.model?.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36)
@@ -825,19 +855,20 @@ async function onSpecUpload(e) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const data = await api.request('/api/upload/extract', { method: 'POST', body: formData, headers: {} })
+    const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
+    const data = await resp.json()
     if (data.extracted) {
       const ext = data.extracted
       if (modalType.value === 'cell') {
         if (ext.capacity_ah || ext.total_mwh) modalForm.value.capacityAh = ext.capacity_ah || ext.total_mwh
         if (ext.cycle_life) modalForm.value.cycleLife = ext.cycle_life
       }
-      specResult.value = '已提取 ' + Object.keys(ext).length + ' 个字段'
+      specResult.value = t('productConfig.extractedFields', { count: Object.keys(ext).length })
     } else {
-      specResult.value = '未能自动提取，请手动填写'
+      specResult.value = t('productConfig.extractFailed')
     }
   } catch {
-    specResult.value = '上传失败'
+    specResult.value = t('productConfig.uploadFailed')
   }
   specUploading.value = false
 }

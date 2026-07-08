@@ -240,9 +240,6 @@ const renderHeatmap = () => {
   heatmap.on('click', function (params) {
     if (params.componentType === 'series') {
       // 点击单元格可扩展详细信息
-      // console.log(
-        `Clicked cell [${String.fromCharCode(65 + params.data[1])},${params.data[0] + 1}] with health: ${params.data[2]}%`
-      )
       // 这里可以触发显示详细信息的逻辑
     }
   })

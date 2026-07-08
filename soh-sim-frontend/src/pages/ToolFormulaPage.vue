@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>算法与公式</h1>
-      <p>查看和调整 SOH 仿真算法参数</p>
+      <h1>{{ $t('tools.formulaTitle') }}</h1>
+      <p>{{ $t('tools.formulaDesc') }}</p>
     </div>
     <FormulaLab :params="store.systemParams" @update="(key, val) => (store.systemParams[key] = val)" />
   </div>

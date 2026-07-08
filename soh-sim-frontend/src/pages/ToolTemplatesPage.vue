@@ -1,20 +1,20 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>校正因子模板</h1>
-      <p>管理 Arrhenius 等模型的校正因子模板</p>
+      <h1>{{ $t('tools.templatesTitle') }}</h1>
+      <p>{{ $t('tools.templatesDesc') }}</p>
     </div>
 
     <div class="toolbar">
-      <button class="btn-primary" @click="loadTemplates">刷新列表</button>
-      <button class="btn-secondary" @click="seedTemplates">初始化默认模板</button>
+      <button class="btn-primary" @click="loadTemplates">{{ $t('tools.templatesRefresh') }}</button>
+      <button class="btn-secondary" @click="seedTemplates">{{ $t('tools.templatesSeed') }}</button>
     </div>
 
-    <div v-if="loading" class="empty-state">加载中...</div>
+    <div v-if="loading" class="empty-state">{{ $t('tools.templatesLoading') }}</div>
 
     <div v-else-if="templates.length === 0" class="empty-state">
-      <p>暂无校正因子模板</p>
-      <button class="btn-primary" @click="seedTemplates">初始化默认模板</button>
+      <p>{{ $t('tools.templatesEmpty') }}</p>
+      <button class="btn-primary" @click="seedTemplates">{{ $t('tools.templatesSeed') }}</button>
     </div>
 
     <div v-else class="template-grid">
@@ -23,7 +23,7 @@
           <h3 class="card-title">
             {{ t.name }}
           </h3>
-          <span v-if="t.is_default" class="badge-default">默认</span>
+          <span v-if="t.is_default" class="badge-default">{{ $t('tools.templatesDefault') }}</span>
           <span class="badge-type">{{ t.template_type }}</span>
         </div>
         <p class="card-desc">
@@ -32,20 +32,20 @@
 
         <div class="card-metrics">
           <div class="metric">
-            <span class="metric-label">SOH 因子</span>
+            <span class="metric-label">{{ $t('tools.templatesSohFactor') }}</span>
             <span class="metric-value">{{ t.global_soh_factor }}</span>
           </div>
           <div class="metric">
-            <span class="metric-label">RTE 因子</span>
+            <span class="metric-label">{{ $t('tools.templatesRteFactor') }}</span>
             <span class="metric-value">{{ t.global_rte_factor }}</span>
           </div>
         </div>
 
         <div v-if="t.annual_corrections" class="card-corrections">
-          <div class="corrections-title">年度校正曲线</div>
+          <div class="corrections-title">{{ $t('tools.templatesAnnualCorrection') }}</div>
           <div class="corrections-grid">
             <div v-for="(val, year) in t.annual_corrections" :key="year" class="correction-item">
-              <span class="year-label">第{{ year }}年</span>
+              <span class="year-label">{{ $t('tools.templatesYearPrefix') }}{{ year }}{{ $t('tools.templatesYearSuffix') }}</span>
               <span class="year-value">{{ val }}</span>
             </div>
           </div>
@@ -74,7 +74,7 @@ async function loadTemplates() {
       templates.value = data.data
     }
   } catch (e) {
-    console.error('加载模板失败:', e)
+    console.error('Failed to load templates:', e)
   } finally {
     loading.value = false
   }
@@ -88,7 +88,7 @@ async function seedTemplates() {
       loadTemplates()
     }
   } catch (e) {
-    console.error('初始化模板失败:', e)
+    console.error('Failed to seed templates:', e)
   } finally {
     loading.value = false
   }

@@ -1,8 +1,8 @@
 <template>
   <div class="tool-page">
     <div class="tool-header">
-      <h1>工程计算</h1>
-      <p>场地面积、BOM 清单、备品备件、充放电时间</p>
+      <h1>{{ $t('tools.engineeringTitle') }}</h1>
+      <p>{{ $t('tools.engineeringDesc') }}</p>
     </div>
     <EngineeringCalc @error="(msg) => $emit('error', msg)" />
   </div>

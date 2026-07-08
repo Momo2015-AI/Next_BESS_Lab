@@ -504,9 +504,11 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import api from '../services/api.js'
 
+const { t } = useI18n()
 const emit = defineEmits(['error'])
 
 const { cells, loadAll } = useProducts()
@@ -558,7 +560,7 @@ onMounted(() => {
 
 async function submitForm() {
   if (!form.project_name) {
-    emit('error', '请填写项目名称', 'warning')
+    emit('error', t('surveyForm.required'), 'warning')
     return
   }
 
@@ -572,11 +574,11 @@ async function submitForm() {
       showSuccess.value = true
       resetForm()
     } else {
-      emit('error', '提交失败: ' + (result.error || '未知错误'), 'error')
+      emit('error', t('surveyForm.submitFailed') + ': ' + (result.error || t('common.other')), 'error')
     }
   } catch (error) {
-    console.error('提交失败:', error)
-    emit('error', '提交失败, 请检查网络连接或稍后重试', 'error')
+    console.error(t('surveyForm.submitFailed'), error)
+    emit('error', t('surveyForm.submitFailed'), 'error')
   } finally {
     submitting.value = false
   }
@@ -626,12 +628,17 @@ function closeSuccess() {
 }
 
 function fillTestData() {
+  const testProjectName = t('surveyForm.testData.projectName')
+  const testContactPerson = t('surveyForm.testData.contactPerson')
+  const testLocation = t('surveyForm.testData.location')
+  const testRemarks = t('surveyForm.testData.remarks')
+
   Object.assign(form, {
-    project_name: '阿布扎比 200MW/400MWh 独立储能电站',
-    contact_person: '张伟',
+    project_name: testProjectName,
+    contact_person: testContactPerson,
     contact_phone: '+86 138-0000-1234',
     contact_email: 'zhangwei@energypro.com',
-    location: '阿联酋 阿布扎比 Al Dhafra 工业区',
+    location: testLocation,
     altitude: 15,
     total_mw: 200,
     total_mwh: 400,
@@ -659,8 +666,7 @@ function fillTestData() {
     dc_voltage_range: '1000-1500V',
     ac_voltage: 380,
     thdi: 3,
-    remarks:
-      '项目位于沙漠气候区，要求集装箱具备C4以上防腐等级。PCS需满足Masdar级液冷碳化硅方案，支持构网型Grid-Forming功能。预期2027年Q1并网投运。'
+    remarks: testRemarks
   })
 }
 </script>

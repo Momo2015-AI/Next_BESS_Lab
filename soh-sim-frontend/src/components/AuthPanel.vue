@@ -4,39 +4,39 @@
       <div class="rounded-xl p-6 shadow-2xl card-panel">
         <div class="text-center mb-6">
           <h2 class="text-xl font-bold mb-1 text-accent-secondary">
-            {{ isLogin ? '用户登录' : '用户注册' }}
+            {{ isLogin ? $t('auth.loginTitle') : $t('auth.registerTitle') }}
           </h2>
           <p class="text-xs text-muted">
-            {{ isLogin ? '欢迎回来' : '创建新账号' }}
+            {{ isLogin ? $t('auth.welcomeBack') : $t('auth.createAccount') }}
           </p>
         </div>
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div>
-            <label class="block text-xs mb-1 text-muted">用户名 / 邮箱</label>
+            <label class="block text-xs mb-1 text-muted">{{ $t('auth.usernameOrEmail') }}</label>
             <input
               v-model="form.username"
               type="text"
               required
               class="form-field-input"
-              placeholder="输入用户名或邮箱"
+              :placeholder="$t('auth.usernamePlaceholder')"
             />
           </div>
 
           <div v-if="!isLogin">
-            <label class="block text-xs mb-1 text-muted">邮箱</label>
-            <input v-model="form.email" type="email" required class="form-field-input" placeholder="输入邮箱地址" />
+            <label class="block text-xs mb-1 text-muted">{{ $t('auth.email') }}</label>
+            <input v-model="form.email" type="email" required class="form-field-input" :placeholder="$t('auth.emailPlaceholder')" />
           </div>
 
           <div>
-            <label class="block text-xs mb-1 text-muted">密码</label>
+            <label class="block text-xs mb-1 text-muted">{{ $t('auth.password') }}</label>
             <div class="relative">
               <input
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
                 class="form-field-input"
-                placeholder="输入密码"
+                :placeholder="$t('auth.passwordPlaceholder')"
               />
               <button type="button" class="toggle-password-btn" @click="showPassword = !showPassword">
                 <AppIcon v-if="showPassword" name="eye-off" size="16" />
@@ -48,10 +48,10 @@
           <div v-if="!isLogin" class="flex items-start gap-2">
             <input v-model="agreedToTerms" type="checkbox" required class="mt-0.5 accent-checkbox" />
             <span class="text-xs text-muted">
-              我已阅读并同意
-              <a href="#" class="terms-link">服务条款</a>
-              和
-              <a href="#" class="terms-link">隐私政策</a>
+              {{ $t('auth.agreeToTerms') }}
+              <a href="#" class="terms-link">{{ $t('auth.termsOfService') }}</a>
+              {{ $t('auth.and') }}
+              <a href="#" class="terms-link">{{ $t('auth.privacyPolicy') }}</a>
             </span>
           </div>
 
@@ -61,12 +61,12 @@
             class="submit-btn"
             :class="{ active: !loading && (isLogin || agreedToTerms) }"
           >
-            {{ loading ? '处理中...' : isLogin ? '登 录' : '注 册' }}
+            {{ loading ? $t('auth.processing') : isLogin ? $t('auth.loginBtn') : $t('auth.registerBtn') }}
           </button>
 
           <div class="text-center">
             <button type="button" class="switch-mode-btn" @click="switchMode">
-              {{ isLogin ? '还没有账号？立即注册' : '已有账号？立即登录' }}
+              {{ isLogin ? $t('auth.switchToRegister') : $t('auth.switchToLogin') }}
             </button>
           </div>
         </form>
@@ -79,11 +79,11 @@
       </div>
 
       <div v-if="isDev" class="mt-4 p-3 rounded-lg card-panel-bordered">
-        <div class="text-xs text-center mb-2 text-muted">快捷体验（无需注册）</div>
+        <div class="text-xs text-center mb-2 text-muted">{{ $t('auth.quickExperience') }}</div>
         <div class="flex gap-2">
-          <button class="quick-login-btn" @click="quickLogin('admin')">管理员</button>
-          <button class="quick-login-btn" @click="quickLogin('engineer')">仿真工程师</button>
-          <button class="quick-login-btn" @click="quickLogin('guest')">访客</button>
+          <button class="quick-login-btn" @click="quickLogin('admin')">{{ $t('auth.roleAdmin') }}</button>
+          <button class="quick-login-btn" @click="quickLogin('engineer')">{{ $t('auth.roleEngineer') }}</button>
+          <button class="quick-login-btn" @click="quickLogin('guest')">{{ $t('auth.roleGuest') }}</button>
         </div>
       </div>
     </div>
@@ -100,8 +100,11 @@
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppIcon from './AppIcon.vue'
 import api from '../services/api.js'
+
+const { t } = useI18n()
 
 const props = defineProps({
   defaultMode: { type: String, default: 'login' }
@@ -179,14 +182,14 @@ async function handleSubmit() {
       // （同窗口 storage 事件默认不触发，需要手动派发）
       window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.user) }))
 
-      showToast(isLogin.value ? '登录成功' : '注册成功')
+      showToast(isLogin.value ? t('auth.loginSuccess') : t('auth.registerSuccess'))
       emit('auth-success', result.user)
     } else {
-      errorMessage.value = result.error || '操作失败'
+      errorMessage.value = result.error || t('auth.operationFailed')
     }
   } catch (error) {
-    console.error('认证失败:', error)
-    errorMessage.value = error.message || '网络错误，请稍后重试'
+    console.error(t('auth.authFailed'), error)
+    errorMessage.value = t('auth.networkError')
   } finally {
     loading.value = false
   }
@@ -210,7 +213,8 @@ async function quickLogin(role) {
 
   window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(mockUsers[role]) }))
 
-  showToast(`${role === 'admin' ? '管理员' : role === 'engineer' ? '仿真工程师' : '访客'} 登录成功`)
+  const roleName = t(role === 'admin' ? 'auth.roleAdmin' : role === 'engineer' ? 'auth.roleEngineer' : 'auth.roleGuest')
+  showToast(t('auth.quickLoginSuccess', { role: roleName }))
   emit('auth-success', mockUsers[role])
 
   loading.value = false
@@ -251,7 +255,7 @@ function getCurrentUser() {
 function logout() {
   sessionStorage.removeItem('auth_token')
   sessionStorage.removeItem('user_info')
-  showToast('已退出登录')
+  showToast(t('auth.loggedOut'))
 }
 
 // 获取token

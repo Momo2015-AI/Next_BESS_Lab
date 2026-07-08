@@ -50,7 +50,6 @@
             v-for="f in acFactors"
             :key="'ac-' + f.id"
             class="formula-block"
-            :class="{ linking: f.degrade }"
             :class="{ linking: f.degrade, 'border-degrade': f.degrade }"
           >
             <span class="block-name">{{ f.abbr }}</span>

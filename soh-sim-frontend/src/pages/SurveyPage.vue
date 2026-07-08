@@ -3,9 +3,9 @@
     <div class="tool-page max-w-4xl mx-auto">
       <!-- Header -->
       <div class="tool-header survey-header">
-        <h1 class="survey-title">储能电站项目调研表</h1>
-        <p class="survey-desc">请填写以下信息，我们将据此为您定制最优的储能系统配置方案</p>
-        <button class="btn-back" @click="goHome">← 返回系统</button>
+        <h1 class="survey-title">{{ $t('surveyForm.pageTitle') }}</h1>
+        <p class="survey-desc">{{ $t('surveyForm.pageDesc') }}</p>
+        <button class="btn-back" @click="goHome">{{ $t('surveyForm.backToSystem') }}</button>
       </div>
 
       <!-- Toast -->
@@ -16,44 +16,44 @@
       <!-- 调研表单 -->
       <form class="space-y-6" @submit.prevent="submitSurvey">
         <!-- 01. 基本信息 -->
-        <SectionCard number="01" title="基本信息">
+        <SectionCard number="01" :title="$t('surveyForm.section01')">
           <div class="form-grid-2">
             <FormField
               v-model="formData.projectName"
-              label="项目名称"
+              :label="$t('surveyForm.projectName')"
               required
               type="text"
-              placeholder="请输入项目名称"
+              :placeholder="$t('surveyForm.projectNamePh')"
             />
-            <FormField v-model="formData.location" label="项目地址" required type="text" placeholder="省/市/区" />
-            <FormField v-model="formData.contact" label="联系人" type="text" placeholder="姓名" />
-            <FormField v-model="formData.phone" label="联系电话" type="text" placeholder="手机号码" />
+            <FormField v-model="formData.location" :label="$t('surveyForm.location')" required type="text" :placeholder="$t('surveyForm.locationPhShort')" />
+            <FormField v-model="formData.contact" :label="$t('surveyForm.contactPerson')" type="text" :placeholder="$t('surveyForm.contactPersonPhShort')" />
+            <FormField v-model="formData.phone" :label="$t('surveyForm.contactPhone')" type="text" :placeholder="$t('surveyForm.contactPhonePhShort')" />
           </div>
         </SectionCard>
 
         <!-- 02. 储能需求 -->
-        <SectionCard number="02" title="储能需求">
+        <SectionCard number="02" :title="$t('surveyForm.section02Storage')">
           <div class="form-grid-3">
             <FormField
               v-model.number="formData.ratedEnergy"
-              label="额定能量 (MWh)"
+              :label="$t('surveyForm.ratedEnergyLabel')"
               required
               type="number"
               step="0.1"
-              placeholder="如：10"
-              hint="电池集装箱总容量"
+              :placeholder="$t('surveyForm.ratedEnergyPh')"
+              :hint="$t('surveyForm.ratedEnergyHint')"
             />
             <FormField
               v-model.number="formData.ratedPower"
-              label="额定功率 (MW)"
+              :label="$t('surveyForm.ratedPowerLabel')"
               type="number"
               step="0.1"
-              placeholder="如：5"
-              hint="PCS总额定功率"
+              :placeholder="$t('surveyForm.ratedPowerPh')"
+              :hint="$t('surveyForm.ratedPowerHint')"
             />
             <FormField
               v-model.number="formData.dischargeHours"
-              label="放电时长 (h)"
+              :label="$t('surveyForm.dischargeHoursLabel')"
               type="select"
               :options="dischargeHourOptions"
             />
@@ -61,15 +61,15 @@
           <div class="form-grid-2">
             <FormField
               v-model="formData.application"
-              label="应用场景"
+              :label="$t('surveyForm.applicationLabel')"
               required
               type="select"
-              placeholder="请选择"
+              :placeholder="$t('common.select')"
               :options="applicationOptions"
             />
             <FormField
               v-model.number="formData.voltageLevel"
-              label="并网电压等级"
+              :label="$t('surveyForm.voltageLevelLabel')"
               type="select"
               :options="voltageOptions"
             />
@@ -77,75 +77,74 @@
         </SectionCard>
 
         <!-- 03. 运行参数 -->
-        <SectionCard number="03" title="运行参数">
+        <SectionCard number="03" :title="$t('surveyForm.section03Operation')">
           <div class="form-grid-3">
             <FormField
               v-model.number="formData.cyclesPerDay"
-              label="日均循环次数"
+              :label="$t('surveyForm.cyclesPerDayLabel')"
               type="number"
               step="0.5"
               min="0"
-              placeholder="如：1"
-              hint="0.5 = 每2天一次"
+              :placeholder="$t('surveyForm.cyclesPerDayPh')"
+              :hint="$t('surveyForm.cyclesPerDayHint')"
             />
             <FormField
               v-model.number="formData.dod"
-              label="DOD设置 (%)"
+              :label="$t('surveyForm.dodLabel')"
               type="number"
               step="5"
               min="0"
               max="100"
-              placeholder="如：90"
+              :placeholder="$t('surveyForm.dodPh')"
             />
-            <FormField v-model.number="formData.cRate" label="设计倍率 (C)" type="select" :options="cRateOptions" />
+            <FormField v-model.number="formData.cRate" :label="$t('surveyForm.cRateLabel')" type="select" :options="cRateOptions" />
           </div>
           <div class="form-grid-2">
             <FormField
               v-model.number="formData.temperature"
-              label="年平均温度 (°C)"
+              :label="$t('surveyForm.avgTempLabel')"
               type="number"
-              placeholder="如：25"
+              :placeholder="$t('surveyForm.avgTempPh')"
             />
             <FormField
               v-model.number="formData.guaranteeYears"
-              label="保障年限 (年)"
+              :label="$t('surveyForm.guaranteeYearsLabel')"
               type="number"
               min="1"
               max="30"
-              placeholder="如：10"
+              :placeholder="$t('surveyForm.guaranteeYearsPh')"
             />
           </div>
         </SectionCard>
 
         <!-- 04. 电池选型偏好 -->
-        <SectionCard number="04" title="电池选型偏好">
+        <SectionCard number="04" :title="$t('surveyForm.section04Battery')">
           <div class="form-grid-3">
-            <FormField v-model="formData.batteryType" label="电池类型" type="select" :options="batteryTypeOptions" />
+            <FormField v-model="formData.batteryType" :label="$t('surveyForm.batteryTypeLabel')" type="select" :options="batteryTypeOptions" />
             <FormField
               v-model="formData.cellCapacity"
-              label="电芯容量偏好"
+              :label="$t('surveyForm.cellCapacityLabel')"
               type="select"
               :options="cellCapacityOptions"
             />
-            <FormField v-model="formData.containerSpec" label="集装箱规格" type="select" :options="containerOptions" />
+            <FormField v-model="formData.containerSpec" :label="$t('surveyForm.containerSpecLabel')" type="select" :options="containerOptions" />
           </div>
         </SectionCard>
 
-        <!-- 05. 特殊需求（可选） -->
-        <SectionCard number="05" title="特殊需求" subtitle="可选填写">
+        <SectionCard number="05" :title="$t('surveyForm.section05Special')" :subtitle="$t('surveyForm.optionalFill')">
           <div class="feature-checkboxes">
             <label v-for="feature in featureOptions" :key="feature.value" class="feature-chip">
               <input v-model="formData.features" type="checkbox" :value="feature.value" />
               <span>{{ feature.label }}</span>
             </label>
           </div>
-          <FormField v-model="formData.remarks" label="其他要求" type="textarea" placeholder="请描述其他特殊需求..." />
+          <FormField v-model="formData.remarks" :label="$t('surveyForm.otherRequirementLabel')" type="textarea" :placeholder="$t('surveyForm.otherRequirementPh')" />
         </SectionCard>
 
         <!-- 提交按钮 -->
         <div class="form-actions">
-          <button type="button" class="btn-reset" @click="resetForm">重置</button>
-          <button type="submit" class="btn-submit">提交调研表</button>
+          <button type="button" class="btn-reset" @click="resetForm">{{ $t('surveyForm.reset') }}</button>
+          <button type="submit" class="btn-submit">{{ $t('surveyForm.submit') }}</button>
         </div>
       </form>
     </div>
@@ -153,13 +152,15 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
+const { t } = useI18n()
 
 const toast = reactive({ show: false, message: '', type: 'info' })
 const showToast = (message, type = 'info') => {
@@ -177,24 +178,24 @@ function goHome() {
   router.push('/')
 }
 
-const featureOptions = [
-  { value: 'EMS', label: '能量管理系统' },
-  { value: '消防', label: '消防系统' },
-  { value: '空调', label: '温控系统' },
-  { value: '监控', label: '视频监控' },
-  { value: '动环', label: '动环监控' },
-  { value: '调频', label: '一次调频' }
-]
+const featureOptions = computed(() => [
+  { value: 'EMS', label: t('surveyForm.featureEms') },
+  { value: '消防', label: t('surveyForm.featureFire') },
+  { value: '空调', label: t('surveyForm.featureAc') },
+  { value: '监控', label: t('surveyForm.featureMonitor') },
+  { value: '动环', label: t('surveyForm.featureEnv') },
+  { value: '调频', label: t('surveyForm.featureFreq') }
+])
 
-const applicationOptions = [
-  { value: '调峰', label: '调峰' },
-  { value: '调频', label: '调频' },
-  { value: '备用电源', label: '备用电源' },
-  { value: '峰谷套利', label: '峰谷套利' },
-  { value: '需求响应', label: '需求响应' },
-  { value: '微电网', label: '微电网' },
-  { value: '其他', label: '其他' }
-]
+const applicationOptions = computed(() => [
+  { value: '调峰', label: t('surveyForm.appPeakShaving') },
+  { value: '调频', label: t('surveyForm.appFreqReg') },
+  { value: '备用电源', label: t('surveyForm.appBackupPower') },
+  { value: '峰谷套利', label: t('surveyForm.appArbitrage') },
+  { value: '需求响应', label: t('surveyForm.appDemandResponse') },
+  { value: '微电网', label: t('surveyForm.appMicrogrid') },
+  { value: '其他', label: t('surveyForm.appOther') }
+])
 
 const voltageOptions = [
   { value: 10, label: '10 kV' },
@@ -203,37 +204,37 @@ const voltageOptions = [
   { value: 220, label: '220 kV' }
 ]
 
-const dischargeHourOptions = [
-  { value: 1, label: '1小时' },
-  { value: 2, label: '2小时' },
-  { value: 3, label: '3小时' },
-  { value: 4, label: '4小时' }
-]
+const dischargeHourOptions = computed(() => [
+  { value: 1, label: t('surveyForm.dischargeHour1') },
+  { value: 2, label: t('surveyForm.dischargeHour2') },
+  { value: 3, label: t('surveyForm.dischargeHour3') },
+  { value: 4, label: t('surveyForm.dischargeHour4') }
+])
 
-const cRateOptions = [
-  { value: 0.25, label: '0.25C (低倍率)' },
-  { value: 0.5, label: '0.5C (标准)' },
-  { value: 1, label: '1C (高倍率)' }
-]
+const cRateOptions = computed(() => [
+  { value: 0.25, label: t('surveyForm.cRate025') },
+  { value: 0.5, label: t('surveyForm.cRate05') },
+  { value: 1, label: t('surveyForm.cRate1') }
+])
 
-const batteryTypeOptions = [
-  { value: 'LFP', label: '磷酸铁锂 (LFP)' },
-  { value: 'NCM', label: '三元锂 (NCM)' },
-  { value: '无所谓', label: '无所谓' }
-]
+const batteryTypeOptions = computed(() => [
+  { value: 'LFP', label: t('surveyForm.batteryLfp') },
+  { value: 'NCM', label: t('surveyForm.batteryNcm') },
+  { value: '无所谓', label: t('surveyForm.batteryAny') }
+])
 
-const cellCapacityOptions = [
-  { value: '280', label: '280Ah (主流)' },
-  { value: '302', label: '302Ah (新品)' },
-  { value: '314', label: '314Ah (高容量)' },
-  { value: '无所谓', label: '无所谓' }
-]
+const cellCapacityOptions = computed(() => [
+  { value: '280', label: t('surveyForm.cell280') },
+  { value: '302', label: t('surveyForm.cell302') },
+  { value: '314', label: t('surveyForm.cell314') },
+  { value: '无所谓', label: t('surveyForm.cellAny') }
+])
 
-const containerOptions = [
-  { value: '20ft', label: '20ft 标准柜' },
-  { value: '20ft-H', label: '20ft 高柜 (5MWh)' },
-  { value: '40ft', label: '40ft 标准柜' }
-]
+const containerOptions = computed(() => [
+  { value: '20ft', label: t('surveyForm.container20ft') },
+  { value: '20ft-H', label: t('surveyForm.container20ftH') },
+  { value: '40ft', label: t('surveyForm.container40ft') }
+])
 
 const formData = reactive({
   projectName: '',
@@ -261,16 +262,16 @@ const defaults = { ...formData }
 
 function resetForm() {
   Object.assign(formData, { ...defaults })
-  showToast('表单已重置')
+  showToast(t('surveyForm.formReset'))
 }
 
 async function submitSurvey() {
   if (!formData.projectName) {
-    showToast('请填写项目名称', 'error')
+    showToast(t('surveyForm.required'), 'error')
     return
   }
   if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
-    showToast('请填写额定能量', 'error')
+    showToast(t('surveyForm.ratedEnergyRequired'), 'error')
     return
   }
 
@@ -316,11 +317,11 @@ async function submitSurvey() {
     localStorage.setItem('surveys', JSON.stringify(surveys))
     localStorage.setItem('currentSurveyId', surveyData.id)
     localStorage.setItem('currentSurvey', JSON.stringify(surveyData))
-    showToast(apiSuccess ? '调研表已提交至服务器！' : '调研表已保存在本地！', 'success')
+    showToast(apiSuccess ? t('surveyForm.surveySubmittedServer') : t('surveyForm.surveySubmittedLocal'), 'success')
     setTimeout(() => router.push('/'), 1500)
   } catch (error) {
     console.error('提交失败:', error)
-    showToast('提交失败，请重试', 'error')
+    showToast(t('surveyForm.submitFailed'), 'error')
   } finally {
     submitting.value = false
   }
