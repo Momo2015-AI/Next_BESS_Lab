@@ -46,8 +46,7 @@
         <div v-if="openSections[section.code]" class="p-2">
           <table class="w-full text-xs border-collapse">
             <thead>
-              <tr>
-                class="text-muted border-b"
+              <tr class="text-muted border-b">
                 <th class="p-1 text-left w-8">#</th>
                 <th class="p-1 text-left">设备/工程名称</th>
                 <th class="p-1 text-left">规格型号</th>
