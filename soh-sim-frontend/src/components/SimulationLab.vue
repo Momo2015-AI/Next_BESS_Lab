@@ -187,7 +187,7 @@
                 class="w-full rounded px-2 py-1 text-xs card-input"
                 @change="initYearlyCorrections"
               >
-                <option v-for="n in [10,15,20,25,30]" :key="n" :value="n">
+                <option v-for="n in [10, 15, 20, 25, 30]" :key="n" :value="n">
                   {{ $t('simLab.years', { n }) }}
                 </option>
               </select>
@@ -195,7 +195,7 @@
             <div>
               <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelGuaranteeYears') }}</label>
               <select v-model.number="simParams.guaranteeYears" class="w-full rounded px-2 py-1 text-xs card-input">
-                <option v-for="n in [5,10,15,20]" :key="n" :value="n">
+                <option v-for="n in [5, 10, 15, 20]" :key="n" :value="n">
                   {{ $t('simLab.years', { n }) }}
                 </option>
               </select>
@@ -477,9 +477,15 @@
             - {{ selectedManufacturer.description }}
           </p>
           <div class="flex gap-4 mt-1">
-            <span class="text-[10px] text-secondary">{{ $t('simLab.rmseSohLabel') }}: {{ selectedManufacturer.rmse_soh }}%</span>
-            <span class="text-[10px] text-secondary">{{ $t('simLab.rmseRteLabel') }}: {{ selectedManufacturer.rmse_rte }}%</span>
-            <span class="text-[10px] text-secondary">{{ $t('simLab.dataPoints') }}: {{ selectedManufacturer.data_points }}</span>
+            <span class="text-[10px] text-secondary">
+              {{ $t('simLab.rmseSohLabel') }}: {{ selectedManufacturer.rmse_soh }}%
+            </span>
+            <span class="text-[10px] text-secondary">
+              {{ $t('simLab.rmseRteLabel') }}: {{ selectedManufacturer.rmse_rte }}%
+            </span>
+            <span class="text-[10px] text-secondary">
+              {{ $t('simLab.dataPoints') }}: {{ selectedManufacturer.data_points }}
+            </span>
           </div>
         </div>
       </div>
@@ -1316,7 +1322,11 @@ const renderChart = () => {
 
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { data: [t('simLab.chartSoh'), t('simLab.chartRte'), t('simLab.chartGuaranteeLine')], top: 0, textStyle: { color: textColor, fontSize: 10 } },
+    legend: {
+      data: [t('simLab.chartSoh'), t('simLab.chartRte'), t('simLab.chartGuaranteeLine')],
+      top: 0,
+      textStyle: { color: textColor, fontSize: 10 }
+    },
     grid: { left: 40, right: 20, top: 30, bottom: 20 },
     xAxis: { type: 'category', data: years, axisLabel: { color: textColor, fontSize: 10 } },
     yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: textColor, fontSize: 10 } },
@@ -1431,7 +1441,8 @@ const resetSimulation = () => {
 
 const exportResults = () => {
   const csvContent =
-    t('simLab.csvHeader') + '\n' +
+    t('simLab.csvHeader') +
+    '\n' +
     simulationResults.tableData
       .map(
         (row) =>
