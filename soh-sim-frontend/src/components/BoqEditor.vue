@@ -1,27 +1,29 @@
 <template>
   <div class="boq-editor h-full flex flex-col gap-3">
     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-bold text-default">工程量清单 BOQ</h2>
+      <h2 class="text-lg font-bold text-default">{{ $t('boq.title') }}</h2>
       <div class="flex gap-2">
         <button
           :class="['px-3 py-1 text-xs rounded', versionActive === 'main' ? 'btn-primary' : 'btn-secondary']"
           @click="switchVersion('main')"
         >
-          Main BOQ
+          {{ $t('boq.mainBoq') }}
         </button>
         <button
           :class="['px-3 py-1 text-xs rounded', versionActive === 'alternative' ? 'btn-primary' : 'btn-secondary']"
           @click="switchVersion('alternative')"
         >
-          Alternative
+          {{ $t('boq.alternative') }}
         </button>
       </div>
     </div>
 
     <div class="flex gap-2">
-      <button class="btn-primary-sm" @click="autoFillQuantities">自动预填数量</button>
-      <button class="btn-secondary-sm" @click="save">保存 BOQ</button>
-      <button class="btn-secondary-sm text-accent border-accent" @click="aggregateCapex">汇总到 CAPEX</button>
+      <button class="btn-primary-sm" @click="autoFillQuantities">{{ $t('boq.autoFill') }}</button>
+      <button class="btn-secondary-sm" @click="save">{{ $t('boq.save') }}</button>
+      <button class="btn-secondary-sm text-accent border-accent" @click="aggregateCapex">
+        {{ $t('boq.aggregateCapex') }}
+      </button>
     </div>
 
     <div class="flex-1 overflow-y-auto space-y-1 u-min-height-0">
@@ -33,11 +35,13 @@
           <div class="flex items-center gap-2">
             <span class="text-xs font-mono text-accent">{{ section.code }}</span>
             <span class="text-sm font-bold text-default">
-              {{ section.name_zh || section.name }}
+              {{ $i18n.locale === 'zh' ? section.name_zh || section.name : section.name || section.name_zh }}
             </span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-muted">小计: {{ formatPrice(sectionSubtotal(section.code)) }}</span>
+            <span class="text-xs text-muted">
+              {{ $t('boq.subtotal') }} {{ formatPrice(sectionSubtotal(section.code)) }}
+            </span>
             <span class="text-xs text-muted">
               {{ openSections[section.code] ? '▲' : '▼' }}
             </span>
@@ -47,14 +51,14 @@
           <table class="w-full text-xs border-collapse">
             <thead>
               <tr class="text-muted border-b">
-                <th class="p-1 text-left w-8">#</th>
-                <th class="p-1 text-left">设备/工程名称</th>
-                <th class="p-1 text-left">规格型号</th>
-                <th class="p-1 text-left w-12">单位</th>
-                <th class="p-1 text-right w-20">数量</th>
-                <th class="p-1 text-right w-24">单价 (USD)</th>
-                <th class="p-1 text-right w-24">合价 (USD)</th>
-                <th class="p-1 text-left w-24">备注</th>
+                <th class="p-1 text-left w-8">{{ $t('boq.colSeq') }}</th>
+                <th class="p-1 text-left">{{ $t('boq.colName') }}</th>
+                <th class="p-1 text-left">{{ $t('boq.colSpec') }}</th>
+                <th class="p-1 text-left w-12">{{ $t('boq.colUnit') }}</th>
+                <th class="p-1 text-right w-20">{{ $t('boq.colQty') }}</th>
+                <th class="p-1 text-right w-24">{{ $t('boq.colUnitPrice') }}</th>
+                <th class="p-1 text-right w-24">{{ $t('boq.colTotal') }}</th>
+                <th class="p-1 text-left w-24">{{ $t('boq.colNote') }}</th>
                 <th class="p-1 w-8" />
               </tr>
             </thead>
@@ -106,14 +110,14 @@
             class="mt-2 text-xs px-2 py-1 rounded u-background-var-color-card-border-1px-dashed-var-color-border-color-var-color-text-muted"
             @click="addItem(section.code)"
           >
-            + 添加条目
+            {{ $t('boq.addItem') }}
           </button>
         </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between px-3 py-2 rounded u-background-var-color-accent-color-white">
-      <span class="text-sm font-bold">BOQ 总价</span>
+      <span class="text-sm font-bold">{{ $t('boq.total') }}</span>
       <span class="text-lg font-mono font-bold">{{ formatPrice(totalPrice) }} USD</span>
     </div>
   </div>

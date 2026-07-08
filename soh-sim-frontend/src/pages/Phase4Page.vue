@@ -182,7 +182,7 @@
         :class="{ active: activeStep === i }"
         @click="activeStep = i"
       >
-        {{ s.label }}
+        {{ $t(s.label) }}
       </button>
     </div>
   </div>
@@ -198,11 +198,11 @@ import FinancialDashboard from '../components/FinancialDashboard.vue'
 const store = useBessStore()
 const activeStep = ref(0)
 const steps = [
-  { label: '4.1 BOQ' },
-  { label: '4.2 CAPEX/OPEX' },
-  { label: '4.3 收入融资' },
-  { label: '4.4 财务指标' },
-  { label: '4.5 敏感性' }
+  { label: 'phase4.stepBoq' },
+  { label: 'phase4.stepCapex' },
+  { label: 'phase4.stepRevenue' },
+  { label: 'phase4.stepFinancial' },
+  { label: 'phase4.stepSensitivity' }
 ]
 
 const totalCapex = computed(() => {

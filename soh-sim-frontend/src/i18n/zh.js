@@ -767,7 +767,12 @@ export default {
     corporateTaxRate: '所得税率 (%)',
     taxHolidayYears: '免税期 (年)',
     discountRate: '折现率 (%)',
-    depreciationYears: '折旧年限'
+    depreciationYears: '折旧年限',
+    stepBoq: '4.1 BOQ',
+    stepCapex: '4.2 CAPEX/OPEX',
+    stepRevenue: '4.3 收入融资',
+    stepFinancial: '4.4 财务指标',
+    stepSensitivity: '4.5 敏感性'
   },
   phase5: {
     title: 'Phase 5: 成果输出',
@@ -800,6 +805,25 @@ export default {
     totalOutput: '总输出',
     initAux: '存量自辅耗',
     augAux: '补容自辅耗'
+  },
+  boq: {
+    title: '工程量清单 BOQ',
+    mainBoq: '主 BOQ',
+    alternative: '备选方案',
+    autoFill: '自动预填数量',
+    save: '保存 BOQ',
+    aggregateCapex: '汇总到 CAPEX',
+    subtotal: '小计:',
+    addItem: '+ 添加条目',
+    total: 'BOQ 总价',
+    colSeq: '#',
+    colName: '设备/工程名称',
+    colSpec: '规格型号',
+    colUnit: '单位',
+    colQty: '数量',
+    colUnitPrice: '单价 (USD)',
+    colTotal: '合价 (USD)',
+    colNote: '备注'
   },
   financial: {
     capexContainer: '集装箱',

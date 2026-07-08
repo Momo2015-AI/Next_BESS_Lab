@@ -877,7 +877,12 @@ export default {
     corporateTaxRate: 'Corporate Tax Rate (%)',
     taxHolidayYears: 'Tax Holiday (years)',
     discountRate: 'Discount Rate (%)',
-    depreciationYears: 'Depreciation Years'
+    depreciationYears: 'Depreciation Years',
+    stepBoq: '4.1 BOQ',
+    stepCapex: '4.2 CAPEX/OPEX',
+    stepRevenue: '4.3 Revenue & Financing',
+    stepFinancial: '4.4 Financial Metrics',
+    stepSensitivity: '4.5 Sensitivity'
   },
   sensitivity: {
     title: 'Sensitivity Analysis',
@@ -1094,6 +1099,25 @@ export default {
     loggedOut: 'Logged out',
     pageTitle: 'Authentication',
     pageSubtitle: 'Login & Authorization'
+  },
+  boq: {
+    title: 'Bill of Quantities (BOQ)',
+    mainBoq: 'Main BOQ',
+    alternative: 'Alternative',
+    autoFill: 'Auto-fill Quantities',
+    save: 'Save BOQ',
+    aggregateCapex: 'Aggregate to CAPEX',
+    subtotal: 'Subtotal:',
+    addItem: '+ Add Item',
+    total: 'BOQ Total',
+    colSeq: '#',
+    colName: 'Equipment / Work Name',
+    colSpec: 'Specification',
+    colUnit: 'Unit',
+    colQty: 'Qty',
+    colUnitPrice: 'Unit Price (USD)',
+    colTotal: 'Total (USD)',
+    colNote: 'Note'
   },
   financial: {
     sectionRevenueStack: 'Revenue Stack',
