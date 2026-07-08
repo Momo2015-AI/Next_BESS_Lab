@@ -25,13 +25,15 @@
     <div class="mt-3 border-t pt-2 border-default">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
         <div class="rounded p-2 bg-card-dark">
-          <div>总成本</div>class="text-muted"
+          <div>总成本</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-danger">
             {{ formatCurrency(totalCost) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>单位成本</div>class="text-muted"
+          <div>单位成本</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-warning">
             {{ formatCostPerMWh(costPerMWh) }}
           </div>

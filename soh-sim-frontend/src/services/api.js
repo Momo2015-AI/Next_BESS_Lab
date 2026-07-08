@@ -143,11 +143,7 @@ function del(url, config) {
 
 /** 文件下载（blob 响应） */
 async function download(url, body, config) {
-  const resp = await request(
-    url,
-    { method: 'POST', body: JSON.stringify(body || {}) },
-    { ...config }
-  )
+  const resp = await request(url, { method: 'POST', body: JSON.stringify(body || {}) }, { ...config })
   const blob = await resp.blob()
   return blob
 }

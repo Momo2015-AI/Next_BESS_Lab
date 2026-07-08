@@ -25,9 +25,25 @@
               type="text"
               :placeholder="$t('surveyForm.projectNamePh')"
             />
-            <FormField v-model="formData.location" :label="$t('surveyForm.location')" required type="text" :placeholder="$t('surveyForm.locationPhShort')" />
-            <FormField v-model="formData.contact" :label="$t('surveyForm.contactPerson')" type="text" :placeholder="$t('surveyForm.contactPersonPhShort')" />
-            <FormField v-model="formData.phone" :label="$t('surveyForm.contactPhone')" type="text" :placeholder="$t('surveyForm.contactPhonePhShort')" />
+            <FormField
+              v-model="formData.location"
+              :label="$t('surveyForm.location')"
+              required
+              type="text"
+              :placeholder="$t('surveyForm.locationPhShort')"
+            />
+            <FormField
+              v-model="formData.contact"
+              :label="$t('surveyForm.contactPerson')"
+              type="text"
+              :placeholder="$t('surveyForm.contactPersonPhShort')"
+            />
+            <FormField
+              v-model="formData.phone"
+              :label="$t('surveyForm.contactPhone')"
+              type="text"
+              :placeholder="$t('surveyForm.contactPhonePhShort')"
+            />
           </div>
         </SectionCard>
 
@@ -97,7 +113,12 @@
               max="100"
               :placeholder="$t('surveyForm.dodPh')"
             />
-            <FormField v-model.number="formData.cRate" :label="$t('surveyForm.cRateLabel')" type="select" :options="cRateOptions" />
+            <FormField
+              v-model.number="formData.cRate"
+              :label="$t('surveyForm.cRateLabel')"
+              type="select"
+              :options="cRateOptions"
+            />
           </div>
           <div class="form-grid-2">
             <FormField
@@ -120,14 +141,24 @@
         <!-- 04. 电池选型偏好 -->
         <SectionCard number="04" :title="$t('surveyForm.section04Battery')">
           <div class="form-grid-3">
-            <FormField v-model="formData.batteryType" :label="$t('surveyForm.batteryTypeLabel')" type="select" :options="batteryTypeOptions" />
+            <FormField
+              v-model="formData.batteryType"
+              :label="$t('surveyForm.batteryTypeLabel')"
+              type="select"
+              :options="batteryTypeOptions"
+            />
             <FormField
               v-model="formData.cellCapacity"
               :label="$t('surveyForm.cellCapacityLabel')"
               type="select"
               :options="cellCapacityOptions"
             />
-            <FormField v-model="formData.containerSpec" :label="$t('surveyForm.containerSpecLabel')" type="select" :options="containerOptions" />
+            <FormField
+              v-model="formData.containerSpec"
+              :label="$t('surveyForm.containerSpecLabel')"
+              type="select"
+              :options="containerOptions"
+            />
           </div>
         </SectionCard>
 
@@ -138,7 +169,12 @@
               <span>{{ feature.label }}</span>
             </label>
           </div>
-          <FormField v-model="formData.remarks" :label="$t('surveyForm.otherRequirementLabel')" type="textarea" :placeholder="$t('surveyForm.otherRequirementPh')" />
+          <FormField
+            v-model="formData.remarks"
+            :label="$t('surveyForm.otherRequirementLabel')"
+            type="textarea"
+            :placeholder="$t('surveyForm.otherRequirementPh')"
+          />
         </SectionCard>
 
         <!-- 提交按钮 -->

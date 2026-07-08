@@ -54,8 +54,16 @@
 import { useEpcModules } from '../../composables/useEpcModules.js'
 
 const {
-  loading, bidForm, bidResult, generateBidDoc,
-  chartTypes, chartReady, chartLoading, chartError, activeChart, chartContainer,
+  loading,
+  bidForm,
+  bidResult,
+  generateBidDoc,
+  chartTypes,
+  chartReady,
+  chartLoading,
+  chartError,
+  activeChart,
+  chartContainer,
   previewChart
 } = useEpcModules()
 </script>

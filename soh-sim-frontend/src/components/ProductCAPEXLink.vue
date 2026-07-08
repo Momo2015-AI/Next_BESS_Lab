@@ -60,21 +60,19 @@
         v-if="hasSelection"
         class="border rounded p-2 u-border-color-var-color-border-background-color-var-color-card-dark"
       >
-        <h4 class="text-xs font-bold mb-2 text-secondary">
-          当前配置 Current Configuration
-        </h4>
+        <h4 class="text-xs font-bold mb-2 text-secondary">当前配置 Current Configuration</h4>
         <div class="grid grid-cols-3 gap-2 text-xs">
           <div>
-            <div>电芯</div>class="text-muted"
-            <div class="font-mono mt-0.5 text-default">
-              {{ selectedCellInfo?.mfr }} {{ selectedCellInfo?.model }}
-            </div>
+            <div>电芯</div>
+            class="text-muted"
+            <div class="font-mono mt-0.5 text-default">{{ selectedCellInfo?.mfr }} {{ selectedCellInfo?.model }}</div>
             <div class="text-[9px] text-muted">
               {{ selectedCellInfo?.capacityAh }}Ah @ ¥{{ selectedCellInfo?.unitPrice }}/Ah
             </div>
           </div>
           <div>
-            <div>集装箱</div>class="text-muted"
+            <div>集装箱</div>
+            class="text-muted"
             <div class="font-mono mt-0.5 text-default">
               {{ selectedContainerInfo?.mfr }} {{ selectedContainerInfo?.model }}
             </div>
@@ -83,10 +81,9 @@
             </div>
           </div>
           <div>
-            <div>PCS</div>class="text-muted"
-            <div class="font-mono mt-0.5 text-default">
-              {{ selectedPcsInfo?.mfr }} {{ selectedPcsInfo?.model }}
-            </div>
+            <div>PCS</div>
+            class="text-muted"
+            <div class="font-mono mt-0.5 text-default">{{ selectedPcsInfo?.mfr }} {{ selectedPcsInfo?.model }}</div>
             <div class="text-[9px] text-muted">
               {{ selectedPcsInfo?.ratedPowerMW }}MW @ ¥{{ selectedPcsInfo?.unitPrice }}/MW
             </div>
@@ -96,30 +93,33 @@
 
       <!-- CAPEX 计算 -->
       <div v-if="hasSelection" class="border-t pt-2">
-        <h4 class="text-xs font-bold mb-2 text-secondary">
-          CAPEX 成本计算 CAPEX Cost Calculation
-        </h4>
+        <h4 class="text-xs font-bold mb-2 text-secondary">CAPEX 成本计算 CAPEX Cost Calculation</h4>
         <div class="space-y-1 text-xs">
           <div class="flex justify-between">
-            <span>电芯成本</span>class="text-muted"
+            <span>电芯成本</span>
+            class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(cellCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span>集装箱成本</span>class="text-muted"
+            <span>集装箱成本</span>
+            class="text-muted"
             <span class="font-mono text-secondary">
               {{ formatCurrency(containerCost) }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span>PCS成本</span>class="text-muted"
+            <span>PCS成本</span>
+            class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(pcsCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span>BOP配套</span>class="text-muted"
+            <span>BOP配套</span>
+            class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(bopCost) }}</span>
           </div>
           <div class="border-t pt-1 mt-1 flex justify-between font-bold">
-            <span>总CAPEX</span>class="text-default"
+            <span>总CAPEX</span>
+            class="text-default"
             <span class="font-mono text-accent">{{ formatCurrency(totalCAPEX) }}</span>
           </div>
           <div class="flex justify-between text-[9px]">
@@ -131,18 +131,13 @@
 
       <!-- 应用到仿真 -->
       <div v-if="hasSelection" class="flex justify-end mt-3">
-        <button
-          class="text-xs px-4 py-1.5 rounded transition-colors bg-accent-2 text-white"
-          @click="applyToSimulation"
-        >
+        <button class="text-xs px-4 py-1.5 rounded transition-colors bg-accent-2 text-white" @click="applyToSimulation">
           应用到仿真 Apply to Simulation
         </button>
       </div>
 
       <!-- 提示信息 -->
-      <div v-if="!hasSelection" class="text-[9px] text-center py-2 text-muted">
-        请选择产品以自动计算CAPEX
-      </div>
+      <div v-if="!hasSelection" class="text-[9px] text-center py-2 text-muted">请选择产品以自动计算CAPEX</div>
     </div>
   </div>
 </template>

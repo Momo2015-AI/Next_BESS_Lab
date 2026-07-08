@@ -70,7 +70,9 @@
           </h3>
           <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelOffPeakPrice') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelOffPeakPrice') }}
+              </label>
               <input
                 v-model.number="f.offPeakPrice"
                 type="number"
@@ -84,7 +86,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelPeakPrice') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelPeakPrice') }}
+              </label>
               <input
                 v-model.number="f.peakPrice"
                 type="number"
@@ -98,7 +102,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelSpreadCapture') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelSpreadCapture') }}
+              </label>
               <input
                 v-model.number="f.spreadCapture"
                 type="number"
@@ -112,7 +118,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelCalendarDays') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelCalendarDays') }}
+              </label>
               <input
                 v-model.number="f.operatingDays"
                 type="number"
@@ -126,7 +134,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelCapacityPrice') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelCapacityPrice') }}
+              </label>
               <input
                 v-model.number="f.capacityPrice"
                 type="number"
@@ -140,7 +150,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelAncillaryPrice') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelAncillaryPrice') }}
+              </label>
               <input
                 v-model.number="f.ancillaryPrice"
                 type="number"
@@ -154,7 +166,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelPriceEscalation') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelPriceEscalation') }}
+              </label>
               <input
                 v-model.number="f.priceEscalation"
                 type="number"
@@ -168,7 +182,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelEfficiencyLoss') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelEfficiencyLoss') }}
+              </label>
               <input
                 v-model.number="f.efficiencyLossPct"
                 type="number"
@@ -195,7 +211,9 @@
           </h3>
           <div class="grid grid-cols-2 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelContainerCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelContainerCost') }}
+              </label>
               <input
                 v-model.number="f.containerCostPerMWh"
                 type="number"
@@ -209,7 +227,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelPcsCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelPcsCost') }}
+              </label>
               <input
                 v-model.number="f.pcsCostPerMW"
                 type="number"
@@ -223,7 +243,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelBopCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelBopCost') }}
+              </label>
               <input
                 v-model.number="f.bopCostPerMWh"
                 type="number"
@@ -237,7 +259,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelSubstationCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelSubstationCost') }}
+              </label>
               <input
                 v-model.number="f.substationCostPerMW"
                 type="number"
@@ -251,7 +275,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelTransmissionCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelTransmissionCost') }}
+              </label>
               <input
                 v-model.number="f.transmissionCostPerMW"
                 type="number"
@@ -265,7 +291,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelLandCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelLandCost') }}
+              </label>
               <input
                 v-model.number="f.landCostPerMW"
                 type="number"
@@ -279,7 +307,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDevCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDevCost') }}
+              </label>
               <input
                 v-model.number="f.developmentCostPerMW"
                 type="number"
@@ -293,7 +323,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelFixedOm') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelFixedOm') }}
+              </label>
               <input
                 v-model.number="f.fixedOpexPerKW"
                 type="number"
@@ -307,7 +339,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelVarOm') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelVarOm') }}
+              </label>
               <input
                 v-model.number="f.varOpexPerMWh"
                 type="number"
@@ -321,7 +355,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelInsuranceRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelInsuranceRate') }}
+              </label>
               <input
                 v-model.number="f.insuranceRate"
                 type="number"
@@ -335,7 +371,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelOmEscalation') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelOmEscalation') }}
+              </label>
               <input
                 v-model.number="f.opexEscalation"
                 type="number"
@@ -349,7 +387,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelVatRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelVatRate') }}
+              </label>
               <input
                 v-model.number="f.vatRate"
                 type="number"
@@ -379,7 +419,9 @@
           </h3>
           <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDiscountRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDiscountRate') }}
+              </label>
               <input
                 v-model.number="f.discountRate"
                 type="number"
@@ -393,7 +435,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDebtRatio') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDebtRatio') }}
+              </label>
               <input
                 v-model.number="f.debtRatio"
                 type="number"
@@ -407,7 +451,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelEquityRatio') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelEquityRatio') }}
+              </label>
               <input
                 v-model.number="f.equityRatio"
                 type="number"
@@ -421,7 +467,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelLoanRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelLoanRate') }}
+              </label>
               <input
                 v-model.number="f.interestRate"
                 type="number"
@@ -435,7 +483,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelCostOfEquity') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelCostOfEquity') }}
+              </label>
               <input
                 v-model.number="f.costOfEquity"
                 type="number"
@@ -449,7 +499,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelLoanTenure') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelLoanTenure') }}
+              </label>
               <input
                 v-model.number="f.loanTenure"
                 type="number"
@@ -463,7 +515,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelTaxRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelTaxRate') }}
+              </label>
               <input
                 v-model.number="f.taxRate"
                 type="number"
@@ -477,7 +531,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDepreciationYears') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDepreciationYears') }}
+              </label>
               <input
                 v-model.number="f.depreciationYears"
                 type="number"
@@ -491,7 +547,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelResidualRate') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelResidualRate') }}
+              </label>
               <input
                 v-model.number="f.residualRate"
                 type="number"
@@ -505,7 +563,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDepreciationMethod') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDepreciationMethod') }}
+              </label>
               <select
                 v-model="f.depreciationMethod"
                 class="w-full rounded px-2 py-1 text-xs"
@@ -533,7 +593,9 @@
           </h3>
           <div class="grid grid-cols-1 gap-2 text-[10px]" style="color: var(--color-text-secondary)">
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelAugContainerCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelAugContainerCost') }}
+              </label>
               <input
                 v-model.number="f.augContainerCostPerMWh"
                 type="number"
@@ -547,7 +609,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelCostDecline') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelCostDecline') }}
+              </label>
               <input
                 v-model.number="f.costDeclineRate"
                 type="number"
@@ -561,7 +625,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelAugInstallCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelAugInstallCost') }}
+              </label>
               <input
                 v-model.number="f.augInstallCost"
                 type="number"
@@ -575,7 +641,9 @@
               />
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelDecommissionCost') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelDecommissionCost') }}
+              </label>
               <input
                 v-model.number="f.decommissioningCost"
                 type="number"
@@ -618,7 +686,9 @@
               <span style="color: var(--color-text-secondary)">+/-{{ f.sensPct }}%</span>
             </div>
             <div>
-              <label class="block mb-0.5" style="color: var(--color-text-muted)">{{ $t('financial.labelVolatilityRange') }}</label>
+              <label class="block mb-0.5" style="color: var(--color-text-muted)">
+                {{ $t('financial.labelVolatilityRange') }}
+              </label>
               <input
                 v-model.number="f.sensPct"
                 type="number"
@@ -827,6 +897,7 @@ import ProductCAPEXLink from './ProductCAPEXLink.vue'
 import { useExchangeRate } from '../composables/useExchangeRate.js'
 
 const { t } = useI18n()
+const $t = t
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, augQty: Array })
 
 // 使用汇率管理
@@ -907,10 +978,30 @@ const metrics = ref([
   { label: $t('financial.metricsProjectIrr'), value: '-', unit: '%', textColor: 'var(--color-accent-secondary)' },
   { label: $t('financial.metricsEquityIrr'), value: '-', unit: '%', textColor: 'var(--color-success)' },
   { label: $t('financial.metricsWacc'), value: '-', unit: '%', textColor: '#0ea5e9' },
-  { label: $t('financial.metricsNpv'), value: '-', unit: `${$t('financial.wanUnit')} (${displayCurrency.value})`, textColor: 'var(--color-accent)' },
-  { label: $t('financial.metricsLcos'), value: '-', unit: `${$t('financial.lcosUnit')} (${displayCurrency.value})`, textColor: 'var(--color-info)' },
-  { label: $t('financial.metricsPayback'), value: '-', unit: $t('financial.metricsYearUnit'), textColor: 'var(--color-warning)' },
-  { label: $t('financial.metricsTotalCapex'), value: '-', unit: `${$t('financial.wanUnit')} (${displayCurrency.value})`, textColor: 'var(--color-danger)' },
+  {
+    label: $t('financial.metricsNpv'),
+    value: '-',
+    unit: `${$t('financial.wanUnit')} (${displayCurrency.value})`,
+    textColor: 'var(--color-accent)'
+  },
+  {
+    label: $t('financial.metricsLcos'),
+    value: '-',
+    unit: `${$t('financial.lcosUnit')} (${displayCurrency.value})`,
+    textColor: 'var(--color-info)'
+  },
+  {
+    label: $t('financial.metricsPayback'),
+    value: '-',
+    unit: $t('financial.metricsYearUnit'),
+    textColor: 'var(--color-warning)'
+  },
+  {
+    label: $t('financial.metricsTotalCapex'),
+    value: '-',
+    unit: `${$t('financial.wanUnit')} (${displayCurrency.value})`,
+    textColor: 'var(--color-danger)'
+  },
   { label: $t('financial.metricsMinDscr'), value: '-', unit: 'x', textColor: 'var(--color-chart-orange)' }
 ])
 
@@ -1243,7 +1334,11 @@ function renderCashFlowChart() {
         return html
       }
     },
-    legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: [t('financial.cumCashFlow'), t('financial.annualNetCashFlow')] },
+    legend: {
+      top: 0,
+      textStyle: { color: colors.legendText, fontSize: 10 },
+      data: [t('financial.cumCashFlow'), t('financial.annualNetCashFlow')]
+    },
     grid: { top: 30, right: 20, bottom: 25, left: 65 },
     xAxis: {
       type: 'category',
@@ -1255,7 +1350,11 @@ function renderCashFlowChart() {
     yAxis: [
       {
         type: 'value',
-        axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: (v) => (v / 10000).toFixed(1) + t('financial.millionUnit') },
+        axisLabel: {
+          color: colors.axisLabel,
+          fontSize: 9,
+          formatter: (v) => (v / 10000).toFixed(1) + t('financial.millionUnit')
+        },
         splitLine: { lineStyle: { color: colors.gridLine } }
       }
     ],
@@ -1299,7 +1398,11 @@ function renderCashFlowChart() {
                 symbol: 'pin',
                 symbolSize: 24,
                 data: [
-                  { coord: [paybackYear, 0], value: t('financial.paybackPrefix') + paybackYear + t('financial.paybackSuffix'), itemStyle: { color: colors.warning } }
+                  {
+                    coord: [paybackYear, 0],
+                    value: t('financial.paybackPrefix') + paybackYear + t('financial.paybackSuffix'),
+                    itemStyle: { color: colors.warning }
+                  }
                 ]
               }
             : undefined
@@ -1425,7 +1528,11 @@ function renderDscrChart() {
         return html
       }
     },
-    legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: [t('financial.ebitdaSeries'), t('financial.debtServiceSeries'), 'DSCR'] },
+    legend: {
+      top: 0,
+      textStyle: { color: colors.legendText, fontSize: 10 },
+      data: [t('financial.ebitdaSeries'), t('financial.debtServiceSeries'), 'DSCR']
+    },
     grid: { top: 30, right: 45, bottom: 25, left: 55 },
     xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
     yAxis: [

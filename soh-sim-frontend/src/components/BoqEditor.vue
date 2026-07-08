@@ -21,20 +21,11 @@
     <div class="flex gap-2">
       <button class="btn-primary-sm" @click="autoFillQuantities">自动预填数量</button>
       <button class="btn-secondary-sm" @click="save">保存 BOQ</button>
-      <button
-        class="btn-secondary-sm text-accent border-accent"
-        @click="aggregateCapex"
-      >
-        汇总到 CAPEX
-      </button>
+      <button class="btn-secondary-sm text-accent border-accent" @click="aggregateCapex">汇总到 CAPEX</button>
     </div>
 
     <div class="flex-1 overflow-y-auto space-y-1 u-min-height-0">
-      <div
-        v-for="section in sections"
-        :key="section.code"
-        class="rounded u-border-1px-solid-var-color-border"
-      >
+      <div v-for="section in sections" :key="section.code" class="rounded u-border-1px-solid-var-color-border">
         <div
           class="flex items-center justify-between px-3 py-2 cursor-pointer select-none u-background-var-color-card"
           @click="toggleSection(section.code)"
@@ -46,9 +37,7 @@
             </span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-muted">
-              小计: {{ formatPrice(sectionSubtotal(section.code)) }}
-            </span>
+            <span class="text-xs text-muted">小计: {{ formatPrice(sectionSubtotal(section.code)) }}</span>
             <span class="text-xs text-muted">
               {{ openSections[section.code] ? '▲' : '▼' }}
             </span>
@@ -57,7 +46,8 @@
         <div v-if="openSections[section.code]" class="p-2">
           <table class="w-full text-xs border-collapse">
             <thead>
-              <tr>class="text-muted border-b"
+              <tr>
+                class="text-muted border-b"
                 <th class="p-1 text-left w-8">#</th>
                 <th class="p-1 text-left">设备/工程名称</th>
                 <th class="p-1 text-left">规格型号</th>
@@ -108,9 +98,7 @@
                   <input v-model="item.note" class="w-full px-1 py-0.5 rounded text-xs boq-table-input" />
                 </td>
                 <td class="p-1 text-center">
-                  <button class="text-xs text-danger" @click="removeItem(section.code, idx)">
-                    x
-                  </button>
+                  <button class="text-xs text-danger" @click="removeItem(section.code, idx)">x</button>
                 </td>
               </tr>
             </tbody>
@@ -125,9 +113,7 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center justify-between px-3 py-2 rounded u-background-var-color-accent-color-white"
-    >
+    <div class="flex items-center justify-between px-3 py-2 rounded u-background-var-color-accent-color-white">
       <span class="text-sm font-bold">BOQ 总价</span>
       <span class="text-lg font-mono font-bold">{{ formatPrice(totalPrice) }} USD</span>
     </div>

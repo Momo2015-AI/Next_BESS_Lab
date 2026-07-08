@@ -15,7 +15,13 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">电网频率 (Hz)</label>
-          <input v-model.number="gcForm.grid_frequency_hz" type="number" step="0.01" class="form-field-input" placeholder="50" />
+          <input
+            v-model.number="gcForm.grid_frequency_hz"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="50"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">PCS数量</label>
@@ -27,7 +33,10 @@
       </button>
 
       <div v-if="gcResult" class="mt-6 space-y-4">
-        <div class="flex items-center gap-4 p-4 rounded-lg" :class="gcResult.overall_pass ? 'pass-banner' : 'fail-banner'">
+        <div
+          class="flex items-center gap-4 p-4 rounded-lg"
+          :class="gcResult.overall_pass ? 'pass-banner' : 'fail-banner'"
+        >
           <span class="status-icon">{{ gcResult.overall_pass ? 'pass' : 'fail' }}</span>
           <div>
             <div class="font-bold" :class="gcResult.overall_pass ? 'pass-text' : 'fail-text'">
@@ -40,31 +49,45 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.lvrt_pass ? 'pass-text' : 'fail-text'">{{ gcResult.lvrt_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="gcResult.lvrt_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.lvrt_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">LVRT低电压穿越</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.hvrt_pass ? 'pass-text' : 'fail-text'">{{ gcResult.hvrt_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="gcResult.hvrt_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.hvrt_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">HVRT高电压穿越</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.freq_response_pass ? 'pass-text' : 'fail-text'">{{ gcResult.freq_response_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="gcResult.freq_response_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.freq_response_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">频率响应</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.reactive_pass ? 'pass-text' : 'fail-text'">{{ gcResult.reactive_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="gcResult.reactive_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.reactive_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">无功功率 ({{ gcResult.reactive_capacity_mvar }}MVar)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.power_quality_pass ? 'pass-text' : 'fail-text'">{{ gcResult.thd }}%</div>
+            <div class="metric-value" :class="gcResult.power_quality_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.thd }}%
+            </div>
             <div class="metric-label">THD (限值5%)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.anti_islanding_pass ? 'pass-text' : 'fail-text'">{{ gcResult.anti_islanding_time_s }}s</div>
+            <div class="metric-value" :class="gcResult.anti_islanding_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.anti_islanding_time_s }}s
+            </div>
             <div class="metric-label">防孤岛 (限值2s)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="gcResult.comm_pass ? 'pass-text' : 'fail-text'">{{ gcResult.comm_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="gcResult.comm_pass ? 'pass-text' : 'fail-text'">
+              {{ gcResult.comm_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">通信合规</div>
           </div>
         </div>

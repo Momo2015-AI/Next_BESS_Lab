@@ -142,16 +142,10 @@
             <th class="py-1.5 u-border-right-1px-solid-var-color-border" colspan="1">
               {{ $t('matrixTable.time') }}
             </th>
-            <th
-              class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-accent"
-              colspan="8"
-            >
+            <th class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-accent" colspan="8">
               {{ $t('matrixTable.initialStock') }}
             </th>
-            <th
-              class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
-              colspan="6"
-            >
+            <th class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-chart-pink" colspan="6">
               {{ $t('matrixTable.augStream') }}
             </th>
             <th class="py-1.5 text-success" colspan="3">
@@ -203,9 +197,7 @@
             <th class="p-1.5 u-color-var-color-chart-pink">
               {{ $t('matrixTable.augGross') }}
             </th>
-            <th
-              class="p-1.5 font-bold u-border-right-1px-solid-var-color-border-color-var-color-chart-pink"
-            >
+            <th class="p-1.5 font-bold u-border-right-1px-solid-var-color-border-color-var-color-chart-pink">
               {{ $t('matrixTable.augNetAc') }}
             </th>
             <th class="p-1.5 font-bold text-success">
@@ -307,10 +299,7 @@
             </td>
 
             <!-- Total Accounting -->
-            <td
-              class="p-1 font-bold text-xs"
-              :class="results.meetsReq[i - 1] ? 'matrix-pass' : 'matrix-fail'"
-            >
+            <td class="p-1 font-bold text-xs" :class="results.meetsReq[i - 1] ? 'matrix-pass' : 'matrix-fail'">
               {{ results.totalAcUsable[i - 1]?.toFixed(2) }}
             </td>
             <td

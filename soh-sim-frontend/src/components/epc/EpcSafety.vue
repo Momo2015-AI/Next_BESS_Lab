@@ -54,15 +54,21 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="metric-card">
-            <div class="metric-value" :class="sfResult.ul_9540a_pass ? 'pass-text' : 'fail-text'">{{ sfResult.ul_9540a_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="sfResult.ul_9540a_pass ? 'pass-text' : 'fail-text'">
+              {{ sfResult.ul_9540a_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">UL 9540A</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="sfResult.nfpa_855_pass ? 'pass-text' : 'fail-text'">{{ sfResult.nfpa_855_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="sfResult.nfpa_855_pass ? 'pass-text' : 'fail-text'">
+              {{ sfResult.nfpa_855_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">NFPA 855</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" :class="sfResult.iec_62619_pass ? 'pass-text' : 'fail-text'">{{ sfResult.iec_62619_pass ? 'PASS' : 'FAIL' }}</div>
+            <div class="metric-value" :class="sfResult.iec_62619_pass ? 'pass-text' : 'fail-text'">
+              {{ sfResult.iec_62619_pass ? 'PASS' : 'FAIL' }}
+            </div>
             <div class="metric-label">IEC 62619</div>
           </div>
           <div class="metric-card">

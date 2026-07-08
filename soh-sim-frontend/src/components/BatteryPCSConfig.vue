@@ -320,10 +320,38 @@ async function loadLibraryData() {
     // 如果没有数据，使用默认值
     if (containers.value.length === 0 || pcsList.value.length === 0) {
       containers.value = [
-        { id: 'container-5mwh', name: t('batteryPcs.defaultNames.standardCabin'), energy: 5, power: 2.5, voltage: 600, cells: 120 },
-        { id: 'container-3mwh', name: t('batteryPcs.defaultNames.compactCabin'), energy: 3, power: 1.5, voltage: 600, cells: 72 },
-        { id: 'container-10mwh', name: t('batteryPcs.defaultNames.largeCabin'), energy: 10, power: 5, voltage: 800, cells: 240 },
-        { id: 'container-2mwh', name: t('batteryPcs.defaultNames.smallCabin'), energy: 2, power: 1, voltage: 400, cells: 48 }
+        {
+          id: 'container-5mwh',
+          name: t('batteryPcs.defaultNames.standardCabin'),
+          energy: 5,
+          power: 2.5,
+          voltage: 600,
+          cells: 120
+        },
+        {
+          id: 'container-3mwh',
+          name: t('batteryPcs.defaultNames.compactCabin'),
+          energy: 3,
+          power: 1.5,
+          voltage: 600,
+          cells: 72
+        },
+        {
+          id: 'container-10mwh',
+          name: t('batteryPcs.defaultNames.largeCabin'),
+          energy: 10,
+          power: 5,
+          voltage: 800,
+          cells: 240
+        },
+        {
+          id: 'container-2mwh',
+          name: t('batteryPcs.defaultNames.smallCabin'),
+          energy: 2,
+          power: 1,
+          voltage: 400,
+          cells: 48
+        }
       ]
       pcsList.value = [
         { id: 'pcs-2mw', name: '2MW PCS', power: 2, voltage: 380, dcVoltage: '600-900V', efficiency: 98 },
@@ -335,10 +363,38 @@ async function loadLibraryData() {
   } catch (error) {
     console.error(t('batteryPcs.errorLoadLibrary'), error)
     containers.value = [
-      { id: 'container-5mwh', name: t('batteryPcs.defaultNames.standardCabin'), energy: 5, power: 2.5, voltage: 600, cells: 120 },
-      { id: 'container-3mwh', name: t('batteryPcs.defaultNames.compactCabin'), energy: 3, power: 1.5, voltage: 600, cells: 72 },
-      { id: 'container-10mwh', name: t('batteryPcs.defaultNames.largeCabin'), energy: 10, power: 5, voltage: 800, cells: 240 },
-      { id: 'container-2mwh', name: t('batteryPcs.defaultNames.smallCabin'), energy: 2, power: 1, voltage: 400, cells: 48 }
+      {
+        id: 'container-5mwh',
+        name: t('batteryPcs.defaultNames.standardCabin'),
+        energy: 5,
+        power: 2.5,
+        voltage: 600,
+        cells: 120
+      },
+      {
+        id: 'container-3mwh',
+        name: t('batteryPcs.defaultNames.compactCabin'),
+        energy: 3,
+        power: 1.5,
+        voltage: 600,
+        cells: 72
+      },
+      {
+        id: 'container-10mwh',
+        name: t('batteryPcs.defaultNames.largeCabin'),
+        energy: 10,
+        power: 5,
+        voltage: 800,
+        cells: 240
+      },
+      {
+        id: 'container-2mwh',
+        name: t('batteryPcs.defaultNames.smallCabin'),
+        energy: 2,
+        power: 1,
+        voltage: 400,
+        cells: 48
+      }
     ]
     pcsList.value = [
       { id: 'pcs-2mw', name: '2MW PCS', power: 2, voltage: 380, dcVoltage: '600-900V', efficiency: 98 },
@@ -473,10 +529,20 @@ const pairingDescription = computed(() => {
   if (ctn === pn) {
     return t('batteryPcs.pairingDescOneToOne', { container: container.name, pcs: pcs.name, pcsCount: pn })
   } else if (ctn > pn) {
-    return t('batteryPcs.pairingDescMultiContainer', { ratio: containersPerPCS.value, container: container.name, pcs: pcs.name, pcsCount: pn })
+    return t('batteryPcs.pairingDescMultiContainer', {
+      ratio: containersPerPCS.value,
+      container: container.name,
+      pcs: pcs.name,
+      pcsCount: pn
+    })
   } else {
     const pcsPerContainer = Math.ceil(pn / ctn)
-    return t('batteryPcs.pairingDescMultiPcs', { container: container.name, pcsPerContainer, pcs: pcs.name, pcsCount: pn })
+    return t('batteryPcs.pairingDescMultiPcs', {
+      container: container.name,
+      pcsPerContainer,
+      pcs: pcs.name,
+      pcsCount: pn
+    })
   }
 })
 
@@ -518,7 +584,12 @@ const recommendedSchemes = computed(() => {
           id: t('batteryPcs.schemePrefix') + (schemes.length + 1),
           containerConfig: `${qty}×${container.name}`,
           pcsConfig: `${pcsCount}×${pcs.name}`,
-          pairingMode: qty === pcsCount ? '1:1' : qty > pcsCount ? t('batteryPcs.pairingMultiContainerParallel') : t('batteryPcs.pairingMultiPcsSingleCabin'),
+          pairingMode:
+            qty === pcsCount
+              ? '1:1'
+              : qty > pcsCount
+                ? t('batteryPcs.pairingMultiContainerParallel')
+                : t('batteryPcs.pairingMultiPcsSingleCabin'),
           energyPowerRatio: `${energy}/${(pcsCount * pcs.power).toFixed(1)}`,
           efficiency: eff.toFixed(1),
           containerQty: qty,
@@ -627,7 +698,13 @@ const renderConnectionDiagram = () => {
     symbolSize: 42,
     category: 0,
     itemStyle: { color: colors.emerald, shadowBlur: 4, shadowColor: 'rgba(0,0,0,0.3)' },
-    label: { show: true, position: 'inside', formatter: t('batteryPcs.legendGrid').replace(/\n/g, ' '), fontSize: 10, color: 'var(--color-text-on-accent)' }
+    label: {
+      show: true,
+      position: 'inside',
+      formatter: t('batteryPcs.legendGrid').replace(/\n/g, ' '),
+      fontSize: 10,
+      color: 'var(--color-text-on-accent)'
+    }
   })
 
   nodes.push({
@@ -653,7 +730,11 @@ const renderConnectionDiagram = () => {
       fontWeight: 'bold'
     }
   })
-  links.push({ source: t('batteryPcs.legendGrid'), target: t('batteryPcs.legendTransformer'), lineStyle: { color: colors.amber, width: 3, type: 'solid' } })
+  links.push({
+    source: t('batteryPcs.legendGrid'),
+    target: t('batteryPcs.legendTransformer'),
+    lineStyle: { color: colors.amber, width: 3, type: 'solid' }
+  })
 
   const pcsUnitWidth = Math.min(80, span / Math.max(pn, 1))
   for (let i = 0; i < pn; i++) {
@@ -684,7 +765,11 @@ const renderConnectionDiagram = () => {
         color: 'var(--color-text-on-accent)'
       }
     })
-    links.push({ source: t('batteryPcs.legendTransformer'), target: pcsName, lineStyle: { color: colors.amber, width: 2, type: 'solid' } })
+    links.push({
+      source: t('batteryPcs.legendTransformer'),
+      target: pcsName,
+      lineStyle: { color: colors.amber, width: 2, type: 'solid' }
+    })
   }
 
   const containersPerPCSVal = Math.ceil(ctn / Math.max(pn, 1))
@@ -742,7 +827,12 @@ const renderConnectionDiagram = () => {
         const name = p.data.name
         const info = nodes.find((n) => n.name === name)
         if (!info) return name
-        const catNames = [t('batteryPcs.legendGrid'), 'PCS', t('batteryPcs.chartBatteryCabin'), t('batteryPcs.legendTransformer')]
+        const catNames = [
+          t('batteryPcs.legendGrid'),
+          'PCS',
+          t('batteryPcs.chartBatteryCabin'),
+          t('batteryPcs.legendTransformer')
+        ]
         return '<b>' + name + '</b><br/>' + t('batteryPcs.chartType') + ': ' + (catNames[info.category || 0] || '')
       }
     },
@@ -756,7 +846,12 @@ const renderConnectionDiagram = () => {
         edgeSymbolSize: [6, 8],
         data: nodes,
         links: links,
-        categories: [{ name: t('batteryPcs.legendGrid') }, { name: 'PCS' }, { name: t('batteryPcs.chartBatteryCabin') }, { name: t('batteryPcs.legendTransformer') }],
+        categories: [
+          { name: t('batteryPcs.legendGrid') },
+          { name: 'PCS' },
+          { name: t('batteryPcs.chartBatteryCabin') },
+          { name: t('batteryPcs.legendTransformer') }
+        ],
         lineStyle: { opacity: 0.9, curveness: 0, width: 2 }
       }
     ]
@@ -977,7 +1072,14 @@ const renderSingleLineDiagram = () => {
     })
     graphicElements.push({
       type: 'text',
-      style: { text: t('batteryPcs.chartDc'), x: pcsX, y: dcJunctionY - 12, fill: colors.slate, fontSize: 8, textAlign: 'center' }
+      style: {
+        text: t('batteryPcs.chartDc'),
+        x: pcsX,
+        y: dcJunctionY - 12,
+        fill: colors.slate,
+        fontSize: 8,
+        textAlign: 'center'
+      }
     })
 
     const group = groupContainers[i]

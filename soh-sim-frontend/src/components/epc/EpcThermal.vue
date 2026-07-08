@@ -50,7 +50,11 @@
           <h4 class="text-sm font-bold mb-2 section-title">高温降额曲线</h4>
           <div class="flex gap-1 items-end h-32 derating-chart">
             <div v-for="point in tmResult.derating_curve" :key="point.temp" class="flex-1 flex flex-col items-center">
-              <div class="w-full rounded-t derating-bar" :class="deratingClass(point.power_pct)" :style="{ height: point.power_pct + '%' }" />
+              <div
+                class="w-full rounded-t derating-bar"
+                :class="deratingClass(point.power_pct)"
+                :style="{ height: point.power_pct + '%' }"
+              />
               <div class="text-xs mt-1 tx-muted">{{ point.temp }}°C</div>
             </div>
           </div>

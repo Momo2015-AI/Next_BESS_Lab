@@ -12,26 +12,25 @@
           <div class="text-xs mb-2 text-muted">选择导出内容</div>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.matrix" type="checkbox" />class="accent-accent-2"
+            <input v-model="exportOptions.matrix" type="checkbox" />
+            class="accent-accent-2"
             <span class="text-xs text-secondary">25年生命周期矩阵</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.soh" type="checkbox" />class="accent-accent-2"
+            <input v-model="exportOptions.soh" type="checkbox" />
+            class="accent-accent-2"
             <span class="text-xs text-secondary">SOH/RTE数据序列</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="exportOptions.params" type="checkbox" />class="accent-accent-2"
+            <input v-model="exportOptions.params" type="checkbox" />
+            class="accent-accent-2"
             <span class="text-xs text-secondary">参数配置</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              v-model="exportOptions.financial"
-              type="checkbox"
- class="accent-accent-2"
-            />
+            <input v-model="exportOptions.financial" type="checkbox" class="accent-accent-2" />
             <span class="text-xs text-secondary">财务分析数据</span>
           </label>
         </div>
@@ -79,9 +78,7 @@
           <button class="link-btn text-xs" @click="loadSimulations">刷新</button>
         </div>
 
-        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">
-          暂无保存的仿真记录
-        </div>
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">暂无保存的仿真记录</div>
 
         <div v-else class="space-y-2 max-h-40 overflow-y-auto">
           <div
@@ -90,14 +87,13 @@
             class="flex items-center justify-between rounded px-3 py-2 text-xs bg-card-dark"
           >
             <div>
-              <span>{{ sim.name }}</span>class="text-secondary"
+              <span>{{ sim.name }}</span>
+              class="text-secondary"
               <span class="ml-2 text-muted">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
               <button class="link-btn" @click="loadSimulation(sim.id)">加载</button>
-              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">
-                导出
-              </button>
+              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">导出</button>
             </div>
           </div>
         </div>

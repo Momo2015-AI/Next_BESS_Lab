@@ -86,25 +86,29 @@
     <div class="mt-3 border-t pt-2 border-default">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
         <div class="rounded p-2 bg-card-dark">
-          <div>总充电量</div>class="text-muted"
+          <div>总充电量</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-accent">
             {{ formatEnergy(totalCharging) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>总放电量</div>class="text-muted"
+          <div>总放电量</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-success">
             {{ formatEnergy(totalDischarging) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>能量损失</div>class="text-muted"
+          <div>能量损失</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-danger">
             {{ formatEnergy(totalLoss) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>系统效率</div>class="text-muted"
+          <div>系统效率</div>
+          class="text-muted"
           <div class="font-mono mt-0.5 text-warning">{{ systemEfficiency.toFixed(1) }}%</div>
         </div>
       </div>

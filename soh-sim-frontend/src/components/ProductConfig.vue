@@ -57,7 +57,11 @@
                     : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
                 "
               >
-                {{ cell.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.preResearch') }}
+                {{
+                  cell.status === 'mass-production'
+                    ? $t('productConfig.massProduction')
+                    : $t('productConfig.preResearch')
+                }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
@@ -133,7 +137,9 @@
                     : { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
                 "
               >
-                {{ c.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.preResearch') }}
+                {{
+                  c.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.preResearch')
+                }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
@@ -208,7 +214,9 @@
             </button>
             <div class="flex justify-between items-start mb-1">
               <span class="text-xs font-bold">{{ p.model }}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">{{ $t('productConfig.massProduction') }}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">
+                {{ $t('productConfig.massProduction') }}
+              </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
               {{ p.mfr }}
@@ -255,7 +263,11 @@
             <div class="flex justify-between items-start mb-1">
               <span class="text-xs font-bold">{{ c.model }}</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded tag-success">
-                {{ c.status === 'mass-production' ? $t('productConfig.massProduction') : $t('productConfig.inDevelopment') }}
+                {{
+                  c.status === 'mass-production'
+                    ? $t('productConfig.massProduction')
+                    : $t('productConfig.inDevelopment')
+                }}
               </span>
             </div>
             <div class="text-[10px] mb-2 text-muted">
@@ -548,7 +560,9 @@
                 >
                   {{ $t('productConfig.uploadSpecBtn') }}
                 </button>
-                <span v-if="specUploading" class="self-center text-accent-secondary">{{ $t('productConfig.parsing') }}</span>
+                <span v-if="specUploading" class="self-center text-accent-secondary">
+                  {{ $t('productConfig.parsing') }}
+                </span>
                 <span v-if="specResult" class="self-center text-success">{{ specResult }}</span>
               </div>
             </div>

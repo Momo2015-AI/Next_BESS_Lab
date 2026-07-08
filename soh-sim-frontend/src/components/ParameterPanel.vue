@@ -158,12 +158,14 @@
         <div>
           {{ $t('paramPanel.dailyRunTotal') }} = {{ params.duration }}h x {{ params.cyclesPerDay
           }}{{ $t('paramPanel.times') }} =
-          <span>class="u-color-var-color-accent-secondary-font-weight-bold"
+          <span>
+            class="u-color-var-color-accent-secondary-font-weight-bold"
             {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h
           </span>
           &nbsp;{{ $t('paramPanel.dailyStandby') }} = Max(0, 24 -
           {{ (params.duration * params.cyclesPerDay).toFixed(1) }}) =
-          <span>class="u-color-var-color-accent-secondary-font-weight-bold"
+          <span>
+            class="u-color-var-color-accent-secondary-font-weight-bold"
             {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h
           </span>
         </div>
@@ -171,7 +173,8 @@
           {{ $t('paramPanel.singleContainerDaily') }} = ({{ params.bessAuxRun }}kW x
           {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.bessAuxStandby }}kW x
           {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000 =
-          <span>class="u-color-var-color-warning-font-weight-bold"
+          <span>
+            class="u-color-var-color-warning-font-weight-bold"
             {{
               (
                 (params.bessAuxRun * params.duration * params.cyclesPerDay +
@@ -186,7 +189,8 @@
           {{ $t('paramPanel.singlePcsDaily') }} = ({{ params.pcsAuxRun }}kW x
           {{ (params.duration * params.cyclesPerDay).toFixed(1) }}h + {{ params.pcsAuxStandby }}kW x
           {{ Math.max(0, 24 - params.duration * params.cyclesPerDay).toFixed(1) }}h) / 1000 =
-          <span>class="u-color-var-color-warning-font-weight-bold"
+          <span>
+            class="u-color-var-color-warning-font-weight-bold"
             {{
               (
                 (params.pcsAuxRun * params.duration * params.cyclesPerDay +
@@ -199,10 +203,11 @@
         </div>
         <div class="pt-1 u-border-top-1px-solid-var-color-border">
           {{ $t('paramPanel.singleCycleAux') }} =
-          <span>class="u-color-var-color-success-font-weight-bold"
-            ({{ params.initContainerQty }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singleContainerDaily') }} +
-            {{ params.initPcsQty }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singlePcsDaily') }}) /
-            {{ params.cyclesPerDay }}{{ $t('paramPanel.times') }}
+          <span>
+            class="u-color-var-color-success-font-weight-bold" ({{ params.initContainerQty
+            }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singleContainerDaily') }} + {{ params.initPcsQty
+            }}{{ $t('paramPanel.units') }} x {{ $t('paramPanel.singlePcsDaily') }}) / {{ params.cyclesPerDay
+            }}{{ $t('paramPanel.times') }}
           </span>
         </div>
       </div>
@@ -215,24 +220,25 @@
       >
         ⚡ 电池与PCS配置规则
       </h2>
-      <div
-        class="rounded-lg p-4 bg-card-dark border-card"
-      >
+      <div class="rounded-lg p-4 bg-card-dark border-card">
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="rounded p-3 bg-input-dark">
             <div class="text-xs mb-2 font-medium text-accent">功率配比规则</div>
             <div class="text-[10px] space-y-1 text-muted">
               <div>
                 • 2h储能:
-                <span>能量 = 2 × 功率</span>class="text-accent-2"
+                <span>能量 = 2 × 功率</span>
+                class="text-accent-2"
               </div>
               <div>
                 • 4h储能:
-                <span>能量 = 4 × 功率</span>class="text-accent-2"
+                <span>能量 = 4 × 功率</span>
+                class="text-accent-2"
               </div>
               <div>
                 • 常用配比:
-                <span>1:2 (功率:能量)</span>class="text-accent-2"
+                <span>1:2 (功率:能量)</span>
+                class="text-accent-2"
               </div>
             </div>
           </div>
@@ -241,15 +247,18 @@
             <div class="text-[10px] space-y-1 text-muted">
               <div>
                 • 5MWh + 0.5C放电 →
-                <span>2台 2.5MW PCS</span>class="text-accent-2"
+                <span>2台 2.5MW PCS</span>
+                class="text-accent-2"
               </div>
               <div>
                 • 10MWh + 0.5C放电 →
-                <span>2台 5MW PCS</span>class="text-accent-2"
+                <span>2台 5MW PCS</span>
+                class="text-accent-2"
               </div>
               <div>
                 • 20MWh + 0.5C放电 →
-                <span>4台 5MW PCS</span>class="text-accent-2"
+                <span>4台 5MW PCS</span>
+                class="text-accent-2"
               </div>
             </div>
           </div>
@@ -267,28 +276,32 @@
         >
           <div class="text-xs text-accent-2">
             当前:
-            <span>{{ params.initContainerQty }}</span>class="font-bold text-default"
-            台 ×
-            <span>{{ params.ratedEnergy }}</span>class="font-bold text-default"
-            MWh =
-            <span>class="u-font-weight-bold-color-var-color-accent"
+            <span>{{ params.initContainerQty }}</span>
+            class="font-bold text-default" 台 ×
+            <span>{{ params.ratedEnergy }}</span>
+            class="font-bold text-default" MWh =
+            <span>
+              class="u-font-weight-bold-color-var-color-accent"
               {{ (params.initContainerQty * params.ratedEnergy).toFixed(1) }}
             </span>
             MWh
           </div>
-          <div>→</div>class="text-muted"
+          <div>→</div>
+          class="text-muted"
           <div class="text-xs text-accent-2">
             建议PCS:
-            <span>class="font-bold text-default"
+            <span>
+              class="font-bold text-default"
               {{ Math.ceil((params.initContainerQty * params.ratedEnergy) / (params.duration * 5)) }}
             </span>
             台 5MW
           </div>
-          <div>→</div>class="text-muted"
+          <div>→</div>
+          class="text-muted"
           <div class="text-xs text-warning">
             配比:
-            <span>class="font-bold text-default"
-              1:{{
+            <span>
+              class="font-bold text-default" 1:{{
                 (
                   (params.initContainerQty * params.ratedEnergy) /
                   (Math.ceil((params.initContainerQty * params.ratedEnergy) / (params.duration * 5)) * 5)
@@ -298,10 +311,7 @@
           </div>
         </div>
 
-        <button
-          class="mt-3 text-xs px-4 py-2 rounded transition-colors bg-accent text-white"
-          @click="autoMatchPCS"
-        >
+        <button class="mt-3 text-xs px-4 py-2 rounded transition-colors bg-accent text-white" @click="autoMatchPCS">
           根据配置规则自动匹配PCS
         </button>
       </div>

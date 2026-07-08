@@ -659,10 +659,7 @@
         </div>
         <div class="rounded p-3 text-center card-panel-bordered">
           <p class="text-[10px] text-muted">保障判定</p>
-          <p
-            class="text-lg font-bold"
-            :class="simulationResults.meetsGuarantee ? 'text-success' : 'text-danger'"
-          >
+          <p class="text-lg font-bold" :class="simulationResults.meetsGuarantee ? 'text-success' : 'text-danger'">
             {{ simulationResults.meetsGuarantee ? '达标' : '未达标' }}
           </p>
         </div>
@@ -702,10 +699,7 @@
               <td class="py-1 px-2 text-success">
                 {{ row.netAvail.toFixed(1) }}
               </td>
-              <td
-                class="py-1 px-2"
-                :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'"
-              >
+              <td class="py-1 px-2" :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'">
                 {{ row.meetsReq ? '达标' : '未达标' }}
               </td>
             </tr>

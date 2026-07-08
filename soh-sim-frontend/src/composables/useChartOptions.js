@@ -26,9 +26,10 @@ export function useChartOptions() {
           if (!row) return ''
           const cfClass = row.cashFlow >= 0 ? 'text-success' : 'text-danger'
           const cumClass = row.cumCashFlow >= 0 ? 'text-success' : 'text-danger'
-          const yearLabel = year === 0
-            ? `${t('financialDashboard.chartYear')} ${t('financialDashboard.construction')}`
-            : t('financialDashboard.chartYearLabel', { year })
+          const yearLabel =
+            year === 0
+              ? `${t('financialDashboard.chartYear')} ${t('financialDashboard.construction')}`
+              : t('financialDashboard.chartYearLabel', { year })
           let html = `<div class="font-bold mb-1">${yearLabel}</div>`
           html += `<div>${t('financialDashboard.chartAnnualCashFlow')}: <span class="font-bold ${cfClass}">${row.cashFlow >= 0 ? '+' : ''}${row.cashFlow.toFixed(0)} ${t('financialDashboard.wanUnit')}</span></div>`
           html += `<div>${t('financialDashboard.chartCumCashFlow')}: <span class="font-bold ${cumClass}">${row.cumCashFlow >= 0 ? '+' : ''}${row.cumCashFlow.toFixed(0)} ${t('financialDashboard.wanUnit')}</span></div>`
@@ -49,7 +50,11 @@ export function useChartOptions() {
           return html
         }
       },
-      legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: [t('financialDashboard.chartCumCashFlow'), t('financialDashboard.chartAnnualCashFlow')] },
+      legend: {
+        top: 0,
+        textStyle: { color: colors.legendText, fontSize: 10 },
+        data: [t('financialDashboard.chartCumCashFlow'), t('financialDashboard.chartAnnualCashFlow')]
+      },
       grid: { top: 30, right: 20, bottom: 25, left: 65 },
       xAxis: {
         type: 'category',
@@ -61,7 +66,11 @@ export function useChartOptions() {
       yAxis: [
         {
           type: 'value',
-          axisLabel: { color: colors.axisLabel, fontSize: 9, formatter: (v) => (v / 10000).toFixed(1) + t('financialDashboard.chartYiUnit') },
+          axisLabel: {
+            color: colors.axisLabel,
+            fontSize: 9,
+            formatter: (v) => (v / 10000).toFixed(1) + t('financialDashboard.chartYiUnit')
+          },
           splitLine: { lineStyle: { color: colors.gridLine } }
         }
       ],
@@ -94,7 +103,14 @@ export function useChartOptions() {
                   symbol: 'pin',
                   symbolSize: 24,
                   data: [
-                    { coord: [paybackYear, 0], value: t('financialDashboard.chartPaybackPrefix') + paybackYear + t('financialDashboard.chartPaybackSuffix'), itemStyle: { color: colors.warning } }
+                    {
+                      coord: [paybackYear, 0],
+                      value:
+                        t('financialDashboard.chartPaybackPrefix') +
+                        paybackYear +
+                        t('financialDashboard.chartPaybackSuffix'),
+                      itemStyle: { color: colors.warning }
+                    }
                   ]
                 }
               : undefined
@@ -141,7 +157,11 @@ export function useChartOptions() {
       legend: {
         top: 0,
         textStyle: { color: colors.legendText, fontSize: 10 },
-        data: [t('financialDashboard.chartArbitrage'), t('financialDashboard.chartCapacity'), t('financialDashboard.chartAncillary')]
+        data: [
+          t('financialDashboard.chartArbitrage'),
+          t('financialDashboard.chartCapacity'),
+          t('financialDashboard.chartAncillary')
+        ]
       },
       grid: { top: 30, right: 20, bottom: 25, left: 55 },
       xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
@@ -207,7 +227,15 @@ export function useChartOptions() {
           return html
         }
       },
-      legend: { top: 0, textStyle: { color: colors.legendText, fontSize: 10 }, data: [t('financialDashboard.chartEbitda'), t('financialDashboard.chartDebtService'), t('financialDashboard.chartDscrLine')] },
+      legend: {
+        top: 0,
+        textStyle: { color: colors.legendText, fontSize: 10 },
+        data: [
+          t('financialDashboard.chartEbitda'),
+          t('financialDashboard.chartDebtService'),
+          t('financialDashboard.chartDscrLine')
+        ]
+      },
       grid: { top: 30, right: 45, bottom: 25, left: 55 },
       xAxis: { type: 'category', data: years, axisLabel: { color: colors.axisLabel, fontSize: 9 } },
       yAxis: [

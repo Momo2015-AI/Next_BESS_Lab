@@ -116,16 +116,9 @@
 </template>
 
 <script setup>
-import {
-  strategyParams,
-  efficiencyParams,
-  auxParams,
-  externalParams
-} from '../composables/useAuxPower.js'
+import { strategyParams, efficiencyParams, auxParams, externalParams } from '../composables/useAuxPower.js'
 
-defineProps({
-  state: { type: Object, required: true }
-})
+const state = defineModel({ type: Object, required: true })
 </script>
 
 <style scoped src="../assets/styles/aux-power.css"></style>

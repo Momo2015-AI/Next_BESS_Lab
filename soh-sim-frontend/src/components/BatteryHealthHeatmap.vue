@@ -19,23 +19,28 @@
     <div class="mt-3 grid grid-cols-5 gap-2 text-[10px]">
       <div class="flex items-center">
         <div class="w-3 h-3 rounded mr-1 bg-success" />
-        <span>>90%</span>class="text-success"
+        <span>>90%</span>
+        class="text-success"
       </div>
       <div class="flex items-center">
         <div class="w-3 h-3 rounded mr-1 bg-success" />
-        <span>80-90%</span>class="text-success"
+        <span>80-90%</span>
+        class="text-success"
       </div>
       <div class="flex items-center">
         <div class="w-3 h-3 rounded mr-1 bg-warning" />
-        <span>70-80%</span>class="text-warning"
+        <span>70-80%</span>
+        class="text-warning"
       </div>
       <div class="flex items-center">
         <div class="w-3 h-3 rounded mr-1 u-background-color-var-color-chart-orange" />
-        <span>60-70%</span>class="text-warning"
+        <span>60-70%</span>
+        class="text-warning"
       </div>
       <div class="flex items-center">
         <div class="w-3 h-3 rounded mr-1 bg-danger" />
-        <span>&lt;60%</span>class="text-danger"
+        <span>&lt;60%</span>
+        class="text-danger"
       </div>
     </div>
   </div>

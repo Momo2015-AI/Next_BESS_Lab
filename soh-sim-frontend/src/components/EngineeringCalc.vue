@@ -67,10 +67,7 @@
           </div>
         </div>
 
-        <button
-          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
-          @click="calculateSiteArea"
-        >
+        <button class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white" @click="calculateSiteArea">
           计算场地面积
         </button>
 
@@ -102,13 +99,13 @@
           >
             <div>
               考虑间距和通道后的实际占地面积:
-              <span>{{ siteAreaResult.actualArea }}</span>class="text-default"
-              m²
+              <span>{{ siteAreaResult.actualArea }}</span>
+              class="text-default" m²
             </div>
             <div>
               约等于
-              <span>{{ siteAreaResult.landAcres }}</span>class="text-default"
-              亩
+              <span>{{ siteAreaResult.landAcres }}</span>
+              class="text-default" 亩
             </div>
           </div>
         </div>
@@ -135,10 +132,7 @@
           </div>
         </div>
 
-        <button
-          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
-          @click="generateBOM"
-        >
+        <button class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white" @click="generateBOM">
           生成BOM清单
         </button>
 
@@ -146,7 +140,8 @@
         <div v-if="bomResult.length > 0" class="mt-4 overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr>class="text-muted border-b"
+              <tr>
+                class="text-muted border-b"
                 <th class="text-left py-2 px-2">序号</th>
                 <th class="text-left py-2 px-2">设备名称</th>
                 <th class="text-left py-2 px-2">规格型号</th>
@@ -156,11 +151,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="(item, idx) in bomResult"
-                :key="idx"
- class="text-secondary border-b"
-              >
+              <tr v-for="(item, idx) in bomResult" :key="idx" class="text-secondary border-b">
                 <td class="py-2 px-2">
                   {{ idx + 1 }}
                 </td>
@@ -184,10 +175,7 @@
           </table>
 
           <div class="mt-3 flex gap-2">
-            <button
-              class="text-xs px-3 py-1.5 rounded transition-colors bg-accent text-white"
-              @click="exportBOM"
-            >
+            <button class="text-xs px-3 py-1.5 rounded transition-colors bg-accent text-white" @click="exportBOM">
               导出BOM
             </button>
           </div>
@@ -232,10 +220,7 @@
           </div>
         </div>
 
-        <button
-          class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white"
-          @click="calculateSpare"
-        >
+        <button class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white" @click="calculateSpare">
           计算备品备件
         </button>
 
@@ -252,8 +237,10 @@
                 :key="idx"
                 class="flex justify-between text-xs py-1 border-b"
               >
-                <span>{{ item.name }}</span>class="text-secondary"
-                <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
+                <span>{{ item.name }}</span>
+                class="text-secondary"
+                <span>{{ item.qty }} {{ item.unit }}</span>
+                class="text-default"
               </div>
             </div>
 
@@ -265,8 +252,10 @@
                 :key="idx"
                 class="flex justify-between text-xs py-1 border-b"
               >
-                <span>{{ item.name }}</span>class="text-secondary"
-                <span>{{ item.qty }} {{ item.unit }}</span>class="text-default"
+                <span>{{ item.name }}</span>
+                class="text-secondary"
+                <span>{{ item.qty }} {{ item.unit }}</span>
+                class="text-default"
               </div>
             </div>
           </div>
@@ -275,9 +264,7 @@
             class="mt-4 p-3 rounded-lg u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
           >
             <div class="text-xs text-accent-2">预计备件库存总价值</div>
-            <div class="text-xl font-bold mt-1 text-accent-2">
-              ¥ {{ spareTotalValue.toLocaleString() }}
-            </div>
+            <div class="text-xl font-bold mt-1 text-accent-2">¥ {{ spareTotalValue.toLocaleString() }}</div>
           </div>
         </div>
       </div>

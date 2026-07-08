@@ -653,7 +653,12 @@
                 class="flex items-center gap-1.5 cursor-pointer"
                 style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certSystem" type="checkbox" :value="certKeys.system[idx]" class="accent-amber-500" />
+                <input
+                  v-model="form.certSystem"
+                  type="checkbox"
+                  :value="certKeys.system[idx]"
+                  class="accent-amber-500"
+                />
                 {{ opt }}
               </label>
             </div>
@@ -683,7 +688,12 @@
                 class="flex items-center gap-1.5 cursor-pointer"
                 style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certExtra" type="checkbox" :value="certKeys.extra[idx]" class="accent-purple-500" />
+                <input
+                  v-model="form.certExtra"
+                  type="checkbox"
+                  :value="certKeys.extra[idx]"
+                  class="accent-purple-500"
+                />
                 {{ opt }}
               </label>
             </div>
@@ -697,7 +707,12 @@
                 class="flex items-center gap-1.5 cursor-pointer"
                 style="color: var(--color-text-secondary)"
               >
-                <input v-model="form.certGridCode" type="checkbox" :value="certKeys.gridCode[idx]" class="accent-emerald-500" />
+                <input
+                  v-model="form.certGridCode"
+                  type="checkbox"
+                  :value="certKeys.gridCode[idx]"
+                  class="accent-emerald-500"
+                />
                 {{ opt }}
               </label>
             </div>
@@ -1051,7 +1066,11 @@ async function parseFile(file) {
     if (data.extracted) {
       uploadResult.value = { extracted: data.extracted, fieldsExtracted: Object.keys(data.extracted).length }
     } else {
-      uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: data.error || t('runningConditions.extractFailed') }
+      uploadResult.value = {
+        extracted: {},
+        fieldsExtracted: 0,
+        error: data.error || t('runningConditions.extractFailed')
+      }
     }
   } catch {
     uploadResult.value = { extracted: {}, fieldsExtracted: 0, error: t('runningConditions.parseUnavailable') }

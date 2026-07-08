@@ -36,7 +36,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <AuxParamPanel :state="state" />
+      <AuxParamPanel v-model="state" />
 
       <div class="space-y-4">
         <div class="rounded-xl p-4 card-bordered">

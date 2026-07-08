@@ -13,7 +13,12 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">短路容量 (MVA)</label>
-          <input v-model.number="hvForm.short_circuit_capacity_mva" type="number" class="form-field-input" placeholder="500" />
+          <input
+            v-model.number="hvForm.short_circuit_capacity_mva"
+            type="number"
+            class="form-field-input"
+            placeholder="500"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">并网点类型</label>

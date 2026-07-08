@@ -379,7 +379,40 @@ export default {
     clickSelect: 'click to select',
     resetAll: 'Reset All',
     exportCSV: 'Export CSV',
-    applyEngine: 'Apply to Simulation Engine'
+    applyEngine: 'Apply to Simulation Engine',
+    pcsSectionTitle: 'PCS Converter Parameters',
+    certificates: {
+      'IEC 62619': 'IEC 62619 (Li-ion Safety)',
+      'IEC 62620': 'IEC 62620 (Performance Testing)',
+      'UL 1642': 'UL 1642 (Cell Safety)',
+      'UN 38.3': 'UN 38.3 (Transport Safety)',
+      'GB/T 36276': 'GB/T 36276 (Chinese National Standard)',
+      'UL 9540': 'UL 9540 (System Safety)',
+      'UL 9540A': 'UL 9540A (Fire Spread Test)',
+      'UL 1973': 'UL 1973 (Module Standard)',
+      'IEC 62933-5-2': 'IEC 62933-5-2 (Grid Safety)',
+      'NFPA 855': 'NFPA 855 (Fire Code)',
+      'IEC 62477-1': 'IEC 62477-1 (PCS Safety)',
+      'IEEE 1547': 'IEEE 1547 (Grid Interconnection)',
+      'IEC 61000-6-2/4': 'IEC 61000-6-2/4 (EMC Immunity/Emission)',
+      'UL 1741': 'UL 1741 (Inverter)',
+      'IEC 62933-4-2': 'IEC 62933-4-2 (Environmental Assessment)',
+      'IEC 60730': 'IEC 60730 (Automatic Control)',
+      'ISO 14001': 'ISO 14001 (Environmental Management)',
+      'ISO 45001': 'ISO 45001 (Occupational Health)',
+      'ISO 9001': 'ISO 9001 (Quality Management)',
+      'CE Marking': 'CE Marking (EU)',
+      UKCA: 'UKCA (UK)',
+      RCM: 'RCM (Australia)',
+      'UK G99': 'UK G99 (UK)',
+      'VDE-AR-N 4110': 'VDE-AR-N 4110 (Germany)',
+      'EN 50549-1': 'EN 50549-1 (EU)',
+      'IEEE 2800': 'IEEE 2800 (US BPS)',
+      'AEMO Grid Code': 'AEMO Grid Code (Australia)',
+      'SASO/IEC': 'SASO/IEC (Middle East/Saudi)'
+    },
+    extractFailed: 'Unable to extract parameters',
+    parseUnavailable: 'Parse service unavailable'
   },
   productConfig: {
     cellLibrary: 'Cell Library',
@@ -737,7 +770,6 @@ export default {
     voltageLevelLabel: 'Grid Voltage Level',
     section03Operation: 'Operating Parameters',
     cyclesPerDayLabel: 'Daily Cycles',
-    cyclesPerDayPh: 'e.g. 1',
     cyclesPerDayHint: '0.5 = once every 2 days',
     dodLabel: 'DOD Setting (%)',
     dodPh: 'e.g. 90',
@@ -793,7 +825,8 @@ export default {
       projectName: 'Abu Dhabi 200MW/400MWh Standalone Storage',
       contactPerson: 'Zhang Wei',
       location: 'Al Dhafra Industrial Zone, Abu Dhabi, UAE',
-      remarks: 'Project located in desert climate zone, containers require C4+ anti-corrosion rating. PCS must support Masdar-grade liquid-cooled SiC solution with Grid-Forming capability. Expected grid connection Q1 2027.'
+      remarks:
+        'Project located in desert climate zone, containers require C4+ anti-corrosion rating. PCS must support Masdar-grade liquid-cooled SiC solution with Grid-Forming capability. Expected grid connection Q1 2027.'
     }
   },
   phase1: {
@@ -933,41 +966,6 @@ export default {
     year25NetAvailable: 'Year 25 Net Available',
     cumulativeAug25: 'Cumulative Augmentation Y25'
   },
-  runningConditions: {
-    pcsSectionTitle: 'PCS Converter Parameters',
-    certificates: {
-      'IEC 62619': 'IEC 62619 (Li-ion Safety)',
-      'IEC 62620': 'IEC 62620 (Performance Testing)',
-      'UL 1642': 'UL 1642 (Cell Safety)',
-      'UN 38.3': 'UN 38.3 (Transport Safety)',
-      'GB/T 36276': 'GB/T 36276 (Chinese National Standard)',
-      'UL 9540': 'UL 9540 (System Safety)',
-      'UL 9540A': 'UL 9540A (Fire Spread Test)',
-      'UL 1973': 'UL 1973 (Module Standard)',
-      'IEC 62933-5-2': 'IEC 62933-5-2 (Grid Safety)',
-      'NFPA 855': 'NFPA 855 (Fire Code)',
-      'IEC 62477-1': 'IEC 62477-1 (PCS Safety)',
-      'IEEE 1547': 'IEEE 1547 (Grid Interconnection)',
-      'IEC 61000-6-2/4': 'IEC 61000-6-2/4 (EMC Immunity/Emission)',
-      'UL 1741': 'UL 1741 (Inverter)',
-      'IEC 62933-4-2': 'IEC 62933-4-2 (Environmental Assessment)',
-      'IEC 60730': 'IEC 60730 (Automatic Control)',
-      'ISO 14001': 'ISO 14001 (Environmental Management)',
-      'ISO 45001': 'ISO 45001 (Occupational Health)',
-      'ISO 9001': 'ISO 9001 (Quality Management)',
-      'CE Marking': 'CE Marking (EU)',
-      'UKCA': 'UKCA (UK)',
-      'RCM': 'RCM (Australia)',
-      'UK G99': 'UK G99 (UK)',
-      'VDE-AR-N 4110': 'VDE-AR-N 4110 (Germany)',
-      'EN 50549-1': 'EN 50549-1 (EU)',
-      'IEEE 2800': 'IEEE 2800 (US BPS)',
-      'AEMO Grid Code': 'AEMO Grid Code (Australia)',
-      'SASO/IEC': 'SASO/IEC (Middle East/Saudi)'
-    },
-    extractFailed: 'Unable to extract parameters',
-    parseUnavailable: 'Parse service unavailable'
-  },
   phase5: {
     title: 'Phase 5: Deliverables',
     desc: 'Technical reports, equipment lists, data export, project archival',
@@ -976,7 +974,8 @@ export default {
     step3: '5.3 Data Export',
     step4: '5.4 Project Archive',
     reportTitle: 'Technical Report (PDF)',
-    reportDesc: 'Integrate project overview, system configuration, performance analysis, and economic indicators into a complete technical report.',
+    reportDesc:
+      'Integrate project overview, system configuration, performance analysis, and economic indicators into a complete technical report.',
     reportBtn: 'Generate Technical Report',
     bomTitle: 'Equipment List (BOM)',
     bomDesc: 'Generate a list of models and quantities for cells, containers, PCS, and other equipment.',
@@ -1020,7 +1019,8 @@ export default {
     rulesDesc: 'Manage system configuration rules and constraints',
     rulesSectionTitle: 'Rule Engine',
     rulesSectionSubtitle: 'Under Development',
-    rulesPlaceholder: 'Grid Code compliance rules, battery configuration constraints, and financial calculation rules will be managed here.',
+    rulesPlaceholder:
+      'Grid Code compliance rules, battery configuration constraints, and financial calculation rules will be managed here.',
     templatesTitle: 'Correction Factor Templates',
     templatesDesc: 'Manage Arrhenius model correction factor templates',
     templatesRefresh: 'Refresh List',
@@ -1044,7 +1044,7 @@ export default {
     errorNameRequired: 'Please enter a project name',
     errorNoMatch: 'No matching projects found',
     saveSuccess: 'Survey data saved successfully',
-    saveFailed: 'Save failed',
+    saveFailed: 'Save failed'
   },
   sohChart: {
     sohCurve: 'SOH Degradation Curve',
@@ -1079,7 +1079,7 @@ export default {
     processing: 'Processing...',
     loginBtn: 'Login',
     registerBtn: 'Sign Up',
-    switchToRegister: 'Don\'t have an account? Sign up',
+    switchToRegister: 'No account yet? Sign up',
     switchToLogin: 'Already have an account? Login',
     quickExperience: 'Quick Experience (No registration)',
     roleAdmin: 'Admin',

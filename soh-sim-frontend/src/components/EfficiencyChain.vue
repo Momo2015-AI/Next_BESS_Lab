@@ -25,9 +25,7 @@
       </div>
     </div>
 
-    <div
-      class="rounded-lg p-3 flex items-center gap-3 bg-card-dark border-card"
-    >
+    <div class="rounded-lg p-3 flex items-center gap-3 bg-card-dark border-card">
       <span class="text-xs text-muted">SOH:</span>
       <input
         v-model.number="previewSoh"
@@ -39,9 +37,7 @@
       <span class="text-xs text-muted">%</span>
     </div>
 
-    <div
-      class="rounded-lg p-3 flex flex-col gap-2.5 bg-card-dark border-card"
-    >
+    <div class="rounded-lg p-3 flex flex-col gap-2.5 bg-card-dark border-card">
       <div class="formula-row">
         <span class="formula-label">AC Side</span>
         <span class="formula-label text-accent">Charge:</span>
@@ -115,18 +111,14 @@
       <div class="total-bar">
         <div class="total-item">
           <span class="total-label">η Charge</span>
-          <span class="total-value text-accent">
-            {{ (totalResult.charge * 100).toFixed(2) }}%
-          </span>
+          <span class="total-value text-accent">{{ (totalResult.charge * 100).toFixed(2) }}%</span>
           <span class="total-formula text-muted">
             = AC-c {{ (acResult.charge * 100).toFixed(1) }}% x DC-c {{ (dcResult.charge * 100).toFixed(1) }}%
           </span>
         </div>
         <div class="total-item">
           <span class="total-label">η Discharge</span>
-          <span class="total-value text-muted">
-            {{ (totalResult.discharge * 100).toFixed(2) }}%
-          </span>
+          <span class="total-value text-muted">{{ (totalResult.discharge * 100).toFixed(2) }}%</span>
           <span class="total-formula text-muted">
             = AC-d {{ (acResult.discharge * 100).toFixed(1) }}% x DC-d {{ (dcResult.discharge * 100).toFixed(1) }}%
           </span>
@@ -154,7 +146,8 @@
               AC Side (Grid → PCS)
             </th>
           </tr>
-          <tr>class="u-border-bottom-2px-solid-var-color-border"
+          <tr>
+            class="u-border-bottom-2px-solid-var-color-border"
             <th class="text-left py-2 px-2 u-color-var-color-text-muted-width-22px">#</th>
             <th class="text-left py-2 px-2 text-muted">Component</th>
             <th class="text-center py-2 px-2 text-muted w-72">η Charge</th>
@@ -179,7 +172,8 @@
                 <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" />class="u-accent-color-var-color-accent"
+                <input v-model="f.degrade" type="checkbox" />
+                class="u-accent-color-var-color-accent"
               </td>
               <td class="py-1.5 px-2 text-center">
                 <input
@@ -191,7 +185,8 @@
                   step="0.01"
                   class="cell-input u-width-48px"
                 />
-                <span v-else>-</span>class="text-muted"
+                <span v-else>-</span>
+                class="text-muted"
               </td>
             </tr>
           </template>
@@ -202,7 +197,8 @@
               DC Side (PCS → Cell)
             </th>
           </tr>
-          <tr>class="u-border-bottom-2px-solid-var-color-border"
+          <tr>
+            class="u-border-bottom-2px-solid-var-color-border"
             <th class="text-left py-2 px-2 u-color-var-color-text-muted-width-22px">#</th>
             <th class="text-left py-2 px-2 text-muted">Component</th>
             <th class="text-center py-2 px-2 text-muted w-72">η Charge</th>
@@ -227,7 +223,8 @@
                 <input v-model.number="f.eta_d" type="number" min="0.5" max="1" step="0.001" class="cell-input" />
               </td>
               <td class="py-1.5 px-2 text-center">
-                <input v-model="f.degrade" type="checkbox" />class="u-accent-color-var-color-success"
+                <input v-model="f.degrade" type="checkbox" />
+                class="u-accent-color-var-color-success"
               </td>
               <td class="py-1.5 px-2 text-center">
                 <input
@@ -239,7 +236,8 @@
                   step="0.01"
                   class="cell-input u-width-48px"
                 />
-                <span v-else>-</span>class="text-muted"
+                <span v-else>-</span>
+                class="text-muted"
               </td>
             </tr>
           </template>
@@ -247,9 +245,7 @@
       </table>
     </div>
 
-    <div class="text-xs text-muted">
-      SOH-linked factors degrade as: η(t) = η₀ x (1 - rate x (1 - SOH(t)/100))
-    </div>
+    <div class="text-xs text-muted">SOH-linked factors degrade as: η(t) = η₀ x (1 - rate x (1 - SOH(t)/100))</div>
   </div>
 </template>
 

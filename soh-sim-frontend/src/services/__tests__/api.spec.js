@@ -26,7 +26,7 @@ beforeEach(() => {
     () =>
       new Promise((resolve) => {
         fetchResolve = resolve
-      }),
+      })
   )
 
   // Spy console.error
@@ -45,8 +45,8 @@ function mockResponse(body, status = 200, contentType = 'application/json') {
       statusText: status === 404 ? 'Not Found' : 'OK',
       headers: new Map([['content-type', contentType]]),
       json: async () => body,
-      blob: async () => new Blob([JSON.stringify(body)]),
-    }),
+      blob: async () => new Blob([JSON.stringify(body)])
+    })
   )
 }
 
@@ -66,8 +66,8 @@ describe('request', () => {
       expect.stringContaining('/api/create'),
       expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ name: 'test' }),
-      }),
+        body: JSON.stringify({ name: 'test' })
+      })
     )
   })
 
@@ -76,7 +76,7 @@ describe('request', () => {
     await put('/api/update', { id: 1 })
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining('/api/update'),
-      expect.objectContaining({ method: 'PUT' }),
+      expect.objectContaining({ method: 'PUT' })
     )
   })
 
@@ -85,7 +85,7 @@ describe('request', () => {
     await del('/api/delete')
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining('/api/delete'),
-      expect.objectContaining({ method: 'DELETE' }),
+      expect.objectContaining({ method: 'DELETE' })
     )
   })
 })
@@ -101,9 +101,9 @@ describe('auth token', () => {
       expect.any(String),
       expect.objectContaining({
         headers: expect.objectContaining({
-          Authorization: 'Bearer test-jwt-token',
-        }),
-      }),
+          Authorization: 'Bearer test-jwt-token'
+        })
+      })
     )
   })
 
@@ -178,8 +178,8 @@ describe('download', () => {
         json: async () => {
           throw new Error('not json')
         },
-        blob: async () => new Blob(['fake-excel-data']),
-      }),
+        blob: async () => new Blob(['fake-excel-data'])
+      })
     )
     const blob = await download('/api/export/csv', { projectId: '1' })
     expect(blob).toBeInstanceOf(Blob)

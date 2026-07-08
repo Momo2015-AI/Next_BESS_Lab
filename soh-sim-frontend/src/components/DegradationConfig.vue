@@ -26,7 +26,11 @@
           v-for="m in models"
           :key="m.value"
           class="text-xs px-3 py-1 rounded transition-all"
-          :class="model === m.value ? 'bg-accent text-white' : 'u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border'"
+          :class="
+            model === m.value
+              ? 'bg-accent text-white'
+              : 'u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border'
+          "
           @click="model = m.value"
         >
           {{ m.label }}
@@ -62,7 +66,8 @@
               class="text-xs px-2 py-1 rounded cursor-pointer transition-all u-background-var-color-bg-color-var-color-text-border-1px-solid-var-color-border"
             >
               Import CSV
-              <input type="file" accept=".csv" @change="handleCsvImport" />class="u-display-none"
+              <input type="file" accept=".csv" @change="handleCsvImport" />
+              class="u-display-none"
             </label>
             <button
               class="text-xs px-2 py-1 rounded u-background-var-color-bg-color-var-color-text-muted-border-1px-solid-var-color-border"
@@ -75,7 +80,8 @@
         <div class="overflow-auto u-max-height-180px">
           <table class="w-full text-xs border-collapse">
             <thead>
-              <tr>class="border-b"
+              <tr>
+                class="border-b"
                 <th class="text-left py-1 px-2 text-muted">Curve</th>
                 <th class="text-center py-1 px-2 text-muted">P-Rate</th>
                 <th class="text-center py-1 px-2 text-muted">T [deg C]</th>
@@ -84,7 +90,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(c, i) in gbCurves" :key="i">class="border-b"
+              <tr v-for="(c, i) in gbCurves" :key="i">
+                class="border-b"
                 <td class="py-1 px-2 text-default">
                   {{ c.label }}
                 </td>
@@ -95,7 +102,9 @@
                 </td>
                 <td
                   class="text-center py-1 px-2 font-bold"
-                  :class="getSohAt8000(c) >= 80 ? 'text-success' : getSohAt8000(c) >= 60 ? 'text-warning' : 'text-danger'"
+                  :class="
+                    getSohAt8000(c) >= 80 ? 'text-success' : getSohAt8000(c) >= 60 ? 'text-warning' : 'text-danger'
+                  "
                 >
                   {{ getSohAt8000(c).toFixed(1) }}%
                 </td>
@@ -113,7 +122,8 @@
           <span class="text-xs text-default">Temperature (Arrhenius)</span>
           <label class="text-xs flex items-center gap-2">
             <input v-model="env.accelerate_temperature" type="checkbox" @change="markDirty" />
-            <span>Enable</span>class="text-muted"
+            <span>Enable</span>
+            class="text-muted"
           </label>
         </div>
         <div v-if="env.accelerate_temperature" class="flex items-center gap-2 ml-4">
@@ -142,7 +152,8 @@
           <span class="text-xs text-default">Dust Factor</span>
           <label class="text-xs flex items-center gap-2">
             <input v-model="env.accelerate_dust" type="checkbox" @change="markDirty" />
-            <span>Enable</span>class="text-muted"
+            <span>Enable</span>
+            class="text-muted"
           </label>
         </div>
         <div v-if="env.accelerate_dust" class="flex items-center gap-2 ml-4">
@@ -162,7 +173,8 @@
           <span class="text-xs text-default">Humidity (Peck)</span>
           <label class="text-xs flex items-center gap-2">
             <input v-model="env.accelerate_humidity" type="checkbox" @change="markDirty" />
-            <span>Enable</span>class="text-muted"
+            <span>Enable</span>
+            class="text-muted"
           </label>
         </div>
         <div v-if="env.accelerate_humidity" class="flex items-center gap-2 ml-4">
@@ -236,7 +248,8 @@
       <div class="overflow-auto u-max-height-160px">
         <table v-if="previewData" class="w-full text-xs border-collapse">
           <thead>
-            <tr>class="border-b"
+            <tr>
+              class="border-b"
               <th class="text-left py-1 px-2 text-muted">Year</th>
               <th class="text-center py-1 px-2 text-muted">SOH</th>
               <th class="text-center py-1 px-2 text-muted">RTE</th>
@@ -244,7 +257,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(s, y) in yearLabels" :key="y">class="border-b"
+            <tr v-for="(s, y) in yearLabels" :key="y">
+              class="border-b"
               <td class="py-1 px-2 text-default">Year {{ y }}</td>
               <td
                 class="text-center py-1 px-2 font-bold"
@@ -252,9 +266,7 @@
               >
                 {{ s.toFixed(2) }}%
               </td>
-              <td class="text-center py-1 px-2 text-muted">
-                {{ (previewRte[y] || 0).toFixed(2) }}%
-              </td>
+              <td class="text-center py-1 px-2 text-muted">{{ (previewRte[y] || 0).toFixed(2) }}%</td>
               <td class="text-center py-1 px-2">
                 <span
                   v-if="s >= 85"
@@ -268,10 +280,7 @@
                 >
                   Warning
                 </span>
-                <span
-                  v-else
-                  class="text-xs px-1 rounded u-background-rgba-239-68-68-0-15-color-var-color-danger"
-                >
+                <span v-else class="text-xs px-1 rounded u-background-rgba-239-68-68-0-15-color-var-color-danger">
                   Critical
                 </span>
               </td>

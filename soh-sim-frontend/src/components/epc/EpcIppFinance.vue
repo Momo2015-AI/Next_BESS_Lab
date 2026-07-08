@@ -9,7 +9,12 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">总CAPEX (USD)</label>
-          <input v-model.number="ippForm.total_capex_usd" type="number" class="form-field-input" placeholder="500000000" />
+          <input
+            v-model.number="ippForm.total_capex_usd"
+            type="number"
+            class="form-field-input"
+            placeholder="500000000"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">容量 (MW)</label>
@@ -23,25 +28,55 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
           <label class="block text-xs mb-1 field-label">容量价格 ($/kW/月)</label>
-          <input v-model.number="ippForm.capacity_price_usd_kw_month" type="number" step="0.1" class="form-field-input" placeholder="8.0" />
+          <input
+            v-model.number="ippForm.capacity_price_usd_kw_month"
+            type="number"
+            step="0.1"
+            class="form-field-input"
+            placeholder="8.0"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">电量价格 ($/kWh)</label>
-          <input v-model.number="ippForm.energy_price_usd_kwh" type="number" step="0.01" class="form-field-input" placeholder="0.05" />
+          <input
+            v-model.number="ippForm.energy_price_usd_kwh"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="0.05"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">PPA递增率</label>
-          <input v-model.number="ippForm.ppa_escalation_rate" type="number" step="0.01" class="form-field-input" placeholder="0.02" />
+          <input
+            v-model.number="ippForm.ppa_escalation_rate"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="0.02"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">贷款比例</label>
-          <input v-model.number="ippForm.debt_ratio" type="number" step="0.05" class="form-field-input" placeholder="0.7" />
+          <input
+            v-model.number="ippForm.debt_ratio"
+            type="number"
+            step="0.05"
+            class="form-field-input"
+            placeholder="0.7"
+          />
         </div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
           <label class="block text-xs mb-1 field-label">贷款利率</label>
-          <input v-model.number="ippForm.debt_interest_rate" type="number" step="0.01" class="form-field-input" placeholder="0.05" />
+          <input
+            v-model.number="ippForm.debt_interest_rate"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="0.05"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">贷款期限 (年)</label>
@@ -49,11 +84,22 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">年OPEX (USD)</label>
-          <input v-model.number="ippForm.annual_opex_usd" type="number" class="form-field-input" placeholder="5000000" />
+          <input
+            v-model.number="ippForm.annual_opex_usd"
+            type="number"
+            class="form-field-input"
+            placeholder="5000000"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">可用率保证</label>
-          <input v-model.number="ippForm.availability_guarantee" type="number" step="0.01" class="form-field-input" placeholder="0.98" />
+          <input
+            v-model.number="ippForm.availability_guarantee"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="0.98"
+          />
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="calculateIPP">

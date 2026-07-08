@@ -19,7 +19,7 @@ import EpcPage from '../EpcPage.vue'
 const AppIconStub = {
   name: 'AppIcon',
   props: ['name', 'size'],
-  template: '<span class="mock-icon">{{ name }}</span>',
+  template: '<span class="mock-icon">{{ name }}</span>'
 }
 
 // Mock fetch
@@ -32,7 +32,7 @@ beforeEach(() => {
     ok: true,
     status: 200,
     headers: { get: () => 'application/json' },
-    json: async () => ({ success: true, data: null }),
+    json: async () => ({ success: true, data: null })
   })
 })
 
@@ -46,9 +46,9 @@ function mountEpcPage() {
   return mount(EpcPage, {
     global: {
       stubs: {
-        AppIcon: AppIconStub,
-      },
-    },
+        AppIcon: AppIconStub
+      }
+    }
   })
 }
 
@@ -147,8 +147,8 @@ describe('apiCall success', () => {
       headers: { get: () => 'application/json' },
       json: async () => ({
         success: true,
-        data: { topology_data: { levels: [] } },
-      }),
+        data: { topology_data: { levels: [] } }
+      })
     })
 
     // Click the first action button (designArchitecture)
@@ -161,8 +161,8 @@ describe('apiCall success', () => {
       '/api/system-architecture/design',
       expect.objectContaining({
         method: 'POST',
-        headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
-      }),
+        headers: expect.objectContaining({ 'Content-Type': 'application/json' })
+      })
     )
   })
 
@@ -173,7 +173,7 @@ describe('apiCall success', () => {
       ok: true,
       status: 200,
       headers: { get: () => 'application/json' },
-      json: async () => ({ success: true, data: {} }),
+      json: async () => ({ success: true, data: {} })
     })
 
     const btn = wrapper.find('button.btn-primary')
@@ -198,8 +198,8 @@ describe('apiCall failure', () => {
       headers: { get: () => 'application/json' },
       json: async () => ({
         success: false,
-        error: '后端计算失败',
-      }),
+        error: '后端计算失败'
+      })
     })
 
     const btn = wrapper.find('button.btn-primary')
@@ -243,13 +243,10 @@ describe('loadStandards on mount', () => {
       ok: true,
       status: 200,
       headers: { get: () => 'application/json' },
-      json: async () => [],
+      json: async () => []
     })
     mountEpcPage()
     // api.js get calls fetch with the URL as first arg
-    expect(mockFetch).toHaveBeenCalledWith(
-      '/api/grid-compliance/standards',
-      expect.objectContaining({ method: 'GET' }),
-    )
+    expect(mockFetch).toHaveBeenCalledWith('/api/grid-compliance/standards', expect.objectContaining({ method: 'GET' }))
   })
 })

@@ -62,7 +62,8 @@
 
       <!-- 转换结果 -->
       <div class="flex justify-between items-center p-2 rounded bg-input-dark">
-        <span>{{ amount }} {{ baseCurrency }}</span>class="text-secondary"
+        <span>{{ amount }} {{ baseCurrency }}</span>
+        class="text-secondary"
         <span class="text-xs u-color-var-color-muted">→</span>
         <span class="font-bold text-accent">{{ result }} {{ targetCurrency }}</span>
       </div>
@@ -71,10 +72,7 @@
       <div class="border-t pt-2 mt-2">
         <div class="flex justify-between items-center mb-1">
           <span class="text-xs text-muted">项目货币 Project Currency</span>
-          <button
-            class="text-[9px] px-2 py-1 rounded transition-colors bg-accent text-white"
-            @click="refreshRates"
-          >
+          <button class="text-[9px] px-2 py-1 rounded transition-colors bg-accent text-white" @click="refreshRates">
             刷新 Refresh
           </button>
         </div>
@@ -110,9 +108,7 @@
         </div>
         <div class="flex justify-between">
           <span>状态</span>
-          <span
-            :class="rateStatus === 'online' ? 'text-success' : 'text-warning'"
-          >
+          <span :class="rateStatus === 'online' ? 'text-success' : 'text-warning'">
             {{ rateStatus === 'online' ? '在线 Online' : '缓存 Cached' }}
           </span>
         </div>

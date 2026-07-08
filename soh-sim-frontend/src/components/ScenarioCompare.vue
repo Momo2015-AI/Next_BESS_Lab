@@ -16,8 +16,8 @@
               class="text-xs px-2 py-1 rounded transition-colors"
               style="background-color: var(--color-accent); color: white"
               @click="createScenario"
-              >
-                + {{ $t('scenario.createNew') }}
+            >
+              + {{ $t('scenario.createNew') }}
             </button>
           </div>
 
@@ -91,7 +91,7 @@
                   class="text-xs px-3 py-1 rounded transition-colors"
                   style="background-color: var(--color-accent); color: white"
                   @click="saveScenario"
-                  >
+                >
                   {{ $t('common.save') }}
                 </button>
                 <button
@@ -110,7 +110,9 @@
 
             <div class="grid grid-cols-3 gap-2 text-xs">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.ratedEnergy') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.ratedEnergy') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
@@ -123,7 +125,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.containerQty') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.containerQty') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
@@ -136,7 +140,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.pcsQty') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.pcsQty') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
@@ -149,7 +155,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.duration') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.duration') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.duration"
                   type="number"
@@ -162,7 +170,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.cyclesPerDay') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.cyclesPerDay') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
@@ -175,7 +185,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.acEfficiency') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.acEfficiency') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
@@ -188,7 +200,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.bessAuxRun') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.bessAuxRun') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
@@ -201,7 +215,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.bessAuxStandby') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.bessAuxStandby') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
@@ -214,7 +230,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('scenario.requiredEnergy') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('scenario.requiredEnergy') }}
+                </label>
                 <input
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"

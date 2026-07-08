@@ -665,7 +665,7 @@ export default {
     errorNameRequired: 'يرجى إدخال اسم المشروع',
     errorNoMatch: 'لم يتم العثور على مشاريع مطابقة',
     saveSuccess: 'تم حفظ بيانات الاستبيان بنجاح',
-    saveFailed: 'فشل الحفظ',
+    saveFailed: 'فشل الحفظ'
   },
   sohChart: {
     sohCurve: 'منحنى تدهور SOH',

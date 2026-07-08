@@ -28,24 +28,15 @@
     </template>
 
     <template v-if="activeChart === 'soh'">
-      <div
-        ref="sohChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
-      />
+      <div ref="sohChartRef" class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered" />
     </template>
 
     <template v-if="activeChart === 'rte'">
-      <div
-        ref="rteChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
-      />
+      <div ref="rteChartRef" class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered" />
     </template>
 
     <template v-if="activeChart === 'acusable'">
-      <div
-        ref="acChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
-      />
+      <div ref="acChartRef" class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered" />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
@@ -67,10 +58,7 @@
     </template>
 
     <template v-if="activeChart === 'stacked'">
-      <div
-        ref="stackedChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
-      />
+      <div ref="stackedChartRef" class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered" />
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
@@ -92,20 +80,13 @@
     </template>
 
     <template v-if="activeChart === 'degradation'">
-      <div
-        ref="degradationChartRef"
-        class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered"
-      />
+      <div ref="degradationChartRef" class="flex-1 min-h-0 w-full rounded-xl min-h-300 card-bordered" />
     </template>
 
     <template v-if="activeChart === 'dashboard'">
       <div class="flex-1 min-h-0 overflow-auto">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-          <div
-            v-for="m in metrics"
-            :key="m.label"
-            class="rounded-xl p-3 text-center card-bordered"
-          >
+          <div v-for="m in metrics" :key="m.label" class="rounded-xl p-3 text-center card-bordered">
             <div class="text-[10px] mb-1 text-muted">
               {{ m.label }}
             </div>

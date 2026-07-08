@@ -91,7 +91,7 @@ describe('renderPlotly', () => {
     const chart = {
       data: [{ x: [1, 2], y: [3, 4] }],
       layout: { title: 'Test' },
-      config: { responsive: true },
+      config: { responsive: true }
     }
     await renderPlotly(el, chart, 'chart-42')
     expect(el.id).toBe('chart-42')

@@ -31,7 +31,13 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
           <label class="block text-xs mb-1 field-label">电芯电压 (V)</label>
-          <input v-model.number="archForm.cell_voltage" type="number" step="0.1" class="form-field-input" placeholder="3.2" />
+          <input
+            v-model.number="archForm.cell_voltage"
+            type="number"
+            step="0.1"
+            class="form-field-input"
+            placeholder="3.2"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">电芯容量 (Ah)</label>
@@ -39,11 +45,22 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">PCS功率 (MW)</label>
-          <input v-model.number="archForm.pcs_power_mw" type="number" step="0.01" class="form-field-input" placeholder="3.45" />
+          <input
+            v-model.number="archForm.pcs_power_mw"
+            type="number"
+            step="0.01"
+            class="form-field-input"
+            placeholder="3.45"
+          />
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">PCS最大DC电压 (V)</label>
-          <input v-model.number="archForm.pcs_max_dc_voltage" type="number" class="form-field-input" placeholder="1500" />
+          <input
+            v-model.number="archForm.pcs_max_dc_voltage"
+            type="number"
+            class="form-field-input"
+            placeholder="1500"
+          />
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="designArchitecture">

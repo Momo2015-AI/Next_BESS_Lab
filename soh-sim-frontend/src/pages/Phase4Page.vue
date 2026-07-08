@@ -4,9 +4,7 @@
       <!-- 4.2 成本汇总 -->
       <div v-if="activeStep === 1" class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="phase4-badge">
-            02
-          </span>
+          <span class="phase4-badge">02</span>
           <div>
             <h3 class="section-title phase4-section-title">
               {{ $t('phase4.costSummary') }}
@@ -29,9 +27,7 @@
                 <label class="label-text">{{ $t('phase4.development') }}</label>
                 <input v-model.number="store.financial.capex.development" type="number" class="form-field-input" />
               </div>
-              <div class="phase4-total-row">
-                {{ $t('phase4.totalCapex') }}: ${{ totalCapex.toLocaleString() }}
-              </div>
+              <div class="phase4-total-row">{{ $t('phase4.totalCapex') }}: ${{ totalCapex.toLocaleString() }}</div>
             </div>
           </div>
           <div>
@@ -81,9 +77,7 @@
       <!-- 4.3 收入模型与融资 -->
       <div v-if="activeStep === 2" class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="phase4-badge">
-            03
-          </span>
+          <span class="phase4-badge">03</span>
           <div>
             <h3 class="section-title phase4-section-title">
               {{ $t('phase4.revenueFinancing') }}

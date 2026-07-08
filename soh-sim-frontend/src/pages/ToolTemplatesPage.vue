@@ -45,7 +45,9 @@
           <div class="corrections-title">{{ $t('tools.templatesAnnualCorrection') }}</div>
           <div class="corrections-grid">
             <div v-for="(val, year) in t.annual_corrections" :key="year" class="correction-item">
-              <span class="year-label">{{ $t('tools.templatesYearPrefix') }}{{ year }}{{ $t('tools.templatesYearSuffix') }}</span>
+              <span class="year-label">
+                {{ $t('tools.templatesYearPrefix') }}{{ year }}{{ $t('tools.templatesYearSuffix') }}
+              </span>
               <span class="year-value">{{ val }}</span>
             </div>
           </div>

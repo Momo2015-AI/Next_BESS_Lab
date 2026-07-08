@@ -82,10 +82,30 @@ export function useFinancialModel(props) {
     { label: t('financialDashboard.projectIRR'), value: '-', unit: '%', textColor: 'var(--color-accent-secondary)' },
     { label: t('financialDashboard.equityIRR'), value: '-', unit: '%', textColor: 'var(--color-success)' },
     { label: 'WACC', value: '-', unit: '%', textColor: '#0ea5e9' },
-    { label: t('financialDashboard.npv'), value: '-', unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`, textColor: 'var(--color-accent)' },
-    { label: t('financialDashboard.lcos'), value: '-', unit: `${t('financialDashboard.energyPriceUnit')} (${displayCurrency})`, textColor: 'var(--color-info)' },
-    { label: t('financialDashboard.payback'), value: '-', unit: t('financialDashboard.yearUnit'), textColor: 'var(--color-warning)' },
-    { label: t('financialDashboard.totalCAPEX'), value: '-', unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`, textColor: 'var(--color-danger)' },
+    {
+      label: t('financialDashboard.npv'),
+      value: '-',
+      unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`,
+      textColor: 'var(--color-accent)'
+    },
+    {
+      label: t('financialDashboard.lcos'),
+      value: '-',
+      unit: `${t('financialDashboard.energyPriceUnit')} (${displayCurrency})`,
+      textColor: 'var(--color-info)'
+    },
+    {
+      label: t('financialDashboard.payback'),
+      value: '-',
+      unit: t('financialDashboard.yearUnit'),
+      textColor: 'var(--color-warning)'
+    },
+    {
+      label: t('financialDashboard.totalCAPEX'),
+      value: '-',
+      unit: `${t('financialDashboard.wanUnit')} (${displayCurrency})`,
+      textColor: 'var(--color-danger)'
+    },
     { label: t('financialDashboard.minDscr'), value: '-', unit: 'x', textColor: 'var(--color-chart-orange)' }
   ])
 
@@ -306,7 +326,10 @@ export function useFinancialModel(props) {
     }
 
     const lcos = totalDiscountedEnergy > 0 ? (totalDiscountedCost / totalDiscountedEnergy) * 10000 : 0
-    const npv = rows.reduce((s, r) => s + r.cashFlow / (r.year === 0 ? 1 : Math.pow(1 + f.discountRate / 100, r.year)), 0)
+    const npv = rows.reduce(
+      (s, r) => s + r.cashFlow / (r.year === 0 ? 1 : Math.pow(1 + f.discountRate / 100, r.year)),
+      0
+    )
     const irr = calcIRR(
       rows.map((r) => r.cashFlow),
       rows.map((r) => r.year)

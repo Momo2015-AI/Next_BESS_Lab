@@ -12,11 +12,15 @@
           class="rounded-lg p-4"
           style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
         >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">{{ $t('pcsAC.pcsPowerSelection') }}</h4>
+          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+            {{ $t('pcsAC.pcsPowerSelection') }}
+          </h4>
 
           <div class="space-y-3">
             <div>
-              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.pcsModel') }}</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                {{ $t('pcsAC.pcsModel') }}
+              </label>
               <select
                 v-model="selectedPcsId"
                 class="w-full rounded px-2 py-1.5 text-xs form-field-select"
@@ -31,7 +35,9 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.dcVoltageRange') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.dcVoltageRange') }}
+                </label>
                 <input
                   v-model="pcsConfig.dcVoltageRange"
                   type="text"
@@ -40,7 +46,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.maxDcCurrent') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.maxDcCurrent') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.maxDcCurrent"
                   type="number"
@@ -51,7 +59,9 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.acRatedPower') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.acRatedPower') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.acRatedPower"
                   type="number"
@@ -60,7 +70,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.acRatedCurrent') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.acRatedCurrent') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.acRatedCurrent"
                   type="number"
@@ -76,11 +88,15 @@
           class="rounded-lg p-4"
           style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
         >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">{{ $t('pcsAC.pcsQtyConfig') }}</h4>
+          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+            {{ $t('pcsAC.pcsQtyConfig') }}
+          </h4>
 
           <div class="space-y-3">
             <div>
-              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.calcMode') }}</label>
+              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                {{ $t('pcsAC.calcMode') }}
+              </label>
               <select v-model="pcsConfig.calcMode" class="w-full rounded px-2 py-1.5 text-xs form-field-select">
                 <option value="ratio">{{ $t('pcsAC.calcModeRatio') }}</option>
                 <option value="fixed">{{ $t('pcsAC.calcModeFixed') }}</option>
@@ -90,7 +106,9 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.pcsQty') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.pcsQty') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.pcsQty"
                   type="number"
@@ -98,7 +116,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.parallelCount') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.parallelCount') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.parallelCount"
                   type="number"
@@ -109,7 +129,9 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.totalPcsPower') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.totalPcsPower') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.totalPcsPower"
                   type="number"
@@ -118,7 +140,9 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.powerRatio') }}</label>
+                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                  {{ $t('pcsAC.powerRatio') }}
+                </label>
                 <input
                   v-model.number="pcsConfig.powerRatio"
                   type="number"
@@ -136,11 +160,15 @@
         class="rounded-lg p-4 mb-4"
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">{{ $t('pcsAC.transformerAndGrid') }}</h4>
+        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+          {{ $t('pcsAC.transformerAndGrid') }}
+        </h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.transformerType') }}</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+              {{ $t('pcsAC.transformerType') }}
+            </label>
             <select v-model="pcsConfig.transformerType" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="2w">{{ $t('pcsAC.transformer2w') }}</option>
               <option value="3w">{{ $t('pcsAC.transformer3w') }}</option>
@@ -148,7 +176,9 @@
             </select>
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.transformerCapacity') }}</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+              {{ $t('pcsAC.transformerCapacity') }}
+            </label>
             <input
               v-model.number="pcsConfig.transformerCapacity"
               type="number"
@@ -156,7 +186,9 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('pcsAC.transformerQty') }}</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+              {{ $t('pcsAC.transformerQty') }}
+            </label>
             <input
               v-model.number="pcsConfig.transformerQty"
               type="number"

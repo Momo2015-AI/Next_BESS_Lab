@@ -4,9 +4,7 @@
       <!-- 01: 基本信息 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             01
           </span>
           <div>
@@ -54,9 +52,7 @@
       <!-- 02: 项目规模 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             02
           </span>
           <div>
@@ -118,9 +114,7 @@
       <!-- 03: 环境条件 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             03
           </span>
           <div>
@@ -202,9 +196,7 @@
       <!-- 04: 电网参数 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             04
           </span>
           <div>
@@ -271,9 +263,7 @@
       <!-- 05: 性能要求 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             05
           </span>
           <div>
@@ -363,9 +353,7 @@
       <!-- 06: 其他参数 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             06
           </span>
           <div>
@@ -431,9 +419,7 @@
       <!-- 07: 备注信息 -->
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent"
-          >
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
             07
           </span>
           <div>
@@ -467,10 +453,7 @@
       </div>
 
       <!-- 提交成功弹窗 -->
-      <div
-        v-if="showSuccess"
-        class="fixed inset-0 z-50 flex items-center justify-center u-background-rgba-0-0-0-0-5"
-      >
+      <div v-if="showSuccess" class="fixed inset-0 z-50 flex items-center justify-center u-background-rgba-0-0-0-0-5">
         <div class="card p-8 text-center max-w-sm w-11/12">
           <div
             class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl font-bold u-background-var-color-success-color-fff"
