@@ -25,7 +25,13 @@
 
           <div v-if="!isLogin">
             <label class="block text-xs mb-1 text-muted">{{ $t('auth.email') }}</label>
-            <input v-model="form.email" type="email" required class="form-field-input" :placeholder="$t('auth.emailPlaceholder')" />
+            <input
+              v-model="form.email"
+              type="email"
+              required
+              class="form-field-input"
+              :placeholder="$t('auth.emailPlaceholder')"
+            />
           </div>
 
           <div>

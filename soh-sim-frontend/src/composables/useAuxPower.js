@@ -1,7 +1,7 @@
 import { reactive, computed } from 'vue'
 import { useDraft } from './useDraft'
 
-const strategyParams = [
+export const strategyParams = [
   { key: 'days', label: '本次计算总天数 (Days)', min: 1, max: 365, step: 1, hasSlider: true },
   { key: 'cycles', label: '每天充放电循环次数', min: 0.5, max: 3, step: 0.5, hasSlider: true },
   { key: 'hours', label: '单次放电时长 (h)', min: 1, max: 6, step: 0.5, hasSlider: true },
@@ -9,7 +9,7 @@ const strategyParams = [
   { key: 'units', label: '当前运行总台数 (台)', min: 1, max: 1000, hasSlider: false }
 ]
 
-const efficiencyParams = [
+export const efficiencyParams = [
   { key: 'dcRte', label: 'DC-RTE (直流往返效率)', min: 0.85, max: 0.98, step: 0.005, hasSlider: true },
   { key: 'pcsEff', label: 'PCS 充/放电效率', min: 0.95, max: 0.995, step: 0.002, hasSlider: true },
   { key: 'acEff', label: '交流侧综合效率 (变损/线损)', min: 0.95, max: 0.995, step: 0.002, hasSlider: true }
@@ -22,7 +22,7 @@ const auxParams = [
   { key: 'pStd', label: 'PCS变流器【待机】损耗 (kW)', min: 0.5, max: 10, step: 0.5, hasSlider: true }
 ]
 
-const externalParams = [
+export const externalParams = [
   { key: 'pStation', label: '站宇及主变固定自耗 (kW)', min: 1, max: 30, step: 0.5, hasSlider: true }
 ]
 

@@ -1,0 +1,10 @@
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-input-focus);
+  outline: none;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
