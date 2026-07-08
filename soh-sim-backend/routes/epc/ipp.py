@@ -1,4 +1,5 @@
 """EPC - IPP财务 路由"""
+
 import json
 import uuid
 
@@ -34,9 +35,7 @@ def calculate_ipp():
     avail_guarantee = float(data.get("availability_guarantee", 0.98))
     avail_penalty = float(data.get("availability_penalty_usd_kw", 5.0))
     rte_guarantee = float(data.get("rte_guarantee", 90.0))
-    perf_penalty_rate = float(
-        data.get("performance_penalty_rate", 0.1)
-    )
+    perf_penalty_rate = float(data.get("performance_penalty_rate", 0.1))
     capex = float(data.get("total_capex_usd", 500_000_000))
     debt_ratio = float(data.get("debt_ratio", 0.7))
     debt_rate = float(data.get("debt_interest_rate", 0.05))
@@ -52,9 +51,7 @@ def calculate_ipp():
         project_life_years=years,
         capacity_mw=capacity_mw,
         energy_mwh=energy_mwh,
-        duration_hours=(
-            energy_mwh / capacity_mw if capacity_mw > 0 else 0
-        ),
+        duration_hours=(energy_mwh / capacity_mw if capacity_mw > 0 else 0),
         ppa_type=data.get("ppa_type", "hybrid"),
         capacity_price_usd_kw_month=cap_price,
         energy_price_usd_kwh=energy_price,
@@ -67,9 +64,7 @@ def calculate_ipp():
         debt_ratio=debt_ratio,
         debt_interest_rate=debt_rate,
         debt_tenor_years=debt_tenor,
-        equity_irr_target=float(
-            data.get("equity_irr_target", 0.12)
-        ),
+        equity_irr_target=float(data.get("equity_irr_target", 0.12)),
         annual_opex_usd=annual_opex,
         insurance_rate=insurance_rate,
         land_lease_usd_year=land_lease,
@@ -95,9 +90,6 @@ def get_ipp(ipp_id):
     obj = get_or_404(IPPFinancialModel, ipp_id)
     if not obj:
         return error_response("未找到", 404)
-    if (
-        getattr(user, "role", None) != "admin"
-        and getattr(obj, "tenant_id", None) != user.tenant_id
-    ):
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
         return error_response("无权访问该项目", 403)
     return success_response(data=obj.to_dict())

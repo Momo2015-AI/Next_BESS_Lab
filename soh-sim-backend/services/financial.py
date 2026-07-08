@@ -39,9 +39,7 @@ def _aggregate_boq_to_capex(boq_items):
                 {
                     "section_code": section_code,
                     "name": item.get("name", ""),
-                    "total_price": float(
-                        item.get("total_price", 0) or 0
-                    ),
+                    "total_price": float(item.get("total_price", 0) or 0),
                 }
             )
     return result
@@ -70,9 +68,7 @@ def _compute_irr(cash_flows, guess=0.1):
     return rate
 
 
-def _calculate_revenue_arbitrage(
-    params, year, total_ac_usable_for_year
-):
+def _calculate_revenue_arbitrage(params, year, total_ac_usable_for_year):
     """峰谷套利收入"""
     arb = params.get("arbitrage", {})
     if not arb.get("enabled", True):
@@ -82,9 +78,7 @@ def _calculate_revenue_arbitrage(
     spread_capture = float(arb.get("spreadCapture", 85)) / 100
     operating_days = int(arb.get("operatingDays", 330))
     escalation = float(params.get("_escalation", 2.0)) / 100
-    efficiency_loss = (
-        float(params.get("_efficiencyLossPct", 3)) / 100
-    )
+    efficiency_loss = float(params.get("_efficiencyLossPct", 3)) / 100
 
     spread = (peak - off_peak) * spread_capture
     year_energy = total_ac_usable_for_year * operating_days
@@ -125,12 +119,8 @@ def _calculate_revenue_ppa(params, year, total_ac_usable_for_year):
         return 0
     ppa_price = float(ppa.get("ppaPrice", 55))
     ppa_escalation = float(ppa.get("escalation", 2.0)) / 100
-    operating_days = int(
-        params.get("arbitrage", {}).get("operatingDays", 330)
-    )
-    efficiency_loss = (
-        float(params.get("_efficiencyLossPct", 3)) / 100
-    )
+    operating_days = int(params.get("arbitrage", {}).get("operatingDays", 330))
+    efficiency_loss = float(params.get("_efficiencyLossPct", 3)) / 100
 
     year_energy = total_ac_usable_for_year * operating_days
     year_energy_eff = year_energy * (1 - efficiency_loss)
@@ -139,9 +129,7 @@ def _calculate_revenue_ppa(params, year, total_ac_usable_for_year):
     return max(0, revenue)
 
 
-def _calculate_revenue_capacity_auction(
-    params, year, system_mwh
-):
+def _calculate_revenue_capacity_auction(params, year, system_mwh):
     """容量拍卖收入（仅合同期内）"""
     auction = params.get("capacityAuction", {})
     if not auction.get("enabled", True):
@@ -159,13 +147,9 @@ def _calculate_revenue_capacity_auction(
 def _calculate_debt_schedule(total_capex, financing):
     """生成 26 年等额本息/等额本金还款计划"""
     debt_ratio = float(financing.get("debtRatio", 70)) / 100
-    interest_rate = (
-        float(financing.get("interestRate", 6.5)) / 100
-    )
+    interest_rate = float(financing.get("interestRate", 6.5)) / 100
     loan_term = int(financing.get("loanTerm", 15))
-    repayment_type = financing.get(
-        "repaymentType", "equal_installment"
-    )
+    repayment_type = financing.get("repaymentType", "equal_installment")
 
     principal = total_capex * debt_ratio
     if principal <= 0 or loan_term <= 0:
@@ -239,9 +223,7 @@ def _calculate_debt_schedule(total_capex, financing):
     return schedule
 
 
-def _calculate_depreciation(
-    total_capex, years, residual_rate
-):
+def _calculate_depreciation(total_capex, years, residual_rate):
     """15 年直线折旧，残值率 5%"""
     depreciable = total_capex * (1 - residual_rate)
     annual_depr = depreciable / years if years > 0 else 0
@@ -254,9 +236,7 @@ def _calculate_depreciation(
     return result
 
 
-def calculate_full_financial(
-    total_ac_usable, financial_params=None, boq_data=None
-):
+def calculate_full_financial(total_ac_usable, financial_params=None, boq_data=None):
     """完整财务计算主入口
 
     Args:
@@ -276,32 +256,18 @@ def calculate_full_financial(
     opex_params = financial_params.get("opex", {})
     financing_params = financial_params.get("financing", {})
     tax_params = financial_params.get("tax", {})
-    discount_rate = (
-        float(financial_params.get("discountRate", 8.0)) / 100
-    )
-    depreciation_years = int(
-        financial_params.get("depreciationYears", 15)
-    )
-    residual_rate = (
-        float(financial_params.get("residualRate", 5)) / 100
-    )
-    escalation = float(
-        financial_params.get("priceEscalation", 2.0)
-    )
+    discount_rate = float(financial_params.get("discountRate", 8.0)) / 100
+    depreciation_years = int(financial_params.get("depreciationYears", 15))
+    residual_rate = float(financial_params.get("residualRate", 5)) / 100
+    escalation = float(financial_params.get("priceEscalation", 2.0))
 
     revenue_params["_escalation"] = escalation
-    revenue_params["_cyclesPerDay"] = financial_params.get(
-        "cyclesPerDay", 1
-    )
-    revenue_params["_efficiencyLossPct"] = (
-        financial_params.get("efficiencyLossPct", 3)
-    )
+    revenue_params["_cyclesPerDay"] = financial_params.get("cyclesPerDay", 1)
+    revenue_params["_efficiencyLossPct"] = financial_params.get("efficiencyLossPct", 3)
 
     system_params = financial_params.get("systemParams", {})
     system_power_mw = float(system_params.get("pcsPower", 50))
-    system_mwh = float(
-        system_params.get("ratedEnergy", 5)
-    ) * float(system_params.get("initContainerQty", 10))
+    system_mwh = float(system_params.get("ratedEnergy", 5)) * float(system_params.get("initContainerQty", 10))
 
     capExInternal = financial_params.get("_capexInternal")
     if capExInternal is None:
@@ -312,49 +278,25 @@ def calculate_full_financial(
         }
     if boq_data:
         boq_capex = _aggregate_boq_to_capex(boq_data)
-        if (
-            boq_capex["equipment"] > 0
-            or boq_capex["epc"] > 0
-            or boq_capex["development"] > 0
-        ):
+        if boq_capex["equipment"] > 0 or boq_capex["epc"] > 0 or boq_capex["development"] > 0:
             capExInternal = boq_capex
 
     capex_equipment = float(capExInternal.get("equipment", 0))
     capex_epc = float(capExInternal.get("epc", 0))
-    capex_development = float(
-        capExInternal.get("development", 0)
-    )
+    capex_development = float(capExInternal.get("development", 0))
     total_capex = capex_equipment + capex_epc + capex_development
 
-    fixed_opex_per_mw = float(
-        opex_params.get("fixedOpexPerMw", 5000)
-    )
-    variable_opex_per_mwh = float(
-        opex_params.get("variableOpexPerMwh", 2.5)
-    )
-    insurance_rate = (
-        float(opex_params.get("insuranceRate", 0.5)) / 100
-    )
+    fixed_opex_per_mw = float(opex_params.get("fixedOpexPerMw", 5000))
+    variable_opex_per_mwh = float(opex_params.get("variableOpexPerMwh", 2.5))
+    insurance_rate = float(opex_params.get("insuranceRate", 0.5)) / 100
     land_lease = float(opex_params.get("landLease", 150000))
-    annual_opex_base = (
-        (system_power_mw * fixed_opex_per_mw)
-        + (total_capex * insurance_rate)
-        + land_lease
-    )
+    annual_opex_base = (system_power_mw * fixed_opex_per_mw) + (total_capex * insurance_rate) + land_lease
 
-    debt_schedule = _calculate_debt_schedule(
-        total_capex, financing_params
-    )
-    depreciation = _calculate_depreciation(
-        total_capex, depreciation_years, residual_rate
-    )
+    debt_schedule = _calculate_debt_schedule(total_capex, financing_params)
+    depreciation = _calculate_depreciation(total_capex, depreciation_years, residual_rate)
 
-    corp_tax_rate = (
-        float(tax_params.get("corporateTaxRate", 20)) / 100
-    )
-    tax_holiday_years = int(
-        tax_params.get("taxHolidayYears", 5)
-    )
+    corp_tax_rate = float(tax_params.get("corporateTaxRate", 20)) / 100
+    tax_holiday_years = int(tax_params.get("taxHolidayYears", 5))
 
     cashflow_table = []
     project_cashflows = []
@@ -381,73 +323,32 @@ def calculate_full_financial(
                 "netIncome": 0,
                 "debtService": 0,
                 "freeCashflow": -total_capex,
-                "equityCashflow": -(
-                    total_capex
-                    - (
-                        total_capex
-                        * float(
-                            financing_params.get(
-                                "debtRatio", 70
-                            )
-                        )
-                        / 100
-                    )
-                ),
+                "equityCashflow": -(total_capex - (total_capex * float(financing_params.get("debtRatio", 70)) / 100)),
                 "cumulativeCashflow": -total_capex,
             }
             cashflow_table.append(row)
             project_cashflows.append(-total_capex)
-            equity_outlay = total_capex - (
-                total_capex
-                * float(financing_params.get("debtRatio", 70))
-                / 100
-            )
+            equity_outlay = total_capex - (total_capex * float(financing_params.get("debtRatio", 70)) / 100)
             equity_cashflows.append(-equity_outlay)
             continue
 
-        total_ac = (
-            float(total_ac_usable[y])
-            if y < len(total_ac_usable)
-            else float(total_ac_usable[-1])
-        )
+        total_ac = float(total_ac_usable[y]) if y < len(total_ac_usable) else float(total_ac_usable[-1])
 
-        rev_arbitrage = _calculate_revenue_arbitrage(
-            revenue_params, y, total_ac
-        )
-        rev_capacity = _calculate_revenue_capacity(
-            revenue_params, y, system_power_mw
-        )
-        rev_ancillary = _calculate_revenue_ancillary(
-            revenue_params, y, system_power_mw
-        )
-        rev_ppa = _calculate_revenue_ppa(
-            revenue_params, y, total_ac
-        )
-        rev_auction = _calculate_revenue_capacity_auction(
-            revenue_params, y, system_mwh
-        )
+        rev_arbitrage = _calculate_revenue_arbitrage(revenue_params, y, total_ac)
+        rev_capacity = _calculate_revenue_capacity(revenue_params, y, system_power_mw)
+        rev_ancillary = _calculate_revenue_ancillary(revenue_params, y, system_power_mw)
+        rev_ppa = _calculate_revenue_ppa(revenue_params, y, total_ac)
+        rev_auction = _calculate_revenue_capacity_auction(revenue_params, y, system_mwh)
 
-        total_revenue = (
-            rev_arbitrage
-            + rev_capacity
-            + rev_ancillary
-            + rev_ppa
-            + rev_auction
-        )
+        total_revenue = rev_arbitrage + rev_capacity + rev_ancillary + rev_ppa + rev_auction
 
-        annual_variable_opex = (
-            total_ac * 365 * variable_opex_per_mwh
-        )
+        annual_variable_opex = total_ac * 365 * variable_opex_per_mwh
         annual_opex = annual_opex_base + annual_variable_opex
 
         ebitda = total_revenue - annual_opex
 
         depr = depreciation[y]
-        debt = (
-            debt_schedule[y]
-            if y < len(debt_schedule)
-            else {"interestPayment": 0, "principalPayment": 0}
-        )
+        debt = debt_schedule[y] if y < len(debt_schedule) else {"interestPayment": 0, "principalPayment": 0}
         interest = debt["interestPayment"]
 
         taxable_income = ebitda - depr - interest
@@ -463,10 +364,7 @@ def calculate_full_financial(
         debt_service = interest + principal_pmt
 
         free_cashflow = ebitda - tax - principal_pmt - interest
-        equity_of = (
-            financial_params.get("financing", {})
-            .get("equityOutlay", {})
-        )
+        equity_of = financial_params.get("financing", {}).get("equityOutlay", {})
         equity_cf = free_cashflow
         if y == 1 and equity_of and equity_of > 0:
             equity_cf = free_cashflow
@@ -479,9 +377,7 @@ def calculate_full_financial(
                     "capacity": round(rev_capacity, 2),
                     "ancillary": round(rev_ancillary, 2),
                     "ppa": round(rev_ppa, 2),
-                    "capacityAuction": round(
-                        rev_auction, 2
-                    ),
+                    "capacityAuction": round(rev_auction, 2),
                 },
                 "totalRevenue": round(total_revenue, 2),
                 "opex": round(annual_opex, 2),
@@ -505,80 +401,42 @@ def calculate_full_financial(
     for i, cf in enumerate(project_cashflows):
         cum += cf
         cumulative[i] = round(cum, 2)
-        cashflow_table[i][
-            "cumulativeCashflow"
-        ] = cumulative[i]
+        cashflow_table[i]["cumulativeCashflow"] = cumulative[i]
 
     npv = 0
     for t, cf in enumerate(project_cashflows):
         npv += cf / ((1 + discount_rate) ** t)
 
     irr = _compute_irr(project_cashflows)
-    project_irr = (
-        round(irr * 100, 2) if irr is not None else None
-    )
+    project_irr = round(irr * 100, 2) if irr is not None else None
 
     equity_irr_val = 0
     try:
         eq_irr = _compute_irr(equity_cashflows)
-        equity_irr_val = (
-            round(eq_irr * 100, 2)
-            if eq_irr is not None
-            else 0
-        )
+        equity_irr_val = round(eq_irr * 100, 2) if eq_irr is not None else 0
     except Exception:
         equity_irr_val = 0
 
     total_discounted_energy = 0.0
     total_discounted_cost = total_capex
     for y in range(1, NUM_YEARS):
-        total_discounted_energy += (
-            float(total_ac_usable[y])
-            * 365
-            / ((1 + discount_rate) ** y)
-        )
-        total_discounted_cost += annual_opex_base / (
-            (1 + discount_rate) ** y
-        )
-    lcos = (
-        total_discounted_cost / total_discounted_energy
-        if total_discounted_energy > 0
-        else 0
-    )
+        total_discounted_energy += float(total_ac_usable[y]) * 365 / ((1 + discount_rate) ** y)
+        total_discounted_cost += annual_opex_base / ((1 + discount_rate) ** y)
+    lcos = total_discounted_cost / total_discounted_energy if total_discounted_energy > 0 else 0
 
-    total_investment = total_capex + annual_opex_base * (
-        NUM_YEARS - 1
-    )
-    total_return = sum(
-        cf
-        for i, cf in enumerate(project_cashflows)
-        if i > 0
-    )
-    roi = (
-        total_return / total_investment * 100
-        if total_investment > 0
-        else 0
-    )
+    total_investment = total_capex + annual_opex_base * (NUM_YEARS - 1)
+    total_return = sum(cf for i, cf in enumerate(project_cashflows) if i > 0)
+    roi = total_return / total_investment * 100 if total_investment > 0 else 0
 
     dscr_vals = []
     for y in range(1, NUM_YEARS):
-        ds = (
-            debt_schedule[y]
-            if y < len(debt_schedule)
-            else {"interestPayment": 0, "principalPayment": 0}
-        )
+        ds = debt_schedule[y] if y < len(debt_schedule) else {"interestPayment": 0, "principalPayment": 0}
         debt_svc = ds["interestPayment"] + ds["principalPayment"]
         if debt_svc > 0:
             ebitda_val = cashflow_table[y]["ebitda"]
             dscr_vals.append(ebitda_val / debt_svc)
-    dscr_min = (
-        round(min(dscr_vals), 2) if dscr_vals else 0
-    )
-    dscr_avg = (
-        round(sum(dscr_vals) / len(dscr_vals), 2)
-        if dscr_vals
-        else 0
-    )
+    dscr_min = round(min(dscr_vals), 2) if dscr_vals else 0
+    dscr_avg = round(sum(dscr_vals) / len(dscr_vals), 2) if dscr_vals else 0
 
     payback = -1
     cum2 = -total_capex

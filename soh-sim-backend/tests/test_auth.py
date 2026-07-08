@@ -4,7 +4,6 @@ import json
 
 import pytest
 
-
 # ---------- 未认证请求 ----------
 
 
@@ -27,10 +26,7 @@ class TestUnauthenticated:
         data = resp.get_json()
         assert data["success"] is True
         assert "token" in data["data"]
-        assert (
-            data["data"]["user"]["username"]
-            == seed_user["username"]
-        )
+        assert data["data"]["user"]["username"] == seed_user["username"]
         assert data["data"]["user"]["role"] == "engineer"
 
     def test_login_wrong_password(self, client, seed_user):
@@ -75,18 +71,13 @@ class TestUnauthenticated:
 
 
 class TestAuthenticated:
-    def test_me_returns_user_info(
-        self, auth_client, seed_user
-    ):
+    def test_me_returns_user_info(self, auth_client, seed_user):
         """GET /api/auth/me 返回当前认证用户信息（统一响应格式）"""
         resp = auth_client.get("/api/auth/me")
         assert resp.status_code == 200
         data = resp.get_json()
         assert data["success"] is True
-        assert (
-            data["data"]["username"]
-            == seed_user["username"]
-        )
+        assert data["data"]["username"] == seed_user["username"]
         assert data["data"]["role"] == "engineer"
 
     def test_protected_route_without_token(self, client):
@@ -98,9 +89,7 @@ class TestAuthenticated:
         """无效 token 返回 401"""
         resp = client.get(
             "/api/auth/me",
-            headers={
-                "Authorization": "Bearer invalid.jwt.token"
-            },
+            headers={"Authorization": "Bearer invalid.jwt.token"},
         )
         assert resp.status_code == 401
 

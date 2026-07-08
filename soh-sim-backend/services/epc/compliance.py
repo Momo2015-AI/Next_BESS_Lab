@@ -244,11 +244,13 @@ def _auto_match_requirement(req, project_data):
             )
             if gc.get("lvrt_pass")
             else (
-                "partial",
-                "系统支持LVRT功能",
+                (
+                    "partial",
+                    "系统支持LVRT功能",
+                )
+                if gc
+                else ("N/A", "待电网合规分析")
             )
-            if gc
-            else ("N/A", "待电网合规分析")
         )
     if "HVRT" in text:
         gc = project_data.get("grid_compliance", {})
@@ -259,11 +261,13 @@ def _auto_match_requirement(req, project_data):
             )
             if gc.get("hvrt_pass")
             else (
-                "partial",
-                "系统支持HVRT功能",
+                (
+                    "partial",
+                    "系统支持HVRT功能",
+                )
+                if gc
+                else ("N/A", "待电网合规分析")
             )
-            if gc
-            else ("N/A", "待电网合规分析")
         )
     if "RTE" in text and "≥" in text:
         sim = project_data.get("simulation", {})
@@ -281,33 +285,19 @@ def _auto_match_requirement(req, project_data):
         )
     if "SOH" in text and "10年" in text:
         sim = project_data.get("simulation", {})
-        return (
-            ("compliant", "第10年SOH满足要求")
-            if sim.get("soh_year10", 0) >= 70
-            else ("partial", "需仿真验证")
-        )
+        return ("compliant", "第10年SOH满足要求") if sim.get("soh_year10", 0) >= 70 else ("partial", "需仿真验证")
     if "UL 9540" in text:
         safety = project_data.get("safety_design", {})
-        return (
-            ("compliant", "已通过UL 9540A测试")
-            if safety.get("ul_9540a_pass")
-            else ("partial", "需提供测试报告")
-        )
+        return ("compliant", "已通过UL 9540A测试") if safety.get("ul_9540a_pass") else ("partial", "需提供测试报告")
     if "NFPA 855" in text:
         safety = project_data.get("safety_design", {})
-        return (
-            ("compliant", "符合NFPA 855要求")
-            if safety.get("nfpa_855_pass")
-            else ("partial", "需安全设计分析")
-        )
+        return ("compliant", "符合NFPA 855要求") if safety.get("nfpa_855_pass") else ("partial", "需安全设计分析")
     return ("N/A", "待人工确认")
 
 
 def generate_compliance_matrix_service(data):
     """生成合规矩阵"""
-    template_code = data.get(
-        "template", "UAE_DEWA_VII_BESS"
-    )
+    template_code = data.get("template", "UAE_DEWA_VII_BESS")
     template = COMPLIANCE_TEMPLATES.get(template_code)
     if not template:
         return None, "模板不存在"
@@ -317,9 +307,7 @@ def generate_compliance_matrix_service(data):
 
     for section in template["sections"]:
         for req in section["requirements"]:
-            status, response = _auto_match_requirement(
-                req, project_data
-            )
+            status, response = _auto_match_requirement(req, project_data)
             matrix.append(
                 {
                     "section": req["id"],
@@ -333,21 +321,9 @@ def generate_compliance_matrix_service(data):
                 }
             )
 
-    compliant = sum(
-        1
-        for m in matrix
-        if m["compliance_status"] == "compliant"
-    )
-    non_compliant = sum(
-        1
-        for m in matrix
-        if m["compliance_status"] == "non_compliant"
-    )
-    partial = sum(
-        1
-        for m in matrix
-        if m["compliance_status"] == "partial"
-    )
+    compliant = sum(1 for m in matrix if m["compliance_status"] == "compliant")
+    non_compliant = sum(1 for m in matrix if m["compliance_status"] == "non_compliant")
+    partial = sum(1 for m in matrix if m["compliance_status"] == "partial")
 
     return {
         "matrix": matrix,

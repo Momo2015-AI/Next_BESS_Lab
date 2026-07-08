@@ -15,7 +15,7 @@ export const efficiencyParams = [
   { key: 'acEff', label: '交流侧综合效率 (变损/线损)', min: 0.95, max: 0.995, step: 0.002, hasSlider: true }
 ]
 
-const auxParams = [
+export const auxParams = [
   { key: 'bRun', label: '电池舱【运行】温控功率 (kW)', min: 5, max: 40, step: 1, hasSlider: true },
   { key: 'bStd', label: '电池舱【待机】温控功率 (kW)', min: 1, max: 15, step: 0.5, hasSlider: true },
   { key: 'pRun', label: 'PCS变流器【运行】损耗 (kW)', min: 1, max: 20, step: 0.5, hasSlider: true },

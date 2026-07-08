@@ -60,9 +60,7 @@ def _get_redis():
         try:
             import redis
 
-            _redis_client = redis.from_url(
-                redis_url, socket_timeout=2, socket_connect_timeout=2
-            )
+            _redis_client = redis.from_url(redis_url, socket_timeout=2, socket_connect_timeout=2)
             return _redis_client
         except Exception:
             _redis_client = False
@@ -74,11 +72,7 @@ def _get_redis():
 def _clean_blacklist():
     """清理超过24小时的进程内黑名单条目"""
     now = datetime.now(timezone.utc)
-    expired = [
-        t
-        for t, ts in _token_blacklist.items()
-        if (now - ts).total_seconds() > 86400
-    ]
+    expired = [t for t, ts in _token_blacklist.items() if (now - ts).total_seconds() > 86400]
     for t in expired:
         del _token_blacklist[t]
 
@@ -157,9 +151,7 @@ def decode_token(token):
     if is_blacklisted(token):
         return None
     try:
-        payload = jwt.decode(
-            token, _get_secret_key(), algorithms=["HS256"]
-        )
+        payload = jwt.decode(token, _get_secret_key(), algorithms=["HS256"])
         return payload
     except jwt.ExpiredSignatureError:
         return None
@@ -288,12 +280,8 @@ def get_current_user():
             "role": user.role,
             "tenant_id": user.tenant_id,
             "is_active": user.is_active,
-            "created_at": (
-                user.created_at.isoformat() if user.created_at else None
-            ),
-            "last_login": (
-                user.last_login.isoformat() if user.last_login else None
-            ),
+            "created_at": (user.created_at.isoformat() if user.created_at else None),
+            "last_login": (user.last_login.isoformat() if user.last_login else None),
         }
     )
 
@@ -328,9 +316,7 @@ def change_password():
 
     from services.users import change_user_password
 
-    success, err, status_code = change_user_password(
-        user, old_password, new_password
-    )
+    success, err, status_code = change_user_password(user, old_password, new_password)
     if not success:
         return error_response(err, status_code=status_code)
 

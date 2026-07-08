@@ -31,9 +31,7 @@ simulation_bp = Blueprint("simulation", __name__)
 # ==================== 仿真结果API ====================
 
 
-@simulation_bp.route(
-    "/api/versions/<version_id>/results", methods=["GET"]
-)
+@simulation_bp.route("/api/versions/<version_id>/results", methods=["GET"])
 @token_required
 def get_simulation_results(version_id):
     """获取版本的所有仿真结果"""
@@ -59,9 +57,7 @@ def get_simulation_results(version_id):
     )
 
 
-@simulation_bp.route(
-    "/api/versions/<version_id>/results", methods=["POST"]
-)
+@simulation_bp.route("/api/versions/<version_id>/results", methods=["POST"])
 @token_required
 def create_simulation_result(version_id):
     """保存仿真结果"""
@@ -84,14 +80,10 @@ def create_simulation_result(version_id):
         if err:
             status_code = 403 if err == "权限不足" else 404
             return error_response(err, status_code)
-        return success_response(
-            data=result, message="仿真结果保存成功", status_code=201
-        )
+        return success_response(data=result, message="仿真结果保存成功", status_code=201)
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"保存仿真结果失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"保存仿真结果失败: {e}", exc_info=True)
         return error_response("保存失败，请重试", 500)
 
 
@@ -121,18 +113,14 @@ def delete_simulation_result(result_id):
         return success_response(message="删除成功")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"删除仿真结果失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"删除仿真结果失败: {e}", exc_info=True)
         return error_response("删除失败，请重试", 500)
 
 
 # ==================== 校正因子模板API ====================
 
 
-@simulation_bp.route(
-    "/api/correction-templates", methods=["GET"]
-)
+@simulation_bp.route("/api/correction-templates", methods=["GET"])
 @token_required
 def get_correction_templates():
     """获取校正因子模板列表"""
@@ -145,17 +133,13 @@ def get_correction_templates():
 
     if user.tenant_id:
         query = query.filter(
-            (CorrectionTemplate.tenant_id == user.tenant_id)
-            | (CorrectionTemplate.tenant_id.is_(None))
+            (CorrectionTemplate.tenant_id == user.tenant_id) | (CorrectionTemplate.tenant_id.is_(None))
         )
 
-    pagination = (
-        query.order_by(
-            CorrectionTemplate.is_default.desc(),
-            CorrectionTemplate.created_at.desc(),
-        )
-        .paginate(page=page, per_page=per_page, error_out=False)
-    )
+    pagination = query.order_by(
+        CorrectionTemplate.is_default.desc(),
+        CorrectionTemplate.created_at.desc(),
+    ).paginate(page=page, per_page=per_page, error_out=False)
 
     return paginated_response(
         items=[t.to_dict() for t in pagination.items],
@@ -165,9 +149,7 @@ def get_correction_templates():
     )
 
 
-@simulation_bp.route(
-    "/api/correction-templates", methods=["POST"]
-)
+@simulation_bp.route("/api/correction-templates", methods=["POST"])
 @token_required
 def create_correction_template():
     """创建校正因子模板"""
@@ -178,26 +160,18 @@ def create_correction_template():
         return error_response("用户不存在", 404)
 
     try:
-        result, err = create_template_service(
-            db, CorrectionTemplate, data, user
-        )
+        result, err = create_template_service(db, CorrectionTemplate, data, user)
         if err:
             status_code = 403 if err == "权限不足" else 400
             return error_response(err, status_code)
-        return success_response(
-            data=result, message="模板创建成功", status_code=201
-        )
+        return success_response(data=result, message="模板创建成功", status_code=201)
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"创建模板失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"创建模板失败: {e}", exc_info=True)
         return error_response("创建失败，请重试", 500)
 
 
-@simulation_bp.route(
-    "/api/correction-templates/<template_id>", methods=["GET"]
-)
+@simulation_bp.route("/api/correction-templates/<template_id>", methods=["GET"])
 @token_required
 def get_correction_template(template_id):
     """获取校正因子模板详情"""
@@ -208,9 +182,7 @@ def get_correction_template(template_id):
     return success_response(data=template.to_dict())
 
 
-@simulation_bp.route(
-    "/api/correction-templates/<template_id>", methods=["PUT"]
-)
+@simulation_bp.route("/api/correction-templates/<template_id>", methods=["PUT"])
 @token_required
 def update_correction_template(template_id):
     """更新校正因子模板"""
@@ -221,24 +193,18 @@ def update_correction_template(template_id):
         return error_response("用户不存在", 404)
 
     try:
-        template, err = update_template_service(
-            db, CorrectionTemplate, template_id, data, user
-        )
+        template, err = update_template_service(db, CorrectionTemplate, template_id, data, user)
         if err:
             status_code = 403 if err == "权限不足" else 404
             return error_response(err, status_code)
         return success_response(message="模板更新成功")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"更新模板失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"更新模板失败: {e}", exc_info=True)
         return error_response("更新失败，请重试", 500)
 
 
-@simulation_bp.route(
-    "/api/correction-templates/<template_id>", methods=["DELETE"]
-)
+@simulation_bp.route("/api/correction-templates/<template_id>", methods=["DELETE"])
 @token_required
 @role_required("engineer", "admin")
 def delete_correction_template(template_id):
@@ -256,15 +222,11 @@ def delete_correction_template(template_id):
         return success_response(message="删除成功")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"删除模板失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"删除模板失败: {e}", exc_info=True)
         return error_response("删除失败，请重试", 500)
 
 
-@simulation_bp.route(
-    "/api/correction-templates/seed", methods=["POST"]
-)
+@simulation_bp.route("/api/correction-templates/seed", methods=["POST"])
 @token_required
 def seed_correction_templates():
     """初始化默认校正因子模板"""
@@ -273,15 +235,11 @@ def seed_correction_templates():
         return error_response("用户不存在", 404)
 
     try:
-        result, err = seed_templates_service(
-            db, CorrectionTemplate, user
-        )
+        result, err = seed_templates_service(db, CorrectionTemplate, user)
         if err:
             return error_response(err, 400)
         return success_response(message="默认模板初始化成功")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(
-            f"初始化模板失败: {e}", exc_info=True
-        )
+        current_app.logger.error(f"初始化模板失败: {e}", exc_info=True)
         return error_response("初始化失败，请重试", 500)

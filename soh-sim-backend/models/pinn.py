@@ -1,4 +1,4 @@
-from . import db, _utcnow
+from . import _utcnow, db
 
 
 class PinnModelWeights(db.Model):

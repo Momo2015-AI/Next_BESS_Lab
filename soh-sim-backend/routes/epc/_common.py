@@ -1,4 +1,5 @@
 """EPC 路由共享辅助函数"""
+
 from database import Project, db
 
 
@@ -11,9 +12,7 @@ def check_project_access(project_id, user):
         return False
     if getattr(user, "role", None) == "admin":
         return True
-    return getattr(proj, "tenant_id", None) == getattr(
-        user, "tenant_id", None
-    )
+    return getattr(proj, "tenant_id", None) == getattr(user, "tenant_id", None)
 
 
 def get_or_404(model, item_id):

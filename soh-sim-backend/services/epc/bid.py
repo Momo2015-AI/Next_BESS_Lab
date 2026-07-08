@@ -220,25 +220,13 @@ def _generate_section_content(section_template, data):
             + data.get("grid_standard", "N/A")
             + "\n"
             + "LVRT: "
-            + (
-                "通过"
-                if data.get("lvrt_pass")
-                else "未通过"
-            )
+            + ("通过" if data.get("lvrt_pass") else "未通过")
             + "\n"
             + "HVRT: "
-            + (
-                "通过"
-                if data.get("hvrt_pass")
-                else "未通过"
-            )
+            + ("通过" if data.get("hvrt_pass") else "未通过")
             + "\n"
             + "总体合规: "
-            + (
-                "通过"
-                if data.get("overall_pass")
-                else "未通过"
-            )
+            + ("通过" if data.get("overall_pass") else "未通过")
         )
     elif source == "safety_design":
         return (
@@ -249,11 +237,7 @@ def _generate_section_content(section_template, data):
             + data.get("thermal_runaway_temp_c", "N/A")
             + "°C\n"
             + "UL 9540A: "
-            + (
-                "通过"
-                if data.get("ul_9540a_pass")
-                else "未通过"
-            )
+            + ("通过" if data.get("ul_9540a_pass") else "未通过")
         )
     elif source == "ipp_financial":
         return (
@@ -288,9 +272,7 @@ def _generate_section_content(section_template, data):
             + data.get("scada_architecture", "N/A")
             + "\n"
             + "通信协议: "
-            + data.get(
-                "communication_protocol", "N/A"
-            )
+            + data.get("communication_protocol", "N/A")
             + "\n"
             + "数据点: "
             + data.get("total_data_points", "N/A")
@@ -303,9 +285,7 @@ def _generate_section_content(section_template, data):
             + "变压器: "
             + data.get("transformer_count", "N/A")
             + "×"
-            + data.get(
-                "transformer_capacity_mva", "N/A"
-            )
+            + data.get("transformer_capacity_mva", "N/A")
             + "MVA\n"
             + "变比: "
             + data.get("transformer_ratio", "N/A")
@@ -330,9 +310,7 @@ def _generate_section_content(section_template, data):
 
 def generate_bid_document_service(data):
     """生成投标文档"""
-    template_code = data.get(
-        "template", "technical_proposal"
-    )
+    template_code = data.get("template", "technical_proposal")
     template = BID_DOCUMENT_TEMPLATES.get(template_code)
     if not template:
         return None, "模板不存在"
@@ -349,9 +327,7 @@ def generate_bid_document_service(data):
         for sec_template in ch_template["sections"]:
             source = sec_template["source"]
             src_data = project_data.get(source, {})
-            content = _generate_section_content(
-                sec_template, src_data
-            )
+            content = _generate_section_content(sec_template, src_data)
             chapter["sections"].append(
                 {
                     "num": sec_template["num"],
@@ -362,13 +338,7 @@ def generate_bid_document_service(data):
             )
         chapters.append(chapter)
 
-    sources = list(
-        set(
-            s["source"]
-            for ch in template["chapters"]
-            for s in ch["sections"]
-        )
-    )
+    sources = list(set(s["source"] for ch in template["chapters"] for s in ch["sections"]))
 
     return {
         "chapters": chapters,

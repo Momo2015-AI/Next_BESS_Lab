@@ -40,9 +40,7 @@ def analyze_grid_compliance_service(data):
     standard = data.get("grid_standard", "UAE_S_5010")
     pcs_power_mw = float(data.get("pcs_power_mw", 3.45))
     pcs_count = int(data.get("pcs_count", 1))
-    grid_voltage_kv = float(
-        data.get("grid_voltage_kv", 33)
-    )
+    grid_voltage_kv = float(data.get("grid_voltage_kv", 33))
     grid_freq = float(data.get("grid_frequency_hz", 50))
     total_power_mw = pcs_power_mw * pcs_count
 
@@ -120,9 +118,7 @@ def analyze_grid_compliance_service(data):
         "freq_response_pass": freq_pass,
         "pf_lag": 0.95,
         "pf_lead": 0.95,
-        "reactive_capacity_mvar": round(
-            reactive_capacity, 2
-        ),
+        "reactive_capacity_mvar": round(reactive_capacity, 2),
         "reactive_pass": reactive_pass,
         "thd": thd,
         "dc_injection": dc_inj,
@@ -131,9 +127,7 @@ def analyze_grid_compliance_service(data):
         "power_quality_pass": pq_pass,
         "anti_islanding_time_s": anti_island_time,
         "anti_islanding_pass": anti_island_pass,
-        "comm_protocol": data.get(
-            "comm_protocol", "IEC_61850"
-        ),
+        "comm_protocol": data.get("comm_protocol", "IEC_61850"),
         "remote_response_s": 0.1,
         "comm_pass": comm_pass,
         "overall_pass": overall,

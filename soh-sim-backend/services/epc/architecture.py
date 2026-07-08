@@ -7,21 +7,14 @@ EPC模块服务层
 import json
 import math
 
-
 # ===================== 系统架构设计 =====================
 
 
 def design_architecture_service(data):
     """自动设计系统架构"""
     total_power_mw = float(data.get("total_power_mw", 100))
-    total_energy_mwh = float(
-        data.get("total_energy_mwh", 200)
-    )
-    duration_hours = (
-        total_energy_mwh / total_power_mw
-        if total_power_mw > 0
-        else 2
-    )
+    total_energy_mwh = float(data.get("total_energy_mwh", 200))
+    duration_hours = total_energy_mwh / total_power_mw if total_power_mw > 0 else 2
     arch_type = data.get("architecture_type", "central")
     coupling = data.get("coupling_type", "AC")
 
@@ -30,70 +23,44 @@ def design_architecture_service(data):
     cell_energy_kwh = cell_v * cell_ah / 1000
 
     pcs_power_mw = float(data.get("pcs_power_mw", 3.45))
-    pcs_max_dc_v = float(
-        data.get("pcs_max_dc_voltage", 1500)
-    )
+    pcs_max_dc_v = float(data.get("pcs_max_dc_voltage", 1500))
 
     pcs_count = math.ceil(total_power_mw / pcs_power_mw)
     dc_bus_voltage = min(pcs_max_dc_v * 0.9, 1500)
     cell_series = int(dc_bus_voltage / cell_v)
     module_series = 24 if cell_series >= 24 else 12
     modules_per_rack = cell_series // module_series
-    pack_energy_kwh = (
-        module_series * cell_v * cell_ah / 1000
-    )
+    pack_energy_kwh = module_series * cell_v * cell_ah / 1000
     rack_energy_kwh = pack_energy_kwh * modules_per_rack
-    rack_power_kw = (
-        rack_energy_kwh / duration_hours
-        if duration_hours > 0
-        else 0
-    )
+    rack_power_kw = rack_energy_kwh / duration_hours if duration_hours > 0 else 0
     racks_per_cluster = (
         max(
             1,
-            math.ceil(
-                pcs_power_mw * 1000 / rack_power_kw / 4
-            ),
+            math.ceil(pcs_power_mw * 1000 / rack_power_kw / 4),
         )
         if rack_power_kw > 0
         else 1
     )
-    cluster_energy_mwh = (
-        rack_energy_kwh * racks_per_cluster / 1000
-    )
+    cluster_energy_mwh = rack_energy_kwh * racks_per_cluster / 1000
     racks_per_container = min(racks_per_cluster, 8)
     containers_per_pcs = max(
         1,
         math.ceil(racks_per_cluster / racks_per_container),
     )
-    container_energy_mwh = (
-        rack_energy_kwh * racks_per_container / 1000
-    )
+    container_energy_mwh = rack_energy_kwh * racks_per_container / 1000
     total_containers = pcs_count * containers_per_pcs
     containers_per_section = containers_per_pcs
     sections = (
         max(
             1,
-            math.ceil(
-                total_energy_mwh
-                / (
-                    container_energy_mwh
-                    * containers_per_section
-                )
-            ),
+            math.ceil(total_energy_mwh / (container_energy_mwh * containers_per_section)),
         )
         if container_energy_mwh > 0
         else 1
     )
-    recommended_stages = (
-        max(2, min(4, sections // 4))
-        if sections > 1
-        else 1
-    )
+    recommended_stages = max(2, min(4, sections // 4)) if sections > 1 else 1
     power_per_stage = total_power_mw / recommended_stages
-    energy_per_stage = (
-        total_energy_mwh / recommended_stages
-    )
+    energy_per_stage = total_energy_mwh / recommended_stages
 
     stages = []
     for i in range(recommended_stages):
@@ -101,20 +68,14 @@ def design_architecture_service(data):
             {
                 "stage": i + 1,
                 "power_mw": round(power_per_stage, 1),
-                "energy_mwh": round(
-                    energy_per_stage, 1
-                ),
-                "sections": max(
-                    1, sections // recommended_stages
-                ),
+                "energy_mwh": round(energy_per_stage, 1),
+                "sections": max(1, sections // recommended_stages),
                 "estimated_date": f"2027-Q{(i*2)+1}",
             }
         )
 
     dc_breaker_count = pcs_count * racks_per_cluster
-    dc_fuse_count = (
-        total_containers * racks_per_container
-    )
+    dc_fuse_count = total_containers * racks_per_container
 
     topology = {
         "levels": [
@@ -186,18 +147,12 @@ def design_architecture_service(data):
         "stages": stages,
         "pcs_count": pcs_count,
         "pcs_power_mw": pcs_power_mw,
-        "pcs_topology": (
-            "distributed"
-            if arch_type == "string"
-            else "centralized"
-        ),
+        "pcs_topology": ("distributed" if arch_type == "string" else "centralized"),
         "dc_bus_voltage": round(dc_bus_voltage, 0),
         "dc_breaker_count": dc_breaker_count,
         "dc_fuse_count": dc_fuse_count,
         "topology_data": topology,
         "rack_energy_kwh": round(rack_energy_kwh, 2),
-        "container_energy_mwh": round(
-            container_energy_mwh, 2
-        ),
+        "container_energy_mwh": round(container_energy_mwh, 2),
         "total_containers": total_containers,
     }

@@ -1,4 +1,5 @@
 """EPC - 投标文档 路由"""
+
 import json
 import uuid
 
@@ -19,12 +20,7 @@ bid_bp = Blueprint("epc_bid", __name__)
 @bid_bp.route("/api/bid-document/templates", methods=["GET"])
 @token_required
 def list_bid_templates():
-    return success_response(
-        data=[
-            {"code": k, "name": v["name"]}
-            for k, v in BID_DOCUMENT_TEMPLATES.items()
-        ]
-    )
+    return success_response(data=[{"code": k, "name": v["name"]} for k, v in BID_DOCUMENT_TEMPLATES.items()])
 
 
 @bid_bp.route("/api/bid-document/generate", methods=["POST"])
@@ -70,10 +66,7 @@ def get_bid_document(bd_id):
     obj = get_or_404(BidDocument, bd_id)
     if not obj:
         return error_response("未找到", 404)
-    if (
-        getattr(user, "role", None) != "admin"
-        and getattr(obj, "tenant_id", None) != user.tenant_id
-    ):
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
         return error_response("无权访问该项目", 403)
     return success_response(data=obj.to_dict())
 
@@ -90,10 +83,7 @@ def list_bid_documents():
         query = query.filter_by(project_id=project_id)
     if getattr(user, "role", None) != "admin":
         query = query.filter_by(tenant_id=user.tenant_id)
-    pagination = (
-        query.order_by(BidDocument.created_at.desc())
-        .paginate(page=page, per_page=per_page, error_out=False)
-    )
+    pagination = query.order_by(BidDocument.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
     return success_response(
         data={
             "items": [item.to_dict() for item in pagination.items],

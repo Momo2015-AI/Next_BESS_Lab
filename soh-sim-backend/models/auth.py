@@ -1,4 +1,4 @@
-from . import db, _utcnow
+from . import _utcnow, db
 
 
 class Tenant(db.Model):
@@ -43,12 +43,8 @@ class User(db.Model):
     # 关联
     tenant = db.relationship("Tenant", back_populates="users")
     simulations = db.relationship("Simulation", back_populates="user")
-    formula_configs = db.relationship(
-        "FormulaConfig", back_populates="user"
-    )
-    project_versions = db.relationship(
-        "ProjectVersion", back_populates="created_by_user"
-    )
+    formula_configs = db.relationship("FormulaConfig", back_populates="user")
+    project_versions = db.relationship("ProjectVersion", back_populates="created_by_user")
 
     def to_dict(self):
         return {
@@ -60,13 +56,7 @@ class User(db.Model):
             "status": self.status,
             "is_active": self.is_active,
             "login_count": self.login_count,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
-            "last_login": (
-                self.last_login.isoformat() if self.last_login else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
+            "last_login": (self.last_login.isoformat() if self.last_login else None),
         }

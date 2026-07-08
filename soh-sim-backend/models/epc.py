@@ -1,4 +1,4 @@
-from . import db, _utcnow
+from . import _utcnow, db
 
 
 class SystemArchitecture(db.Model):
@@ -7,9 +7,7 @@ class SystemArchitecture(db.Model):
     __tablename__ = "system_architectures"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -23,12 +21,8 @@ class SystemArchitecture(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -38,9 +32,7 @@ class GridComplianceAnalysis(db.Model):
     __tablename__ = "grid_compliance_analyses"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -54,12 +46,8 @@ class GridComplianceAnalysis(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -69,9 +57,7 @@ class SafetyFireDesign(db.Model):
     __tablename__ = "safety_fire_designs"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -85,12 +71,8 @@ class SafetyFireDesign(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -100,9 +82,7 @@ class IPPFinancialModel(db.Model):
     __tablename__ = "ipp_financial_models"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -116,12 +96,8 @@ class IPPFinancialModel(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -131,9 +107,7 @@ class ComplianceMatrix(db.Model):
     __tablename__ = "compliance_matrices"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -147,12 +121,8 @@ class ComplianceMatrix(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -162,9 +132,7 @@ class ThermalManagement(db.Model):
     __tablename__ = "thermal_managements"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -178,12 +146,8 @@ class ThermalManagement(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -193,9 +157,7 @@ class ScadaEmsDesign(db.Model):
     __tablename__ = "scada_ems_designs"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -209,12 +171,8 @@ class ScadaEmsDesign(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -224,9 +182,7 @@ class HVInterconnection(db.Model):
     __tablename__ = "hv_interconnections"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -240,12 +196,8 @@ class HVInterconnection(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -255,9 +207,7 @@ class BidDocument(db.Model):
     __tablename__ = "bid_documents"
 
     id = db.Column(db.String(36), primary_key=True)
-    project_id = db.Column(
-        db.String(36), db.ForeignKey("projects.id"), nullable=False
-    )
+    project_id = db.Column(db.String(36), db.ForeignKey("projects.id"), nullable=False)
     tenant_id = db.Column(db.String(36), nullable=True, index=True)
     data = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -271,10 +221,6 @@ class BidDocument(db.Model):
             "project_id": self.project_id,
             "tenant_id": self.tenant_id,
             "data": self.data,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }

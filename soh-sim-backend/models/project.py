@@ -1,4 +1,4 @@
-from . import db, _utcnow
+from . import _utcnow, db
 
 
 class Project(db.Model):
@@ -34,16 +34,10 @@ class Project(db.Model):
     tenant = db.relationship("Tenant", back_populates="projects")
     surveys = db.relationship("Survey", back_populates="project")
     simulations = db.relationship("Simulation", back_populates="project")
-    battery_configs = db.relationship(
-        "BatteryPCSConfig", back_populates="project"
-    )
+    battery_configs = db.relationship("BatteryPCSConfig", back_populates="project")
     soh_rte_data = db.relationship("SohRteData", back_populates="project")
-    financial_data = db.relationship(
-        "FinancialData", back_populates="project"
-    )
-    product_configs = db.relationship(
-        "ProductConfig", back_populates="project"
-    )
+    financial_data = db.relationship("FinancialData", back_populates="project")
+    product_configs = db.relationship("ProductConfig", back_populates="project")
     versions = db.relationship(
         "ProjectVersion",
         back_populates="project",
@@ -60,12 +54,8 @@ class Project(db.Model):
             "stage": self.stage,
             "customer_id": self.customer_id,
             "config": self.config,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -97,9 +87,7 @@ class ProjectVersion(db.Model):
     created_by = db.Column(db.String(36), db.ForeignKey("users.id"))
 
     # 状态
-    status = db.Column(
-        db.String(20), default="draft"
-    )  # draft/in-use/archived
+    status = db.Column(db.String(20), default="draft")  # draft/in-use/archived
 
     # 时间信息
     created_at = db.Column(db.DateTime, default=_utcnow)
@@ -107,12 +95,8 @@ class ProjectVersion(db.Model):
 
     # 关联
     project = db.relationship("Project", back_populates="versions")
-    created_by_user = db.relationship(
-        "User", back_populates="project_versions"
-    )
-    simulation_results = db.relationship(
-        "SimulationResult", back_populates="version"
-    )
+    created_by_user = db.relationship("User", back_populates="project_versions")
+    simulation_results = db.relationship("SimulationResult", back_populates="version")
 
     def to_dict(self):
         return {
@@ -125,10 +109,6 @@ class ProjectVersion(db.Model):
             "config_data": self.config_data,
             "created_by": self.created_by,
             "status": self.status,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }

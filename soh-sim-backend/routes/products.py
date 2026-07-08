@@ -25,15 +25,15 @@ from database import (
     db,
 )
 from routes.auth import token_required
-from utils.api_response import error_response, paginated_response, success_response
+from services.products import apply_tenant_filter as _apply_tenant_filter
+from services.products import camel_to_snake as _camel_to_snake
+from services.products import get_models as _get_models
+from services.products import is_super_admin as _is_super_admin
+from services.products import json_to_model as _json_to_model
 from services.products import (
-    get_models as _get_models,
-    camel_to_snake as _camel_to_snake,
-    json_to_model as _json_to_model,
-    is_super_admin as _is_super_admin,
-    apply_tenant_filter as _apply_tenant_filter,
     seed_products,
 )
+from utils.api_response import error_response, paginated_response, success_response
 
 products_bp = Blueprint("products", __name__)
 

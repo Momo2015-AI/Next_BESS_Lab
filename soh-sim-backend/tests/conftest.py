@@ -11,12 +11,8 @@ import os
 import uuid
 
 # Must be set BEFORE importing app so that app.py reads the in-memory DB URI
-os.environ.setdefault(
-    "TEST_DATABASE_URI", "sqlite:///:memory:"
-)
-os.environ.setdefault(
-    "SECRET_KEY", "test-secret-for-pytest-2026"
-)
+os.environ.setdefault("TEST_DATABASE_URI", "sqlite:///:memory:")
+os.environ.setdefault("SECRET_KEY", "test-secret-for-pytest-2026")
 os.environ.setdefault("CORS_ORIGINS", "*")
 
 import pytest  # noqa: E402
@@ -25,7 +21,6 @@ from flask import g  # noqa: E402
 from app import app as _app  # noqa: E402
 from database import Tenant, User, db  # noqa: E402
 from routes.auth import generate_token  # noqa: E402
-
 
 # ---------- Fixtures ----------
 

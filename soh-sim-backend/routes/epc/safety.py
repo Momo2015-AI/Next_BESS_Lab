@@ -1,4 +1,5 @@
 """EPC - 安全消防 路由"""
+
 import json
 import uuid
 
@@ -34,14 +35,11 @@ def analyze_safety_design():
         **{
             k: v
             for k, v in result.items()
-            if hasattr(SafetyFireDesign, k)
-            and k not in ["design_data", "compliance_report"]
+            if hasattr(SafetyFireDesign, k) and k not in ["design_data", "compliance_report"]
         },
     )
     sf.design_data = json.dumps(result["design_data"])
-    sf.compliance_report = json.dumps(
-        result["compliance_report"]
-    )
+    sf.compliance_report = json.dumps(result["compliance_report"])
     db.session.add(sf)
     db.session.commit()
 
@@ -55,10 +53,7 @@ def get_safety_design(sf_id):
     obj = get_or_404(SafetyFireDesign, sf_id)
     if not obj:
         return error_response("未找到", 404)
-    if (
-        getattr(user, "role", None) != "admin"
-        and getattr(obj, "tenant_id", None) != user.tenant_id
-    ):
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
         return error_response("无权访问该项目", 403)
     return success_response(data=obj.to_dict())
 

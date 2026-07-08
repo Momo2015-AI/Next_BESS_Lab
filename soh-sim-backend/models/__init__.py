@@ -5,6 +5,7 @@
 
 此文件为 models/ 包的入口，保持与原有 database.py 的向后兼容。
 """
+
 import json
 import os
 from datetime import datetime, timezone
@@ -70,10 +71,7 @@ def _serialize_value(model_name, column_name, value):
     """序列化单个字段值：datetime→ISO 字符串，JSON 列→解析回对象"""
     if value is None:
         return None
-    if (
-        model_name in _JSON_COLUMNS
-        and column_name in _JSON_COLUMNS[model_name]
-    ):
+    if model_name in _JSON_COLUMNS and column_name in _JSON_COLUMNS[model_name]:
         if isinstance(value, str):
             try:
                 return json.loads(value)
@@ -89,44 +87,43 @@ def _model_to_dict(self):
     """通用 to_dict：遍历所有列，按需序列化"""
     model_name = type(self).__name__
     return {
-        column.name: _serialize_value(
-            model_name, column.name, getattr(self, column.name)
-        )
+        column.name: _serialize_value(model_name, column.name, getattr(self, column.name))
         for column in self.__table__.columns
     }
 
 
+from .algorithm import AlgorithmModel, FormulaConfig
+
 # 导入所有模型类（必须在 db 和辅助函数定义之后）
 from .auth import Tenant, User
-from .survey import Survey
-from .project import Project, ProjectVersion
-from .simulation import Simulation, SimulationResult, CorrectionTemplate
-from .config_data import BatteryPCSConfig, SohRteData, FinancialData
-from .product import (
-    ProductConfig,
-    CellProduct,
-    PackProduct,
-    RackProduct,
-    ClusterProduct,
-    ContainerProduct,
-    PcsProduct,
-    BatteryConfigRule,
-    BatteryManufacturer,
-)
-from .algorithm import FormulaConfig, AlgorithmModel
-from .boq import BoqSection, BoqItem
+from .boq import BoqItem, BoqSection
+from .config_data import BatteryPCSConfig, FinancialData, SohRteData
 from .epc import (
-    SystemArchitecture,
-    GridComplianceAnalysis,
-    SafetyFireDesign,
-    IPPFinancialModel,
-    ComplianceMatrix,
-    ThermalManagement,
-    ScadaEmsDesign,
-    HVInterconnection,
     BidDocument,
+    ComplianceMatrix,
+    GridComplianceAnalysis,
+    HVInterconnection,
+    IPPFinancialModel,
+    SafetyFireDesign,
+    ScadaEmsDesign,
+    SystemArchitecture,
+    ThermalManagement,
 )
 from .pinn import PinnModelWeights
+from .product import (
+    BatteryConfigRule,
+    BatteryManufacturer,
+    CellProduct,
+    ClusterProduct,
+    ContainerProduct,
+    PackProduct,
+    PcsProduct,
+    ProductConfig,
+    RackProduct,
+)
+from .project import Project, ProjectVersion
+from .simulation import CorrectionTemplate, Simulation, SimulationResult
+from .survey import Survey
 
 # 所有公共导出（确保 from database import * 兼容）
 __all__ = [
@@ -206,9 +203,7 @@ def _inherit_tenant_from_project(session, flush_context, instances):
     """新建 EPC 对象若未显式设置 tenant_id，则从所属项目继承，确保租户隔离。"""
     for obj in session.new:
         if type(obj).__name__ in _TENANT_PROJECT_MODELS:
-            if getattr(obj, "tenant_id", None) is None and getattr(
-                obj, "project_id", None
-            ):
+            if getattr(obj, "tenant_id", None) is None and getattr(obj, "project_id", None):
                 with session.no_autoflush:
                     proj = session.get(Project, obj.project_id)
                 if proj is not None:
@@ -235,16 +230,9 @@ def init_db(app):
                 "bid_documents",
             ):
                 if table in inspector.get_table_names():
-                    cols = {
-                        c["name"] for c in inspector.get_columns(table)
-                    }
+                    cols = {c["name"] for c in inspector.get_columns(table)}
                     if "tenant_id" not in cols:
-                        conn.execute(
-                            text(
-                                f"ALTER TABLE {table} "
-                                "ADD COLUMN tenant_id VARCHAR(36)"
-                            )
-                        )
+                        conn.execute(text(f"ALTER TABLE {table} " "ADD COLUMN tenant_id VARCHAR(36)"))
         # 种子默认租户
         import uuid as _uuid
 

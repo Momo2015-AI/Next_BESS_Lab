@@ -1,4 +1,4 @@
-from . import db, _utcnow
+from . import _utcnow, db
 
 
 class ProductConfig(db.Model):
@@ -6,9 +6,7 @@ class ProductConfig(db.Model):
 
     __tablename__ = "product_configs"
 
-    __table_args__ = (
-        db.Index("idx_product_configs_project_id", "project_id"),
-    )
+    __table_args__ = (db.Index("idx_product_configs_project_id", "project_id"),)
 
     id = db.Column(db.String(36), primary_key=True)
     project_id = db.Column(db.String(36), db.ForeignKey("projects.id"))
@@ -31,9 +29,7 @@ class ProductConfig(db.Model):
     pcs_supplier = db.Column(db.String(100))
 
     # 认证要求
-    certifications = db.Column(
-        db.Text
-    )  # JSON数组 ['UL9540', 'IEC62619', ...]
+    certifications = db.Column(db.Text)  # JSON数组 ['UL9540', 'IEC62619', ...]
 
     # EPC配置
     epc_company = db.Column(db.String(100))
@@ -62,12 +58,8 @@ class ProductConfig(db.Model):
             "certifications": self.certifications,
             "epc_company": self.epc_company,
             "epc_contract_type": self.epc_contract_type,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }
 
 
@@ -76,17 +68,11 @@ class CellProduct(db.Model):
 
     __tablename__ = "cell_products"
 
-    __table_args__ = (
-        db.Index("idx_cell_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_cell_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
-    tenant_id = db.Column(
-        db.String(36), db.ForeignKey("tenants.id")
-    )  # 企业隔离
-    is_builtin = db.Column(
-        db.Boolean, default=False
-    )  # 是否系统内置（对所有企业可见）
+    tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))  # 企业隔离
+    is_builtin = db.Column(db.Boolean, default=False)  # 是否系统内置（对所有企业可见）
     mfr = db.Column(db.String(200))
     model = db.Column(db.String(200))
     chemistry = db.Column(db.String(50))
@@ -118,9 +104,7 @@ class PackProduct(db.Model):
 
     __tablename__ = "pack_products"
 
-    __table_args__ = (
-        db.Index("idx_pack_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_pack_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -134,9 +118,7 @@ class PackProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    rated_energy_mwh = db.Column(
-        db.Float
-    )  # MWh, was nominal_energy_kwh
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_kwh
     max_charge_current = db.Column(db.Float)
     max_discharge_current = db.Column(db.Float)
     dimensions = db.Column(db.String(200))
@@ -154,9 +136,7 @@ class RackProduct(db.Model):
 
     __tablename__ = "rack_products"
 
-    __table_args__ = (
-        db.Index("idx_rack_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_rack_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -169,9 +149,7 @@ class RackProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    rated_energy_mwh = db.Column(
-        db.Float
-    )  # MWh, was nominal_energy_kwh
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_kwh
     dimensions = db.Column(db.String(200))
     weight = db.Column(db.Float)  # kg
     cooling = db.Column(db.String(100))
@@ -186,9 +164,7 @@ class ClusterProduct(db.Model):
 
     __tablename__ = "cluster_products"
 
-    __table_args__ = (
-        db.Index("idx_cluster_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_cluster_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -201,12 +177,8 @@ class ClusterProduct(db.Model):
     parallel_count = db.Column(db.Integer)
     nominal_voltage = db.Column(db.Float)
     nominal_capacity_ah = db.Column(db.Float)
-    rated_energy_mwh = db.Column(
-        db.Float
-    )  # MWh, was nominal_energy_mwh (统一命名)
-    rated_power_mw = db.Column(
-        db.Float
-    )  # MW, was nominal_power_mw (统一命名)
+    rated_energy_mwh = db.Column(db.Float)  # MWh, was nominal_energy_mwh (统一命名)
+    rated_power_mw = db.Column(db.Float)  # MW, was nominal_power_mw (统一命名)
     dimensions = db.Column(db.String(200))
     weight = db.Column(db.Float)  # kg
     bmu_type = db.Column(db.String(100))
@@ -221,9 +193,7 @@ class ContainerProduct(db.Model):
 
     __tablename__ = "container_products"
 
-    __table_args__ = (
-        db.Index("idx_container_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_container_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -264,9 +234,7 @@ class PcsProduct(db.Model):
 
     __tablename__ = "pcs_products"
 
-    __table_args__ = (
-        db.Index("idx_pcs_products_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_pcs_products_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(100), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -303,9 +271,7 @@ class BatteryConfigRule(db.Model):
 
     __tablename__ = "battery_config_rules"
 
-    __table_args__ = (
-        db.Index("idx_battery_config_rules_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_battery_config_rules_tenant_id", "tenant_id"),)
 
     id = db.Column(db.String(36), primary_key=True)
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"))
@@ -381,10 +347,6 @@ class BatteryManufacturer(db.Model):
             "country": self.country,
             "chemistry_type": self.chemistry_type,
             "calibrated_params": self.calibrated_params,
-            "created_at": (
-                self.created_at.isoformat() if self.created_at else None
-            ),
-            "updated_at": (
-                self.updated_at.isoformat() if self.updated_at else None
-            ),
+            "created_at": (self.created_at.isoformat() if self.created_at else None),
+            "updated_at": (self.updated_at.isoformat() if self.updated_at else None),
         }

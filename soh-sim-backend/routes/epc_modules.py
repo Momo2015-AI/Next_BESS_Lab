@@ -7,10 +7,11 @@ EPC模块路由 - 向后兼容代理
   from routes.epc import register_epc_blueprints
   register_epc_blueprints(app)
 """
-from routes.epc import register_epc_blueprints
 
 # 向后兼容：提供一个空 Blueprint，实际路由已通过
 # register_epc_blueprints 注册
 from flask import Blueprint
+
+from routes.epc import register_epc_blueprints
 
 epc_bp = Blueprint("epc", __name__)

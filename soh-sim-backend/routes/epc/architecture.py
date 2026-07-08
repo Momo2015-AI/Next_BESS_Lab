@@ -1,4 +1,5 @@
 """EPC - 系统架构设计 路由"""
+
 import json
 import uuid
 
@@ -25,9 +26,8 @@ def list_architectures():
         query = query.filter_by(project_id=project_id)
     if getattr(user, "role", None) != "admin":
         query = query.filter_by(tenant_id=user.tenant_id)
-    pagination = (
-        query.order_by(SystemArchitecture.created_at.desc())
-        .paginate(page=page, per_page=per_page, error_out=False)
+    pagination = query.order_by(SystemArchitecture.created_at.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
     )
     return success_response(
         data={
@@ -40,26 +40,19 @@ def list_architectures():
     )
 
 
-@architecture_bp.route(
-    "/api/system-architecture/<arch_id>", methods=["GET"]
-)
+@architecture_bp.route("/api/system-architecture/<arch_id>", methods=["GET"])
 @token_required
 def get_architecture(arch_id):
     user = request.current_user
     obj = get_or_404(SystemArchitecture, arch_id)
     if not obj:
         return error_response("未找到", 404)
-    if (
-        getattr(user, "role", None) != "admin"
-        and getattr(obj, "tenant_id", None) != user.tenant_id
-    ):
+    if getattr(user, "role", None) != "admin" and getattr(obj, "tenant_id", None) != user.tenant_id:
         return error_response("无权访问该项目", 403)
     return success_response(data=obj.to_dict())
 
 
-@architecture_bp.route(
-    "/api/system-architecture/design", methods=["POST"]
-)
+@architecture_bp.route("/api/system-architecture/design", methods=["POST"])
 @token_required
 def design_architecture():
     """自动设计系统架构"""
@@ -74,12 +67,7 @@ def design_architecture():
     arch = SystemArchitecture(
         id=str(uuid.uuid4()),
         project_id=data.get("project_id"),
-        **{
-            k: v
-            for k, v in result.items()
-            if hasattr(SystemArchitecture, k)
-            and k not in ["stages", "topology_data"]
-        },
+        **{k: v for k, v in result.items() if hasattr(SystemArchitecture, k) and k not in ["stages", "topology_data"]},
     )
     arch.stages = json.dumps(result["stages"])
     arch.topology_data = json.dumps(result["topology_data"])

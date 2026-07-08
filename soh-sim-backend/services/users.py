@@ -28,9 +28,7 @@ def register_user(username, email, password):
         (user_dict_or_none, error_or_none, status_code)
     """
     # 检查用户是否已存在
-    existing_user = User.query.filter(
-        (User.username == username) | (User.email == email)
-    ).first()
+    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
     if existing_user:
         return None, "用户名或邮箱已存在", 409
 
@@ -61,15 +59,19 @@ def register_user(username, email, password):
 
     token = generate_token(user_id)
 
-    return {
-        "token": token,
-        "user": {
-            "id": user_id,
-            "username": username,
-            "email": email,
-            "role": "user",
+    return (
+        {
+            "token": token,
+            "user": {
+                "id": user_id,
+                "username": username,
+                "email": email,
+                "role": "user",
+            },
         },
-    }, None, 201
+        None,
+        201,
+    )
 
 
 def authenticate_user(username, password):
@@ -82,10 +84,7 @@ def authenticate_user(username, password):
     Returns:
         (user_dict_or_none, error_or_none, status_code)
     """
-    user = User.query.filter(
-        (User.username == username)
-        | (User.email == username)
-    ).first()
+    user = User.query.filter((User.username == username) | (User.email == username)).first()
 
     if not user:
         return None, "用户名或密码错误", 401
@@ -107,16 +106,20 @@ def authenticate_user(username, password):
 
     token = generate_token(user.id)
 
-    return {
-        "token": token,
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "role": user.role,
-            "tenant_id": user.tenant_id,
+    return (
+        {
+            "token": token,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+                "tenant_id": user.tenant_id,
+            },
         },
-    }, None, 200
+        None,
+        200,
+    )
 
 
 def change_user_password(user, old_password, new_password):

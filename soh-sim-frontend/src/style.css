@@ -774,33 +774,71 @@
   }
 
   /* ── 通用文本颜色工具类 ── */
-  .text-accent { color: var(--color-accent); }
-  .text-accent-secondary { color: var(--color-accent-secondary); }
-  .text-success { color: var(--color-success); }
-  .text-warning { color: var(--color-warning); }
-  .text-info { color: var(--color-info); }
-  .text-danger { color: var(--color-danger); }
-  .text-text-secondary { color: var(--color-text-secondary); }
+  .text-accent {
+    color: var(--color-accent);
+  }
+  .text-accent-secondary {
+    color: var(--color-accent-secondary);
+  }
+  .text-success {
+    color: var(--color-success);
+  }
+  .text-warning {
+    color: var(--color-warning);
+  }
+  .text-info {
+    color: var(--color-info);
+  }
+  .text-danger {
+    color: var(--color-danger);
+  }
+  .text-text-secondary {
+    color: var(--color-text-secondary);
+  }
 
   /* ── 通用背景色工具类 ── */
-  .bg-accent { background-color: var(--color-accent); }
-  .bg-accent-secondary { background-color: var(--color-accent-secondary); }
-  .bg-success { background-color: var(--color-success); }
-  .bg-warning { background-color: var(--color-warning); }
-  .bg-info { background-color: var(--color-info); }
-  .bg-danger { background-color: var(--color-danger); }
-  .bg-muted { background-color: var(--color-text-muted); }
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  .bg-accent-secondary {
+    background-color: var(--color-accent-secondary);
+  }
+  .bg-success {
+    background-color: var(--color-success);
+  }
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
+  .bg-info {
+    background-color: var(--color-info);
+  }
+  .bg-danger {
+    background-color: var(--color-danger);
+  }
+  .bg-muted {
+    background-color: var(--color-text-muted);
+  }
 
   /* ── 边框色工具类 ── */
-  .border-b-border { border-bottom: 1px solid var(--color-border); }
-  .border-t-border { border-top: 1px solid var(--color-border); }
+  .border-b-border {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .border-t-border {
+    border-top: 1px solid var(--color-border);
+  }
 
   /* ── 主文本颜色 ── */
-  .text-primary { color: var(--color-text); }
-  .text-white { color: white; }
+  .text-primary {
+    color: var(--color-text);
+  }
+  .text-white {
+    color: white;
+  }
 
   /* ── 卡片背景 ── */
-  .bg-card { background-color: var(--color-card); }
+  .bg-card {
+    background-color: var(--color-card);
+  }
 
   /* ── 图表卡片容器 ── */
   .card-panel-chart {
@@ -919,8 +957,12 @@
   }
 
   /* ── 背景色工具扩展 ── */
-  .bg-secondary { background-color: var(--color-bg-secondary); }
-  .bg-table-header { background-color: var(--color-table-header); }
+  .bg-secondary {
+    background-color: var(--color-bg-secondary);
+  }
+  .bg-table-header {
+    background-color: var(--color-table-header);
+  }
 
   /* ── 边框色工具 ── */
   .border-color-muted {
@@ -1837,13 +1879,27 @@
     color: var(--color-text-secondary);
   }
 
-  .soh-legend-dot.bg-accent { background-color: var(--color-accent); }
-  .soh-legend-dot.bg-accent-secondary { background-color: var(--color-accent-secondary); }
-  .soh-legend-dot.bg-chart-pink { background-color: var(--color-chart-pink); }
-  .soh-legend-dot.bg-chart-orange { background-color: var(--color-chart-orange); }
-  .soh-legend-dot.bg-danger { background-color: var(--color-danger); }
-  .soh-legend-dot.bg-warning { background-color: var(--color-warning); }
-  .soh-legend-dot.bg-success { background-color: var(--color-success); }
+  .soh-legend-dot.bg-accent {
+    background-color: var(--color-accent);
+  }
+  .soh-legend-dot.bg-accent-secondary {
+    background-color: var(--color-accent-secondary);
+  }
+  .soh-legend-dot.bg-chart-pink {
+    background-color: var(--color-chart-pink);
+  }
+  .soh-legend-dot.bg-chart-orange {
+    background-color: var(--color-chart-orange);
+  }
+  .soh-legend-dot.bg-danger {
+    background-color: var(--color-danger);
+  }
+  .soh-legend-dot.bg-warning {
+    background-color: var(--color-warning);
+  }
+  .soh-legend-dot.bg-success {
+    background-color: var(--color-success);
+  }
 
   /* ── AuthPanel 专用 ── */
   .accent-checkbox {

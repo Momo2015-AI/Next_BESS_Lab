@@ -5,15 +5,16 @@ EPC模块路由（按子模块拆分为独立 Blueprint）
   from routes.epc import register_epc_blueprints
   register_epc_blueprints(app)
 """
+
 from .architecture import architecture_bp
-from .grid_compliance import grid_compliance_bp
-from .safety import safety_bp
-from .ipp import ipp_bp
-from .compliance import compliance_bp
-from .thermal import thermal_bp
-from .scada import scada_bp
-from .hv import hv_bp
 from .bid import bid_bp
+from .compliance import compliance_bp
+from .grid_compliance import grid_compliance_bp
+from .hv import hv_bp
+from .ipp import ipp_bp
+from .safety import safety_bp
+from .scada import scada_bp
+from .thermal import thermal_bp
 
 
 def register_epc_blueprints(app):
