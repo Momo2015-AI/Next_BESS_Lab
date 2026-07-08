@@ -1,4 +1,5 @@
 import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
+import api from '../services/api.js'
 
 /**
  * 汇率管理 Composable
@@ -66,16 +67,11 @@ export function useExchangeRate() {
   const fetchAllRates = async () => {
     loading.value = true
     try {
-      const response = await fetch('/api/exchange-rates/all')
-      const data = await response.json()
+      const data = await api.get('/api/exchange-rates/all')
 
-      if (data.success) {
-        exchangeRates.value = data.rates
-        lastUpdated.value = data.date
-        rateSource.value = data.rates[Object.keys(data.rates)[0]]?.source || ''
-      } else {
-        console.error('Failed to fetch exchange rates:', data.error)
-      }
+      exchangeRates.value = data.rates
+      lastUpdated.value = data.date
+      rateSource.value = data.rates[Object.keys(data.rates)[0]]?.source || ''
     } catch (e) {
       console.error('Error fetching exchange rates:', e)
     } finally {
@@ -87,23 +83,17 @@ export function useExchangeRate() {
   const fetchRate = async (currency) => {
     loading.value = true
     try {
-      const response = await fetch(`/api/exchange-rates/latest?currency=${currency}`)
-      const data = await response.json()
+      const data = await api.get(`/api/exchange-rates/latest?currency=${currency}`)
 
-      if (data.success) {
-        exchangeRates.value[currency] = {
-          rate: data.rate,
-          source: data.source,
-          date: data.date,
-          name: supportedCurrencies[currency]
-        }
-        lastUpdated.value = data.date
-        rateSource.value = data.source
-        return data.rate
-      } else {
-        console.error('Failed to fetch exchange rate:', data.error)
-        return null
+      exchangeRates.value[currency] = {
+        rate: data.rate,
+        source: data.source,
+        date: data.date,
+        name: supportedCurrencies[currency]
       }
+      lastUpdated.value = data.date
+      rateSource.value = data.source
+      return data.rate
     } catch (e) {
       console.error('Error fetching exchange rate:', e)
       return null
@@ -154,16 +144,10 @@ export function useExchangeRate() {
   // 刷新所有汇率
   const refreshRates = async () => {
     try {
-      const response = await fetch('/api/exchange-rates/refresh', { method: 'POST' })
-      const data = await response.json()
+      await api.post('/api/exchange-rates/refresh')
 
-      if (data.success) {
-        await fetchAllRates()
-        return true
-      } else {
-        console.error('Failed to refresh rates:', data.error)
-        return false
-      }
+      await fetchAllRates()
+      return true
     } catch (e) {
       console.error('Error refreshing rates:', e)
       return false

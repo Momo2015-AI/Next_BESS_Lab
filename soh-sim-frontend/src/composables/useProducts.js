@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import api from '../services/api.js'
 import localProducts from '../data/products.json'
 
 const cells = ref([])
@@ -84,33 +85,18 @@ function toCamel(obj) {
   return result
 }
 
-function getAuthHeaders() {
-  const token = sessionStorage.getItem('auth_token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
-async function fetchCategory(category, force = false) {
+async function fetchCategory(category, _force = false) {
   try {
-    const resp = await fetch(`/api/products/${category}`, {
-      headers: getAuthHeaders(),
-      cache: force ? 'no-store' : 'default'
-    })
-    if (!resp.ok) return []
-    const data = await resp.json()
+    const data = await api.get(`/api/products/${category}`)
     return (data.items || []).map(toCamel)
   } catch {
     return []
   }
 }
 
-async function fetchConfigRules(force = false) {
+async function fetchConfigRules(_force = false) {
   try {
-    const resp = await fetch('/api/products/config-rules', {
-      headers: getAuthHeaders(),
-      cache: force ? 'no-store' : 'default'
-    })
-    if (!resp.ok) return []
-    const data = await resp.json()
+    const data = await api.get('/api/products/config-rules')
     return (data.items || []).map(toCamel)
   } catch {
     return []
@@ -147,7 +133,7 @@ export function useProducts() {
       const totalFromApi = c.length + p.length + r.length + cl.length + ct.length + pc.length
       if (totalFromApi === 0) {
         try {
-          await fetch('/api/products/seed', { method: 'POST', headers: getAuthHeaders() })
+          await api.post('/api/products/seed')
           const [c2, p2, r2, cl2, ct2, pc2, rules2] = await Promise.all([
             fetchCategory('cells', true),
             fetchCategory('packs', true),
@@ -200,16 +186,7 @@ export function useProducts() {
    * 新增产品
    */
   async function createProduct(category, data) {
-    const resp = await fetch(`/api/products/${category}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(data)
-    })
-    const result = await resp.json()
-    if (!resp.ok) {
-      throw new Error(result.error || '创建失败')
-    }
-    // 强制刷新下拉框
+    const result = await api.post(`/api/products/${category}`, data)
     await loadAll(true)
     return result
   }
@@ -218,15 +195,7 @@ export function useProducts() {
    * 更新产品
    */
   async function updateProduct(category, itemId, data) {
-    const resp = await fetch(`/api/products/${category}/${itemId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(data)
-    })
-    const result = await resp.json()
-    if (!resp.ok) {
-      throw new Error(result.error || '更新失败')
-    }
+    const result = await api.put(`/api/products/${category}/${itemId}`, data)
     await loadAll(true)
     return result
   }
@@ -235,26 +204,14 @@ export function useProducts() {
    * 删除产品
    */
   async function deleteProduct(category, itemId) {
-    const resp = await fetch(`/api/products/${category}/${itemId}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders()
-    })
-    const result = await resp.json()
-    if (!resp.ok) {
-      throw new Error(result.error || '删除失败')
-    }
+    const result = await api.del(`/api/products/${category}/${itemId}`)
     await loadAll(true)
     return result
   }
 
   async function matchConfigRule(params) {
     try {
-      const resp = await fetch('/api/products/match-config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-        body: JSON.stringify(params)
-      })
-      const data = await resp.json()
+      const data = await api.post('/api/products/match-config', params)
       return data
     } catch {
       return { success: false, matched: false }
@@ -263,12 +220,7 @@ export function useProducts() {
 
   async function getHierarchy(params) {
     try {
-      const resp = await fetch('/api/products/hierarchy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-        body: JSON.stringify(params)
-      })
-      const data = await resp.json()
+      const data = await api.post('/api/products/hierarchy', params)
       return data
     } catch {
       return { success: false, data: {} }
