@@ -40,19 +40,19 @@
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
-          存量净可用
+          {{ $t('sohChart.initNetAc') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-pink" />
-          补容净可用
+          {{ $t('sohChart.augNetAc') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-warning" />
-          承诺底线
+          {{ $t('sohChart.reqThreshold') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-accent-2" />
-          总输出
+          {{ $t('sohChart.totalOutput') }}
         </div>
       </div>
     </template>
@@ -62,19 +62,19 @@
       <div class="flex gap-4 mt-2 flex-shrink-0 flex-wrap">
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-accent" />
-          存量净可用
+          {{ $t('sohChart.initNetAc') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-pink" />
-          补容净可用
+          {{ $t('sohChart.augNetAc') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm bg-danger" />
-          存量自辅耗
+          {{ $t('sohChart.initAux') }}
         </div>
         <div class="flex items-center gap-1 text-[10px] text-secondary">
           <span class="inline-block w-3 h-3 rounded-sm u-background-color-var-color-chart-orange" />
-          补容自辅耗
+          {{ $t('sohChart.augAux') }}
         </div>
       </div>
     </template>

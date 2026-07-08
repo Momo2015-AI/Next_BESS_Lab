@@ -7,7 +7,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent"
         >
-          <div class="text-[9px] uppercase text-muted">AC-RTE 不带辅耗</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.acRteNoAux') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-accent">
             {{ dashboardMetrics.acRteNoAux }}
           </div>
@@ -16,7 +16,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-success"
         >
-          <div class="text-[9px] uppercase text-muted">AC-RTE 带辅耗</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.acRteWithAux') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-success">
             {{ dashboardMetrics.acRteWithAux }}
           </div>
@@ -25,7 +25,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent-secondary"
         >
-          <div class="text-[9px] uppercase text-muted">总装机容量</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.totalCapacity') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-accent-2">
             {{ dashboardMetrics.totalCapacity }}
           </div>
@@ -34,7 +34,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
         >
-          <div class="text-[9px] uppercase text-muted">总装机功率</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.totalPower') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 u-color-var-color-info">
             {{ dashboardMetrics.totalPower }}
           </div>
@@ -43,7 +43,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-warning"
         >
-          <div class="text-[9px] uppercase text-muted">年吞吐量</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.annualThroughput') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-warning">
             {{ dashboardMetrics.annualThroughput }}
           </div>
@@ -52,7 +52,7 @@
         <div
           class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-danger"
         >
-          <div class="text-[9px] uppercase text-muted">E/P 配比</div>
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.epRatio') }}</div>
           <div class="text-sm font-bold font-mono mt-0.5 text-danger">
             {{ dashboardMetrics.epRatio }}
           </div>

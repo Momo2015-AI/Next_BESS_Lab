@@ -15,48 +15,50 @@
         >
           {{ idx + 1 }}
         </span>
-        {{ step.label }}
+        {{ $t(step.label) }}
       </div>
     </div>
 
     <div v-show="currentStep === 0" class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
         <span class="w-2 h-2 rounded-full bg-accent" />
-        调研表数据获取
+        {{ $t('simLab.titleSurvey') }}
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-2">
-          <label class="text-xs text-secondary">调研表串码ID</label>
+          <label class="text-xs text-secondary">{{ $t('simLab.labelSurveyId') }}</label>
           <div class="flex gap-2">
             <input
               v-model="surveyId"
               type="text"
-              placeholder="输入调研表ID或扫描二维码"
+              :placeholder="$t('simLab.placeholderSurveyId')"
               class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
             />
-            <button class="text-xs px-3 py-1.5 rounded transition-all bg-accent" @click="loadSurveyData">加载</button>
+            <button class="text-xs px-3 py-1.5 rounded transition-all bg-accent" @click="loadSurveyData">
+              {{ $t('simLab.btnLoad') }}
+            </button>
           </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs text-secondary">项目名称搜索</label>
+          <label class="text-xs text-secondary">{{ $t('simLab.labelProjectSearch') }}</label>
           <div class="flex gap-2">
             <input
               v-model="searchKeyword"
               type="text"
-              placeholder="输入项目名称搜索"
+              :placeholder="$t('simLab.placeholderProjectSearch')"
               class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
             />
             <button class="text-xs px-3 py-1.5 rounded transition-all bg-info" @click="searchByProjectName">
-              搜索
+              {{ $t('simLab.btnSearch') }}
             </button>
           </div>
         </div>
       </div>
 
       <div v-if="searchResults.length > 0" class="mt-4 rounded-lg p-3 card-panel-bordered">
-        <h4 class="text-xs font-medium mb-2">搜索结果</h4>
+        <h4 class="text-xs font-medium mb-2">{{ $t('simLab.searchResults') }}</h4>
         <div class="max-h-40 overflow-auto">
           <div
             v-for="item in searchResults"
@@ -72,14 +74,14 @@
                 {{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh
               </p>
             </div>
-            <span class="text-[10px] px-2 py-1 rounded bg-accent">选择</span>
+            <span class="text-[10px] px-2 py-1 rounded bg-accent">{{ $t('simLab.btnSelect') }}</span>
           </div>
         </div>
       </div>
 
       <div class="mt-4 grid grid-cols-3 gap-3">
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">额定能量 (MWh)</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelRatedEnergy') }}</label>
           <input
             v-model.number="surveyData.ratedEnergy"
             type="number"
@@ -88,7 +90,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">集装箱数量</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelContainerQty') }}</label>
           <input
             v-model.number="surveyData.containerQty"
             type="number"
@@ -96,7 +98,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">PCS数量</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsQty') }}</label>
           <input
             v-model.number="surveyData.pcsQty"
             type="number"
@@ -104,7 +106,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">运行温度 (°C)</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelTemperature') }}</label>
           <input
             v-model.number="surveyData.temperature"
             type="number"
@@ -113,7 +115,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">每日循环次数</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCyclesPerDay') }}</label>
           <input
             v-model.number="surveyData.cyclesPerDay"
             type="number"
@@ -122,7 +124,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">DOD (%)</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelDod') }}</label>
           <input
             v-model.number="surveyData.dod"
             type="number"
@@ -133,7 +135,7 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">倍率 (C)</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCRate') }}</label>
           <input
             v-model.number="surveyData.cRate"
             type="number"
@@ -144,15 +146,15 @@
           />
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">电池类型</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBatteryType') }}</label>
           <select v-model="surveyData.batteryType" class="w-full rounded px-2 py-1 text-xs card-input text-accent">
-            <option value="LFP">LFP (磷酸铁锂)</option>
-            <option value="NCM">NCM (三元锂)</option>
-            <option value="LTO">LTO (钛酸锂)</option>
+            <option value="LFP">{{ $t('simLab.batteryLfp') }}</option>
+            <option value="NCM">{{ $t('simLab.batteryNcm') }}</option>
+            <option value="LTO">{{ $t('simLab.batteryLto') }}</option>
           </select>
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">项目地点</label>
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelLocation') }}</label>
           <input
             v-model="surveyData.location"
             type="text"
@@ -163,7 +165,7 @@
 
       <div class="mt-4 flex justify-end">
         <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="nextStep">
-          下一步：补全仿真参数
+          {{ $t('simLab.btnNextParams') }}
         </button>
       </div>
     </div>
@@ -171,38 +173,35 @@
     <div v-show="currentStep === 1" class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
         <span class="w-2 h-2 rounded-full bg-accent" />
-        仿真参数补全
+        {{ $t('simLab.titleParamsComplete') }}
       </h3>
 
       <div class="grid grid-cols-4 gap-3">
         <div class="col-span-4 rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">基础配置</h4>
+          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionBasic') }}</h4>
           <div class="grid grid-cols-4 gap-3">
             <div>
-              <label class="text-[10px] block mb-1 text-muted">仿真年限 (年)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSimYears') }}</label>
               <select
                 v-model.number="simParams.simulationYears"
                 class="w-full rounded px-2 py-1 text-xs card-input"
                 @change="initYearlyCorrections"
               >
-                <option value="10">10年</option>
-                <option value="15">15年</option>
-                <option value="20">20年</option>
-                <option value="25">25年</option>
-                <option value="30">30年</option>
+                <option v-for="n in [10,15,20,25,30]" :key="n" :value="n">
+                  {{ $t('simLab.years', { n }) }}
+                </option>
               </select>
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">最低保障年限 (年)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelGuaranteeYears') }}</label>
               <select v-model.number="simParams.guaranteeYears" class="w-full rounded px-2 py-1 text-xs card-input">
-                <option value="5">5年</option>
-                <option value="10">10年</option>
-                <option value="15">15年</option>
-                <option value="20">20年</option>
+                <option v-for="n in [5,10,15,20]" :key="n" :value="n">
+                  {{ $t('simLab.years', { n }) }}
+                </option>
               </select>
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">保障SOH底线 (%)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelGuaranteeSoh') }}</label>
               <input
                 v-model.number="simParams.guaranteeSoh"
                 type="number"
@@ -213,7 +212,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">承诺能量底线 (MWh)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelRequiredEnergy') }}</label>
               <input
                 v-model.number="simParams.requiredEnergy"
                 type="number"
@@ -225,10 +224,10 @@
         </div>
 
         <div class="col-span-2 rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">效率参数</h4>
+          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionEfficiency') }}</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] block mb-1 text-muted">初始RTE (%)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelInitRte') }}</label>
               <input
                 v-model.number="simParams.initRte"
                 type="number"
@@ -239,7 +238,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">AC效率 (%)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelAcEfficiency') }}</label>
               <input
                 v-model.number="simParams.acEfficiency"
                 type="number"
@@ -250,7 +249,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">DC效率 (%)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelDcEfficiency') }}</label>
               <input
                 v-model.number="simParams.dcEfficiency"
                 type="number"
@@ -261,7 +260,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">自放电率 (%/月)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSelfDischarge') }}</label>
               <input
                 v-model.number="simParams.selfDischarge"
                 type="number"
@@ -275,10 +274,10 @@
         </div>
 
         <div class="col-span-2 rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">辅耗参数</h4>
+          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionAux') }}</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] block mb-1 text-muted">BESS运行辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxRun') }}</label>
               <input
                 v-model.number="simParams.bessAuxRun"
                 type="number"
@@ -287,7 +286,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">BESS待机辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxStandby') }}</label>
               <input
                 v-model.number="simParams.bessAuxStandby"
                 type="number"
@@ -296,7 +295,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">PCS运行辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxRun') }}</label>
               <input
                 v-model.number="simParams.pcsAuxRun"
                 type="number"
@@ -305,7 +304,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">PCS待机辅耗 (kW)</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxStandby') }}</label>
               <input
                 v-model.number="simParams.pcsAuxStandby"
                 type="number"
@@ -318,9 +317,11 @@
       </div>
 
       <div class="mt-4 flex justify-between">
-        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">上一步</button>
+        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">
+          {{ $t('simLab.btnPrev') }}
+        </button>
         <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="nextStep">
-          下一步：选择仿真算法
+          {{ $t('simLab.btnNextAlgorithm') }}
         </button>
       </div>
     </div>
@@ -328,7 +329,7 @@
     <div v-show="currentStep === 2" class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
         <span class="w-2 h-2 rounded-full bg-accent" />
-        仿真算法选择
+        {{ $t('simLab.titleAlgorithm') }}
       </h3>
 
       <div class="grid grid-cols-3 gap-3">
@@ -358,7 +359,7 @@
             <span class="inline-block rounded px-1.5 py-0.5 mr-1 theme-bg-card">
               {{ algo.type }}
             </span>
-            <span class="text-secondary">精度: {{ algo.accuracy }}</span>
+            <span class="text-secondary">{{ $t('simLab.accuracy') }}: {{ algo.accuracy }}</span>
           </div>
           <div class="mt-2 text-[10px] font-mono truncate text-accent">
             {{ algo.mathematical_form }}
@@ -367,17 +368,17 @@
       </div>
 
       <div v-if="algorithms.length === 0" class="text-center py-8 text-muted">
-        <div>暂无算法模型，请先在算法公式试验舱中添加或初始化</div>
+        <div>{{ $t('simLab.noAlgo') }}</div>
       </div>
 
       <div v-if="selectedAlgoDetail" class="mt-4 rounded p-3 card-panel-bordered">
         <div class="flex justify-between items-center mb-2">
-          <h4 class="text-xs font-medium">{{ selectedAlgoDetail.name }} 参数</h4>
+          <h4 class="text-xs font-medium">{{ $t('simLab.algoParams', { name: selectedAlgoDetail.name }) }}</h4>
           <button
             class="text-[10px] rounded px-2 py-0.5 transition-colors theme-bg-card text-muted"
             @click="resetAlgoParams"
           >
-            恢复默认
+            {{ $t('simLab.btnRestoreDefault') }}
           </button>
         </div>
         <div class="grid grid-cols-4 gap-3">
@@ -401,21 +402,21 @@
       >
         <h4 class="text-xs font-bold mb-3 flex items-center gap-2 text-accent">
           <span>🤖</span>
-          AI仿真配置
+          {{ $t('simLab.titleAiConfig') }}
         </h4>
 
         <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="text-[10px] block mb-1 text-muted">电池厂家</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelManufacturer') }}</label>
             <select v-model="aiSimParams.manufacturerId" class="w-full rounded px-2 py-1 text-xs card-input">
-              <option value="">选择厂家（使用通用模型）</option>
+              <option value="">{{ $t('simLab.manufacturerPlaceholder') }}</option>
               <option v-for="mfr in manufacturers" :key="mfr.id" :value="mfr.id">
                 {{ mfr.name }} ({{ mfr.chemistry_type }})
               </option>
             </select>
           </div>
           <div>
-            <label class="text-[10px] block mb-1 text-muted">仿真年限 (年)</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSimYears') }}</label>
             <input
               v-model.number="aiSimParams.simulationYears"
               type="number"
@@ -425,7 +426,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1 text-muted">运行温度 (°C)</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelTemperature') }}</label>
             <input
               v-model.number="aiSimParams.temperature"
               type="number"
@@ -436,7 +437,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1 text-muted">日循环次数</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelDailyCycles') }}</label>
             <input
               v-model.number="aiSimParams.cyclesPerDay"
               type="number"
@@ -447,7 +448,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1 text-muted">放电深度 DOD (%)</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelDischargeDod') }}</label>
             <input
               v-model.number="aiSimParams.dod"
               type="number"
@@ -458,7 +459,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1 text-muted">充放电倍率 (C)</label>
+            <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelChargeRate') }}</label>
             <input
               v-model.number="aiSimParams.cRate"
               type="number"
@@ -476,17 +477,19 @@
             - {{ selectedManufacturer.description }}
           </p>
           <div class="flex gap-4 mt-1">
-            <span class="text-[10px] text-secondary">精度: SOH RMSE {{ selectedManufacturer.rmse_soh }}%</span>
-            <span class="text-[10px] text-secondary">RTE RMSE {{ selectedManufacturer.rmse_rte }}%</span>
-            <span class="text-[10px] text-secondary">数据点: {{ selectedManufacturer.data_points }}</span>
+            <span class="text-[10px] text-secondary">{{ $t('simLab.rmseSohLabel') }}: {{ selectedManufacturer.rmse_soh }}%</span>
+            <span class="text-[10px] text-secondary">{{ $t('simLab.rmseRteLabel') }}: {{ selectedManufacturer.rmse_rte }}%</span>
+            <span class="text-[10px] text-secondary">{{ $t('simLab.dataPoints') }}: {{ selectedManufacturer.data_points }}</span>
           </div>
         </div>
       </div>
 
       <div class="mt-4 flex justify-between">
-        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">上一步</button>
+        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">
+          {{ $t('simLab.btnPrev') }}
+        </button>
         <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="nextStep">
-          下一步：校正因子设置
+          {{ $t('simLab.btnNextCorrection') }}
         </button>
       </div>
     </div>
@@ -494,15 +497,15 @@
     <div v-show="currentStep === 3" class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
         <span class="w-2 h-2 rounded-full bg-accent" />
-        手工校正因子设置
+        {{ $t('simLab.titleCorrection') }}
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <div class="rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">全局校正因子</h4>
+          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionGlobalCorrection') }}</h4>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[10px] block mb-1 text-muted">SOH校正系数</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSohFactor') }}</label>
               <input
                 v-model.number="correctionFactors.sohFactor"
                 type="number"
@@ -511,10 +514,10 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs card-input"
               />
-              <p class="text-[10px] mt-1 text-muted">范围: 0.9-1.1，默认1.0</p>
+              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">RTE校正系数</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelRteFactor') }}</label>
               <input
                 v-model.number="correctionFactors.rteFactor"
                 type="number"
@@ -523,10 +526,10 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs card-input"
               />
-              <p class="text-[10px] mt-1 text-muted">范围: 0.9-1.1，默认1.0</p>
+              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">容量校正系数</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCapacityFactor') }}</label>
               <input
                 v-model.number="correctionFactors.capacityFactor"
                 type="number"
@@ -535,10 +538,10 @@
                 max="1.1"
                 class="w-full rounded px-2 py-1 text-xs card-input"
               />
-              <p class="text-[10px] mt-1 text-muted">范围: 0.9-1.1，默认1.0</p>
+              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
             </div>
             <div>
-              <label class="text-[10px] block mb-1 text-muted">老化加速因子</label>
+              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelAgingFactor') }}</label>
               <input
                 v-model.number="correctionFactors.agingFactor"
                 type="number"
@@ -547,20 +550,20 @@
                 max="1.5"
                 class="w-full rounded px-2 py-1 text-xs card-input"
               />
-              <p class="text-[10px] mt-1 text-muted">范围: 1.0-1.5，默认1.0</p>
+              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1_5') }}</p>
             </div>
           </div>
         </div>
 
         <div class="rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">年度校正表（可选）</h4>
+          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.annualCorrection') }}</h4>
           <div class="overflow-auto max-h-40">
             <table class="w-full text-[10px]">
               <thead>
                 <tr class="text-muted">
-                  <th class="py-1 px-2 text-left">年份</th>
-                  <th class="py-1 px-2 text-left">SOH校正</th>
-                  <th class="py-1 px-2 text-left">RTE校正</th>
+                  <th class="py-1 px-2 text-left">{{ $t('simLab.colYear') }}</th>
+                  <th class="py-1 px-2 text-left">{{ $t('simLab.colSohCorrection') }}</th>
+                  <th class="py-1 px-2 text-left">{{ $t('simLab.colRteCorrection') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -593,25 +596,27 @@
 
       <div class="mt-3 rounded p-2 card-panel-bordered">
         <p class="text-secondary">
-          <strong>校正因子说明：</strong>
+          <strong>{{ $t('simLab.correctionNotes') }}</strong>
         </p>
         <ul class="list-disc list-inside mt-1 space-y-0.5 text-secondary">
-          <li>校正系数 &gt; 1 表示增加衰减（保守估计）</li>
-          <li>校正系数 &lt; 1 表示减少衰减（乐观估计）</li>
-          <li>年度校正可针对特定年份进行精细调整</li>
-          <li>校正结果将应用于最终仿真输出</li>
+          <li>{{ $t('simLab.correctionNoteFactorGt') }}</li>
+          <li>{{ $t('simLab.correctionNoteFactorLt') }}</li>
+          <li>{{ $t('simLab.correctionNoteAnnual') }}</li>
+          <li>{{ $t('simLab.correctionNoteApplied') }}</li>
         </ul>
       </div>
 
       <div class="mt-4 flex justify-between">
-        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">上一步</button>
+        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">
+          {{ $t('simLab.btnPrev') }}
+        </button>
         <button
           :disabled="!selectedAlgorithm"
           class="text-xs px-6 py-2 rounded font-bold transition-all"
           :class="selectedAlgorithm ? 'btn-gradient-ready' : 'btn-disabled-muted'"
           @click="runSimulation"
         >
-          前端计算
+          {{ $t('simLab.btnFrontendCalc') }}
         </button>
         <button
           :disabled="!selectedAlgorithm"
@@ -619,7 +624,7 @@
           :class="selectedAlgorithm ? 'btn-gradient-accent' : 'btn-disabled-muted'"
           @click="runBackendSimulation"
         >
-          后端引擎计算
+          {{ $t('simLab.btnBackendCalc') }}
         </button>
       </div>
     </div>
@@ -628,24 +633,24 @@
       <div class="flex justify-between items-center mb-3">
         <h3 class="text-sm font-bold flex items-center gap-2 text-accent">
           <span class="w-2 h-2 rounded-full bg-accent" />
-          仿真结果
+          {{ $t('simLab.titleResults') }}
         </h3>
         <button
           class="text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1 bg-info"
           @click="saveSimulationResult"
         >
           <span>💾</span>
-          保存结果
+          {{ $t('simLab.btnSaveResult') }}
         </button>
       </div>
 
       <div class="grid grid-cols-4 gap-3 mb-4">
         <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">初始SOH</p>
+          <p class="text-[10px] text-muted">{{ $t('simLab.labelInitSoh') }}</p>
           <p class="text-lg font-bold text-accent">{{ simulationResults.initSoh?.toFixed(2) || '--' }}%</p>
         </div>
         <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">保障年限末SOH</p>
+          <p class="text-[10px] text-muted">{{ $t('simLab.labelGuaranteeEndSoh') }}</p>
           <p
             class="text-lg font-bold"
             :class="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? 'text-success' : 'text-danger'"
@@ -654,19 +659,19 @@
           </p>
         </div>
         <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">仿真年限末SOH</p>
+          <p class="text-[10px] text-muted">{{ $t('simLab.labelFinalSoh') }}</p>
           <p class="text-lg font-bold text-accent-secondary">{{ simulationResults.finalSoh?.toFixed(2) || '--' }}%</p>
         </div>
         <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">保障判定</p>
+          <p class="text-[10px] text-muted">{{ $t('simLab.labelGuaranteeCheck') }}</p>
           <p class="text-lg font-bold" :class="simulationResults.meetsGuarantee ? 'text-success' : 'text-danger'">
-            {{ simulationResults.meetsGuarantee ? '达标' : '未达标' }}
+            {{ simulationResults.meetsGuarantee ? $t('simLab.pass') : $t('simLab.fail') }}
           </p>
         </div>
       </div>
 
       <div class="rounded p-3 card-panel-bordered">
-        <h4 class="text-xs mb-2 font-medium">SOH衰减曲线</h4>
+        <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.titleSohCurve') }}</h4>
         <div ref="chartContainer" class="chart-container-sm" />
       </div>
 
@@ -674,11 +679,11 @@
         <table class="w-full text-[10px]">
           <thead>
             <tr class="text-muted">
-              <th class="py-1 px-2 text-left">年份</th>
-              <th class="py-1 px-2 text-left">SOH (%)</th>
-              <th class="py-1 px-2 text-left">RTE (%)</th>
-              <th class="py-1 px-2 text-left">净可用 (MWh)</th>
-              <th class="py-1 px-2 text-left">保障线</th>
+              <th class="py-1 px-2 text-left">{{ $t('simLab.colYear') }}</th>
+              <th class="py-1 px-2 text-left">{{ $t('simLab.colSoh') }}</th>
+              <th class="py-1 px-2 text-left">{{ $t('simLab.colRte') }}</th>
+              <th class="py-1 px-2 text-left">{{ $t('simLab.colNetAvail') }}</th>
+              <th class="py-1 px-2 text-left">{{ $t('simLab.colGuaranteeLine') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -700,7 +705,7 @@
                 {{ row.netAvail.toFixed(1) }}
               </td>
               <td class="py-1 px-2" :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'">
-                {{ row.meetsReq ? '达标' : '未达标' }}
+                {{ row.meetsReq ? $t('simLab.pass') : $t('simLab.fail') }}
               </td>
             </tr>
           </tbody>
@@ -709,10 +714,10 @@
 
       <div class="mt-4 flex justify-between">
         <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="resetSimulation">
-          重新仿真
+          {{ $t('simLab.btnReSimulate') }}
         </button>
         <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="exportResults">
-          导出结果
+          {{ $t('simLab.btnExport') }}
         </button>
       </div>
     </div>
@@ -731,6 +736,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -741,13 +747,14 @@ import api from '../services/api.js'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const emit = defineEmits(['applyConfig', 'error'])
+const { t } = useI18n()
 
 const steps = [
-  { label: '调研表数据' },
-  { label: '参数补全' },
-  { label: '算法选择' },
-  { label: '校正因子' },
-  { label: '仿真结果' }
+  { label: 'simLab.stepSurvey' },
+  { label: 'simLab.stepParams' },
+  { label: 'simLab.stepAlgorithm' },
+  { label: 'simLab.stepCorrection' },
+  { label: 'simLab.stepResults' }
 ]
 
 const currentStep = useDraftRef('sim-current-step', 0).state
@@ -842,7 +849,7 @@ const toast = reactive({ show: false, message: '', type: 'success' })
 
 const loadSurveyData = async () => {
   if (!surveyId.value) {
-    emit('error', '请输入调研表ID', 'warning')
+    emit('error', t('simLab.enterSurveyId'), 'warning')
     return
   }
   try {
@@ -850,16 +857,16 @@ const loadSurveyData = async () => {
     mapSurveyData(data)
   } catch (e) {
     if (e.status === 404) {
-      emit('error', '调研表ID不存在，请手动填写数据', 'warning')
+      emit('error', t('simLab.surveyNotFound'), 'warning')
     } else {
-      emit('error', '网络错误，请手动填写数据', 'error')
+      emit('error', t('simLab.networkErrorManual'), 'error')
     }
   }
 }
 
 const searchByProjectName = async () => {
   if (!searchKeyword.value.trim()) {
-    emit('error', '请输入项目名称关键词', 'warning')
+    emit('error', t('simLab.enterProjectKeyword'), 'warning')
     return
   }
   try {
@@ -867,13 +874,13 @@ const searchByProjectName = async () => {
     if (data.success) {
       searchResults.value = data.surveys
       if (data.surveys.length === 0) {
-        emit('error', '未找到匹配的项目', 'warning')
+        emit('error', t('simLab.noMatchingProject'), 'warning')
       }
     } else {
-      emit('error', data.error || '搜索失败', 'error')
+      emit('error', data.error || t('simLab.searchFailed'), 'error')
     }
   } catch {
-    emit('error', '网络错误，搜索失败', 'error')
+    emit('error', t('simLab.networkErrorSearch'), 'error')
   }
 }
 
@@ -933,9 +940,9 @@ const fetchAlgorithms = async () => {
         id: alg.id,
         name: alg.name,
         name_en: alg.name_en || '',
-        description: alg.description || '无描述',
+        description: alg.description || t('simLab.noDescription'),
         type: getCategoryLabel(alg.category),
-        accuracy: alg.accuracy_desc || '未知',
+        accuracy: alg.accuracy_desc || t('simLab.unknown'),
         model_type: alg.model_type,
         parameters: alg.parameters,
         mathematical_form: alg.mathematical_form || '',
@@ -943,7 +950,7 @@ const fetchAlgorithms = async () => {
       }))
     }
   } catch (e) {
-    console.error('获取算法列表失败:', e)
+    console.error('Failed to fetch algorithms:', e)
   }
 
   if (algorithms.value.length === 0) {
@@ -964,16 +971,16 @@ const fetchManufacturers = async () => {
       manufacturers.value = data.data
     }
   } catch (e) {
-    console.error('获取厂家列表失败:', e)
+    console.error('Failed to fetch manufacturers:', e)
   }
 }
 
 function getCategoryLabel(category) {
   const labels = {
-    degradation: '容量衰减',
-    financial: '财务模型',
-    engineering: '工程计算',
-    simulation: '仿真配置'
+    degradation: t('simLab.catDegradation'),
+    financial: t('simLab.catFinancial'),
+    engineering: t('simLab.catEngineering'),
+    simulation: t('simLab.catSimulation')
   }
   return labels[category] || category
 }
@@ -995,7 +1002,7 @@ const resetAlgoParams = () => {
   Object.keys(algo.parameters).forEach((key) => {
     algoParams[key] = algo.parameters[key].default || 0
   })
-  showToast('参数已恢复为默认值')
+  showToast(t('simLab.paramsReset'))
 }
 
 watch(selectedAlgorithm, (newId) => {
@@ -1213,13 +1220,13 @@ const runAISimulation = async () => {
         guaranteeSoh: simParams.guaranteeSoh
       })
 
-      showToast('AI仿真计算完成')
+      showToast(t('simLab.aiSimComplete'))
     } else {
-      showToast(result.error || 'AI仿真失败', 'error')
+      showToast(result.error || t('simLab.aiSimFailed'), 'error')
     }
   } catch (e) {
-    console.error('AI仿真失败:', e)
-    showToast('AI仿真失败: ' + e.message, 'error')
+    console.error('AI simulation failed:', e)
+    showToast(t('simLab.aiSimFailedWithError', { message: e.message }), 'error')
   }
 }
 
@@ -1309,13 +1316,13 @@ const renderChart = () => {
 
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { data: ['SOH', 'RTE', '保障线'], top: 0, textStyle: { color: textColor, fontSize: 10 } },
+    legend: { data: [t('simLab.chartSoh'), t('simLab.chartRte'), t('simLab.chartGuaranteeLine')], top: 0, textStyle: { color: textColor, fontSize: 10 } },
     grid: { left: 40, right: 20, top: 30, bottom: 20 },
     xAxis: { type: 'category', data: years, axisLabel: { color: textColor, fontSize: 10 } },
     yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: textColor, fontSize: 10 } },
     series: [
       {
-        name: 'SOH',
+        name: t('simLab.chartSoh'),
         type: 'line',
         data: simulationResults.sohCurve,
         smooth: true,
@@ -1323,7 +1330,7 @@ const renderChart = () => {
         itemStyle: { color: accentColor }
       },
       {
-        name: 'RTE',
+        name: t('simLab.chartRte'),
         type: 'line',
         data: simulationResults.rteCurve,
         smooth: true,
@@ -1331,7 +1338,7 @@ const renderChart = () => {
         itemStyle: { color: secondaryColor }
       },
       {
-        name: '保障线',
+        name: t('simLab.chartGuaranteeLine'),
         type: 'line',
         data: Array.from({ length: years.length }, () => simParams.guaranteeSoh),
         lineStyle: { color: warningColor, type: 'dashed' },
@@ -1352,11 +1359,11 @@ const handleResize = () => {
 const saveSimulationResult = async () => {
   const token = sessionStorage.getItem('auth_token')
   if (!token) {
-    showToast('请先登录', 'error')
+    showToast(t('simLab.pleaseLogin'), 'error')
     return
   }
 
-  const projectName = surveyData.projectName || '未命名项目'
+  const projectName = surveyData.projectName || t('simLab.unnamedProject')
   const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T:]/g, '')
   const resultName = `${projectName}_${timestamp}`
 
@@ -1364,7 +1371,7 @@ const saveSimulationResult = async () => {
 
   const data = {
     name: resultName,
-    description: `使用${algo?.name || '未知算法'}进行仿真`,
+    description: t('simLab.descriptionTemplate', { algo: algo?.name || t('simLab.unknown') }),
     simulation_type: algo?.category || 'comprehensive',
     algorithm_model_id: selectedAlgorithm.value,
     params: {
@@ -1392,12 +1399,12 @@ const saveSimulationResult = async () => {
   try {
     const respData = await api.post('/api/versions/default/results', data)
     if (respData.success) {
-      showToast('仿真结果保存成功')
+      showToast(t('simLab.saveSuccess'))
     } else {
-      showToast(respData.error || '保存失败', 'error')
+      showToast(respData.error || t('simLab.saveFailed'), 'error')
     }
   } catch (e) {
-    showToast('保存失败: ' + e.message, 'error')
+    showToast(t('simLab.saveFailedWithError', { message: e.message }), 'error')
   }
 }
 
@@ -1424,18 +1431,20 @@ const resetSimulation = () => {
 
 const exportResults = () => {
   const csvContent =
-    '年份,SOH(%),RTE(%),净可用(MWh),保障判定\n' +
+    t('simLab.csvHeader') + '\n' +
     simulationResults.tableData
       .map(
         (row) =>
-          `${row.year},${row.soh.toFixed(2)},${row.rte.toFixed(2)},${row.netAvail.toFixed(1)},${row.meetsReq ? '达标' : '未达标'}`
+          `${row.year},${row.soh.toFixed(2)},${row.rte.toFixed(2)},${row.netAvail.toFixed(1)},${row.meetsReq ? t('simLab.pass') : t('simLab.fail')}`
       )
       .join('\n')
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
+  const name = surveyData.projectName || t('simLab.csvUnnamed')
+  const date = new Date().toISOString().slice(0, 10)
   link.href = URL.createObjectURL(blob)
-  link.download = `仿真结果_${surveyData.projectName || '未命名'}_${new Date().toISOString().slice(0, 10)}.csv`
+  link.download = t('simLab.simExportFilename', { name, date })
   link.click()
 }
 
