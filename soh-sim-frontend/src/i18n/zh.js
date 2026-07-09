@@ -1370,36 +1370,8 @@ export default {
     healthStatus: '健康状态'
   },
   capexLink: {
-    title: '产品库→CAPEX 自动联动',
-    cell: '电芯',
-    selectCell: '选择电芯',
-    container: '集装箱',
-    selectContainer: '选择集装箱',
-    pcs: 'PCS 变流器',
-    selectPcs: '选择PCS',
-    currentConfig: '当前配置',
-    capexCalc: 'CAPEX 成本计算',
-    cellCost: '电芯成本',
-    containerCost: '集装箱成本',
-    pcsCost: 'PCS成本',
-    bop: 'BOP配套',
-    totalCapex: '总CAPEX',
-    unitPrice: '单价',
-    yuan10kPerMwh: '万元/MWh',
-    applyToSim: '应用到仿真',
-    noSelection: '请选择产品以自动计算CAPEX'
-  },
-  sidebar: {
-    platform: '储能系统仿真平台',
-    userName: '用户名称',
-    engineer: '储能工程师',
-    dashboard: '仪表盘',
-    simulation: '仿真实验室',
-    design: '系统设计',
-    analysis: '财务分析',
-    optimization: '策略优化',
-    configuration: '配置管理',
-    reports: '报告中心',
-    settings: '系统设置'
+    title: 'CAPEX 联动',
+    desc: '产品配置与 CAPEX 成本联动',
+    selectProductFirst: '请先选择产品以自动计算CAPEX'
   }
 }

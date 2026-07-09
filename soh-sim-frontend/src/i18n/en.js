@@ -1806,18 +1806,5 @@ export default {
     yuan10kPerMwh: '10k CNY/MWh',
     applyToSim: 'Apply to Simulation',
     noSelection: 'Please select products to auto-calculate CAPEX'
-  },
-  sidebar: {
-    platform: 'Energy Storage Simulation Platform',
-    userName: 'User Name',
-    engineer: 'Storage Engineer',
-    dashboard: 'Dashboard',
-    simulation: 'Simulation Lab',
-    design: 'System Design',
-    analysis: 'Financial Analysis',
-    optimization: 'Strategy Optimization',
-    configuration: 'Config Management',
-    reports: 'Report Center',
-    settings: 'System Settings'
   }
 }
