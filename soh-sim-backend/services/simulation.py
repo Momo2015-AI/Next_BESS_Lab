@@ -5,6 +5,7 @@
 import json
 import uuid
 from datetime import datetime, timezone
+from sqlalchemy.orm import selectinload
 
 
 def get_or_create_default_version(db, Project, ProjectVersion, user_id, tenant_id, version_id):
@@ -75,7 +76,8 @@ def create_simulation_result_service(db, Project, ProjectVersion, SimulationResu
     if err:
         return None, err
 
-    project = Project.query.get(ProjectVersion.query.get(actual_version_id).project_id)
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(actual_version_id)
+    project = version.project if version else None
     project_name = project.name if project else "未命名项目"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     default_name = f"{project_name}_{timestamp}"

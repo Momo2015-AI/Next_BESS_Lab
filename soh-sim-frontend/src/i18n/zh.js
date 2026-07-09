@@ -974,6 +974,23 @@ export default {
     tooltipPrincipal: '本金',
     wanSuffix: '万',
     yAxisUnit: '万元',
-    yAxisMultiplier: '倍率'
+    yAxisMultiplier: '倍率',
+    sectionCurrencyConverter: '货币转换',
+    labelBaseCurrency: '基础货币',
+    labelTargetCurrency: '目标货币',
+    labelAmount: '金额',
+    labelRate: '汇率',
+    labelApiRate: 'API汇率',
+    labelEffectiveRate: '有效汇率',
+    rateManual: '手动',
+    btnReset: '重置',
+    labelProjectCurrency: '项目货币设置',
+    btnRefresh: '刷新',
+    labelDisplayCurrency: '显示货币',
+    labelRateSource: '汇率来源',
+    labelLastUpdated: '更新时间',
+    labelStatus: '状态',
+    statusOnline: '在线',
+    statusCached: '缓存'
   }
 }

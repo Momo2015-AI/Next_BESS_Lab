@@ -9,6 +9,7 @@ import json
 from datetime import datetime
 
 from flask import Blueprint, current_app, make_response, request
+from sqlalchemy.orm import selectinload
 
 from database import Project, Simulation
 from routes.auth import token_required
@@ -40,10 +41,9 @@ def _enforce_simulation_tenant(simulation_id, user):
     """校验 simulation 关联 project 归属当前租户，返回 (ok, error_response)。"""
     if not simulation_id:
         return True, None
-    simulation = Simulation.query.get(simulation_id)
+    simulation = Simulation.query.options(selectinload(Simulation.project)).get(simulation_id)
     if simulation and simulation.project_id:
-        sim_project = Project.query.get(simulation.project_id)
-        if sim_project and user and sim_project.tenant_id != user.tenant_id:
+        if simulation.project and user and simulation.project.tenant_id != user.tenant_id:
             return False, error_response("无权访问该仿真", status_code=403)
     return True, None
 

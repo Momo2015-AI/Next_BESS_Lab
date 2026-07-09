@@ -9,6 +9,7 @@ import io
 import json
 import uuid
 from datetime import datetime, timezone
+from sqlalchemy.orm import selectinload
 
 from database import Project, Simulation, db
 
@@ -260,12 +261,10 @@ def save_simulation(data, current_user):
     }
 
     if simulation_id:
-        simulation = Simulation.query.get(simulation_id)
+        simulation = Simulation.query.options(selectinload(Simulation.project)).get(simulation_id)
         if simulation:
-            # 租户隔离：验证 simulation 关联 project 属于当前租户
             if simulation.project_id and current_user:
-                sim_project = Project.query.get(simulation.project_id)
-                if sim_project and sim_project.tenant_id != current_user.tenant_id:
+                if simulation.project and simulation.project.tenant_id != current_user.tenant_id:
                     return None, "无权访问该仿真", 403
             simulation.results = json.dumps(simulation_data)
             simulation.status = "completed"
@@ -341,14 +340,12 @@ def get_simulation_detail(simulation_id, current_user):
     Returns:
         (result_dict, error_str, status_code)
     """
-    simulation = Simulation.query.get(simulation_id)
+    simulation = Simulation.query.options(selectinload(Simulation.project)).get(simulation_id)
     if not simulation:
         return None, "仿真不存在", 404
 
-    # 租户隔离：验证关联 project 属于当前租户
     if simulation.project_id:
-        project = Project.query.get(simulation.project_id)
-        if project and current_user and project.tenant_id != current_user.tenant_id:
+        if simulation.project and current_user and simulation.project.tenant_id != current_user.tenant_id:
             return None, "无权访问", 403
 
     result = {

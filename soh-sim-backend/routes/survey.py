@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 
 from flask import Blueprint, current_app, request
+from sqlalchemy.orm import selectinload
 
 from database import Project, Survey, db
 from routes.auth import token_required
@@ -40,7 +41,7 @@ def submit_survey():
 @token_required
 def get_survey(survey_id):
     """获取调研表详情"""
-    survey = Survey.query.get(survey_id)
+    survey = Survey.query.options(selectinload(Survey.project)).get(survey_id)
     if not survey:
         return error_response("调研表不存在", 404)
 
@@ -131,7 +132,7 @@ def delete_survey(survey_id):
 @token_required
 def get_project(project_id):
     """获取项目详情"""
-    project = Project.query.get(project_id)
+    project = Project.query.options(selectinload(Project.surveys)).get(project_id)
     if not project:
         return error_response("项目不存在", 404)
 
