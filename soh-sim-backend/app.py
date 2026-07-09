@@ -16,12 +16,16 @@ from routes.auth import auth_bp, limiter
 from routes.aux_power import aux_power_bp
 from routes.boq import boq_bp
 from routes.degradation import degradation_bp
+from routes.design_engine import design_engine_bp
 from routes.efficiency import efficiency_bp
 from routes.epc import register_epc_blueprints
 from routes.exchange_rate import exchange_rate_bp
 from routes.export import export_bp
 from routes.financial import financial_bp
+from routes.financial_engine import fin_engine_bp
+from routes.orchestrator import orchestrator_bp
 from routes.pipeline import pipeline_bp
+from routes.simulation_engine import sim_engine_bp
 from routes.products import products_bp, seed_products
 from routes.project import project_bp
 from routes.rbac import rbac_bp
@@ -77,6 +81,10 @@ register_epc_blueprints(app)
 
 app.register_blueprint(pipeline_bp)
 app.register_blueprint(financial_bp)
+app.register_blueprint(design_engine_bp)
+app.register_blueprint(sim_engine_bp)
+app.register_blueprint(fin_engine_bp)
+app.register_blueprint(orchestrator_bp)
 app.register_blueprint(boq_bp)
 app.register_blueprint(efficiency_bp)
 app.register_blueprint(degradation_bp)

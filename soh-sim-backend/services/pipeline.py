@@ -1,3 +1,13 @@
+"""
+完整计算流水线
+
+新架构：核心已迁移到 services/simulation/engine.py (SimulationEngine)
+此文件保留为向后兼容代理，所有原有函数保持不变。
+"""
+
+# 向后兼容代理 — 从新引擎模块重导出
+from services.simulation.engine import SimulationEngine, run_simulation  # noqa: F401
+
 from services.degradation import NUM_YEARS, predict_soh
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
 

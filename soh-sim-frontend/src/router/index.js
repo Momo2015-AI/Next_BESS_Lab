@@ -148,6 +148,12 @@ const routes = [
     name: 'admin',
     component: () => import('../pages/AdminPanelPage.vue'),
     meta: { permission: 'admin_panel' }
+  },
+  {
+    path: '/orchestrator',
+    name: 'orchestrator',
+    component: () => import('../pages/OrchestratorPage.vue'),
+    meta: { permission: 'tool_engineering' }
   }
 ]
 

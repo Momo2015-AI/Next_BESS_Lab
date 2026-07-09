@@ -280,3 +280,154 @@ def sync_params():
         db.session.rollback()
         current_app.logger.error(f"参数同步失败: {e}", exc_info=True)
         return error_response("同步失败，请重试", 500)
+
+
+# ==================== 版本对比与回溯 API ====================
+
+
+@project_bp.route("/api/versions/compare", methods=["POST"])
+@token_required
+def compare_versions():
+    """对比两个版本的方案数据
+
+    Request Body:
+        { "version_ids": ["id1", "id2"] }
+
+    Returns:
+        {
+            versions: [{ id, name, design, simulation, financial }, ...],
+            delta: { irr: +2.5, npv: -50000, ... }
+        }
+    """
+    import json
+
+    data = request.get_json()
+    if not data:
+        return error_response("无效的请求数据", 400)
+
+    version_ids = data.get("version_ids", [])
+    if len(version_ids) < 2:
+        return error_response("至少需要 2 个版本ID进行对比", 400)
+
+    try:
+        versions_data = []
+        for vid in version_ids:
+            version = ProjectVersion.query.get(vid)
+            if not version:
+                return error_response(f"版本 {vid} 不存在", 404)
+
+            config = {}
+            if version.config_data:
+                try:
+                    config = json.loads(version.config_data)
+                except (json.JSONDecodeError, TypeError):
+                    config = {"raw": version.config_data}
+
+            versions_data.append({
+                "id": version.id,
+                "name": version.name,
+                "version_num": version.version_num,
+                "description": version.description,
+                "created_at": version.created_at.isoformat() if version.created_at else None,
+                "config": config,
+            })
+
+        # 计算差异
+        delta = _compute_version_delta(versions_data)
+
+        return success_response(
+            data={
+                "versions": versions_data,
+                "delta": delta,
+            },
+            message="版本对比完成",
+        )
+    except Exception as e:
+        current_app.logger.error(f"版本对比失败: {e}", exc_info=True)
+        return error_response("版本对比失败，请重试", 500)
+
+
+def _compute_version_delta(versions_data: list) -> dict:
+    """计算两个版本的关键指标差异"""
+    if len(versions_data) < 2:
+        return {}
+
+    def extract_metrics(config):
+        """从 config 中提取关键指标"""
+        fin = config.get("financial", {}) or {}
+        m = fin.get("metrics", {}) or {}
+        design = config.get("design", {}) or {}
+        return {
+            "irr": m.get("projectIrr") or m.get("irr"),
+            "npv": m.get("npv"),
+            "lcos": m.get("lcos") or m.get("lcoe"),
+            "payback": m.get("payback"),
+            "roi": m.get("roi"),
+            "containerQty": design.get("containerQty"),
+            "totalEnergy": design.get("totalEnergyMwh"),
+            "totalPower": design.get("totalPowerMW"),
+            "totalCapex": (design.get("estimatedCapex") or {}).get("totalCapex"),
+        }
+
+    m1 = extract_metrics(versions_data[0].get("config", {}))
+    m2 = extract_metrics(versions_data[1].get("config", {}))
+
+    delta = {}
+    for key in m1:
+        v1 = m1[key]
+        v2 = m2[key]
+        if v1 is None and v2 is None:
+            continue
+        v1 = float(v1) if v1 is not None else 0
+        v2 = float(v2) if v2 is not None else 0
+        diff = round(v2 - v1, 4)
+        pct = round((diff / abs(v1)) * 100, 2) if v1 != 0 else 0
+        delta[key] = {
+            "v1": v1,
+            "v2": v2,
+            "diff": diff,
+            "pct": pct,
+        }
+
+    return delta
+
+
+@project_bp.route("/api/versions/<version_id>/restore", methods=["POST"])
+@token_required
+def restore_version(version_id):
+    """回溯版本 — 返回版本的完整方案数据
+
+    将指定版本的 config_data 解析为 design + simulation + financial 返回，
+    前端可将其恢复到 store 中。
+    """
+    import json
+
+    version = ProjectVersion.query.get(version_id)
+    if not version:
+        return error_response("版本不存在", 404)
+
+    try:
+        config = {}
+        if version.config_data:
+            try:
+                config = json.loads(version.config_data)
+            except (json.JSONDecodeError, TypeError):
+                return error_response("版本数据格式异常，无法回溯", 500)
+
+        return success_response(
+            data={
+                "version": {
+                    "id": version.id,
+                    "name": version.name,
+                    "version_num": version.version_num,
+                    "description": version.description,
+                },
+                "design": config.get("design"),
+                "simulation": config.get("simulation"),
+                "financial": config.get("financial"),
+            },
+            message=f"已加载方案版本: {version.name}",
+        )
+    except Exception as e:
+        current_app.logger.error(f"版本回溯失败: {e}", exc_info=True)
+        return error_response("版本回溯失败，请重试", 500)

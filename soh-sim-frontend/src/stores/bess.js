@@ -384,6 +384,247 @@ export const useBessStore = defineStore('bess', {
         phase4: { status: 'pending' },
         phase5: { status: 'pending' }
       }
+    },
+
+    // ==================== 三引擎工作流 ====================
+
+    /** 一键执行完整工作流（设计 → 仿真 → 财务） */
+    async runFullWorkflow(surveyParams, strategy = 'economic', targetMetric = 'lcos') {
+      this.calculating = true
+      this.calculationError = null
+      try {
+        const resp = await post('/api/workflow/full', {
+          survey_params: surveyParams || {
+            ratedEnergy: this.survey.ratedEnergy,
+            totalPower: this.survey.totalPower,
+            duration: this.survey.duration,
+            temperature: this.survey.temperature,
+            cyclesPerDay: this.survey.cyclesPerDay,
+            dod: 90,
+            requiredEnergy: this.survey.requiredEnergy,
+            location: this.survey.location
+          },
+          strategy,
+          target_metric: targetMetric
+        })
+        if (resp.success && resp.data) {
+          this._applyWorkflowResult(resp.data)
+          return resp.data
+        }
+      } catch (e) {
+        this.calculationError = e.message
+        throw e
+      } finally {
+        this.calculating = false
+      }
+    },
+
+    /** 应用工作流结果到 store */
+    _applyWorkflowResult(data) {
+      const rec = data.recommendation
+      if (!rec) return
+
+      // 应用设计方案
+      if (rec.design) {
+        const d = rec.design
+        this.systemParams = {
+          ...this.systemParams,
+          ratedEnergy: d.container?.ratedEnergyMwh || this.systemParams.ratedEnergy,
+          initContainerQty: d.containerQty || this.systemParams.initContainerQty,
+          initPcsQty: d.pcsQty || this.systemParams.initPcsQty,
+          pcsPower: d.pcs?.ratedPowerMW || this.systemParams.pcsPower,
+          duration: d.duration || this.systemParams.duration
+        }
+        this.selectedProducts = {
+          cell: d.container?.cellModel || null,
+          container: d.container?.model || null,
+          pcs: d.pcs?.model || null
+        }
+        if (d.estimatedCapex) {
+          this.financial.capex = {
+            equipment: d.estimatedCapex.equipmentCost || 0,
+            epc: d.estimatedCapex.epcCost || 0,
+            development: d.estimatedCapex.developmentCost || 0
+          }
+        }
+      }
+
+      // 应用仿真结果
+      if (rec.simulation) {
+        const sim = rec.simulation
+        this.results = {
+          initGross: sim.initGross || [],
+          initAux: sim.initAux || [],
+          initAcUsable: sim.initAcUsable || [],
+          augGross: sim.augGross || [],
+          augAux: sim.augAux || [],
+          augAcUsable: sim.augAcUsable || [],
+          augAccumQty: sim.augAccumQty || [],
+          totalAcUsable: sim.totalAcUsable || [],
+          meetsReq: sim.meetsReq || []
+        }
+        this.degradation.soh = sim.soh || []
+        this.degradation.rte = sim.rte || []
+        this.degradation.dod = sim.dod || []
+        this.degradation.augQty = sim.augQty || []
+        if (sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
+        if (sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
+      }
+
+      // 应用财务结果
+      if (rec.financial?.metrics) {
+        const m = rec.financial.metrics
+        this.financial.metrics = {
+          projectIrr: m.projectIrr || m.irr || 0,
+          equityIrr: m.equityIrr || 0,
+          npv: m.npv || 0,
+          lcos: m.lcos || m.lcoe || 0,
+          dscr: m.dscr || { min: 0, avg: 0 },
+          payback: m.payback || -1,
+          roi: m.roi || 0
+        }
+        this.financial.cashflowTable = rec.financial.cashflowTable || []
+        this.financial.capexBreakdown = rec.financial.capexBreakdown || { equipment: 0, epc: 0, development: 0 }
+        if (rec.financial.revenueModel) {
+          this.financial.revenue = { ...this.financial.revenue, ...rec.financial.revenueModel }
+        }
+        if (rec.financial.sensitivity) {
+          this.financial.sensitivity = rec.financial.sensitivity
+        }
+      }
+    },
+
+    /** 运行设计引擎（仅设计） */
+    async runDesignEngine(surveyParams, strategy = 'economic') {
+      this.calculating = true
+      this.calculationError = null
+      try {
+        const resp = await post('/api/design/auto', {
+          survey_params: surveyParams,
+          strategy
+        })
+        if (resp.success && resp.data) {
+          return resp.data
+        }
+      } catch (e) {
+        this.calculationError = e.message
+        throw e
+      } finally {
+        this.calculating = false
+      }
+    },
+
+    /** 运行 What-If 分析 */
+    async runWhatIf(baseDesign, adjustments, surveyParams) {
+      try {
+        const resp = await post('/api/workflow/what-if', {
+          base_design: baseDesign,
+          adjustments,
+          survey_params: surveyParams
+        })
+        if (resp.success && resp.data) {
+          return resp.data
+        }
+      } catch (e) {
+        console.error('What-If analysis failed:', e)
+        throw e
+      }
+    },
+
+    /** 保存工作流结果为版本 */
+    async saveWorkflowAsVersion(projectId, surveyParams, strategy, targetMetric) {
+      try {
+        const resp = await post('/api/workflow/full', {
+          survey_params: surveyParams || {
+            ratedEnergy: this.survey.ratedEnergy,
+            totalPower: this.survey.totalPower,
+            duration: this.survey.duration,
+            temperature: this.survey.temperature,
+            cyclesPerDay: this.survey.cyclesPerDay,
+            dod: 90,
+            requiredEnergy: this.survey.requiredEnergy,
+            location: this.survey.location
+          },
+          strategy: strategy || 'economic',
+          target_metric: targetMetric || 'lcos',
+          project_id: projectId
+        })
+        if (resp.success) {
+          return resp.data
+        }
+      } catch (e) {
+        console.error('保存方案版本失败:', e)
+        throw e
+      }
+    },
+
+    /** 加载版本数据到 store */
+    async loadVersion(versionId) {
+      try {
+        const resp = await post(`/api/versions/${versionId}/restore`)
+        if (resp.success) {
+          const data = resp.data
+          if (data.design) {
+            this.selectedProducts = {
+              cell: data.design.container?.cellModel || null,
+              container: data.design.container?.model || null,
+              pcs: data.design.pcs?.model || null
+            }
+            this.systemParams = {
+              ...this.systemParams,
+              ratedEnergy: data.design.container?.ratedEnergyMwh || this.systemParams.ratedEnergy,
+              initContainerQty: data.design.containerQty || this.systemParams.initContainerQty,
+              initPcsQty: data.design.pcsQty || this.systemParams.initPcsQty,
+              pcsPower: data.design.pcs?.ratedPowerMW || this.systemParams.pcsPower,
+            }
+          }
+          if (data.simulation) {
+            this.results = {
+              initGross: data.simulation.initGross || [],
+              initAux: data.simulation.initAux || [],
+              initAcUsable: data.simulation.initAcUsable || [],
+              augGross: data.simulation.augGross || [],
+              augAux: data.simulation.augAux || [],
+              augAcUsable: data.simulation.augAcUsable || [],
+              augAccumQty: data.simulation.augAccumQty || [],
+              totalAcUsable: data.simulation.totalAcUsable || [],
+              meetsReq: data.simulation.meetsReq || []
+            }
+            this.degradation.soh = data.simulation.soh || []
+            this.degradation.rte = data.simulation.rte || []
+            this.degradation.dod = data.simulation.dod || []
+          }
+          if (data.financial?.metrics) {
+            const m = data.financial.metrics
+            this.financial.metrics = {
+              projectIrr: m.projectIrr || m.irr || 0,
+              equityIrr: m.equityIrr || 0,
+              npv: m.npv || 0,
+              lcos: m.lcos || m.lcoe || 0,
+              dscr: m.dscr || { min: 0, avg: 0 },
+              payback: m.payback || -1,
+              roi: m.roi || 0
+            }
+          }
+          return data
+        }
+      } catch (e) {
+        console.error('版本回溯失败:', e)
+        throw e
+      }
+    },
+
+    /** 对比两个版本 */
+    async compareVersions(versionIds) {
+      try {
+        const resp = await post('/api/versions/compare', { version_ids: versionIds })
+        if (resp.success) {
+          return resp.data
+        }
+      } catch (e) {
+        console.error('版本对比失败:', e)
+        throw e
+      }
     }
   },
   persist: { storage: sessionStorage }

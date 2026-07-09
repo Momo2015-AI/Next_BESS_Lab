@@ -1,7 +1,13 @@
 """完整财务计算引擎
 
 支持 5 种收入模型、融资参数化、税收/折旧建模，向后兼容简化参数。
+
+新架构：核心已迁移到 services/financial/engine.py (FinancialEngine)
+此文件保留为向后兼容代理，所有原有函数和常量均保持不变。
 """
+
+# 向后兼容代理 — 从新引擎模块重导出
+from services.financial.engine import FinancialEngine, run_financial  # noqa: F401
 
 NUM_YEARS = 26
 

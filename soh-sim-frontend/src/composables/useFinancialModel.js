@@ -1,3 +1,15 @@
+/**
+ * 前端财务模型 — 实时预览引擎
+ *
+ * **双轨设计（Frontend Preview + Backend Precision）：**
+ *   - 前端（此文件）：用于拖拽参数时的即时反馈，含 Newton-Raphson IRR 求解器。
+ *     计算简化版指标（IRR/NPV/Payback），让用户调整参数时获得 <100ms 的响应。
+ *   - 后端（services/financial/engine.py）：确认后调用 POST /api/financial/calculate
+ *     执行完整精算（26年逐期现金流 + DSCR + LCOS + 敏感性分析）。
+ *
+ * 不要废弃此文件 — 它是交互体验的关键。
+ */
+
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDraft } from './useDraft'
