@@ -7,3 +7,9 @@ __pycache__/
 .env
 .env.*
 *.local
+.pytest_cache/
+.codebuddy/
+*.egg-info/
+coverage/
+.vite/
+*.log
