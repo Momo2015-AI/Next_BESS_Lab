@@ -181,15 +181,15 @@ async function handleSubmit() {
 
     if (result.success) {
       // 保存token和用户信息到sessionStorage（页面关闭后自动清除）
-      sessionStorage.setItem('auth_token', result.token)
-      sessionStorage.setItem('user_info', JSON.stringify(result.user))
+      sessionStorage.setItem('auth_token', result.data.token)
+      sessionStorage.setItem('user_info', JSON.stringify(result.data.user))
 
       // 显式广播 storage 事件，通知同窗口的 App.vue 刷新用户态
       // （同窗口 storage 事件默认不触发，需要手动派发）
-      window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.user) }))
+      window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.data.user) }))
 
       showToast(isLogin.value ? t('auth.loginSuccess') : t('auth.registerSuccess'))
-      emit('auth-success', result.user)
+      emit('auth-success', result.data.user)
     } else {
       errorMessage.value = result.error || t('auth.operationFailed')
     }
