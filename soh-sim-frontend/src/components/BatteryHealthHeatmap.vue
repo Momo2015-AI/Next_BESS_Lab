@@ -6,12 +6,12 @@
       >
         BH
       </span>
-      电池健康状态热力图 Battery Health Heatmap
+      {{ $t('heatmap.title') }}
     </h3>
 
     <div class="mb-3 flex justify-between text-[10px] text-secondary">
-      <div>单元格颜色表示健康状态：绿色(>90%) - 红色(&lt;70%)</div>
-      <div>点击单元格查看详细信息</div>
+      <div>{{ $t('heatmap.legend') }}</div>
+      <div>{{ $t('heatmap.clickDetail') }}</div>
     </div>
 
     <div ref="heatmapRef" class="chart-container" />
@@ -48,7 +48,10 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { debounce } from 'lodash-es'
+
+const { t } = useI18n()
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { HeatmapChart } from 'echarts/charts'
@@ -157,7 +160,7 @@ const renderHeatmap = () => {
         const x = params.data[0]
         const y = params.data[1]
         const value = params.data[2]
-        return `单元格 [${String.fromCharCode(65 + y)},${x + 1}]<br/>健康状态: ${value.toFixed(1)}%`
+        return t('heatmap.cellHealth', { col: String.fromCharCode(65 + y), row: x + 1, value: value.toFixed(1) })
       }
     },
     grid: {
@@ -218,7 +221,7 @@ const renderHeatmap = () => {
     },
     series: [
       {
-        name: '健康状态',
+        name: t('heatmap.healthStatus'),
         type: 'heatmap',
         data: data,
         label: {

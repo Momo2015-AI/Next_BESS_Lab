@@ -44,23 +44,23 @@
     <!-- 成本明细 -->
     <div class="mt-2 space-y-1 text-[9x] text-muted">
       <div class="flex justify-between">
-        <span>初始CAPEX</span>
+        <span>{{ $t('waterfall.initialCapex') }}</span>
         <span>{{ formatCurrency(initialCapex) }}</span>
       </div>
       <div class="flex justify-between">
-        <span>年度OPEX</span>
+        <span>{{ $t('waterfall.annualOpex') }}</span>
         <span>{{ formatCurrency(annualOpex) }}</span>
       </div>
       <div class="flex justify-between">
-        <span>维护成本</span>
+        <span>{{ $t('waterfall.maintenance') }}</span>
         <span>{{ formatCurrency(maintenanceCost) }}</span>
       </div>
       <div class="flex justify-between">
-        <span>保险费用</span>
+        <span>{{ $t('waterfall.insurance') }}</span>
         <span>{{ formatCurrency(insuranceCost) }}</span>
       </div>
       <div class="flex justify-between">
-        <span>土地租金</span>
+        <span>{{ $t('waterfall.landRent') }}</span>
         <span>{{ formatCurrency(landLeaseCost) }}</span>
       </div>
     </div>
@@ -69,12 +69,15 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { debounce } from 'lodash-es'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
+
+const { t } = useI18n()
 echarts.use([CanvasRenderer, BarChart, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({
@@ -159,27 +162,27 @@ const generateWaterfallData = () => {
   // 瀑布图数据：正值为向上，负值为向下
   const data = [
     {
-      name: '初始CAPEX',
+      name: t('waterfall.initialCapex'),
       value: initialCapex.value,
       itemStyle: { color: 'var(--color-danger)' }
     },
     {
-      name: '年度OPEX',
+      name: t('waterfall.annualOpex'),
       value: annualOpex.value,
       itemStyle: { color: 'var(--color-warning)' }
     },
     {
-      name: '维护成本',
+      name: t('waterfall.maintenance'),
       value: maintenanceCost.value,
       itemStyle: { color: 'var(--color-warning)' }
     },
     {
-      name: '保险费用',
+      name: t('waterfall.insurance'),
       value: insuranceCost.value,
       itemStyle: { color: '#84cc16' }
     },
     {
-      name: '土地租金',
+      name: t('waterfall.landRent'),
       value: landLeaseCost.value,
       itemStyle: { color: 'var(--color-chart-cyan)' }
     }
@@ -218,7 +221,7 @@ const generateWaterfallData = () => {
 
   // 最后一列：累计线
   series.push({
-    name: '累计',
+    name: t('waterfall.cumulative'),
     type: 'line',
     yAxisIndex: 1,
     data: [baseValue, cumulative],
@@ -257,7 +260,7 @@ const updateChart = () => {
         const param = params[0]
         const value = param.value
         const formatted = formatCurrency(Math.abs(value))
-        return `${param.name}<br/>金额: ${formatted}`
+        return `${param.name}<br/>${t('waterfall.amount')}: ${formatted}`
       }
     },
     grid: {
@@ -281,7 +284,7 @@ const updateChart = () => {
     yAxis: [
       {
         type: 'value',
-        name: '金额 (万元)',
+        name: t('waterfall.amount') + ' (' + t('waterfall.yuan10k') + ')',
         nameTextStyle: {
           color:
             getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') ||
@@ -306,7 +309,7 @@ const updateChart = () => {
       },
       {
         type: 'value',
-        name: '累计线',
+        name: t('waterfall.cumulative'),
         nameTextStyle: {
           color: 'var(--color-accent)',
           fontSize: 10

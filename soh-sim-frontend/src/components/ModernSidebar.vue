@@ -10,7 +10,7 @@
       >
         <span class="font-bold">ES</span>
       </div>
-      <h1 class="text-xl font-bold">储能系统仿真平台</h1>
+      <h1 class="text-xl font-bold">{{ $t('sidebar.platform') }}</h1>
     </div>
 
     <!-- Navigation Menu -->
@@ -24,7 +24,7 @@
             @click.prevent="selectTab(item.id)"
           >
             <span class="mr-3">{{ item.icon }}</span>
-            <span>{{ item.title }}</span>
+            <span>{{ $t(item.title) }}</span>
           </a>
         </li>
       </ul>
@@ -39,8 +39,8 @@
           <span class="font-bold">U</span>
         </div>
         <div class="ml-3">
-          <p class="text-sm font-medium">用户名称</p>
-          <p class="text-xs text-gray-400">储能工程师</p>
+          <p class="text-sm font-medium">{{ $t('sidebar.userName') }}</p>
+          <p class="text-xs text-gray-400">{{ $t('sidebar.engineer') }}</p>
         </div>
       </div>
     </div>
@@ -59,14 +59,14 @@ const isOpen = ref(true)
 
 // 定义菜单项
 const menuItems = ref([
-  { id: 'dashboard', title: '仪表盘', icon: '📊' },
-  { id: 'simulation', title: '仿真实验室', icon: '🔬' },
-  { id: 'design', title: '系统设计', icon: '⚙️' },
-  { id: 'analysis', title: '财务分析', icon: '📈' },
-  { id: 'optimization', title: '策略优化', icon: '🎯' },
-  { id: 'configuration', title: '配置管理', icon: '🔧' },
-  { id: 'reports', title: '报告中心', icon: '📋' },
-  { id: 'settings', title: '系统设置', icon: '⚙️' }
+  { id: 'dashboard', title: 'sidebar.dashboard', icon: '📊' },
+  { id: 'simulation', title: 'sidebar.simulation', icon: '🔬' },
+  { id: 'design', title: 'sidebar.design', icon: '⚙️' },
+  { id: 'analysis', title: 'sidebar.analysis', icon: '📈' },
+  { id: 'optimization', title: 'sidebar.optimization', icon: '🎯' },
+  { id: 'configuration', title: 'sidebar.configuration', icon: '🔧' },
+  { id: 'reports', title: 'sidebar.reports', icon: '📋' },
+  { id: 'settings', title: 'sidebar.settings', icon: '⚙️' }
 ])
 
 const activeTab = ref('dashboard')

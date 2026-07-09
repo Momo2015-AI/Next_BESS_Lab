@@ -6,33 +6,33 @@
       >
         VII
       </span>
-      产品库→CAPEX 自动联动 Product Library → CAPEX Auto-Link
+      {{ $t('capexLink.title') }}
     </h3>
 
     <div class="space-y-3 text-[10px] text-secondary">
-      <!-- 产品选择 -->
+      <!-- Product Selection -->
       <div class="grid grid-cols-3 gap-2">
         <div>
-          <label class="block mb-0.5 text-muted">电芯 Cell</label>
+          <label class="block mb-0.5 text-muted">{{ $t('capexLink.cell') }}</label>
           <select
             v-model="selectedCell"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
-            <option value="">选择电芯</option>
+            <option value="">{{ $t('capexLink.selectCell') }}</option>
             <option v-for="cell in availableCells" :key="cell.id" :value="cell.id">
               {{ cell.mfr }} {{ cell.model }} ({{ cell.capacityAh }}Ah, ¥{{ cell.unitPrice }}/Ah)
             </option>
           </select>
         </div>
         <div>
-          <label class="block mb-0.5 text-muted">集装箱 Container</label>
+          <label class="block mb-0.5 text-muted">{{ $t('capexLink.container') }}</label>
           <select
             v-model="selectedContainer"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
-            <option value="">选择集装箱</option>
+            <option value="">{{ $t('capexLink.selectContainer') }}</option>
             <option v-for="container in availableContainers" :key="container.id" :value="container.id">
               {{ container.mfr }} {{ container.model }} ({{ container.ratedEnergyMWh }}MWh, ¥{{
                 container.unitPrice
@@ -41,13 +41,13 @@
           </select>
         </div>
         <div>
-          <label class="block mb-0.5 text-muted">PCS 变流器</label>
+          <label class="block mb-0.5 text-muted">{{ $t('capexLink.pcs') }}</label>
           <select
             v-model="selectedPcs"
             class="w-full rounded px-2 py-1 text-xs form-field-select"
             @change="updateCAPEX"
           >
-            <option value="">选择PCS</option>
+            <option value="">{{ $t('capexLink.selectPcs') }}</option>
             <option v-for="pcs in availablePcs" :key="pcs.id" :value="pcs.id">
               {{ pcs.mfr }} {{ pcs.model }} ({{ pcs.ratedPowerMW }}MW, ¥{{ pcs.unitPrice }}/MW)
             </option>
@@ -55,15 +55,15 @@
         </div>
       </div>
 
-      <!-- 配置摘要 -->
+      <!-- Current Config -->
       <div
         v-if="hasSelection"
         class="border rounded p-2 u-border-color-var-color-border-background-color-var-color-card-dark"
       >
-        <h4 class="text-xs font-bold mb-2 text-secondary">当前配置 Current Configuration</h4>
+        <h4 class="text-xs font-bold mb-2 text-secondary">{{ $t('capexLink.currentConfig') }}</h4>
         <div class="grid grid-cols-3 gap-2 text-xs">
           <div>
-            <div>电芯</div>
+            <div>{{ $t('capexLink.cell') }}</div>
             class="text-muted"
             <div class="font-mono mt-0.5 text-default">{{ selectedCellInfo?.mfr }} {{ selectedCellInfo?.model }}</div>
             <div class="text-[9px] text-muted">
@@ -71,7 +71,7 @@
             </div>
           </div>
           <div>
-            <div>集装箱</div>
+            <div>{{ $t('capexLink.container') }}</div>
             class="text-muted"
             <div class="font-mono mt-0.5 text-default">
               {{ selectedContainerInfo?.mfr }} {{ selectedContainerInfo?.model }}
@@ -91,53 +91,53 @@
         </div>
       </div>
 
-      <!-- CAPEX 计算 -->
+      <!-- CAPEX Calculation -->
       <div v-if="hasSelection" class="border-t pt-2">
-        <h4 class="text-xs font-bold mb-2 text-secondary">CAPEX 成本计算 CAPEX Cost Calculation</h4>
+        <h4 class="text-xs font-bold mb-2 text-secondary">{{ $t('capexLink.capexCalc') }}</h4>
         <div class="space-y-1 text-xs">
           <div class="flex justify-between">
-            <span>电芯成本</span>
+            <span>{{ $t('capexLink.cellCost') }}</span>
             class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(cellCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span>集装箱成本</span>
+            <span>{{ $t('capexLink.containerCost') }}</span>
             class="text-muted"
             <span class="font-mono text-secondary">
               {{ formatCurrency(containerCost) }}
             </span>
           </div>
           <div class="flex justify-between">
-            <span>PCS成本</span>
+            <span>{{ $t('capexLink.pcsCost') }}</span>
             class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(pcsCost) }}</span>
           </div>
           <div class="flex justify-between">
-            <span>BOP配套</span>
+            <span>{{ $t('capexLink.bop') }}</span>
             class="text-muted"
             <span class="font-mono text-secondary">{{ formatCurrency(bopCost) }}</span>
           </div>
           <div class="border-t pt-1 mt-1 flex justify-between font-bold">
-            <span>总CAPEX</span>
+            <span>{{ $t('capexLink.totalCapex') }}</span>
             class="text-default"
             <span class="font-mono text-accent">{{ formatCurrency(totalCAPEX) }}</span>
           </div>
           <div class="flex justify-between text-[9px]">
-            <span class="text-muted">单价</span>
-            <span class="text-secondary">{{ capexPerMWh.toFixed(0) }} 万元/MWh</span>
+            <span class="text-muted">{{ $t('capexLink.unitPrice') }}</span>
+            <span class="text-secondary">{{ capexPerMWh.toFixed(0) }} {{ $t('capexLink.yuan10kPerMwh') }}</span>
           </div>
         </div>
       </div>
 
-      <!-- 应用到仿真 -->
+      <!-- Apply -->
       <div v-if="hasSelection" class="flex justify-end mt-3">
         <button class="text-xs px-4 py-1.5 rounded transition-colors bg-accent-2 text-white" @click="applyToSimulation">
-          应用到仿真 Apply to Simulation
+          {{ $t('capexLink.applyToSim') }}
         </button>
       </div>
 
-      <!-- 提示信息 -->
-      <div v-if="!hasSelection" class="text-[9px] text-center py-2 text-muted">请选择产品以自动计算CAPEX</div>
+      <!-- Hint -->
+      <div v-if="!hasSelection" class="text-[9px] text-center py-2 text-muted">{{ $t('capexLink.noSelection') }}</div>
     </div>
   </div>
 </template>

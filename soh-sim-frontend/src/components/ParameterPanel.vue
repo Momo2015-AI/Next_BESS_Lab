@@ -213,60 +213,60 @@
       </div>
     </div>
 
-    <!-- 配置规则区域 -->
+    <!-- Configuration Rules -->
     <div>
       <h2
         class="text-sm font-bold mb-3 flex items-center gap-2 u-color-var-color-accent-border-left-4px-solid-var-color-accent-padding-left-8px"
       >
-        ⚡ 电池与PCS配置规则
+        ⚡ {{ $t('paramPanel.configRules') }}
       </h2>
       <div class="rounded-lg p-4 bg-card-dark border-card">
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="rounded p-3 bg-input-dark">
-            <div class="text-xs mb-2 font-medium text-accent">功率配比规则</div>
+            <div class="text-xs mb-2 font-medium text-accent">{{ $t('paramPanel.powerRatioRule') }}</div>
             <div class="text-[10px] space-y-1 text-muted">
               <div>
-                • 2h储能:
-                <span>能量 = 2 × 功率</span>
+                • {{ $t('paramPanel.rule2h') }}
+                <span>{{ $t('paramPanel.rule2hVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • 4h储能:
-                <span>能量 = 4 × 功率</span>
+                • {{ $t('paramPanel.rule4h') }}
+                <span>{{ $t('paramPanel.rule4hVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • 常用配比:
-                <span>1:2 (功率:能量)</span>
+                • {{ $t('paramPanel.ruleCommon') }}
+                <span>{{ $t('paramPanel.ruleCommonVal') }}</span>
                 class="text-accent-2"
               </div>
             </div>
           </div>
           <div class="rounded p-3 bg-input-dark">
-            <div class="text-xs mb-2 font-medium text-accent-2">集装箱与PCS对应规则</div>
+            <div class="text-xs mb-2 font-medium text-accent-2">{{ $t('paramPanel.containerPcsRule') }}</div>
             <div class="text-[10px] space-y-1 text-muted">
               <div>
-                • 5MWh + 0.5C放电 →
-                <span>2台 2.5MW PCS</span>
+                • {{ $t('paramPanel.rule5mwh') }}
+                <span>{{ $t('paramPanel.rule5mwhVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • 10MWh + 0.5C放电 →
-                <span>2台 5MW PCS</span>
+                • {{ $t('paramPanel.rule10mwh') }}
+                <span>{{ $t('paramPanel.rule10mwhVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • 20MWh + 0.5C放电 →
-                <span>4台 5MW PCS</span>
+                • {{ $t('paramPanel.rule20mwh') }}
+                <span>{{ $t('paramPanel.rule20mwhVal') }}</span>
                 class="text-accent-2"
               </div>
             </div>
           </div>
           <div class="rounded p-3 bg-input-dark">
-            <div class="text-xs mb-2 font-medium text-warning">计算公式</div>
+            <div class="text-xs mb-2 font-medium text-warning">{{ $t('paramPanel.formulas') }}</div>
             <div class="text-[10px] space-y-1 text-muted">
-              <div>PCS数量 = 能量 ÷ (放电时长 × 单台功率)</div>
-              <div>变压器 = PCS总量 ÷ 并机数 × 1.1</div>
+              <div>{{ $t('paramPanel.pcsFormula') }}</div>
+              <div>{{ $t('paramPanel.transformerFormula') }}</div>
             </div>
           </div>
         </div>
@@ -275,9 +275,9 @@
           class="flex items-center gap-4 p-3 rounded u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark"
         >
           <div class="text-xs text-accent-2">
-            当前:
+            {{ $t('paramPanel.current') }}
             <span>{{ params.initContainerQty }}</span>
-            class="font-bold text-default" 台 ×
+            class="font-bold text-default" ×
             <span>{{ params.ratedEnergy }}</span>
             class="font-bold text-default" MWh =
             <span>
@@ -289,17 +289,17 @@
           <div>→</div>
           class="text-muted"
           <div class="text-xs text-accent-2">
-            建议PCS:
+            {{ $t('paramPanel.suggestedPcs') }}
             <span>
               class="font-bold text-default"
               {{ Math.ceil((params.initContainerQty * params.ratedEnergy) / (params.duration * 5)) }}
             </span>
-            台 5MW
+            × 5MW
           </div>
           <div>→</div>
           class="text-muted"
           <div class="text-xs text-warning">
-            配比:
+            {{ $t('paramPanel.ratio') }}
             <span>
               class="font-bold text-default" 1:{{
                 (
@@ -312,7 +312,7 @@
         </div>
 
         <button class="mt-3 text-xs px-4 py-2 rounded transition-colors bg-accent text-white" @click="autoMatchPCS">
-          根据配置规则自动匹配PCS
+          {{ $t('paramPanel.autoMatch') }}
         </button>
       </div>
     </div>
@@ -373,6 +373,9 @@
 
 <script setup>
 import { reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({ params: Object })
 const emit = defineEmits(['update', 'error'])
@@ -407,19 +410,19 @@ const validationRules = {
 
 const validateAndUpdate = (key, value, rule) => {
   if (value === '' || value === null || value === undefined) {
-    errors[key] = '该字段不能为空'
+    errors[key] = t('paramPanel.fieldRequired')
     emit('error', errors[key], 'error')
     return
   }
 
   if (value < rule.min) {
-    errors[key] = `该值不能小于 ${rule.min}`
+    errors[key] = t('paramPanel.valueTooSmall', { min: rule.min })
     emit('error', errors[key], 'error')
     return
   }
 
   if (value > rule.max) {
-    errors[key] = `该值不能大于 ${rule.max}`
+    errors[key] = t('paramPanel.valueTooLarge', { max: rule.max })
     emit('error', errors[key], 'error')
     return
   }
