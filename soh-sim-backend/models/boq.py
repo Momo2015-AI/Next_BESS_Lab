@@ -1,4 +1,5 @@
 from . import _utcnow, db
+from .auth import Tenant, User
 
 
 class BoqSection(db.Model):

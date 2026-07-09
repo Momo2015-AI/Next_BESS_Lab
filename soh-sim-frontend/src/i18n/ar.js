@@ -681,5 +681,24 @@ export default {
     totalOutput: 'إجمالي الإخراج',
     initAux: 'خسائر الأصول الأولية',
     augAux: 'خسائر التعزيز'
+  },
+  financial: {
+    sectionCurrencyConverter: 'محول العملات',
+    labelBaseCurrency: 'العملة الأساسية',
+    labelTargetCurrency: 'العملة المستهدفة',
+    labelAmount: 'المبلغ',
+    labelRate: 'سعر الصرف',
+    labelApiRate: 'سعر API',
+    labelEffectiveRate: 'السعر الفعّال',
+    rateManual: 'يدوي',
+    btnReset: 'إعادة ضبط',
+    labelProjectCurrency: 'إعدادات عملة المشروع',
+    btnRefresh: 'تحديث',
+    labelDisplayCurrency: 'عملة العرض',
+    labelRateSource: 'مصدر السعر',
+    labelLastUpdated: 'آخر تحديث',
+    labelStatus: 'الحالة',
+    statusOnline: 'متصل',
+    statusCached: 'مخزّن'
   }
 }

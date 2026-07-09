@@ -18,6 +18,7 @@ from routes.boq import boq_bp
 from routes.degradation import degradation_bp
 from routes.efficiency import efficiency_bp
 from routes.epc import register_epc_blueprints
+from routes.exchange_rate import exchange_rate_bp
 from routes.export import export_bp
 from routes.financial import financial_bp
 from routes.pipeline import pipeline_bp
@@ -78,6 +79,7 @@ app.register_blueprint(financial_bp)
 app.register_blueprint(boq_bp)
 app.register_blueprint(efficiency_bp)
 app.register_blueprint(degradation_bp)
+app.register_blueprint(exchange_rate_bp)
 
 
 # ==================== 全局错误处理器 ====================

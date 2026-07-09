@@ -67,11 +67,11 @@ export function useExchangeRate() {
   const fetchAllRates = async () => {
     loading.value = true
     try {
-      const data = await api.get('/api/exchange-rates/all')
+      const resp = await api.get('/api/exchange-rates/all')
 
-      exchangeRates.value = data.rates
-      lastUpdated.value = data.date
-      rateSource.value = data.rates[Object.keys(data.rates)[0]]?.source || ''
+      exchangeRates.value = resp.data.rates
+      lastUpdated.value = resp.data.date
+      rateSource.value = resp.data.rates[Object.keys(resp.data.rates)[0]]?.source || ''
     } catch (e) {
       console.error('Error fetching exchange rates:', e)
     } finally {
@@ -83,17 +83,17 @@ export function useExchangeRate() {
   const fetchRate = async (currency) => {
     loading.value = true
     try {
-      const data = await api.get(`/api/exchange-rates/latest?currency=${currency}`)
+      const resp = await api.get(`/api/exchange-rates/latest?currency=${currency}`)
 
       exchangeRates.value[currency] = {
-        rate: data.rate,
-        source: data.source,
-        date: data.date,
+        rate: resp.data.rate,
+        source: resp.data.source,
+        date: resp.data.date,
         name: supportedCurrencies[currency]
       }
-      lastUpdated.value = data.date
-      rateSource.value = data.source
-      return data.rate
+      lastUpdated.value = resp.data.date
+      rateSource.value = resp.data.source
+      return resp.data.rate
     } catch (e) {
       console.error('Error fetching exchange rate:', e)
       return null
