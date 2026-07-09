@@ -1,25 +1,22 @@
 <template>
   <div class="battery-dc-design h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent-secondary)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent-secondary)" />
+    <div class="rounded-lg p-4 card">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-secondary">
+        <span class="w-2 h-2 rounded-full dot-accent" />
         {{ $t('batteryDC.title') }}
       </h3>
 
       <!-- 电池系统配置 -->
       <div class="grid grid-cols-2 gap-4 mb-4">
         <!-- 电芯选型 -->
-        <div
-          class="rounded-lg p-4"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+        <div class="rounded-lg p-4 card-dark">
+          <h4 class="text-xs mb-3 font-medium text-secondary">
             {{ $t('batteryDC.cellModel') }}
           </h4>
 
           <div class="space-y-3">
             <div>
-              <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+              <label class="text-[10px] block mb-1 text-muted">
                 {{ $t('batteryDC.cellType') }}
               </label>
               <select
@@ -36,7 +33,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.ratedCapacity') }}
                 </label>
                 <input
@@ -46,7 +43,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.ratedVoltage') }}
                 </label>
                 <input
@@ -59,7 +56,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.energyDensity') }}
                 </label>
                 <input
@@ -69,7 +66,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.cycleLife') }}
                 </label>
                 <input
@@ -83,18 +80,15 @@
         </div>
 
         <!-- 电池簇配置 -->
-        <div
-          class="rounded-lg p-4"
-          style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-        >
-          <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+        <div class="rounded-lg p-4 card-dark">
+          <h4 class="text-xs mb-3 font-medium text-secondary">
             {{ $t('batteryDC.clusterConfig') }}
           </h4>
 
           <div class="space-y-3">
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.seriesCount') }}
                 </label>
                 <input
@@ -104,7 +98,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.parallelCount') }}
                 </label>
                 <input
@@ -117,7 +111,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.clusterVoltage') }}
                 </label>
                 <input
@@ -128,7 +122,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.clusterCapacity') }}
                 </label>
                 <input
@@ -142,7 +136,7 @@
 
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.clusterEnergy') }}
                 </label>
                 <input
@@ -153,7 +147,7 @@
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 text-muted">
                   {{ $t('batteryDC.clusterQty') }}
                 </label>
                 <input
@@ -168,17 +162,14 @@
       </div>
 
       <!-- 集装箱配置 -->
-      <div
-        class="rounded-lg p-4 mb-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+      <div class="rounded-lg p-4 mb-4 card-dark">
+        <h4 class="text-xs mb-3 font-medium text-secondary">
           {{ $t('batteryDC.containerConfig') }}
         </h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.containerSpec') }}
             </label>
             <select v-model="batteryConfig.containerSpec" class="w-full rounded px-2 py-1 text-xs form-field-select">
@@ -188,7 +179,7 @@
             </select>
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.clustersPerContainer') }}
             </label>
             <input
@@ -198,7 +189,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.containerEnergy') }}
             </label>
             <input
@@ -209,7 +200,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.containerQty') }}
             </label>
             <input
@@ -222,7 +213,7 @@
 
         <div class="grid grid-cols-4 gap-3 mt-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.totalDcEnergy') }}
             </label>
             <input
@@ -233,7 +224,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.dcVoltageRange') }}
             </label>
             <input
@@ -243,7 +234,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.maxDcCurrent') }}
             </label>
             <input
@@ -253,7 +244,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.dcBreaker') }}
             </label>
             <input
@@ -266,17 +257,14 @@
       </div>
 
       <!-- 运行参数 -->
-      <div
-        class="rounded-lg p-4 mb-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">
+      <div class="rounded-lg p-4 mb-4 card-dark">
+        <h4 class="text-xs mb-3 font-medium text-secondary">
           {{ $t('batteryDC.operatingParams') }}
         </h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.operatingTemp') }}
             </label>
             <input
@@ -286,7 +274,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.dodSetting') }}
             </label>
             <input
@@ -298,7 +286,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.cyclesPerDay') }}
             </label>
             <input
@@ -308,7 +296,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+            <label class="text-[10px] block mb-1 text-muted">
               {{ $t('batteryDC.actualDod') }}
             </label>
             <input
@@ -322,105 +310,71 @@
       </div>
 
       <!-- 计算结果 -->
-      <div
-        class="rounded-lg p-4"
-        style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
-      >
+      <div class="rounded-lg p-4 card-dark">
         <div class="flex items-center justify-between mb-3">
-          <h4 class="text-xs font-medium" style="color: var(--color-text-secondary)">
+          <h4 class="text-xs font-medium text-secondary">
             {{ $t('batteryDC.configResult') }}
           </h4>
-          <button
-            class="text-xs px-3 py-1 rounded transition-colors"
-            style="background-color: var(--color-accent-secondary); color: white"
-            @click="calculateBatteryConfig"
-          >
+          <button class="text-xs px-3 py-1 rounded transition-colors btn-accent" @click="calculateBatteryConfig">
             {{ $t('batteryDC.calculateConfig') }}
           </button>
         </div>
 
         <div class="grid grid-cols-6 gap-3">
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-accent-secondary)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-accent-secondary">
               {{ batteryConfig.totalDcEnergy.toFixed(1) }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">
+            <div class="text-[10px] text-muted">
               {{ $t('batteryDC.resultTotalDcEnergy') }}
             </div>
           </div>
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-accent)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-accent">
               {{ batteryConfig.containerQty }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">
+            <div class="text-[10px] text-muted">
               {{ $t('batteryDC.resultContainerQty') }}
             </div>
           </div>
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-success)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-success">
               {{ totalStrings }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">
+            <div class="text-[10px] text-muted">
               {{ $t('batteryDC.resultTotalClusters') }}
             </div>
           </div>
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-warning)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-warning">
               {{ batteryConfig.dcVoltageRange }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">
+            <div class="text-[10px] text-muted">
               {{ $t('batteryDC.resultVoltageRange') }}
             </div>
           </div>
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-danger)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-danger">
               {{ batteryConfig.maxDcCurrent }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('batteryDC.resultMaxCurrent') }}</div>
+            <div class="text-[10px] text-muted">{{ $t('batteryDC.resultMaxCurrent') }}</div>
           </div>
-          <div
-            class="text-center rounded p-2"
-            style="background-color: var(--color-card); border: 1px solid var(--color-border)"
-          >
-            <div class="text-lg font-bold" style="color: var(--color-accent)">
+          <div class="text-center rounded p-2 result-card">
+            <div class="text-lg font-bold text-accent">
               {{ batteryConfig.clustersPerContainer }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">
+            <div class="text-[10px] text-muted">
               {{ $t('batteryDC.resultClustersPerContainer') }}
             </div>
           </div>
         </div>
 
         <div class="mt-4 flex justify-end gap-2">
-          <button
-            class="text-xs px-3 py-1.5 rounded transition-colors"
-            style="
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-            "
-            @click="resetBatteryConfig"
-          >
+          <button class="text-xs px-3 py-1.5 rounded transition-colors btn-outline" @click="resetBatteryConfig">
             {{ $t('common.reset') }}
           </button>
           <button
-            class="text-xs px-4 py-1.5 rounded font-bold transition-colors"
-            style="background-color: var(--color-accent-secondary); color: white"
+            class="text-xs px-4 py-1.5 rounded font-bold transition-colors btn-accent"
             @click="applyBatteryConfig"
           >
             {{ $t('batteryDC.applyConfig') }}
@@ -433,11 +387,7 @@
     <div
       v-if="toast.show"
       class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all"
-      :style="
-        toast.type === 'success'
-          ? { backgroundColor: 'var(--color-success)', color: 'white' }
-          : { backgroundColor: 'var(--color-danger)', color: 'white' }
-      "
+      :class="toast.type === 'success' ? 'toast-success' : 'toast-error'"
     >
       {{ toast.message }}
     </div>
@@ -657,6 +607,75 @@ defineExpose({ loadFromSurvey })
 .battery-dc-design {
   height: 100%;
 }
+
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.card-dark {
+  background-color: var(--color-card-dark);
+  border: 1px solid var(--color-border);
+}
+
+.dot-accent {
+  background-color: var(--color-accent-secondary);
+}
+
+.text-accent-secondary {
+  color: var(--color-accent-secondary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.btn-accent {
+  background-color: var(--color-accent-secondary);
+  color: white;
+}
+
+.btn-outline {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.result-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.toast-success {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.toast-error {
+  background-color: var(--color-danger);
+  color: white;
+}
+
 input:focus,
 select:focus,
 textarea:focus {
