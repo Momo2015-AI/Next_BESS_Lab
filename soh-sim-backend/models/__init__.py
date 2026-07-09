@@ -110,6 +110,16 @@ from .epc import (
     ThermalManagement,
 )
 from .pinn import PinnModelWeights
+from .rbac import (
+    DEFAULT_ROLE,
+    DEFAULT_ROLE_PERMISSIONS,
+    PERMISSION_KEYS,
+    ROLES,
+    RolePermission,
+    UserPermissionOverride,
+    get_effective_permissions,
+    get_user_effective_role,
+)
 from .product import (
     BatteryConfigRule,
     BatteryManufacturer,
@@ -165,6 +175,14 @@ __all__ = [
     "HVInterconnection",
     "BidDocument",
     "PinnModelWeights",
+    "RolePermission",
+    "UserPermissionOverride",
+    "ROLES",
+    "PERMISSION_KEYS",
+    "DEFAULT_ROLE",
+    "DEFAULT_ROLE_PERMISSIONS",
+    "get_effective_permissions",
+    "get_user_effective_role",
 ]
 
 
@@ -187,6 +205,8 @@ BoqSection.to_dict = _model_to_dict
 BoqItem.to_dict = _model_to_dict
 BatteryManufacturer.to_dict = _model_to_dict
 PinnModelWeights.to_dict = _model_to_dict
+RolePermission.to_dict = _model_to_dict
+UserPermissionOverride.to_dict = _model_to_dict
 SystemArchitecture.to_dict = _model_to_dict
 GridComplianceAnalysis.to_dict = _model_to_dict
 SafetyFireDesign.to_dict = _model_to_dict

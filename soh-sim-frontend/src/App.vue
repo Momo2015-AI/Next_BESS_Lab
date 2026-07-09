@@ -28,9 +28,14 @@
               <ul v-if="userMenuOpen" class="user-dropdown">
                 <li class="user-info">
                   <div class="user-info-name">{{ authUser.username }}</div>
-                  <div class="user-info-role">{{ authUser.role || 'user' }}</div>
+                  <div class="user-info-role">{{ getRoleLabel(authUser.effective_role || authUser.role) }}</div>
                 </li>
                 <li class="user-divider" />
+                <li v-if="canAccessAdmin" class="user-item" @click="goToAdmin">
+                  <AppIcon name="shield" :size="14" :stroke-width="1.5" color="var(--text-secondary)" />
+                  <span>{{ $t('admin.title') }}</span>
+                </li>
+                <li v-if="canAccessAdmin" class="user-divider" />
                 <li class="user-item danger" @click="handleLogout">
                   <AppIcon name="log-in" :size="14" :stroke-width="1.5" color="var(--color-danger)" />
                   <span>{{ $t('common.logout') }}</span>
@@ -67,7 +72,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted, provide } from 'vue'
+import { reactive, ref, computed, onMounted, onUnmounted, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
@@ -102,6 +107,31 @@ function loadAuthUser() {
   } catch {
     authUser.value = null
   }
+}
+
+// 管理员权限检查
+const canAccessAdmin = computed(() => {
+  if (!authUser.value) return false
+  const role = authUser.value.effective_role || authUser.value.role
+  return role === 'admin'
+})
+
+function goToAdmin() {
+  userMenuOpen.value = false
+  router.push('/admin')
+}
+
+const ROLE_LABELS = {
+  developer: '开发商',
+  solution_engineer: '方案工程师',
+  epc_contractor: 'EPC承包商',
+  financial_analyst: '财务分析师',
+  project_manager: '项目经理',
+  admin: '管理员'
+}
+
+function getRoleLabel(role) {
+  return ROLE_LABELS[role] || role || '用户'
 }
 
 function handleLogout() {

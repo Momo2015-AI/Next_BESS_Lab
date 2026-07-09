@@ -24,6 +24,7 @@ from routes.financial import financial_bp
 from routes.pipeline import pipeline_bp
 from routes.products import products_bp, seed_products
 from routes.project import project_bp
+from routes.rbac import rbac_bp
 from routes.report import report_bp
 from routes.simulation import simulation_bp
 from routes.survey import survey_bp
@@ -80,6 +81,7 @@ app.register_blueprint(boq_bp)
 app.register_blueprint(efficiency_bp)
 app.register_blueprint(degradation_bp)
 app.register_blueprint(exchange_rate_bp)
+app.register_blueprint(rbac_bp)
 
 
 # ==================== 全局错误处理器 ====================

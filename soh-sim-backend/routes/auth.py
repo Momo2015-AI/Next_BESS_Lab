@@ -267,10 +267,15 @@ def logout():
 
 @auth_bp.route("/api/auth/me", methods=["GET"])
 def get_current_user():
-    """获取当前用户信息"""
+    """获取当前用户信息（含有效权限）"""
     user, error = _get_user_from_token()
     if error:
         return error_response(error[0], status_code=error[1])
+
+    from models.rbac import get_effective_permissions, get_user_effective_role
+
+    effective_role = get_user_effective_role(user)
+    permissions = get_effective_permissions(user)
 
     return success_response(
         data={
@@ -278,6 +283,8 @@ def get_current_user():
             "username": user.username,
             "email": user.email,
             "role": user.role,
+            "effective_role": effective_role,
+            "permissions": permissions,
             "tenant_id": user.tenant_id,
             "is_active": user.is_active,
             "created_at": (user.created_at.isoformat() if user.created_at else None),
@@ -356,9 +363,47 @@ def role_required(*roles):
             user = request.current_user
             if not user:
                 return error_response("请先登录", status_code=401)
-            if user.role not in roles:
+            # 获取有效角色（考虑临时角色覆盖）
+            from models.rbac import get_user_effective_role
+
+            effective_role = get_user_effective_role(user)
+            if effective_role not in roles:
                 return error_response("权限不足", status_code=403)
-            request.user_role = user.role
+            request.user_role = effective_role
+            return f(*args, **kwargs)
+
+        return decorated
+
+    return decorator
+
+
+def permission_required(permission_key, level="full"):
+    """模块级权限检查装饰器
+
+    检查当前用户对某个功能模块的权限级别。
+    level="full" 要求至少有 full 权限；
+    level="readonly" 要求至少有 readonly 或 full 权限。
+
+    Args:
+        permission_key: PERMISSION_KEYS 中的一个
+        level: "full" 或 "readonly"
+    """
+
+    def decorator(f):
+        @functools.wraps(f)
+        def decorated(*args, **kwargs):
+            user = request.current_user
+            if not user:
+                return error_response("请先登录", status_code=401)
+            from models.rbac import get_effective_permissions
+
+            perms = get_effective_permissions(user)
+            user_level = perms.get(permission_key, "hidden")
+            if user_level == "hidden":
+                return error_response("无权访问此功能", status_code=403)
+            if level == "full" and user_level != "full":
+                return error_response("只读权限，不可修改", status_code=403)
+            request.user_permissions = perms
             return f(*args, **kwargs)
 
         return decorated

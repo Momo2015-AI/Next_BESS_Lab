@@ -8,12 +8,34 @@ from datetime import datetime, timezone
 
 from sqlalchemy.exc import IntegrityError
 
-from database import Tenant, User, db
+from database import DEFAULT_ROLE, Tenant, User, db
 from routes.auth import (
     generate_token,
     hash_password,
     verify_password,
 )
+
+
+def _get_auth_response(user):
+    """构建登录/注册返回数据，包含有效角色和权限"""
+    from models.rbac import get_effective_permissions, get_user_effective_role
+
+    effective_role = get_user_effective_role(user)
+    permissions = get_effective_permissions(user)
+    token = generate_token(user.id)
+
+    return {
+        "token": token,
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "effective_role": effective_role,
+            "permissions": permissions,
+            "tenant_id": user.tenant_id,
+        },
+    }
 
 
 def register_user(username, email, password):
@@ -40,7 +62,7 @@ def register_user(username, email, password):
         email=email,
         password_hash=hash_password(password),
         tenant_id="00000000-0000-0000-0000-000000000001",
-        role="user",
+        role=DEFAULT_ROLE,
         is_active=True,
         created_at=datetime.now(timezone.utc),
         updated_at=datetime.now(timezone.utc),
@@ -60,15 +82,7 @@ def register_user(username, email, password):
     token = generate_token(user_id)
 
     return (
-        {
-            "token": token,
-            "user": {
-                "id": user_id,
-                "username": username,
-                "email": email,
-                "role": "user",
-            },
-        },
+        _get_auth_response(user),
         None,
         201,
     )
@@ -104,19 +118,8 @@ def authenticate_user(username, password):
     except Exception:
         db.session.rollback()
 
-    token = generate_token(user.id)
-
     return (
-        {
-            "token": token,
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "role": user.role,
-                "tenant_id": user.tenant_id,
-            },
-        },
+        _get_auth_response(user),
         None,
         200,
     )
