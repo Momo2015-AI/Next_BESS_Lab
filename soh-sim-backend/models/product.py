@@ -1,4 +1,4 @@
-from . import _utcnow, db
+from . import _model_to_dict, _utcnow, db
 
 
 class ProductConfig(db.Model):
