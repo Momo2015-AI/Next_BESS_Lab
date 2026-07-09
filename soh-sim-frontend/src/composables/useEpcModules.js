@@ -20,8 +20,9 @@ import { renderPlotly, purgePlotly } from './usePlotly.js'
 
 /**
  * @param {(msg: string) => void} [onError] 错误回调（用于向上层 emit error）
+ * @param {function} [t] i18n translate 函数
  */
-export function useEpcModules(onError) {
+export function useEpcModules(onError, t) {
   const loading = ref(false)
 
   // ---------- 9 个 reactive 表单 ----------
@@ -107,7 +108,7 @@ export function useEpcModules(onError) {
       // 能走到这里说明 resp.success !== false。保持与原逻辑一致：返回 resp.data
       return resp.data
     } catch (e) {
-      const msg = e instanceof ApiError ? e.message : '网络错误: ' + (e?.message || '')
+      const msg = e instanceof ApiError ? e.message : (t ? t('epc.netError', { message: e?.message || '' }) : 'Network error: ' + (e?.message || ''))
       if (onError) onError(msg)
       return null
     } finally {
@@ -172,10 +173,10 @@ export function useEpcModules(onError) {
 
   // ---------- 图表预览 ----------
   const chartTypes = [
-    { id: 'soh_rte_curve', label: 'SOH/RTE 衰减曲线' },
-    { id: 'capacity_matrix', label: '容量矩阵热力图' },
-    { id: 'grid_compliance', label: 'LVRT/HVRT 曲线' },
-    { id: 'ipp_cashflow', label: 'IPP 现金流瀑布图' }
+    { id: 'soh_rte_curve', label: 'epc.chartSohRteCurve' },
+    { id: 'capacity_matrix', label: 'epc.chartCapacityMatrix' },
+    { id: 'grid_compliance', label: 'epc.chartLvrtHvrt' },
+    { id: 'ipp_cashflow', label: 'epc.chartIppCashflow' }
   ]
   const chartReady = ref(false)
   const chartLoading = ref('')
@@ -203,10 +204,10 @@ export function useEpcModules(onError) {
         await nextTick()
         await renderPlotly(chartContainer.value, result.chart, result.div_id)
       } else {
-        chartError.value = result.error || '图表生成失败'
+        chartError.value = result.error || (t ? t('epc.chartGenFailed') : 'Chart generation failed')
       }
     } catch (e) {
-      chartError.value = e instanceof ApiError ? e.message : '网络错误: ' + (e?.message || '')
+      chartError.value = e instanceof ApiError ? e.message : (t ? t('epc.netError', { message: e?.message || '' }) : 'Network error: ' + (e?.message || ''))
     } finally {
       chartLoading.value = ''
     }
@@ -228,7 +229,7 @@ export function useEpcModules(onError) {
   }
 
   function statusLabel(status) {
-    const map = { compliant: '合规', non_compliant: '不合规', partial: '部分合规', 'N/A': '待确认' }
+    const map = { compliant: 'epc.statusCompliant', non_compliant: 'epc.statusNonCompliant', partial: 'epc.statusPartial', 'N/A': 'epc.statusNA' }
     return map[status] || status
   }
 

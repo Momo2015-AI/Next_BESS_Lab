@@ -37,7 +37,7 @@
             :class="{ active: activeChart === c.id }"
             @click="previewChart(c.id)"
           >
-            {{ chartLoading === c.id ? '加载中...' : c.label }}
+            {{ chartLoading === c.id ? $t('epc.chartLoading') : $t(c.label) }}
           </button>
         </div>
         <div v-if="chartError" class="text-xs p-2 rounded mb-3 error-box">{{ chartError }}</div>

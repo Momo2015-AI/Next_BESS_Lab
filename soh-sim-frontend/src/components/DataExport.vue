@@ -3,41 +3,41 @@
     <div class="rounded-lg p-4 card-bordered">
       <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-2">
         <span class="w-2 h-2 rounded-full bg-accent-2" />
-        数据导出
+        {{ $t('dataExport.title') }}
       </h3>
 
       <div class="grid grid-cols-2 gap-4">
         <!-- 导出类型选择 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2 text-muted">选择导出内容</div>
+          <div class="text-xs mb-2 text-muted">{{ $t('dataExport.selectContent') }}</div>
 
           <label class="flex items-center gap-2 cursor-pointer">
             <input v-model="exportOptions.matrix" type="checkbox" />
             class="accent-accent-2"
-            <span class="text-xs text-secondary">25年生命周期矩阵</span>
+            <span class="text-xs text-secondary">{{ $t('dataExport.matrix') }}</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
             <input v-model="exportOptions.soh" type="checkbox" />
             class="accent-accent-2"
-            <span class="text-xs text-secondary">SOH/RTE数据序列</span>
+            <span class="text-xs text-secondary">{{ $t('dataExport.sohRte') }}</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
             <input v-model="exportOptions.params" type="checkbox" />
             class="accent-accent-2"
-            <span class="text-xs text-secondary">参数配置</span>
+            <span class="text-xs text-secondary">{{ $t('dataExport.params') }}</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
             <input v-model="exportOptions.financial" type="checkbox" class="accent-accent-2" />
-            <span class="text-xs text-secondary">财务分析数据</span>
+            <span class="text-xs text-secondary">{{ $t('dataExport.financial') }}</span>
           </label>
         </div>
 
         <!-- 导出操作 -->
         <div class="space-y-3">
-          <div class="text-xs mb-2 text-muted">导出格式</div>
+          <div class="text-xs mb-2 text-muted">{{ $t('dataExport.exportFormat') }}</div>
 
           <button
             :disabled="exporting"
@@ -46,7 +46,7 @@
             @click="exportCSV"
           >
             <AppIcon name="download" size="16" />
-            {{ exporting ? '导出中...' : '导出 CSV' }}
+            {{ exporting ? $t('dataExport.exporting') : $t('dataExport.exportCsv') }}
           </button>
 
           <button
@@ -56,7 +56,7 @@
             @click="exportPNG"
           >
             <AppIcon name="image" size="16" />
-            导出 PNG 图表
+            {{ $t('dataExport.exportPng') }}
           </button>
 
           <button
@@ -66,7 +66,7 @@
             @click="saveSimulation"
           >
             <AppIcon name="save" size="16" />
-            {{ saving ? '保存中...' : '保存仿真结果' }}
+            {{ saving ? $t('dataExport.saving') : $t('dataExport.saveResult') }}
           </button>
         </div>
       </div>
@@ -74,11 +74,11 @@
       <!-- 历史仿真记录 -->
       <div class="mt-4 pt-4 border-t border-default">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs text-muted">历史仿真记录</span>
-          <button class="link-btn text-xs" @click="loadSimulations">刷新</button>
+          <span class="text-xs text-muted">{{ $t('dataExport.history') }}</span>
+          <button class="link-btn text-xs" @click="loadSimulations">{{ $t('dataExport.refresh') }}</button>
         </div>
 
-        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">暂无保存的仿真记录</div>
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">{{ $t('dataExport.noHistory') }}</div>
 
         <div v-else class="space-y-2 max-h-40 overflow-y-auto">
           <div
@@ -92,8 +92,8 @@
               <span class="ml-2 text-muted">{{ sim.created_at }}</span>
             </div>
             <div class="flex gap-2">
-              <button class="link-btn" @click="loadSimulation(sim.id)">加载</button>
-              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">导出</button>
+              <button class="link-btn" @click="loadSimulation(sim.id)">{{ $t('dataExport.load') }}</button>
+              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">{{ $t('dataExport.export') }}</button>
             </div>
           </div>
         </div>
@@ -113,8 +113,11 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppIcon from './AppIcon.vue'
 import api from '../services/api.js'
+
+const { t } = useI18n()
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -158,7 +161,7 @@ const showToast = (message, type = 'success') => {
 // 导出CSV
 async function exportCSV() {
   if (!exportOptions.matrix && !exportOptions.soh && !exportOptions.params && !exportOptions.financial) {
-    showToast('请选择至少一项导出内容', 'error')
+    showToast(t('dataExport.selectAtLeastOne'), 'error')
     return
   }
 
@@ -194,10 +197,10 @@ async function exportCSV() {
     document.body.removeChild(a)
     window.URL.revokeObjectURL(url)
 
-    showToast('CSV导出成功')
+    showToast(t('dataExport.csvSuccess'))
   } catch (error) {
-    console.error('导出失败:', error)
-    showToast('导出失败: ' + error.message, 'error')
+    console.error('Export failed:', error)
+    showToast(t('dataExport.exportFailedWithError', { message: error.message }), 'error')
   } finally {
     exporting.value = false
   }
@@ -212,7 +215,7 @@ function exportPNG() {
     const charts = document.querySelectorAll('.echarts-instance, canvas')
 
     if (charts.length === 0) {
-      showToast('未找到可导出的图表', 'error')
+      showToast(t('dataExport.noChartToExport'), 'error')
       return
     }
 
@@ -230,14 +233,14 @@ function exportPNG() {
 
     // 如果没有canvas，尝试导出整个页面
     if (exportedCount === 0) {
-      showToast('请在图表视图中导出', 'error')
+      showToast(t('dataExport.exportInChartView'), 'error')
       return
     }
 
-    showToast(`成功导出 ${exportedCount} 张图表`)
+    showToast(t('dataExport.pngSuccess', { count: exportedCount }))
   } catch (error) {
-    console.error('PNG导出失败:', error)
-    showToast('PNG导出失败', 'error')
+    console.error('PNG export failed:', error)
+    showToast(t('dataExport.exportFailed'), 'error')
   } finally {
     exporting.value = false
   }
@@ -250,7 +253,7 @@ async function saveSimulation() {
   try {
     const result = await api.post('/api/export/simulation', {
       project_id: props.projectId,
-      name: `仿真_${new Date().toLocaleString()}`,
+      name: t('dataExport.simSaveName', { date: new Date().toLocaleString() }),
       params: props.params,
       results: props.results,
       soh: props.soh,
@@ -261,14 +264,14 @@ async function saveSimulation() {
     })
 
     if (result.success) {
-      showToast('仿真结果已保存')
+      showToast(t('dataExport.resultSaved'))
       loadSimulations()
     } else {
       throw new Error(result.error)
     }
   } catch (error) {
-    console.error('保存失败:', error)
-    showToast('保存失败: ' + error.message, 'error')
+    console.error('Save failed:', error)
+    showToast(t('dataExport.saveFailedWithError', { message: error.message }), 'error')
   } finally {
     saving.value = false
   }
@@ -290,10 +293,10 @@ async function loadSimulation(simulationId) {
     const data = await api.get(`/api/simulation/${simulationId}`)
 
     emit('load-simulation', data)
-    showToast('仿真结果已加载')
+    showToast(t('dataExport.resultLoaded'))
   } catch (error) {
-    console.error('加载仿真失败:', error)
-    showToast('加载失败', 'error')
+    console.error('Load simulation failed:', error)
+    showToast(t('dataExport.loadFailed'), 'error')
   }
 }
 
@@ -311,35 +314,34 @@ async function exportSimulationCSV(simulationId) {
       link.href = url
       link.click()
       window.URL.revokeObjectURL(url)
-      showToast('导出成功')
+      showToast(t('dataExport.csvSuccess'))
     }
   } catch (error) {
-    console.error('导出失败:', error)
-    showToast('导出失败', 'error')
+    console.error('Export failed:', error)
+    showToast(t('dataExport.exportFailed'), 'error')
   }
 }
 
 // 生成CSV内容
 function generateCSV(data) {
-  let csv = '储能电站SOH仿真计算结果\n\n'
+  let csv = t('dataExport.csvHeaderTitle') + '\n\n'
 
   // 矩阵数据
   if (data.results) {
-    csv += '25年生命周期矩阵\n'
-    csv +=
-      '年份,初始Gross(MWh),初始Aux(MWh),初始净可用(MWh),扩容Gross(MWh),扩容Aux(MWh),扩容净可用(MWh),总净可用(MWh),累计扩容,满足需求\n'
+    csv += t('dataExport.csvMatrix') + '\n'
+    csv += t('dataExport.csvMatrixHeader') + '\n'
 
     const r = data.results
     for (let i = 0; i < 26; i++) {
       csv += `${i},${r.initGross?.[i]?.toFixed(2) || 0},${r.initAux?.[i]?.toFixed(2) || 0},${r.initAcUsable?.[i]?.toFixed(2) || 0},`
       csv += `${r.augGross?.[i]?.toFixed(2) || 0},${r.augAux?.[i]?.toFixed(2) || 0},${r.augAcUsable?.[i]?.toFixed(2) || 0},`
-      csv += `${r.totalAcUsable?.[i]?.toFixed(2) || 0},${r.augAccumQty?.[i] || 0},${r.meetsReq?.[i] ? '是' : '否'}\n`
+      csv += `${r.totalAcUsable?.[i]?.toFixed(2) || 0},${r.augAccumQty?.[i] || 0},${r.meetsReq?.[i] ? t('dataExport.csvYes') : t('dataExport.csvNo')}\n`
     }
   }
 
   // SOH数据
   if (data.soh && data.soh.length > 0) {
-    csv += '\nSOH/RTE数据\n年份,SOH(%),RTE(%)\n'
+    csv += '\n' + t('dataExport.csvSohRte') + '\n' + t('dataExport.csvSohRteHeader') + '\n'
     for (let i = 0; i < data.soh.length; i++) {
       csv += `${i},${(data.soh[i] * 100).toFixed(2)},${data.rte?.[i] ? (data.rte[i] * 100).toFixed(2) : ''}\n`
     }

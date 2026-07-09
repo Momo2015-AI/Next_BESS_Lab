@@ -8,22 +8,22 @@ import api from '../services/api.js'
 export function useExchangeRate() {
   // 支持的货币列表
   const supportedCurrencies = reactive({
-    USD: '美元',
-    CNY: '人民币',
-    EUR: '欧元',
-    GBP: '英镑',
-    AED: '迪拉姆(阿联酋)',
-    SAR: '里亚尔(沙特)',
-    QAR: '里亚尔(卡塔尔)',
-    KWD: '第纳尔(科威特)',
-    OMR: '里亚尔(阿曼)',
-    BHD: '第纳尔(巴林)',
-    JPY: '日元',
-    KRW: '韩元',
-    AUD: '澳元',
-    INR: '卢比(印度)',
-    TND: '第纳尔(突尼斯)',
-    EGP: '镑(埃及)'
+    USD: 'currency.USD',
+    CNY: 'currency.CNY',
+    EUR: 'currency.EUR',
+    GBP: 'currency.GBP',
+    AED: 'currency.AED',
+    SAR: 'currency.SAR',
+    QAR: 'currency.QAR',
+    KWD: 'currency.KWD',
+    OMR: 'currency.OMR',
+    BHD: 'currency.BHD',
+    JPY: 'currency.JPY',
+    KRW: 'currency.KRW',
+    AUD: 'currency.AUD',
+    INR: 'currency.INR',
+    TND: 'currency.TND',
+    EGP: 'currency.EGP'
   })
 
   // 状态

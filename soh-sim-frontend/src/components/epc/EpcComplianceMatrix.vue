@@ -48,7 +48,7 @@
                 <td class="px-3 py-2 text-xs tx-muted">{{ item.category }}</td>
                 <td class="px-3 py-2">
                   <span class="status-badge" :class="statusClass(item.compliance_status)">
-                    {{ statusLabel(item.compliance_status) }}
+                    {{ $t(statusLabel(item.compliance_status)) }}
                   </span>
                 </td>
                 <td class="px-3 py-2 text-xs tx-muted-dark">{{ item.response }}</td>

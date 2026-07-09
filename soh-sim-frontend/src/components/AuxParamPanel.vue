@@ -8,7 +8,7 @@
     <div class="mb-4">
       <div class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b">1. 运行策略、时间与容量</div>
       <div v-for="param in strategyParams" :key="param.key" class="mb-3">
-        <label class="block text-xs mb-1 text-muted">{{ param.label }}</label>
+        <label class="block text-xs mb-1 text-muted">{{ $t(param.label) }}</label>
         <div v-if="param.hasSlider" class="flex items-center gap-3">
           <input
             v-model.number="state[param.key]"
@@ -41,7 +41,7 @@
     <div class="mb-4">
       <div class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b">2. 效率拓扑边界</div>
       <div v-for="param in efficiencyParams" :key="param.key" class="mb-3">
-        <label class="block text-xs mb-1 text-muted">{{ param.label }}</label>
+        <label class="block text-xs mb-1 text-muted">{{ $t(param.label) }}</label>
         <div class="flex items-center gap-3">
           <input
             v-model.number="state[param.key]"
@@ -66,7 +66,7 @@
     <div class="mb-4">
       <div class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b">3. 4象限动静态辅助功率</div>
       <div v-for="param in auxParams" :key="param.key" class="mb-3">
-        <label class="block text-xs mb-1 text-muted">{{ param.label }}</label>
+        <label class="block text-xs mb-1 text-muted">{{ $t(param.label) }}</label>
         <div class="flex items-center gap-3">
           <input
             v-model.number="state[param.key]"
@@ -91,7 +91,7 @@
     <div>
       <div class="text-[10px] font-bold uppercase mb-3 pb-2 text-muted border-b">4. 外部固定自耗</div>
       <div v-for="param in externalParams" :key="param.key" class="mb-3">
-        <label class="block text-xs mb-1 text-muted">{{ param.label }}</label>
+        <label class="block text-xs mb-1 text-muted">{{ $t(param.label) }}</label>
         <div class="flex items-center gap-3">
           <input
             v-model.number="state[param.key]"

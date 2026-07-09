@@ -172,7 +172,7 @@
             <select v-model="pcsConfig.transformerType" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="2w">{{ $t('pcsAC.transformer2w') }}</option>
               <option value="3w">{{ $t('pcsAC.transformer3w') }}</option>
-              <option value="一体化">{{ $t('pcsAC.transformerIntegrated') }}</option>
+              <option value="integrated">{{ $t('pcsAC.transformerIntegrated') }}</option>
             </select>
           </div>
           <div>
@@ -196,7 +196,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">高压侧电压 (kV)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.hvSideVoltage') }}</label>
             <input
               v-model.number="pcsConfig.hvVoltage"
               type="number"
@@ -207,7 +207,7 @@
 
         <div class="grid grid-cols-4 gap-3 mt-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">低压侧电压 (V)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.lvSideVoltage') }}</label>
             <input
               v-model.number="pcsConfig.lvVoltage"
               type="number"
@@ -215,7 +215,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">短路阻抗 (%)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.shortCircuitImpedance') }}</label>
             <input
               v-model.number="pcsConfig.impedance"
               type="number"
@@ -224,7 +224,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">接线方式</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.wiringMethod') }}</label>
             <select v-model="pcsConfig.connection" class="w-full rounded px-2 py-1 text-xs form-field-select">
               <option value="Dynd11">Dyn11</option>
               <option value="Ynd11">Ynd11</option>
@@ -232,11 +232,11 @@
             </select>
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">接地方式</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.groundingMethod') }}</label>
             <select v-model="pcsConfig.grounding" class="w-full rounded px-2 py-1 text-xs form-field-select">
-              <option value="直接接地">直接接地</option>
-              <option value="消弧线圈">消弧线圈</option>
-              <option value="电阻接地">电阻接地</option>
+              <option value="direct">{{ $t('acDesign.groundingDirect') }}</option>
+              <option value="arc">{{ $t('acDesign.groundingArc') }}</option>
+              <option value="resistance">{{ $t('acDesign.groundingResistance') }}</option>
             </select>
           </div>
         </div>
@@ -247,11 +247,11 @@
         class="rounded-lg p-4 mb-4"
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">PCS运行参数</h4>
+        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-text-secondary)">{{ $t('acDesign.operatingParams') }}</h4>
 
         <div class="grid grid-cols-4 gap-3">
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">PCS效率 (%)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.pcsEfficiency') }}</label>
             <input
               v-model.number="pcsConfig.pcsEfficiency"
               type="number"
@@ -260,7 +260,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">运行辅耗 (kW)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.runAux') }}</label>
             <input
               v-model.number="pcsConfig.auxConsumption"
               type="number"
@@ -268,7 +268,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">待机辅耗 (kW)</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.standbyAux') }}</label>
             <input
               v-model.number="pcsConfig.standbyConsumption"
               type="number"
@@ -276,7 +276,7 @@
             />
           </div>
           <div>
-            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">功率因数</label>
+            <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">{{ $t('acDesign.powerFactor') }}</label>
             <input
               v-model.number="pcsConfig.powerFactor"
               type="number"
@@ -292,34 +292,34 @@
         class="rounded-lg p-4 mb-4"
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
-        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-warning)">⚡ PCS与电池配置规则</h4>
+        <h4 class="text-xs mb-3 font-medium" style="color: var(--color-warning)">⚡ {{ $t('acDesign.configRules') }}</h4>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="rounded p-3" style="background-color: var(--color-input-bg-dark)">
-            <div class="text-xs mb-2" style="color: var(--color-text-secondary)">常用配置规则（基于0.5C放电）</div>
+            <div class="text-xs mb-2" style="color: var(--color-text-secondary)">{{ $t('acDesign.commonRules') }}</div>
             <div class="space-y-1 text-[10px]">
               <div class="flex justify-between">
-                <span style="color: var(--color-text-muted)">5MWh集装箱</span>
+                <span style="color: var(--color-text-muted)">{{ $t('acDesign.container5mwh') }}</span>
                 <span style="color: var(--color-accent)">→ 2台 2.5MW PCS</span>
               </div>
               <div class="flex justify-between">
-                <span style="color: var(--color-text-muted)">10MWh集装箱</span>
+                <span style="color: var(--color-text-muted)">{{ $t('acDesign.container10mwh') }}</span>
                 <span style="color: var(--color-accent)">→ 2台 5MW PCS</span>
               </div>
               <div class="flex justify-between">
-                <span style="color: var(--color-text-muted)">20MWh集装箱</span>
+                <span style="color: var(--color-text-muted)">{{ $t('acDesign.container20mwh') }}</span>
                 <span style="color: var(--color-accent)">→ 4台 5MW PCS</span>
               </div>
             </div>
           </div>
           <div class="rounded p-3" style="background-color: var(--color-input-bg-dark)">
-            <div class="text-xs mb-2" style="color: var(--color-text-secondary)">功率配比计算</div>
+            <div class="text-xs mb-2" style="color: var(--color-text-secondary)">{{ $t('acDesign.powerRatioCalc') }}</div>
             <div class="text-[10px]" style="color: var(--color-text-muted)">
-              PCS总功率 = 电池总能量 ÷ 放电时长
+              {{ $t('acDesign.pcsTotalPower') }}
               <br />
-              例：100MWh ÷ 2h = 50MW PCS
+              {{ $t('acDesign.example') }}
               <br />
-              配比：1:2 (能量:功率)
+              {{ $t('acDesign.ratio') }}
             </div>
           </div>
         </div>
@@ -329,7 +329,7 @@
           style="background-color: var(--color-warning); color: white"
           @click="applyConfigRules"
         >
-          根据电池配置自动计算PCS
+          {{ $t('acDesign.autoCalcFromBattery') }}
         </button>
       </div>
 
@@ -339,13 +339,13 @@
         style="background-color: var(--color-card-dark); border: 1px solid var(--color-border)"
       >
         <div class="flex items-center justify-between mb-3">
-          <h4 class="text-xs font-medium" style="color: var(--color-text-secondary)">PCS系统配置结果</h4>
+          <h4 class="text-xs font-medium" style="color: var(--color-text-secondary)">{{ $t('acDesign.result') }}</h4>
           <button
             class="text-xs px-3 py-1 rounded transition-colors"
             style="background-color: var(--color-accent); color: white"
             @click="calculatePcsConfig"
           >
-            计算配置
+            {{ $t('acDesign.checkConfig') }}
           </button>
         </div>
 
@@ -354,35 +354,35 @@
             <div class="text-lg font-bold" style="color: var(--color-accent)">
               {{ pcsConfig.pcsQty }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">PCS数量</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.pcsQty') }}</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-input-bg)">
             <div class="text-lg font-bold" style="color: var(--color-accent-secondary)">
               {{ pcsConfig.totalPcsPower.toFixed(1) }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">总PCS功率 (MW)</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.totalPcsPower') }}</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-input-bg)">
             <div class="text-lg font-bold" style="color: var(--color-success)">
               {{ pcsConfig.powerRatio.toFixed(1) }}:1
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">功率配比</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.powerRatio') }}</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-input-bg)">
             <div class="text-lg font-bold" style="color: var(--color-warning)">
               {{ pcsConfig.transformerQty }}
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">变压器数量</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.transformerQty') }}</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-input-bg)">
             <div class="text-lg font-bold" style="color: var(--color-accent-secondary)">
               {{ pcsConfig.transformerCapacity }}MVA
             </div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">单台变压器容量</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.singleTransformerCapacity') }}</div>
           </div>
           <div class="text-center rounded p-2" style="background-color: var(--color-input-bg)">
             <div class="text-lg font-bold" style="color: var(--color-danger)">{{ pcsConfig.pcsEfficiency }}%</div>
-            <div class="text-[10px]" style="color: var(--color-text-muted)">PCS效率</div>
+            <div class="text-[10px]" style="color: var(--color-text-muted)">{{ $t('acDesign.pcsEfficiencyLabel') }}</div>
           </div>
         </div>
 
@@ -396,14 +396,14 @@
             "
             @click="resetPcsConfig"
           >
-            重置
+            {{ $t('acDesign.reset') }}
           </button>
           <button
             class="text-xs px-4 py-1.5 rounded transition-colors"
             style="background-color: var(--color-accent); color: white"
             @click="applyPcsConfig"
           >
-            应用配置
+            {{ $t('acDesign.applyConfig') }}
           </button>
         </div>
       </div>
@@ -491,14 +491,14 @@ const { state: pcsConfig, clearDraft: clearPcsConfigDraft } = useDraft('pcs-ac-c
   totalPcsPower: 50,
   powerRatio: 1.0,
 
-  transformerType: '一体化',
+  transformerType: 'integrated',
   transformerCapacity: 6.3,
   transformerQty: 5,
   hvVoltage: 35,
   lvVoltage: 690,
   impedance: 10.5,
   connection: 'Dyn11',
-  grounding: '电阻接地',
+  grounding: 'resistance',
 
   pcsEfficiency: 99,
   auxConsumption: 6.5,
@@ -540,12 +540,12 @@ function applyConfigRules() {
 
   pcsConfig.transformerQty = Math.ceil(pcsConfig.totalPcsPower / 5)
 
-  showToast('PCS配置已根据电池参数自动计算')
+  showToast(t('acDesign.configAutoCalculated'))
 }
 
 function calculatePcsConfig() {
   if (pcsConfig.totalPcsPower <= 0) {
-    showToast('请检查PCS配置', 'error')
+    showToast(t('acDesign.checkConfig'), 'error')
     return
   }
 
@@ -553,7 +553,7 @@ function calculatePcsConfig() {
 
   pcsConfig.transformerCapacity = Math.ceil((pcsConfig.totalPcsPower / pcsConfig.transformerQty) * 1.1 * 10) / 10
 
-  showToast('PCS配置计算完成')
+  showToast(t('acDesign.calcComplete'))
 }
 
 function resetPcsConfig() {
@@ -562,14 +562,14 @@ function resetPcsConfig() {
     pcsQty: 10,
     totalPcsPower: 50,
     powerRatio: 1.0,
-    transformerType: '一体化',
+    transformerType: 'integrated',
     transformerCapacity: 6.3,
     transformerQty: 5,
     pcsEfficiency: 99,
     auxConsumption: 6.5,
     standbyConsumption: 1.0
   })
-  showToast('配置已重置')
+  showToast(t('acDesign.configReset'))
 }
 
 function applyPcsConfig() {
@@ -582,7 +582,7 @@ function applyPcsConfig() {
     pcsAuxRun: pcsConfig.auxConsumption,
     pcsAuxStandby: pcsConfig.standbyConsumption
   })
-  showToast('PCS配置已应用')
+  showToast(t('acDesign.configApplied'))
 }
 
 function setBatteryConfig(config) {
@@ -606,6 +606,4 @@ textarea:focus {
 }
 
 button:not(:disabled):hover {
-  opacity: 0.9;
-}
-</style>
+  opac

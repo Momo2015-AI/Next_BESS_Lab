@@ -1188,7 +1188,7 @@ const runAISimulation = async () => {
           rte *
           soh *
           (simParams.acEfficiency / 100)
-        const auxEnergy = ((simParams.bessAuxRun + simParams.pcsAuxRun) * aiSimParams.simulationYears) / 1000
+        const auxEnergy = ((simParams.bessAuxRun + simParams.pcsAuxRun) * i) / 1000
         const netAvail = Math.max(0, grossEnergy - auxEnergy)
 
         simulationResults.netAvailCurve.push(netAvail)

@@ -2,28 +2,28 @@ import { reactive, computed } from 'vue'
 import { useDraft } from './useDraft'
 
 export const strategyParams = [
-  { key: 'days', label: '本次计算总天数 (Days)', min: 1, max: 365, step: 1, hasSlider: true },
-  { key: 'cycles', label: '每天充放电循环次数', min: 0.5, max: 3, step: 0.5, hasSlider: true },
-  { key: 'hours', label: '单次放电时长 (h)', min: 1, max: 6, step: 0.5, hasSlider: true },
-  { key: 'cap', label: '单舱标称铭牌容量 (MWh)', min: 0.1, max: 100, hasSlider: false },
-  { key: 'units', label: '当前运行总台数 (台)', min: 1, max: 1000, hasSlider: false }
+  { key: 'days', label: 'auxPower.days', min: 1, max: 365, step: 1, hasSlider: true },
+  { key: 'cycles', label: 'auxPower.cycles', min: 0.5, max: 3, step: 0.5, hasSlider: true },
+  { key: 'hours', label: 'auxPower.hours', min: 1, max: 6, step: 0.5, hasSlider: true },
+  { key: 'cap', label: 'auxPower.cap', min: 0.1, max: 100, hasSlider: false },
+  { key: 'units', label: 'auxPower.units', min: 1, max: 1000, hasSlider: false }
 ]
 
 export const efficiencyParams = [
-  { key: 'dcRte', label: 'DC-RTE (直流往返效率)', min: 0.85, max: 0.98, step: 0.005, hasSlider: true },
-  { key: 'pcsEff', label: 'PCS 充/放电效率', min: 0.95, max: 0.995, step: 0.002, hasSlider: true },
-  { key: 'acEff', label: '交流侧综合效率 (变损/线损)', min: 0.95, max: 0.995, step: 0.002, hasSlider: true }
+  { key: 'dcRte', label: 'auxPower.dcRte', min: 0.85, max: 0.98, step: 0.005, hasSlider: true },
+  { key: 'pcsEff', label: 'auxPower.pcsEff', min: 0.95, max: 0.995, step: 0.002, hasSlider: true },
+  { key: 'acEff', label: 'auxPower.acEff', min: 0.95, max: 0.995, step: 0.002, hasSlider: true }
 ]
 
 export const auxParams = [
-  { key: 'bRun', label: '电池舱【运行】温控功率 (kW)', min: 5, max: 40, step: 1, hasSlider: true },
-  { key: 'bStd', label: '电池舱【待机】温控功率 (kW)', min: 1, max: 15, step: 0.5, hasSlider: true },
-  { key: 'pRun', label: 'PCS变流器【运行】损耗 (kW)', min: 1, max: 20, step: 0.5, hasSlider: true },
-  { key: 'pStd', label: 'PCS变流器【待机】损耗 (kW)', min: 0.5, max: 10, step: 0.5, hasSlider: true }
+  { key: 'bRun', label: 'auxPower.bRun', min: 5, max: 40, step: 1, hasSlider: true },
+  { key: 'bStd', label: 'auxPower.bStd', min: 1, max: 15, step: 0.5, hasSlider: true },
+  { key: 'pRun', label: 'auxPower.pRun', min: 1, max: 20, step: 0.5, hasSlider: true },
+  { key: 'pStd', label: 'auxPower.pStd', min: 0.5, max: 10, step: 0.5, hasSlider: true }
 ]
 
 export const externalParams = [
-  { key: 'pStation', label: '站宇及主变固定自耗 (kW)', min: 1, max: 30, step: 0.5, hasSlider: true }
+  { key: 'pStation', label: 'auxPower.pStation', min: 1, max: 30, step: 0.5, hasSlider: true }
 ]
 
 // 工厂函数：每次调用创建独立实例，避免组件间状态共享

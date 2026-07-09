@@ -45,7 +45,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
+import { useI18n } from 'vue-i18n'
 import { useEpcModules } from '../composables/useEpcModules.js'
+
+const { t } = useI18n()
 
 import EpcArchitecture from '../components/epc/EpcArchitecture.vue'
 import EpcGridCompliance from '../components/epc/EpcGridCompliance.vue'
@@ -76,7 +79,7 @@ const tabs = [
 // 壳组件不直接持有状态，仅负责 tab 导航与生命周期钩子；
 // 9 个子组件各自通过 useEpcModules() 共享同一份状态（composable 为模块级单例）。
 // loadStandards / purgeChart 由共享 composable 承载，这里仅触发生命周期副作用。
-const { loadStandards, purgeChart } = useEpcModules((msg) => emit('error', msg))
+const { loadStandards, purgeChart } = useEpcModules((msg) => emit('error', msg), t)
 
 onMounted(() => {
   loadStandards()

@@ -6,25 +6,25 @@
       >
         VIII
       </span>
-      能量流桑基图 Energy Flow Sankey
+      {{ $t('energyFlow.title') }}
     </h3>
 
     <div class="mb-2 flex items-center gap-2 text-[10px] text-secondary">
       <div class="flex items-center gap-1">
         <div class="w-3 h-3 rounded bg-accent" />
-        <span>充电 Charging</span>
+        <span>{{ $t('energyFlow.charging') }}</span>
       </div>
       <div class="flex items-center gap-1">
         <div class="w-3 h-3 rounded bg-danger" />
-        <span>损失 Loss</span>
+        <span>{{ $t('energyFlow.loss') }}</span>
       </div>
       <div class="flex items-center gap-1">
         <div class="w-3 h-3 rounded bg-success" />
-        <span>放电 Discharging</span>
+        <span>{{ $t('energyFlow.discharging') }}</span>
       </div>
       <div class="flex items-center gap-1">
         <div class="w-3 h-3 rounded bg-warning" />
-        <span>辅助 Auxiliary</span>
+        <span>{{ $t('energyFlow.aux') }}</span>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
     <!-- 参数控制 -->
     <div class="mt-3 grid grid-cols-2 gap-2 text-[10px] text-secondary">
       <div>
-        <label class="block mb-0.5 text-muted">循环次数/天</label>
+        <label class="block mb-0.5 text-muted">{{ $t('energyFlow.cyclesPerDay') }}</label>
         <input
           v-model.number="cyclesPerDay"
           type="number"
@@ -45,7 +45,7 @@
         />
       </div>
       <div>
-        <label class="block mb-0.5 text-muted">可用天数/年</label>
+        <label class="block mb-0.5 text-muted">{{ $t('energyFlow.operatingDays') }}</label>
         <input
           v-model.number="operatingDays"
           type="number"
@@ -57,7 +57,7 @@
         />
       </div>
       <div>
-        <label class="block mb-0.5 text-muted">充电效率 %</label>
+        <label class="block mb-0.5 text-muted">{{ $t('energyFlow.chargingEff') }}</label>
         <input
           v-model.number="chargingEfficiency"
           type="number"
@@ -69,7 +69,7 @@
         />
       </div>
       <div>
-        <label class="block mb-0.5 text-muted">放电效率 %</label>
+        <label class="block mb-0.5 text-muted">{{ $t('energyFlow.dischargingEff') }}</label>
         <input
           v-model.number="dischargingEfficiency"
           type="number"
@@ -86,28 +86,28 @@
     <div class="mt-3 border-t pt-2 border-default">
       <div class="grid grid-cols-2 gap-2 text-[10px]">
         <div class="rounded p-2 bg-card-dark">
-          <div>总充电量</div>
+          <div>{{ $t('energyFlow.totalCharging') }}</div>
           class="text-muted"
           <div class="font-mono mt-0.5 text-accent">
             {{ formatEnergy(totalCharging) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>总放电量</div>
+          <div>{{ $t('energyFlow.totalDischarging') }}</div>
           class="text-muted"
           <div class="font-mono mt-0.5 text-success">
             {{ formatEnergy(totalDischarging) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>能量损失</div>
+          <div>{{ $t('energyFlow.energyLoss') }}</div>
           class="text-muted"
           <div class="font-mono mt-0.5 text-danger">
             {{ formatEnergy(totalLoss) }}
           </div>
         </div>
         <div class="rounded p-2 bg-card-dark">
-          <div>系统效率</div>
+          <div>{{ $t('energyFlow.systemEff') }}</div>
           class="text-muted"
           <div class="font-mono mt-0.5 text-warning">{{ systemEfficiency.toFixed(1) }}%</div>
         </div>
@@ -118,12 +118,15 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { debounce } from 'lodash-es'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { SankeyChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
+
+const { t } = useI18n()
 echarts.use([CanvasRenderer, SankeyChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({
@@ -179,12 +182,12 @@ const formatEnergy = (energy) => {
 // 生成桑基图数据
 const generateSankeyData = () => {
   const nodes = [
-    { name: '充电输入', itemStyle: { color: 'var(--color-accent)' } },
-    { name: '充电损失', itemStyle: { color: 'var(--color-danger)' } },
-    { name: '电池储能', itemStyle: { color: 'var(--color-info)' } },
-    { name: '放电损失', itemStyle: { color: 'var(--color-warning)' } },
-    { name: '放电输出', itemStyle: { color: 'var(--color-success)' } },
-    { name: '辅助消耗', itemStyle: { color: 'var(--color-warning)' } }
+    { name: t('energyFlow.nodeChargingInput'), itemStyle: { color: 'var(--color-accent)' } },
+    { name: t('energyFlow.nodeChargingLoss'), itemStyle: { color: 'var(--color-danger)' } },
+    { name: t('energyFlow.nodeBatteryStorage'), itemStyle: { color: 'var(--color-info)' } },
+    { name: t('energyFlow.nodeDischargingLoss'), itemStyle: { color: 'var(--color-warning)' } },
+    { name: t('energyFlow.nodeDischargingOutput'), itemStyle: { color: 'var(--color-success)' } },
+    { name: t('energyFlow.nodeAux'), itemStyle: { color: 'var(--color-warning)' } }
   ]
 
   const links = [
@@ -244,9 +247,9 @@ const updateChart = () => {
       trigger: 'item',
       formatter: (params) => {
         if (params.dataType === 'node') {
-          return `${params.name}<br/>能量: ${formatEnergy(params.value)}`
+          return `${params.name}<br/>${t('energyFlow.energy')}: ${formatEnergy(params.value)}`
         } else {
-          return `${params.data.source} → ${params.data.target}<br/>流量: ${formatEnergy(params.value)}<br/>占比: ${((params.value / totalCharging.value) * 100).toFixed(1)}%`
+          return `${params.data.source} → ${params.data.target}<br/>${t('energyFlow.flow')}: ${formatEnergy(params.value)}<br/>${t('energyFlow.ratio')}: ${((params.value / totalCharging.value) * 100).toFixed(1)}%`
         }
       }
     },
