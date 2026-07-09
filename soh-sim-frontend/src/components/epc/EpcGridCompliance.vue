@@ -1,20 +1,20 @@
 <template>
   <div class="epc-panel space-y-4">
     <div class="panel-card">
-      <h3 class="panel-title">电网合规分析</h3>
+      <h3 class="panel-title">{{ $t('epcGrid.title') }}</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
-          <label class="block text-xs mb-1 field-label">电网标准</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcGrid.gridStandard') }}</label>
           <select v-model="gcForm.grid_standard" class="form-field-select">
             <option v-for="s in gridStandards" :key="s.code" :value="s.code">{{ s.name }}</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">并网点电压 (kV)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcGrid.pocVoltage') }}</label>
           <input v-model.number="gcForm.grid_voltage_kv" type="number" class="form-field-input" placeholder="33" />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">电网频率 (Hz)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcGrid.gridFreq') }}</label>
           <input
             v-model.number="gcForm.grid_frequency_hz"
             type="number"
@@ -29,7 +29,7 @@
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="analyzeGridCompliance">
-        {{ loading ? '分析中...' : '执行合规分析' }}
+        {{ loading ? $t('epcGrid.analyzing') : $t('epcGrid.runAnalysis') }}
       </button>
 
       <div v-if="gcResult" class="mt-6 space-y-4">
@@ -43,7 +43,7 @@
               {{ gcResult.overall_pass ? '全部合规' : '存在不合规项' }}
             </div>
             <div v-if="gcResult.failed_items.length" class="text-xs tx-muted-dark">
-              不合规: {{ gcResult.failed_items.join(', ') }}
+              {{ $t('epcGrid.nonCompliant') }} {{ gcResult.failed_items.join(', ') }}
             </div>
           </div>
         </div>
@@ -52,43 +52,43 @@
             <div class="metric-value" :class="gcResult.lvrt_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.lvrt_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">LVRT低电压穿越</div>
+            <div class="metric-label">{{ $t('epcGrid.lvrt') }}</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.hvrt_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.hvrt_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">HVRT高电压穿越</div>
+            <div class="metric-label">{{ $t('epcGrid.hvrt') }}</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.freq_response_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.freq_response_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">频率响应</div>
+            <div class="metric-label">{{ $t('epcGrid.freqResponse') }}</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.reactive_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.reactive_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">无功功率 ({{ gcResult.reactive_capacity_mvar }}MVar)</div>
+            <div class="metric-label">{{ $t('epcGrid.reactivePower') }} ({{ gcResult.reactive_capacity_mvar }}MVar)</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.power_quality_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.thd }}%
             </div>
-            <div class="metric-label">THD (限值5%)</div>
+            <div class="metric-label">{{ $t('epcGrid.thdLimit') }}</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.anti_islanding_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.anti_islanding_time_s }}s
             </div>
-            <div class="metric-label">防孤岛 (限值2s)</div>
+            <div class="metric-label">{{ $t('epcGrid.antiIslanding') }}</div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.comm_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.comm_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">通信合规</div>
+            <div class="metric-label">{{ $t('epcGrid.commCompliance') }}</div>
           </div>
         </div>
       </div>

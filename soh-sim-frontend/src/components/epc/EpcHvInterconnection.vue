@@ -1,18 +1,18 @@
 <template>
   <div class="epc-panel space-y-4">
     <div class="panel-card">
-      <h3 class="panel-title">高压接入设计</h3>
+      <h3 class="panel-title">{{ $t('epcHv.title') }}</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
-          <label class="block text-xs mb-1 field-label">总功率 (MW)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcHv.totalPower') }}</label>
           <input v-model.number="hvForm.total_power_mw" type="number" class="form-field-input" placeholder="100" />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">并网点电压 (kV)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcHv.pocVoltage') }}</label>
           <input v-model.number="hvForm.poc_voltage_kv" type="number" class="form-field-input" placeholder="33" />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">短路容量 (MVA)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcHv.shortCircuit') }}</label>
           <input
             v-model.number="hvForm.short_circuit_capacity_mva"
             type="number"
@@ -21,16 +21,16 @@
           />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">并网点类型</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcHv.pocType') }}</label>
           <select v-model="hvForm.poc_type" class="form-field-select">
-            <option value="substation">变电站</option>
-            <option value="overhead_line">架空线</option>
-            <option value="cable">电缆</option>
+            <option value="substation">{{ $t('epcHv.substation') }}</option>
+            <option value="overhead_line">{{ $t('epcHv.overheadLine') }}</option>
+            <option value="cable">{{ $t('epcHv.cable') }}</option>
           </select>
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="designHV">
-        {{ loading ? '设计中...' : '执行高压接入设计' }}
+        {{ loading ? $t('epcHv.designing') : $t('epcHv.runDesign') }}
       </button>
 
       <div v-if="hvResult" class="mt-6 space-y-4">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div v-if="hvResult.protection_scheme" class="info-box">
-          <div class="text-sm font-bold mb-2 section-title">保护配置</div>
+          <div class="text-sm font-bold mb-2 section-title">{{ $t('epcHv.protectionScheme') }}</div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
             <div v-for="prot in hvResult.protection_scheme" :key="prot.name" class="protection-item">
               <div class="font-bold">{{ prot.name }}</div>

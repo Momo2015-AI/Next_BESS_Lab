@@ -1,18 +1,18 @@
 <template>
   <div class="epc-panel space-y-4">
     <div class="panel-card">
-      <h3 class="panel-title">安全与消防设计</h3>
+      <h3 class="panel-title">{{ $t('epcSafety.title') }}</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
-          <label class="block text-xs mb-1 field-label">系统容量 (MWh)</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.systemCapacity') }}</label>
           <input v-model.number="sfForm.system_capacity_mwh" type="number" class="form-field-input" placeholder="100" />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">集装箱数量</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.containerCount') }}</label>
           <input v-model.number="sfForm.container_count" type="number" class="form-field-input" placeholder="20" />
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">化学体系</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.chemistryType') }}</label>
           <select v-model="sfForm.chemistry_type" class="form-field-select">
             <option value="LFP">LFP (磷酸铁锂)</option>
             <option value="NCM">NCM (三元)</option>
@@ -21,7 +21,7 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs mb-1 field-label">灭火系统</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.suppressionType') }}</label>
           <select v-model="sfForm.suppression_type" class="form-field-select">
             <option value="Novec1230">Novec 1230</option>
             <option value="Aerosol">气溶胶</option>
@@ -30,7 +30,7 @@
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="analyzeSafety">
-        {{ loading ? '分析中...' : '执行安全分析' }}
+        {{ loading ? $t('epcSafety.analyzing') : $t('epcSafety.runAnalysis') }}
       </button>
 
       <div v-if="sfResult" class="mt-6 space-y-4">
@@ -73,7 +73,7 @@
           </div>
           <div class="metric-card">
             <div class="metric-value">{{ sfResult.suppression_capacity_kg }}kg</div>
-            <div class="metric-label">灭火剂容量</div>
+            <div class="metric-label">{{ $t('epcSafety.suppressantCapacity') }}</div>
           </div>
         </div>
       </div>
