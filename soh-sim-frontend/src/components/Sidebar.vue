@@ -100,7 +100,7 @@ const coreToolItems = computed(() => [
   { id: 'auxpower', path: '/tools/auxpower', label: t('sidebar.toolAuxPower'), iconName: 'lightning', perm: 'tool_auxpower' },
   { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), iconName: 'dollar', perm: 'tool_financial' },
   { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), iconName: 'grid', perm: 'tool_engineering' },
-  { id: 'orchestrator', path: '/orchestrator', label: t('sidebar.orchestrator'), iconName: 'zap', perm: 'tool_engineering' },
+  { id: 'orchestrator', path: '/orchestrator', label: t('sidebar.orchestrator'), iconName: 'zap', perm: 'orchestrator' },
   { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), iconName: 'upload', perm: 'tool_datainject' }
 ].filter(item => canView(item.perm)))
 

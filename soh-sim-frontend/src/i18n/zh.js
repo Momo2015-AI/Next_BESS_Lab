@@ -1480,6 +1480,7 @@ export default {
       tool_rules: '配置规则',
       epc: 'EPC 模块',
       epc_ipp: 'IPP 财务模型',
+      orchestrator: '一键方案引擎',
       admin_panel: '管理面板'
     }
   },
@@ -1489,7 +1490,11 @@ export default {
     whatIf: 'What-If 假设分析',
     analyzing: '分析中...',
     runWhatIf: '运行假设分析',
-    whatIfResult: '差异分析结果'
+    whatIfResult: '差异分析结果',
+    selectProject: '选择项目（可选）',
+    noProject: '不关联项目',
+    saveAsVersion: '保存为方案版本',
+    saving: '保存中...'
   },
   design: {
     surveyInput: '调研参数输入',
@@ -1574,11 +1579,5 @@ export default {
     metric: '指标',
     diff: '差异',
     radarChart: '雷达图对比'
-  },
-  orchestrator: {
-    selectProject: '选择项目（可选）',
-    noProject: '不关联项目',
-    saveAsVersion: '保存为方案版本',
-    saving: '保存中...'
   }
 }

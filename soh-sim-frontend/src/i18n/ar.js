@@ -772,6 +772,7 @@ export default {
       tool_rules: 'Config Rules',
       epc: 'EPC Modules',
       epc_ipp: 'IPP Financial Model',
+      orchestrator: 'One-Click Engine',
       admin_panel: 'Admin Panel'
     }
   }

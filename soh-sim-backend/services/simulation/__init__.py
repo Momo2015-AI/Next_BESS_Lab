@@ -6,5 +6,22 @@
 输出: 25年仿真矩阵
 """
 from .engine import SimulationEngine, run_simulation
+from .services import (
+    DEFAULT_TEMPLATES,
+    create_simulation_result_service,
+    create_template_service,
+    get_or_create_default_version,
+    seed_templates_service,
+    update_template_service,
+)
 
-__all__ = ["SimulationEngine", "run_simulation"]
+__all__ = [
+    "SimulationEngine",
+    "run_simulation",
+    "get_or_create_default_version",
+    "create_simulation_result_service",
+    "create_template_service",
+    "update_template_service",
+    "seed_templates_service",
+    "DEFAULT_TEMPLATES",
+]

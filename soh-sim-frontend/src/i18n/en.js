@@ -1879,6 +1879,7 @@ export default {
       tool_rules: 'Config Rules',
       epc: 'EPC Modules',
       epc_ipp: 'IPP Financial Model',
+      orchestrator: 'One-Click Engine',
       admin_panel: 'Admin Panel'
     }
   },
@@ -1888,7 +1889,11 @@ export default {
     whatIf: 'What-If Analysis',
     analyzing: 'Analyzing...',
     runWhatIf: 'Run What-If',
-    whatIfResult: 'Delta Analysis Results'
+    whatIfResult: 'Delta Analysis Results',
+    selectProject: 'Select Project (optional)',
+    noProject: 'No project',
+    saveAsVersion: 'Save as Version',
+    saving: 'Saving...'
   },
   design: {
     surveyInput: 'Survey Parameters',
@@ -1973,11 +1978,5 @@ export default {
     metric: 'Metric',
     diff: 'Diff',
     radarChart: 'Radar Comparison'
-  },
-  orchestrator: {
-    selectProject: 'Select Project (optional)',
-    noProject: 'No project',
-    saveAsVersion: 'Save as Version',
-    saving: 'Saving...'
   }
 }

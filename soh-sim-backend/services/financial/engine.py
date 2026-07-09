@@ -169,7 +169,7 @@ class FinancialEngine(BaseEngine):
 
     def _calculate_full(self, total_ac_usable: list, params: dict) -> dict:
         """委托给现有 financial.py 的完整计算"""
-        from services.financial import calculate_full_financial
+        from services.financial.calculator import calculate_full_financial
 
         return calculate_full_financial(total_ac_usable, params)
 

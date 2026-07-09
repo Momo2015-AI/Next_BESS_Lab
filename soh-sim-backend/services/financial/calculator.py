@@ -1,13 +1,8 @@
-"""完整财务计算引擎
+"""财务计算核心函数
 
-支持 5 种收入模型、融资参数化、税收/折旧建模，向后兼容简化参数。
-
-新架构：核心已迁移到 services/financial/engine.py (FinancialEngine)
-此文件保留为向后兼容代理，所有原有函数和常量均保持不变。
+从 services/financial.py 迁移，避免模块/包同名冲突。
+包含：5种收入模型、融资建模、税务/折旧、IRR/NPV/LCOS/DSCR/Payback 全量计算。
 """
-
-# 向后兼容代理 — 从新引擎模块重导出
-from services.financial.engine import FinancialEngine, run_financial  # noqa: F401
 
 NUM_YEARS = 26
 
@@ -68,7 +63,6 @@ def _compute_irr(cash_flows, guess=0.1):
         if abs(npv) < 1e-6:
             converged = True
             break
-    # 未收敛时返回 None，调用方需处理
     if not converged:
         return None
     return rate

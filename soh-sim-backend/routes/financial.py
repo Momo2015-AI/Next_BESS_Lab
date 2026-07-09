@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, request
 
 from routes.auth import token_required
-from services.financial import _aggregate_boq_to_capex, calculate_full_financial
+from services.financial.calculator import _aggregate_boq_to_capex, calculate_full_financial
 from utils.api_response import error_response, success_response
 
 financial_bp = Blueprint("financial", __name__)

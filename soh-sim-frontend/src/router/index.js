@@ -153,7 +153,7 @@ const routes = [
     path: '/orchestrator',
     name: 'orchestrator',
     component: () => import('../pages/OrchestratorPage.vue'),
-    meta: { permission: 'tool_engineering' }
+    meta: { permission: 'orchestrator' }
   }
 ]
 

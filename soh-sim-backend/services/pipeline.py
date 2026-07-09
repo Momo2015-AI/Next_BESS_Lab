@@ -144,7 +144,7 @@ def calculate_financial_metrics(total_ac_usable, financial_params=None):
     Delegates to services/financial.py:calculate_full_financial for full 25-year cashflow.
     Returns backward-compatible metrics dict.
     """
-    from services.financial import calculate_full_financial as _calc_full
+    from services.financial.calculator import calculate_full_financial as _calc_full
 
     result = _calc_full(total_ac_usable, financial_params)
     metrics = result["metrics"]
