@@ -155,7 +155,6 @@ import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
 import api from '../services/api.js'
 
 const supportedCurrencies = reactive({
-<<<<<<< HEAD
   USD: 'currency.USD',
   CNY: 'currency.CNY',
   EUR: 'currency.EUR',
@@ -172,24 +171,6 @@ const supportedCurrencies = reactive({
   INR: 'currency.INR',
   TND: 'currency.TND',
   EGP: 'currency.EGP'
-=======
-  USD: '\u7f8e\u5143',
-  CNY: '\u4eba\u6c11\u5e01',
-  EUR: '\u6b27\u5143',
-  GBP: '\u82f1\u9551',
-  AED: '\u8fea\u62c9\u59c6(\u963f\u8054\u914b)',
-  SAR: '\u91cc\u4e9a\u5c14(\u6c99\u7279)',
-  QAR: '\u91cc\u4e9a\u5c14(\u5361\u5854\u5c14)',
-  KWD: '\u7b2c\u7eb3\u5c14(\u79d1\u5a01\u7279)',
-  OMR: '\u91cc\u4e9a\u5c14(\u963f\u66fc)',
-  BHD: '\u7b2c\u7eb3\u5c14(\u5df4\u6797)',
-  JPY: '\u65e5\u5143',
-  KRW: '\u97e9\u5143',
-  AUD: '\u6fb3\u5143',
-  INR: '\u5362\u6bd4(\u5370\u5ea6)',
-  TND: '\u7b2c\u7eb3\u5c14(\u7a81\u5c3c\u65af)',
-  EGP: '\u78c5(\u57c3\u53ca)'
->>>>>>> origin/fix0702
 })
 
 const baseCurrency = ref('USD')

@@ -606,4 +606,6 @@ textarea:focus {
 }
 
 button:not(:disabled):hover {
-  opac
+  opacity: 0.9;
+}
+</style>
