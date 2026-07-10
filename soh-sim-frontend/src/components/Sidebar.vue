@@ -2,7 +2,7 @@
   <aside class="sidebar-container">
     <nav class="sidebar-scroll">
       <div class="sidebar-section">
-        <router-link to="/" class="sidebar-menu-item" :class="{ active: $route.path === '/' }">
+        <router-link to="/" class="sidebar-menu-item" :class="{ active: route.path === '/' }">
           <AppIcon name="home" class="menu-icon" :size="18" />
           <span>{{ $t('sidebar.home') }}</span>
         </router-link>
@@ -17,7 +17,7 @@
           :key="item.id"
           :to="item.path"
           class="sidebar-menu-item"
-          :class="{ active: $route.path === item.path }"
+          :class="{ active: route.path === item.path }"
         >
           <span class="phase-num">{{ String(item.num).padStart(2, '0') }}</span>
           <span>{{ item.label }}</span>
@@ -33,7 +33,7 @@
           :key="item.id"
           :to="item.path"
           class="sidebar-menu-item"
-          :class="{ active: $route.path === item.path }"
+          :class="{ active: route.path === item.path }"
         >
           <AppIcon :name="item.iconName" class="menu-icon" :size="18" />
           <span>{{ item.label }}</span>
@@ -49,7 +49,7 @@
           :key="item.id"
           :to="item.path"
           class="sidebar-menu-item"
-          :class="{ active: $route.path === item.path }"
+          :class="{ active: route.path === item.path }"
         >
           <AppIcon :name="item.iconName" class="menu-icon" :size="18" />
           <span>{{ item.label }}</span>
@@ -58,7 +58,7 @@
 
       <div v-if="canView('epc')" class="sidebar-section">
         <div class="sidebar-section-label">EPC</div>
-        <router-link to="/epc" class="sidebar-menu-item" :class="{ active: $route.path === '/epc' }">
+        <router-link to="/epc" class="sidebar-menu-item" :class="{ active: route.path === '/epc' }">
           <AppIcon name="dashboard" class="menu-icon" :size="18" />
           <span>EPC</span>
         </router-link>
@@ -82,7 +82,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <router-link to="/auth" class="sidebar-menu-item" :class="{ active: $route.path === '/auth' }">
+      <router-link to="/auth" class="sidebar-menu-item" :class="{ active: route.path === '/auth' }">
         <AppIcon name="lock" class="menu-icon" :size="18" />
         <span>{{ $t('sidebar.auth') }}</span>
       </router-link>
@@ -92,12 +92,14 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import { usePermission } from '../composables/usePermission.js'
 import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
+const route = useRoute()
 const store = useBessStore()
 const { canView, isAdmin } = usePermission()
 
@@ -140,9 +142,9 @@ const adminItems = computed(() => [
 
 function isAdminTabActive(item) {
   if (item.tab) {
-    return $route.path === '/admin' && $route.query.tab === item.tab
+    return route.path === '/admin' && route.query.tab === item.tab
   }
-  return $route.path === '/admin' && !$route.query.tab
+  return route.path === '/admin' && !route.query.tab
 }
 </script>
 
