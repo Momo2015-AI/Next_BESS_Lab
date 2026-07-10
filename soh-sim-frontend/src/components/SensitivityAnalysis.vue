@@ -197,6 +197,7 @@ import { ref, reactive, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 import { useSensitivityCharts } from '../composables/useSensitivityCharts.js'
+import { post } from '../services/api.js'
 const { t } = useI18n()
 
 const props = defineProps({
@@ -326,20 +327,52 @@ async function analyzeSingleParam(param) {
     const testParams = { ...props.params, [param.key]: value }
 
     try {
-      const response = await fetch('/api/soh/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testParams)
-      })
+      // 构建仿真请求
+      const simBody = {
+        design_output: {
+          container: { ratedEnergyMwh: testParams.ratedEnergy || 5 },
+          pcs: { ratedPowerMW: testParams.pcsPower || 2.5 },
+          containerQty: testParams.initContainerQty || 10,
+          pcsQty: testParams.initPcsQty || 2,
+          duration: testParams.duration || 2
+        },
+        survey_params: {
+          ratedEnergy: testParams.ratedEnergy || 5,
+          temperature: testParams.temperature || 25,
+          cyclesPerDay: testParams.cyclesPerDay || 1,
+          dod: 90,
+          requiredEnergy: testParams.requiredEnergy || 240
+        }
+      }
+      const simResult = await post('/api/simulation/run', simBody)
 
-      const result = await response.json()
+      if (simResult.success && simResult.data) {
+        const totalAcUsable = simResult.data.totalAcUsable || []
+        // 调用财务引擎
+        const finBody = {
+          simulation_output: {
+            totalAcUsable: totalAcUsable,
+            soh: simResult.data.soh || [],
+            rte: simResult.data.rte || [],
+            meetsReq: simResult.data.meetsReq || []
+          },
+          design_output: simBody.design_output,
+          survey_params: simBody.survey_params
+        }
+        const finResult = await post('/api/financial/calculate', finBody)
 
-      if (result.success) {
-        const financial = result.data.financial || {}
-        npvValues.push(financial.npv || 0)
-        irrValues.push(financial.irr || 0)
-        paybackValues.push(financial.paybackYears || 0)
-        lcosValues.push(financial.lcos || 0)
+        if (finResult.success && finResult.data) {
+          const financial = finResult.data.metrics || {}
+          npvValues.push(financial.npv || 0)
+          irrValues.push(financial.irr || financial.projectIrr || 0)
+          paybackValues.push(financial.payback || financial.paybackYears || 0)
+          lcosValues.push(financial.lcos || financial.lcoe || 0)
+        } else {
+          npvValues.push(0)
+          irrValues.push(0)
+          paybackValues.push(0)
+          lcosValues.push(0)
+        }
       } else {
         npvValues.push(0)
         irrValues.push(0)

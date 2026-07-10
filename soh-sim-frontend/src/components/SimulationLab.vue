@@ -1247,53 +1247,58 @@ const runBackendSimulation = async () => {
         modelParams[key] = algoParams[key] ?? cfg.default
       }
     }
-    const body = {
-      systemParams: {
-        ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
-        initContainerQty: surveyData.containerQty || store.systemParams.initContainerQty,
-        initPcsQty: store.systemParams.initPcsQty,
-        pcsPower: store.systemParams.pcsPower,
-        duration: surveyData.duration || store.systemParams.duration,
-        temperature: surveyData.temperature || store.systemParams.temperature,
-        cyclesPerDay: surveyData.cyclesPerDay || store.systemParams.cyclesPerDay,
-        dod: surveyData.dod || store.systemParams.dod || 80,
-        cRate: store.systemParams.cRate || 0.5,
-        requiredEnergy: store.systemParams.requiredEnergy,
-        acEfficiency: simParams.acEfficiency || store.systemParams.acEfficiency,
-        bessAuxRun: store.systemParams.bessAuxRun,
-        bessAuxStandby: store.systemParams.bessAuxStandby,
-        pcsAuxRun: store.systemParams.pcsAuxRun,
-        pcsAuxStandby: store.systemParams.pcsAuxStandby
-      },
-      algorithm: {
-        model: modelType,
-        correctionFactor: correctionFactors.sohFactor || 1.0,
-        modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined
-      }
-    }
-    const data = await api.post('/api/pipeline/calculate', body)
-    if (data.result) {
-      const sohArr = data.result.soh || []
+	    const body = {
+	      design_output: {
+	        container: { ratedEnergyMwh: surveyData.ratedEnergy || store.systemParams.ratedEnergy },
+	        pcs: { ratedPowerMW: store.systemParams.pcsPower },
+	        containerQty: surveyData.containerQty || store.systemParams.initContainerQty,
+	        pcsQty: store.systemParams.initPcsQty,
+	        duration: surveyData.duration || store.systemParams.duration
+	      },
+	      survey_params: {
+	        ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
+	        temperature: surveyData.temperature || store.systemParams.temperature,
+	        cyclesPerDay: surveyData.cyclesPerDay || store.systemParams.cyclesPerDay,
+	        dod: surveyData.dod || store.systemParams.dod || 80,
+	        requiredEnergy: store.systemParams.requiredEnergy,
+	        cRate: store.systemParams.cRate || 0.5
+	      },
+	      degradation: {
+	        soh: [...store.degradation.soh],
+	        rte: [...store.degradation.rte],
+	        dod: [...store.degradation.dod],
+	        augQty: [...store.degradation.augQty]
+	      },
+	      algorithm: {
+	        model: modelType,
+	        correctionFactor: correctionFactors.sohFactor || 1.0,
+	        modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined
+	      }
+	    }
+	    const data = await api.post('/api/simulation/run', body)
+	    if (data.success && data.data) {
+	      const result = data.data
+	      const sohArr = result.soh || []
       const rteArr = data.result.rte || []
       simulationResults.sohCurve = sohArr
       simulationResults.rteCurve = rteArr
-      simulationResults.netAvailCurve = data.result.totalAcUsable || []
-      simulationResults.initSoh = sohArr[0] || 100
-      simulationResults.finalSoh = sohArr[sohArr.length - 1] || 0
-      simulationResults.guaranteeEndSoh = sohArr[simParams.guaranteeYears] || 0
-      simulationResults.meetsGuarantee = (sohArr[simParams.guaranteeYears] || 0) >= simParams.guaranteeSoh
-      simulationResults.tableData = sohArr.map((s, i) => ({
-        year: i,
-        soh: s,
-        rte: rteArr[i] || 0,
-        netAvail: (data.result.totalAcUsable || [])[i] || 0,
-        meetsReq: (data.result.meetsReq || [])[i] || false
-      }))
-      nextTick(() => setTimeout(() => renderChart(), 100))
-      emit('applyConfig', {
-        soh: sohArr,
-        rte: rteArr,
-        source: 'backend-pipeline',
+	      simulationResults.netAvailCurve = result.totalAcUsable || []
+	      simulationResults.initSoh = sohArr[0] || 100
+	      simulationResults.finalSoh = sohArr[sohArr.length - 1] || 0
+	      simulationResults.guaranteeEndSoh = sohArr[simParams.guaranteeYears] || 0
+	      simulationResults.meetsGuarantee = (sohArr[simParams.guaranteeYears] || 0) >= simParams.guaranteeSoh
+	      simulationResults.tableData = sohArr.map((s, i) => ({
+	        year: i,
+	        soh: s,
+	        rte: rteArr[i] || 0,
+	        netAvail: (result.totalAcUsable || [])[i] || 0,
+	        meetsReq: (result.meetsReq || [])[i] || false
+	      }))
+	      nextTick(() => setTimeout(() => renderChart(), 100))
+	      emit('applyConfig', {
+	        soh: sohArr,
+	        rte: rteArr,
+	        source: 'backend-simulation',
         algorithmType: modelType,
         simulationYears: simParams.simulationYears,
         guaranteeSoh: simParams.guaranteeSoh

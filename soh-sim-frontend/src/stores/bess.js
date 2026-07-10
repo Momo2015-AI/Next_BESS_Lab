@@ -200,6 +200,7 @@ export const useBessStore = defineStore('bess', {
       return await post('/api/degradation/environmental/preview', params)
     },
 
+    /** @deprecated 使用 runSimulationEngine() 替代 */
     async runPipeline() {
       this.calculating = true
       this.calculationError = null
@@ -273,36 +274,127 @@ export const useBessStore = defineStore('bess', {
       }
     },
 
-    async refreshFinancialResults() {
-      this.financial.calculating = true
+    // ==================== 三引擎工作流 ====================
+
+    /** 运行仿真引擎 → 财务引擎（新 API） */
+    async runSimulationEngine(designOutput, surveyParams, options = {}) {
+      this.calculating = true
+      this.calculationError = null
       try {
-        const body = {
-          totalAcUsable: [...this.results.totalAcUsable],
-          financialParams: {
-            capex: { ...this.financial.capex },
-            opex: { ...this.financial.opex },
-            revenue: { ...this.financial.revenue },
-            financing: { ...this.financial.financing },
-            tax: { ...this.financial.tax },
-            discountRate: this.financial.discountRate,
-            depreciationYears: this.financial.depreciationYears,
-            residualRate: this.financial.residualRate,
-            priceEscalation: this.financial.priceEscalation,
-            efficiencyLossPct: this.financial.efficiencyLossPct,
-            cyclesPerDay: this.systemParams.cyclesPerDay,
-            systemParams: { ...this.systemParams }
+        // Step 1: 调用仿真引擎
+        const simBody = {
+          design_output: designOutput || {
+            container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
+            pcs: { ratedPowerMW: this.systemParams.pcsPower },
+            containerQty: this.systemParams.initContainerQty,
+            pcsQty: this.systemParams.initPcsQty,
+            duration: this.systemParams.duration
+          },
+          survey_params: surveyParams || {
+            ratedEnergy: this.survey.ratedEnergy,
+            temperature: this.survey.temperature,
+            cyclesPerDay: this.survey.cyclesPerDay,
+            dod: 90,
+            requiredEnergy: this.survey.requiredEnergy,
+            cRate: this.systemParams.cRate || 0.5
+          },
+          degradation: {
+            soh: [...this.degradation.soh],
+            rte: [...this.degradation.rte],
+            dod: [...this.degradation.dod],
+            augQty: [...this.degradation.augQty]
+          },
+          algorithm: {
+            model: this.degradationModel,
+            correctionFactor: 1.0,
+            environmental: { ...this.environmental },
+            gb36276Curves: [...this.gb36276Curves]
           }
         }
-        const json = await post('/api/financial/calculate', body)
-        if (json.success && json.data) {
-          this.financial.metrics = { ...json.data.metrics }
-          this.financial.cashflowTable = json.data.cashflowTable || []
-          this.financial.capexBreakdown = json.data.capexBreakdown || { equipment: 0, epc: 0, development: 0 }
+
+        const simResp = await post('/api/simulation/run', simBody)
+        if (!simResp.success || !simResp.data) {
+          throw new Error(simResp.message || 'Simulation engine failed')
         }
+
+        const sim = simResp.data
+
+        // 写入退化结果
+        this.degradation.soh = sim.soh || []
+        this.degradation.rte = sim.rte || []
+        this.degradation.dod = sim.dod || []
+        this.degradation.augQty = sim.augQty || []
+
+        // 写入能量核算结果
+        this.results = {
+          initGross: sim.initGross || create26Array(0),
+          initAux: sim.initAux || create26Array(0),
+          initAcUsable: sim.initAcUsable || create26Array(0),
+          augGross: sim.augGross || create26Array(0),
+          augAux: sim.augAux || create26Array(0),
+          augAcUsable: sim.augAcUsable || create26Array(0),
+          augAccumQty: sim.augAccumQty || create26Array(0),
+          totalAcUsable: sim.totalAcUsable || create26Array(0),
+          meetsReq: sim.meetsReq || create26Array(false)
+        }
+
+        if (sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
+        if (sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
+
+        // Step 2: 调用财务引擎
+        if (!options.skipFinancial) {
+          const finBody = {
+            simulation_output: {
+              totalAcUsable: sim.totalAcUsable || create26Array(0),
+              soh: sim.soh || [],
+              rte: sim.rte || [],
+              meetsReq: sim.meetsReq || []
+            },
+            design_output: designOutput || {
+              container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
+              pcs: { ratedPowerMW: this.systemParams.pcsPower },
+              containerQty: this.systemParams.initContainerQty,
+              pcsQty: this.systemParams.initPcsQty,
+              duration: this.systemParams.duration
+            },
+            survey_params: surveyParams || {
+              location: this.survey.location,
+              ratedEnergy: this.survey.ratedEnergy,
+              totalPower: this.survey.totalPower
+            },
+            financial_params: {
+              discountRate: this.financial.discountRate,
+              depreciationYears: this.financial.depreciationYears,
+              residualRate: this.financial.residualRate,
+              priceEscalation: this.financial.priceEscalation,
+              efficiencyLossPct: this.financial.efficiencyLossPct
+            }
+          }
+
+          const finResp = await post('/api/financial/calculate', finBody)
+          if (finResp.success && finResp.data) {
+            const fin = finResp.data
+            const m = fin.metrics || {}
+            this.financial.metrics = {
+              projectIrr: m.projectIrr || m.irr || 0,
+              equityIrr: m.equityIrr || 0,
+              npv: m.npv || 0,
+              lcos: m.lcos || m.lcoe || 0,
+              dscr: m.dscr || { min: 0, avg: 0 },
+              payback: m.payback || m.paybackYears || -1,
+              roi: m.roi || 0
+            }
+            this.financial.cashflowTable = fin.cashflowTable || []
+            this.financial.capexBreakdown = fin.capexBreakdown || { equipment: 0, epc: 0, development: 0 }
+          }
+        }
+
+        return simResp.data
       } catch (e) {
-        console.error('Financial calculation failed:', e)
+        this.calculationError = e.message
+        throw e
       } finally {
-        this.financial.calculating = false
+        this.calculating = false
       }
     },
 

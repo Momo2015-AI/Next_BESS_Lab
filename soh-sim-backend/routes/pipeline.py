@@ -17,6 +17,14 @@ _lock = threading.Lock()
 @pipeline_bp.route("/api/pipeline/calculate", methods=["POST"])
 @token_required
 def pipeline_calculate():
+    """@deprecated 使用 POST /api/simulation/run + POST /api/financial/calculate 替代"""
+    import warnings
+    warnings.warn(
+        "POST /api/pipeline/calculate is deprecated. "
+        "Use POST /api/simulation/run and POST /api/financial/calculate instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     data = request.get_json()
     if not data:
         return error_response("invalid request body", 400)

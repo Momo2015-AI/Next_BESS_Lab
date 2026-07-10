@@ -66,7 +66,25 @@ const steps = computed(() => [
 ])
 
 async function runPipeline() {
-  await store.runPipeline()
+  const designOutput = {
+    container: { ratedEnergyMwh: store.systemParams.ratedEnergy },
+    pcs: { ratedPowerMW: store.systemParams.pcsPower },
+    containerQty: store.systemParams.initContainerQty,
+    pcsQty: store.systemParams.initPcsQty,
+    duration: store.systemParams.duration
+  }
+  const surveyParams = {
+    ratedEnergy: store.survey.ratedEnergy,
+    temperature: store.survey.temperature,
+    cyclesPerDay: store.survey.cyclesPerDay,
+    dod: 90,
+    requiredEnergy: store.survey.requiredEnergy
+  }
+  try {
+    await store.runSimulationEngine(designOutput, surveyParams)
+  } catch (e) {
+    store.calculationError = e.message
+  }
 }
 
 function onError(msg) {

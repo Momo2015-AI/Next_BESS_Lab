@@ -399,6 +399,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
+import { post } from '../services/api.js'
 const { t } = useI18n()
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
@@ -519,15 +520,26 @@ async function calculateScenario() {
   calculating.value = true
 
   try {
-    const response = await fetch('/api/soh/calculate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editingScenario.value.params)
-    })
+    const params = editingScenario.value.params
+    const body = {
+      design_output: {
+        container: { ratedEnergyMwh: params.ratedEnergy },
+        pcs: { ratedPowerMW: 2.5 },
+        containerQty: params.initContainerQty,
+        pcsQty: params.initPcsQty,
+        duration: params.duration
+      },
+      survey_params: {
+        ratedEnergy: params.ratedEnergy,
+        temperature: 25,
+        cyclesPerDay: params.cyclesPerDay,
+        dod: 90,
+        requiredEnergy: params.requiredEnergy
+      }
+    }
+    const result = await post('/api/simulation/run', body)
 
-    const result = await response.json()
-
-    if (result.success) {
+    if (result.success && result.data) {
       editingScenario.value.results = result.data
 
       // 更新列表中的场景
