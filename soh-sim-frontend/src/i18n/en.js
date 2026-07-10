@@ -161,7 +161,11 @@ export default {
     toolProjects: 'Projects',
     toolTemplates: 'Templates',
     toolRules: 'Rules',
-    adminPanel: 'Access Control'
+    adminPanel: 'Access Control',
+    sectionAdmin: 'Administration',
+    adminUsers: 'User Management',
+    adminRoles: 'Role Permissions',
+    adminOverview: 'Admin Panel'
   },
   tabs: {
     survey: '0. Survey Form',

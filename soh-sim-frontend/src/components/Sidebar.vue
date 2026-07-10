@@ -63,6 +63,22 @@
           <span>EPC</span>
         </router-link>
       </div>
+
+      <div v-if="isAdmin" class="sidebar-section sidebar-section-admin">
+        <div class="sidebar-section-label">
+          {{ $t('sidebar.sectionAdmin') }}
+        </div>
+        <router-link
+          v-for="item in adminItems"
+          :key="item.id"
+          :to="{ path: item.path, query: item.tab ? { tab: item.tab } : undefined }"
+          class="sidebar-menu-item"
+          :class="{ active: isAdminTabActive(item) }"
+        >
+          <AppIcon :name="item.iconName" class="menu-icon" :size="18" />
+          <span>{{ item.label }}</span>
+        </router-link>
+      </div>
     </nav>
 
     <div class="sidebar-footer">
@@ -105,7 +121,7 @@ const coreToolItems = computed(() => [
 ].filter(item => canView(item.perm)))
 
 const advToolItems = computed(() => {
-  const items = [
+  return [
     { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), iconName: 'settings', perm: 'tool_config' },
     { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyViewTitle'), iconName: 'eye', perm: 'tool_survey_view' },
     { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), iconName: 'bar-chart', perm: 'tool_simulation_view' },
@@ -114,20 +130,20 @@ const advToolItems = computed(() => {
     { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), iconName: 'save', perm: 'tool_templates' },
     { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), iconName: 'shield', perm: 'tool_rules' }
   ].filter(item => canView(item.perm))
-
-  // 管理员额外显示管理面板入口
-  if (isAdmin.value) {
-    items.push({
-      id: 'admin',
-      path: '/admin',
-      label: t('sidebar.adminPanel'),
-      iconName: 'shield',
-      perm: 'admin_panel'
-    })
-  }
-
-  return items
 })
+
+const adminItems = computed(() => [
+  { id: 'admin-users', path: '/admin', tab: 'users', label: t('sidebar.adminUsers'), iconName: 'users' },
+  { id: 'admin-roles', path: '/admin', tab: 'roles', label: t('sidebar.adminRoles'), iconName: 'key' },
+  { id: 'admin-panel', path: '/admin', tab: '', label: t('sidebar.adminOverview'), iconName: 'settings' }
+])
+
+function isAdminTabActive(item) {
+  if (item.tab) {
+    return $route.path === '/admin' && $route.query.tab === item.tab
+  }
+  return $route.path === '/admin' && !$route.query.tab
+}
 </script>
 
 <style scoped>
@@ -177,5 +193,21 @@ const advToolItems = computed(() => {
 .sidebar-footer {
   padding: 8px 12px;
   border-top: 1px solid var(--border-color);
+}
+
+.sidebar-section-admin {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-section-admin .sidebar-section-label {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.sidebar-section-admin .menu-icon {
+  stroke: var(--text-secondary);
+  opacity: 0.7;
 }
 </style>

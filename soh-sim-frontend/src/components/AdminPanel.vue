@@ -285,13 +285,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import api from '../services/api.js'
 
 const { t } = useI18n()
 
-const activeTab = ref('roles')
+const props = defineProps({
+  initialTab: { type: String, default: '' }
+})
+
+const activeTab = ref(props.initialTab || 'roles')
 const loading = ref(false)
 const usersLoading = ref(false)
 
@@ -388,7 +392,6 @@ function loadRoleToEditor() {
 }
 
 // 监听角色切换
-import { watch } from 'vue'
 watch(selectedRole, () => loadRoleToEditor())
 
 function getDefaultPerm(key) {

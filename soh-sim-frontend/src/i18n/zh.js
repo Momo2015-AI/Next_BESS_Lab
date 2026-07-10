@@ -160,7 +160,11 @@ export default {
     toolProjects: '历史项目',
     toolTemplates: '校正因子模板',
     toolRules: '配置规则',
-    adminPanel: '权限管理'
+    adminPanel: '权限管理',
+    sectionAdmin: '系统管理',
+    adminUsers: '用户管理',
+    adminRoles: '角色权限',
+    adminOverview: '管理面板'
   },
   tabs: {
     survey: '0. 项目调研表',
