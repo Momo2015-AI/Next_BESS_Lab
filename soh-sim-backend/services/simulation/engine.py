@@ -224,6 +224,7 @@ class SimulationEngine(BaseEngine):
             aug_qty = strat_data.get("augQty", [0] * NUM_YEARS)
 
             # 超配策略：初始 containerQty × 1.2，初始 CAPEX 也需增加
+            # 额外成本直接融入 equipment，不在输出中暴露独立字段，避免双重计数风险
             if strat_name == "overbuild":
                 params = {**system_params}
                 extra_containers = int(system_params.get("initContainerQty", 10) * 0.2)
@@ -255,8 +256,8 @@ class SimulationEngine(BaseEngine):
                     })
 
             # 构造财务参数
-            # overbuild 策略：equipment CAPEX 包含额外 20% 容器的成本（反映更高的初始投资）
-            # 非 overbuild 策略：equipment CAPEX 保持不变，补容成本在后续年份体现
+            # overbuild 策略：equipment CAPEX 已包含额外 20% 容器的成本，
+            # 反映更高的初始投资（不单独暴露 overbuildExtraCost 字段以避免双重计数）
             capex_internal = design_output.get("estimatedCapex", {})
             adjusted_capex = {
                 "equipment": float(capex_internal.get("equipmentCost", 0)) + overbuild_extra_cost,
@@ -280,7 +281,6 @@ class SimulationEngine(BaseEngine):
                 "augQty": aug_qty,
                 "augSchedule": aug_schedule,
                 "totalAugCapex": round(total_aug_capex, 2),
-                "overbuildExtraCost": round(overbuild_extra_cost, 2),
                 "description": strat_data.get("description", ""),
                 "metrics": {
                     "irr": metrics.get("projectIrr"),
