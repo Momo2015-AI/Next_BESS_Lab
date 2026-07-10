@@ -750,6 +750,7 @@ import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 import api from '../services/api.js'
+import { useChartTheme } from '../composables/useChartTheme.js'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const emit = defineEmits(['applyConfig', 'error'])
@@ -769,6 +770,7 @@ const searchKeyword = ref('')
 const searchResults = ref([])
 
 const store = useBessStore()
+const { themeObject } = useChartTheme()
 const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
 
 const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-survey-data', {
@@ -1316,14 +1318,14 @@ const renderChart = () => {
     chartInstance.dispose()
   }
 
-  chartInstance = echarts.init(chartContainer.value)
+  chartInstance = echarts.init(chartContainer.value, themeObject.value)
 
   const years = Array.from({ length: simulationResults.sohCurve.length }, (_, i) => i)
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   const textColor = isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)'
-  const accentColor = isDark ? '#2dd4bf' : 'var(--color-accent)'
-  const secondaryColor = isDark ? '#38bdf8' : 'var(--color-chart-cyan)'
-  const warningColor = 'var(--color-warning)'
+  const accentColor = themeObject.value.primary
+  const secondaryColor = themeObject.value.cyan
+  const warningColor = themeObject.value.warning
 
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },

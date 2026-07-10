@@ -356,7 +356,9 @@ import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
 import { post } from '../services/api.js'
+import { useChartTheme } from '../composables/useChartTheme.js'
 const { t } = useI18n()
+const { themeObject } = useChartTheme()
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
 const props = defineProps({
@@ -523,7 +525,7 @@ function updateChart() {
     if (!chartContainer.value) return
 
     if (!chartInstance) {
-      chartInstance = echarts.init(chartContainer.value)
+      chartInstance = echarts.init(chartContainer.value, themeObject.value)
     }
 
     const years = Array.from({ length: 26 }, (_, i) => i)
@@ -570,17 +572,16 @@ function updateChart() {
 	    }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const tObj = themeObject.value
     const colors = {
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
+      tooltipBg: tObj.tooltipBg,
       tooltipBorder: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(226, 232, 240, 0.5)',
-      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b',
-      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
-      splitLine: isDark ? '#1e293b' : '#f1f5f9',
-      colorList: isDark
-        ? ['#2dd4bf', '#38bdf8', 'var(--color-chart-orange)', '#a78bfa', 'var(--color-chart-pink)']
-        : ['#14b8a6', '#0ea5e9', 'var(--color-chart-orange)', 'var(--color-info)', 'var(--color-chart-pink)']
+      tooltipText: tObj.tooltipText,
+      legendText: tObj.legendText,
+      axisLabel: tObj.axisLabel,
+      axisLine: tObj.gridLine,
+      splitLine: tObj.splitLine,
+      colorList: tObj.color.slice(0, 5)
     }
 
     const option = {

@@ -76,8 +76,10 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 const { t } = useI18n()
+const { themeObject } = useChartTheme()
 echarts.use([CanvasRenderer, BarChart, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({
@@ -164,27 +166,27 @@ const generateWaterfallData = () => {
     {
       name: t('waterfall.initialCapex'),
       value: initialCapex.value,
-      itemStyle: { color: 'var(--color-danger)' }
+      itemStyle: { color: themeObject.value.danger }
     },
     {
       name: t('waterfall.annualOpex'),
       value: annualOpex.value,
-      itemStyle: { color: 'var(--color-warning)' }
+      itemStyle: { color: themeObject.value.warning }
     },
     {
       name: t('waterfall.maintenance'),
       value: maintenanceCost.value,
-      itemStyle: { color: 'var(--color-warning)' }
+      itemStyle: { color: themeObject.value.warning }
     },
     {
       name: t('waterfall.insurance'),
       value: insuranceCost.value,
-      itemStyle: { color: '#84cc16' }
+      itemStyle: { color: themeObject.value.acLine }
     },
     {
       name: t('waterfall.landRent'),
       value: landLeaseCost.value,
-      itemStyle: { color: 'var(--color-chart-cyan)' }
+      itemStyle: { color: themeObject.value.cyan }
     }
   ]
 
@@ -199,7 +201,7 @@ const generateWaterfallData = () => {
     stack: 'total',
     emphasis: { focus: 'series' },
     data: [baseValue],
-    itemStyle: { color: 'var(--color-danger)' },
+    itemStyle: { color: themeObject.value.danger },
     barWidth: '40%'
   })
 
@@ -225,7 +227,7 @@ const generateWaterfallData = () => {
     type: 'line',
     yAxisIndex: 1,
     data: [baseValue, cumulative],
-    lineStyle: { color: 'var(--color-accent)', width: 2 },
+    lineStyle: { color: themeObject.value.primary, width: 2 },
     symbol: 'none',
     silent: true
   })
@@ -311,7 +313,7 @@ const updateChart = () => {
         type: 'value',
         name: t('waterfall.cumulative'),
         nameTextStyle: {
-          color: 'var(--color-accent)',
+          color: themeObject.value.primary,
           fontSize: 10
         },
         axisLine: { show: false },
@@ -330,7 +332,7 @@ const initChart = () => {
     waterfallChart.dispose()
   }
 
-  waterfallChart = echarts.init(waterfallChartRef.value)
+  waterfallChart = echarts.init(waterfallChartRef.value, themeObject.value)
   updateChart()
 }
 

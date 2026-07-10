@@ -4,6 +4,7 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, RadarChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, RadarComponent } from 'echarts/components'
+import { useChartTheme } from './useChartTheme.js'
 
 echarts.use([
   CanvasRenderer,
@@ -18,6 +19,7 @@ echarts.use([
 
 export function useSensitivityCharts(analysisResults, tornadoChartRef, spiderChartRef) {
   const { t } = useI18n()
+  const { themeObject } = useChartTheme()
   let tornadoInstance = null
   let spiderInstance = null
   let _resizeHandler = null
@@ -26,19 +28,20 @@ export function useSensitivityCharts(analysisResults, tornadoChartRef, spiderCha
     if (!tornadoChartRef.value) return
 
     if (!tornadoInstance) {
-      tornadoInstance = echarts.init(tornadoChartRef.value)
+      tornadoInstance = echarts.init(tornadoChartRef.value, themeObject.value)
     }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const tObj = themeObject.value
     const colors = {
-      success: 'var(--color-success)',
-      danger: 'var(--color-danger)',
-      textMuted: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
-      splitLine: isDark ? '#1e293b' : '#f1f5f9',
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b'
+      success: tObj.success,
+      danger: tObj.danger,
+      textMuted: tObj.axisLabel,
+      legendText: tObj.legendText,
+      axisLine: tObj.gridLine,
+      splitLine: tObj.splitLine,
+      tooltipBg: tObj.tooltipBg,
+      tooltipText: tObj.tooltipText
     }
 
     const sortedResults = [...analysisResults.value].sort((a, b) => b.sensitivityScore - a.sensitivityScore)
@@ -105,23 +108,24 @@ export function useSensitivityCharts(analysisResults, tornadoChartRef, spiderCha
     if (!spiderChartRef.value) return
 
     if (!spiderInstance) {
-      spiderInstance = echarts.init(spiderChartRef.value)
+      spiderInstance = echarts.init(spiderChartRef.value, themeObject.value)
     }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const tObj = themeObject.value
     const colors = {
-      npvLine: isDark ? '#2dd4bf' : '#14b8a6',
-      irrLine: isDark ? '#38bdf8' : '#0ea5e9',
-      lcosLine: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
+      npvLine: tObj.acLine,
+      irrLine: tObj.info,
+      lcosLine: tObj.orange,
       npvArea: isDark ? 'rgba(45, 212, 191, 0.1)' : 'rgba(20, 184, 166, 0.08)',
       irrArea: isDark ? 'rgba(56, 189, 248, 0.1)' : 'rgba(14, 165, 233, 0.08)',
       lcosArea: isDark ? 'rgba(251, 146, 60, 0.1)' : 'rgba(249, 115, 22, 0.08)',
-      legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-      axisLine: isDark ? 'var(--color-border)' : 'var(--color-border-light)',
-      splitLine: isDark ? '#1e293b' : '#f1f5f9',
+      legendText: tObj.legendText,
+      axisLine: tObj.gridLine,
+      splitLine: tObj.splitLine,
       splitArea: isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(241, 245, 249, 0.5)',
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-      tooltipText: isDark ? 'var(--color-border-light)' : '#1e293b'
+      tooltipBg: tObj.tooltipBg,
+      tooltipText: tObj.tooltipText
     }
 
     const topResults = [...analysisResults.value].sort((a, b) => b.sensitivityScore - a.sensitivityScore).slice(0, 3)

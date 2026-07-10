@@ -65,8 +65,11 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, RadarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, RadarComponent, GridComponent } from 'echarts/components'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 echarts.use([CanvasRenderer, BarChart, RadarChart, TooltipComponent, LegendComponent, RadarComponent, GridComponent])
+
+const { themeObject } = useChartTheme()
 
 function debounce(fn, delay = 300) {
   let timer = null
@@ -197,7 +200,7 @@ function renderRadarChart() {
   if (!radarChartRef.value || selected.value.length < 2) return
 
   if (!radarChart) {
-    radarChart = echarts.init(radarChartRef.value)
+    radarChart = echarts.init(radarChartRef.value, themeObject.value)
   }
 
   const indicators = [
@@ -256,7 +259,7 @@ function renderBarChart() {
   if (!barChartRef.value || selected.value.length < 2) return
 
   if (!barChart) {
-    barChart = echarts.init(barChartRef.value)
+    barChart = echarts.init(barChartRef.value, themeObject.value)
   }
 
   const names = selected.value.map((s, i) => s.container?.model || ('方案 ' + (i + 1)))
@@ -282,14 +285,14 @@ function renderBarChart() {
         name: '总 CAPEX ($)',
         type: 'bar',
         data: capexData,
-        itemStyle: { color: '#3b82f6' }
+        itemStyle: { color: themeObject.value.primary }
       },
       {
         name: '总容量 (MWh)',
         type: 'bar',
         yAxisIndex: 1,
         data: energyData,
-        itemStyle: { color: '#10b981' }
+        itemStyle: { color: themeObject.value.success }
       }
     ]
   }, true)

@@ -40,6 +40,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useChartTheme } from '../composables/useChartTheme.js'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, LineChart, PieChart } from 'echarts/charts'
@@ -79,25 +80,7 @@ let cashFlowChart = null,
   capexChart = null
 let _resizeHandler = null
 
-const chartColors = computed(() => {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  return {
-    textStyle: { color: 'var(--color-text-secondary)', fontSize: 10 },
-    axisLabel: 'var(--color-text-secondary)',
-    legendText: 'var(--color-text-secondary)',
-    gridLine: isDark ? '#1e293b' : 'var(--color-border-light)',
-    success: 'var(--color-success)',
-    danger: 'var(--color-danger)',
-    warning: 'var(--color-warning)',
-    info: isDark ? '#0ea5e9' : '#0ea5e9',
-    acLine: isDark ? '#14b8a6' : '#14b8a6',
-    purple: 'var(--color-info)',
-    orange: 'var(--color-chart-orange)',
-    cyan: 'var(--color-chart-cyan)',
-    redLight: '#f87171',
-    muted: 'var(--color-text-secondary)'
-  }
-})
+const { themeObject } = useChartTheme()
 
 function fmtNum(v) {
   if (v == null || isNaN(v)) return '-'
@@ -120,7 +103,7 @@ function renderAll() {
 function renderCashFlowChart() {
   if (!cashFlowChartRef.value) return
   if (cashFlowChart) cashFlowChart.dispose()
-  const colors = chartColors.value
+  const colors = themeObject.value
   cashFlowChart = echarts.init(cashFlowChartRef.value, colors)
   const rows = props.cachedRows
   const years = rows.map((r) => r.year)
@@ -246,7 +229,7 @@ function renderCashFlowChart() {
 function renderRevenueChart() {
   if (!revenueChartRef.value) return
   if (revenueChart) revenueChart.dispose()
-  const colors = chartColors.value
+  const colors = themeObject.value
   revenueChart = echarts.init(revenueChartRef.value, colors)
   const rows = props.cachedRows.filter((r) => r.year > 0)
   const years = rows.map((r) => r.year)
@@ -318,7 +301,7 @@ function renderRevenueChart() {
 function renderDscrChart() {
   if (!dscrChartRef.value) return
   if (dscrChart) dscrChart.dispose()
-  const colors = chartColors.value
+  const colors = themeObject.value
   dscrChart = echarts.init(dscrChartRef.value, colors)
   const rows = props.cachedRows.filter((r) => r.year > 0)
   const years = rows.map((r) => r.year)
@@ -426,7 +409,7 @@ function renderDscrChart() {
 function renderCapexChart() {
   if (!capexChartRef.value) return
   if (capexChart) capexChart.dispose()
-  const colors = chartColors.value
+  const colors = themeObject.value
   capexChart = echarts.init(capexChartRef.value, colors)
   if (!props.cachedCapexData) return
   const {

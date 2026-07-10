@@ -110,6 +110,7 @@
 <script setup>
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useChartTheme } from '../composables/useChartTheme.js'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, ScatterChart } from 'echarts/charts'
@@ -153,31 +154,23 @@ let stackedChart = null
 let degradationChart = null
 let dashChart = null
 
-const chartColors = computed(() => {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  return {
-    textStyle: { color: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)' },
-    backgroundColor: 'transparent',
-    axisLabel: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-    legendText: isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)',
-    titleText: isDark ? '#facc15' : 'var(--color-warning)',
-    sohLine: isDark ? '#facc15' : 'var(--color-warning)',
-    rteLine: isDark ? '#38bdf8' : '#0ea5e9',
-    acLine: isDark ? '#2dd4bf' : '#14b8a6',
-    augLine: isDark ? 'var(--color-chart-pink)' : 'var(--color-chart-pink)',
-    totalLine: isDark ? '#38bdf8' : '#0ea5e9',
-    reqLine: isDark ? 'var(--color-warning)' : 'var(--color-warning)',
-    initAux: isDark ? '#e11d48' : '#dc2626',
-    augAux: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
-    initAc: isDark ? '#14b8a6' : '#14b8a6',
-    augAc: isDark ? 'var(--color-chart-pink)' : 'var(--color-chart-pink)',
-    degradation: isDark ? 'var(--color-chart-orange)' : 'var(--color-chart-orange)',
-    dashboard: isDark ? '#c084fc' : 'var(--color-info)',
-    success: isDark ? 'var(--color-success)' : 'var(--color-success)',
-    danger: isDark ? 'var(--color-danger)' : 'var(--color-danger)',
-    warning: isDark ? 'var(--color-warning)' : 'var(--color-warning)'
-  }
-})
+const { themeObject } = useChartTheme()
+
+const chartColors = computed(() => ({
+  ...themeObject.value,
+  titleText: themeObject.value.warning,
+  sohLine: themeObject.value.warning,
+  rteLine: themeObject.value.info,
+  augLine: themeObject.value.info,
+  totalLine: themeObject.value.info,
+  reqLine: themeObject.value.warning,
+  initAux: themeObject.value.danger,
+  augAux: themeObject.value.orange,
+  initAc: themeObject.value.acLine,
+  augAc: themeObject.value.cyan,
+  degradation: themeObject.value.orange,
+  dashboard: themeObject.value.purple,
+}))
 
 const years = Array.from({ length: 26 }, (_, i) => i)
 

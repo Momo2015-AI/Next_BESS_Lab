@@ -125,8 +125,10 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { SankeyChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 const { t } = useI18n()
+const { themeObject } = useChartTheme()
 echarts.use([CanvasRenderer, SankeyChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({
@@ -182,12 +184,12 @@ const formatEnergy = (energy) => {
 // 生成桑基图数据
 const generateSankeyData = () => {
   const nodes = [
-    { name: t('energyFlow.nodeChargingInput'), itemStyle: { color: 'var(--color-accent)' } },
-    { name: t('energyFlow.nodeChargingLoss'), itemStyle: { color: 'var(--color-danger)' } },
-    { name: t('energyFlow.nodeBatteryStorage'), itemStyle: { color: 'var(--color-info)' } },
-    { name: t('energyFlow.nodeDischargingLoss'), itemStyle: { color: 'var(--color-warning)' } },
-    { name: t('energyFlow.nodeDischargingOutput'), itemStyle: { color: 'var(--color-success)' } },
-    { name: t('energyFlow.nodeAux'), itemStyle: { color: 'var(--color-warning)' } }
+    { name: t('energyFlow.nodeChargingInput'), itemStyle: { color: themeObject.value.primary } },
+    { name: t('energyFlow.nodeChargingLoss'), itemStyle: { color: themeObject.value.danger } },
+    { name: t('energyFlow.nodeBatteryStorage'), itemStyle: { color: themeObject.value.purple } },
+    { name: t('energyFlow.nodeDischargingLoss'), itemStyle: { color: themeObject.value.warning } },
+    { name: t('energyFlow.nodeDischargingOutput'), itemStyle: { color: themeObject.value.success } },
+    { name: t('energyFlow.nodeAux'), itemStyle: { color: themeObject.value.warning } }
   ]
 
   const links = [
@@ -195,31 +197,31 @@ const generateSankeyData = () => {
       source: 0,
       target: 1,
       value: totalCharging.value * (1 - chargingEfficiency.value / 100),
-      itemStyle: { color: 'var(--color-danger)' }
+      itemStyle: { color: themeObject.value.danger }
     },
     {
       source: 0,
       target: 2,
       value: (totalCharging.value * chargingEfficiency.value) / 100,
-      itemStyle: { color: 'var(--color-accent)' }
+      itemStyle: { color: themeObject.value.primary }
     },
     {
       source: 2,
       target: 3,
       value: totalDischarging.value * (1 - dischargingEfficiency.value / 100),
-      itemStyle: { color: 'var(--color-warning)' }
+      itemStyle: { color: themeObject.value.warning }
     },
     {
       source: 2,
       target: 4,
       value: (totalDischarging.value * dischargingEfficiency.value) / 100,
-      itemStyle: { color: 'var(--color-success)' }
+      itemStyle: { color: themeObject.value.success }
     },
     {
       source: 2,
       target: 5,
-      value: totalCapacityMWh.value * 0.02 * operatingDays.value, // 2% auxiliary consumption
-      itemStyle: { color: 'var(--color-warning)' }
+      value: totalCapacityMWh.value * 0.02 * operatingDays.value,
+      itemStyle: { color: themeObject.value.warning }
     }
   ]
 
@@ -308,7 +310,7 @@ const initChart = () => {
     sankeyChart.dispose()
   }
 
-  sankeyChart = echarts.init(sankeyChartRef.value)
+  sankeyChart = echarts.init(sankeyChartRef.value, themeObject.value)
   updateChart()
 }
 

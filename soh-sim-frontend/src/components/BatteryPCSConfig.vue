@@ -270,6 +270,7 @@ import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
 import { useProducts } from '../composables/useProducts'
 import { useDraftRef } from '../composables/useDraft'
+import { useChartTheme } from '../composables/useChartTheme.js'
 echarts.use([
   CanvasRenderer,
   LineChart,
@@ -281,6 +282,7 @@ echarts.use([
 ])
 
 const { t } = useI18n()
+const { themeObject } = useChartTheme()
 
 const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])
@@ -637,7 +639,7 @@ const renderConnectionDiagram = () => {
   }
 
   try {
-    connectionChart = echarts.init(connectionDiagram.value)
+    connectionChart = echarts.init(connectionDiagram.value, themeObject.value)
   } catch (e) {
     console.error('Failed to init connection diagram echarts:', e)
     return
@@ -677,12 +679,13 @@ const renderConnectionDiagram = () => {
   const links = []
 
   const style = getComputedStyle(document.documentElement)
+  const tObj = themeObject.value
   const colors = {
-    emerald: style.getPropertyValue('--color-success').trim(),
-    amber: style.getPropertyValue('--color-warning').trim(),
-    sky: style.getPropertyValue('--color-accent').trim(),
+    emerald: tObj.success,
+    amber: tObj.warning,
+    sky: tObj.primary,
     teal: style.getPropertyValue('--color-accent-secondary').trim(),
-    slate: style.getPropertyValue('--color-text-muted').trim(),
+    slate: tObj.muted,
     text: style.getPropertyValue('--color-text').trim()
   }
 
@@ -871,7 +874,7 @@ const renderSingleLineDiagram = () => {
   }
 
   try {
-    singleLineChart = echarts.init(singleLineDiagram.value)
+    singleLineChart = echarts.init(singleLineDiagram.value, themeObject.value)
   } catch (e) {
     console.error('Failed to init single line diagram echarts:', e)
     return
@@ -908,12 +911,13 @@ const renderSingleLineDiagram = () => {
   }
 
   const style = getComputedStyle(document.documentElement)
+  const tObj = themeObject.value
   const colors = {
-    emerald: style.getPropertyValue('--color-success').trim(),
-    amber: style.getPropertyValue('--color-warning').trim(),
-    sky: style.getPropertyValue('--color-accent').trim(),
+    emerald: tObj.success,
+    amber: tObj.warning,
+    sky: tObj.primary,
     teal: style.getPropertyValue('--color-accent-secondary').trim(),
-    slate: style.getPropertyValue('--color-text-muted').trim(),
+    slate: tObj.muted,
     text: style.getPropertyValue('--color-text').trim()
   }
 

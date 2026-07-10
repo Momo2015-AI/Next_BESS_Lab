@@ -229,6 +229,14 @@
     <template v-else-if="name === 'moon'">
       <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
     </template>
+    <template v-else-if="name === 'palette'">
+      <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+      <path d="M12 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+      <circle cx="8.5" cy="12" r="1.5" />
+      <circle cx="15.5" cy="8" r="1.5" />
+      <circle cx="15.5" cy="16" r="1.5" />
+      <circle cx="8" cy="17" r="1" />
+    </template>
     <template v-else-if="name === 'close'">
       <rect x="3" y="3" width="18" height="18" rx="3" />
       <line x1="9" y1="9" x2="15" y2="15" />

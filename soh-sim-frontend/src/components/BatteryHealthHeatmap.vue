@@ -63,6 +63,7 @@ import {
   VisualMapComponent
 } from 'echarts/components'
 import { useDraft } from '../composables/useDraft'
+import { useChartTheme } from '../composables/useChartTheme.js'
 echarts.use([
   CanvasRenderer,
   HeatmapChart,
@@ -72,6 +73,8 @@ echarts.use([
   LegendComponent,
   VisualMapComponent
 ])
+
+const { themeObject } = useChartTheme()
 
 const props = defineProps({
   params: Object,
@@ -114,12 +117,12 @@ const renderHeatmap = () => {
   }
 
   const colors = {
-    success: 'var(--color-success)', // green-500
-    warning: 'var(--color-warning)', // amber-500
-    danger: 'var(--color-danger)', // red-500
-    info: 'var(--color-accent)', // blue-500
-    purple: 'var(--color-info)', // violet-500
-    muted: 'var(--color-text-secondary)' // slate-400
+    success: themeObject.value.success,
+    warning: themeObject.value.warning,
+    danger: themeObject.value.danger,
+    info: themeObject.value.primary,
+    purple: themeObject.value.purple,
+    muted: themeObject.value.muted
   }
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -127,7 +130,7 @@ const renderHeatmap = () => {
   const textColor = isDark ? 'var(--color-border-light)' : 'var(--color-border)' // text色
   const borderColor = isDark ? 'var(--color-border)' : '#cbd5e1' // border色
 
-  heatmap = echarts.init(heatmapRef.value, null, {
+  heatmap = echarts.init(heatmapRef.value, themeObject.value, {
     renderer: 'canvas'
   })
 
@@ -208,11 +211,11 @@ const renderHeatmap = () => {
       top: 'center',
       inRange: {
         color: [
-          'var(--color-danger)',
-          'var(--color-chart-orange)',
-          'var(--color-warning)',
-          'var(--color-success)',
-          'var(--color-success)'
+          themeObject.value.danger,
+          themeObject.value.orange,
+          themeObject.value.warning,
+          themeObject.value.success,
+          themeObject.value.success
         ]
       },
       textStyle: {

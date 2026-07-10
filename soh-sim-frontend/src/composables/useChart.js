@@ -1,4 +1,5 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useChartTheme } from './useChartTheme.js'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, PieChart, RadarChart, GaugeChart, HeatmapChart, SankeyChart } from 'echarts/charts'
@@ -33,6 +34,7 @@ echarts.use([
 ])
 
 export function useChart(chartRef, options, dependencies = []) {
+  const { themeObject } = useChartTheme()
   const chart = ref(null)
 
   const init = () => {
@@ -40,7 +42,7 @@ export function useChart(chartRef, options, dependencies = []) {
     if (chart.value) {
       chart.value.dispose()
     }
-    chart.value = echarts.init(chartRef.value)
+    chart.value = echarts.init(chartRef.value, themeObject.value)
     chart.value.setOption(options.value)
   }
 
@@ -81,6 +83,7 @@ export function useChart(chartRef, options, dependencies = []) {
 }
 
 export function useMultiChart(chartRefs, optionsList, dependencies = []) {
+  const { themeObject } = useChartTheme()
   const charts = ref([])
 
   const initAll = () => {
@@ -90,7 +93,7 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
     charts.value = chartRefs.value
       .filter((ref) => ref)
       .map((ref) => {
-        const instance = echarts.init(ref)
+        const instance = echarts.init(ref, themeObject.value)
         return instance
       })
     charts.value.forEach((chart, index) => {

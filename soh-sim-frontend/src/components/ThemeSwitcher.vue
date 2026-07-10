@@ -11,6 +11,16 @@
       <AppIcon v-else name="moon" :size="18" :stroke-width="1.5" color="var(--text-secondary)" />
     </button>
 
+    <!-- Chart theme switcher: icon button that cycles through palettes -->
+    <button
+      class="theme-icon-btn"
+      :title="`${$t('common.chartTheme')}: ${chartThemeLabel}`"
+      :aria-label="`${$t('common.chartTheme')}: ${chartThemeLabel}`"
+      @click="cycleTheme"
+    >
+      <AppIcon name="palette" :size="18" :stroke-width="1.5" color="var(--text-secondary)" />
+    </button>
+
     <!-- Language switcher: pill with globe + current lang + chevron -->
     <div ref="rootRef" class="lang-switcher">
       <button class="lang-trigger" :aria-expanded="open" :title="$t('common.language')" @click="open = !open">
@@ -52,9 +62,11 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useChartTheme } from '../composables/useChartTheme.js'
 import AppIcon from './AppIcon.vue'
 
 const { locale, t } = useI18n()
+const { themeKey, cycleTheme } = useChartTheme()
 const theme = ref(localStorage.getItem('app-theme') || 'light')
 const open = ref(false)
 const rootRef = ref(null)
@@ -68,6 +80,15 @@ const languages = [
 const currentLangLabel = computed(() => {
   const cur = languages.find((l) => l.value === locale.value)
   return cur ? cur.label : ''
+})
+
+const chartThemeLabel = computed(() => {
+  const map = {
+    echarts: t('common.chartThemeEcharts'),
+    tailwind: t('common.chartThemeTailwind'),
+    antv: t('common.chartThemeAntv'),
+  }
+  return map[themeKey.value] || themeKey.value
 })
 
 function switchLocale(val) {
@@ -116,12 +137,13 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: transparent;
+  background: var(--color-card);
   cursor: pointer;
   transition:
     background 0.2s ease,
+    border-color 0.2s ease,
     color 0.2s ease;
 }
 

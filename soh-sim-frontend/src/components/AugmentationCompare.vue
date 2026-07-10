@@ -102,8 +102,11 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, GridComponent } from 'echarts/components'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 echarts.use([CanvasRenderer, BarChart, TooltipComponent, LegendComponent, GridComponent])
+
+const { themeObject } = useChartTheme()
 
 const props = defineProps({
   comparison: { type: Object, default: () => ({}) }
@@ -161,7 +164,7 @@ function renderChart() {
   if (!chartRef.value || !hasData.value) return
 
   if (!chart) {
-    chart = echarts.init(chartRef.value)
+    chart = echarts.init(chartRef.value, themeObject.value)
   }
 
   const keys = Object.keys(strategies.value)
@@ -182,19 +185,19 @@ function renderChart() {
     series: [
       {
         name: 'NPV ($)', type: 'bar', data: npvData,
-        itemStyle: { color: '#3b82f6' }
+        itemStyle: { color: themeObject.value.primary }
       },
       {
         name: 'IRR (%)', type: 'bar', data: irrData,
-        itemStyle: { color: '#10b981' }
+        itemStyle: { color: themeObject.value.success }
       },
       {
         name: 'LCOS', type: 'bar', data: lcosData,
-        itemStyle: { color: '#f59e0b' }
+        itemStyle: { color: themeObject.value.warning }
       },
       {
         name: '补容 CAPEX ($)', type: 'bar', data: capexData,
-        itemStyle: { color: '#ef4444' }
+        itemStyle: { color: themeObject.value.danger }
       }
     ]
   }, true)

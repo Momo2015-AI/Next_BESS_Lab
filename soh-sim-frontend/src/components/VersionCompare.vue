@@ -71,8 +71,11 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { RadarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
+import { useChartTheme } from '../composables/useChartTheme.js'
 
 echarts.use([CanvasRenderer, RadarChart, TooltipComponent, LegendComponent, RadarComponent])
+
+const { themeObject } = useChartTheme()
 
 function debounce(fn, delay = 300) {
   let timer = null
@@ -150,7 +153,7 @@ const deltaRows = computed(() => {
 
 function renderRadar() {
   if (!radarRef.value || versions.value.length < 2) return
-  if (!radarChart) radarChart = echarts.init(radarRef.value)
+  if (!radarChart) radarChart = echarts.init(radarRef.value, themeObject.value)
 
   const indicators = [
     { name: 'IRR', max: 20 },
