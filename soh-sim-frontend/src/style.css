@@ -117,6 +117,11 @@
     --color-chart-cyan: #06b6d4;
     --color-chart-lime: #84cc16;
 
+    /* ── 危险/信息 glow 别名 ── */
+    --color-danger-glow: rgba(239, 68, 68, 0.12);
+    --color-danger-glow-soft: rgba(239, 68, 68, 0.1);
+    --color-info-glow: rgba(139, 92, 246, 0.15);
+
     /* ============================================
        Section Card (Design Spec — 序号徽章 + 标题)
        ============================================ */
@@ -260,6 +265,11 @@
     --color-chart-orange: #fb923c;
     --color-chart-cyan: #22d3ee;
     --color-chart-lime: #84cc16;
+
+    /* ── 危险/信息 glow 别名 (dark) ── */
+    --color-danger-glow: rgba(239, 68, 68, 0.15);
+    --color-danger-glow-soft: rgba(239, 68, 68, 0.12);
+    --color-info-glow: rgba(167, 139, 250, 0.15);
 
     /* Section Card (dark) */
     --section-card-bg: rgba(22, 24, 31, 0.6);

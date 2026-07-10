@@ -1,15 +1,10 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.auxPowerTitle') }}</h1>
-      <p>{{ $t('tools.auxPowerDesc') }}</p>
-    </div>
+  <AppPage title-key="tools.auxPowerTitle" desc-key="tools.auxPowerDesc">
     <AuxPowerCalculator @error="(msg) => $emit('error', msg)" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
+import AppPage from '../components/AppPage.vue'
 import AuxPowerCalculator from '../components/AuxPowerCalculator.vue'
 </script>
-
-<style scoped></style>

@@ -546,4 +546,3 @@ onMounted(() => {
 })
 </script>
 
-<style scoped src="../assets/styles/admin-panel.css"></style>

@@ -1,15 +1,12 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.conditionsTitle') }}</h1>
-      <p>{{ $t('tools.conditionsDesc') }}</p>
-    </div>
+  <AppPage title-key="tools.conditionsTitle" desc-key="tools.conditionsDesc">
     <RunningConditions @apply-params="onApply" @error="(msg) => (store.calculationError = msg)" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { useBessStore } from '../stores/bess.js'
+import AppPage from '../components/AppPage.vue'
 import RunningConditions from '../components/RunningConditions.vue'
 const store = useBessStore()
 
@@ -19,5 +16,3 @@ function onApply(mapped) {
   if (mapped.requiredEnergy != null) store.systemParams.requiredEnergy = mapped.requiredEnergy
 }
 </script>
-
-<style scoped></style>

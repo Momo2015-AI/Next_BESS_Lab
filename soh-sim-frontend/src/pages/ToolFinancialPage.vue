@@ -1,9 +1,5 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.financialTitle') }}</h1>
-      <p>{{ $t('tools.financialDesc') }}</p>
-    </div>
+  <AppPage title-key="tools.financialTitle" desc-key="tools.financialDesc">
     <FinancialDashboard
       :params="store.systemParams"
       :results="store.results"
@@ -11,13 +7,12 @@
       :rte="store.degradation.rte"
       :aug-qty="store.degradation.augQty"
     />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { useBessStore } from '../stores/bess.js'
+import AppPage from '../components/AppPage.vue'
 import FinancialDashboard from '../components/FinancialDashboard.vue'
 const store = useBessStore()
 </script>
-
-<style scoped></style>

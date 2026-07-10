@@ -1,12 +1,5 @@
 ﻿<template>
-  <div class="epc-page">
-    <div class="epc-header">
-      <h1>EPC 工程化模块</h1>
-      <p class="epc-desc">
-        系统架构设计、电网合规分析、安全消防、IPP财务、合规矩阵、热管理、SCADA/EMS、高压接入、投标文档
-      </p>
-    </div>
-
+  <AppPage title="EPC 工程化模块" desc="系统架构设计、电网合规分析、安全消防、IPP财务、合规矩阵、热管理、SCADA/EMS、高压接入、投标文档">
     <!-- 模块标签页 -->
     <div class="epc-tabs">
       <button
@@ -39,7 +32,7 @@
     <EpcHvInterconnection v-show="activeModule === 'hv'" />
     <!-- P1-4: 投标文档 -->
     <EpcBidDocument v-show="activeModule === 'bidDoc'" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>

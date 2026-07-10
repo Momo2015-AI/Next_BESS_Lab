@@ -163,5 +163,3 @@ onUnmounted(() => {
   document.removeEventListener('click', onDocClick)
 })
 </script>
-
-<style scoped src="./assets/styles/app-shell.css"></style>

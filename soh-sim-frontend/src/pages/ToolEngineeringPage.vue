@@ -1,15 +1,10 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.engineeringTitle') }}</h1>
-      <p>{{ $t('tools.engineeringDesc') }}</p>
-    </div>
+  <AppPage title-key="tools.engineeringTitle" desc-key="tools.engineeringDesc">
     <EngineeringCalc @error="(msg) => $emit('error', msg)" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
+import AppPage from '../components/AppPage.vue'
 import EngineeringCalc from '../components/EngineeringCalc.vue'
 </script>
-
-<style scoped></style>

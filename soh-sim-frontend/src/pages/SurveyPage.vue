@@ -1,12 +1,9 @@
 <template>
   <div class="survey-page">
-    <div class="tool-page max-w-4xl mx-auto">
-      <!-- Header -->
-      <div class="tool-header survey-header">
-        <h1 class="survey-title">{{ $t('surveyForm.pageTitle') }}</h1>
-        <p class="survey-desc">{{ $t('surveyForm.pageDesc') }}</p>
+    <AppPage title-key="surveyForm.pageTitle" desc-key="surveyForm.pageDesc">
+      <template #actions>
         <button class="btn-back" @click="goHome">{{ $t('surveyForm.backToSystem') }}</button>
-      </div>
+      </template>
 
       <!-- Toast -->
       <div v-if="toast.show" class="toast" :class="'toast-' + toast.type">
@@ -183,7 +180,7 @@
           <button type="submit" class="btn-submit">{{ $t('surveyForm.submit') }}</button>
         </div>
       </form>
-    </div>
+    </AppPage>
   </div>
 </template>
 
@@ -192,6 +189,7 @@ import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
+import AppPage from '../components/AppPage.vue'
 import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
 

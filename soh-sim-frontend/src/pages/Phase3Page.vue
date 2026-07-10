@@ -1,55 +1,52 @@
 <template>
-  <div class="phase-page phase3-page">
-    <div class="phase-header">
-      <h1>{{ $t('phase3.title') }}</h1>
-      <p class="phase-desc">{{ $t('phase3.desc') }}</p>
+  <AppPage title-key="phase3.title" desc-key="phase3.desc">
+    <template #actions>
       <button class="run-btn" :disabled="store.calculating" @click="runPipeline">
         {{ store.calculating ? $t('phase3.calculating') : $t('phase3.runPipeline') }}
       </button>
       <p v-if="store.calculationError" class="error">
         {{ store.calculationError }}
       </p>
+    </template>
+    <div class="steps-nav">
+      <button v-for="(s, i) in steps" :key="i" :class="{ active: activeStep === i }" @click="activeStep = i">
+        {{ s.label }}
+      </button>
     </div>
-    <div class="phase-body">
-      <div class="steps-nav">
-        <button v-for="(s, i) in steps" :key="i" :class="{ active: activeStep === i }" @click="activeStep = i">
-          {{ s.label }}
-        </button>
-      </div>
-      <div class="step-content">
-        <SimulationLab v-if="activeStep === 0" @apply-config="onApplySimulationConfig" @error="onError" />
-        <MatrixTable
-          v-if="activeStep === 1"
-          :params="store.systemParams"
-          :results="store.results"
-          :soh="store.degradation.soh"
-          :rte="store.degradation.rte"
-          :dod="store.degradation.dod"
-          :aug-qty="store.degradation.augQty"
-          @update:param="(key, val) => (store.systemParams[key] = val)"
-          @update:soh="store.degradation.soh = $event"
-          @update:rte="store.degradation.rte = $event"
-          @update:dod="store.degradation.dod = $event"
-          @update:aug-qty="store.degradation.augQty = $event"
-          @recalculate="runPipeline"
-        />
-        <SohChart
-          v-if="activeStep === 2"
-          :results="store.results"
-          :soh="store.degradation.soh"
-          :rte="store.degradation.rte"
-          :required-energy="store.systemParams.requiredEnergy"
-        />
-        <ScenarioCompare v-if="activeStep === 3" :base-params="store.systemParams" @error="onError" />
-      </div>
+    <div class="step-content">
+      <SimulationLab v-if="activeStep === 0" @apply-config="onApplySimulationConfig" @error="onError" />
+      <MatrixTable
+        v-if="activeStep === 1"
+        :params="store.systemParams"
+        :results="store.results"
+        :soh="store.degradation.soh"
+        :rte="store.degradation.rte"
+        :dod="store.degradation.dod"
+        :aug-qty="store.degradation.augQty"
+        @update:param="(key, val) => (store.systemParams[key] = val)"
+        @update:soh="store.degradation.soh = $event"
+        @update:rte="store.degradation.rte = $event"
+        @update:dod="store.degradation.dod = $event"
+        @update:aug-qty="store.degradation.augQty = $event"
+        @recalculate="runPipeline"
+      />
+      <SohChart
+        v-if="activeStep === 2"
+        :results="store.results"
+        :soh="store.degradation.soh"
+        :rte="store.degradation.rte"
+        :required-energy="store.systemParams.requiredEnergy"
+      />
+      <ScenarioCompare v-if="activeStep === 3" :base-params="store.systemParams" @error="onError" />
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
+import AppPage from '../components/AppPage.vue'
 import SimulationLab from '../components/SimulationLab.vue'
 import MatrixTable from '../components/MatrixTable.vue'
 import SohChart from '../components/SohChart.vue'

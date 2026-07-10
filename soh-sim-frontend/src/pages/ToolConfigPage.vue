@@ -1,15 +1,12 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.configTitle') }}</h1>
-      <p>{{ $t('tools.configDesc') }}</p>
-    </div>
+  <AppPage title-key="tools.configTitle" desc-key="tools.configDesc">
     <BatteryPCSConfig />
     <BatteryDCDesign class="mt-4" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
+import AppPage from '../components/AppPage.vue'
 import BatteryPCSConfig from '../components/BatteryPCSConfig.vue'
 import BatteryDCDesign from '../components/BatteryDCDesign.vue'
 </script>

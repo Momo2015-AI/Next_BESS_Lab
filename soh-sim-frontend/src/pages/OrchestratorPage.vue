@@ -1,10 +1,5 @@
 <template>
-  <div class="orchestrator-page">
-    <div class="page-header">
-      <h1>{{ $t('orchestrator.title') }}</h1>
-      <p>{{ $t('orchestrator.desc') }}</p>
-    </div>
-
+  <AppPage title-key="orchestrator.title" desc-key="orchestrator.desc">
     <!-- 项目选择栏 -->
     <div class="project-bar">
       <div class="form-group">
@@ -112,12 +107,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { get, post } from '../services/api.js'
+import AppPage from '../components/AppPage.vue'
 import DesignEnginePanel from '../components/DesignEnginePanel.vue'
 import DesignComparePanel from '../components/DesignComparePanel.vue'
 import AugmentationCompare from '../components/AugmentationCompare.vue'

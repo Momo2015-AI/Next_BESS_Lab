@@ -1,15 +1,12 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('admin.title') }}</h1>
-      <p>{{ $t('admin.desc') }}</p>
-    </div>
+  <AppPage title-key="admin.title" desc-key="admin.desc">
     <AdminPanel :initial-tab="$route.query.tab || ''" />
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router'
+import AppPage from '../components/AppPage.vue'
 import AdminPanel from '../components/AdminPanel.vue'
 
 const $route = useRoute()

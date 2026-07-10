@@ -6,6 +6,8 @@ import router from './router'
 import i18n from './i18n/index.js'
 import './style.css'
 import './assets/styles/shared.css'
+import './assets/styles/app-shell.css'
+import './assets/styles/admin-panel.css'
 
 const pinia = createPinia()
 pinia.use(piniaPersistedstate)

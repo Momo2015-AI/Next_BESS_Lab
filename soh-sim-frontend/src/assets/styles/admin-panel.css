@@ -1,4 +1,4 @@
-/* AdminPanel styles */
+/* AdminPanel styles — unified to --color-* variable system */
 
 .admin-panel {
   max-width: 1100px;
@@ -11,14 +11,14 @@
   display: flex;
   gap: 4px;
   margin-bottom: 24px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .admin-tab {
   padding: 10px 24px;
   border: none;
   background: none;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -27,17 +27,18 @@
 }
 
 .admin-tab:hover {
-  color: var(--text-primary);
+  color: var(--color-text);
 }
 
 .admin-tab.active {
-  color: var(--accent-color, #4f8cff);
-  border-bottom-color: var(--accent-color, #4f8cff);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 /* Section */
 .admin-section {
-  background: var(--bg-card, var(--bg-surface, #fff));
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 24px;
 }
@@ -54,14 +55,14 @@
 
 .admin-section-desc {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
 .admin-loading {
   text-align: center;
   padding: 48px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 /* Role selector */
@@ -80,10 +81,10 @@
 
 .role-select {
   padding: 8px 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: var(--bg-input, var(--bg-surface, #fff));
-  color: var(--text-primary);
+  background: var(--color-input-bg-dark);
+  color: var(--color-text);
   font-size: 14px;
   cursor: pointer;
   min-width: 240px;
@@ -91,7 +92,7 @@
 
 .role-desc {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 /* Permission matrix */
@@ -109,9 +110,9 @@
 .perm-table th {
   text-align: center;
   padding: 10px 8px;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--color-border);
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
@@ -121,7 +122,7 @@
 
 .perm-table td {
   padding: 8px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
   text-align: center;
 }
 
@@ -141,7 +142,7 @@
 
 .perm-default {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-family: monospace;
 }
 
@@ -151,7 +152,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px;
-  background: var(--bg-hover, rgba(0, 0, 0, 0.03));
+  background: var(--color-card-dark);
   border-radius: 8px;
 }
 
@@ -170,10 +171,10 @@
 
 .control-input {
   padding: 6px 10px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: var(--bg-input, var(--bg-surface, #fff));
-  color: var(--text-primary);
+  background: var(--color-input-bg-dark);
+  color: var(--color-text);
   font-size: 13px;
   flex: 1;
   min-width: 200px;
@@ -181,21 +182,21 @@
 
 .control-clear-btn {
   padding: 6px 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   background: none;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 12px;
 }
 
 .control-clear-btn:hover {
-  background: var(--bg-hover);
+  background: var(--color-card-dark);
 }
 
 .control-hint {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .control-actions {
@@ -206,10 +207,10 @@
 /* Buttons */
 .admin-btn {
   padding: 8px 20px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: var(--bg-surface, #fff);
-  color: var(--text-primary);
+  background: var(--color-card);
+  color: var(--color-text);
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
@@ -226,19 +227,19 @@
 }
 
 .admin-btn.primary {
-  background: var(--accent-color, #4f8cff);
-  color: #fff;
-  border-color: var(--accent-color, #4f8cff);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
 }
 
 .admin-btn.danger {
-  color: var(--color-danger, #e74c3c);
-  border-color: var(--color-danger, #e74c3c);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .admin-btn.danger:hover:not(:disabled) {
-  background: var(--color-danger, #e74c3c);
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-text-on-accent);
 }
 
 .admin-btn.small {
@@ -249,11 +250,11 @@
 /* Override info */
 .override-info {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .override-status.expired {
-  color: var(--color-danger, #e74c3c);
+  color: var(--color-danger);
 }
 
 /* User table */
@@ -270,15 +271,15 @@
 .user-table th {
   text-align: left;
   padding: 10px 12px;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--color-border);
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
 .user-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 /* Role badge */
@@ -291,48 +292,48 @@
 }
 
 .role-badge.admin {
-  background: rgba(231, 76, 60, 0.15);
-  color: #e74c3c;
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
 }
 
 .role-badge.developer {
-  background: rgba(52, 152, 219, 0.15);
-  color: #3498db;
+  background: rgba(0, 102, 204, 0.15);
+  color: var(--color-accent);
 }
 
 .role-badge.solution_engineer {
-  background: rgba(46, 204, 113, 0.15);
-  color: #2ecc71;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success);
 }
 
 .role-badge.epc_contractor {
-  background: rgba(241, 196, 15, 0.15);
-  color: #f1c40f;
+  background: rgba(247, 147, 30, 0.15);
+  color: var(--color-warning);
 }
 
 .role-badge.financial_analyst {
-  background: rgba(155, 89, 182, 0.15);
-  color: #9b59b6;
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--color-info);
 }
 
 .role-badge.project_manager {
-  background: rgba(230, 126, 34, 0.15);
-  color: #e67e22;
+  background: rgba(234, 88, 12, 0.15);
+  color: var(--color-chart-orange);
 }
 
 /* Override status */
 .override-active {
-  color: var(--accent-color, #4f8cff);
+  color: var(--color-accent);
   font-size: 12px;
 }
 
 .override-expired {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-size: 12px;
 }
 
 .override-none {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-size: 12px;
 }
 
@@ -340,7 +341,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,7 +350,8 @@
 }
 
 .modal-content {
-  background: var(--bg-surface, #fff);
+  background: var(--color-modal-bg);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   width: 100%;
   max-width: 680px;
@@ -362,7 +364,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .modal-header h3 {
@@ -376,7 +378,7 @@
   background: none;
   font-size: 24px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   padding: 0;
   line-height: 1;
 }
@@ -397,13 +399,13 @@
 
 .modal-hint {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   margin: 0 0 8px 0;
 }
 
 .modal-divider {
   height: 1px;
-  background: var(--border-color);
+  background: var(--color-border);
   margin: 20px 0;
 }
 
@@ -411,7 +413,7 @@
 .perm-matrix.compact {
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px;
 }
@@ -421,7 +423,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 4px 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .perm-row:last-child {
@@ -434,10 +436,10 @@
 
 .perm-select {
   padding: 4px 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  background: var(--bg-input, var(--bg-surface, #fff));
-  color: var(--text-primary);
+  background: var(--color-input-bg-dark);
+  color: var(--color-text);
   font-size: 12px;
   cursor: pointer;
 }
@@ -451,25 +453,25 @@
   border-radius: 8px;
   font-size: 13px;
   z-index: 2000;
-  animation: slideIn 0.3s ease;
+  animation: adminSlideIn 0.3s ease;
 }
 
-.toast-success {
-  background: #2ecc71;
-  color: #fff;
+.admin-toast.toast-success {
+  background: var(--color-success);
+  color: var(--color-text-on-accent);
 }
 
-.toast-error {
-  background: #e74c3c;
-  color: #fff;
+.admin-toast.toast-error {
+  background: var(--color-danger);
+  color: var(--color-text-on-accent);
 }
 
-.toast-info {
-  background: #3498db;
-  color: #fff;
+.admin-toast.toast-info {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
 }
 
-@keyframes slideIn {
+@keyframes adminSlideIn {
   from {
     transform: translateX(100%);
     opacity: 0;

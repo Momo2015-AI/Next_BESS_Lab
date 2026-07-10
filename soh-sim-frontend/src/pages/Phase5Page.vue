@@ -1,60 +1,55 @@
 <template>
-  <div class="phase-page phase5-page">
-    <div class="phase-header">
-      <h1>{{ $t('phase5.title') }}</h1>
-      <p class="phase-desc">{{ $t('phase5.desc') }}</p>
+  <AppPage title-key="phase5.title" desc-key="phase5.desc">
+    <div class="steps-nav">
+      <button v-for="(s, i) in steps" :key="i" :class="{ active: activeStep === i }" @click="activeStep = i">
+        {{ s.label }}
+      </button>
     </div>
-    <div class="phase-body">
-      <div class="steps-nav">
-        <button v-for="(s, i) in steps" :key="i" :class="{ active: activeStep === i }" @click="activeStep = i">
-          {{ s.label }}
-        </button>
+    <div class="step-content">
+      <div v-if="activeStep === 0" class="card">
+        <h3>{{ $t('phase5.reportTitle') }}</h3>
+        <p>{{ $t('phase5.reportDesc') }}</p>
+        <button :disabled="generating" @click="generateReport">{{ $t('phase5.reportBtn') }}</button>
+        <p v-if="reportMsg" class="msg">
+          {{ reportMsg }}
+        </p>
       </div>
-      <div class="step-content">
-        <div v-if="activeStep === 0" class="card">
-          <h3>{{ $t('phase5.reportTitle') }}</h3>
-          <p>{{ $t('phase5.reportDesc') }}</p>
-          <button :disabled="generating" @click="generateReport">{{ $t('phase5.reportBtn') }}</button>
-          <p v-if="reportMsg" class="msg">
-            {{ reportMsg }}
-          </p>
-        </div>
-        <div v-if="activeStep === 1" class="card">
-          <h3>{{ $t('phase5.bomTitle') }}</h3>
-          <p>{{ $t('phase5.bomDesc') }}</p>
-          <button :disabled="generatingBom" @click="generateBom">{{ $t('phase5.bomBtn') }}</button>
-          <p v-if="bomMsg" class="msg">
-            {{ bomMsg }}
-          </p>
-        </div>
-        <DataExport
-          v-if="activeStep === 2"
-          :params="store.systemParams"
-          :results="store.results"
-          :soh="store.degradation.soh"
-          :rte="store.degradation.rte"
-          :dod="store.degradation.dod"
-          :aug-qty="store.degradation.augQty"
-          :financial="store.financial.metrics"
-          :project-id="store.project.id"
-        />
-        <div v-if="activeStep === 3" class="card">
-          <h3>{{ $t('phase5.archiveTitle') }}</h3>
-          <p>{{ $t('phase5.archiveDesc') }}</p>
-          <button @click="saveProject">{{ $t('phase5.archiveBtn') }}</button>
-          <p v-if="saveMsg" class="msg">
-            {{ saveMsg }}
-          </p>
-        </div>
+      <div v-if="activeStep === 1" class="card">
+        <h3>{{ $t('phase5.bomTitle') }}</h3>
+        <p>{{ $t('phase5.bomDesc') }}</p>
+        <button :disabled="generatingBom" @click="generateBom">{{ $t('phase5.bomBtn') }}</button>
+        <p v-if="bomMsg" class="msg">
+          {{ bomMsg }}
+        </p>
+      </div>
+      <DataExport
+        v-if="activeStep === 2"
+        :params="store.systemParams"
+        :results="store.results"
+        :soh="store.degradation.soh"
+        :rte="store.degradation.rte"
+        :dod="store.degradation.dod"
+        :aug-qty="store.degradation.augQty"
+        :financial="store.financial.metrics"
+        :project-id="store.project.id"
+      />
+      <div v-if="activeStep === 3" class="card">
+        <h3>{{ $t('phase5.archiveTitle') }}</h3>
+        <p>{{ $t('phase5.archiveDesc') }}</p>
+        <button @click="saveProject">{{ $t('phase5.archiveBtn') }}</button>
+        <p v-if="saveMsg" class="msg">
+          {{ saveMsg }}
+        </p>
       </div>
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
+import AppPage from '../components/AppPage.vue'
 import DataExport from '../components/DataExport.vue'
 import api from '../services/api.js'
 
