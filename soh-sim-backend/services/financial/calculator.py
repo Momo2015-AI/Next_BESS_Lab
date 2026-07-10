@@ -47,19 +47,35 @@ def _aggregate_boq_to_capex(boq_items):
 
 
 def _compute_irr(cash_flows, guess=0.1):
-    """Newton-Raphson IRR 求解，含收敛验证"""
+    """Newton-Raphson IRR 求解，含收敛验证与溢出保护"""
     rate = guess
     converged = False
     for i in range(100):
         npv = 0.0
         dnpv = 0.0
         for t, cf in enumerate(cash_flows):
-            npv += cf / ((1 + rate) ** t)
+            denom = (1 + rate) ** t
+            # 防止分母爆炸（rate 趋近 -1 时）
+            if denom == 0 or abs(denom) > 1e15:
+                return None
+            npv += cf / denom
             if t > 0:
-                dnpv += -t * cf / ((1 + rate) ** (t + 1))
+                denom2 = (1 + rate) ** (t + 1)
+                if denom2 == 0 or abs(denom2) > 1e15:
+                    return None
+                dnpv += -t * cf / denom2
         if abs(dnpv) < 1e-12:
             break
-        rate -= npv / dnpv
+        # 防止 Newton 步长发散
+        delta = npv / dnpv
+        if abs(delta) > 10:
+            # 步长过大，缩小步长防止跳入负值区域
+            delta = 10 * (1 if delta > 0 else -1)
+        new_rate = rate - delta
+        # 防止 rate 进入 ≤ -1 的危险区域
+        if new_rate <= -0.99:
+            return None
+        rate = new_rate
         if abs(npv) < 1e-6:
             converged = True
             break

@@ -223,15 +223,12 @@ class SimulationEngine(BaseEngine):
         for strat_name, strat_data in strategies.items():
             aug_qty = strat_data.get("augQty", [0] * NUM_YEARS)
 
-            # 超配策略：初始 containerQty × 1.2
+            # 超配策略：初始 containerQty × 1.2，初始 CAPEX 也需增加
             if strat_name == "overbuild":
                 params = {**system_params}
-                params["initContainerQty"] = int(system_params.get("initContainerQty", 10) * 1.2)
-                # 超配策略的初始 CAPEX 也需增加
-                overbuild_extra_cost = (
-                    int(system_params.get("initContainerQty", 10) * 0.2)
-                    * init_container_unit_price
-                )
+                extra_containers = int(system_params.get("initContainerQty", 10) * 0.2)
+                params["initContainerQty"] = int(system_params.get("initContainerQty", 10)) + extra_containers
+                overbuild_extra_cost = extra_containers * init_container_unit_price
             else:
                 params = system_params
                 overbuild_extra_cost = 0
@@ -240,7 +237,7 @@ class SimulationEngine(BaseEngine):
             energy = calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_factors)
             total_ac = energy.get("totalAcUsable", [0] * NUM_YEARS)
 
-            # 计算补容 CAPEX（增量）
+            # 计算补容 CAPEX（仅限实际补容事件，不含 overbuild 溢价）
             total_aug_capex = 0.0
             aug_schedule = []
             for y in range(NUM_YEARS):
@@ -257,7 +254,9 @@ class SimulationEngine(BaseEngine):
                         "totalCost": round(year_aug_cost, 2),
                     })
 
-            # 构造财务参数（初始 CAPEX + 超配额外成本）
+            # 构造财务参数
+            # overbuild 策略：equipment CAPEX 包含额外 20% 容器的成本（反映更高的初始投资）
+            # 非 overbuild 策略：equipment CAPEX 保持不变，补容成本在后续年份体现
             capex_internal = design_output.get("estimatedCapex", {})
             adjusted_capex = {
                 "equipment": float(capex_internal.get("equipmentCost", 0)) + overbuild_extra_cost,
@@ -280,7 +279,7 @@ class SimulationEngine(BaseEngine):
             comparison[strat_name] = {
                 "augQty": aug_qty,
                 "augSchedule": aug_schedule,
-                "totalAugCapex": round(total_aug_capex + overbuild_extra_cost, 2),
+                "totalAugCapex": round(total_aug_capex, 2),
                 "overbuildExtraCost": round(overbuild_extra_cost, 2),
                 "description": strat_data.get("description", ""),
                 "metrics": {

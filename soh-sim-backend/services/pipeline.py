@@ -39,8 +39,13 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_facto
 
     daily_container_aux_per_unit = (bess_aux_run * run_hours + bess_aux_standby * standby_hours) / 1000
     daily_pcs_aux_per_unit = (pcs_aux_run * run_hours + pcs_aux_standby * standby_hours) / 1000
-    cycle_container_aux_per_unit = daily_container_aux_per_unit / cycles_per_day
-    cycle_pcs_aux_per_unit = daily_pcs_aux_per_unit / cycles_per_day
+    # 防止 cycles_per_day=0 导致除零（0 循环时辅助损耗按 0 处理）
+    if cycles_per_day > 0:
+        cycle_container_aux_per_unit = daily_container_aux_per_unit / cycles_per_day
+        cycle_pcs_aux_per_unit = daily_pcs_aux_per_unit / cycles_per_day
+    else:
+        cycle_container_aux_per_unit = 0.0
+        cycle_pcs_aux_per_unit = 0.0
 
     init_gross = [0.0] * N
     init_aux = [0.0] * N

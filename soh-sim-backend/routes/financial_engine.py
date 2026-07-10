@@ -57,7 +57,7 @@ def calculate_financial():
         )
         return success_response(data=result, message="财务计算完成")
     except Exception as e:
-        return error_response(f"财务计算失败: {str(e)}", 500)
+        return error_response(f"财务计算失败: {str(e)}", status_code=500)
 
 
 @fin_engine_bp.route("/api/financial/sensitivity", methods=["POST"])

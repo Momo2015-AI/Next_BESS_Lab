@@ -225,8 +225,8 @@ class DesignEngine(BaseEngine):
                 "cyclesPerDay": cycles_per_day,
                 "dod": dod,
                 "params": manufacturer_params or {
-                    "A_cal": 0.02, "Ea_cal": 0.5, "alpha": 0.5,
-                    "A_cyc": 0.01, "Ea_cyc": 0.3, "beta": 0.5, "gamma": 1.0, "delta": 0.1,
+                    "A_cal": 1.950563, "Ea_cal": 26000, "alpha": 0.8,
+                    "A_cyc": 12.556758, "Ea_cyc": 22000, "beta": 0.5, "gamma": 1.5, "delta": 0.2,
                 },
             }
         return candidates
