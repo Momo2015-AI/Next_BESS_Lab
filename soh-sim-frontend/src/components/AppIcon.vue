@@ -259,6 +259,10 @@
       <line x1="9" y1="12" x2="15" y2="12" />
       <line x1="9" y1="16" x2="15" y2="16" />
     </template>
+    <template v-else-if="name === 'briefcase'">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+    </template>
     <template v-else-if="name === 'play'">
       <circle cx="12" cy="12" r="10" />
       <polygon points="10 8 16 12 10 16 10 8" />
