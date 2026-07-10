@@ -98,7 +98,12 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart } from 'echarts/charts'
+import { TooltipComponent, LegendComponent, GridComponent } from 'echarts/components'
+
+echarts.use([CanvasRenderer, BarChart, TooltipComponent, LegendComponent, GridComponent])
 
 const props = defineProps({
   comparison: { type: Object, default: () => ({}) }

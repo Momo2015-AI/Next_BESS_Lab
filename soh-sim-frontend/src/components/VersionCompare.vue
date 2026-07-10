@@ -67,7 +67,20 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { RadarChart } from 'echarts/charts'
+import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
+
+echarts.use([CanvasRenderer, RadarChart, TooltipComponent, LegendComponent, RadarComponent])
+
+function debounce(fn, delay = 300) {
+  let timer = null
+  return (...args) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), delay)
+  }
+}
 
 const props = defineProps({
   compareResult: { type: Object, default: null }
@@ -194,8 +207,9 @@ function renderRadar() {
 
 function handleResize() { radarChart?.resize() }
 
-watch(hasResult, (val) => { if (val) nextTick(() => renderRadar()) })
-watch(() => props.compareResult, () => { nextTick(() => renderRadar()) }, { deep: true })
+watch(() => props.compareResult, debounce(() => {
+  nextTick(() => renderRadar())
+}), { deep: true })
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)

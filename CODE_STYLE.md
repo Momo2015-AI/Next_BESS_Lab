@@ -1,38 +1,40 @@
 # 代码规范手册
 
-**版本**: v2.0
-**最后更新**: 2026-07-01
-**负责人**: @Momo2015-AI
+**版本**: v1.2
+**最后更新**: 2026-07-10
+**状态**: 当前实际执行标准（标注 [计划] 的为未来引入）
 
 本文档使用 RFC 2119 关键词：
 - **MUST**: 强制执行，违反不得合并
 - **SHOULD**: 强烈建议，特殊情况可豁免但需注释说明
 - **MAY**: 可选，由开发者自行决定
+- **[计划]**: 未来版本引入，当前不强制
 
 ---
 
 ## 版本历史
 
-| 版本 | 日期 | 更新内容 | 负责人 |
-|------|------|----------|--------|
-| v2.0 | 2026-07-01 | 添加 TypeScript、API设计、数据库设计、安全、测试、团队协作、代码示例 | @Momo2015-AI |
-| v1.0 | 2026-06-20 | 初始版本，前后端基础规范 | @Momo2015-AI |
+| 版本 | 日期 | 更新内容 |
+|------|------|----------|
+| v1.2 | 2026-07-10 | 清理过时引用、区分当前/计划状态、添加豁免清单、合并冗余文档 |
+| v1.1 | 2026-07-01 | 添加 TypeScript、API设计、数据库设计、安全、测试、团队协作 |
+| v1.0 | 2026-06-20 | 初始版本，前后端基础规范 |
 
 ---
 
-## 一、前端规范 (Vue 3 + Vite)
+## 一、前端规范 (Vue 3 + Vite + Tailwind CSS 4)
 
 ### 1.1 命名约定
 
 | 类型 | 规则 | 示例 |
 |------|------|------|
 | 组件文件 | PascalCase + .vue | `BatteryDCDesign.vue` |
-| 组合式函数 | camelCase + use 前缀 | `useDraft.js` |
+| 组合式函数 | camelCase + `use` 前缀 | `useDraft.js` |
 | Store 模块 | camelCase | `bess.js` |
 | 路由名称 | kebab-case | `tool-auxpower` |
 | CSS 类名 | kebab-case | `tool-page` |
 | 常量 | UPPER_SNAKE_CASE | `ABBR_MAP` |
-| 私有变量 | _ 前缀 | `_in_memory_factors` |
+| 私有变量 | `_` 前缀 | `_in_memory_factors` |
 | Props | camelCase | `ratedEnergy` |
 | Emits | camelCase | `updateConfig` |
 
@@ -47,6 +49,7 @@
 - MUST `setInterval` 在 `onUnmounted` 中 clearInterval
 - MUST `MutationObserver` 在 `onUnmounted` 中 disconnect
 - MUST `watch({ deep: true })` 配合防抖（300-500ms）
+- MUST ECharts 使用按需引入，禁止 `import * as echarts`
 - SHOULD 使用 `<script setup>` 语法
 - SHOULD Props 声明类型和默认值
 
@@ -117,19 +120,18 @@ watch(inputValue, debouncedCalculate)
 
 | 类型 | 规则 | 示例 |
 |------|------|------|
-| 接口 | IPascalCase | `IBatteryConfig`, `ISimParams` |
-| 类型别名 | PascalCase | `DegradationType`, `CellData` |
+| 接口 | `IPascalCase` | `IBatteryConfig`, `ISimParams` |
+| 类型别名 | `PascalCase` | `DegradationType`, `CellData` |
 | 泛型 | 单字母 | `T`, `K`, `V` |
-| 枚举 | PascalCase | `GridStandard`, `BatteryType` |
+| 枚举 | `PascalCase` | `GridStandard`, `BatteryType` |
 | .ts 文件 | kebab-case | `battery-types.ts` |
 
 #### 类型定义
 
-- MUST 优先使用 `interface` 定义对象类型
-- MUST 使用 `type` 定义联合类型、交叉类型
-- MUST 禁止使用 `any`，用 `unknown` 代替
-- SHOULD 为复杂类型编写 JSDoc 注释
-- SHOULD 利用类型推导，避免冗余注解
+- SHOULD 优先使用 `interface` 定义对象类型
+- SHOULD 使用 `type` 定义联合类型、交叉类型
+- SHOULD 避免使用 `any`，优先使用具体类型或 `unknown`
+- MAY 为复杂类型编写 JSDoc 注释
 
 ```typescript
 // 接口定义对象
@@ -141,11 +143,6 @@ interface IBatteryConfig {
 
 // 类型别名定义联合类型
 type DegradationModel = 'arrhenius' | 'linear_log' | 'double_exponential'
-
-// 泛型
-function getResult<T>(data: T): T {
-  return data
-}
 ```
 
 ### 1.5 共享样式
@@ -162,6 +159,14 @@ function getResult<T>(data: T): T {
 import { useChart } from '@/composables/useChart'
 
 const { chart, containerRef, dispose } = useChart()
+
+// 正确：按需引入 ECharts
+import * as echarts from 'echarts/core'
+import { BarChart, LineChart } from 'echarts/charts'
+import { GridComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+echarts.use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer])
 ```
 
 ### 1.7 性能要求
@@ -170,7 +175,6 @@ const { chart, containerRef, dispose } = useChart()
 - MUST localStorage 写入必须防抖 500ms+
 - SHOULD 多图表渲染使用 `requestAnimationFrame` 错开
 - MUST 路由组件使用动态导入 `() => import()`
-- SHOULD ECharts 按需导入，禁止 `import * as echarts`
 
 ---
 
@@ -184,8 +188,8 @@ const { chart, containerRef, dispose } = useChart()
 | 类名 | PascalCase | `BatteryManufacturer` |
 | 函数/方法 | snake_case | `calculate_efficiency_chain()` |
 | 常量 | UPPER_SNAKE_CASE | `FACTOR_DEFAULTS` |
-| 私有变量 | _ 前缀 | `_token_blacklist` |
-| 模块级私有 | __ 前缀 | `__all__` |
+| 私有变量 | `_` 前缀 | `_token_blacklist` |
+| 模块级私有 | `__` 前缀 | `__all__` |
 
 ### 2.2 模块规范
 
@@ -244,7 +248,7 @@ class Project(db.Model):
 
 - MUST 单列索引：查询频繁的字段（`status`, `tenant_id`）
 - SHOULD 复合索引：WHERE 条件中的字段组合
-- MUST 唯一索引：业务唯一性约束（`name + tenant_id`）
+- MUST 唯一索引：业务唯一性约束
 - MAY 全文索引：文本搜索字段
 
 #### 查询规范
@@ -271,13 +275,6 @@ for project in projects:
     versions = Version.query.filter_by(project_id=project.id).all()  # ❌
 ```
 
-#### 数据库迁移
-
-- MUST 使用 Alembic 进行数据库迁移
-- MUST 每个 PR 只包含一个迁移文件
-- MUST 迁移必须可逆（支持 downgrade）
-- MUST 迁移前备份生产数据
-
 ### 2.4 API 设计规范
 
 #### URL 设计
@@ -285,14 +282,13 @@ for project in projects:
 - MUST 使用 RESTful 风格
 - SHOULD 资源名使用复数形式
 - MUST 使用连字符分隔多单词路径
-- SHOULD 版本控制放在 URL 中：`/api/v1/`
 
 ```
-GET    /api/v1/projects        # 获取项目列表
-GET    /api/v1/projects/:id    # 获取单个项目
-POST   /api/v1/projects        # 创建项目
-PUT    /api/v1/projects/:id    # 更新项目
-DELETE /api/v1/projects/:id    # 删除项目
+GET    /api/projects              # 获取项目列表
+GET    /api/projects/:id          # 获取单个项目
+POST   /api/projects              # 创建项目
+PUT    /api/projects/:id          # 更新项目
+DELETE /api/projects/:id          # 删除项目
 ```
 
 #### 请求规范
@@ -300,7 +296,6 @@ DELETE /api/v1/projects/:id    # 删除项目
 - MUST Content-Type 使用 `application/json`
 - MUST 请求体字段使用 camelCase
 - MUST 查询参数使用 snake_case
-- SHOULD 请求体验证使用 JSON Schema 或 marshmallow
 
 #### 响应规范
 
@@ -356,15 +351,16 @@ DELETE /api/v1/projects/:id    # 删除项目
 - MUST 使用 JWT Bearer Token 认证
 - MUST `token_required` 装饰器获取的 User 对象直接传递给路由函数
 - MUST 禁止在路由函数中重复查询 User
-- MUST Token 黑名单使用 Redis 存储
+- [计划] Token 黑名单使用 Redis 存储
 
 ### 2.5 性能要求
 
-- MUST 内存缓存至少 200 条，生产环境使用 Redis
-- MUSR LRU 淘汰算法使用 `OrderedDict`，O(1) 复杂度
+- MUST 内存缓存至少 200 条
+- MUST LRU 淘汰算法使用 `OrderedDict`，O(1) 复杂度
 - MUST 缓存键使用序列化稳定的格式
-- SHOULD 计算密集型端点使用 Celery/RQ 异步处理
-- MUST 生产环境使用 gunicorn/uwsgi，禁止 Flask 单线程服务器
+- [计划] 计算密集型端点使用 Celery/RQ 异步处理
+- [计划] 生产环境使用 gunicorn/uwsgi，禁止 Flask 单线程服务器
+- [计划] 生产环境使用 Redis 替代内存缓存
 
 ---
 
@@ -374,8 +370,8 @@ DELETE /api/v1/projects/:id    # 删除项目
 
 - MUST 用户输入必须转义，防止 XSS
 - SHOULD 使用 CSP (Content Security Policy) 头
-- MUST 禁止在前端存储敏感信息（API Key、Token 存储在 httpOnly Cookie）
-- MUST 使用 HTTPS，生产环境禁止 HTTP
+- MUST 禁止在前端存储敏感信息
+- [计划] Token 存储在 httpOnly Cookie
 
 ### 3.2 后端安全
 
@@ -398,13 +394,13 @@ DELETE /api/v1/projects/:id    # 删除项目
 
 ### 4.1 前端测试
 
-- SHOULD 组件有单元测试（Jest + Vue Test Utils）
+- SHOULD 组件有单元测试（Vitest + Vue Test Utils）
 - SHOULD 关键工具函数有测试覆盖
 - SHOULD 测试覆盖率目标：>70%
 
 ### 4.2 后端测试
 
-- MUST 每个 API 端点有端到端测试
+- SHOULD 每个 API 端点有端到端测试
 - SHOULD 服务层函数有单元测试
 - SHOULD 数据库操作有集成测试
 - SHOULD 测试覆盖率目标：>80%
@@ -462,7 +458,7 @@ export default {
 
 | 分支 | 用途 | 保护规则 |
 |------|------|---------|
-| `main` | 生产环境 | 禁止直接 push，至少 2 人审查 |
+| `main` | 生产环境 | 禁止直接 push |
 | `develop` | 开发环境 | 禁止直接 push |
 | `feature/*` | 功能分支 | 从 develop 创建 |
 | `fix/*` | Bug 修复分支 | 从 main 或 develop 创建 |
@@ -491,17 +487,15 @@ perf(frontend): 添加 FinancialDashboard 防抖
 
 ### 6.3 代码审查
 
-- MUST 至少 1 人审查（建议 2 人）
-- MUST 审查者检查 [代码审查清单](#代码审查清单)
+- SHOULD 至少 1 人审查
+- SHOULD 审查者检查 [代码审查清单](#十代码审查清单)
 - SHOULD 审查时间不超过 24 小时
-- SHOULD 使用 Squash Merge 合并
 
 ### 6.4 合并规范
 
 - MUST 合并前通过 CI 检查
 - MUST 合并后删除功能分支
 - SHOULD 使用 Squash Merge 合并到 main
-- SHOULD commit message 描述完整功能
 
 ---
 
@@ -509,7 +503,7 @@ perf(frontend): 添加 FinancialDashboard 防抖
 
 ### 7.1 编辑器配置
 
-`.vscode/settings.json`：
+项目根目录 `.vscode/settings.json` 已配置：
 
 ```json
 {
@@ -521,23 +515,19 @@ perf(frontend): 添加 FinancialDashboard 防抖
 }
 ```
 
-### 7.2 AI 工具配置
+### 7.2 AI 工具规则
 
-本项目已配置以下 AI 工具规则文件，内容通过 `scripts/sync-ai-rules.js` 自动同步：
+本项目使用 `.cursorrules` 作为 AI 编码规则的唯一权威来源。
 
-| 文件 | 对应工具 |
-|------|---------|
-| `.cursorrules` | Cursor |
-| `.github/copilot-instructions.md` | GitHub Copilot |
-| `CLAUDE.md` | Claude Code / opencode |
-| `.continue/continue.yaml` | Continue |
-| `.windsurfrules` | Windsurf |
-| `AGENTS.md` | 通用 AI 工具 |
+| 文件 | 对应工具 | 说明 |
+|------|---------|------|
+| `.cursorrules` | Cursor / ZCode / 通用 | **权威源文件** |
+| `AGENTS.md` | 通用 AI 工具 | 从 `.cursorrules` 同步 |
+| `.continue/continue.yaml` | Continue | 从 `.cursorrules` 同步 |
 
-### 7.3 同步机制
-
+同步机制：
 ```bash
-# 同步所有 AI 工具规则文件（修改 .ai-rules-core.md 后运行）
+# 修改 .cursorrules 后同步到其他 AI 工具
 node scripts/sync-ai-rules.js
 
 # 检查 AI 工具规则文件一致性
@@ -569,7 +559,6 @@ cd soh-sim-backend
 black .                   # Black 格式化
 isort .                   # isort 排序
 flake8                    # Flake8 检查
-mypy .                    # MyPy 类型检查
 ```
 
 ### 全局检查
@@ -580,7 +569,20 @@ bash scripts/check-code-style.sh
 
 ---
 
-## 九、代码审查清单
+## 九、存量代码豁免清单
+
+以下规则对**存量代码**暂时豁免，但在**新增和修改的代码**中必须遵守：
+
+| 规则 | 豁免说明 | 收敛计划 |
+|------|---------|---------|
+| 内联 `style` 属性 | 存量约 370 处违规 | 修改相关组件时顺手修复 |
+| 组件 ≤ 400 行 | 存量 26 个组件超标 | 按页面优先级逐步拆分 |
+| `import * as echarts` | 3 个组件违规 | 本次规范优化中修复 |
+| TypeScript `any` | 存量 `.js` 文件较多 | 新 `.ts` 文件禁止使用 |
+
+---
+
+## 十、代码审查清单
 
 提交 PR 前自查：
 
@@ -588,11 +590,10 @@ bash scripts/check-code-style.sh
 - [ ] 所有文本使用 `$t()` 国际化
 - [ ] 无内联事件处理器（`onfocus`/`onblur`）
 - [ ] 无内联 `style` 属性
-- [ ] 组件不超过 400 行
+- [ ] 组件不超过 400 行（新增组件必须遵守）
 - [ ] ECharts 实例在 `onUnmounted` 中 dispose
 - [ ] `resize` 监听器在 `onUnmounted` 中移除
 - [ ] `deep watch` 有防抖
-- [ ] TypeScript 无 `any` 类型
 - [ ] 运行 `npm run lint` 无错误
 - [ ] 运行 `npm run type-check` 通过
 
@@ -610,4 +611,16 @@ bash scripts/check-code-style.sh
 - [ ] 通过 CI/CD 流水线
 - [ ] AI 规则文件已同步
 - [ ] 相关文档已更新
-- [ ] 有充分的测试覆盖
+
+---
+
+## 十一、常见错误速查
+
+| 错误 | 正确做法 |
+|------|---------|
+| `onfocus="this.style.border='1px solid blue'"` | `.input:focus { border-color: blue; }` |
+| `style="color: red"` | `.error { color: red; }` |
+| `import * as echarts from 'echarts'` | `import * as echarts from 'echarts/core'` + 按需引入 |
+| `watch(data, handler, { deep: true })` | `watch(data, debounce(handler, 300))` |
+| `window.addEventListener('resize', fn)` | `onMounted(()=>add) + onUnmounted(()=>remove)` |
+| `User.query.get(user_id)` 在路由中 | 从 `token_required` 装饰器传入的 user 对象使用 |

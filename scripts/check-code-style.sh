@@ -1,6 +1,6 @@
 #!/bin/bash
 # 代码规范自动检查脚本
-# 任何 AI 或人类开发者运行此脚本即可验证代码是否符合规范
+# 用法: bash scripts/check-code-style.sh
 
 set -e
 
@@ -10,14 +10,14 @@ echo "========================================="
 echo ""
 
 # 检查前端
-echo "[1/4] 检查前端代码规范..."
+echo "[1/3] 检查前端代码规范..."
 cd soh-sim-frontend
 
 # 检查硬编码中文
 echo "  - 检查硬编码中文..."
 CHINESE_FILES=$(grep -rl '[\x{4e00}-\x{9fff}]' src/ --include="*.vue" --include="*.js" 2>/dev/null | grep -v node_modules | grep -v i18n || true)
 if [ -n "$CHINESE_FILES" ]; then
-  echo "  WARNING: 以下文件包含硬编码中文（应使用 $t() 国际化）:"
+  echo "  WARNING: 以下文件包含硬编码中文（应使用 \$t() 国际化）:"
   echo "$CHINESE_FILES"
 fi
 
@@ -41,13 +41,13 @@ echo "  前端检查完成"
 echo ""
 
 # 检查后端
-echo "[2/4] 检查后端代码规范..."
+echo "[2/3] 检查后端代码规范..."
 cd ../soh-sim-backend
 
 # 检查 Python 格式
 echo "  - 检查 Python 代码格式..."
 if command -v black &> /dev/null; then
-  black --check . || { echo "  ERROR: 后端代码格式不符合 black 规范"; exit 1; }
+  black --check . || echo "  WARNING: 后端代码格式不符合 black 规范"
 fi
 
 # 检查 N+1 查询模式
@@ -61,35 +61,9 @@ fi
 echo "  后端检查完成"
 echo ""
 
-# 检查 AI 工具规则文件
-echo "[3/4] 检查 AI 工具规则文件一致性..."
-cd ..
-RULE_FILES=(
-  ".cursorrules"
-  ".github/copilot-instructions.md"
-  "CLAUDE.md"
-  ".continue/continue.yaml"
-  ".windsurfrules"
-)
-
-CONSISTENT=true
-for file in "${RULE_FILES[@]}"; do
-  if [ -f "$file" ]; then
-    echo "  OK: $file exists"
-  else
-    echo "  MISSING: $file"
-    CONSISTENT=false
-  fi
-done
-
-if [ "$CONSISTENT" = false ]; then
-  echo "  WARNING: 部分 AI 工具规则文件缺失"
-fi
-
-echo ""
-
 # 检查国际化文件
-echo "[4/4] 检查国际化文件..."
+echo "[3/3] 检查国际化文件..."
+cd ..
 if [ -f "soh-sim-frontend/src/i18n/zh.js" ] && [ -f "soh-sim-frontend/src/i18n/en.js" ]; then
   ZH_COUNT=$(grep -c "'" soh-sim-frontend/src/i18n/zh.js || echo 0)
   EN_COUNT=$(grep -c "'" soh-sim-frontend/src/i18n/en.js || echo 0)

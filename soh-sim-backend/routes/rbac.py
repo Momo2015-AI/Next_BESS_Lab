@@ -8,6 +8,7 @@ import uuid
 from datetime import datetime, timezone
 
 from flask import Blueprint, request
+from sqlalchemy.orm import selectinload
 
 from database import (
     DEFAULT_ROLE,
@@ -204,11 +205,15 @@ def reset_role_permission(role_code):
 def list_users():
     """获取所有用户列表（含权限覆盖信息）"""
     # 管理员可查看所有租户的用户
-    users = User.query.order_by(User.created_at.desc()).all()
+    users = (
+        User.query.options(selectinload(User.permission_override))
+        .order_by(User.created_at.desc())
+        .all()
+    )
 
     result = []
     for user in users:
-        override = UserPermissionOverride.query.filter_by(user_id=user.id).first()
+        override = user.permission_override
         override_data = None
         if override:
             now = datetime.now(timezone.utc)

@@ -20,21 +20,13 @@
 
 详见 [CODE_STYLE.md](./CODE_STYLE.md)
 
-## AI 工具配置
+## AI 工具规则
 
-本项目已配置以下 AI 工具的规则文件，确保代码规范一致：
-
-- `.cursorrules` - Cursor
-- `.github/copilot-instructions.md` - GitHub Copilot
-- `CLAUDE.md` - Claude Code / opencode
-- `.continue/continue.yaml` - Continue
-- `.windsurfrules` - Windsurf
-
-所有 AI 工具读取同一套规范，无需手动指定。
+本项目使用 `.cursorrules` 作为 AI 编码规则的唯一权威来源。规则通过 `scripts/sync-ai-rules.js` 自动同步。
 
 ---
 
-## Frontend (Vue 3 + Vite)
+## Frontend (Vue 3 + Vite + Tailwind CSS 4)
 
 ### Naming
 - Components: PascalCase (.vue)
@@ -53,7 +45,7 @@
 7. setInterval must be cleared in onUnmounted.
 8. MutationObserver must be disconnected in onUnmounted.
 9. watch({ deep: true }) must be debounced (300-500ms).
-10. Use tree-shakable echarts imports, NOT import * as echarts.
+10. Use tree-shakable echarts imports from 'echarts/core', NOT 'import * as echarts from echarts'.
 
 ### Shared Styles
 - Extract common styles to src/assets/styles/shared.css

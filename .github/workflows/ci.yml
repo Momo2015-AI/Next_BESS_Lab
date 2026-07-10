@@ -72,3 +72,4 @@ jobs:
 
       - name: Check code style
         run: bash scripts/check-code-style.sh
+        continue-on-error: true

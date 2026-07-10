@@ -1,46 +1,62 @@
 #!/usr/bin/env node
-// 检查所有AI工具规则文件的一致性
+// 检查AI工具规则文件的一致性
 // 用法: node scripts/check-ai-rules-consistency.js
 
 const fs = require('fs');
 const path = require('path');
 
-const CORE_FILE = '.ai-rules-core.md';
-const AI_FILES = [
-  '.cursorrules',
-  '.github/copilot-instructions.md',
-  'CLAUDE.md',
-  '.continue/continue.yaml',
-  '.windsurfrules',
+const SOURCE_FILE = '.cursorrules';
+const TARGET_FILES = [
   'AGENTS.md',
+  '.continue/continue.yaml',
 ];
 
 function normalize(content) {
-  // 移除头部差异，只比较核心内容
+  // 移除头部差异和空白，只比较核心规则内容
   return content
-    .replace(/#.*/g, '')  // 移除注释行
-    .replace(/\s+/g, ' ')  // 合并空白
+    .replace(/#.*/g, '')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
+function extractRules(content) {
+  // 提取 Mandatory Rules 部分的关键规则文本
+  const rules = [];
+  const lines = content.split('\n');
+  let inRules = false;
+  for (const line of lines) {
+    if (line.includes('Mandatory Rules')) {
+      inRules = true;
+      continue;
+    }
+    if (inRules && line.match(/^#/)) {
+      break;
+    }
+    if (inRules && line.trim().match(/^\d+\./)) {
+      rules.push(line.trim());
+    }
+  }
+  return rules.join(' ');
+}
+
 function main() {
-  const corePath = path.join(__dirname, '..', CORE_FILE);
-  
-  if (!fs.existsSync(corePath)) {
-    console.error(`ERROR: ${CORE_FILE} not found`);
-    console.log('Run: node scripts/sync-ai-rules.js first');
+  const sourcePath = path.join(__dirname, '..', SOURCE_FILE);
+
+  if (!fs.existsSync(sourcePath)) {
+    console.error(`ERROR: ${SOURCE_FILE} not found`);
     process.exit(1);
   }
 
-  const coreContent = fs.readFileSync(corePath, 'utf8');
+  const sourceContent = fs.readFileSync(sourcePath, 'utf8');
+  const sourceRules = extractRules(sourceContent);
   let inconsistencies = 0;
   let missing = 0;
 
   console.log('Checking AI rules consistency...\n');
 
-  for (const file of AI_FILES) {
+  for (const file of TARGET_FILES) {
     const filePath = path.join(__dirname, '..', file);
-    
+
     if (!fs.existsSync(filePath)) {
       console.log(`MISSING: ${file}`);
       missing++;
@@ -48,11 +64,9 @@ function main() {
     }
 
     const fileContent = fs.readFileSync(filePath, 'utf8');
-    const normalizedCore = normalize(coreContent);
-    const normalizedFile = normalize(fileContent);
+    const fileRules = extractRules(fileContent);
 
-    // 检查核心内容是否存在于文件中
-    if (normalizedFile.includes(normalizedCore.substring(0, 200))) {
+    if (fileRules === sourceRules) {
       console.log(`OK: ${file}`);
     } else {
       console.log(`INCONSISTENT: ${file}`);
