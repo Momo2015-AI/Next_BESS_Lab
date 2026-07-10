@@ -771,6 +771,10 @@ const searchResults = ref([])
 
 const store = useBessStore()
 const { themeObject } = useChartTheme()
+
+watch(themeObject, () => {
+  nextTick(renderChart)
+})
 const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
 
 const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-survey-data', {

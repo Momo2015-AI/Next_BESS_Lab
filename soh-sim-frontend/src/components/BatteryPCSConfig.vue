@@ -284,6 +284,13 @@ echarts.use([
 const { t } = useI18n()
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(() => {
+    renderConnectionDiagram()
+    renderSingleLineDiagram()
+  })
+})
+
 const props = defineProps({ active: Boolean, params: Object })
 const emit = defineEmits(['applyConfig', 'error'])
 

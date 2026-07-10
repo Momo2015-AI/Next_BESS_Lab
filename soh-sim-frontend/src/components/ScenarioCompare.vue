@@ -359,6 +359,10 @@ import { post } from '../services/api.js'
 import { useChartTheme } from '../composables/useChartTheme.js'
 const { t } = useI18n()
 const { themeObject } = useChartTheme()
+
+watch(themeObject, () => {
+  nextTick(updateChart)
+})
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent])
 
 const props = defineProps({

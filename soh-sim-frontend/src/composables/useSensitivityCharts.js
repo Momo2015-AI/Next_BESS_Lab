@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -20,6 +20,11 @@ echarts.use([
 export function useSensitivityCharts(analysisResults, tornadoChartRef, spiderChartRef) {
   const { t } = useI18n()
   const { themeObject } = useChartTheme()
+
+  watch(themeObject, () => {
+    updateTornadoChart()
+    updateSpiderChart()
+  })
   let tornadoInstance = null
   let spiderInstance = null
   let _resizeHandler = null

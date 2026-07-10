@@ -156,6 +156,17 @@ let dashChart = null
 
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(() => {
+    sohChart?.setOption(getCombinedOption())
+    rteChart?.setOption(getRteOption())
+    acChart?.setOption(getAcOption())
+    stackedChart?.setOption(getStackedOption())
+    degradationChart?.setOption(getDegradationOption())
+    dashChart?.setOption(getDashOption())
+  })
+})
+
 const chartColors = computed(() => ({
   ...themeObject.value,
   titleText: themeObject.value.warning,

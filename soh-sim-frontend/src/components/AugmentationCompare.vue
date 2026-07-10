@@ -108,6 +108,10 @@ echarts.use([CanvasRenderer, BarChart, TooltipComponent, LegendComponent, GridCo
 
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(renderChart)
+})
+
 const props = defineProps({
   comparison: { type: Object, default: () => ({}) }
 })

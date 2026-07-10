@@ -37,6 +37,10 @@ export function useChart(chartRef, options, dependencies = []) {
   const { themeObject } = useChartTheme()
   const chart = ref(null)
 
+  watch(themeObject, () => {
+    init()
+  })
+
   const init = () => {
     if (!chartRef.value) return
     if (chart.value) {

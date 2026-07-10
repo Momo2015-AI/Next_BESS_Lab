@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { debounce } from 'lodash-es'
 import * as echarts from 'echarts/core'
@@ -129,6 +129,10 @@ import { useChartTheme } from '../composables/useChartTheme.js'
 
 const { t } = useI18n()
 const { themeObject } = useChartTheme()
+
+watch(themeObject, () => {
+  nextTick(initChart)
+})
 echarts.use([CanvasRenderer, SankeyChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const props = defineProps({

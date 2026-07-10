@@ -76,6 +76,10 @@ echarts.use([
 
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(renderHeatmap)
+})
+
 const props = defineProps({
   params: Object,
   soh: Array,

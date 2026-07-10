@@ -82,6 +82,10 @@ let _resizeHandler = null
 
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(renderAll)
+})
+
 function fmtNum(v) {
   if (v == null || isNaN(v)) return '-'
   if (Math.abs(v) >= 100) return v.toFixed(1)

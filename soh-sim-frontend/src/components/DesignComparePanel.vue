@@ -71,6 +71,13 @@ echarts.use([CanvasRenderer, BarChart, RadarChart, TooltipComponent, LegendCompo
 
 const { themeObject } = useChartTheme()
 
+watch(themeObject, () => {
+  nextTick(() => {
+    renderRadarChart()
+    renderBarChart()
+  })
+})
+
 function debounce(fn, delay = 300) {
   let timer = null
   return (...args) => {
