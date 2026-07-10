@@ -17,7 +17,14 @@ class SimulationEngine(BaseEngine):
     def validate_input(self, data: dict) -> list:
         errors = []
         required = ["ratedEnergy", "initContainerQty", "duration", "temperature"]
-        params = data.get("system_params", data)
+        # 兼容两种输入格式：直接的 system_params 或嵌套的 design_output + survey_params
+        if "design_output" in data:
+            params = self._extract_params(data.get("design_output", {}), data.get("survey_params", {}))
+        elif "container" in data:
+            # design_output 格式
+            params = self._extract_params(data, {})
+        else:
+            params = data.get("system_params", data)
         for field in required:
             if params.get(field) is None:
                 errors.append({"field": field, "error": f"{field} is required"})
