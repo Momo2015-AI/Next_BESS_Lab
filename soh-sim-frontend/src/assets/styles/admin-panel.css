@@ -481,3 +481,182 @@
     opacity: 1;
   }
 }
+
+/* ==================== 产品库管理 ==================== */
+
+.admin-subtabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.admin-subtab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.admin-subtab:hover {
+  color: var(--color-text);
+}
+
+.admin-subtab.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.subtab-count {
+  font-size: 0.75rem;
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 0.0625rem 0.375rem;
+  border-radius: 8px;
+}
+
+.admin-subtab.active .subtab-count {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.product-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.product-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.product-search::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.product-filter {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  min-width: 140px;
+}
+
+.product-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.product-table th {
+  background: var(--color-bg-secondary, #f8f9fa);
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.product-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.product-table tbody tr:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.02));
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.product-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+}
+
+.product-modal {
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-group label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.modal-sm {
+  max-width: 360px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-active {
+  background: rgba(34,197,94,0.15);
+  color: #16a34a;
+}
+
+.status-inactive {
+  background: rgba(156,163,175,0.15);
+  color: #6b7280;
+}

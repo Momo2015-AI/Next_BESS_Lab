@@ -14,6 +14,12 @@
       >
         {{ $t('admin.tabUsers') }}
       </button>
+      <button
+        :class="['admin-tab', { active: activeTab === 'products' }]"
+        @click="activeTab = 'products'"
+      >
+        {{ $t('admin.tabProducts') }}
+      </button>
     </div>
 
     <!-- ==================== 角色权限配置 ==================== -->
@@ -277,6 +283,9 @@
       </template>
     </div>
 
+    <!-- ==================== 产品库管理 ==================== -->
+    <AdminProducts v-if="activeTab === 'products'" />
+
     <!-- Toast -->
     <div v-if="toast.show" :class="['admin-toast', `toast-${toast.type}`]">
       {{ toast.message }}
@@ -288,6 +297,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import api from '../services/api.js'
+import AdminProducts from './AdminProducts.vue'
 
 const { t } = useI18n()
 

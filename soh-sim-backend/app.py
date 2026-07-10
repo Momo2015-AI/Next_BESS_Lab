@@ -28,6 +28,7 @@ from routes.pipeline import pipeline_bp
 from routes.simulation_engine import sim_engine_bp
 from routes.products import products_bp, seed_products
 from routes.project import project_bp
+from routes.admin import admin_bp
 from routes.rbac import rbac_bp
 from routes.report import report_bp
 from routes.simulation import simulation_bp
@@ -90,6 +91,7 @@ app.register_blueprint(efficiency_bp)
 app.register_blueprint(degradation_bp)
 app.register_blueprint(exchange_rate_bp)
 app.register_blueprint(rbac_bp)
+app.register_blueprint(admin_bp)
 
 
 # ==================== 全局错误处理器 ====================
@@ -188,6 +190,53 @@ with app.app_context():
     seed_algorithms()
 
     seed_boq_sections(db)
+
+    # 种子方案模板
+    from models.admin import DesignTemplate
+
+    _builtin_templates = [
+        {
+            "name": "经济优先方案",
+            "name_en": "Economic Priority",
+            "strategy": "economic",
+            "description": "选用大容量集装箱，最小化 BOP 和施工成本，适合预算优先项目",
+            "is_default": True,
+            "sort_order": 1,
+        },
+        {
+            "name": "均衡方案",
+            "name_en": "Balanced",
+            "strategy": "balanced",
+            "description": "中等容量集装箱，最优单位成本（CAPEX/MWh），适合大多数项目",
+            "is_default": True,
+            "sort_order": 2,
+        },
+        {
+            "name": "灵活分期方案",
+            "name_en": "Flexible Phased",
+            "strategy": "flexible",
+            "description": "小容量集装箱，便于分期部署和扩容，适合分阶段投资项目",
+            "is_default": True,
+            "sort_order": 3,
+        },
+    ]
+    for tmpl in _builtin_templates:
+        existing = DesignTemplate.query.filter_by(
+            name=tmpl["name"], is_builtin=True
+        ).first()
+        if not existing:
+            db.session.add(
+                DesignTemplate(
+                    name=tmpl["name"],
+                    name_en=tmpl["name_en"],
+                    strategy=tmpl["strategy"],
+                    description=tmpl["description"],
+                    is_default=tmpl["is_default"],
+                    is_builtin=True,
+                    sort_order=tmpl["sort_order"],
+                )
+            )
+    db.session.commit()
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ import uuid
 
 from services.engine_base import BaseEngine
 
-# 产品数据路径
+# 产品数据路径（DB 为空时的 JSON 回退）
 _PRODUCTS_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
     "data",
@@ -21,9 +21,83 @@ _PRODUCTS_PATH = os.path.join(
 # 多方案生成策略
 STRATEGIES = ["economic", "balanced", "flexible", "manufacturer"]
 
+# DB snake_case → camelCase 字段映射（与前端 useProducts.js 对齐）
+_FIELD_MAP = {
+    "rated_energy_mwh": "ratedEnergyMwh",
+    "rated_power_mw": "ratedPowerMW",
+    "rated_power_mva": "ratedPowerMVA",
+    "unit_price": "unitPrice",
+    "cell_model": "cellModel",
+    "clusters_per_container": "clustersPerContainer",
+    "cycle_life": "cycleLife",
+    "calendar_life": "calendarLife",
+    "ac_voltage": "acVoltage",
+    "dc_voltage_range": "dcVoltageRange",
+    "max_dc_current": "maxDcCurrent",
+    "aux_run": "auxRun",
+    "aux_standby": "auxStandby",
+}
+
+
+def _db_row_to_camel(row_dict: dict) -> dict:
+    """将 DB 行 dict(snake_case) 转为 camelCase，保留原键"""
+    result = {}
+    for key, value in row_dict.items():
+        camel = _FIELD_MAP.get(key, key)
+        result[camel] = value
+        # 同时保留 snake_case 键，兼容两种访问方式
+        if camel != key:
+            result[key] = value
+    # Container 需要 ratedPowerMw（小写 w）兼容旧代码
+    if "ratedPowerMW" in result and "ratedPowerMw" not in result:
+        result["ratedPowerMw"] = result["ratedPowerMW"]
+    return result
+
+
+def _load_products_from_db():
+    """从数据库加载产品库（优先），返回与 JSON 文件相同结构的 dict"""
+    try:
+        from database import db as _db
+        from models.product import (
+            CellProduct, PackProduct, RackProduct, ClusterProduct,
+            ContainerProduct, PcsProduct,
+        )
+
+        # 需要在 app context 内执行
+        containers_raw = ContainerProduct.query.filter(
+            ContainerProduct.status == "active"
+        ).all()
+        pcs_raw = PcsProduct.query.filter(PcsProduct.status == "active").all()
+        cells_raw = CellProduct.query.filter(CellProduct.status == "active").all()
+        packs_raw = PackProduct.query.filter(PackProduct.status == "active").all()
+        racks_raw = RackProduct.query.filter(RackProduct.status == "active").all()
+        clusters_raw = ClusterProduct.query.filter(ClusterProduct.status == "active").all()
+
+        containers = [_db_row_to_camel(c.to_dict()) for c in containers_raw]
+        pcs_list = [_db_row_to_camel(p.to_dict()) for p in pcs_raw]
+
+        if containers or pcs_list:
+            return {
+                "containers": containers,
+                "pcs": pcs_list,
+                "cells": [_db_row_to_camel(c.to_dict()) for c in cells_raw],
+                "packs": [_db_row_to_camel(p.to_dict()) for p in packs_raw],
+                "racks": [_db_row_to_camel(r.to_dict()) for r in racks_raw],
+                "clusters": [_db_row_to_camel(c.to_dict()) for c in clusters_raw],
+            }
+        return None  # DB 为空
+    except Exception:
+        return None  # DB 不可用时回退 JSON
+
 
 def _load_products():
-    """加载产品库数据"""
+    """加载产品库数据 — DB 优先，JSON 兜底"""
+    # 优先从 DB 加载
+    db_products = _load_products_from_db()
+    if db_products and (db_products.get("containers") or db_products.get("pcs")):
+        return db_products
+
+    # JSON 文件兜底
     if not os.path.exists(_PRODUCTS_PATH):
         return {"cells": [], "containers": [], "pcs": [], "racks": [], "clusters": [], "packs": []}
     with open(_PRODUCTS_PATH, "r", encoding="utf-8") as f:
