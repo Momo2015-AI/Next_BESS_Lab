@@ -4,13 +4,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             01
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section01') }}
             </h3>
           </div>
@@ -76,13 +76,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             02
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section02') }}
             </h3>
           </div>
@@ -117,7 +117,9 @@
               <option value="zone1">
                 {{ $t('runningConditions.seismicZones.low') }}
               </option>
-              <option value="zone2">Zone II</option>
+              <option value="zone2">
+                {{ $t('runningConditions.seismicZones.mid') }}
+              </option>
               <option value="zone3">
                 {{ $t('runningConditions.seismicZones.mid') }}
               </option>
@@ -172,13 +174,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             03
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section03') }}
             </h3>
           </div>
@@ -254,13 +256,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             04
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section04') }}
             </h3>
           </div>
@@ -334,13 +336,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             05
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section05') }}
             </h3>
           </div>
@@ -425,18 +427,18 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             06
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section06') }}
             </h3>
           </div>
           <div class="ml-auto">
-            <label class="flex items-center gap-2 text-xs cursor-pointer" style="color: var(--color-text-secondary)">
+            <label class="flex items-center gap-2 text-xs cursor-pointer ins-3">
               <input v-model="autoMatchEnabled" type="checkbox" class="accent-teal-500" />
               {{ $t('runningConditions.autoMatch') }}
             </label>
@@ -499,11 +501,11 @@
             </select>
           </div>
         </div>
-        <div v-if="matchedConfig" class="mt-3 p-3 rounded" style="background: var(--color-accent-glow)">
-          <div class="text-xs font-bold mb-1" style="color: var(--color-accent)">
+        <div v-if="matchedConfig" class="mt-3 p-3 rounded ins-4">
+          <div class="text-xs font-bold mb-1 ins-5">
             {{ $t('runningConditions.matchedConfig') }}: {{ matchedConfig.name }}
           </div>
-          <div class="text-[10px] space-y-0.5" style="color: var(--color-text-secondary)">
+          <div class="text-[10px] space-y-0.5 ins-3">
             <div>{{ $t('runningConditions.packEnergy') }}: {{ matchedConfig.packNominalEnergyKwh }} kWh</div>
             <div>
               {{ $t('runningConditions.rackEnergy') }}: {{ (matchedConfig.rackNominalEnergyKwh / 1000).toFixed(2) }} MWh
@@ -517,13 +519,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             07
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.pcsSectionTitle') }}
             </h3>
           </div>
@@ -618,13 +620,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             08
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section07') }}
             </h3>
           </div>
@@ -632,12 +634,12 @@
         <div class="grid grid-cols-3 gap-3 text-[10px]">
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.cell') }}</span>
-            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
+            <div class="rounded p-2 space-y-1.5 ins-6">
               <label
                 v-for="(opt, idx) in certOptionsI18n.cell"
                 :key="certKeys.cell[idx]"
-                class="flex items-center gap-1.5 cursor-pointer"
-                style="color: var(--color-text-secondary)"
+                class="flex items-center gap-1.5 cursor-pointer ins-3"
+               
               >
                 <input v-model="form.certCell" type="checkbox" :value="certKeys.cell[idx]" class="accent-teal-500" />
                 {{ opt }}
@@ -646,12 +648,12 @@
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.system') }}</span>
-            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
+            <div class="rounded p-2 space-y-1.5 ins-6">
               <label
                 v-for="(opt, idx) in certOptionsI18n.system"
                 :key="certKeys.system[idx]"
-                class="flex items-center gap-1.5 cursor-pointer"
-                style="color: var(--color-text-secondary)"
+                class="flex items-center gap-1.5 cursor-pointer ins-3"
+               
               >
                 <input
                   v-model="form.certSystem"
@@ -665,12 +667,12 @@
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.grid') }}</span>
-            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
+            <div class="rounded p-2 space-y-1.5 ins-6">
               <label
                 v-for="(opt, idx) in certOptionsI18n.grid"
                 :key="certKeys.grid[idx]"
-                class="flex items-center gap-1.5 cursor-pointer"
-                style="color: var(--color-text-secondary)"
+                class="flex items-center gap-1.5 cursor-pointer ins-3"
+               
               >
                 <input v-model="form.certGrid" type="checkbox" :value="certKeys.grid[idx]" class="accent-blue-500" />
                 {{ opt }}
@@ -681,12 +683,12 @@
         <div class="mt-2 grid grid-cols-2 gap-3 text-[10px]">
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.extra') }}</span>
-            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
+            <div class="rounded p-2 space-y-1.5 ins-6">
               <label
                 v-for="(opt, idx) in certOptionsI18n.extra"
                 :key="certKeys.extra[idx]"
-                class="flex items-center gap-1.5 cursor-pointer"
-                style="color: var(--color-text-secondary)"
+                class="flex items-center gap-1.5 cursor-pointer ins-3"
+               
               >
                 <input
                   v-model="form.certExtra"
@@ -700,12 +702,12 @@
           </div>
           <div>
             <span class="label-text">{{ $t('runningConditions.certifications.gridCode') }}</span>
-            <div class="rounded p-2 space-y-1.5" style="background: var(--color-input-bg)">
+            <div class="rounded p-2 space-y-1.5 ins-6">
               <label
                 v-for="(opt, idx) in certOptionsI18n.gridCode"
                 :key="certKeys.gridCode[idx]"
-                class="flex items-center gap-1.5 cursor-pointer"
-                style="color: var(--color-text-secondary)"
+                class="flex items-center gap-1.5 cursor-pointer ins-3"
+               
               >
                 <input
                   v-model="form.certGridCode"
@@ -723,13 +725,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             09
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section08') }}
             </h3>
           </div>
@@ -829,13 +831,13 @@
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
           <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold"
-            style="background: var(--color-accent-glow); color: var(--color-accent)"
+            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
+           
           >
             10
           </span>
           <div>
-            <h3 class="section-title" style="color: var(--color-accent); border-color: var(--color-accent)">
+            <h3 class="section-title ins-2">
               {{ $t('runningConditions.section09') }}
             </h3>
           </div>
@@ -862,24 +864,24 @@
             class="hidden"
             @change="onFileChange"
           />
-          <div v-if="uploading" style="color: var(--color-accent)" class="text-xs">
+          <div v-if="uploading" class="ins-5 text-xs">
             <div
-              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2"
-              style="border-color: var(--color-accent); border-top-color: transparent"
+              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2 ins-7"
+             
             />
             {{ $t('runningConditions.uploading') }}
           </div>
           <div v-else-if="uploadResult" class="text-xs">
-            <span style="color: var(--color-success)" class="font-bold">{{ $t('common.done') }}</span>
-            <span style="color: var(--color-text-muted)" class="ml-2">
+            <span class="ins-8 font-bold">{{ $t('common.done') }}</span>
+            <span class="ins-9 ml-2">
               {{ uploadResult.fieldsExtracted }} {{ $t('runningConditions.uploadDone') }}
             </span>
-            <button class="ml-3 underline text-xs" style="color: var(--color-accent)" @click.stop="applyExtracted">
+            <button class="ml-3 underline text-xs ins-5" @click.stop="applyExtracted">
               {{ $t('runningConditions.applyForm') }}
             </button>
             <button
-              class="ml-3 underline text-xs"
-              style="color: var(--color-text-muted)"
+              class="ml-3 underline text-xs ins-9"
+             
               @click.stop="uploadResult = null"
             >
               {{ $t('runningConditions.clearForm') }}
@@ -887,13 +889,13 @@
           </div>
           <div v-else>
             <div class="text-2xl mb-1 opacity-40">📄</div>
-            <p class="text-xs" style="color: var(--color-text-secondary)">
+            <p class="text-xs ins-3">
               {{ $t('runningConditions.dragDrop') }}
-              <span style="color: var(--color-accent)" class="underline">
+              <span class="ins-5 underline">
                 {{ $t('runningConditions.clickSelect') }}
               </span>
             </p>
-            <p class="text-[10px] mt-1" style="color: var(--color-text-muted)">
+            <p class="text-[10px] mt-1 ins-9">
               {{ $t('runningConditions.uploadSupport') }}
             </p>
           </div>
@@ -901,16 +903,12 @@
       </div>
 
       <div class="text-right pb-4">
-        <button class="text-xs underline mr-4" style="color: var(--color-text-muted)" @click="clearAll">
+        <button class="text-xs underline mr-4 ins-9" @click="clearAll">
           {{ $t('runningConditions.resetAll') }}
         </button>
         <button
-          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors"
-          style="
-            background: var(--color-input-bg);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text-secondary);
-          "
+          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors ins-10"
+         
           @click="exportCSV"
         >
           {{ $t('runningConditions.exportCSV') }}
@@ -1311,3 +1309,20 @@ function applyToSimulation() {
   emit('applyParams', mapped)
 }
 </script>
+
+<style scoped>
+.ins-1 { background: var(--color-accent-glow); color: var(--color-accent) }
+.ins-2 { color: var(--color-accent); border-color: var(--color-accent) }
+.ins-3 { color: var(--color-text-secondary) }
+.ins-4 { background: var(--color-accent-glow) }
+.ins-5 { color: var(--color-accent) }
+.ins-6 { background: var(--color-input-bg) }
+.ins-7 { border-color: var(--color-accent); border-top-color: transparent }
+.ins-8 { color: var(--color-success) }
+.ins-9 { color: var(--color-text-muted) }
+.ins-10 { 
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-input-border);
+            color: var(--color-text-secondary);
+           }
+</style>

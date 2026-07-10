@@ -2,8 +2,8 @@
   <div class="rounded-lg p-3 card-bordered">
     <h3 class="font-bold text-xs mb-2 flex items-center gap-2 text-default">
       <span
-        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold"
-        style="background-color: rgba(239, 68, 68, 0.2); color: var(--color-danger)"
+        class="w-5 h-5 rounded text-[10px] flex items-center justify-center font-bold ins-1"
+       
       >
         VI
       </span>
@@ -65,8 +65,8 @@
             />
             <button
               v-if="isManualRate"
-              class="text-[9px] px-1 py-0.5 rounded transition-colors"
-              style="background-color: var(--color-accent); color: white"
+              class="text-[9px] px-1 py-0.5 rounded transition-colors ins-2"
+             
               @click="resetToApiRate"
             >
               {{ $t('financial.btnReset') }}
@@ -92,8 +92,8 @@
 
       <div class="flex justify-between items-center p-2 rounded bg-input-dark">
         <span class="text-xs">{{ amount }} {{ baseCurrency }}</span>
-        <span class="text-xs" style="color: var(--color-text-muted)">&rarr;</span>
-        <span class="text-xs font-bold" style="color: var(--color-accent)">{{ result }} {{ targetCurrency }}</span>
+        <span class="text-xs ins-3">&rarr;</span>
+        <span class="text-xs font-bold ins-4">{{ result }} {{ targetCurrency }}</span>
       </div>
 
       <div class="border-t pt-2 mt-2">
@@ -121,12 +121,8 @@
           <div>
             <label class="block mb-0.5 text-muted">{{ $t('financial.labelRateSource') }}</label>
             <div
-              class="px-2 py-1 text-xs"
-              style="
-                background-color: var(--color-input-bg-dark);
-                border: 1px solid var(--color-input-border);
-                color: var(--color-text-secondary);
-              "
+              class="px-2 py-1 text-xs ins-5"
+             
             >
               {{ rateSource || '---' }}
             </div>
@@ -310,6 +306,16 @@ watch([baseCurrency, targetCurrency], updateRates)
 </script>
 
 <style scoped>
+.ins-1 { background-color: rgba(239, 68, 68, 0.2); color: var(--color-danger) }
+.ins-2 { background-color: var(--color-accent); color: white }
+.ins-3 { color: var(--color-text-muted) }
+.ins-4 { color: var(--color-accent) }
+.ins-5 { 
+                background-color: var(--color-input-bg-dark);
+                border: 1px solid var(--color-input-border);
+                color: var(--color-text-secondary);
+               }
+
 input:focus,
 select:focus,
 textarea:focus {

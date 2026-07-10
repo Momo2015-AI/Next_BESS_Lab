@@ -1,20 +1,20 @@
 <template>
   <div class="scenario-compare h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent)" />
+    <div class="rounded-lg p-4 ins-1">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 ins-2">
+        <span class="w-2 h-2 rounded-full ins-3" />
         {{ $t('scenario.title') }}
       </h3>
 
       <!-- 场景管理 -->
       <div class="grid grid-cols-3 gap-4 mb-4">
         <!-- 场景列表 -->
-        <div class="col-span-1 rounded-lg p-3" style="background-color: var(--color-card-dark)">
+        <div class="col-span-1 rounded-lg p-3 ins-4">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('scenario.sceneList') }}</span>
+            <span class="text-xs ins-5">{{ $t('scenario.sceneList') }}</span>
             <button
-              class="text-xs px-2 py-1 rounded transition-colors"
-              style="background-color: var(--color-accent); color: white"
+              class="text-xs px-2 py-1 rounded transition-colors ins-6"
+             
               @click="createScenario"
             >
               + {{ $t('scenario.createNew') }}
@@ -33,9 +33,9 @@
               "
             >
               <div class="flex items-center justify-between">
-                <span style="color: var(--color-text-secondary)" @click="selectScenario(idx)">{{ scenario.name }}</span>
+                <span class="ins-7" @click="selectScenario(idx)">{{ scenario.name }}</span>
                 <div class="flex gap-1">
-                  <button style="color: var(--color-text-muted)" @click.stop="editScenario(idx)">
+                  <button class="ins-5" @click.stop="editScenario(idx)">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -45,7 +45,7 @@
                       />
                     </svg>
                   </button>
-                  <button style="color: var(--color-text-muted)" @click.stop="deleteScenario(idx)">
+                  <button class="ins-5" @click.stop="deleteScenario(idx)">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -57,20 +57,20 @@
                   </button>
                 </div>
               </div>
-              <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">
+              <div class="text-[10px] mt-1 ins-5">
                 {{ scenario.params.ratedEnergy || '-' }} MWh | {{ scenario.params.acEfficiency || '-' }}%
               </div>
             </div>
 
-            <div v-if="scenarios.length === 0" class="text-xs text-center py-4" style="color: var(--color-text-muted)">
+            <div v-if="scenarios.length === 0" class="text-xs text-center py-4 ins-5">
               {{ $t('scenario.noScene') }}
             </div>
           </div>
         </div>
 
         <!-- 场景编辑器 -->
-        <div class="col-span-2 rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div v-if="!editingScenario" class="text-xs text-center py-8" style="color: var(--color-text-muted)">
+        <div class="col-span-2 rounded-lg p-3 ins-4">
+          <div v-if="!editingScenario" class="text-xs text-center py-8 ins-5">
             {{ $t('scenario.selectOrCreate') }}
           </div>
 
@@ -78,29 +78,21 @@
             <div class="flex items-center justify-between mb-3">
               <input
                 v-model="editingScenario.name"
-                class="text-xs px-2 py-1 rounded"
-                style="
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                "
+                class="text-xs px-2 py-1 rounded ins-8"
+               
                 :placeholder="$t('scenario.namePlaceholder')"
               />
               <div class="flex gap-2">
                 <button
-                  class="text-xs px-3 py-1 rounded transition-colors"
-                  style="background-color: var(--color-accent); color: white"
+                  class="text-xs px-3 py-1 rounded transition-colors ins-6"
+                 
                   @click="saveScenario"
                 >
                   {{ $t('common.save') }}
                 </button>
                 <button
-                  class="text-xs px-3 py-1 rounded transition-colors"
-                  style="
-                    background-color: var(--color-card);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-text-secondary);
-                  "
+                  class="text-xs px-3 py-1 rounded transition-colors ins-9"
+                 
                   @click="cancelEdit"
                 >
                   {{ $t('common.cancel') }}
@@ -110,138 +102,102 @@
 
             <div class="grid grid-cols-3 gap-2 text-xs">
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.ratedEnergy') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.containerQty') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.pcsQty') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.duration') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.duration"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.cyclesPerDay') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.acEfficiency') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.bessAuxRun') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.bessAuxStandby') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
               <div>
-                <label class="text-[10px] block mb-1" style="color: var(--color-text-muted)">
+                <label class="text-[10px] block mb-1 ins-5">
                   {{ $t('scenario.requiredEnergy') }}
                 </label>
                 <input
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"
-                  class="w-full rounded px-2 py-1"
-                  style="
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                  "
+                  class="w-full rounded px-2 py-1 ins-10"
+                 
                 />
               </div>
             </div>
@@ -260,8 +216,8 @@
                 {{ calculating ? $t('scenario.calculating') : $t('scenario.calculateThis') }}
               </button>
               <button
-                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors"
-                style="background-color: var(--color-accent-secondary); color: white"
+                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors ins-11"
+               
                 @click="useAsBase"
               >
                 {{ $t('scenario.setAsBase') }}
@@ -274,7 +230,7 @@
       <!-- 对比图表 -->
       <div v-if="scenarios.length > 0" class="mt-4">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('scenario.chart') }}</span>
+          <span class="text-xs ins-5">{{ $t('scenario.chart') }}</span>
           <div class="flex gap-2">
             <button
               class="text-xs px-2 py-1 rounded transition-colors"
@@ -312,16 +268,16 @@
           </div>
         </div>
 
-        <div ref="chartContainer" class="h-64 rounded-lg" style="background-color: var(--color-card-dark)" />
+        <div ref="chartContainer" class="h-64 rounded-lg ins-4" />
       </div>
 
       <!-- 对比表格 -->
       <div v-if="scenarios.length > 0" class="mt-4">
-        <div class="text-xs mb-2" style="color: var(--color-text-muted)">{{ $t('scenario.keyMetrics') }}</div>
+        <div class="text-xs mb-2 ins-5">{{ $t('scenario.keyMetrics') }}</div>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-12">
                 <th class="text-left py-2 px-2">{{ $t('scenario.metric') }}</th>
                 <th v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.name }}
@@ -329,43 +285,43 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.ratedEnergy') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.params.ratedEnergy || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.acEfficiency') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.params.acEfficiency || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.initNetAvailable') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.initAcUsable?.[0]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.year10NetAvailable') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.totalAcUsable?.[10]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.year25NetAvailable') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.totalAcUsable?.[25]?.toFixed(2) || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-13">
                 <td class="py-2 px-2">{{ $t('scenario.cumulativeAug25') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.augAccumQty?.[25] || '-' }}
                 </td>
               </tr>
-              <tr style="color: var(--color-accent); font-weight: 500; border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-14">
                 <td class="py-2 px-2">{{ $t('scenario.meetsRequirement') }}</td>
                 <td v-for="(scenario, idx) in scenarios" :key="idx" class="text-right py-2 px-2">
                   {{ scenario.results?.meetsReq?.[25] ? '✓' : '✗' }}
@@ -586,19 +542,32 @@ function updateChart() {
           })
         }
       })
-    } else if (showChart.value === 'energy') {
-      scenarios.value.forEach((scenario, idx) => {
-        if (scenario.results?.totalAcUsable) {
-          series.push({
-            name: scenario.name,
-            type: 'line',
-            smooth: true,
-            data: scenario.results.totalAcUsable,
-            connectNulls: true
-          })
-        }
-      })
-    }
+	    } else if (showChart.value === 'energy') {
+	      scenarios.value.forEach((scenario, idx) => {
+	        if (scenario.results?.totalAcUsable) {
+	          series.push({
+	            name: scenario.name,
+	            type: 'line',
+	            smooth: true,
+	            data: scenario.results.totalAcUsable,
+	            connectNulls: true
+	          })
+	        }
+	      })
+	    } else if (showChart.value === 'cost') {
+	      // Cost comparison: show LCOS or NPV for each scenario
+	      scenarios.value.forEach((scenario, idx) => {
+	        const metrics = scenario.results?.metrics || {}
+	        if (metrics.lcos != null) {
+	          series.push({
+	            name: scenario.name,
+	            type: 'bar',
+	            data: [Number(metrics.lcos).toFixed(2)],
+	            label: { show: true, position: 'top', fontSize: 10 }
+	          })
+	        }
+	      })
+	    }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const colors = {
@@ -635,15 +604,15 @@ function updateChart() {
       },
       xAxis: {
         type: 'category',
-        data: years,
-        name: t('scenario.year'),
+        data: showChart.value === 'cost' ? scenarios.value.map(s => s.name) : years,
+        name: showChart.value === 'cost' ? '' : t('scenario.year'),
         nameTextStyle: { color: colors.axisLabel, fontSize: 10 },
         axisLabel: { color: colors.axisLabel, fontSize: 10 },
         axisLine: { lineStyle: { color: colors.axisLine } }
       },
       yAxis: {
         type: 'value',
-        name: showChart.value === 'soh' ? t('scenario.sohPct') : t('scenario.netAvailableMwh'),
+        name: showChart.value === 'soh' ? t('scenario.sohPct') : showChart.value === 'cost' ? t('scenario.lcos') : t('scenario.netAvailableMwh'),
         nameTextStyle: { color: colors.axisLabel, fontSize: 10 },
         axisLabel: { color: colors.axisLabel, fontSize: 10 },
         axisLine: { lineStyle: { color: colors.axisLine } },
@@ -683,6 +652,33 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
+.ins-2 { color: var(--color-accent) }
+.ins-3 { background-color: var(--color-accent) }
+.ins-4 { background-color: var(--color-card-dark) }
+.ins-5 { color: var(--color-text-muted) }
+.ins-6 { background-color: var(--color-accent); color: white }
+.ins-7 { color: var(--color-text-secondary) }
+.ins-8 { 
+                  background-color: var(--color-input-bg-dark);
+                  border: 1px solid var(--color-input-border);
+                  color: var(--color-text);
+                 }
+.ins-9 { 
+                    background-color: var(--color-card);
+                    border: 1px solid var(--color-border);
+                    color: var(--color-text-secondary);
+                   }
+.ins-10 { 
+                    background-color: var(--color-input-bg-dark);
+                    border: 1px solid var(--color-input-border);
+                    color: var(--color-text);
+                   }
+.ins-11 { background-color: var(--color-accent-secondary); color: white }
+.ins-12 { color: var(--color-text-muted); border-bottom: 1px solid var(--color-border) }
+.ins-13 { color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border) }
+.ins-14 { color: var(--color-accent); font-weight: 500; border-bottom: 1px solid var(--color-border) }
+
 .scenario-compare {
   height: 100%;
 }

@@ -1,24 +1,24 @@
 <template>
   <div class="sensitivity-analysis h-full overflow-auto p-4">
-    <div class="rounded-lg p-4" style="background-color: var(--color-card); border: 1px solid var(--color-border)">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color: var(--color-accent)">
-        <span class="w-2 h-2 rounded-full" style="background-color: var(--color-accent)" />
+    <div class="rounded-lg p-4 ins-1">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 ins-2">
+        <span class="w-2 h-2 rounded-full ins-3" />
         {{ $t('sensitivity.title') }}
       </h3>
 
       <!-- 敏感性参数设置 -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <!-- 参数选择 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.selectParam') }}</div>
+        <div class="rounded-lg p-3 ins-4">
+          <div class="text-xs mb-3 ins-5">{{ $t('sensitivity.selectParam') }}</div>
           <div class="space-y-2">
             <label
               v-for="param in sensitivityParams"
               :key="param.key"
               class="flex items-center gap-2 cursor-pointer text-xs label-text"
             >
-              <input v-model="param.enabled" type="checkbox" style="accent-color: var(--color-accent)" />
-              <span style="color: var(--color-text-secondary)">
+              <input v-model="param.enabled" type="checkbox" class="ins-6" />
+              <span class="ins-7">
                 {{ $t('sensitivity.paramLabel', { label: param.label }) }}
               </span>
             </label>
@@ -26,12 +26,12 @@
         </div>
 
         <!-- 参数范围设置 -->
-        <div class="col-span-3 rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.range') }}</div>
+        <div class="col-span-3 rounded-lg p-3 ins-4">
+          <div class="text-xs mb-3 ins-5">{{ $t('sensitivity.range') }}</div>
 
           <div class="grid grid-cols-3 gap-3">
             <div v-for="param in enabledParams" :key="param.key">
-              <div class="text-xs mb-1" style="color: var(--color-text-secondary)">
+              <div class="text-xs mb-1 ins-7">
                 {{ $t('sensitivity.paramLabel', { label: param.label }) }}
               </div>
               <div class="flex items-center gap-1">
@@ -41,7 +41,7 @@
                   step="0.01"
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
-                <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('sensitivity.to') }}</span>
+                <span class="text-xs ins-5">{{ $t('sensitivity.to') }}</span>
                 <input
                   v-model.number="param.max"
                   type="number"
@@ -49,14 +49,14 @@
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
               </div>
-              <div class="text-[10px] mt-1" style="color: var(--color-text-muted)">
+              <div class="text-[10px] mt-1 ins-5">
                 {{ $t('sensitivity.currentValue') }}: {{ param.current }}
               </div>
             </div>
           </div>
 
           <div class="mt-3 flex items-center gap-2">
-            <span class="text-xs" style="color: var(--color-text-muted)">{{ $t('sensitivity.stepsLabel') }}</span>
+            <span class="text-xs ins-5">{{ $t('sensitivity.stepsLabel') }}</span>
             <input
               v-model.number="steps"
               type="number"
@@ -64,7 +64,7 @@
               max="10"
               class="w-16 rounded text-xs px-2 py-1 form-field-input"
             />
-            <span class="text-xs" style="color: var(--color-text-muted)">({{ $t('sensitivity.stepsRange') }})</span>
+            <span class="text-xs ins-5">({{ $t('sensitivity.stepsRange') }})</span>
             <button
               :disabled="analyzing || enabledParams.length === 0"
               class="ml-auto text-xs px-4 py-1.5 rounded transition-colors"
@@ -84,25 +84,25 @@
       <!-- 分析结果 -->
       <div v-if="analysisResults.length > 0" class="grid grid-cols-2 gap-4">
         <!-- 龙卷风图 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.tornadoRank') }}</div>
+        <div class="rounded-lg p-3 ins-4">
+          <div class="text-xs mb-3 ins-5">{{ $t('sensitivity.tornadoRank') }}</div>
           <div ref="tornadoChart" class="h-64" />
         </div>
 
         <!-- 蜘蛛图 -->
-        <div class="rounded-lg p-3" style="background-color: var(--color-card-dark)">
-          <div class="text-xs mb-3" style="color: var(--color-text-muted)">{{ $t('sensitivity.spiderChart') }}</div>
+        <div class="rounded-lg p-3 ins-4">
+          <div class="text-xs mb-3 ins-5">{{ $t('sensitivity.spiderChart') }}</div>
           <div ref="spiderChart" class="h-64" />
         </div>
       </div>
 
       <!-- 详细数据表 -->
       <div v-if="analysisResults.length > 0" class="mt-4">
-        <div class="text-xs mb-2" style="color: var(--color-text-muted)">{{ $t('sensitivity.detailData') }}</div>
+        <div class="text-xs mb-2 ins-5">{{ $t('sensitivity.detailData') }}</div>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
-              <tr style="color: var(--color-text-muted); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-8">
                 <th class="text-left py-2 px-2">{{ $t('sensitivity.parameter') }}</th>
                 <th v-for="(result, idx) in analysisResults" :key="idx" class="text-right py-2 px-2">
                   {{ result.param }} ({{ (result.minValue * 100).toFixed(0) }}%~{{
@@ -112,7 +112,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-9">
                 <td class="py-2 px-2">{{ $t('sensitivity.npvChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -123,7 +123,7 @@
                   {{ result.npvImpact > 0 ? '+' : '' }}{{ result.npvImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-9">
                 <td class="py-2 px-2">{{ $t('sensitivity.irrChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -134,7 +134,7 @@
                   {{ result.irrImpact > 0 ? '+' : '' }}{{ result.irrImpact.toFixed(2) }}%
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-9">
                 <td class="py-2 px-2">{{ $t('sensitivity.paybackChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -148,7 +148,7 @@
                   }}{{ $t('sensitivity.yearUnit') }}
                 </td>
               </tr>
-              <tr style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border)">
+              <tr class="ins-9">
                 <td class="py-2 px-2">{{ $t('sensitivity.lcosChange') }}</td>
                 <td
                   v-for="(result, idx) in analysisResults"
@@ -165,11 +165,11 @@
       </div>
 
       <!-- 财务指标敏感性说明 -->
-      <div class="mt-4 p-3 rounded-lg" style="background-color: var(--color-card-dark)">
-        <div class="font-medium mb-2" style="color: var(--color-text-secondary)">
+      <div class="mt-4 p-3 rounded-lg ins-4">
+        <div class="font-medium mb-2 ins-7">
           {{ $t('sensitivity.explanationTitle') }}
         </div>
-        <ul class="list-disc list-inside space-y-1 text-xs" style="color: var(--color-text-muted)">
+        <ul class="list-disc list-inside space-y-1 text-xs ins-5">
           <li>{{ $t('sensitivity.explanationNpv') }}</li>
           <li>{{ $t('sensitivity.explanationIrr') }}</li>
           <li>{{ $t('sensitivity.explanationPayback') }}</li>
@@ -426,6 +426,16 @@ async function analyzeSingleParam(param) {
 </script>
 
 <style scoped>
+.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
+.ins-2 { color: var(--color-accent) }
+.ins-3 { background-color: var(--color-accent) }
+.ins-4 { background-color: var(--color-card-dark) }
+.ins-5 { color: var(--color-text-muted) }
+.ins-6 { accent-color: var(--color-accent) }
+.ins-7 { color: var(--color-text-secondary) }
+.ins-8 { color: var(--color-text-muted); border-bottom: 1px solid var(--color-border) }
+.ins-9 { color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border) }
+
 .sensitivity-analysis {
   height: 100%;
 }

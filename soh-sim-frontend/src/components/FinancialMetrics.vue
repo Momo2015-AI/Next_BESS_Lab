@@ -10,13 +10,13 @@
         borderTop: '3px solid ' + (metrics[idx]?.borderColor || m.textColor || 'var(--color-accent)')
       }"
     >
-      <div class="text-[9px] uppercase tracking-wider truncate" style="color: var(--color-text-muted)">
+      <div class="text-[9px] uppercase tracking-wider truncate ins-1">
         {{ m.label }}
       </div>
       <div class="text-base md:text-lg font-bold font-mono mt-1" :style="{ color: m.textColor }">
         {{ m.value }}
       </div>
-      <div class="text-[8px] mt-0.5" style="color: var(--color-text-muted)">
+      <div class="text-[8px] mt-0.5 ins-1">
         {{ m.unit }}
       </div>
     </div>
@@ -28,3 +28,7 @@ defineProps({
   metrics: { type: Array, required: true }
 })
 </script>
+
+<style scoped>
+.ins-1 { color: var(--color-text-muted) }
+</style>

@@ -244,8 +244,9 @@ export default {
     seismicZone: 'Seismic Zone',
     seismicZones: {
       low: 'Zone I (Low)',
-      mid: 'Zone III (Medium)',
-      high: 'Zone IV (High)'
+      mid: 'Zone II (Moderate)',
+      high: 'Zone III (Medium)',
+      extreme: 'Zone IV (High)'
     },
     corrosionLevel: 'Corrosion Level',
     corrosionLevels: {
@@ -1617,6 +1618,32 @@ export default {
     calcComplete: 'PCS config calculation complete',
     configReset: 'Config reset',
     configApplied: 'PCS config applied'
+  },
+  pcsAC: {
+    title: 'PCS AC Design',
+    pcsPowerSelection: 'PCS Power Selection',
+    pcsModel: 'PCS Model',
+    selectPcs: 'Select PCS',
+    dcVoltageRange: 'DC Voltage Range',
+    maxDcCurrent: 'Max DC Current',
+    acRatedPower: 'AC Rated Power',
+    acRatedCurrent: 'AC Rated Current',
+    pcsQtyConfig: 'PCS Quantity Config',
+    calcMode: 'Calc Mode',
+    calcModeRatio: 'By Power Ratio',
+    calcModeFixed: 'Fixed Qty',
+    calcModeEnergy: 'By Energy',
+    pcsQty: 'PCS Qty',
+    parallelCount: 'Parallel Count',
+    totalPcsPower: 'Total PCS Power',
+    powerRatio: 'Power Ratio',
+    transformerAndGrid: 'Transformer & Grid',
+    transformerType: 'Transformer Type',
+    transformer2w: '2-Winding',
+    transformer3w: '3-Winding',
+    transformerIntegrated: 'Integrated',
+    transformerCapacity: 'Transformer Capacity',
+    transformerQty: 'Transformer Qty',
   },
   epcArch: {
     title: 'System Architecture Design',

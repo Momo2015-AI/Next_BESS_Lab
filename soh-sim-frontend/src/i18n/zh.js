@@ -243,8 +243,9 @@ export default {
     seismicZone: '地震等级',
     seismicZones: {
       low: 'Zone I (低)',
-      mid: 'Zone III (中)',
-      high: 'Zone IV (高)'
+      mid: 'Zone II (中低)',
+      high: 'Zone III (中)',
+      extreme: 'Zone IV (高)'
     },
     corrosionLevel: '防腐等级',
     corrosionLevels: {
@@ -1259,9 +1260,35 @@ export default {
     checkConfig: '请检查PCS配置',
     calcComplete: 'PCS配置计算完成',
     configReset: '配置已重置',
-    configApplied: 'PCS配置已应用'
-  },
-  epcArch: {
+	    configApplied: 'PCS配置已应用'
+	  },
+	  pcsAC: {
+	    title: 'PCS交流侧设计',
+	    pcsPowerSelection: 'PCS功率选型',
+	    pcsModel: 'PCS型号',
+	    selectPcs: '请选择PCS',
+	    dcVoltageRange: '直流电压范围',
+	    maxDcCurrent: '最大直流电流',
+	    acRatedPower: '交流额定功率',
+	    acRatedCurrent: '交流额定电流',
+	    pcsQtyConfig: 'PCS数量配置',
+	    calcMode: '计算方式',
+	    calcModeRatio: '按功率配比',
+	    calcModeFixed: '固定数量',
+	    calcModeEnergy: '按能量计算',
+	    pcsQty: 'PCS数量',
+	    parallelCount: '并联数量',
+	    totalPcsPower: 'PCS总功率',
+	    powerRatio: '功率配比',
+	    transformerAndGrid: '变压器与并网',
+	    transformerType: '变压器类型',
+	    transformer2w: '双绕组',
+	    transformer3w: '三绕组',
+	    transformerIntegrated: '一体化',
+	    transformerCapacity: '变压器容量',
+	    transformerQty: '变压器数量',
+	  },
+	  epcArch: {
     title: '系统架构设计',
     systemPower: '系统功率 (MW)',
     systemEnergy: '系统能量 (MWh)',
