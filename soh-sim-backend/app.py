@@ -12,7 +12,7 @@ from flask_cors import CORS
 from database import Project, Survey, db, init_db
 from routes.ai_sim import ai_sim_bp, seed_manufacturers
 from routes.algorithm import algorithm_bp, seed_algorithms
-from routes.auth import auth_bp, limiter
+from routes.auth import auth_bp, hash_password, limiter
 from routes.aux_power import aux_power_bp
 from routes.boq import boq_bp
 from routes.degradation import degradation_bp
@@ -136,7 +136,52 @@ def internal_error(e):
 # ==================== 种子数据 ====================
 
 
+def seed_users():
+    """初始化默认用户（管理员 + 演示工程师），仅当数据库中无用户时执行"""
+    from database import User
+
+    if User.query.first() is not None:
+        return  # 已有用户，跳过种子
+
+    import uuid as _uuid
+
+    default_users = [
+        {
+            "id": "admin-000000000000000000000001",
+            "username": "admin",
+            "email": "admin@soh-sim.com",
+            "password": "admin123",
+            "role": "admin",
+        },
+        {
+            "id": "eng-000000000000000000000001",
+            "username": "engineer",
+            "email": "engineer@soh-sim.com",
+            "password": "engineer123",
+            "role": "solution_engineer",
+        },
+    ]
+
+    for u in default_users:
+        user = User(
+            id=u["id"],
+            tenant_id="00000000-0000-0000-0000-000000000001",
+            username=u["username"],
+            email=u["email"],
+            password_hash=hash_password(u["password"]),
+            role=u["role"],
+            is_active=True,
+        )
+        db.session.add(user)
+
+    db.session.commit()
+    import logging
+
+    logging.info("种子用户已创建: admin/admin123, engineer/engineer123")
+
+
 with app.app_context():
+    seed_users()
     seed_manufacturers()
     seed_products()
 
