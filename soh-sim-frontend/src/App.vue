@@ -100,7 +100,8 @@ function syncSidebarWidth() {
     // 获取 .brand 元素的渲染宽度（即 LOGO 实际宽度）
     const rect = brandRef.value.getBoundingClientRect()
     if (rect.width > 0) {
-      logoWidth.value = Math.ceil(rect.width)
+      // 使用 rect.right（视口坐标）补偿 header-left padding，使分栏竖线对准 Logo "B" 右边缘
+      logoWidth.value = Math.ceil(rect.right)
       document.documentElement.style.setProperty('--sidebar-width', logoWidth.value + 'px')
     }
   }
