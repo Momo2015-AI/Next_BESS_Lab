@@ -19,8 +19,8 @@
         <h4 class="dts-card-name">{{ tmpl.name }}</h4>
         <p class="dts-card-desc">{{ tmpl.description }}</p>
         <div v-if="tmpl.containerModel || tmpl.pcsModel" class="dts-card-products">
-          <span v-if="tmpl.containerModel" class="dts-product-tag">📦 {{ tmpl.containerModel }}</span>
-          <span v-if="tmpl.pcsModel" class="dts-product-tag">⚡ {{ tmpl.pcsModel }}</span>
+          <span v-if="tmpl.containerModel" class="dts-product-tag"><AppIcon name="briefcase" size="12" /> {{ tmpl.containerModel }}</span>
+          <span v-if="tmpl.pcsModel" class="dts-product-tag"><AppIcon name="lightning" size="12" /> {{ tmpl.pcsModel }}</span>
         </div>
       </div>
     </div>
@@ -45,6 +45,7 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import api from '../services/api.js'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 const store = useBessStore()

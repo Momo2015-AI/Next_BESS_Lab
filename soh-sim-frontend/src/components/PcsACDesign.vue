@@ -292,7 +292,7 @@
         class="rounded-lg p-4 mb-4 ins-4"
        
       >
-        <h4 class="text-xs mb-3 font-medium ins-7">⚡ {{ $t('acDesign.configRules') }}</h4>
+        <h4 class="text-xs mb-3 font-medium ins-7"><AppIcon name="lightning" size="12" /> {{ $t('acDesign.configRules') }}</h4>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="rounded p-3 ins-8">
@@ -424,6 +424,7 @@ import { ref, reactive, watch, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 

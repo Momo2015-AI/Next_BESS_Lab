@@ -621,7 +621,7 @@
         @click="showAlgorithmPanel = !showAlgorithmPanel"
       >
         <div class="flex items-center gap-2">
-          <span class="text-white text-xs font-medium">⚙️ 算法模型管理</span>
+          <span class="text-white text-xs font-medium"><AppIcon name="settings" size="12" color="#fff" /> 算法模型管理</span>
           <span class="text-white/70 text-[10px]">(点击展开/收起)</span>
         </div>
         <span
@@ -646,6 +646,7 @@
 import { ref } from 'vue'
 import AlgorithmLab from '../views/AlgorithmLab.vue'
 import { useAuxPower } from '../composables/useAuxPower.js'
+import AppIcon from './AppIcon.vue'
 
 defineProps({ params: Object })
 defineEmits(['update'])

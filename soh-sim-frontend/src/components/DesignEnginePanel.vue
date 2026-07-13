@@ -3,7 +3,7 @@
     <!-- 输入区域 -->
     <div class="panel-section">
       <h3 class="section-title">
-        <span class="icon">⚙️</span> {{ $t('design.surveyInput') }}
+        <AppIcon name="settings" size="16" /> {{ $t('design.surveyInput') }}
       </h3>
       <div class="form-grid">
         <div class="form-group">
@@ -248,6 +248,7 @@
 import { ref, reactive } from 'vue'
 import { post } from '../services/api.js'
 import { useBessStore } from '../stores/bess.js'
+import AppIcon from './AppIcon.vue'
 
 const store = useBessStore()
 const emit = defineEmits(['select', 'workflow-complete'])

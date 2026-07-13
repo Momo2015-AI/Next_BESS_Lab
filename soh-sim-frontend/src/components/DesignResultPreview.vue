@@ -28,7 +28,7 @@
               <span class="drp-topo-qty">× {{ sol.containerQty }}</span>
             </div>
             <div class="drp-topo-item">
-              <span class="drp-topo-icon">⚡</span>
+              <AppIcon name="lightning" size="14" class="drp-topo-icon" />
               <span class="drp-topo-label">{{ sol.pcs?.model || '-' }}</span>
               <span class="drp-topo-qty">× {{ sol.pcsQty }}</span>
             </div>
@@ -126,6 +126,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
