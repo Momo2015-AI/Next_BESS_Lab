@@ -1,16 +1,14 @@
 /**
- * EPC 模块共享样式
+ * SOH-SIM 共享样式
  *
- * 从 EpcPage.vue 抽取的通用样式（约 330 行）。
- * 所有 EPC 子组件通过 :global 或在父组件 EpcPage.vue 中 import 后生效。
+ * 所有 Vue 组件通过 :global 或父组件 import 后生效。
  * 类名 kebab-case，使用 CSS 变量，无内联 style。
+ * 按功能区划分，统一维护。
  */
 
-/* ---------- 页面布局 ---------- */
-.epc-page {
-  padding: 24px;
-}
-
+/* ============================================
+   1. 页面布局 & EPC 面板
+   ============================================ */
 .epc-header {
   margin-bottom: 24px;
 }
@@ -23,6 +21,11 @@
   color: var(--text-secondary, var(--color-text-secondary));
   font-size: 14px;
   margin: 0;
+}
+
+/* EPC 面板（v-show 容器） */
+.epc-panel {
+  /* 占位，便于子组件继承布局 */
 }
 
 /* ---------- Tab 导航 ---------- */
@@ -78,45 +81,9 @@
   margin-left: 2px;
 }
 
-/* Priority badges - semantic status colors */
-.pri-P0-1 {
-  background: var(--color-success);
-  color: white;
-}
-.pri-P0-2 {
-  background: var(--color-accent-glow);
-  color: var(--color-accent);
-}
-.pri-P0-3 {
-  background: var(--color-accent-dark);
-  color: var(--color-accent);
-}
-.pri-P0-4 {
-  background: var(--color-warning-glow, rgba(245, 158, 11, 0.15));
-  color: var(--color-warning);
-}
-.pri-P0-5 {
-  background: var(--color-info-glow, rgba(139, 92, 246, 0.15));
-  color: var(--color-info);
-}
-.pri-P1-1 {
-  background: var(--color-tab-hover);
-  color: var(--color-text-secondary);
-}
-.pri-P1-2 {
-  background: var(--color-card-dark);
-  color: var(--color-text-secondary);
-}
-.pri-P1-3 {
-  background: var(--color-step-bg);
-  color: var(--color-text-secondary);
-}
-.pri-P1-4 {
-  background: var(--color-bg);
-  color: var(--color-text-secondary);
-}
-
-/* ---------- 面板卡片 ---------- */
+/* ============================================
+   2. 面板卡片
+   ============================================ */
 .panel-card {
   background: var(--section-card-bg);
   border-radius: var(--section-card-radius);
@@ -139,14 +106,35 @@
   font-size: 14px;
 }
 
-/* ---------- 表单输入 ---------- */
+/* ============================================
+   3. 表单输入
+   ============================================ */
 .field-label {
   color: var(--form-label-color);
   font-size: var(--form-label-size);
   font-weight: var(--form-label-weight);
 }
 
-/* ---------- 指标卡片 ---------- */
+.form-field-input,
+.form-field-select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.form-field-input:focus-visible,
+.form-field-select:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* ============================================
+   4. 指标卡片
+   ============================================ */
 .metric-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
@@ -167,6 +155,7 @@
   margin-top: 2px;
 }
 
+/* 语义色文字 */
 .primary-text {
   color: var(--color-accent) !important;
 }
@@ -180,7 +169,9 @@
   color: var(--color-warning) !important;
 }
 
-/* ---------- 分期卡片 ---------- */
+/* ============================================
+   5. 分期卡片 / 横幅
+   ============================================ */
 .stage-card {
   background: var(--color-accent-glow);
   border-radius: 8px;
@@ -188,7 +179,6 @@
   border: 1px solid var(--color-accent-dark);
 }
 
-/* ---------- 横幅 ---------- */
 .pass-banner {
   background: var(--color-success-glow, rgba(16, 185, 129, 0.15));
   border-radius: 8px;
@@ -204,7 +194,9 @@
   font-weight: 700;
 }
 
-/* ---------- 数据表格 ---------- */
+/* ============================================
+   6. 数据表格
+   ============================================ */
 .data-table {
   border-collapse: collapse;
 }
@@ -244,7 +236,9 @@
   color: var(--color-text-secondary);
 }
 
-/* ---------- 降额曲线 ---------- */
+/* ============================================
+   7. 降额曲线
+   ============================================ */
 .derating-chart {
   background: var(--color-card);
   border-radius: 8px;
@@ -257,7 +251,6 @@
   transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* derating bar 颜色通过 class 控制，避免内联 style */
 .derating-bar.bar-success {
   background-color: var(--color-success);
 }
@@ -268,7 +261,9 @@
   background-color: var(--color-danger);
 }
 
-/* ---------- 信息盒子 ---------- */
+/* ============================================
+   8. 信息盒子 / 保护项 / 章节
+   ============================================ */
 .info-box {
   background: var(--color-card);
   border-radius: 8px;
@@ -280,7 +275,6 @@
   color: var(--color-text-secondary);
 }
 
-/* ---------- 保护项 ---------- */
 .protection-item {
   background: var(--color-card);
   border-radius: 6px;
@@ -289,7 +283,6 @@
   font-size: 12px;
 }
 
-/* ---------- 章节 / 小节 ---------- */
 .chapter-title {
   background: var(--color-bg-secondary);
   color: var(--color-accent);
@@ -308,7 +301,9 @@
   margin-bottom: 8px;
 }
 
-/* ---------- 图表按钮 ---------- */
+/* ============================================
+   9. 图表按钮 & 容器
+   ============================================ */
 .chart-btn {
   padding: 6px 12px;
   border-radius: 6px;
@@ -335,7 +330,6 @@
   cursor: not-allowed;
 }
 
-/* ---------- 图表容器 ---------- */
 .chart-container {
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -343,19 +337,19 @@
   min-height: 300px;
 }
 
-/* ---------- 错误盒子 ---------- */
+/* ============================================
+   10. 错误 / 空状态 / 边框工具
+   ============================================ */
 .error-box {
   background: rgba(239, 68, 68, 0.1);
   color: var(--color-danger);
   border-radius: 6px;
 }
 
-/* ---------- 空状态 ---------- */
 .empty-state {
   color: var(--color-text-muted);
 }
 
-/* ---------- 边框 ---------- */
 .border-top {
   border-top: 1px solid var(--color-border);
 }
@@ -364,7 +358,9 @@
   margin-top: 16px;
 }
 
-/* ---------- 工具类 ---------- */
+/* ============================================
+   11. 文本工具类
+   ============================================ */
 .tx-muted {
   color: var(--color-text-muted);
 }
@@ -375,25 +371,9 @@
   max-width: 300px;
 }
 
-/* ---------- 表单输入框统一样式（原 EpcPage 未定义，补齐共享） ---------- */
-.form-field-input,
-.form-field-select {
-  width: 100%;
-  padding: 6px 8px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-card);
-  color: var(--color-text);
-  font-size: 13px;
-}
-
-.form-field-input:focus-visible,
-.form-field-select:focus-visible {
-  outline: none;
-  border-color: var(--color-accent);
-}
-
-/* ---------- 主按钮（共享） ---------- */
+/* ============================================
+   12. 主按钮
+   ============================================ */
 .btn-primary {
   padding: 8px 16px;
   border-radius: 6px;
@@ -415,154 +395,59 @@
   cursor: not-allowed;
 }
 
-/* ---------- EPC 面板（v-show 容器） ---------- */
-.epc-panel {
-  /* 占位，便于子组件继承布局 */
-}
-/* ==== INLINE-STYLE UTILITY CLASSES ==== */
-/* INLINE-STYLE UTILITY CLASSES (auto-generated) */
-.accent-accent-2 {
-  accent-color: var(--color-accent-secondary);
-}
-.bg-accent {
-  background-color: var(--color-accent);
-}
-.bg-accent text-white {
-  background-color: var(--color-accent);
-  color: white;
-}
-.bg-accent-2 {
-  background-color: var(--color-accent-secondary);
-}
-.bg-accent-2 text-white {
-  background-color: var(--color-accent-secondary);
-  color: white;
-}
-.bg-accent-glow text-accent {
-  background: var(--color-accent-glow);
-  color: var(--color-accent);
-}
-.bg-card-dark {
-  background-color: var(--color-card-dark);
-}
-.bg-card-dark border-card {
-  background-color: var(--color-card-dark);
-  border: 1px solid var(--color-border);
-}
-.bg-card-dark border-card {
-  background: var(--color-card-dark);
-  border: 1px solid var(--color-border);
-}
-.bg-danger {
-  background-color: var(--color-danger);
-}
-.bg-input {
-  background: var(--color-input-bg);
-}
-.bg-input {
-  background-color: var(--color-input-bg);
-}
-.bg-input-dark {
-  background-color: var(--color-input-bg-dark);
-}
-.bg-input-dark text-default {
-  background-color: var(--color-input-bg-dark);
-  color: var(--color-text);
-}
-.bg-secondary border-card {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-}
-.bg-success {
-  background-color: var(--color-success);
-}
-.bg-warning {
-  background-color: var(--color-warning);
-}
-.border-b {
-  border-bottom: 1px solid var(--color-border);
-}
-.border-collapse {
-  border-collapse: collapse;
-}
-.border-default {
-  border-color: var(--color-border);
-}
-.border-t-eee mt-6 pt-6 {
-  border-top: 1px solid #eee;
-  margin-top: 6px;
-  padding-top: 6px;
-}
+/* ============================================
+   13. 内联样式替代 — 简单工具类
+   （高使用频率，保留为轻量原子类）
+   ============================================ */
+
+/* 背景色 */
+.bg-accent       { background-color: var(--color-accent); }
+.bg-accent-2     { background-color: var(--color-accent-secondary); }
+.bg-accent-glow  { background: var(--color-accent-glow); }
+.bg-card-dark    { background-color: var(--color-card-dark); }
+.bg-danger       { background-color: var(--color-danger); }
+.bg-success      { background-color: var(--color-success); }
+.bg-warning      { background-color: var(--color-warning); }
+.bg-input        { background: var(--color-input-bg); }
+.bg-input-dark   { background-color: var(--color-input-bg-dark); }
+.bg-secondary    { background: var(--color-bg-secondary); }
+
+/* 文字色 */
+.text-accent      { color: var(--color-accent); }
+.text-accent-2    { color: var(--color-accent-secondary); }
+.text-danger      { color: var(--color-danger); }
+.text-default     { color: var(--color-text); }
+.text-muted       { color: var(--color-text-muted); }
+.text-secondary   { color: var(--color-text-secondary); }
+.text-success     { color: var(--color-success); }
+.text-warning     { color: var(--color-warning); }
+
+/* 边框 */
+.border-b        { border-bottom: 1px solid var(--color-border); }
+.border-collapse { border-collapse: collapse; }
+.border-default  { border-color: var(--color-border); }
+
+/* 卡片 */
 .card-bordered {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
 }
-.font-bold mb-8 {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-.font-bold text-default {
-  font-weight: bold;
-  color: var(--color-text);
-}
-.h-280 {
-  height: 280px;
-}
-.min-h-300 card-bordered {
-  min-height: 300px;
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-}
-.opacity-50 not-allowed {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.text-accent {
-  color: var(--color-accent);
-}
-.text-accent border-accent {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-.text-accent-2 {
-  color: var(--color-accent-secondary);
-}
-.text-danger {
-  color: var(--color-danger);
-}
-.text-default {
-  color: var(--color-text);
-}
-.text-muted {
-  color: var(--color-text-muted);
-}
-.text-muted border-b {
-  color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
-}
-.text-muted w-72 {
-  color: var(--color-text-muted);
-  width: 72px;
-}
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-.text-secondary border-b {
-  color: var(--color-text-secondary);
-  border-bottom: 1px solid var(--color-border);
-}
-.text-success {
-  color: var(--color-success);
-}
-.text-warning {
-  color: var(--color-warning);
-}
-.u-accent-color-var-color-accent {
-  accent-color: var(--color-accent);
-}
-.u-accent-color-var-color-success {
-  accent-color: var(--color-success);
-}
+
+/* 字体/尺寸 */
+.font-bold  { font-weight: bold; }
+.min-h-300  { min-height: 300px; }
+.opacity-50 { opacity: 0.5; }
+.accent-accent-2 { accent-color: var(--color-accent-secondary); }
+.w-50 { width: 50px; }
+
+/* ============================================
+   14. u-* 自动生成工具类（Round 1）
+   注意：这些类由工具自动生成，保留以兼容现有组件。
+   后续 P1-4/P1-6 中逐步迁移到语义化类名。
+   ============================================ */
+.u-accent-color-var-color-accent { accent-color: var(--color-accent); }
+.u-accent-color-var-color-success { accent-color: var(--color-success); }
+
 .u-background-color-rgba-139-92-246-0-2-color-var-color-accent {
   background-color: rgba(139, 92, 246, 0.2);
   color: var(--color-accent);
@@ -587,6 +472,7 @@
   background-color: rgba(59, 130, 246, 0.2);
   color: var(--color-accent-secondary);
 }
+
 .u-background-color-var-color-accent-glow-border-1px-solid-var-color-accent-dark {
   background-color: var(--color-accent-glow);
   border: 1px solid var(--color-accent-dark);
@@ -612,12 +498,9 @@
   background-color: var(--color-warning);
   color: white;
 }
-.u-background-rgba-0-0-0-0-5 {
-  background: rgba(0, 0, 0, 0.5);
-}
-.u-background-rgba-16-185-129-0-08 {
-  background: rgba(16, 185, 129, 0.08);
-}
+
+.u-background-rgba-0-0-0-0-5 { background: rgba(0, 0, 0, 0.5); }
+.u-background-rgba-16-185-129-0-08 { background: rgba(16, 185, 129, 0.08); }
 .u-background-rgba-16-185-129-0-15-color-var-color-success {
   background: rgba(16, 185, 129, 0.15);
   color: var(--color-success);
@@ -630,9 +513,8 @@
   background: rgba(245, 158, 11, 0.15);
   color: var(--color-warning);
 }
-.u-background-rgba-64-158-255-0-08 {
-  background: rgba(64, 158, 255, 0.08);
-}
+.u-background-rgba-64-158-255-0-08 { background: rgba(64, 158, 255, 0.08); }
+
 .u-background-var-color-accent-color-white {
   background: var(--color-accent);
   color: white;
@@ -678,6 +560,7 @@
   background: var(--color-warning);
   color: white;
 }
+
 .u-border-1px-solid-var-color-border {
   border: 1px solid var(--color-border);
 }
@@ -718,6 +601,7 @@
 .u-border-top-1px-solid-var-color-border {
   border-top: 1px solid var(--color-border);
 }
+
 .u-color-var-color-accent-border-left-4px-solid-var-color-accent-padding-left-8px {
   color: var(--color-accent);
   border-left: 4px solid var(--color-accent);
@@ -743,12 +627,8 @@
   color: var(--color-danger);
   border-color: var(--color-danger);
 }
-.u-color-var-color-info {
-  color: var(--color-info);
-}
-.u-color-var-color-muted {
-  color: var(--color-muted);
-}
+.u-color-var-color-info { color: var(--color-info); }
+.u-color-var-color-muted { color: var(--color-muted); }
 .u-color-var-color-success-font-size-11px {
   color: var(--color-success);
   font-size: 11px;
@@ -781,55 +661,30 @@
   color: var(--color-warning);
   font-weight: bold;
 }
-.u-display-block-margin-bottom-4px {
-  display: block;
-  margin-bottom: 4px;
-}
-.u-display-none {
-  display: none;
-}
-.u-font-weight-bold {
-  font-weight: bold;
-}
-.u-font-weight-bold {
-  font-weight: bold;
-}
+
+.u-display-block-margin-bottom-4px { display: block; margin-bottom: 4px; }
+.u-display-none { display: none; }
+
+.u-font-weight-bold { font-weight: bold; }
 .u-font-weight-bold-color-var-color-accent {
   font-weight: bold;
   color: var(--color-accent);
 }
-.u-max-height-160px {
-  max-height: 160px;
-}
-.u-max-height-180px {
-  max-height: 180px;
-}
-.u-min-height-0 {
-  min-height: 0;
-}
-.u-width-40px {
-  width: 40px;
-}
-.u-width-45px {
-  width: 45px;
-}
-.u-width-48px {
-  width: 48px;
-}
-.u-width-60px {
-  width: 60px;
-}
-.u-width-70px {
-  width: 70px;
-}
-.u-width-80px {
-  width: 80px;
-}
-.w-50 {
-  width: 50px;
-}
-/* ==== INLINE-STYLE UTILITY CLASSES R2 ==== */
-/* INLINE-STYLE UTILITY CLASSES (auto-generated, round 2) */
+
+.u-max-height-160px { max-height: 160px; }
+.u-max-height-180px { max-height: 180px; }
+.u-min-height-0 { min-height: 0; }
+
+.u-width-40px { width: 40px; }
+.u-width-45px { width: 45px; }
+.u-width-48px { width: 48px; }
+.u-width-60px { width: 60px; }
+.u-width-70px { width: 70px; }
+.u-width-80px { width: 80px; }
+
+/* ============================================
+   15. u-* 自动生成工具类（Round 2）
+   ============================================ */
 .u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-accent {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
@@ -934,16 +789,18 @@
   border: 1px solid var(--color-input-border);
 }
 
-/* ===== 语义化输入控件类（手写，替代机器生成的长类名） ===== */
+/* ============================================
+   16. 语义化状态/组件类（手写，替代内联 style 三元表达式）
+   ============================================ */
+
+/* 输入控件 */
 .input-dark {
   background-color: var(--color-input-bg-dark);
   border: 1px solid var(--color-input-border);
   color: var(--color-text);
 }
 
-/* ===== 语义化状态类（替代内联 style 三元表达式） ===== */
-
-/* 选中/激活边框 */
+/* 边框语义色 */
 .border-accent {
   border-color: var(--color-accent);
 }
@@ -954,7 +811,7 @@
   border-color: var(--color-warning);
 }
 
-/* 选中卡片（用于 ProductConfig / ScenarioCompare 等选择列表） */
+/* 选中卡片 */
 .card-selected {
   border-color: var(--color-accent);
   background-color: var(--color-accent-glow);
@@ -977,9 +834,6 @@
   background-color: var(--color-step-active);
   border: 1px solid var(--color-accent);
 }
-.step-inactive {
-  /* 默认空状态 */
-}
 .step-num-active {
   background-color: var(--color-accent);
   color: white;
@@ -998,28 +852,14 @@
   background-color: var(--color-card-dark);
   border-color: var(--color-border);
 }
-.algo-dot-selected {
-  background-color: var(--color-accent);
-}
-.algo-dot-default {
-  background-color: var(--color-text-muted);
-}
-.algo-name-selected {
-  color: var(--color-accent);
-}
-.algo-name-default {
-  color: var(--color-text);
-}
+.algo-dot-selected { background-color: var(--color-accent); }
+.algo-dot-default { background-color: var(--color-text-muted); }
+.algo-name-selected { color: var(--color-accent); }
+.algo-name-default { color: var(--color-text); }
 
 /* Toast */
-.toast-success {
-  background-color: var(--color-success);
-  color: white;
-}
-.toast-error {
-  background-color: var(--color-danger);
-  color: white;
-}
+.toast-success { background-color: var(--color-success); color: white; }
+.toast-error   { background-color: var(--color-danger);  color: white; }
 
 /* 按钮：已修改/可操作 */
 .btn-modified {
@@ -1060,7 +900,7 @@
   color: var(--color-text-secondary);
 }
 
-/* 状态标签（ProductConfig 等） */
+/* 状态标签 */
 .tag-production {
   background-color: var(--color-success-glow);
   color: var(--color-success);
@@ -1075,13 +915,9 @@
   border: 1px solid rgba(245, 158, 11, 0.5);
 }
 
-/* 状态文字颜色（动态切换用） */
-.text-result-pos {
-  color: var(--color-success);
-}
-.text-result-neg {
-  color: var(--color-danger);
-}
+/* 状态文字颜色 */
+.text-result-pos { color: var(--color-success); }
+.text-result-neg { color: var(--color-danger); }
 
 /* 上传区 hover */
 .upload-zone-hover {
@@ -1089,21 +925,13 @@
   background: var(--color-accent-glow);
 }
 
-/* 矩阵表格通过/不通过 */
-.matrix-pass {
-  color: var(--color-accent);
-}
-.matrix-fail {
-  color: var(--color-danger);
-}
+/* 矩阵表格 */
+.matrix-pass { color: var(--color-accent); }
+.matrix-fail { color: var(--color-danger); }
 
 /* 仿真结果行 */
-.sim-row-pass {
-  color: var(--color-success);
-}
-.sim-row-fail {
-  color: var(--color-danger);
-}
+.sim-row-pass { color: var(--color-success); }
+.sim-row-fail { color: var(--color-danger); }
 
 /* 渐变按钮 */
 .btn-gradient-ready {
@@ -1120,28 +948,13 @@
 }
 
 /* 背景辅助 */
-.bg-success-10 {
-  background: rgba(16, 185, 129, 0.1);
-}
-.bg-danger-10 {
-  background: rgba(239, 68, 68, 0.1);
-}
+.bg-success-10 { background: rgba(16, 185, 129, 0.1); }
+.bg-danger-10  { background: rgba(239, 68, 68, 0.1); }
 
-/* 上传区 */
-.upload-zone-hover {
-  border-color: var(--color-accent);
-  background: var(--color-accent-glow);
-}
+/* 上传区边框 */
 .border-color-var-color-input-border {
   border-color: var(--color-input-border);
 }
 
 /* 行透明度 */
-.opacity-85 {
-  opacity: 0.85;
-}
-
-/* bg-input 背景（ScenarioCompare） */
-.bg-input {
-  background: var(--color-input-bg);
-}
+.opacity-85 { opacity: 0.85; }
