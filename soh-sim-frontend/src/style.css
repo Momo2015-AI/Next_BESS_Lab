@@ -1677,6 +1677,7 @@
     cursor: pointer;
     text-decoration: none;
     margin-bottom: 2px;
+    border: 1px solid transparent;
     transition:
       background 0.4s var(--ease-precision),
       color 0.4s var(--ease-precision),
