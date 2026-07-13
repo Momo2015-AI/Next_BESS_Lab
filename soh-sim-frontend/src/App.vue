@@ -96,9 +96,14 @@ const brandRef = ref(null)
 const logoWidth = ref(260)
 let _brandObserver = null
 
+function brandEl() {
+  return brandRef.value?.$el || brandRef.value
+}
+
 function syncSidebarWidth() {
-  if (!brandRef.value) return
-  const brandRect = brandRef.value.getBoundingClientRect()
+  const el = brandEl()
+  if (!el) return
+  const brandRect = el.getBoundingClientRect()
   if (brandRect.width <= 0) return
 
   const sidebarEl = document.querySelector('.sidebar-container')
@@ -121,13 +126,16 @@ onMounted(() => {
     nextTick(syncSidebarWidth)
   }
 
-  // ResizeObserver 持续监听 Logo 宽度变化（字体切换、缩放等）
-  if (brandRef.value) {
-    _brandObserver = new ResizeObserver(() => {
-      syncSidebarWidth()
-    })
-    _brandObserver.observe(brandRef.value)
-  }
+  // ResizeObserver 持续监听 Logo 宽度变化
+  nextTick(() => {
+    const el = brandEl()
+    if (el) {
+      _brandObserver = new ResizeObserver(() => {
+        syncSidebarWidth()
+      })
+      _brandObserver.observe(el)
+    }
+  })
 })
 
 onUnmounted(() => {
