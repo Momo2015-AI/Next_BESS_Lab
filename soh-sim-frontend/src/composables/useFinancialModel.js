@@ -159,14 +159,28 @@ export function useFinancialModel(props) {
     const p = props.params || {}
     const soh = props.soh || []
     const augQty = props.augQty || []
-    const ratedEnergy = p.ratedEnergy || 5
-    const initContainerQty = p.initContainerQty || 62
-    const initPcsQty = p.initPcsQty || 1
-    const cyclesPerDay = p.cyclesPerDay || 1
-    const duration = p.duration || 2
 
-    const totalCapMWh = ratedEnergy * initContainerQty
-    const totalCapMW = totalCapMWh / (duration || 1)
+    // 独立模式 vs 项目模式：数据来源不同
+    let totalCapMWh, totalCapMW, cyclesPerDay, duration
+    const isStandalone = props.mode === 'standalone'
+
+    if (isStandalone && props.standalone) {
+      const sp = props.standalone
+      totalCapMWh = sp.totalCapMWh || 100
+      totalCapMW = sp.totalCapMW || 50
+      cyclesPerDay = sp.cyclesPerDay || 1
+      duration = totalCapMWh / (totalCapMW || 1)
+      // 独立模式：operatingDays / efficiencyLossPct 从 standalone 读取
+      if (sp.operatingDays != null) f.operatingDays = sp.operatingDays
+      if (sp.efficiencyLossPct != null) f.efficiencyLossPct = sp.efficiencyLossPct
+    } else {
+      const ratedEnergy = p.ratedEnergy || 5
+      const initContainerQty = p.initContainerQty || 62
+      cyclesPerDay = p.cyclesPerDay || 1
+      duration = p.duration || 2
+      totalCapMWh = ratedEnergy * initContainerQty
+      totalCapMW = totalCapMWh / (duration || 1)
+    }
 
     const containerCost = f.containerCostPerMWh * totalCapMWh
     const pcsCost = f.pcsCostPerMW * totalCapMW
@@ -242,7 +256,14 @@ export function useFinancialModel(props) {
 
     for (let i = 1; i <= 25; i++) {
       const idx = i
-      const cSoh = soh[idx] != null ? soh[idx] : soh.length > 0 ? soh[soh.length - 1] : 1
+      // 独立模式：用线性衰减生成SOH；项目模式：用仿真结果
+      let cSoh
+      if (isStandalone && props.standalone) {
+        const sp = props.standalone
+        cSoh = Math.max(0, (sp.sohStart || 100) - (sp.sohAnnualDecline || 2) * i) / 100
+      } else {
+        cSoh = soh[idx] != null ? soh[idx] : soh.length > 0 ? soh[soh.length - 1] : 1
+      }
       const yearEnergy = totalCapMWh * cyclesPerDay * f.operatingDays * cSoh * (1 - f.efficiencyLossPct / 100)
       const priceFactor = Math.pow(1 + f.priceEscalation / 100, i)
       const opexFactor = Math.pow(1 + f.opexEscalation / 100, i)
