@@ -24,7 +24,6 @@ from routes.export import export_bp
 from routes.financial import financial_bp
 from routes.financial_engine import fin_engine_bp
 from routes.orchestrator import orchestrator_bp
-from routes.pipeline import pipeline_bp
 from routes.simulation_engine import sim_engine_bp
 from routes.products import products_bp, seed_products
 from routes.project import project_bp
@@ -80,7 +79,6 @@ app.register_blueprint(aux_power_bp)
 app.register_blueprint(ai_sim_bp)
 register_epc_blueprints(app)
 
-app.register_blueprint(pipeline_bp)
 app.register_blueprint(financial_bp)
 app.register_blueprint(design_engine_bp)
 app.register_blueprint(sim_engine_bp)
