@@ -96,15 +96,22 @@ const brandRef = ref(null)
 const logoWidth = ref(260) // 默认 fallback
 
 function syncSidebarWidth() {
-  if (brandRef.value) {
-    // 获取 .brand 元素的渲染宽度（即 LOGO 实际宽度）
-    const rect = brandRef.value.getBoundingClientRect()
-    if (rect.width > 0) {
-      // 使用 rect.right（视口坐标）补偿 header-left padding，使分栏竖线对准 Logo "B" 右边缘
-      logoWidth.value = Math.ceil(rect.right)
-      document.documentElement.style.setProperty('--sidebar-width', logoWidth.value + 'px')
-    }
+  if (!brandRef.value) return
+  const brandRect = brandRef.value.getBoundingClientRect()
+  if (brandRect.width <= 0) return
+
+  // 关键：Sidebar width 是 CSS 宽度（相对其 containing block），
+  // 而 brandRect.right 是视口坐标。两者坐标系不同会导致偏移。
+  // 正确做法：sidebarWidth = Logo右边缘(视口) - Sidebar左边缘(视口)
+  const sidebarEl = document.querySelector('.sidebar-container')
+  if (!sidebarEl) {
+    // fallback: 假设 Sidebar 从视口 x=0 开始（无 body margin 时成立）
+    logoWidth.value = Math.ceil(brandRect.right)
+  } else {
+    const sidebarRect = sidebarEl.getBoundingClientRect()
+    logoWidth.value = Math.ceil(brandRect.right - sidebarRect.left)
   }
+  document.documentElement.style.setProperty('--sidebar-width', logoWidth.value + 'px')
 }
 
 onMounted(() => {
