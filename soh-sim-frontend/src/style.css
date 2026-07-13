@@ -1797,32 +1797,6 @@
   /* ==========================================================================
      Shared Layout Classes (merged from assets/styles/shared.css)
      ========================================================================== */
-  .phase-page,
-  .tool-page {
-    padding: 24px;
-  }
-
-  .phase-header,
-  .tool-header {
-    margin-bottom: 28px;
-  }
-
-  .phase-header h1,
-  .tool-header h1 {
-    font-size: 24px;
-    font-weight: 800;
-    margin: 0 0 8px;
-    color: var(--section-title-color);
-    letter-spacing: -0.02em;
-  }
-
-  .phase-desc,
-  .tool-header p {
-    color: var(--color-text-muted);
-    font-size: 14px;
-    margin: 0;
-  }
-
   .steps-nav {
     display: flex;
     gap: 8px;

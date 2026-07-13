@@ -1,9 +1,5 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('tools.templatesTitle') }}</h1>
-      <p>{{ $t('tools.templatesDesc') }}</p>
-    </div>
+  <AppPage :title-key="'tools.templatesTitle'" :desc-key="'tools.templatesDesc'">
 
     <div class="toolbar">
       <button class="btn-primary" @click="loadTemplates">{{ $t('tools.templatesRefresh') }}</button>
@@ -58,12 +54,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../services/api.js'
+import AppPage from '../components/AppPage.vue'
 
 const templates = ref([])
 const loading = ref(false)

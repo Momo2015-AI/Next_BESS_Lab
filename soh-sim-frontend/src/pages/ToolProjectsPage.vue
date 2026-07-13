@@ -1,9 +1,5 @@
 <template>
-  <div class="projects-page">
-    <div class="page-header">
-      <h1>{{ $t('versionManager.title') }}</h1>
-      <p>{{ $t('versionManager.desc') }}</p>
-    </div>
+  <AppPage :title-key="'versionManager.title'" :desc-key="'versionManager.desc'">
 
     <!-- 视图切换 -->
     <div class="view-tabs">
@@ -114,12 +110,13 @@
     <div v-if="view === 'compare'" class="view-content">
       <VersionCompare :compare-result="compareResult" />
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import AppPage from '../components/AppPage.vue'
 import { get, post } from '../services/api.js'
 import { useBessStore } from '../stores/bess.js'
 import VersionCompare from '../components/VersionCompare.vue'
@@ -262,28 +259,6 @@ watch(compareIds, async (ids) => {
 </script>
 
 <style scoped>
-.projects-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
-.page-header {
-  margin-bottom: 1rem;
-}
-
-.page-header h1 {
-  font-size: 1.5rem;
-  margin: 0 0 0.25rem 0;
-  color: var(--text-primary, #1a1a1a);
-}
-
-.page-header p {
-  color: var(--text-secondary, #888);
-  font-size: 0.9rem;
-  margin: 0;
-}
-
 .view-tabs {
   display: flex;
   gap: 0.5rem;

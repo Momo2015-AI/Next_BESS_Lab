@@ -1,9 +1,5 @@
 <template>
-  <div class="tool-page">
-    <div class="tool-header">
-      <h1>{{ $t('sidebar.toolSurveyViewTitle') }}</h1>
-      <p>{{ $t('sidebar.toolSurveyViewDesc') }}</p>
-    </div>
+  <AppPage :title-key="'sidebar.toolSurveyViewTitle'" :desc-key="'sidebar.toolSurveyViewDesc'">
 
     <!-- 搜索区域 -->
     <SectionCard number="01" :title="$t('sidebar.toolSurveyView.searchTitle')">
@@ -202,7 +198,7 @@
       <button class="btn-secondary" @click="resetForm">{{ $t('sidebar.toolSurveyView.resetBtn') }}</button>
       <button class="btn-accent" @click="goToSimulation">{{ $t('sidebar.toolSurveyView.goSimBtn') }}</button>
     </div>
-  </div>
+  </AppPage>
 </template>
 
 <script setup>
@@ -211,6 +207,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
+import AppPage from '../components/AppPage.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
@@ -382,26 +379,6 @@ function goToSimulation() {
 </script>
 
 <style scoped>
-.tool-page {
-  padding: 24px;
-  max-width: 960px;
-}
-
-.tool-header {
-  margin-bottom: 24px;
-}
-.tool-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: var(--section-title-color);
-}
-.tool-header p {
-  color: var(--color-text-muted);
-  font-size: 14px;
-  margin: 0;
-}
-
 .search-field-row {
   display: flex;
   align-items: flex-end;
