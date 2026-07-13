@@ -150,7 +150,7 @@ function isAdminTabActive(item) {
 
 <style scoped>
 .sidebar-container {
-  width: 260px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -176,7 +176,7 @@ function isAdminTabActive(item) {
 .sidebar-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 12px 12px;
+  padding: 32px 10px 12px;
 }
 
 .sidebar-section {
@@ -193,7 +193,7 @@ function isAdminTabActive(item) {
 }
 
 .sidebar-footer {
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-top: 1px solid var(--border-color);
 }
 
