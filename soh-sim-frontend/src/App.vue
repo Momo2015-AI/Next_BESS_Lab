@@ -93,19 +93,16 @@ provide('showToast', showToast)
 
 // ===== 侧边栏宽度与 LOGO 宽度同步 =====
 const brandRef = ref(null)
-const logoWidth = ref(260) // 默认 fallback
+const logoWidth = ref(260)
+let _brandObserver = null
 
 function syncSidebarWidth() {
   if (!brandRef.value) return
   const brandRect = brandRef.value.getBoundingClientRect()
   if (brandRect.width <= 0) return
 
-  // 关键：Sidebar width 是 CSS 宽度（相对其 containing block），
-  // 而 brandRect.right 是视口坐标。两者坐标系不同会导致偏移。
-  // 正确做法：sidebarWidth = Logo右边缘(视口) - Sidebar左边缘(视口)
   const sidebarEl = document.querySelector('.sidebar-container')
   if (!sidebarEl) {
-    // fallback: 假设 Sidebar 从视口 x=0 开始（无 body margin 时成立）
     logoWidth.value = Math.ceil(brandRect.right)
   } else {
     const sidebarRect = sidebarEl.getBoundingClientRect()
@@ -115,15 +112,29 @@ function syncSidebarWidth() {
 }
 
 onMounted(() => {
-  nextTick(() => {
-    syncSidebarWidth()
-  })
-  // 监听窗口缩放
-  window.addEventListener('resize', syncSidebarWidth)
+  // 等待字体加载完成后初次同步
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      nextTick(syncSidebarWidth)
+    })
+  } else {
+    nextTick(syncSidebarWidth)
+  }
+
+  // ResizeObserver 持续监听 Logo 宽度变化（字体切换、缩放等）
+  if (brandRef.value) {
+    _brandObserver = new ResizeObserver(() => {
+      syncSidebarWidth()
+    })
+    _brandObserver.observe(brandRef.value)
+  }
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', syncSidebarWidth)
+  if (_brandObserver) {
+    _brandObserver.disconnect()
+    _brandObserver = null
+  }
 })
 
 // 鉴权状态
