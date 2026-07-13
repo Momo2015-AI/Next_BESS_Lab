@@ -46,7 +46,7 @@
               <th v-for="col in currentColumns" :key="col.key" :style="col.width ? { width: col.width } : {}">
                 {{ $t(col.labelKey) }}
               </th>
-              <th style="width:100px">{{ $t('admin.actions') }}</th>
+              <th class="actions-col">{{ $t('admin.actions') }}</th>
             </tr>
           </thead>
           <tbody>
