@@ -23,7 +23,7 @@
     --bg-global: radial-gradient(circle at 10% 10%, #ffffff 0%, #f4f5f8 70%, #eaecef 100%);
 
     /* ── 侧边栏 ── */
-    --sidebar-width: 250px;
+    --sidebar-width: 254px;
     --bg-sidebar: rgba(244, 245, 248, 0.4);
     --bg-sidebar-hover: rgba(255, 255, 255, 0.9);
 
@@ -199,7 +199,7 @@
     --bg-global: radial-gradient(circle at 80% 20%, #1a2238 0%, #0d0e12 60%, #07080a 100%);
 
     /* ── 侧边栏 ── */
-    --sidebar-width: 250px;
+    --sidebar-width: 254px;
     --bg-sidebar: rgba(11, 12, 16, 0.45);
     --bg-sidebar-hover: rgba(5, 6, 8, 0.96);
 
