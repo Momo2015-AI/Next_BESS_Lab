@@ -150,7 +150,7 @@ function isAdminTabActive(item) {
 
 <style scoped>
 .sidebar-container {
-  width: var(--sidebar-width);
+  width: var(--sidebar-width, 260px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

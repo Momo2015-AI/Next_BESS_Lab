@@ -6,7 +6,7 @@
 
     <header class="app-header">
       <div class="header-inner">
-        <router-link to="/" class="brand">
+        <router-link ref="brandRef" to="/" class="brand">
           <NexBessLogo compact />
         </router-link>
 
@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted, onUnmounted, provide } from 'vue'
+import { reactive, ref, computed, onMounted, onUnmounted, provide, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
@@ -90,6 +90,33 @@ const showToast = (message, type = 'info') => {
   }, 3000)
 }
 provide('showToast', showToast)
+
+// ===== 侧边栏宽度与 LOGO 宽度同步 =====
+const brandRef = ref(null)
+const logoWidth = ref(260) // 默认 fallback
+
+function syncSidebarWidth() {
+  if (brandRef.value) {
+    // 获取 .brand 元素的渲染宽度（即 LOGO 实际宽度）
+    const rect = brandRef.value.getBoundingClientRect()
+    if (rect.width > 0) {
+      logoWidth.value = Math.ceil(rect.width)
+      document.documentElement.style.setProperty('--sidebar-width', logoWidth.value + 'px')
+    }
+  }
+}
+
+onMounted(() => {
+  nextTick(() => {
+    syncSidebarWidth()
+  })
+  // 监听窗口缩放
+  window.addEventListener('resize', syncSidebarWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', syncSidebarWidth)
+})
 
 // 鉴权状态
 const authUser = ref(null)
