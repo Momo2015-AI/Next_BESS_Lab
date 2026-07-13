@@ -1669,15 +1669,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 14px;
+    padding: 6px 14px;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
     border-radius: 12px;
     cursor: pointer;
     text-decoration: none;
-    margin-bottom: 4px;
-    border: 1px solid transparent;
+    margin-bottom: 1px;
     transition:
       background 0.4s var(--ease-precision),
       color 0.4s var(--ease-precision),
@@ -1718,7 +1717,7 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     padding: 0 12px;
-    margin: 28px 0 8px;
+    margin: 12px 0 4px;
     opacity: 0.8;
   }
   .sidebar-section-label:first-child {
