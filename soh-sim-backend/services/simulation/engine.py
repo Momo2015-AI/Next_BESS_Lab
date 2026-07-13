@@ -103,6 +103,9 @@ class SimulationEngine(BaseEngine):
             "bessAuxStandby": aux.get("bessAuxStandby", 3.5),
             "pcsAuxRun": aux.get("pcsAuxRun", 6.5),
             "pcsAuxStandby": aux.get("pcsAuxStandby", 1.0),
+            "auxPowerMode": survey_params.get("auxPowerMode", design_output.get("auxPowerMode", "manual")),
+            "ambientTemp": survey_params.get("tempAvg", design_output.get("ambientTemp", 25)),
+            "coolingType": survey_params.get("coolingType", design_output.get("coolingType", "liquid")),
             "requiredEnergy": survey_params.get("requiredEnergy", 240),
             "efficiencyFactors": FACTOR_DEFAULTS,
         }

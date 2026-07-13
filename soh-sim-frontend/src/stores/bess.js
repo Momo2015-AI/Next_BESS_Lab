@@ -38,6 +38,9 @@ export const useBessStore = defineStore('bess', {
       bessAuxStandby: 3.5,
       pcsAuxRun: 6.5,
       pcsAuxStandby: 1.0,
+      auxPowerMode: 'manual',     // 'manual' | 'thermal'
+      coolingType: 'liquid',      // 'forced-air' | 'liquid' | 'SiC-liquid'
+      ambientTemp: 25,            // 环境温度(℃) — thermal 模式使用
       requiredEnergy: 240
     },
     selectedProducts: {
@@ -264,7 +267,10 @@ export const useBessStore = defineStore('bess', {
             cyclesPerDay: this.survey.cyclesPerDay,
             dod: 90,
             requiredEnergy: this.survey.requiredEnergy,
-            cRate: this.systemParams.cRate || 0.5
+            cRate: this.systemParams.cRate || 0.5,
+            auxPowerMode: this.systemParams.auxPowerMode,
+            tempAvg: this.systemParams.ambientTemp,
+            coolingType: this.systemParams.coolingType
           },
           degradation: {
             soh: [...this.degradation.soh],

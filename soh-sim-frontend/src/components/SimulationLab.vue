@@ -274,8 +274,27 @@
         </div>
 
         <div class="col-span-2 rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionAux') }}</h4>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-medium">{{ $t('simLab.sectionAux') }}</h4>
+            <div class="flex items-center gap-1 text-[10px]">
+              <span class="text-muted">{{ $t('simLab.auxModeLabel') }}:</span>
+              <button
+                :class="['px-2 py-0.5 rounded transition-all', simParams.auxPowerMode === 'manual' ? 'bg-accent text-white' : 'text-muted hover:text-secondary']"
+                @click="simParams.auxPowerMode = 'manual'"
+              >
+                {{ $t('simLab.auxModeManual') }}
+              </button>
+              <button
+                :class="['px-2 py-0.5 rounded transition-all', simParams.auxPowerMode === 'thermal' ? 'bg-accent text-white' : 'text-muted hover:text-secondary']"
+                @click="simParams.auxPowerMode = 'thermal'"
+              >
+                {{ $t('simLab.auxModeThermal') }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual 模式 -->
+          <div v-if="simParams.auxPowerMode === 'manual'" class="grid grid-cols-2 gap-3">
             <div>
               <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxRun') }}</label>
               <input
@@ -311,6 +330,67 @@
                 step="0.1"
                 class="w-full rounded px-2 py-1 text-xs card-input"
               />
+            </div>
+          </div>
+
+          <!-- Thermal 模式 -->
+          <div v-else class="space-y-2">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.ambientTempLabel') }}</label>
+                <input
+                  v-model.number="simParams.ambientTemp"
+                  type="number"
+                  step="0.5"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.coolingTypeLabel') }}</label>
+                <select v-model="simParams.coolingType" class="w-full rounded px-2 py-1 text-xs card-input">
+                  <option value="forced-air">{{ $t('simLab.coolingTypes.forcedAir') }}</option>
+                  <option value="liquid">{{ $t('simLab.coolingTypes.liquid') }}</option>
+                  <option value="SiC-liquid">{{ $t('simLab.coolingTypes.SiCLiquid') }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded p-2 text-[10px] space-y-0.5" style="background: var(--color-input-bg)">
+              <div class="flex justify-between text-muted">
+                <span>{{ $t('simLab.coolingPowerEstimate') }}</span>
+                <span class="text-secondary">{{ estimatedCoolingPower?.coolingKw ?? '—' }} kW</span>
+              </div>
+              <div class="flex justify-between text-muted">
+                <span>{{ $t('simLab.fixedAuxNote') }}</span>
+                <span class="text-secondary">{{ FIXED_AUX }} kW</span>
+              </div>
+              <div class="flex justify-between font-medium" style="border-top: 1px solid var(--color-border); padding-top: 2px; margin-top: 2px;">
+                <span>= {{ $t('simLab.labelBessAuxRun') }}</span>
+                <span class="text-accent">{{ estimatedCoolingPower?.totalRunKw ?? '—' }} kW</span>
+              </div>
+              <div class="flex justify-between text-muted">
+                <span>{{ $t('simLab.standbyAuxNote') }}</span>
+                <span class="text-secondary">{{ estimatedCoolingPower?.standbyKw ?? '—' }} kW</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxRun') }}</label>
+                <input
+                  v-model.number="simParams.pcsAuxRun"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxStandby') }}</label>
+                <input
+                  v-model.number="simParams.pcsAuxStandby"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -802,7 +882,10 @@ const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-para
   bessAuxRun: 18.124,
   bessAuxStandby: 3.5,
   pcsAuxRun: 6.5,
-  pcsAuxStandby: 1.0
+  pcsAuxStandby: 1.0,
+  auxPowerMode: 'manual',
+  coolingType: 'liquid',
+  ambientTemp: 25
 })
 
 const algorithms = ref([])
@@ -851,6 +934,31 @@ const simulationResults = reactive({
   rteCurve: [],
   netAvailCurve: [],
   tableData: []
+})
+
+// 冷却功耗估算（前端预览，用于 thermal 模式 UI 展示）
+const FIXED_AUX = 3.0  // BMS/消防/照明固定功耗 kW
+const COP_MAP = { 'forced-air': 2.0, liquid: 3.5, 'SiC-liquid': 5.0 }
+const estimatedCoolingPower = computed(() => {
+  if (simParams.auxPowerMode !== 'thermal') return null
+  const ambient = simParams.ambientTemp || 25
+  const cop = COP_MAP[simParams.coolingType] || COP_MAP.liquid
+  // 电芯发热: I²R × N_cells, 默认值
+  const cellAh = 280, cellR = 0.00025, cRate = 0.5, cells = 5000
+  const cellHeatKw = ((cellAh * cRate) ** 2 * cellR * cells) / 1000
+  // 热渗透: U × A × ΔT
+  const deltaT = Math.max(0, ambient - 25)
+  const infiltrationKw = (0.5 * 60 * deltaT) / 1000
+  const totalHeatKw = (cellHeatKw + infiltrationKw) * 1.2
+  const coolingKw = totalHeatKw / cop
+  return {
+    coolingKw: +coolingKw.toFixed(2),
+    standbyKw: +(coolingKw * 0.15).toFixed(2),
+    totalRunKw: +(coolingKw + FIXED_AUX).toFixed(2),
+    cellHeatKw: +cellHeatKw.toFixed(2),
+    infiltrationKw: +infiltrationKw.toFixed(2),
+    cop
+  }
 })
 
 const chartContainer = ref(null)
@@ -1115,7 +1223,12 @@ const runSimulation = async () => {
       rte *
       soh *
       (simParams.acEfficiency / 100)
-    const auxEnergy = ((simParams.bessAuxRun + simParams.pcsAuxRun) * i) / 1000
+    // 前端预览: thermal 模式使用动态 aux，manual 模式使用手动值
+    const bessAux =
+      simParams.auxPowerMode === 'thermal' && estimatedCoolingPower.value
+        ? estimatedCoolingPower.value.totalRunKw
+        : simParams.bessAuxRun
+    const auxEnergy = ((bessAux + simParams.pcsAuxRun) * i) / 1000
     const netAvail = Math.max(0, grossEnergy - auxEnergy) * correctionFactors.capacityFactor
 
     sohCurve.push(Math.min(100, Math.max(60, soh * 100)))
@@ -1158,7 +1271,10 @@ const runSimulation = async () => {
     source: 'simulation',
     algorithmType: simParams.algorithmType,
     simulationYears: simParams.simulationYears,
-    guaranteeSoh: simParams.guaranteeSoh
+    guaranteeSoh: simParams.guaranteeSoh,
+    auxPowerMode: simParams.auxPowerMode,
+    coolingType: simParams.coolingType,
+    ambientTemp: simParams.ambientTemp
   })
 }
 
@@ -1200,7 +1316,11 @@ const runAISimulation = async () => {
           rte *
           soh *
           (simParams.acEfficiency / 100)
-        const auxEnergy = ((simParams.bessAuxRun + simParams.pcsAuxRun) * i) / 1000
+        const bessAuxAi =
+          simParams.auxPowerMode === 'thermal' && estimatedCoolingPower.value
+            ? estimatedCoolingPower.value.totalRunKw
+            : simParams.bessAuxRun
+        const auxEnergy = ((bessAuxAi + simParams.pcsAuxRun) * i) / 1000
         const netAvail = Math.max(0, grossEnergy - auxEnergy)
 
         simulationResults.netAvailCurve.push(netAvail)
@@ -1229,7 +1349,10 @@ const runAISimulation = async () => {
         source: 'ai_simulation',
         algorithmType: 'ai_simulation',
         simulationYears: aiSimParams.simulationYears,
-        guaranteeSoh: simParams.guaranteeSoh
+        guaranteeSoh: simParams.guaranteeSoh,
+        auxPowerMode: simParams.auxPowerMode,
+        coolingType: simParams.coolingType,
+        ambientTemp: simParams.ambientTemp
       })
 
       showToast(t('simLab.aiSimComplete'))

@@ -1,5 +1,84 @@
 # ===================== 热管理 =====================
 
+# COP (Coefficient of Performance) 按冷却方式
+COP_MAP = {
+    "forced-air": 2.0,    # 风冷效率较低
+    "liquid": 3.5,         # 液冷标准
+    "SiC-liquid": 5.0,     # 全液冷碳化硅，最高效
+}
+
+# 容器热参数默认值
+CONTAINER_U_VALUE = 0.5      # W/(m²·K) 传热系数
+CONTAINER_AREA_M2 = 60       # m² 集装箱表面积
+TARGET_CELL_TEMP_C = 25      # ℃ 目标电芯温度
+FIXED_AUX_KW = 3.0           # kW BMS/消防/照明固定功耗
+SAFETY_FACTOR = 1.2          # 20% 安全裕度
+
+
+def calculate_cooling_power(ambient_temp_c, cooling_type, container_params=None):
+    """根据环境温度和冷却方式计算冷却功耗。
+
+    用于仿真管线中动态推导 bessAuxRun，替代固定常量。
+
+    Args:
+        ambient_temp_c: 环境温度 (℃)
+        cooling_type: 冷却方式 ("forced-air" | "liquid" | "SiC-liquid")
+        container_params: 可选容器参数 dict:
+            - cell_capacity_ah (默认 280)
+            - cell_resistance_ohm (默认 0.00025)
+            - c_rate (默认 0.5)
+            - cells_per_container (默认 5000)
+
+    Returns:
+        dict: {
+            cooling_power_kw: 运行冷却功耗 (kW),
+            standby_power_kw: 待机冷却功耗 (kW),
+            cop: 实际使用的 COP 值,
+            heat_load_kw: 总热负荷 (kW),
+            cell_heat_kw: 电芯发热 (kW),
+            infiltration_kw: 热渗透 (kW),
+            ambient_temp_c: 输入环境温度,
+            cooling_type: 输入冷却方式,
+        }
+    """
+    cp = container_params or {}
+    cell_ah = float(cp.get("cell_capacity_ah", 280))
+    cell_resistance = float(cp.get("cell_resistance_ohm", 0.00025))
+    c_rate = float(cp.get("c_rate", 0.5))
+    cells_per_container = int(cp.get("cells_per_container", 5000))
+
+    # 电芯发热: I²R × N
+    current = cell_ah * c_rate
+    heat_per_cell_w = current ** 2 * cell_resistance
+    cell_heat_kw = (heat_per_cell_w * cells_per_container) / 1000
+
+    # 容器壁热渗透: U × A × (T_ambient - T_target)
+    # 仅当环境温度高于目标温度时产生正向热渗透（需要制冷）
+    delta_t = max(0, ambient_temp_c - TARGET_CELL_TEMP_C)
+    infiltration_w = CONTAINER_U_VALUE * CONTAINER_AREA_M2 * delta_t
+    infiltration_kw = infiltration_w / 1000
+
+    # 总热负荷（含安全系数）
+    total_heat_kw = (cell_heat_kw + infiltration_kw) * SAFETY_FACTOR
+
+    # COP 折算为电功耗
+    cop = COP_MAP.get(cooling_type, COP_MAP["liquid"])
+    cooling_power_kw = total_heat_kw / cop if cop > 0 else total_heat_kw
+
+    # 待机功耗约为运行功耗的 15%
+    standby_power_kw = round(cooling_power_kw * 0.15, 2)
+
+    return {
+        "cooling_power_kw": round(cooling_power_kw, 2),
+        "standby_power_kw": standby_power_kw,
+        "cop": cop,
+        "heat_load_kw": round(total_heat_kw, 2),
+        "cell_heat_kw": round(cell_heat_kw, 2),
+        "infiltration_kw": round(infiltration_kw, 2),
+        "ambient_temp_c": ambient_temp_c,
+        "cooling_type": cooling_type,
+    }
+
 
 def calculate_thermal_service(data):
     """热管理设计计算"""

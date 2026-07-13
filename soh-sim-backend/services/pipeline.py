@@ -28,8 +28,20 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_facto
     duration = params.get("duration", 2)
     cycles_per_day = params.get("cyclesPerDay", 1)
     ac_efficiency = params.get("acEfficiency", 97.03) / 100
-    bess_aux_run = params.get("bessAuxRun", 18.124)
-    bess_aux_standby = params.get("bessAuxStandby", 3.5)
+    # 辅耗计算模式: "manual"（默认，向后兼容）或 "thermal"（环境温度驱动）
+    aux_mode = params.get("auxPowerMode", "manual")
+    if aux_mode == "thermal":
+        from services.epc.thermal import calculate_cooling_power, FIXED_AUX_KW
+
+        ambient_temp = params.get("ambientTemp", params.get("temperature", 25))
+        cooling_type = params.get("coolingType", "liquid")
+        cp = calculate_cooling_power(ambient_temp, cooling_type)
+        bess_aux_run = cp["cooling_power_kw"] + FIXED_AUX_KW
+        bess_aux_standby = cp["standby_power_kw"]
+    else:
+        bess_aux_run = params.get("bessAuxRun", 18.124)
+        bess_aux_standby = params.get("bessAuxStandby", 3.5)
+
     pcs_aux_run = params.get("pcsAuxRun", 6.5)
     pcs_aux_standby = params.get("pcsAuxStandby", 1.0)
     required_energy = params.get("requiredEnergy", 240)
