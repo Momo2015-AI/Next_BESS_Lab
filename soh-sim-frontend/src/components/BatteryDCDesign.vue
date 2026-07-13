@@ -1,5 +1,25 @@
 <template>
   <div class="battery-dc-design h-full overflow-auto p-4">
+    <!-- 来源切换 -->
+    <div class="flex items-center gap-3 mb-3 p-3 rounded-lg" style="background: var(--color-accent-glow, rgba(0,102,204,0.05));">
+      <span class="text-xs text-muted">{{ $t('batteryDC.configSource') }}:</span>
+      <button
+        :class="['tab-btn text-xs', { active: configSource === 'manual' }]"
+        @click="switchSource('manual')"
+      >
+        {{ $t('batteryDC.manualInput') }}
+      </button>
+      <button
+        :class="['tab-btn text-xs', { active: configSource === 'hierarchy' }]"
+        @click="switchSource('hierarchy')"
+      >
+        {{ $t('batteryDC.fromHierarchy') }}
+      </button>
+      <span v-if="configSource === 'hierarchy'" class="text-xs text-success">
+        ✓ {{ $t('batteryDC.hierarchyLinked') }}
+      </span>
+    </div>
+
     <div class="rounded-lg p-4 card">
       <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-accent-secondary">
         <span class="w-2 h-2 rounded-full dot-accent" />
@@ -399,8 +419,10 @@ import { ref, reactive, watch, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useDraft } from '../composables/useDraft'
+import { useBessStore } from '../stores/bess.js'
 
 const { t } = useI18n()
+const store = useBessStore()
 
 const emit = defineEmits(['apply-config', 'error'])
 
@@ -408,6 +430,52 @@ const { cells, containers, loadAll } = useProducts()
 
 // 电芯库数据（从统一产品库获取）
 const selectedCellId = ref('')
+
+// 配置来源切换
+const configSource = ref('manual') // 'manual' | 'hierarchy'
+
+function switchSource(source) {
+  configSource.value = source
+  if (source === 'hierarchy') {
+    importFromHierarchy()
+  }
+}
+
+function importFromHierarchy() {
+  const h = store.batteryHierarchy
+  if (!h.cellModel) return
+
+  // 匹配电芯
+  const matchedCell = cells.value.find(c => c.model === h.cellModel)
+  if (matchedCell) {
+    selectedCellId.value = matchedCell.id
+  }
+
+  // 同步层级参数到 batteryConfig
+  batteryConfig.cellCapacity = h.cellCapacityAh
+  batteryConfig.cellVoltage = h.cellVoltage
+  batteryConfig.seriesPerPack = h.seriesPerPack
+  batteryConfig.parallelPerPack = h.parallelPerPack
+  batteryConfig.seriesCount = h.seriesPerPack * h.racksPerCluster // cluster 串数
+  batteryConfig.parallelCount = h.parallelPerPack
+  batteryConfig.stringQty = h.clustersPerContainer * h.requiredContainers
+  batteryConfig.clustersPerContainer = h.clustersPerContainer
+  batteryConfig.containerQty = h.requiredContainers
+  batteryConfig.containerEnergy = h.containerEnergyMwh
+  batteryConfig.dodSet = h.dodPercent
+  batteryConfig.cyclesPerDay = 1
+
+  // 自动计算
+  calculateBatteryConfig()
+}
+
+// 监听 hierarchy 来源变化
+watch(() => store.batteryHierarchy.source, (src) => {
+  if (src === 'hierarchy') {
+    configSource.value = 'hierarchy'
+    importFromHierarchy()
+  }
+})
 
 // 加载电芯库数据
 async function loadCellLibrary() {

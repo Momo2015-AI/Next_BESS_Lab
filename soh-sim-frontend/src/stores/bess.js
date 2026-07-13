@@ -45,6 +45,48 @@ export const useBessStore = defineStore('bess', {
       container: null,
       pcs: null
     },
+    batteryHierarchy: {
+      // 层级配置
+      cellModel: '',
+      packModel: '',
+      rackModel: '',
+      clusterModel: '',
+      containerModel: '',
+      // 电芯参数
+      cellVoltage: 3.2,
+      cellCapacityAh: 280,
+      // Pack 层级
+      seriesPerPack: 52,
+      parallelPerPack: 1,
+      packVoltage: 0,
+      packEnergyKwh: 0,
+      // Rack 层级
+      packsPerRack: 8,
+      rackVoltage: 0,
+      rackEnergyKwh: 0,
+      // Cluster 层级
+      racksPerCluster: 1,
+      clusterVoltage: 0,
+      clusterEnergyKwh: 0,
+      // Container 层级
+      clustersPerContainer: 12,
+      containerEnergyMwh: 5.0,
+      // DC 容量推导 (DEWA §6.2)
+      targetPowerMW: 260,
+      targetEnergyMWh: 1560,
+      pRate: 0.167,
+      dodPercent: 90,
+      voltageMismatchLoss: 1,
+      oemDesignMargin: 3,
+      sohInitial: 100,
+      // 计算结果
+      deltaPercent: 0,
+      dcFunctionalMWh: 0,
+      dcInstalledMWh: 0,
+      requiredContainers: 0,
+      // 来源标记
+      source: 'manual' // 'manual' | 'hierarchy'
+    },
     degradation: {
       soh: create26Array(100),
       rte: create26Array(97.03),
