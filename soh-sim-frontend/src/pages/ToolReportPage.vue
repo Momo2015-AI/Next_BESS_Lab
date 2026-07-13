@@ -139,7 +139,7 @@ async function generateReport(type, url) {
 
 .btn-generate:hover:not(:disabled) {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-text-on-accent);
 }
 
 .btn-generate:disabled {
@@ -164,8 +164,7 @@ async function generateReport(type, url) {
   gap: 6px;
   padding: 10px 28px;
   background: var(--color-accent);
-  color: #fff;
-  border: none;
+  color: var(--color-text-on-accent);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

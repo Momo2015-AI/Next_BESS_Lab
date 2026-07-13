@@ -309,35 +309,35 @@ async function runWhatIf() {
 }
 
 .btn-save {
-  background: var(--primary, #3b82f6);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
 }
 
 .btn-save:hover:not(:disabled) {
-  background: var(--primary-dark, #2563eb);
+  background: var(--color-accent-secondary);
 }
 
 .btn-accent {
-  background: #8b5cf6;
-  color: #fff;
+  background: var(--color-info);
+  color: var(--color-text-on-accent);
   align-self: flex-start;
 }
 
 .btn-accent:hover:not(:disabled) {
-  background: #7c3aed;
+  background: var(--color-accent-secondary);
 }
 
 .save-success {
   font-size: 0.85rem;
-  color: #059669;
+  color: var(--color-success);
   font-weight: 500;
 }
 
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
@@ -399,8 +399,8 @@ async function runWhatIf() {
 .error-message {
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-danger-glow-soft, rgba(239, 68, 68, 0.1));
+  color: var(--color-danger);
   border-radius: 6px;
   font-size: 0.85rem;
 }
@@ -442,6 +442,6 @@ async function runWhatIf() {
   font-weight: 600;
 }
 
-.delta-value.positive { color: #059669; }
-.delta-value.negative { color: #dc2626; }
+.delta-value.positive { color: var(--color-success); }
+.delta-value.negative { color: var(--color-danger); }
 </style>

@@ -225,8 +225,8 @@ async function runDesign() {
 .dpc-spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: dpc-spin 0.6s linear infinite;
 }
@@ -238,8 +238,8 @@ async function runDesign() {
 .dpc-error {
   margin-top: 0.75rem;
   padding: 0.625rem 0.75rem;
-  background: rgba(239,68,68,0.1);
-  color: #dc2626;
+  background: var(--color-danger-glow-soft, rgba(239, 68, 68, 0.1));
+  color: var(--color-danger);
   border-radius: 6px;
   font-size: 0.8125rem;
 }

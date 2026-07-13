@@ -276,9 +276,9 @@ watch(compareIds, async (ids) => {
 }
 
 .tab-btn.active {
-  background: var(--primary, #3b82f6);
-  color: #fff;
-  border-color: var(--primary, #3b82f6);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
 }
 
 .tab-btn:disabled {
@@ -333,9 +333,9 @@ watch(compareIds, async (ids) => {
   text-transform: uppercase;
 }
 
-.status-active { background: #d1fae5; color: #065f46; }
-.status-draft { background: #e5e7eb; color: #374151; }
-.status-archived { background: #fef3c7; color: #92400e; }
+.status-active { background: var(--color-success-glow); color: var(--color-success); }
+.status-draft { background: var(--color-card-dark); color: var(--color-text-secondary); }
+.status-archived { background: var(--color-warning-glow); color: var(--color-warning); }
 
 .card-row {
   display: flex;
@@ -384,8 +384,8 @@ watch(compareIds, async (ids) => {
 .active-badge {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-success-glow);
+  color: var(--color-success);
   border-radius: 4px;
 }
 
@@ -431,8 +431,8 @@ watch(compareIds, async (ids) => {
 }
 
 .btn-sm {
-  background: var(--primary, #3b82f6);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
 }
 
 .btn-sm:hover { background: var(--primary-dark, #2563eb); }

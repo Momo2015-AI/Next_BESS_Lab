@@ -421,13 +421,13 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-on-accent);
 }
 
-.rank-1 { background: #f59e0b; }
-.rank-2 { background: #6b7280; }
-.rank-3 { background: #9ca3af; }
-.rank-4, .rank-5 { background: #d1d5db; }
+.rank-1 { background: var(--color-warning); }
+.rank-2 { background: var(--color-text-secondary); }
+.rank-3 { background: var(--color-text-muted); }
+.rank-4, .rank-5 { background: var(--color-border-light); }
 
 .row-label {
   font-weight: 500;
@@ -442,7 +442,7 @@ onBeforeUnmount(() => {
 }
 
 .row-value.best {
-  color: #059669;
+  color: var(--color-success);
   font-weight: 700;
 }
 

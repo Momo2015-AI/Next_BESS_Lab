@@ -182,8 +182,8 @@ onMounted(() => {
   font-size: 0.75rem;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  background: rgba(59,130,246,0.1);
-  color: #3b82f6;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
   font-weight: 500;
 }
 
@@ -191,8 +191,8 @@ onMounted(() => {
   font-size: 0.7rem;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  background: rgba(34,197,94,0.1);
-  color: #16a34a;
+  background: var(--color-success-glow);
+  color: var(--color-success);
 }
 
 .dts-card-name {

@@ -120,8 +120,8 @@ function onSolutionConfirm(sol) {
 }
 
 .steps-nav button.done {
-  border-color: #16a34a;
-  color: #16a34a;
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .step-num {

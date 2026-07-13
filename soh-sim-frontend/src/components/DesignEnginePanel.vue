@@ -440,14 +440,14 @@ async function runFullWorkflow() {
 }
 
 .strategy-btn.active {
-  background: var(--primary, #3b82f6);
-  color: #fff;
-  border-color: var(--primary, #3b82f6);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
 }
 
 .strategy-btn:hover:not(.active) {
-  border-color: var(--primary, #3b82f6);
-  color: var(--primary, #3b82f6);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .action-row {
@@ -474,17 +474,17 @@ async function runFullWorkflow() {
 }
 
 .btn-primary {
-  background: var(--primary, #3b82f6);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-dark, #2563eb);
+  background: var(--color-accent-secondary);
 }
 
 .btn-secondary {
-  background: var(--success, #10b981);
-  color: #fff;
+  background: var(--color-success);
+  color: var(--color-text-on-accent);
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -501,8 +501,8 @@ async function runFullWorkflow() {
 .error-message {
   margin-top: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-danger-glow-soft, rgba(239, 68, 68, 0.1));
+  color: var(--color-danger);
   border-radius: 6px;
   font-size: 0.85rem;
 }
@@ -510,8 +510,8 @@ async function runFullWorkflow() {
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
@@ -563,13 +563,13 @@ async function runFullWorkflow() {
   border-radius: 50%;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-on-accent);
 }
 
-.rank-1 { background: #f59e0b; }
-.rank-2 { background: #6b7280; }
-.rank-3 { background: #9ca3af; }
-.rank-4, .rank-5 { background: #d1d5db; }
+.rank-1 { background: var(--color-warning); }
+.rank-2 { background: var(--color-text-secondary); }
+.rank-3 { background: var(--color-text-muted); }
+.rank-4, .rank-5 { background: var(--color-border-light); }
 
 .strategy-tag {
   font-size: 0.75rem;
@@ -582,8 +582,8 @@ async function runFullWorkflow() {
 .recommend-badge {
   font-size: 0.7rem;
   padding: 0.15rem 0.5rem;
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
   border-radius: 4px;
   margin-left: auto;
   font-weight: 600;

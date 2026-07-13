@@ -257,16 +257,16 @@ onMounted(() => {
   font-size: 0.7rem;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  background: rgba(59,130,246,0.1);
-  color: #3b82f6;
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
 }
 
 .drp-recommend-badge {
   font-size: 0.65rem;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  background: rgba(34,197,94,0.15);
-  color: #16a34a;
+  background: var(--color-success-glow);
+  color: var(--color-success);
   margin-left: auto;
 }
 

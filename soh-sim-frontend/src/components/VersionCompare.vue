@@ -256,9 +256,9 @@ onBeforeUnmount(() => {
 }
 .delta-table th { background: var(--table-header-bg, #f8fafc); font-weight: 600; }
 .row-label { text-align: left; font-weight: 500; color: var(--text-secondary, #666); }
-.row-value.best { color: #059669; font-weight: 700; }
-.row-diff.positive, .row-pct.positive { color: #059669; font-weight: 600; }
-.row-diff.negative, .row-pct.negative { color: #dc2626; font-weight: 600; }
+.row-value.best { color: var(--color-success); font-weight: 700; }
+.row-diff.positive, .row-pct.positive { color: var(--color-success); font-weight: 600; }
+.row-diff.negative, .row-pct.negative { color: var(--color-danger); font-weight: 600; }
 
 .chart-container { width: 100%; height: 350px; }
 </style>

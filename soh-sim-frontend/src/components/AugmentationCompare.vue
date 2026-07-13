@@ -277,8 +277,8 @@ onBeforeUnmount(() => {
 }
 
 .strategy-card.recommended {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+  border-color: var(--color-warning);
+  box-shadow: 0 0 0 2px var(--color-warning-glow);
 }
 
 .card-header {
@@ -294,8 +294,8 @@ onBeforeUnmount(() => {
 
 .recommend-badge {
   font-size: 0.75rem;
-  color: #92400e;
-  background: #fef3c7;
+  color: var(--color-warning);
+  background: var(--color-warning-glow);
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
   font-weight: 600;
@@ -322,8 +322,8 @@ onBeforeUnmount(() => {
 .metric-row:last-child { border-bottom: none; }
 .metric-label { color: var(--text-secondary, #888); }
 .metric-value { font-weight: 500; }
-.metric-value.best { color: #059669; font-weight: 700; }
-.metric-value.highlight { color: var(--primary, #3b82f6); font-weight: 600; }
+.metric-value.best { color: var(--color-success); font-weight: 700; }
+.metric-value.highlight { color: var(--color-accent); font-weight: 600; }
 
 .aug-schedule {
   margin-top: 0.5rem;
@@ -355,7 +355,7 @@ onBeforeUnmount(() => {
 
 .no-aug {
   font-size: 0.8rem;
-  color: #059669;
+  color: var(--color-success);
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--border-light, #f3f4f6);
