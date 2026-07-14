@@ -208,10 +208,12 @@ import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
 import AppPage from '../components/AppPage.vue'
 import api from '../services/api.js'
+import { useBessStore } from '../stores/bess.js'
 
 const router = useRouter()
 const emit = defineEmits(['error'])
 const { t } = useI18n()
+const store = useBessStore()
 
 const loading = ref(false)
 const surveyId = ref('')
@@ -337,6 +339,14 @@ async function saveSurvey() {
     if (result.success) {
       emit('error', t('tools.saveSuccess'), 'success')
       surveyId.value = result.data.id
+      // 同步到 Pinia store，确保下游页面能读取调研数据
+      store.survey.ratedEnergy = formData.ratedEnergy
+      store.survey.temperature = formData.temperature
+      store.survey.cyclesPerDay = formData.cyclesPerDay
+      store.survey.dod = formData.dod
+      store.survey.cRate = formData.cRate
+      if (formData.location) store.survey.location = formData.location
+      if (formData.projectName) store.survey.projectName = formData.projectName
     } else {
       emit('error', result.error || t('tools.saveFailed'), 'error')
     }

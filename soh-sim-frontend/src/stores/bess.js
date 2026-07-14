@@ -167,6 +167,8 @@ export const useBessStore = defineStore('bess', {
       strategy: 'balanced', // 当前策略
       confirmedSolution: null // 用户确认的方案
     },
+    // Phase3 当前步骤持久化（解决切换 tab 后步骤重置问题）
+    phase3ActiveStep: 0,
     environmental: {
       accelerate_temperature: true,
       accelerate_dust: false,

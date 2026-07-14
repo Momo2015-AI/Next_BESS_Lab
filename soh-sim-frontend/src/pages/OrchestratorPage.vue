@@ -91,10 +91,13 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { get, post } from '../services/api.js'
+import { useBessStore } from '../stores/bess.js'
 import AppPage from '../components/AppPage.vue'
 import DesignEnginePanel from '../components/DesignEnginePanel.vue'
 import DesignComparePanel from '../components/DesignComparePanel.vue'
 import AugmentationCompare from '../components/AugmentationCompare.vue'
+
+const store = useBessStore()
 
 const compareSolutions = ref([])
 const baseSolution = ref(null)
@@ -126,6 +129,23 @@ onMounted(async () => {
   } catch (e) {
     console.error('加载项目列表失败:', e)
   }
+
+  // 从 store 恢复之前的工作流结果（防止切换 tab 后数据丢失）
+  if (store.results.totalAcUsable?.length) {
+    compareSolutions.value = [{
+      id: 'restored',
+      containerQty: store.systemParams.initContainerQty,
+      pcsQty: store.systemParams.initPcsQty,
+      totalEnergyMwh: store.systemParams.ratedEnergy,
+      totalPowerMW: store.systemParams.pcsPower,
+      duration: store.systemParams.duration,
+      degradationModel: {
+        soh: store.degradation.soh,
+        rte: store.degradation.rte
+      }
+    }]
+    baseSolution.value = compareSolutions.value[0]
+  }
 })
 
 function onProjectChange() {
@@ -153,6 +173,9 @@ function onWorkflowComplete(data) {
   if (rec?.simulation?.augmentationComparison) {
     augComparison.value = rec.simulation.augmentationComparison
   }
+
+  // 持久化工作流结果到 store（防止切换 tab 后数据丢失）
+  store._applyWorkflowResult(data)
 
   // 如果选了项目，自动保存
   if (selectedProjectId.value) {

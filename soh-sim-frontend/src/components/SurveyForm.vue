@@ -85,16 +85,30 @@
             />
           </div>
           <div>
-            <label class="label-text">{{ $t('surveyForm.durationH') }}</label>
-            <input
-              v-model.number="form.duration"
-              type="number"
-              step="0.5"
-              min="0.5"
-              max="8"
-              class="form-field-input"
-              :placeholder="$t('surveyForm.durationHPh')"
-            />
+            <label class="label-text">
+              {{ $t('surveyForm.durationH') }}
+              <span v-if="isDurationAuto" class="auto-badge">{{ $t('design.auto') }}</span>
+            </label>
+            <div class="duration-input-row">
+              <input
+                v-model.number="form.duration"
+                type="number"
+                step="0.5"
+                min="0.5"
+                max="8"
+                class="form-field-input"
+                :disabled="isDurationAuto"
+                :placeholder="$t('surveyForm.durationHPh')"
+              />
+              <button
+                type="button"
+                class="lock-toggle-btn"
+                :title="isDurationAuto ? $t('design.unlock') : $t('design.lock')"
+                @click="isDurationAuto = !isDurationAuto"
+              >
+                {{ isDurationAuto ? '🔒' : '🔓' }}
+              </button>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.cyclesPerDay') }}</label>
@@ -486,13 +500,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
+import { useBessStore } from '../stores/bess.js'
 import api from '../services/api.js'
 
 const { t } = useI18n()
 const emit = defineEmits(['error'])
+const store = useBessStore()
 
 const { cells, loadAll } = useProducts()
 
@@ -533,6 +549,20 @@ const form = reactive({
   remarks: ''
 })
 
+// 储能时长自动计算
+const isDurationAuto = ref(true)
+
+function autoCalcDuration() {
+  if (form.total_mwh > 0 && form.total_mw > 0) {
+    form.duration = +(form.total_mwh / form.total_mw).toFixed(2)
+  }
+}
+
+watch(
+  () => [form.total_mwh, form.total_mw],
+  () => { if (isDurationAuto.value) autoCalcDuration() }
+)
+
 const submitting = ref(false)
 const showSuccess = ref(false)
 const submittedData = ref({})
@@ -555,6 +585,19 @@ async function submitForm() {
     if (result.success) {
       submittedData.value = result
       showSuccess.value = true
+      // 同步到 Pinia store，确保 Phase2/3/4 能读取调研数据
+      if (form.total_mwh) store.survey.ratedEnergy = form.total_mwh
+      if (form.total_mw) store.survey.totalPower = form.total_mw
+      if (form.duration) store.survey.duration = form.duration
+      if (form.temp_avg != null) store.survey.temperature = form.temp_avg
+      if (form.cycles_per_day) store.survey.cyclesPerDay = form.cycles_per_day
+      if (form.total_mwh && form.duration) {
+        store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
+      }
+      if (form.location) store.survey.location = form.location
+      if (form.project_name) store.survey.projectName = form.project_name
+      if (form.grid_voltage) store.survey.gridVoltage = form.grid_voltage
+      if (form.altitude != null) store.survey.altitude = form.altitude
       resetForm()
     } else {
       emit('error', t('surveyForm.submitFailed') + ': ' + (result.error || t('common.other')), 'error')
@@ -653,3 +696,53 @@ function fillTestData() {
   })
 }
 </script>
+
+<style scoped>
+/* 储能时长自动计算样式 */
+.auto-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.duration-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.duration-input-row .form-field-input {
+  flex: 1;
+}
+
+.duration-input-row .form-field-input:disabled {
+  background: var(--color-bg, #f5f5f5);
+  color: var(--text-secondary, #888);
+  cursor: not-allowed;
+}
+
+.lock-toggle-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+  background: var(--color-card, #fff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  padding: 0;
+}
+
+.lock-toggle-btn:hover {
+  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
+}
+</style>

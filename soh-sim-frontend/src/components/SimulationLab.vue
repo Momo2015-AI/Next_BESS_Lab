@@ -1439,6 +1439,22 @@ const runBackendSimulation = async () => {
         meetsReq: (result.meetsReq || [])[i] || false
       }))
       nextTick(() => setTimeout(() => renderChart(), 100))
+      // 持久化仿真结果到 store，防止切换 tab 后数据丢失
+      store.results = {
+        ...store.results,
+        totalAcUsable: result.totalAcUsable || [],
+        initGross: result.initGross || [],
+        initAux: result.initAux || [],
+        meetsReq: result.meetsReq || [],
+        augGross: result.augGross || [],
+        augAux: result.augAux || [],
+        augAcUsable: result.augAcUsable || [],
+        augAccumQty: result.augAccumQty || [],
+      }
+      store.degradation.soh = [...sohArr]
+      store.degradation.rte = [...rteArr]
+      if (result.dod) store.degradation.dod = [...result.dod]
+      if (result.augQty) store.degradation.augQty = [...result.augQty]
       emit('applyConfig', {
         soh: sohArr,
         rte: rteArr,
@@ -1621,6 +1637,22 @@ onMounted(() => {
   const designReqEnergy = store.survey.requiredEnergy || store.systemParams.requiredEnergy
   if (designReqEnergy && (simParams.requiredEnergy === 240 || !simParams.requiredEnergy)) {
     simParams.requiredEnergy = designReqEnergy
+  }
+  // 从 store 恢复之前的仿真结果（防止切换 tab 后图表数据丢失）
+  if (store.results.totalAcUsable?.length) {
+    simulationResults.sohCurve = [...store.degradation.soh]
+    simulationResults.rteCurve = [...store.degradation.rte]
+    simulationResults.netAvailCurve = [...store.results.totalAcUsable]
+    simulationResults.initSoh = store.degradation.soh[0] || 100
+    simulationResults.finalSoh = store.degradation.soh[store.degradation.soh.length - 1] || 0
+    simulationResults.tableData = store.degradation.soh.map((s, i) => ({
+      year: i,
+      soh: s,
+      rte: store.degradation.rte[i] || 0,
+      netAvail: store.results.totalAcUsable[i] || 0,
+      meetsReq: store.results.meetsReq?.[i] || false
+    }))
+    nextTick(() => setTimeout(() => renderChart(), 200))
   }
   initYearlyCorrections()
   fetchAlgorithms()

@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import AppPage from '../components/AppPage.vue'
@@ -54,7 +54,8 @@ import ScenarioCompare from '../components/ScenarioCompare.vue'
 
 const store = useBessStore()
 const { t } = useI18n()
-const activeStep = ref(0)
+const activeStep = ref(store.phase3ActiveStep || 0)
+watch(activeStep, (v) => { store.phase3ActiveStep = v })
 const steps = computed(() => [
   { label: t('phase3.step1') },
   { label: t('phase3.step2') },
