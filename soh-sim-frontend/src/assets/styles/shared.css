@@ -118,12 +118,14 @@
 .form-field-input,
 .form-field-select {
   width: 100%;
-  padding: 6px 8px;
+  padding: 6px 28px 6px 8px;
   border: 1px solid var(--color-border);
   border-radius: 6px;
   background: var(--color-card);
   color: var(--color-text);
   font-size: 13px;
+  /* 原生 select 右侧预留下拉箭头空间，防止文字被截断 */
+  appearance: auto;
 }
 
 .form-field-input:focus-visible,
