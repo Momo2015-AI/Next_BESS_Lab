@@ -2,17 +2,17 @@
 
 # COP (Coefficient of Performance) 按冷却方式
 COP_MAP = {
-    "forced-air": 2.0,    # 风冷效率较低
-    "liquid": 3.5,         # 液冷标准
-    "SiC-liquid": 5.0,     # 全液冷碳化硅，最高效
+    "forced-air": 2.0,  # 风冷效率较低
+    "liquid": 3.5,  # 液冷标准
+    "SiC-liquid": 5.0,  # 全液冷碳化硅，最高效
 }
 
 # 容器热参数默认值
-CONTAINER_U_VALUE = 0.5      # W/(m²·K) 传热系数
-CONTAINER_AREA_M2 = 60       # m² 集装箱表面积
-TARGET_CELL_TEMP_C = 25      # ℃ 目标电芯温度
-FIXED_AUX_KW = 3.0           # kW BMS/消防/照明固定功耗
-SAFETY_FACTOR = 1.2          # 20% 安全裕度
+CONTAINER_U_VALUE = 0.5  # W/(m²·K) 传热系数
+CONTAINER_AREA_M2 = 60  # m² 集装箱表面积
+TARGET_CELL_TEMP_C = 25  # ℃ 目标电芯温度
+FIXED_AUX_KW = 3.0  # kW BMS/消防/照明固定功耗
+SAFETY_FACTOR = 1.2  # 20% 安全裕度
 
 
 def calculate_cooling_power(ambient_temp_c, cooling_type, container_params=None):
@@ -49,7 +49,7 @@ def calculate_cooling_power(ambient_temp_c, cooling_type, container_params=None)
 
     # 电芯发热: I²R × N
     current = cell_ah * c_rate
-    heat_per_cell_w = current ** 2 * cell_resistance
+    heat_per_cell_w = current**2 * cell_resistance
     cell_heat_kw = (heat_per_cell_w * cells_per_container) / 1000
 
     # 容器壁热渗透: U × A × (T_ambient - T_target)

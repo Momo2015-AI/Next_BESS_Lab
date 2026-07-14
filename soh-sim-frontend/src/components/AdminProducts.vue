@@ -23,19 +23,12 @@
     <template v-else>
       <!-- 工具栏 -->
       <div class="product-toolbar">
-        <input
-          v-model="searchQuery"
-          type="text"
-          :placeholder="$t('admin.searchProduct')"
-          class="product-search"
-        />
+        <input v-model="searchQuery" type="text" :placeholder="$t('admin.searchProduct')" class="product-search" />
         <select v-model="mfrFilter" class="product-filter">
           <option value="">{{ $t('admin.allManufacturers') }}</option>
           <option v-for="m in currentMfrList" :key="m" :value="m">{{ m }}</option>
         </select>
-        <button class="admin-btn admin-btn-primary" @click="openAddModal">
-          + {{ $t('admin.addProduct') }}
-        </button>
+        <button class="admin-btn admin-btn-primary" @click="openAddModal">+ {{ $t('admin.addProduct') }}</button>
       </div>
 
       <!-- 产品表格 -->
@@ -141,7 +134,7 @@ const { t } = useI18n()
 const categories = [
   { key: 'cells', labelKey: 'admin.cellLibrary', apiCategory: 'cells' },
   { key: 'containers', labelKey: 'admin.containerLibrary', apiCategory: 'containers' },
-  { key: 'pcs', labelKey: 'admin.pcsLibrary', apiCategory: 'pcs' },
+  { key: 'pcs', labelKey: 'admin.pcsLibrary', apiCategory: 'pcs' }
 ]
 
 const activeCategory = ref('containers')
@@ -169,7 +162,7 @@ const columnDefs = {
     { key: 'chemistry', labelKey: 'admin.colChemistry', width: '80px' },
     { key: 'capacityAh', labelKey: 'admin.colCapacity', width: '90px' },
     { key: 'cycleLife', labelKey: 'admin.colCycleLife', width: '80px' },
-    { key: 'status', labelKey: 'admin.colStatus', width: '80px' },
+    { key: 'status', labelKey: 'admin.colStatus', width: '80px' }
   ],
   containers: [
     { key: 'model', labelKey: 'admin.colModel', width: '140px' },
@@ -178,7 +171,7 @@ const columnDefs = {
     { key: 'ratedPowerMw', labelKey: 'admin.colPower', width: '90px' },
     { key: 'cooling', labelKey: 'admin.colCooling', width: '100px' },
     { key: 'cycleLife', labelKey: 'admin.colCycleLife', width: '80px' },
-    { key: 'status', labelKey: 'admin.colStatus', width: '80px' },
+    { key: 'status', labelKey: 'admin.colStatus', width: '80px' }
   ],
   pcs: [
     { key: 'model', labelKey: 'admin.colModel', width: '140px' },
@@ -187,8 +180,8 @@ const columnDefs = {
     { key: 'efficiency', labelKey: 'admin.colEfficiency', width: '80px' },
     { key: 'acVoltage', labelKey: 'admin.colAcVoltage', width: '100px' },
     { key: 'cooling', labelKey: 'admin.colCooling', width: '100px' },
-    { key: 'status', labelKey: 'admin.colStatus', width: '80px' },
-  ],
+    { key: 'status', labelKey: 'admin.colStatus', width: '80px' }
+  ]
 }
 
 // 表单字段定义
@@ -200,16 +193,21 @@ const formFieldDefs = {
     { key: 'capacityAh', labelKey: 'admin.fieldCapacityAh', type: 'number', step: '0.1' },
     { key: 'voltageNominal', labelKey: 'admin.fieldVoltage', type: 'number', step: '0.01' },
     { key: 'cycleLife', labelKey: 'admin.fieldCycleLife', type: 'number', step: '1' },
-    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' },
+    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' }
   ],
   containers: [
     { key: 'model', labelKey: 'admin.fieldModel', type: 'text', placeholder: 'e.g. TENER-6.25' },
     { key: 'mfr', labelKey: 'admin.fieldMfr', type: 'text', placeholder: 'e.g. CATL' },
     { key: 'ratedEnergyMwh', labelKey: 'admin.fieldEnergy', type: 'number', step: '0.01' },
     { key: 'ratedPowerMw', labelKey: 'admin.fieldPower', type: 'number', step: '0.1' },
-    { key: 'cooling', labelKey: 'admin.fieldCooling', type: 'select', options: ['Liquid Cooling', 'Air Cooling', 'Hybrid'] },
+    {
+      key: 'cooling',
+      labelKey: 'admin.fieldCooling',
+      type: 'select',
+      options: ['Liquid Cooling', 'Air Cooling', 'Hybrid']
+    },
     { key: 'cycleLife', labelKey: 'admin.fieldCycleLife', type: 'number', step: '1' },
-    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' },
+    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' }
   ],
   pcs: [
     { key: 'model', labelKey: 'admin.fieldModel', type: 'text', placeholder: 'e.g. PCS-2500' },
@@ -217,9 +215,14 @@ const formFieldDefs = {
     { key: 'ratedPowerMW', labelKey: 'admin.fieldPower', type: 'number', step: '0.01' },
     { key: 'efficiency', labelKey: 'admin.fieldEfficiency', type: 'number', step: '0.1' },
     { key: 'acVoltage', labelKey: 'admin.fieldAcVoltage', type: 'text', placeholder: 'e.g. 690V' },
-    { key: 'cooling', labelKey: 'admin.fieldCooling', type: 'select', options: ['Liquid Cooling', 'Air Cooling', 'Forced Air'] },
-    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' },
-  ],
+    {
+      key: 'cooling',
+      labelKey: 'admin.fieldCooling',
+      type: 'select',
+      options: ['Liquid Cooling', 'Air Cooling', 'Forced Air']
+    },
+    { key: 'unitPrice', labelKey: 'admin.fieldUnitPrice', type: 'number', step: '0.01' }
+  ]
 }
 
 // ---- 计算属性 ----
@@ -229,7 +232,9 @@ const currentProducts = computed(() => allProducts.value[activeCategory.value] |
 
 const currentMfrList = computed(() => {
   const mfrs = new Set()
-  currentProducts.value.forEach(p => { if (p.mfr) mfrs.add(p.mfr) })
+  currentProducts.value.forEach((p) => {
+    if (p.mfr) mfrs.add(p.mfr)
+  })
   return [...mfrs].sort()
 })
 
@@ -237,13 +242,10 @@ const filteredProducts = computed(() => {
   let list = currentProducts.value
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
-    list = list.filter(p =>
-      (p.model || '').toLowerCase().includes(q) ||
-      (p.mfr || '').toLowerCase().includes(q)
-    )
+    list = list.filter((p) => (p.model || '').toLowerCase().includes(q) || (p.mfr || '').toLowerCase().includes(q))
   }
   if (mfrFilter.value) {
-    list = list.filter(p => p.mfr === mfrFilter.value)
+    list = list.filter((p) => p.mfr === mfrFilter.value)
   }
   return list
 })
@@ -264,12 +266,12 @@ async function loadProducts() {
     const results = await Promise.all([
       api.get('/api/products/cells?page_size=200'),
       api.get('/api/products/containers?page_size=200'),
-      api.get('/api/products/pcs?page_size=200'),
+      api.get('/api/products/pcs?page_size=200')
     ])
     allProducts.value = {
       cells: results[0]?.data || results[0]?.items || [],
       containers: results[1]?.data || results[1]?.items || [],
-      pcs: results[2]?.data || results[2]?.items || [],
+      pcs: results[2]?.data || results[2]?.items || []
     }
   } catch (e) {
     console.error('Failed to load products:', e)
@@ -292,7 +294,7 @@ function openEditModal(item) {
 
 async function saveProduct() {
   const cat = activeCategory.value
-  const apiCategory = categories.find(c => c.key === cat)?.apiCategory || cat
+  const apiCategory = categories.find((c) => c.key === cat)?.apiCategory || cat
   try {
     if (editingItem.value) {
       await api.put(`/api/products/${apiCategory}/${editingItem.value.id}`, formData.value)
@@ -315,7 +317,7 @@ function confirmDelete(item) {
 async function doDelete() {
   if (!deleteTarget.value) return
   const cat = activeCategory.value
-  const apiCategory = categories.find(c => c.key === cat)?.apiCategory || cat
+  const apiCategory = categories.find((c) => c.key === cat)?.apiCategory || cat
   try {
     await api.del(`/api/products/${apiCategory}/${deleteTarget.value.id}`)
     showDeleteConfirm.value = false

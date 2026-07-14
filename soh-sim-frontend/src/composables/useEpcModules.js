@@ -108,7 +108,12 @@ export function useEpcModules(onError, t) {
       // 能走到这里说明 resp.success !== false。保持与原逻辑一致：返回 resp.data
       return resp.data
     } catch (e) {
-      const msg = e instanceof ApiError ? e.message : (t ? t('epc.netError', { message: e?.message || '' }) : 'Network error: ' + (e?.message || ''))
+      const msg =
+        e instanceof ApiError
+          ? e.message
+          : t
+            ? t('epc.netError', { message: e?.message || '' })
+            : 'Network error: ' + (e?.message || '')
       if (onError) onError(msg)
       return null
     } finally {
@@ -207,7 +212,12 @@ export function useEpcModules(onError, t) {
         chartError.value = result.error || (t ? t('epc.chartGenFailed') : 'Chart generation failed')
       }
     } catch (e) {
-      chartError.value = e instanceof ApiError ? e.message : (t ? t('epc.netError', { message: e?.message || '' }) : 'Network error: ' + (e?.message || ''))
+      chartError.value =
+        e instanceof ApiError
+          ? e.message
+          : t
+            ? t('epc.netError', { message: e?.message || '' })
+            : 'Network error: ' + (e?.message || '')
     } finally {
       chartLoading.value = ''
     }
@@ -229,7 +239,12 @@ export function useEpcModules(onError, t) {
   }
 
   function statusLabel(status) {
-    const map = { compliant: 'epc.statusCompliant', non_compliant: 'epc.statusNonCompliant', partial: 'epc.statusPartial', 'N/A': 'epc.statusNA' }
+    const map = {
+      compliant: 'epc.statusCompliant',
+      non_compliant: 'epc.statusNonCompliant',
+      partial: 'epc.statusPartial',
+      'N/A': 'epc.statusNA'
+    }
     return map[status] || status
   }
 

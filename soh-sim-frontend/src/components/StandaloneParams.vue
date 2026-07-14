@@ -9,49 +9,24 @@
       <!-- 系统规模 -->
       <div class="param-group">
         <label class="param-label">{{ $t('financial.labelTotalCapMWh') }}</label>
-        <input
-          v-model.number="local.totalCapMWh"
-          type="number"
-          step="1"
-          min="1"
-          class="param-input"
-        />
+        <input v-model.number="local.totalCapMWh" type="number" step="1" min="1" class="param-input" />
         <span class="param-unit">MWh</span>
       </div>
       <div class="param-group">
         <label class="param-label">{{ $t('financial.labelTotalCapMW') }}</label>
-        <input
-          v-model.number="local.totalCapMW"
-          type="number"
-          step="0.1"
-          min="0.1"
-          class="param-input"
-        />
+        <input v-model.number="local.totalCapMW" type="number" step="0.1" min="0.1" class="param-input" />
         <span class="param-unit">MW</span>
       </div>
       <div class="param-group">
         <label class="param-label">{{ $t('financial.labelCyclesPerDay') }}</label>
-        <input
-          v-model.number="local.cyclesPerDay"
-          type="number"
-          step="0.1"
-          min="0.1"
-          class="param-input"
-        />
+        <input v-model.number="local.cyclesPerDay" type="number" step="0.1" min="0.1" class="param-input" />
         <span class="param-unit">{{ $t('financial.cyclesUnit') }}</span>
       </div>
 
       <!-- 运行参数 -->
       <div class="param-group">
         <label class="param-label">{{ $t('financial.labelOperatingDays') }}</label>
-        <input
-          v-model.number="local.operatingDays"
-          type="number"
-          step="1"
-          min="1"
-          max="365"
-          class="param-input"
-        />
+        <input v-model.number="local.operatingDays" type="number" step="1" min="1" max="365" class="param-input" />
         <span class="param-unit">{{ $t('financial.daysUnit') }}</span>
       </div>
       <div class="param-group">
@@ -68,28 +43,14 @@
       </div>
       <div class="param-group">
         <label class="param-label">{{ $t('financial.labelSohStart') }}</label>
-        <input
-          v-model.number="local.sohStart"
-          type="number"
-          step="0.1"
-          min="1"
-          max="100"
-          class="param-input"
-        />
+        <input v-model.number="local.sohStart" type="number" step="0.1" min="1" max="100" class="param-input" />
         <span class="param-unit">%</span>
       </div>
 
       <!-- 衰减参数 -->
       <div class="param-group param-group-wide">
         <label class="param-label">{{ $t('financial.labelSohDecline') }}</label>
-        <input
-          v-model.number="local.sohAnnualDecline"
-          type="number"
-          step="0.1"
-          min="0"
-          max="20"
-          class="param-input"
-        />
+        <input v-model.number="local.sohAnnualDecline" type="number" step="0.1" min="0" max="20" class="param-input" />
         <span class="param-unit">% / {{ $t('financial.yearUnit') }}</span>
       </div>
     </div>
@@ -122,10 +83,14 @@ const emit = defineEmits(['update:modelValue', 'change'])
 
 const local = reactive({ ...props.modelValue })
 
-watch(local, (val) => {
-  emit('update:modelValue', { ...val })
-  emit('change')
-}, { deep: true })
+watch(
+  local,
+  (val) => {
+    emit('update:modelValue', { ...val })
+    emit('change')
+  },
+  { deep: true }
+)
 
 // 生成26年SOH曲线预览 (year 0-25)
 const sohPreview = computed(() => {

@@ -5,11 +5,11 @@
 此文件保留为向后兼容代理，所有原有函数保持不变。
 """
 
-# 向后兼容代理 — 从新引擎模块重导出
-from services.simulation.engine import SimulationEngine, run_simulation  # noqa: F401
-
 from services.degradation import NUM_YEARS, predict_soh
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
+
+# 向后兼容代理 — 从新引擎模块重导出
+from services.simulation.engine import SimulationEngine, run_simulation  # noqa: F401
 
 
 def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_factors=None):
@@ -31,7 +31,7 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_facto
     # 辅耗计算模式: "manual"（默认，向后兼容）或 "thermal"（环境温度驱动）
     aux_mode = params.get("auxPowerMode", "manual")
     if aux_mode == "thermal":
-        from services.epc.thermal import calculate_cooling_power, FIXED_AUX_KW
+        from services.epc.thermal import FIXED_AUX_KW, calculate_cooling_power
 
         ambient_temp = params.get("ambientTemp", params.get("temperature", 25))
         cooling_type = params.get("coolingType", "liquid")

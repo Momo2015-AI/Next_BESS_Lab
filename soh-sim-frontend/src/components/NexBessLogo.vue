@@ -143,7 +143,12 @@ const staticGradId = `nx-static-${++_idCounter}`
 .nx-text {
   display: flex;
   align-items: baseline;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   letter-spacing: -0.5px;
   white-space: nowrap;
 }

@@ -173,8 +173,8 @@
     /* ── UISTD 精密渐变按钮 ── */
     --btn-accent-bg: linear-gradient(90deg, rgba(0, 102, 204, 0.02) 0%, rgba(67, 100, 247, 0.02) 100%);
     --btn-accent-border: 1px solid rgba(0, 91, 148, 0.3);
-    --btn-accent-text: #005B94;
-    --btn-accent-hover-bg: linear-gradient(90deg, #0052D4 0%, #4364F7 100%);
+    --btn-accent-text: #005b94;
+    --btn-accent-hover-bg: linear-gradient(90deg, #0052d4 0%, #4364f7 100%);
     --btn-accent-hover-glow: 0 4px 12px rgba(0, 82, 212, 0.25);
 
     /* ── 嵌套景深层级配色 ── */
@@ -221,7 +221,8 @@
     --shadow-subtle: rgba(0, 0, 0, 0.5);
 
     /* ── 黑阴影阻断 + 冷蓝背光渗出 ── */
-    --shadow-sidebar-dynamic: 15px 0 35px rgba(0, 0, 0, 0.8), 1px 0 15px rgba(47, 128, 237, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-sidebar-dynamic:
+      15px 0 35px rgba(0, 0, 0, 0.8), 1px 0 15px rgba(47, 128, 237, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
     /* ── 全局毛玻璃 ── */
     --backdrop-filter: blur(40px);
@@ -340,8 +341,8 @@
     /* ── UISTD 精密渐变按钮 (dark) ── */
     --btn-accent-bg: linear-gradient(90deg, rgba(0, 229, 255, 0.06) 0%, rgba(58, 139, 255, 0.1) 100%);
     --btn-accent-border: 1px solid rgba(0, 229, 255, 0.25);
-    --btn-accent-text: #00E5FF;
-    --btn-accent-hover-bg: linear-gradient(90deg, #00E5FF 0%, #1A73E8 100%);
+    --btn-accent-text: #00e5ff;
+    --btn-accent-hover-bg: linear-gradient(90deg, #00e5ff 0%, #1a73e8 100%);
     --btn-accent-hover-glow: 0 0 15px rgba(0, 229, 255, 0.45);
 
     /* ── 嵌套景深层级配色 (dark) ── */
@@ -359,7 +360,14 @@
     background: var(--bg-global);
     background-attachment: scroll;
     color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'PingFang SC',
+      'Microsoft YaHei',
+      'Helvetica Neue',
+      sans-serif;
     font-size: 12px;
     overflow: hidden;
     position: relative;
@@ -367,7 +375,7 @@
 
   /* ── 精密仪器网格背景 ── */
   body::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -430,7 +438,9 @@
     -webkit-backdrop-filter: blur(25px);
     padding: var(--section-card-padding);
     margin-bottom: var(--section-card-gap);
-    transition: box-shadow 0.4s var(--ease-precision), transform 0.3s var(--ease-precision);
+    transition:
+      box-shadow 0.4s var(--ease-precision),
+      transform 0.3s var(--ease-precision);
   }
 
   .section-card:hover {
@@ -689,10 +699,7 @@
     background: var(--bg-card-solid, var(--color-card));
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
-    box-shadow:
-      var(--shadow-card-elevated),
-      var(--shadow-card-inner),
-      var(--shadow-card-glow);
+    box-shadow: var(--shadow-card-elevated), var(--shadow-card-inner), var(--shadow-card-glow);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     will-change: transform;
@@ -706,10 +713,7 @@
 
   .card:hover {
     border-color: var(--border-color-hover);
-    box-shadow:
-      var(--shadow-card-elevated),
-      var(--shadow-card-inner),
-      var(--shadow-card-active);
+    box-shadow: var(--shadow-card-elevated), var(--shadow-card-inner), var(--shadow-card-active);
     transform: translateY(-2px);
   }
 
@@ -717,10 +721,7 @@
     background: var(--bg-card-solid, var(--color-card));
     border: 1px solid var(--border-color, var(--color-border));
     border-radius: var(--radius-md);
-    box-shadow:
-      var(--shadow-card-elevated),
-      var(--shadow-card-inner),
-      var(--shadow-card-glow);
+    box-shadow: var(--shadow-card-elevated), var(--shadow-card-inner), var(--shadow-card-glow);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     will-change: transform;
@@ -733,10 +734,7 @@
   }
   .card-hover:hover {
     border-color: var(--border-color-hover);
-    box-shadow:
-      var(--shadow-card-elevated),
-      var(--shadow-card-inner),
-      var(--shadow-card-active);
+    box-shadow: var(--shadow-card-elevated), var(--shadow-card-inner), var(--shadow-card-active);
     transform: translateY(-2px);
   }
 

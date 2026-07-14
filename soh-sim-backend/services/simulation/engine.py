@@ -41,17 +41,13 @@ class SimulationEngine(BaseEngine):
         system_params = self._extract_params(design_output, survey_params)
 
         # 执行退化预测
-        soh, rte, dod, aug_qty = self._predict_degradation(
-            system_params, degradation, algorithm
-        )
+        soh, rte, dod, aug_qty = self._predict_degradation(system_params, degradation, algorithm)
 
         # 能量核算 — 允许 efficiencyFactors=None 以使用自定义RTE数组
         efficiency_factors = system_params.get("efficiencyFactors")
         if efficiency_factors is None and "efficiencyFactors" not in system_params:
             efficiency_factors = FACTOR_DEFAULTS
-        energy_results = self._calculate_energy(
-            system_params, soh, rte, dod, aug_qty, efficiency_factors
-        )
+        energy_results = self._calculate_energy(system_params, soh, rte, dod, aug_qty, efficiency_factors)
 
         # 效率曲线 — 当 efficiency_factors 为 None 时跳过（使用自定义RTE）
         if efficiency_factors is not None:
@@ -63,14 +59,17 @@ class SimulationEngine(BaseEngine):
             efficiency_detail = None
 
         # 补容策略
-        aug_strategy = self._optimize_augmentation(
-            soh, energy_results, system_params
-        )
+        aug_strategy = self._optimize_augmentation(soh, energy_results, system_params)
 
         # 补容策略经济性对比
         aug_comparison = self._compare_augmentation_strategies(
-            system_params, soh, rte, dod, energy_results,
-            design_output, survey_params,
+            system_params,
+            soh,
+            rte,
+            dod,
+            energy_results,
+            design_output,
+            survey_params,
         )
 
         return {
@@ -110,7 +109,9 @@ class SimulationEngine(BaseEngine):
             "pcsAuxRun": aux.get("pcsAuxRun", 6.5),
             "pcsAuxStandby": aux.get("pcsAuxStandby", 1.0),
             "auxPowerMode": survey_params.get("auxPowerMode", design_output.get("auxPowerMode", "manual")),
-            "ambientTemp": survey_params.get("ambientTemp", survey_params.get("tempAvg", design_output.get("ambientTemp", 25))),
+            "ambientTemp": survey_params.get(
+                "ambientTemp", survey_params.get("tempAvg", design_output.get("ambientTemp", 25))
+            ),
             "coolingType": survey_params.get("coolingType", design_output.get("coolingType", "liquid")),
             "requiredEnergy": survey_params.get("requiredEnergy", 240),
             "efficiencyFactors": survey_params.get("efficiencyFactors", FACTOR_DEFAULTS),
@@ -134,9 +135,16 @@ class SimulationEngine(BaseEngine):
             soh = list(degradation["soh"])
         else:
             soh, rte_out = predict_soh(
-                model_type, temperature, cycles_per_day, dod_input, c_rate,
-                model_params, correction_factor, correction_table,
-                environmental, gb_curves,
+                model_type,
+                temperature,
+                cycles_per_day,
+                dod_input,
+                c_rate,
+                model_params,
+                correction_factor,
+                correction_table,
+                environmental,
+                gb_curves,
             )
 
         if degradation.get("rte") and len(degradation["rte"]) == NUM_YEARS:
@@ -200,7 +208,9 @@ class SimulationEngine(BaseEngine):
             "recommended": "on_demand",
         }
 
-    def _compare_augmentation_strategies(self, system_params, soh, rte, dod, energy_results, design_output, survey_params):
+    def _compare_augmentation_strategies(
+        self, system_params, soh, rte, dod, energy_results, design_output, survey_params
+    ):
         """对三种补容策略执行完整经济性对比
 
         对每种策略：
@@ -209,8 +219,8 @@ class SimulationEngine(BaseEngine):
           3. 调用 FinancialEngine 计算 NPV/IRR/LCOS
         返回对比结果并推荐 NPV 最高的策略。
         """
-        from services.pipeline import calculate_energy_accounting
         from services.financial.engine import FinancialEngine
+        from services.pipeline import calculate_energy_accounting
 
         aug_result = self._optimize_augmentation(soh, energy_results, system_params)
         strategies = aug_result.get("strategies", {})
@@ -257,12 +267,14 @@ class SimulationEngine(BaseEngine):
                     discounted_price = init_container_unit_price * ((1 - learning_rate) ** y)
                     year_aug_cost = qty * discounted_price + qty * aug_install_cost_per_unit
                     total_aug_capex += year_aug_cost
-                    aug_schedule.append({
-                        "year": y,
-                        "quantity": qty,
-                        "unitPrice": round(discounted_price, 2),
-                        "totalCost": round(year_aug_cost, 2),
-                    })
+                    aug_schedule.append(
+                        {
+                            "year": y,
+                            "quantity": qty,
+                            "unitPrice": round(discounted_price, 2),
+                            "totalCost": round(year_aug_cost, 2),
+                        }
+                    )
 
             # 构造财务参数
             # overbuild 策略：equipment CAPEX 已包含额外 20% 容器的成本，

@@ -4,11 +4,7 @@
       <FinancialMetrics :metrics="metrics" />
 
       <!-- 独立模式：系统规模 + 电量参数区 -->
-      <StandaloneParams
-        v-if="mode === 'standalone'"
-        v-model="standaloneParams"
-        @change="onStandaloneChange"
-      />
+      <StandaloneParams v-if="mode === 'standalone'" v-model="standaloneParams" @change="onStandaloneChange" />
 
       <FinancialInputs />
 
@@ -23,10 +19,7 @@
       <CurrencyConverter />
 
       <!-- 项目模式才显示产品联动 -->
-      <ProductCAPEXLink
-        v-if="mode === 'project'"
-        @apply-config="handleProductConfig"
-      />
+      <ProductCAPEXLink v-if="mode === 'project'" @apply-config="handleProductConfig" />
 
       <FinancialTable :cash-flow-table="cashFlowTable" @recalc="recalc" />
     </div>
@@ -62,19 +55,19 @@ const standaloneParams = reactive({
   operatingDays: 330,
   efficiencyLossPct: 5,
   sohStart: 100,
-  sohAnnualDecline: 2.0,
+  sohAnnualDecline: 2.0
 })
 
 // 将 standalone 参数注入到 props 中传给 useFinancialModel
 const mergedProps = computed(() => ({
   ...props,
-  standalone: props.mode === 'standalone' ? standaloneParams : null,
+  standalone: props.mode === 'standalone' ? standaloneParams : null
 }))
 
 const { f, metrics, cashFlowTable, computeAll, recalc } = useFinancialModel(mergedProps)
 
 provide('financialParams', f)
-provide('standaloneParams', null)  // 由子组件 provide
+provide('standaloneParams', null) // 由子组件 provide
 
 const cachedRows = ref([])
 const cachedCapexData = ref(null)

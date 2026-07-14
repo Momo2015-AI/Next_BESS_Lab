@@ -69,3 +69,4 @@ rules:
       - Full spec: CODE_STYLE.md
       - Translations: src/i18n/zh.js and src/i18n/en.js
       - Design tokens: src/style.css
+      

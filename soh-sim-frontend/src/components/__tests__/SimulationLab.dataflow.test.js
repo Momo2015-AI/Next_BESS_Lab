@@ -19,12 +19,12 @@ vi.mock('../../services/api.js', () => ({
   post: vi.fn(),
   get: vi.fn(),
   put: vi.fn(),
-  del: vi.fn(),
+  del: vi.fn()
 }))
 
 // Mock chart components
 vi.mock('../charts/LineChart.vue', () => ({
-  default: { template: '<div class="line-chart"/>', props: ['data', 'options'] },
+  default: { template: '<div class="line-chart"/>', props: ['data', 'options'] }
 }))
 
 describe('SimulationLab — 数据传递', () => {
@@ -40,13 +40,16 @@ describe('SimulationLab — 数据传递', () => {
           'el-dialog': { template: '<div class="el-dialog"><slot/></div>' },
           'el-form': { template: '<form><slot/></form>' },
           'el-form-item': { template: '<div><slot/></div>' },
-          'el-input': { template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />', props: ['modelValue'] },
+          'el-input': {
+            template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
+            props: ['modelValue']
+          },
           'el-input-number': { template: '<input type="number" />', props: ['modelValue'] },
           'el-select': { template: '<select :value="modelValue"><slot/></select>', props: ['modelValue'] },
           'el-option': { template: '<option/>' },
           'el-button': {
             template: '<button @click="$emit(\'click\')"><slot/></button>',
-            emits: ['click'],
+            emits: ['click']
           },
           'el-table': { template: '<table><slot/></table>' },
           'el-table-column': { template: '<td><slot/></td>' },
@@ -67,10 +70,10 @@ describe('SimulationLab — 数据传递', () => {
           'el-radio-group': { template: '<div><slot/></div>', props: ['modelValue'] },
           'el-radio': { template: '<label><slot/></label>' },
           'el-result': { template: '<div><slot/></div>' },
-          'LineChart': { template: '<div class="line-chart"/>', props: ['data', 'options'] },
-          'BarChart': { template: '<div class="bar-chart"/>', props: ['data', 'options'] },
-        },
-      },
+          LineChart: { template: '<div class="line-chart"/>', props: ['data', 'options'] },
+          BarChart: { template: '<div class="bar-chart"/>', props: ['data', 'options'] }
+        }
+      }
     })
   }
 
@@ -91,8 +94,8 @@ describe('SimulationLab — 数据传递', () => {
   it('应有运行仿真按钮', () => {
     wrapper = createWrapper()
     const buttons = wrapper.findAll('button')
-    const simBtn = buttons.find(b =>
-      b.text().includes('仿真') || b.text().includes('运行') || b.text().includes('计算')
+    const simBtn = buttons.find(
+      (b) => b.text().includes('仿真') || b.text().includes('运行') || b.text().includes('计算')
     )
     // 验证按钮存在或组件功能正常
     expect(buttons.length).toBeGreaterThanOrEqual(0)

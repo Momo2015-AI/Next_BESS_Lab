@@ -49,9 +49,7 @@
                   class="w-16 rounded text-xs px-2 py-1 form-field-input"
                 />
               </div>
-              <div class="text-[10px] mt-1 ins-5">
-                {{ $t('sensitivity.currentValue') }}: {{ param.current }}
-              </div>
+              <div class="text-[10px] mt-1 ins-5">{{ $t('sensitivity.currentValue') }}: {{ param.current }}</div>
             </div>
           </div>
 
@@ -426,15 +424,36 @@ async function analyzeSingleParam(param) {
 </script>
 
 <style scoped>
-.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
-.ins-2 { color: var(--color-accent) }
-.ins-3 { background-color: var(--color-accent) }
-.ins-4 { background-color: var(--color-card-dark) }
-.ins-5 { color: var(--color-text-muted) }
-.ins-6 { accent-color: var(--color-accent) }
-.ins-7 { color: var(--color-text-secondary) }
-.ins-8 { color: var(--color-text-muted); border-bottom: 1px solid var(--color-border) }
-.ins-9 { color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border) }
+.ins-1 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.ins-2 {
+  color: var(--color-accent);
+}
+.ins-3 {
+  background-color: var(--color-accent);
+}
+.ins-4 {
+  background-color: var(--color-card-dark);
+}
+.ins-5 {
+  color: var(--color-text-muted);
+}
+.ins-6 {
+  accent-color: var(--color-accent);
+}
+.ins-7 {
+  color: var(--color-text-secondary);
+}
+.ins-8 {
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.ins-9 {
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
 
 .sensitivity-analysis {
   height: 100%;

@@ -3,12 +3,7 @@
     <div class="max-w-5xl mx-auto space-y-4 py-2">
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            01
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">01</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section01') }}
@@ -75,12 +70,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            02
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">02</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section02') }}
@@ -173,12 +163,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            03
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">03</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section03') }}
@@ -255,12 +240,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            04
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">04</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section04') }}
@@ -335,12 +315,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            05
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">05</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section05') }}
@@ -426,12 +401,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            06
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">06</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section06') }}
@@ -518,12 +488,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            07
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">07</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.pcsSectionTitle') }}
@@ -619,12 +584,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            08
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">08</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section07') }}
@@ -639,7 +599,6 @@
                 v-for="(opt, idx) in certOptionsI18n.cell"
                 :key="certKeys.cell[idx]"
                 class="flex items-center gap-1.5 cursor-pointer ins-3"
-               
               >
                 <input v-model="form.certCell" type="checkbox" :value="certKeys.cell[idx]" class="accent-teal-500" />
                 {{ opt }}
@@ -653,7 +612,6 @@
                 v-for="(opt, idx) in certOptionsI18n.system"
                 :key="certKeys.system[idx]"
                 class="flex items-center gap-1.5 cursor-pointer ins-3"
-               
               >
                 <input
                   v-model="form.certSystem"
@@ -672,7 +630,6 @@
                 v-for="(opt, idx) in certOptionsI18n.grid"
                 :key="certKeys.grid[idx]"
                 class="flex items-center gap-1.5 cursor-pointer ins-3"
-               
               >
                 <input v-model="form.certGrid" type="checkbox" :value="certKeys.grid[idx]" class="accent-blue-500" />
                 {{ opt }}
@@ -688,7 +645,6 @@
                 v-for="(opt, idx) in certOptionsI18n.extra"
                 :key="certKeys.extra[idx]"
                 class="flex items-center gap-1.5 cursor-pointer ins-3"
-               
               >
                 <input
                   v-model="form.certExtra"
@@ -707,7 +663,6 @@
                 v-for="(opt, idx) in certOptionsI18n.gridCode"
                 :key="certKeys.gridCode[idx]"
                 class="flex items-center gap-1.5 cursor-pointer ins-3"
-               
               >
                 <input
                   v-model="form.certGridCode"
@@ -724,12 +679,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            09
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">09</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section08') }}
@@ -830,12 +780,7 @@
 
       <div class="card p-4">
         <div class="flex items-center gap-2 mb-3">
-          <span
-            class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1"
-           
-          >
-            10
-          </span>
+          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">10</span>
           <div>
             <h3 class="section-title ins-2">
               {{ $t('runningConditions.section09') }}
@@ -865,25 +810,16 @@
             @change="onFileChange"
           />
           <div v-if="uploading" class="ins-5 text-xs">
-            <div
-              class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2 ins-7"
-             
-            />
+            <div class="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full mx-auto mb-2 ins-7" />
             {{ $t('runningConditions.uploading') }}
           </div>
           <div v-else-if="uploadResult" class="text-xs">
             <span class="ins-8 font-bold">{{ $t('common.done') }}</span>
-            <span class="ins-9 ml-2">
-              {{ uploadResult.fieldsExtracted }} {{ $t('runningConditions.uploadDone') }}
-            </span>
+            <span class="ins-9 ml-2">{{ uploadResult.fieldsExtracted }} {{ $t('runningConditions.uploadDone') }}</span>
             <button class="ml-3 underline text-xs ins-5" @click.stop="applyExtracted">
               {{ $t('runningConditions.applyForm') }}
             </button>
-            <button
-              class="ml-3 underline text-xs ins-9"
-             
-              @click.stop="uploadResult = null"
-            >
+            <button class="ml-3 underline text-xs ins-9" @click.stop="uploadResult = null">
               {{ $t('runningConditions.clearForm') }}
             </button>
           </div>
@@ -906,11 +842,7 @@
         <button class="text-xs underline mr-4 ins-9" @click="clearAll">
           {{ $t('runningConditions.resetAll') }}
         </button>
-        <button
-          class="text-xs px-4 py-1.5 rounded mr-2 transition-colors ins-10"
-         
-          @click="exportCSV"
-        >
+        <button class="text-xs px-4 py-1.5 rounded mr-2 transition-colors ins-10" @click="exportCSV">
           {{ $t('runningConditions.exportCSV') }}
         </button>
         <button class="btn-primary" @click="applyToSimulation">
@@ -1311,18 +1243,39 @@ function applyToSimulation() {
 </script>
 
 <style scoped>
-.ins-1 { background: var(--color-accent-glow); color: var(--color-accent) }
-.ins-2 { color: var(--color-accent); border-color: var(--color-accent) }
-.ins-3 { color: var(--color-text-secondary) }
-.ins-4 { background: var(--color-accent-glow) }
-.ins-5 { color: var(--color-accent) }
-.ins-6 { background: var(--color-input-bg) }
-.ins-7 { border-color: var(--color-accent); border-top-color: transparent }
-.ins-8 { color: var(--color-success) }
-.ins-9 { color: var(--color-text-muted) }
-.ins-10 { 
-            background: var(--color-input-bg);
-            border: 1px solid var(--color-input-border);
-            color: var(--color-text-secondary);
-           }
+.ins-1 {
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
+}
+.ins-2 {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.ins-3 {
+  color: var(--color-text-secondary);
+}
+.ins-4 {
+  background: var(--color-accent-glow);
+}
+.ins-5 {
+  color: var(--color-accent);
+}
+.ins-6 {
+  background: var(--color-input-bg);
+}
+.ins-7 {
+  border-color: var(--color-accent);
+  border-top-color: transparent;
+}
+.ins-8 {
+  color: var(--color-success);
+}
+.ins-9 {
+  color: var(--color-text-muted);
+}
+.ins-10 {
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text-secondary);
+}
 </style>

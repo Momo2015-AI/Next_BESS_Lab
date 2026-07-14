@@ -1,31 +1,19 @@
 <template>
   <div>
     <div class="grid grid-cols-2 gap-3">
-      <div
-        class="rounded-lg p-3 ins-1"
-       
-      >
+      <div class="rounded-lg p-3 ins-1">
         <h3 class="font-bold text-xs mb-2 ins-2">{{ $t('financial.chartCashFlow') }}</h3>
         <div ref="cashFlowChartRef" class="w-full ins-3" />
       </div>
-      <div
-        class="rounded-lg p-3 ins-1"
-       
-      >
+      <div class="rounded-lg p-3 ins-1">
         <h3 class="font-bold text-xs mb-2 ins-2">{{ $t('financial.chartRevenue') }}</h3>
         <div ref="revenueChartRef" class="w-full ins-3" />
       </div>
-      <div
-        class="rounded-lg p-3 ins-1"
-       
-      >
+      <div class="rounded-lg p-3 ins-1">
         <h3 class="font-bold text-xs mb-2 ins-2">{{ $t('financial.chartDscr') }}</h3>
         <div ref="dscrChartRef" class="w-full ins-3" />
       </div>
-      <div
-        class="rounded-lg p-3 ins-1"
-       
-      >
+      <div class="rounded-lg p-3 ins-1">
         <h3 class="font-bold text-xs mb-2 ins-2">{{ $t('financial.chartCapex') }}</h3>
         <div ref="capexChartRef" class="w-full ins-3" />
       </div>
@@ -511,7 +499,15 @@ window.addEventListener('resize', _resizeHandler)
 </script>
 
 <style scoped>
-.ins-1 { min-height: 300px; background-color: var(--color-card); border: 1px solid var(--color-border) }
-.ins-2 { color: var(--color-text) }
-.ins-3 { height: 280px }
+.ins-1 {
+  min-height: 300px;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.ins-2 {
+  color: var(--color-text);
+}
+.ins-3 {
+  height: 280px;
+}
 </style>

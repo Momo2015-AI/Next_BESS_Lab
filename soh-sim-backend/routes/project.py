@@ -323,14 +323,16 @@ def compare_versions():
                 except (json.JSONDecodeError, TypeError):
                     config = {"raw": version.config_data}
 
-            versions_data.append({
-                "id": version.id,
-                "name": version.name,
-                "version_num": version.version_num,
-                "description": version.description,
-                "created_at": version.created_at.isoformat() if version.created_at else None,
-                "config": config,
-            })
+            versions_data.append(
+                {
+                    "id": version.id,
+                    "name": version.name,
+                    "version_num": version.version_num,
+                    "description": version.description,
+                    "created_at": version.created_at.isoformat() if version.created_at else None,
+                    "config": config,
+                }
+            )
 
         # 计算差异
         delta = _compute_version_delta(versions_data)

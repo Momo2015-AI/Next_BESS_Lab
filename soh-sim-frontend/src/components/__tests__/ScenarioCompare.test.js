@@ -4,14 +4,14 @@ import { createTestingPinia } from '@pinia/testing'
 
 // Use vi.hoisted for mock objects
 const { mockPost } = vi.hoisted(() => ({
-  mockPost: vi.fn(),
+  mockPost: vi.fn()
 }))
 
 // Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
-    t: (key) => key,
-  }),
+    t: (key) => key
+  })
 }))
 
 // Mock echarts
@@ -20,15 +20,15 @@ vi.mock('echarts/core', () => ({
   init: vi.fn(() => ({
     setOption: vi.fn(),
     resize: vi.fn(),
-    dispose: vi.fn(),
-  })),
+    dispose: vi.fn()
+  }))
 }))
 vi.mock('echarts/renderers', () => ({ CanvasRenderer: {} }))
 vi.mock('echarts/charts', () => ({ LineChart: {} }))
 vi.mock('echarts/components', () => ({
   TitleComponent: {},
   TooltipComponent: {},
-  GridComponent: {},
+  GridComponent: {}
 }))
 
 // Mock services/api.js
@@ -38,8 +38,12 @@ vi.mock('../../services/api.js', () => ({
   put: vi.fn(),
   del: vi.fn(),
   request: vi.fn(),
-  ApiError: class extends Error { constructor(m) { super(m) } },
-  default: { get: vi.fn(), post: mockPost },
+  ApiError: class extends Error {
+    constructor(m) {
+      super(m)
+    }
+  },
+  default: { get: vi.fn(), post: mockPost }
 }))
 
 // Mock useDraft - return simple objects that work with the component's usage patterns
@@ -53,7 +57,7 @@ vi.mock('../../composables/useDraft', () => ({
     }
     return {
       state: draftStore.get(key),
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
   },
   useDraftRef: (key, defaultValue) => {
@@ -67,17 +71,19 @@ vi.mock('../../composables/useDraft', () => ({
       __v_isRef: true,
       _isRef: true,
       _value: val,
-      get value() { return this._value },
+      get value() {
+        return this._value
+      },
       set value(v) {
         this._value = v
         draftStore.set(key, v)
-      },
+      }
     }
     return {
       state: refObj,
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
-  },
+  }
 }))
 
 import ScenarioCompare from '../ScenarioCompare.vue'
@@ -90,14 +96,14 @@ describe('ScenarioCompare.vue', () => {
         plugins: [
           createTestingPinia({
             createSpy: vi.fn,
-            stubActions: false,
-          }),
+            stubActions: false
+          })
         ],
         stubs: {
           SohChart: { template: '<div class="soh-chart" />' },
-          SectionCard: { template: '<div><slot /></div>' },
-        },
-      },
+          SectionCard: { template: '<div><slot /></div>' }
+        }
+      }
     })
   }
 

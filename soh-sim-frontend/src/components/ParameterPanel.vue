@@ -218,7 +218,8 @@
       <h2
         class="text-sm font-bold mb-3 flex items-center gap-2 u-color-var-color-accent-border-left-4px-solid-var-color-accent-padding-left-8px"
       >
-        <AppIcon name="lightning" size="14" /> {{ $t('paramPanel.configRules') }}
+        <AppIcon name="lightning" size="14" />
+        {{ $t('paramPanel.configRules') }}
       </h2>
       <div class="rounded-lg p-4 bg-card-dark border-card">
         <div class="grid grid-cols-3 gap-4 mb-4">

@@ -6,15 +6,15 @@ import { createTestingPinia } from '@pinia/testing'
 const { mockApi } = vi.hoisted(() => ({
   mockApi: {
     get: vi.fn(),
-    post: vi.fn(),
-  },
+    post: vi.fn()
+  }
 }))
 
 // Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
-    t: (key) => key,
-  }),
+    t: (key) => key
+  })
 }))
 
 // Mock echarts
@@ -23,8 +23,8 @@ vi.mock('echarts/core', () => ({
   init: vi.fn(() => ({
     setOption: vi.fn(),
     resize: vi.fn(),
-    dispose: vi.fn(),
-  })),
+    dispose: vi.fn()
+  }))
 }))
 
 vi.mock('echarts/renderers', () => ({ CanvasRenderer: {} }))
@@ -33,7 +33,7 @@ vi.mock('echarts/components', () => ({
   TitleComponent: {},
   TooltipComponent: {},
   GridComponent: {},
-  LegendComponent: {},
+  LegendComponent: {}
 }))
 
 // Mock services/api.js - both default and named exports
@@ -44,7 +44,11 @@ vi.mock('../../services/api.js', () => ({
   put: vi.fn(),
   del: vi.fn(),
   request: vi.fn(),
-  ApiError: class extends Error { constructor(m) { super(m) } },
+  ApiError: class extends Error {
+    constructor(m) {
+      super(m)
+    }
+  }
 }))
 
 // Mock useDraft composable
@@ -56,7 +60,7 @@ vi.mock('../../composables/useDraft', () => ({
     }
     return {
       state: draftStateMap[key],
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
   },
   useDraftRef: (key, defaultValue) => {
@@ -65,9 +69,9 @@ vi.mock('../../composables/useDraft', () => ({
     }
     return {
       state: { value: draftStateMap[key] },
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
-  },
+  }
 }))
 
 // Mock builtinAlgorithms
@@ -83,11 +87,11 @@ vi.mock('../../data/builtinAlgorithms.js', () => ({
       parameters: {
         A: { label: 'A', default: 0.001, unit: '', min: 0, max: 1, step: 0.001 },
         Ea: { label: 'Ea', default: 35, unit: 'kJ/mol', min: 20, max: 60, step: 1 },
-        alpha: { label: 'alpha', default: 0.5, unit: '', min: 0.1, max: 1, step: 0.1 },
-      },
-    },
+        alpha: { label: 'alpha', default: 0.5, unit: '', min: 0.1, max: 1, step: 0.1 }
+      }
+    }
   ],
-  mapToSimulationLabFormat: (alg) => alg,
+  mapToSimulationLabFormat: (alg) => alg
 }))
 
 import SimulationLab from '../SimulationLab.vue'
@@ -102,15 +106,15 @@ describe('SimulationLab.vue', () => {
         plugins: [
           createTestingPinia({
             createSpy: vi.fn,
-            stubActions: false,
-          }),
+            stubActions: false
+          })
         ],
         stubs: {
           SohChart: { template: '<div class="soh-chart" />' },
           ParamInput: { template: '<div class="param-input" />' },
-          SectionCard: { template: '<div class="section-card"><slot /></div>' },
-        },
-      },
+          SectionCard: { template: '<div class="section-card"><slot /></div>' }
+        }
+      }
     })
   }
 
@@ -136,8 +140,8 @@ describe('SimulationLab.vue', () => {
         soh: Array(26).fill(95),
         rte: Array(26).fill(96),
         dod: Array(26).fill(80),
-        totalAcUsable: Array(26).fill(900),
-      },
+        totalAcUsable: Array(26).fill(900)
+      }
     })
 
     const wrapper = createWrapper()

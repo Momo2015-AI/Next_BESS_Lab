@@ -14,7 +14,6 @@ from services.efficiency import FACTOR_DEFAULTS
 from services.financial.engine import FinancialEngine
 from services.simulation.engine import SimulationEngine
 
-
 # ==================== TestSimulationEngineParamsMapping ====================
 
 
@@ -42,12 +41,9 @@ class TestSimulationEngineParamsMapping:
                 "dod": 90,
             },
         )
-        assert params["auxPowerMode"] == "thermal", \
-            f"Expected thermal, got {params['auxPowerMode']}"
-        assert params["ambientTemp"] == 32, \
-            f"Expected 32, got {params['ambientTemp']}"
-        assert params["coolingType"] == "liquid", \
-            f"Expected liquid, got {params['coolingType']}"
+        assert params["auxPowerMode"] == "thermal", f"Expected thermal, got {params['auxPowerMode']}"
+        assert params["ambientTemp"] == 32, f"Expected 32, got {params['ambientTemp']}"
+        assert params["coolingType"] == "liquid", f"Expected liquid, got {params['coolingType']}"
 
     # ---- 2. auxPowerMode 默认值 ----
 
@@ -57,8 +53,7 @@ class TestSimulationEngineParamsMapping:
             design_output={"containerQty": 10, "pcsQty": 10, "duration": 2},
             survey_params={"temperature": 25, "cyclesPerDay": 1, "dod": 90},
         )
-        assert params["auxPowerMode"] == "manual", \
-            f"Expected manual (default), got {params['auxPowerMode']}"
+        assert params["auxPowerMode"] == "manual", f"Expected manual (default), got {params['auxPowerMode']}"
 
     # ---- 3. ambientTemp 回退到 tempAvg ----
 
@@ -73,8 +68,7 @@ class TestSimulationEngineParamsMapping:
                 "dod": 90,
             },
         )
-        assert params["ambientTemp"] == 30, \
-            f"Expected 30 (from tempAvg), got {params['ambientTemp']}"
+        assert params["ambientTemp"] == 30, f"Expected 30 (from tempAvg), got {params['ambientTemp']}"
 
     # ---- 4. ambientTemp 直接使用 ----
 
@@ -90,8 +84,7 @@ class TestSimulationEngineParamsMapping:
                 "dod": 90,
             },
         )
-        assert params["ambientTemp"] == 40, \
-            f"Expected 40 (ambientTemp takes priority), got {params['ambientTemp']}"
+        assert params["ambientTemp"] == 40, f"Expected 40 (ambientTemp takes priority), got {params['ambientTemp']}"
 
     # ---- 5. efficiencyFactors=None 穿透 ----
 
@@ -106,8 +99,7 @@ class TestSimulationEngineParamsMapping:
                 "efficiencyFactors": None,
             },
         )
-        assert params["efficiencyFactors"] is None, \
-            f"Expected None, got {params['efficiencyFactors']}"
+        assert params["efficiencyFactors"] is None, f"Expected None, got {params['efficiencyFactors']}"
 
     # ---- 6. efficiencyFactors 默认值 ----
 
@@ -117,8 +109,9 @@ class TestSimulationEngineParamsMapping:
             design_output={"containerQty": 10, "pcsQty": 10, "duration": 2},
             survey_params={"temperature": 25, "cyclesPerDay": 1, "dod": 90},
         )
-        assert params["efficiencyFactors"] == FACTOR_DEFAULTS, \
-            "Expected FACTOR_DEFAULTS when efficiencyFactors not provided"
+        assert (
+            params["efficiencyFactors"] == FACTOR_DEFAULTS
+        ), "Expected FACTOR_DEFAULTS when efficiencyFactors not provided"
 
     # ---- 7. coolingType 默认值 ----
 
@@ -128,8 +121,7 @@ class TestSimulationEngineParamsMapping:
             design_output={"containerQty": 10, "pcsQty": 10, "duration": 2},
             survey_params={"temperature": 25, "cyclesPerDay": 1, "dod": 90},
         )
-        assert params["coolingType"] == "liquid", \
-            f"Expected liquid (default), got {params['coolingType']}"
+        assert params["coolingType"] == "liquid", f"Expected liquid (default), got {params['coolingType']}"
 
     # ---- 8. 完整参数集成 ----
 
@@ -190,8 +182,7 @@ class TestSimulationEngineParamsMapping:
         assert params["ambientTemp"] == 35, f"ambientTemp: {params['ambientTemp']}"
         assert params["coolingType"] == "SiC-liquid", f"coolingType: {params['coolingType']}"
         assert params["requiredEnergy"] == 500, f"requiredEnergy: {params['requiredEnergy']}"
-        assert params["efficiencyFactors"] is None, \
-            f"efficiencyFactors: {params['efficiencyFactors']}"
+        assert params["efficiencyFactors"] is None, f"efficiencyFactors: {params['efficiencyFactors']}"
 
 
 # ==================== TestFinancialEngineParamsMapping ====================
@@ -216,11 +207,11 @@ class TestFinancialEngineParamsMapping:
         # equipment = 500 * 200000 = 100,000,000
         assert capex["equipment"] > 0, f"equipment should be > 0, got {capex['equipment']}"
         expected_equipment = 500 * 200000  # 100,000,000
-        assert capex["equipment"] == expected_equipment, \
-            f"Expected {expected_equipment}, got {capex['equipment']}"
+        assert capex["equipment"] == expected_equipment, f"Expected {expected_equipment}, got {capex['equipment']}"
         # 验证不是旧逻辑的 100*200000=20,000,000
-        assert capex["equipment"] != 100 * 200000, \
-            "equipment should use totalEnergy (container * qty), not just containerQty"
+        assert (
+            capex["equipment"] != 100 * 200000
+        ), "equipment should use totalEnergy (container * qty), not just containerQty"
 
     # ---- 10. CAPEX fallback 使用 totalEnergyMwh ----
 
@@ -232,8 +223,7 @@ class TestFinancialEngineParamsMapping:
             survey_params={},
         )
         expected_equipment = 200 * 200000  # 40,000,000
-        assert capex["equipment"] == expected_equipment, \
-            f"Expected {expected_equipment}, got {capex['equipment']}"
+        assert capex["equipment"] == expected_equipment, f"Expected {expected_equipment}, got {capex['equipment']}"
 
     # ---- 11. 中国收入模型 ----
 

@@ -14,15 +14,15 @@ import json
 
 import pytest
 
-# conftest.py 提供: client, auth_headers (seed_user), seed_tenant, seed_user, db_session
-# test_integration.py 提供: auth_headers, auth_headers_admin, _post, _get, _assert_success, SURVEY_PARAMS
-
 from tests.test_integration import (
+    SURVEY_PARAMS,
     _assert_success,
     _get,
     _post,
-    SURVEY_PARAMS,
 )
+
+# conftest.py 提供: client, auth_headers (seed_user), seed_tenant, seed_user, db_session
+# test_integration.py 提供: auth_headers, auth_headers_admin, _post, _get, _assert_success, SURVEY_PARAMS
 
 
 # ==================== TestApiEndpointConnectivity ====================
@@ -42,15 +42,20 @@ class TestApiEndpointConnectivity:
             "pcsQty": 10,
             "duration": 2,
         }
-        resp = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "thermal",
-                "ambientTemp": 32,
-                "coolingType": "liquid",
+        resp = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "thermal",
+                    "ambientTemp": 32,
+                    "coolingType": "liquid",
+                },
             },
-        }, auth_headers)
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         # 验证核心数组长度
@@ -75,10 +80,15 @@ class TestApiEndpointConnectivity:
             "pcsQty": 10,
             "duration": 2,
         }
-        resp = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {**SURVEY_PARAMS, "auxPowerMode": "manual"},
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {**SURVEY_PARAMS, "auxPowerMode": "manual"},
+            },
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         for key in ["soh", "rte", "totalAcUsable"]:
@@ -92,28 +102,33 @@ class TestApiEndpointConnectivity:
         # 构造 26 年 totalAcUsable
         base = 240.0
         total_ac = [max(0, base * (1 - 0.005 * i)) for i in range(26)]
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": {
-                "totalAcUsable": total_ac,
-                "soh": [100 * (1 - 0.005 * i) for i in range(26)],
-                "rte": [97 * (1 - 0.002 * i) for i in range(26)],
-                "meetsReq": [v >= 200 for v in total_ac],
-            },
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
-                "estimatedCapex": {
-                    "totalCapex": 50000000,
-                    "equipmentCost": 35000000,
-                    "epcCost": 10000000,
-                    "developmentCost": 5000000,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": {
+                    "totalAcUsable": total_ac,
+                    "soh": [100 * (1 - 0.005 * i) for i in range(26)],
+                    "rte": [97 * (1 - 0.002 * i) for i in range(26)],
+                    "meetsReq": [v >= 200 for v in total_ac],
                 },
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                    "estimatedCapex": {
+                        "totalCapex": 50000000,
+                        "equipmentCost": 35000000,
+                        "epcCost": 10000000,
+                        "developmentCost": 5000000,
+                    },
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers)
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         assert "metrics" in data, "Response missing metrics"
@@ -136,9 +151,14 @@ class TestApiEndpointConnectivity:
 
     def test_design_auto(self, client, auth_headers):
         """POST /api/design/auto — 验证返回 solutions 和 recommendation"""
-        resp = _post(client, "/api/design/auto", {
-            "survey_params": SURVEY_PARAMS,
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/design/auto",
+            {
+                "survey_params": SURVEY_PARAMS,
+            },
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         assert "solutions" in data, "Missing solutions"
@@ -150,13 +170,18 @@ class TestApiEndpointConnectivity:
 
     def test_degradation_preview(self, client, auth_headers):
         """POST /api/degradation/preview — 验证返回 soh 和 rte 数组"""
-        resp = _post(client, "/api/degradation/preview", {
-            "model": "arrhenius",
-            "temperature": 25,
-            "cyclesPerDay": 1,
-            "dod": 80,
-            "cRate": 0.5,
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/degradation/preview",
+            {
+                "model": "arrhenius",
+                "temperature": 25,
+                "cyclesPerDay": 1,
+                "dod": 80,
+                "cRate": 0.5,
+            },
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         assert "soh" in data, "Missing soh"
@@ -186,26 +211,32 @@ class TestApiEndpointConnectivity:
         body = resp.get_json()
         assert body is not None, "Response is not valid JSON"
         # paginated_response 格式
-        assert "items" in body or "success" in body, \
-            f"Unexpected response shape: {list(body.keys()) if isinstance(body, dict) else type(body)}"
+        assert (
+            "items" in body or "success" in body
+        ), f"Unexpected response shape: {list(body.keys()) if isinstance(body, dict) else type(body)}"
 
     # ---- 9. 调研表提交 ----
 
     def test_survey_submit(self, client, auth_headers):
         """POST /api/survey/submit — 验证返回 survey 含 id"""
-        resp = _post(client, "/api/survey/submit", {
-            "project_name": "Pipeline Data Flow Test",
-            "total_mwh": 100,
-            "total_mw": 50,
-            "location": "Beijing",
-            "temperature": 25,
-            "duration": 2,
-            "cyclesPerDay": 1,
-            "requiredEnergy": 240,
-            "ratedEnergy": 100,
-            "totalPower": 50,
-            "gridVoltage": "110kV",
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/survey/submit",
+            {
+                "project_name": "Pipeline Data Flow Test",
+                "total_mwh": 100,
+                "total_mw": 50,
+                "location": "Beijing",
+                "temperature": 25,
+                "duration": 2,
+                "cyclesPerDay": 1,
+                "requiredEnergy": 240,
+                "ratedEnergy": 100,
+                "totalPower": 50,
+                "gridVoltage": "110kV",
+            },
+            auth_headers,
+        )
         data = _assert_success(resp, status=(200, 201))
 
         # 验证返回了 survey id
@@ -231,14 +262,18 @@ class TestApiEndpointConnectivity:
         """POST /api/report/charts/soh_rte_curve — 验证返回 chart data"""
         soh = [100 * (1 - 0.005 * i) for i in range(26)]
         rte = [97 * (1 - 0.002 * i) for i in range(26)]
-        resp = _post(client, "/api/report/charts/soh_rte_curve", {
-            "soh": soh,
-            "rte": rte,
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/report/charts/soh_rte_curve",
+            {
+                "soh": soh,
+                "rte": rte,
+            },
+            auth_headers,
+        )
         # 注：后端 report.py 中 make_subplots 未导入，可能返回 500
         # 这是一个已知 bug，不是数据流问题
-        assert resp.status_code in (200, 500), \
-            f"Report charts returned unexpected: {resp.status_code}"
+        assert resp.status_code in (200, 500), f"Report charts returned unexpected: {resp.status_code}"
         if resp.status_code == 200:
             data = _assert_success(resp)
             assert "chart" in data, "Missing chart data"
@@ -250,26 +285,37 @@ class TestApiEndpointConnectivity:
 
     def test_export_csv(self, client, auth_headers):
         """POST /api/export/csv — 验证返回 CSV 内容（非 JSON）"""
-        resp = _post(client, "/api/export/csv", {
-            "soh": [100 * (1 - 0.005 * i) for i in range(26)],
-            "rte": [97 * (1 - 0.002 * i) for i in range(26)],
-            "totalAcUsable": [240 * (1 - 0.005 * i) for i in range(26)],
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/export/csv",
+            {
+                "soh": [100 * (1 - 0.005 * i) for i in range(26)],
+                "rte": [97 * (1 - 0.002 * i) for i in range(26)],
+                "totalAcUsable": [240 * (1 - 0.005 * i) for i in range(26)],
+            },
+            auth_headers,
+        )
 
         assert resp.status_code == 200, f"Expected 200, got {resp.status_code}"
         content_type = resp.headers.get("Content-Type", "")
         # CSV 返回 text/csv，不是 application/json
-        assert "csv" in content_type.lower() or "text" in content_type.lower(), \
-            f"Expected CSV content type, got: {content_type}"
+        assert (
+            "csv" in content_type.lower() or "text" in content_type.lower()
+        ), f"Expected CSV content type, got: {content_type}"
 
     # ---- 13. 一键工作流 ----
 
     def test_workflow_full(self, client, auth_headers):
         """POST /api/workflow/full — 验证返回 solutions, recommendation, pipeline_summary"""
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": SURVEY_PARAMS,
-            "strategy": "economic",
-        }, auth_headers)
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": SURVEY_PARAMS,
+                "strategy": "economic",
+            },
+            auth_headers,
+        )
         data = _assert_success(resp)
 
         assert "solutions" in data, "Missing solutions"
@@ -280,21 +326,28 @@ class TestApiEndpointConnectivity:
 
     def test_what_if(self, client, auth_headers):
         """POST /api/workflow/what-if — 验证返回 base, adjusted, delta"""
-        resp = _post(client, "/api/workflow/what-if", {
-            "base_design": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 5,
-                "pcsQty": 5,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/workflow/what-if",
+            {
+                "base_design": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 5,
+                    "pcsQty": 5,
+                    "duration": 2,
+                },
+                "adjustments": {"containerQty": 6},
+                "survey_params": SURVEY_PARAMS,
             },
-            "adjustments": {"containerQty": 6},
-            "survey_params": SURVEY_PARAMS,
-        }, auth_headers)
+            auth_headers,
+        )
 
         # What-If 可能因计算复杂度返回 400，接受两种
-        assert resp.status_code in (200, 400), \
-            f"What-If unexpected: {resp.status_code}: {resp.get_data(as_text=True)[:300]}"
+        assert resp.status_code in (
+            200,
+            400,
+        ), f"What-If unexpected: {resp.status_code}: {resp.get_data(as_text=True)[:300]}"
         if resp.status_code == 200:
             data = _assert_success(resp)
             assert "base" in data, "Missing base"
@@ -306,30 +359,38 @@ class TestApiEndpointConnectivity:
     def test_version_restore(self, client, auth_headers):
         """POST /api/versions/{id}/restore — 验证返回 design/simulation/financial"""
         # Step 1: 创建项目
-        proj_resp = _post(client, "/api/projects", {
-            "name": "Restore Test Project",
-            "code": "RT-001",
-        }, auth_headers)
+        proj_resp = _post(
+            client,
+            "/api/projects",
+            {
+                "name": "Restore Test Project",
+                "code": "RT-001",
+            },
+            auth_headers,
+        )
         proj_data = _assert_success(proj_resp, status=(200, 201))
         project_id = proj_data.get("id") or proj_data.get("project", {}).get("id")
         assert project_id, "Failed to create project"
 
         # Step 2: 创建版本
-        ver_resp = _post(client, f"/api/projects/{project_id}/versions", {
-            "name": "v1.0",
-            "description": "Initial version",
-            "config_data": json.dumps({
-                "design": {"containerQty": 10},
-                "simulation": {"soh": [100] * 26},
-                "financial": {"metrics": {"npv": 1000000}},
-            }),
-        }, auth_headers)
-        ver_data = _assert_success(ver_resp, status=(200, 201))
-        version_id = (
-            ver_data.get("id")
-            or (ver_data.get("version") or {}).get("id")
-            or ver_data.get("version_id")
+        ver_resp = _post(
+            client,
+            f"/api/projects/{project_id}/versions",
+            {
+                "name": "v1.0",
+                "description": "Initial version",
+                "config_data": json.dumps(
+                    {
+                        "design": {"containerQty": 10},
+                        "simulation": {"soh": [100] * 26},
+                        "financial": {"metrics": {"npv": 1000000}},
+                    }
+                ),
+            },
+            auth_headers,
         )
+        ver_data = _assert_success(ver_resp, status=(200, 201))
+        version_id = ver_data.get("id") or (ver_data.get("version") or {}).get("id") or ver_data.get("version_id")
         assert version_id, "Failed to create version"
 
         # Step 3: 回溯版本

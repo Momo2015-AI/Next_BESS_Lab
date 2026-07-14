@@ -1,5 +1,8 @@
 ﻿<template>
-  <AppPage title="EPC 工程化模块" desc="系统架构设计、电网合规分析、安全消防、IPP财务、合规矩阵、热管理、SCADA/EMS、高压接入、投标文档">
+  <AppPage
+    title="EPC 工程化模块"
+    desc="系统架构设计、电网合规分析、安全消防、IPP财务、合规矩阵、热管理、SCADA/EMS、高压接入、投标文档"
+  >
     <!-- 模块标签页 -->
     <div class="epc-tabs">
       <button

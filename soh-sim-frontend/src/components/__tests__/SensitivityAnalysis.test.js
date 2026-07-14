@@ -3,14 +3,14 @@ import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 
 const { mockPost } = vi.hoisted(() => ({
-  mockPost: vi.fn(),
+  mockPost: vi.fn()
 }))
 
 // Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
-    t: (key) => key,
-  }),
+    t: (key) => key
+  })
 }))
 
 // Mock echarts
@@ -19,8 +19,8 @@ vi.mock('echarts/core', () => ({
   init: vi.fn(() => ({
     setOption: vi.fn(),
     resize: vi.fn(),
-    dispose: vi.fn(),
-  })),
+    dispose: vi.fn()
+  }))
 }))
 vi.mock('echarts/renderers', () => ({ CanvasRenderer: {} }))
 vi.mock('echarts/charts', () => ({ BarChart: {}, RadarChart: {} }))
@@ -29,7 +29,7 @@ vi.mock('echarts/components', () => ({
   TooltipComponent: {},
   GridComponent: {},
   LegendComponent: {},
-  RadarComponent: {},
+  RadarComponent: {}
 }))
 
 // Mock services/api.js - SensitivityAnalysis imports { post } as named
@@ -39,8 +39,12 @@ vi.mock('../../services/api.js', () => ({
   put: vi.fn(),
   del: vi.fn(),
   request: vi.fn(),
-  ApiError: class extends Error { constructor(m) { super(m) } },
-  default: { get: vi.fn(), post: mockPost },
+  ApiError: class extends Error {
+    constructor(m) {
+      super(m)
+    }
+  },
+  default: { get: vi.fn(), post: mockPost }
 }))
 
 // Mock useDraft
@@ -52,7 +56,7 @@ vi.mock('../../composables/useDraft', () => ({
     }
     return {
       state: draftStore.get(key),
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
   },
   useDraftRef: (key, defaultValue) => {
@@ -65,23 +69,25 @@ vi.mock('../../composables/useDraft', () => ({
         __v_isRef: true,
         _isRef: true,
         _value: val,
-        get value() { return this._value },
+        get value() {
+          return this._value
+        },
         set value(v) {
           this._value = v
           draftStore.set(key, v)
-        },
+        }
       },
-      clearDraft: vi.fn(),
+      clearDraft: vi.fn()
     }
-  },
+  }
 }))
 
 // Mock useSensitivityCharts
 vi.mock('../../composables/useSensitivityCharts.js', () => ({
   useSensitivityCharts: () => ({
     updateTornadoChart: vi.fn(),
-    updateSpiderChart: vi.fn(),
-  }),
+    updateSpiderChart: vi.fn()
+  })
 }))
 
 import SensitivityAnalysis from '../SensitivityAnalysis.vue'
@@ -94,14 +100,14 @@ describe('SensitivityAnalysis.vue', () => {
         plugins: [
           createTestingPinia({
             createSpy: vi.fn,
-            stubActions: false,
-          }),
+            stubActions: false
+          })
         ],
         stubs: {
           SohChart: { template: '<div class="soh-chart" />' },
-          SectionCard: { template: '<div><slot /></div>' },
-        },
-      },
+          SectionCard: { template: '<div><slot /></div>' }
+        }
+      }
     })
   }
 

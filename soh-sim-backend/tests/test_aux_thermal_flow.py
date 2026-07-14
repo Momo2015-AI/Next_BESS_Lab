@@ -18,7 +18,6 @@ from tests.test_integration import (
     _post,
 )
 
-
 # ==================== TestThermalCoolingFlow ====================
 
 
@@ -37,13 +36,13 @@ class TestThermalCoolingFlow:
 
         # 验证 cooling_power_kw 约为 8.47（容许小范围浮动）
         cpk = result["cooling_power_kw"]
-        assert 7.5 <= cpk <= 10.0, \
-            f"Expected cooling_power_kw ~8.47 for liquid at 32C, got {cpk}"
+        assert 7.5 <= cpk <= 10.0, f"Expected cooling_power_kw ~8.47 for liquid at 32C, got {cpk}"
 
         # 验证 standby_power_kw = cooling_power_kw * 0.15
         expected_standby = round(cpk * 0.15, 2)
-        assert result["standby_power_kw"] == expected_standby, \
-            f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
+        assert (
+            result["standby_power_kw"] == expected_standby
+        ), f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
 
     # ---- 2. 风冷 32C 冷却功耗计算 ----
 
@@ -56,12 +55,12 @@ class TestThermalCoolingFlow:
         assert result["cooling_type"] == "forced-air"
 
         cpk = result["cooling_power_kw"]
-        assert 12.0 <= cpk <= 18.0, \
-            f"Expected cooling_power_kw ~14.83 for forced-air at 32C, got {cpk}"
+        assert 12.0 <= cpk <= 18.0, f"Expected cooling_power_kw ~14.83 for forced-air at 32C, got {cpk}"
 
         expected_standby = round(cpk * 0.15, 2)
-        assert result["standby_power_kw"] == expected_standby, \
-            f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
+        assert (
+            result["standby_power_kw"] == expected_standby
+        ), f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
 
     # ---- 3. SiC 液冷 32C 冷却功耗计算 ----
 
@@ -74,12 +73,12 @@ class TestThermalCoolingFlow:
         assert result["cooling_type"] == "SiC-liquid"
 
         cpk = result["cooling_power_kw"]
-        assert 4.5 <= cpk <= 7.5, \
-            f"Expected cooling_power_kw ~5.93 for SiC-liquid at 32C, got {cpk}"
+        assert 4.5 <= cpk <= 7.5, f"Expected cooling_power_kw ~5.93 for SiC-liquid at 32C, got {cpk}"
 
         expected_standby = round(cpk * 0.15, 2)
-        assert result["standby_power_kw"] == expected_standby, \
-            f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
+        assert (
+            result["standby_power_kw"] == expected_standby
+        ), f"standby_power_kw should be {expected_standby}, got {result['standby_power_kw']}"
 
     # ---- 4. 热管理模式 vs 手动模式能量差异 ----
 
@@ -94,25 +93,35 @@ class TestThermalCoolingFlow:
         }
 
         # 热管理模式
-        resp_thermal = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "thermal",
-                "ambientTemp": 32,
-                "coolingType": "liquid",
+        resp_thermal = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "thermal",
+                    "ambientTemp": 32,
+                    "coolingType": "liquid",
+                },
             },
-        }, auth_headers)
+            auth_headers,
+        )
         thermal_data = _assert_success(resp_thermal)
 
         # 手动模式（默认 bessAuxRun=18.124kW）
-        resp_manual = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "manual",
+        resp_manual = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "manual",
+                },
             },
-        }, auth_headers)
+            auth_headers,
+        )
         manual_data = _assert_success(resp_manual)
 
         thermal_tac = thermal_data["totalAcUsable"]
@@ -120,10 +129,10 @@ class TestThermalCoolingFlow:
 
         # 热管理模式在 32C 液冷下功耗约 8.47+3=11.47kW < 18.124kW
         # 所以 usable energy 应更高
-        assert thermal_tac[0] != manual_tac[0], \
-            "Thermal and manual mode totalAcUsable should differ"
-        assert thermal_tac[0] > manual_tac[0], \
-            f"Thermal mode ({thermal_tac[0]}) should have higher usable energy than manual ({manual_tac[0]})"
+        assert thermal_tac[0] != manual_tac[0], "Thermal and manual mode totalAcUsable should differ"
+        assert (
+            thermal_tac[0] > manual_tac[0]
+        ), f"Thermal mode ({thermal_tac[0]}) should have higher usable energy than manual ({manual_tac[0]})"
 
     # ---- 5. 环境温度影响冷却功耗 ----
 
@@ -138,35 +147,46 @@ class TestThermalCoolingFlow:
         }
 
         # 低温（25C）
-        resp_cool = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "thermal",
-                "ambientTemp": 25,
-                "coolingType": "liquid",
+        resp_cool = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "thermal",
+                    "ambientTemp": 25,
+                    "coolingType": "liquid",
+                },
             },
-        }, auth_headers)
+            auth_headers,
+        )
         cool_data = _assert_success(resp_cool)
 
         # 高温（45C）
-        resp_hot = _post(client, "/api/simulation/run", {
-            "design_output": design_output,
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "thermal",
-                "ambientTemp": 45,
-                "coolingType": "liquid",
+        resp_hot = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": design_output,
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "thermal",
+                    "ambientTemp": 45,
+                    "coolingType": "liquid",
+                },
             },
-        }, auth_headers)
+            auth_headers,
+        )
         hot_data = _assert_success(resp_hot)
 
         cool_tac = cool_data["totalAcUsable"]
         hot_tac = hot_data["totalAcUsable"]
 
         # 高温需要更多冷却 → 更多辅机功耗 → 更低可用能量
-        assert cool_tac[0] > hot_tac[0], \
-            f"Cool ({cool_tac[0]}) should have higher usable energy than hot ({hot_tac[0]})"
+        assert (
+            cool_tac[0] > hot_tac[0]
+        ), f"Cool ({cool_tac[0]}) should have higher usable energy than hot ({hot_tac[0]})"
 
     # ---- 6. 待机功耗 = 冷却功耗 * 0.15 ----
 
@@ -177,9 +197,9 @@ class TestThermalCoolingFlow:
         cpk = result["cooling_power_kw"]
         expected_standby = round(cpk * 0.15, 2)
 
-        assert result["standby_power_kw"] == expected_standby, \
-            f"standby_power_kw should be {expected_standby} (= {cpk} * 0.15), got {result['standby_power_kw']}"
+        assert (
+            result["standby_power_kw"] == expected_standby
+        ), f"standby_power_kw should be {expected_standby} (= {cpk} * 0.15), got {result['standby_power_kw']}"
 
         # 同时验证 FIXED_AUX_KW 常量存在且为合理值
-        assert FIXED_AUX_KW == 3.0, \
-            f"FIXED_AUX_KW should be 3.0, got {FIXED_AUX_KW}"
+        assert FIXED_AUX_KW == 3.0, f"FIXED_AUX_KW should be 3.0, got {FIXED_AUX_KW}"

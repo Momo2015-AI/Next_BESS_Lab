@@ -29,7 +29,7 @@ function extractRules(content) {
       inRules = true;
       continue;
     }
-    if (inRules && line.match(/^#/)) {
+    if (inRules && line.trim().match(/^#/)) {
       break;
     }
     if (inRules && line.trim().match(/^\d+\./)) {

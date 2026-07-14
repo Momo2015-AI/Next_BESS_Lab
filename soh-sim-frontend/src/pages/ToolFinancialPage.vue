@@ -3,16 +3,10 @@
     <!-- 模式切换条 -->
     <div class="mode-switch-bar">
       <span class="mode-label">{{ $t('financial.dataSource') }}：</span>
-      <button
-        :class="['mode-btn', { active: mode === 'project' }]"
-        @click="mode = 'project'"
-      >
+      <button :class="['mode-btn', { active: mode === 'project' }]" @click="mode = 'project'">
         📋 {{ $t('financial.modeProject') }}
       </button>
-      <button
-        :class="['mode-btn', { active: mode === 'standalone' }]"
-        @click="mode = 'standalone'"
-      >
+      <button :class="['mode-btn', { active: mode === 'standalone' }]" @click="mode = 'standalone'">
         ✏️ {{ $t('financial.modeStandalone') }}
       </button>
       <span v-if="mode === 'project' && hasProjectData" class="mode-hint">
@@ -61,15 +55,19 @@ const projectName = computed(() => {
   return '-'
 })
 
-const titleKey = computed(() => mode.value === 'standalone' ? 'financial.standaloneTitle' : 'tools.financialTitle')
-const descKey = computed(() => mode.value === 'standalone' ? 'financial.standaloneDesc' : 'tools.financialDesc')
+const titleKey = computed(() => (mode.value === 'standalone' ? 'financial.standaloneTitle' : 'tools.financialTitle'))
+const descKey = computed(() => (mode.value === 'standalone' ? 'financial.standaloneDesc' : 'tools.financialDesc'))
 
 // 没有项目数据时自动切到独立模式
-watch(hasProjectData, (val) => {
-  if (!val && mode.value === 'project') {
-    mode.value = 'standalone'
-  }
-}, { immediate: true })
+watch(
+  hasProjectData,
+  (val) => {
+    if (!val && mode.value === 'project') {
+      mode.value = 'standalone'
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

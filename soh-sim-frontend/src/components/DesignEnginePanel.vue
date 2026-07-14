@@ -36,13 +36,20 @@
               class="unlock-btn"
               :title="$t('design.unlockDuration') || '手动设置'"
               @click="isDurationAuto = false"
-            >🔓</button>
+            >
+              🔓
+            </button>
             <button
               v-else
               class="lock-btn"
               :title="$t('design.lockDuration') || '自动计算'"
-              @click="isDurationAuto = true; autoCalcDuration()"
-            >🔒</button>
+              @click="
+                isDurationAuto = true
+                autoCalcDuration()
+              "
+            >
+              🔒
+            </button>
           </div>
         </div>
         <div class="form-group">

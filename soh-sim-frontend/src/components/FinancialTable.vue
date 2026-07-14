@@ -2,11 +2,7 @@
   <div class="rounded-lg p-3 ins-1">
     <div class="flex justify-between items-center mb-2">
       <h3 class="font-bold text-xs ins-2">{{ $t('financial.tableCashFlowTitle') }}</h3>
-      <button
-        class="text-[10px] px-3 py-1 rounded transition-colors ins-3"
-       
-        @click="$emit('recalc')"
-      >
+      <button class="text-[10px] px-3 py-1 rounded transition-colors ins-3" @click="$emit('recalc')">
         {{ $t('financial.btnRecalculate') }}
       </button>
     </div>
@@ -14,71 +10,37 @@
       <table class="w-full text-[10px] border-collapse">
         <thead>
           <tr class="sticky top-0 z-10 ins-4">
-            <th
-              class="text-left py-1 px-2 sticky left-0 z-20 ins-5"
-             
-            >
+            <th class="text-left py-1 px-2 sticky left-0 z-20 ins-5">
               {{ $t('financial.colYear') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colGeneration') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colArbitrage') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colCapacity') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colAncillary') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colTotalRevenue') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colOpex') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colEbitda') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colNetCashFlow') }}
             </th>
-            <th
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colCumCashFlow') }}
             </th>
-            <th
-              v-if="f.debtRatio > 0"
-              class="text-right py-1 px-2 ins-5"
-             
-            >
+            <th v-if="f.debtRatio > 0" class="text-right py-1 px-2 ins-5">
               {{ $t('financial.colDscr') }}
             </th>
           </tr>
@@ -131,11 +93,7 @@
             >
               {{ fmtNum(row.cumCashFlow) }}
             </td>
-            <td
-              v-if="f.debtRatio > 0"
-              class="text-right py-1 px-2 font-mono ins-7"
-             
-            >
+            <td v-if="f.debtRatio > 0" class="text-right py-1 px-2 font-mono ins-7">
               {{ row.dscr ? row.dscr.toFixed(2) : '-' }}
             </td>
           </tr>
@@ -161,11 +119,28 @@ function fmtNum(v) {
 </script>
 
 <style scoped>
-.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
-.ins-2 { color: var(--color-text) }
-.ins-3 { background-color: var(--color-accent); color: white }
-.ins-4 { background-color: var(--color-card) }
-.ins-5 { color: var(--color-text-muted); border-bottom: 1px solid var(--color-border) }
-.ins-6 { border-bottom: 1px solid var(--color-border) }
-.ins-7 { color: var(--color-text-secondary) }
+.ins-1 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.ins-2 {
+  color: var(--color-text);
+}
+.ins-3 {
+  background-color: var(--color-accent);
+  color: white;
+}
+.ins-4 {
+  background-color: var(--color-card);
+}
+.ins-5 {
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.ins-6 {
+  border-bottom: 1px solid var(--color-border);
+}
+.ins-7 {
+  color: var(--color-text-secondary);
+}
 </style>

@@ -110,16 +110,6 @@ from .epc import (
     ThermalManagement,
 )
 from .pinn import PinnModelWeights
-from .rbac import (
-    DEFAULT_ROLE,
-    DEFAULT_ROLE_PERMISSIONS,
-    PERMISSION_KEYS,
-    ROLES,
-    RolePermission,
-    UserPermissionOverride,
-    get_effective_permissions,
-    get_user_effective_role,
-)
 from .product import (
     BatteryConfigRule,
     BatteryManufacturer,
@@ -132,6 +122,16 @@ from .product import (
     RackProduct,
 )
 from .project import Project, ProjectVersion
+from .rbac import (
+    DEFAULT_ROLE,
+    DEFAULT_ROLE_PERMISSIONS,
+    PERMISSION_KEYS,
+    ROLES,
+    RolePermission,
+    UserPermissionOverride,
+    get_effective_permissions,
+    get_user_effective_role,
+)
 from .simulation import CorrectionTemplate, Simulation, SimulationResult
 from .survey import Survey
 

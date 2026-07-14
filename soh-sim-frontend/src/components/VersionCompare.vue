@@ -8,13 +8,14 @@
     <div v-else>
       <div class="panel-section">
         <h3 class="section-title">
-          <span class="icon">📊</span> {{ $t('versionCompare.title') }}
+          <span class="icon">📊</span>
+          {{ $t('versionCompare.title') }}
         </h3>
 
         <!-- 版本信息 -->
         <div class="version-headers">
           <div v-for="(v, idx) in versions" :key="v.id" class="version-header">
-            <span class="version-name">{{ v.name || ('v' + v.version_num) }}</span>
+            <span class="version-name">{{ v.name || 'v' + v.version_num }}</span>
             <span class="version-meta">v{{ v.version_num }}</span>
           </div>
         </div>
@@ -26,7 +27,7 @@
               <tr>
                 <th>{{ $t('versionCompare.metric') }}</th>
                 <th v-for="(v, idx) in versions" :key="v.id">
-                  {{ v.name || ('v' + v.version_num) }}
+                  {{ v.name || 'v' + v.version_num }}
                 </th>
                 <th>{{ $t('versionCompare.diff') }}</th>
                 <th>%</th>
@@ -35,11 +36,7 @@
             <tbody>
               <tr v-for="row in deltaRows" :key="row.key">
                 <td class="row-label">{{ row.label }}</td>
-                <td
-                  v-for="(v, idx) in versions"
-                  :key="v.id"
-                  :class="['row-value', { best: row.bestIdx === idx }]"
-                >
+                <td v-for="(v, idx) in versions" :key="v.id" :class="['row-value', { best: row.bestIdx === idx }]">
                   {{ row.formatVal(row.values[idx]) }}
                 </td>
                 <td :class="['row-diff', row.diff > 0 ? 'positive' : 'negative']">
@@ -57,7 +54,8 @@
       <!-- 雷达图 -->
       <div class="panel-section">
         <h3 class="section-title">
-          <span class="icon">🎯</span> {{ $t('versionCompare.radarChart') }}
+          <span class="icon">🎯</span>
+          {{ $t('versionCompare.radarChart') }}
         </h3>
         <div ref="radarRef" class="chart-container"></div>
       </div>
@@ -129,13 +127,11 @@ const deltaRows = computed(() => {
   ]
 
   return rowDefs
-    .filter(def => delta.value[def.key])
-    .map(def => {
+    .filter((def) => delta.value[def.key])
+    .map((def) => {
       const d = delta.value[def.key]
       const vals = [d.v1, d.v2]
-      const bestIdx = def.lowerBetter
-        ? (vals[0] <= vals[1] ? 0 : 1)
-        : (vals[0] >= vals[1] ? 0 : 1)
+      const bestIdx = def.lowerBetter ? (vals[0] <= vals[1] ? 0 : 1) : vals[0] >= vals[1] ? 0 : 1
       return {
         ...def,
         values: vals,
@@ -147,8 +143,7 @@ const deltaRows = computed(() => {
           if (def.key === 'irr' || def.key === 'roi') return fmtNum(v, 2) + '%'
           if (def.key === 'lcos') return fmtNum(v, 4)
           if (def.key === 'containerQty') return fmtNum(v, 0)
-          if (def.key === 'totalEnergy' || def.key === 'totalPower' || def.key === 'payback')
-            return fmtNum(v, 1)
+          if (def.key === 'totalEnergy' || def.key === 'totalPower' || def.key === 'payback') return fmtNum(v, 1)
           return fmtCurrency(v)
         }
       }
@@ -190,33 +185,44 @@ function renderRadar() {
   indicators[2].max = maxLcos
   indicators[3].max = maxCapex
 
-  radarChart.setOption({
-    tooltip: {},
-    legend: {
-      data: versions.value.map(v => v.name || ('v' + v.version_num)),
-      bottom: 0
+  radarChart.setOption(
+    {
+      tooltip: {},
+      legend: {
+        data: versions.value.map((v) => v.name || 'v' + v.version_num),
+        bottom: 0
+      },
+      radar: { indicators },
+      series: [
+        {
+          type: 'radar',
+          data: versions.value.map((v) => ({
+            name: v.name || 'v' + v.version_num,
+            value: [
+              getMetric(v.config, 'irr'),
+              getMetric(v.config, 'npv'),
+              maxLcos - getMetric(v.config, 'lcos'),
+              maxCapex - getMetric(v.config, 'capex')
+            ]
+          }))
+        }
+      ]
     },
-    radar: { indicators },
-    series: [{
-      type: 'radar',
-      data: versions.value.map(v => ({
-        name: v.name || ('v' + v.version_num),
-        value: [
-          getMetric(v.config, 'irr'),
-          getMetric(v.config, 'npv'),
-          maxLcos - getMetric(v.config, 'lcos'),
-          maxCapex - getMetric(v.config, 'capex')
-        ]
-      }))
-    }]
-  }, true)
+    true
+  )
 }
 
-function handleResize() { radarChart?.resize() }
+function handleResize() {
+  radarChart?.resize()
+}
 
-watch(() => props.compareResult, debounce(() => {
-  nextTick(() => renderRadar())
-}), { deep: true })
+watch(
+  () => props.compareResult,
+  debounce(() => {
+    nextTick(() => renderRadar())
+  }),
+  { deep: true }
+)
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)
@@ -229,36 +235,98 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.version-compare-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+.version-compare-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
 .empty-state {
-  text-align: center; padding: 2rem 1rem;
-  background: var(--card-bg, #fff); border-radius: 8px;
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--card-bg, #fff);
+  border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-.empty-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
-.empty-state p { color: var(--text-secondary, #888); font-size: 0.9rem; }
+.empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.empty-state p {
+  color: var(--text-secondary, #888);
+  font-size: 0.9rem;
+}
 
 .panel-section {
-  background: var(--card-bg, #fff); border-radius: 8px; padding: 1.5rem;
+  background: var(--card-bg, #fff);
+  border-radius: 8px;
+  padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-.section-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; margin: 0 0 1rem 0; }
-
-.version-headers { display: flex; gap: 2rem; margin-bottom: 1rem; }
-.version-name { font-weight: 600; font-size: 1rem; }
-.version-meta { font-size: 0.8rem; color: var(--text-secondary, #888); margin-left: 0.5rem; }
-
-.table-wrapper { overflow-x: auto; }
-.delta-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-.delta-table th, .delta-table td {
-  padding: 0.5rem 0.75rem; text-align: center; border-bottom: 1px solid var(--border-light, #f3f4f6);
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
 }
-.delta-table th { background: var(--table-header-bg, #f8fafc); font-weight: 600; }
-.row-label { text-align: left; font-weight: 500; color: var(--text-secondary, #666); }
-.row-value.best { color: var(--color-success); font-weight: 700; }
-.row-diff.positive, .row-pct.positive { color: var(--color-success); font-weight: 600; }
-.row-diff.negative, .row-pct.negative { color: var(--color-danger); font-weight: 600; }
 
-.chart-container { width: 100%; height: 350px; }
+.version-headers {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+.version-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.version-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #888);
+  margin-left: 0.5rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+.delta-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.delta-table th,
+.delta-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light, #f3f4f6);
+}
+.delta-table th {
+  background: var(--table-header-bg, #f8fafc);
+  font-weight: 600;
+}
+.row-label {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary, #666);
+}
+.row-value.best {
+  color: var(--color-success);
+  font-weight: 700;
+}
+.row-diff.positive,
+.row-pct.positive {
+  color: var(--color-success);
+  font-weight: 600;
+}
+.row-diff.negative,
+.row-pct.negative {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.chart-container {
+  width: 100%;
+  height: 350px;
+}
 </style>

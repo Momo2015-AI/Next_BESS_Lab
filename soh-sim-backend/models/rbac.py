@@ -6,7 +6,7 @@
 
 from datetime import datetime, timezone
 
-from . import db, _utcnow
+from . import _utcnow, db
 
 # ==================== 角色与权限常量 ====================
 
@@ -329,7 +329,9 @@ def get_effective_permissions(user):
                 perms = dict(DEFAULT_ROLE_PERMISSIONS.get(temp_role, DEFAULT_ROLE_PERMISSIONS[DEFAULT_ROLE]))
                 # 也应用该角色的角色级覆盖
                 temp_role_override = RolePermission.query.filter_by(role=temp_role).first()
-                if temp_role_override and (temp_role_override.expires_at is None or temp_role_override.expires_at > now):
+                if temp_role_override and (
+                    temp_role_override.expires_at is None or temp_role_override.expires_at > now
+                ):
                     try:
                         temp_override_perms = json.loads(temp_role_override.permissions or "{}")
                         perms.update(temp_override_perms)

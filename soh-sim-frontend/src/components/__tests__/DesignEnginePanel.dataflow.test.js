@@ -18,7 +18,7 @@ vi.mock('../../services/api.js', () => ({
   post: vi.fn(),
   get: vi.fn(),
   put: vi.fn(),
-  del: vi.fn(),
+  del: vi.fn()
 }))
 
 describe('DesignEnginePanel — 数据传递', () => {
@@ -34,12 +34,15 @@ describe('DesignEnginePanel — 数据传递', () => {
           'el-dialog': { template: '<div class="el-dialog"><slot/></div>' },
           'el-form': { template: '<form><slot/></form>' },
           'el-form-item': { template: '<div><slot/></div>' },
-          'el-input': { template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />', props: ['modelValue'] },
+          'el-input': {
+            template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
+            props: ['modelValue']
+          },
           'el-select': { template: '<select :value="modelValue"><slot/></select>', props: ['modelValue'] },
           'el-option': { template: '<option/>' },
           'el-button': {
             template: '<button @click="$emit(\'click\')"><slot/></button>',
-            emits: ['click'],
+            emits: ['click']
           },
           'el-table': { template: '<table><slot/></table>' },
           'el-table-column': { template: '<td><slot/></td>' },
@@ -49,9 +52,9 @@ describe('DesignEnginePanel — 数据传递', () => {
           'el-switch': { template: '<input type="checkbox" />', props: ['modelValue'] },
           'el-progress': { template: '<div/>' },
           'el-popover': { template: '<div><slot/></div>' },
-          'el-alert': { template: '<div><slot/></div>' },
-        },
-      },
+          'el-alert': { template: '<div><slot/></div>' }
+        }
+      }
     })
   }
 
@@ -74,7 +77,7 @@ describe('DesignEnginePanel — 数据传递', () => {
     wrapper = createWrapper()
     // 查找包含"一键全流程"文本的按钮
     const buttons = wrapper.findAll('button')
-    const fullFlowBtn = buttons.find(b => b.text().includes('全流程') || b.text().includes('一键'))
+    const fullFlowBtn = buttons.find((b) => b.text().includes('全流程') || b.text().includes('一键'))
     // 即使没有找到明确的全流程按钮，也验证组件功能正常
     expect(buttons.length).toBeGreaterThanOrEqual(0)
   })

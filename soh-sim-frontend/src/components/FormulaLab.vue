@@ -621,7 +621,10 @@
         @click="showAlgorithmPanel = !showAlgorithmPanel"
       >
         <div class="flex items-center gap-2">
-          <span class="text-white text-xs font-medium"><AppIcon name="settings" size="12" color="white" /> 算法模型管理</span>
+          <span class="text-white text-xs font-medium">
+            <AppIcon name="settings" size="12" color="white" />
+            算法模型管理
+          </span>
           <span class="text-white/70 text-[10px]">(点击展开/收起)</span>
         </div>
         <span

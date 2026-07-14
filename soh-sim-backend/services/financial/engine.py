@@ -114,7 +114,13 @@ class FinancialEngine(BaseEngine):
         # 欧洲：套利 + 辅助服务 + 负电价
         if any(kw in location for kw in ["europe", "eu", "germany", "uk", "france", "spain"]):
             return {
-                "arbitrage": {"enabled": True, "offPeakPrice": 30, "peakPrice": 60, "spreadCapture": 85, "operatingDays": 330},
+                "arbitrage": {
+                    "enabled": True,
+                    "offPeakPrice": 30,
+                    "peakPrice": 60,
+                    "spreadCapture": 85,
+                    "operatingDays": 330,
+                },
                 "capacity": {"enabled": True, "capacityPrice": 45000},
                 "ancillary": {"enabled": True, "ancillaryPrice": 25000},  # 欧洲辅助服务价格更高
                 "ppa": {"enabled": False, "ppaPrice": 55, "escalation": 2.0},
@@ -123,7 +129,13 @@ class FinancialEngine(BaseEngine):
         # 中东：PPA + 容量拍卖
         elif any(kw in location for kw in ["middle east", "saudi", "uae", "dubai", "qatar", "kuwait"]):
             return {
-                "arbitrage": {"enabled": False, "offPeakPrice": 30, "peakPrice": 60, "spreadCapture": 85, "operatingDays": 330},
+                "arbitrage": {
+                    "enabled": False,
+                    "offPeakPrice": 30,
+                    "peakPrice": 60,
+                    "spreadCapture": 85,
+                    "operatingDays": 330,
+                },
                 "capacity": {"enabled": False, "capacityPrice": 45000},
                 "ancillary": {"enabled": False, "ancillaryPrice": 15000},
                 "ppa": {"enabled": True, "ppaPrice": 45, "escalation": 2.0},
@@ -132,7 +144,13 @@ class FinancialEngine(BaseEngine):
         # 中国：峰谷套利 + 容量市场
         elif any(kw in location for kw in ["china", "cn", "beijing", "shanghai"]):
             return {
-                "arbitrage": {"enabled": True, "offPeakPrice": 20, "peakPrice": 50, "spreadCapture": 80, "operatingDays": 330},
+                "arbitrage": {
+                    "enabled": True,
+                    "offPeakPrice": 20,
+                    "peakPrice": 50,
+                    "spreadCapture": 80,
+                    "operatingDays": 330,
+                },
                 "capacity": {"enabled": True, "capacityPrice": 35000},
                 "ancillary": {"enabled": False, "ancillaryPrice": 15000},
                 "ppa": {"enabled": False, "ppaPrice": 55, "escalation": 2.0},
@@ -141,7 +159,13 @@ class FinancialEngine(BaseEngine):
         # 默认：全部开启
         else:
             return {
-                "arbitrage": {"enabled": True, "offPeakPrice": 30, "peakPrice": 60, "spreadCapture": 85, "operatingDays": 330},
+                "arbitrage": {
+                    "enabled": True,
+                    "offPeakPrice": 30,
+                    "peakPrice": 60,
+                    "spreadCapture": 85,
+                    "operatingDays": 330,
+                },
                 "capacity": {"enabled": True, "capacityPrice": 45000},
                 "ancillary": {"enabled": True, "ancillaryPrice": 15000},
                 "ppa": {"enabled": True, "ppaPrice": 55, "escalation": 2.0},
@@ -207,6 +231,7 @@ class FinancialEngine(BaseEngine):
     def _apply_scenario(self, base_params: dict, scenario: dict) -> dict:
         """应用敏感性场景"""
         import copy
+
         params = copy.deepcopy(base_params)
 
         capex_mult = scenario.get("capex_multiplier", 1.0)

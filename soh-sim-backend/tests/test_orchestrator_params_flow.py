@@ -19,8 +19,8 @@ from app import app as _app  # noqa: E402
 from database import Tenant, User, db  # noqa: E402
 from routes.auth import generate_token, hash_password  # noqa: E402
 
-
 # ==================== Fixtures ====================
+
 
 @pytest.fixture(scope="session")
 def app():
@@ -90,6 +90,7 @@ def auth_headers_eng(seed_engineer):
 
 # ==================== Helper Functions ====================
 
+
 def _post(client, url, data, headers=None):
     """Convenience POST helper."""
     h = headers or {}
@@ -110,8 +111,9 @@ def _get(client, url, headers=None):
 def _assert_success(resp, status=200):
     """Assert response is successful and return parsed JSON data."""
     acceptable = status if isinstance(status, tuple) else (status,)
-    assert resp.status_code in acceptable, \
-        f"Expected {acceptable}, got {resp.status_code}: {resp.get_data(as_text=True)[:500]}"
+    assert (
+        resp.status_code in acceptable
+    ), f"Expected {acceptable}, got {resp.status_code}: {resp.get_data(as_text=True)[:500]}"
     body = resp.get_json()
     assert body is not None, "Response is not valid JSON"
     assert body.get("success") is True, f"success=False: {body.get('error', body.get('message', 'unknown'))}"
@@ -135,6 +137,7 @@ SURVEY_PARAMS = {
 
 # ==================== Test Class ====================
 
+
 class TestOrchestratorParamsFlow:
     """Verify the orchestrator (run_full_workflow) correctly passes all new
     parameters through the full pipeline."""
@@ -143,30 +146,35 @@ class TestOrchestratorParamsFlow:
         """POST /api/workflow/full with survey_params containing
         auxPowerMode='thermal', ambientTemp=32, coolingType='liquid'.
         Verify the returned recommendation.simulation exists and has valid data."""
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "auxPowerMode": "thermal",
-                "ambientTemp": 32,
-                "coolingType": "liquid",
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "auxPowerMode": "thermal",
+                    "ambientTemp": 32,
+                    "coolingType": "liquid",
+                },
+                "strategy": "economic",
+                "target_metric": "lcos",
             },
-            "strategy": "economic",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         recommendation = data.get("recommendation")
         assert recommendation is not None, "Recommendation should not be None"
-        assert isinstance(recommendation, dict), \
-            f"recommendation should be a dict, got {type(recommendation)}"
+        assert isinstance(recommendation, dict), f"recommendation should be a dict, got {type(recommendation)}"
 
         sim = recommendation.get("simulation")
         assert sim is not None, "Recommendation should have simulation data"
         assert "soh" in sim, "Simulation missing soh"
         assert "rte" in sim, "Simulation missing rte"
         assert "totalAcUsable" in sim, "Simulation missing totalAcUsable"
-        assert len(sim["totalAcUsable"]) == 26, \
-            f"totalAcUsable should have 26 elements, got {len(sim['totalAcUsable'])}"
+        assert (
+            len(sim["totalAcUsable"]) == 26
+        ), f"totalAcUsable should have 26 elements, got {len(sim['totalAcUsable'])}"
 
     def test_workflow_passes_efficiency_factors_none(self, client, auth_headers_eng):
         """POST /api/workflow/full with survey_params containing
@@ -175,20 +183,25 @@ class TestOrchestratorParamsFlow:
         custom_rte = [88.5] * 26
         custom_soh = [98.0] * 26
 
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": {
-                **SURVEY_PARAMS,
-                "efficiencyFactors": None,
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": {
+                    **SURVEY_PARAMS,
+                    "efficiencyFactors": None,
+                },
+                "strategy": "economic",
+                "target_metric": "lcos",
+                "degradation": {
+                    "soh": custom_soh,
+                    "rte": custom_rte,
+                    "dod": [90.0] * 26,
+                    "augQty": [0] * 26,
+                },
             },
-            "strategy": "economic",
-            "target_metric": "lcos",
-            "degradation": {
-                "soh": custom_soh,
-                "rte": custom_rte,
-                "dod": [90.0] * 26,
-                "augQty": [0] * 26,
-            },
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         recommendation = data.get("recommendation")
@@ -205,8 +218,9 @@ class TestOrchestratorParamsFlow:
         # When efficiencyFactors=None, rte values should be close to the custom values
         # (they may be adjusted by chain-derived values, but should be within ~15%)
         for i in range(26):
-            assert abs(result_rte[i] - custom_rte[i]) < 15.0, \
-                f"Year {i}: rte should be close to {custom_rte[i]}, got {result_rte[i]}"
+            assert (
+                abs(result_rte[i] - custom_rte[i]) < 15.0
+            ), f"Year {i}: rte should be close to {custom_rte[i]}, got {result_rte[i]}"
 
     def test_workflow_cambodia_project(self, client, auth_headers_eng):
         """POST with Cambodia-like params: ratedEnergy=5, totalPower=250,
@@ -229,11 +243,16 @@ class TestOrchestratorParamsFlow:
             "coolingType": "liquid",
         }
 
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": cambodia_params,
-            "strategy": "economic",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": cambodia_params,
+                "strategy": "economic",
+                "target_metric": "lcos",
+            },
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         # Verify solutions exist
@@ -246,15 +265,13 @@ class TestOrchestratorParamsFlow:
         # Verify simulation data
         sim = recommendation.get("simulation")
         assert sim is not None, "Recommendation should have simulation data"
-        assert len(sim.get("totalAcUsable", [])) == 26, \
-            "Simulation should have 26-year totalAcUsable"
+        assert len(sim.get("totalAcUsable", [])) == 26, "Simulation should have 26-year totalAcUsable"
 
         # Verify financial data
         fin = recommendation.get("financial")
         assert fin is not None, "Recommendation should have financial data"
         metrics = fin.get("metrics", {})
-        assert "lcos" in metrics or "projectIrr" in metrics, \
-            "Financial should have metrics"
+        assert "lcos" in metrics or "projectIrr" in metrics, "Financial should have metrics"
 
     def test_workflow_recommendation_structure(self, client, auth_headers_eng):
         """POST /api/workflow/full with standard params.
@@ -262,17 +279,21 @@ class TestOrchestratorParamsFlow:
         Verify design has containerQty, pcsQty.
         Verify simulation has soh, rte, totalAcUsable.
         Verify financial has metrics."""
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": SURVEY_PARAMS,
-            "strategy": "economic",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": SURVEY_PARAMS,
+                "strategy": "economic",
+                "target_metric": "lcos",
+            },
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         recommendation = data.get("recommendation")
         assert recommendation is not None, "Recommendation should not be None"
-        assert isinstance(recommendation, dict), \
-            f"recommendation should be dict, got {type(recommendation)}"
+        assert isinstance(recommendation, dict), f"recommendation should be dict, got {type(recommendation)}"
 
         # Design
         design = recommendation.get("design")
@@ -280,8 +301,7 @@ class TestOrchestratorParamsFlow:
         assert isinstance(design, dict), f"design should be dict, got {type(design)}"
         assert "containerQty" in design, "Design missing containerQty"
         assert "pcsQty" in design, "Design missing pcsQty"
-        assert isinstance(design["containerQty"], (int, float)), \
-            "containerQty should be numeric"
+        assert isinstance(design["containerQty"], (int, float)), "containerQty should be numeric"
         assert design["containerQty"] > 0, "containerQty should be positive"
 
         # Simulation
@@ -291,8 +311,9 @@ class TestOrchestratorParamsFlow:
         assert "soh" in sim, "Simulation missing soh"
         assert "rte" in sim, "Simulation missing rte"
         assert "totalAcUsable" in sim, "Simulation missing totalAcUsable"
-        assert len(sim["totalAcUsable"]) == 26, \
-            f"totalAcUsable should have 26 elements, got {len(sim['totalAcUsable'])}"
+        assert (
+            len(sim["totalAcUsable"]) == 26
+        ), f"totalAcUsable should have 26 elements, got {len(sim['totalAcUsable'])}"
 
         # Financial
         fin = recommendation.get("financial")
@@ -301,19 +322,22 @@ class TestOrchestratorParamsFlow:
         assert "metrics" in fin, "Financial missing metrics"
         metrics = fin["metrics"]
         assert isinstance(metrics, dict), f"metrics should be dict, got {type(metrics)}"
-        assert "projectIrr" in metrics or "irr" in metrics, \
-            "Financial metrics missing IRR"
-        assert "lcos" in metrics or "lcoe" in metrics, \
-            "Financial metrics missing LCOS"
+        assert "projectIrr" in metrics or "irr" in metrics, "Financial metrics missing IRR"
+        assert "lcos" in metrics or "lcoe" in metrics, "Financial metrics missing LCOS"
 
     def test_workflow_solutions_sorted(self, client, auth_headers_eng):
         """POST with target_metric='lcos'. Verify solutions are sorted
         (first solution should have the lowest score/lcos)."""
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": SURVEY_PARAMS,
-            "strategy": "economic",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": SURVEY_PARAMS,
+                "strategy": "economic",
+                "target_metric": "lcos",
+            },
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         solutions = data.get("solutions", [])
@@ -330,8 +354,9 @@ class TestOrchestratorParamsFlow:
             for i in range(1, len(scores)):
                 # LCOS scores should be sorted ascending (lower is better)
                 if scores[i] != float("inf") and scores[i - 1] != float("inf"):
-                    assert scores[i - 1] <= scores[i], \
-                        f"Solutions should be sorted by lcos: {scores[i-1]} > {scores[i]}"
+                    assert (
+                        scores[i - 1] <= scores[i]
+                    ), f"Solutions should be sorted by lcos: {scores[i-1]} > {scores[i]}"
 
         # First solution should be the recommendation
         recommendation = data.get("recommendation")
@@ -339,8 +364,7 @@ class TestOrchestratorParamsFlow:
             rec_score = recommendation.get("score")
             first_score = solutions[0].get("score")
             if rec_score is not None and first_score is not None:
-                assert rec_score == first_score, \
-                    "Recommendation should be the first (best) solution"
+                assert rec_score == first_score, "Recommendation should be the first (best) solution"
 
     def test_design_to_system_params_mapping(self):
         """Import _design_to_system_params from services.orchestrator.
@@ -356,8 +380,7 @@ class TestOrchestratorParamsFlow:
             "pcsQty": 10,
             "duration": 2,
             "efficiencyChain": {"systemRTE": 97.5},
-            "auxPower": {"bessAuxRun": 15.0, "bessAuxStandby": 2.5,
-                         "pcsAuxRun": 5.0, "pcsAuxStandby": 0.8},
+            "auxPower": {"bessAuxRun": 15.0, "bessAuxStandby": 2.5, "pcsAuxRun": 5.0, "pcsAuxStandby": 0.8},
         }
 
         survey_params = {
@@ -398,19 +421,29 @@ class TestOrchestratorParamsFlow:
         """POST with strategy='economic' vs strategy='balanced'.
         Verify both return valid results (may have different designs)."""
         # Economic strategy
-        resp_econ = _post(client, "/api/workflow/full", {
-            "survey_params": SURVEY_PARAMS,
-            "strategy": "economic",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+        resp_econ = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": SURVEY_PARAMS,
+                "strategy": "economic",
+                "target_metric": "lcos",
+            },
+            auth_headers_eng,
+        )
         data_econ = _assert_success(resp_econ)
 
         # Balanced strategy
-        resp_bal = _post(client, "/api/workflow/full", {
-            "survey_params": SURVEY_PARAMS,
-            "strategy": "balanced",
-            "target_metric": "lcos",
-        }, auth_headers_eng)
+        resp_bal = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": SURVEY_PARAMS,
+                "strategy": "balanced",
+                "target_metric": "lcos",
+            },
+            auth_headers_eng,
+        )
         data_bal = _assert_success(resp_bal)
 
         # Both should have solutions
@@ -434,13 +467,16 @@ class TestOrchestratorParamsFlow:
     def test_workflow_error_on_missing_params(self, client, auth_headers_eng):
         """POST /api/workflow/full with empty survey_params.
         Verify returns 400 error."""
-        resp = _post(client, "/api/workflow/full", {
-            "survey_params": {},
-        }, auth_headers_eng)
-        assert resp.status_code == 400, \
-            f"Expected 400 for empty survey_params, got {resp.status_code}"
+        resp = _post(
+            client,
+            "/api/workflow/full",
+            {
+                "survey_params": {},
+            },
+            auth_headers_eng,
+        )
+        assert resp.status_code == 400, f"Expected 400 for empty survey_params, got {resp.status_code}"
 
         body = resp.get_json()
         assert body is not None, "Response should be valid JSON"
-        assert body.get("success") is False, \
-            "Response should indicate failure for empty survey_params"
+        assert body.get("success") is False, "Response should indicate failure for empty survey_params"

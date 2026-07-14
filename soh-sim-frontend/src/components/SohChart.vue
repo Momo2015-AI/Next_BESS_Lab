@@ -180,7 +180,7 @@ const chartColors = computed(() => ({
   initAc: themeObject.value.acLine,
   augAc: themeObject.value.cyan,
   degradation: themeObject.value.orange,
-  dashboard: themeObject.value.purple,
+  dashboard: themeObject.value.purple
 }))
 
 const years = Array.from({ length: 26 }, (_, i) => i)

@@ -59,14 +59,16 @@ def _load_products_from_db():
     try:
         from database import db as _db
         from models.product import (
-            CellProduct, PackProduct, RackProduct, ClusterProduct,
-            ContainerProduct, PcsProduct,
+            CellProduct,
+            ClusterProduct,
+            ContainerProduct,
+            PackProduct,
+            PcsProduct,
+            RackProduct,
         )
 
         # 需要在 app context 内执行
-        containers_raw = ContainerProduct.query.filter(
-            ContainerProduct.status == "active"
-        ).all()
+        containers_raw = ContainerProduct.query.filter(ContainerProduct.status == "active").all()
         pcs_raw = PcsProduct.query.filter(PcsProduct.status == "active").all()
         cells_raw = CellProduct.query.filter(CellProduct.status == "active").all()
         packs_raw = PackProduct.query.filter(PackProduct.status == "active").all()
@@ -298,9 +300,16 @@ class DesignEngine(BaseEngine):
                 "temperature": temperature,
                 "cyclesPerDay": cycles_per_day,
                 "dod": dod,
-                "params": manufacturer_params or {
-                    "A_cal": 1.950563, "Ea_cal": 26000, "alpha": 0.8,
-                    "A_cyc": 12.556758, "Ea_cyc": 22000, "beta": 0.5, "gamma": 1.5, "delta": 0.2,
+                "params": manufacturer_params
+                or {
+                    "A_cal": 1.950563,
+                    "Ea_cal": 26000,
+                    "alpha": 0.8,
+                    "A_cyc": 12.556758,
+                    "Ea_cyc": 22000,
+                    "beta": 0.5,
+                    "gamma": 1.5,
+                    "delta": 0.2,
                 },
             }
         return candidates

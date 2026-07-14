@@ -86,7 +86,7 @@ const chartThemeLabel = computed(() => {
   const map = {
     echarts: t('common.chartThemeEcharts'),
     tailwind: t('common.chartThemeTailwind'),
-    antv: t('common.chartThemeAntv'),
+    antv: t('common.chartThemeAntv')
   }
   return map[themeKey.value] || themeKey.value
 })

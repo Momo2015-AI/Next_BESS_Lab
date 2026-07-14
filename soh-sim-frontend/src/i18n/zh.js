@@ -747,7 +747,7 @@ export default {
     desc: '方案模板选择 → 设计参数确认 → 方案结果预览，三步完成系统设计',
     step1: '2.1 方案模板选择',
     step2: '2.2 设计参数确认',
-    step3: '2.3 方案结果预览',
+    step3: '2.3 方案结果预览'
   },
   phase3: {
     title: 'Phase 3: 性能分析',
@@ -882,7 +882,7 @@ export default {
       saveRules: '保存规则',
       saved: '规则已保存',
       units: '个',
-      years: '年',
+      years: '年'
     },
     templatesTitle: '校正因子模板',
     templatesDesc: '管理Arrhenius模型校正因子模板',
@@ -907,7 +907,7 @@ export default {
     errorNameRequired: '请输入项目名称',
     errorNoMatch: '未找到匹配的项目',
     saveSuccess: '调研数据保存成功',
-    saveFailed: '保存失败',
+    saveFailed: '保存失败'
   },
   sohChart: {
     sohCurve: 'SOH 衰减曲线',
@@ -1139,7 +1139,7 @@ export default {
     daysUnit: '天',
     sohCurvePreview: 'SOH曲线',
     sohEnd: '第25年',
-    year: '年',
+    year: '年'
   },
   energyFlow: {
     title: '能量流桑基图',
@@ -1198,7 +1198,8 @@ export default {
     exportFailed: '导出失败',
     csvHeaderTitle: '储能电站SOH仿真计算结果',
     csvMatrix: '25年生命周期矩阵',
-    csvMatrixHeader: '年份,初始Gross(MWh),初始Aux(MWh),初始净可用(MWh),扩容Gross(MWh),扩容Aux(MWh),扩容净可用(MWh),总净可用(MWh),累计扩容,满足需求',
+    csvMatrixHeader:
+      '年份,初始Gross(MWh),初始Aux(MWh),初始净可用(MWh),扩容Gross(MWh),扩容Aux(MWh),扩容净可用(MWh),总净可用(MWh),累计扩容,满足需求',
     csvYes: '是',
     csvNo: '否',
     csvSohRte: 'SOH/RTE数据',
@@ -1294,35 +1295,35 @@ export default {
     checkConfig: '请检查PCS配置',
     calcComplete: 'PCS配置计算完成',
     configReset: '配置已重置',
-	    configApplied: 'PCS配置已应用'
-	  },
-	  pcsAC: {
-	    title: 'PCS交流侧设计',
-	    pcsPowerSelection: 'PCS功率选型',
-	    pcsModel: 'PCS型号',
-	    selectPcs: '请选择PCS',
-	    dcVoltageRange: '直流电压范围',
-	    maxDcCurrent: '最大直流电流',
-	    acRatedPower: '交流额定功率',
-	    acRatedCurrent: '交流额定电流',
-	    pcsQtyConfig: 'PCS数量配置',
-	    calcMode: '计算方式',
-	    calcModeRatio: '按功率配比',
-	    calcModeFixed: '固定数量',
-	    calcModeEnergy: '按能量计算',
-	    pcsQty: 'PCS数量',
-	    parallelCount: '并联数量',
-	    totalPcsPower: 'PCS总功率',
-	    powerRatio: '功率配比',
-	    transformerAndGrid: '变压器与并网',
-	    transformerType: '变压器类型',
-	    transformer2w: '双绕组',
-	    transformer3w: '三绕组',
-	    transformerIntegrated: '一体化',
-	    transformerCapacity: '变压器容量',
-	    transformerQty: '变压器数量',
-	  },
-	  epcArch: {
+    configApplied: 'PCS配置已应用'
+  },
+  pcsAC: {
+    title: 'PCS交流侧设计',
+    pcsPowerSelection: 'PCS功率选型',
+    pcsModel: 'PCS型号',
+    selectPcs: '请选择PCS',
+    dcVoltageRange: '直流电压范围',
+    maxDcCurrent: '最大直流电流',
+    acRatedPower: '交流额定功率',
+    acRatedCurrent: '交流额定电流',
+    pcsQtyConfig: 'PCS数量配置',
+    calcMode: '计算方式',
+    calcModeRatio: '按功率配比',
+    calcModeFixed: '固定数量',
+    calcModeEnergy: '按能量计算',
+    pcsQty: 'PCS数量',
+    parallelCount: '并联数量',
+    totalPcsPower: 'PCS总功率',
+    powerRatio: '功率配比',
+    transformerAndGrid: '变压器与并网',
+    transformerType: '变压器类型',
+    transformer2w: '双绕组',
+    transformer3w: '三绕组',
+    transformerIntegrated: '一体化',
+    transformerCapacity: '变压器容量',
+    transformerQty: '变压器数量'
+  },
+  epcArch: {
     title: '系统架构设计',
     systemPower: '系统功率 (MW)',
     systemEnergy: '系统能量 (MWh)',
@@ -1698,7 +1699,7 @@ export default {
     cancel: '取消',
     save: '保存',
     edit: '编辑',
-    delete: '删除',
+    delete: '删除'
   },
   designTemplate: {
     selectTitle: '选择方案模板',
@@ -1737,7 +1738,7 @@ export default {
     strategyEconomic: '经济优先',
     strategyBalanced: '均衡方案',
     strategyFlexible: '灵活分期',
-    strategyManufacturer: '指定厂家',
+    strategyManufacturer: '指定厂家'
   },
   orchestrator: {
     title: '一键方案引擎',

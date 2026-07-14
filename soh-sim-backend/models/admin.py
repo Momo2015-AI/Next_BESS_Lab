@@ -22,8 +22,9 @@ class DesignTemplate(db.Model):
     tenant_id = db.Column(db.String(36), db.ForeignKey("tenants.id"), nullable=True)
     name = db.Column(db.String(100), nullable=False, comment="模板名称")
     name_en = db.Column(db.String(100), nullable=True, comment="英文名称")
-    strategy = db.Column(db.String(50), nullable=False, default="balanced",
-                         comment="策略: economic/balanced/flexible/manufacturer")
+    strategy = db.Column(
+        db.String(50), nullable=False, default="balanced", comment="策略: economic/balanced/flexible/manufacturer"
+    )
     description = db.Column(db.Text, nullable=True, comment="模板描述")
 
     # 产品引用（存 model 字符串，非 FK，便于跨库迁移）

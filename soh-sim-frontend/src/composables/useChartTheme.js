@@ -23,7 +23,9 @@ function loadThemeKey() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved && THEME_KEYS.includes(saved)) return saved
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return 'tailwind'
 }
 
@@ -43,7 +45,11 @@ const themeName = computed(() => `${themeKey.value}-${themeMode.value}`)
 function setTheme(key) {
   if (!THEME_KEYS.includes(key)) return
   themeKey.value = key
-  try { localStorage.setItem(STORAGE_KEY, key) } catch { /* ignore */ }
+  try {
+    localStorage.setItem(STORAGE_KEY, key)
+  } catch {
+    /* ignore */
+  }
 }
 
 function cycleTheme() {
@@ -59,7 +65,7 @@ if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
   })
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme'],
+    attributeFilter: ['data-theme']
   })
 }
 
@@ -71,6 +77,6 @@ export function useChartTheme() {
     themeName,
     setTheme,
     cycleTheme,
-    THEME_KEYS,
+    THEME_KEYS
   }
 }

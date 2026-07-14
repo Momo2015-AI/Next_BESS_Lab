@@ -77,14 +77,16 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               h ×
-              <span class="text-muted">2</span> ×
+              <span class="text-muted">2</span>
+              ×
               <input
                 v-model.number="state.bRun"
                 type="number"
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               kW) + (
-              <span class="text-muted">24</span> h -
+              <span class="text-muted">24</span>
+              h -
               <input
                 v-model.number="state.cycles"
                 type="number"
@@ -99,7 +101,8 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               h ×
-              <span class="text-muted">2</span> ) ×
+              <span class="text-muted">2</span>
+              ) ×
               <input
                 v-model.number="state.days"
                 type="number"
@@ -154,7 +157,8 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               h ×
-              <span class="text-muted">2</span> ×
+              <span class="text-muted">2</span>
+              ×
               <input
                 v-model.number="state.pRun"
                 type="number"
@@ -162,7 +166,8 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               kW) + (
-              <span class="text-muted">24</span> h -
+              <span class="text-muted">24</span>
+              h -
               <input
                 v-model.number="state.cycles"
                 type="number"
@@ -177,7 +182,8 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               h ×
-              <span class="text-muted">2</span> ) ×
+              <span class="text-muted">2</span>
+              ) ×
               <input
                 v-model.number="state.days"
                 type="number"
@@ -197,7 +203,8 @@
                 class="w-10 text-center bg-transparent border border-current outline-none rounded px-1"
               />
               天 ×
-              <span class="text-muted">24</span> h ×
+              <span class="text-muted">24</span>
+              h ×
               <input
                 v-model.number="state.pStation"
                 type="number"

@@ -186,7 +186,9 @@ async function handleSubmit() {
 
       // 显式广播 storage 事件，通知同窗口的 App.vue 刷新用户态
       // （同窗口 storage 事件默认不触发，需要手动派发）
-      window.dispatchEvent(new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.data.user) }))
+      window.dispatchEvent(
+        new StorageEvent('storage', { key: 'user_info', newValue: JSON.stringify(result.data.user) })
+      )
 
       showToast(isLogin.value ? t('auth.loginSuccess') : t('auth.registerSuccess'))
       emit('auth-success', result.data.user)
@@ -207,20 +209,56 @@ async function quickLogin(role) {
 
   // 各角色对应的默认权限（与后端 DEFAULT_ROLE_PERMISSIONS 对应）
   const ALL_PERMS = {
-    phase1: 'full', phase2: 'full', phase3: 'full', phase4: 'full', phase5: 'full',
-    tool_formula: 'full', tool_params: 'full', tool_conditions: 'full',
-    tool_auxpower: 'full', tool_financial: 'full', tool_engineering: 'full',
-    tool_datainject: 'full', tool_config: 'full', tool_survey_view: 'full',
-    tool_simulation_view: 'full', tool_report: 'full', tool_projects: 'full',
-    tool_templates: 'full', tool_rules: 'full', epc: 'full', epc_ipp: 'full',
+    phase1: 'full',
+    phase2: 'full',
+    phase3: 'full',
+    phase4: 'full',
+    phase5: 'full',
+    tool_formula: 'full',
+    tool_params: 'full',
+    tool_conditions: 'full',
+    tool_auxpower: 'full',
+    tool_financial: 'full',
+    tool_engineering: 'full',
+    tool_datainject: 'full',
+    tool_config: 'full',
+    tool_survey_view: 'full',
+    tool_simulation_view: 'full',
+    tool_report: 'full',
+    tool_projects: 'full',
+    tool_templates: 'full',
+    tool_rules: 'full',
+    epc: 'full',
+    epc_ipp: 'full',
     admin_panel: 'full'
   }
 
   // 模拟快速登录
   const mockUsers = {
-    admin: { id: 'admin-001', username: 'admin', email: 'admin@soh-sim.com', role: 'admin', effective_role: 'admin', permissions: ALL_PERMS },
-    engineer: { id: 'eng-001', username: 'engineer', email: 'engineer@soh-sim.com', role: 'solution_engineer', effective_role: 'solution_engineer', permissions: ALL_PERMS },
-    guest: { id: 'guest-001', username: 'guest', email: 'guest@soh-sim.com', role: 'developer', effective_role: 'developer', permissions: ALL_PERMS }
+    admin: {
+      id: 'admin-001',
+      username: 'admin',
+      email: 'admin@soh-sim.com',
+      role: 'admin',
+      effective_role: 'admin',
+      permissions: ALL_PERMS
+    },
+    engineer: {
+      id: 'eng-001',
+      username: 'engineer',
+      email: 'engineer@soh-sim.com',
+      role: 'solution_engineer',
+      effective_role: 'solution_engineer',
+      permissions: ALL_PERMS
+    },
+    guest: {
+      id: 'guest-001',
+      username: 'guest',
+      email: 'guest@soh-sim.com',
+      role: 'developer',
+      effective_role: 'developer',
+      permissions: ALL_PERMS
+    }
   }
 
   const mockToken = `mock-token-${role}-${Date.now()}`

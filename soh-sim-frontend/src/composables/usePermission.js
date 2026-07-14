@@ -100,6 +100,6 @@ export function usePermission() {
     canView,
     canEdit,
     isHidden,
-    loadUserInfo,
+    loadUserInfo
   }
 }

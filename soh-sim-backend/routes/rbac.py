@@ -205,11 +205,7 @@ def reset_role_permission(role_code):
 def list_users():
     """获取所有用户列表（含权限覆盖信息）"""
     # 管理员可查看所有租户的用户
-    users = (
-        User.query.options(selectinload(User.permission_override))
-        .order_by(User.created_at.desc())
-        .all()
-    )
+    users = User.query.options(selectinload(User.permission_override)).order_by(User.created_at.desc()).all()
 
     result = []
     for user in users:

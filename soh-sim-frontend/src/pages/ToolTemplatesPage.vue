@@ -1,6 +1,5 @@
 <template>
   <AppPage :title-key="'tools.templatesTitle'" :desc-key="'tools.templatesDesc'">
-
     <div class="toolbar">
       <button class="btn-primary" @click="loadTemplates">{{ $t('tools.templatesRefresh') }}</button>
       <button class="btn-secondary" @click="seedTemplates">{{ $t('tools.templatesSeed') }}</button>

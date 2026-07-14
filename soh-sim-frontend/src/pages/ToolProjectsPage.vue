@@ -1,12 +1,8 @@
 <template>
   <AppPage :title-key="'versionManager.title'" :desc-key="'versionManager.desc'">
-
     <!-- 视图切换 -->
     <div class="view-tabs">
-      <button
-        :class="['tab-btn', { active: view === 'projects' }]"
-        @click="view = 'projects'"
-      >
+      <button :class="['tab-btn', { active: view === 'projects' }]" @click="view = 'projects'">
         📁 {{ $t('versionManager.projects') }}
       </button>
       <button
@@ -63,7 +59,8 @@
     <div v-if="view === 'versions' && selectedProject" class="view-content">
       <div class="version-toolbar">
         <span class="project-label">
-          {{ $t('versionManager.project') }}: <strong>{{ selectedProject.name || selectedProject.id }}</strong>
+          {{ $t('versionManager.project') }}:
+          <strong>{{ selectedProject.name || selectedProject.id }}</strong>
         </span>
       </div>
 
@@ -73,11 +70,7 @@
         <p>{{ $t('versionManager.noVersions') }}</p>
       </div>
       <div v-else class="version-list">
-        <div
-          v-for="v in versions"
-          :key="v.id"
-          class="version-row"
-        >
+        <div v-for="v in versions" :key="v.id" class="version-row">
           <div class="version-info">
             <span class="version-num">v{{ v.version_num }}</span>
             <span class="version-name">{{ v.name }}</span>
@@ -90,12 +83,7 @@
           </div>
           <div class="version-actions">
             <label class="compare-check">
-              <input
-                type="checkbox"
-                :value="v.id"
-                :checked="compareIds.includes(v.id)"
-                @change="toggleCompare(v.id)"
-              />
+              <input type="checkbox" :value="v.id" :checked="compareIds.includes(v.id)" @change="toggleCompare(v.id)" />
               {{ $t('versionManager.selectCompare') }}
             </label>
             <button class="btn btn-sm" @click="restoreVersion(v.id)">
@@ -135,7 +123,11 @@ const compareResult = ref(null)
 
 function fmtDate(d) {
   if (!d) return '—'
-  try { return new Date(d).toLocaleDateString('zh-CN') } catch { return d }
+  try {
+    return new Date(d).toLocaleDateString('zh-CN')
+  } catch {
+    return d
+  }
 }
 
 onMounted(async () => {
@@ -201,7 +193,7 @@ async function restoreVersion(versionId) {
           ratedEnergy: data.design.container?.ratedEnergyMwh || store.systemParams.ratedEnergy,
           initContainerQty: data.design.containerQty || store.systemParams.initContainerQty,
           initPcsQty: data.design.pcsQty || store.systemParams.initPcsQty,
-          pcsPower: data.design.pcs?.ratedPowerMW || store.systemParams.pcsPower,
+          pcsPower: data.design.pcs?.ratedPowerMW || store.systemParams.pcsPower
         }
       }
       if (data.simulation) {
@@ -293,13 +285,18 @@ watch(compareIds, async (ids) => {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.loading, .empty-state {
+.loading,
+.empty-state {
   text-align: center;
   padding: 2rem;
   color: var(--text-secondary, #888);
 }
 
-.empty-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+.empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
 
 .project-cards {
   display: grid;
@@ -312,11 +309,17 @@ watch(compareIds, async (ids) => {
   border-radius: 8px;
   padding: 0.75rem;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
-.project-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-.project-card.selected { border-color: var(--primary, #3b82f6); }
+.project-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.project-card.selected {
+  border-color: var(--primary, #3b82f6);
+}
 
 .card-header {
   display: flex;
@@ -325,7 +328,10 @@ watch(compareIds, async (ids) => {
   margin-bottom: 0.5rem;
 }
 
-.project-name { font-weight: 600; font-size: 0.95rem; }
+.project-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
 .project-status {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
@@ -333,9 +339,18 @@ watch(compareIds, async (ids) => {
   text-transform: uppercase;
 }
 
-.status-active { background: var(--color-success-glow); color: var(--color-success); }
-.status-draft { background: var(--color-card-dark); color: var(--color-text-secondary); }
-.status-archived { background: var(--color-warning-glow); color: var(--color-warning); }
+.status-active {
+  background: var(--color-success-glow);
+  color: var(--color-success);
+}
+.status-draft {
+  background: var(--color-card-dark);
+  color: var(--color-text-secondary);
+}
+.status-archived {
+  background: var(--color-warning-glow);
+  color: var(--color-warning);
+}
 
 .card-row {
   display: flex;
@@ -344,8 +359,12 @@ watch(compareIds, async (ids) => {
   padding: 0.15rem 0;
 }
 
-.card-row .label { color: var(--text-secondary, #888); }
-.card-row .value { font-weight: 500; }
+.card-row .label {
+  color: var(--text-secondary, #888);
+}
+.card-row .value {
+  font-weight: 500;
+}
 
 /* Version List */
 .version-toolbar {
@@ -379,7 +398,9 @@ watch(compareIds, async (ids) => {
   font-size: 0.9rem;
 }
 
-.version-name { font-weight: 500; }
+.version-name {
+  font-weight: 500;
+}
 
 .active-badge {
   font-size: 0.7rem;
@@ -435,5 +456,7 @@ watch(compareIds, async (ids) => {
   color: var(--color-text-on-accent);
 }
 
-.btn-sm:hover { background: var(--primary-dark, #2563eb); }
+.btn-sm:hover {
+  background: var(--primary-dark, #2563eb);
+}
 </style>

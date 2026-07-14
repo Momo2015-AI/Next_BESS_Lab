@@ -9,7 +9,8 @@
       <!-- 对比表格 -->
       <div class="panel-section">
         <h3 class="section-title">
-          <span class="icon">📋</span> {{ $t('compare.title') }} ({{ selected.length }})
+          <span class="icon">📋</span>
+          {{ $t('compare.title') }} ({{ selected.length }})
         </h3>
         <div class="table-wrapper">
           <table class="compare-table">
@@ -19,7 +20,7 @@
                 <th v-for="(sol, idx) in selected" :key="sol.id || idx">
                   <span class="col-header">
                     <span class="rank-badge" :class="'rank-' + (idx + 1)">#{{ idx + 1 }}</span>
-                    {{ sol.container?.model || ('方案 ' + (idx + 1)) }}
+                    {{ sol.container?.model || '方案 ' + (idx + 1) }}
                   </span>
                 </th>
               </tr>
@@ -43,7 +44,8 @@
       <!-- 雷达图对比 -->
       <div v-if="selected.length >= 2" class="panel-section">
         <h3 class="section-title">
-          <span class="icon">🎯</span> {{ $t('compare.radarChart') }}
+          <span class="icon">🎯</span>
+          {{ $t('compare.radarChart') }}
         </h3>
         <div ref="radarChartRef" class="chart-container"></div>
       </div>
@@ -51,7 +53,8 @@
       <!-- 柱状图对比 -->
       <div v-if="selected.length >= 2" class="panel-section">
         <h3 class="section-title">
-          <span class="icon">📊</span> {{ $t('compare.barChart') }}
+          <span class="icon">📊</span>
+          {{ $t('compare.barChart') }}
         </h3>
         <div ref="barChartRef" class="chart-container"></div>
       </div>
@@ -147,19 +150,19 @@ const compareRows = computed(() => {
     {
       key: 'containerQty',
       label: '集装箱数量',
-      bestIdx: findBest(s => s.containerQty, true),
+      bestIdx: findBest((s) => s.containerQty, true),
       format: (sol) => fmt(sol.containerQty, ' 台')
     },
     {
       key: 'totalEnergy',
       label: '总容量',
-      bestIdx: findBest(s => s.totalEnergyMwh, false),
+      bestIdx: findBest((s) => s.totalEnergyMwh, false),
       format: (sol) => fmt(sol.totalEnergyMwh, ' MWh', 1)
     },
     {
       key: 'totalPower',
       label: '总功率',
-      bestIdx: findBest(s => s.totalPowerMW, false),
+      bestIdx: findBest((s) => s.totalPowerMW, false),
       format: (sol) => fmt(sol.totalPowerMW, ' MW', 1)
     },
     {
@@ -171,31 +174,31 @@ const compareRows = computed(() => {
     {
       key: 'systemRTE',
       label: '系统效率',
-      bestIdx: findBest(s => s.efficiencyChain?.systemRTE, false),
+      bestIdx: findBest((s) => s.efficiencyChain?.systemRTE, false),
       format: (sol) => fmt(sol.efficiencyChain?.systemRTE, '%', 1)
     },
     {
       key: 'totalCapex',
       label: '总 CAPEX',
-      bestIdx: findBest(s => s.estimatedCapex?.totalCapex, true),
+      bestIdx: findBest((s) => s.estimatedCapex?.totalCapex, true),
       format: (sol) => fmtCurrency(sol.estimatedCapex?.totalCapex)
     },
     {
       key: 'capexPerMWh',
       label: 'CAPEX/MWh',
-      bestIdx: findBest(s => s.estimatedCapex?.capexPerMWh, true),
+      bestIdx: findBest((s) => s.estimatedCapex?.capexPerMWh, true),
       format: (sol) => fmtCurrency(sol.estimatedCapex?.capexPerMWh)
     },
     {
       key: 'dailyAux',
       label: '日辅耗',
-      bestIdx: findBest(s => s.auxPower?.dailyTotalAuxMWh, true),
+      bestIdx: findBest((s) => s.auxPower?.dailyTotalAuxMWh, true),
       format: (sol) => fmt(sol.auxPower?.dailyTotalAuxMWh, ' MWh', 3)
     },
     {
       key: 'score',
       label: '综合评分',
-      bestIdx: findBest(s => s.score, false),
+      bestIdx: findBest((s) => s.score, false),
       format: (sol) => fmt(sol.score, '', 2)
     }
   ]
@@ -221,11 +224,11 @@ function renderRadarChart() {
   // Normalize values to 0-1
   const allSols = selected.value
   const maxVals = {
-    totalEnergy: Math.max(...allSols.map(s => s.totalEnergyMwh || 0)),
-    totalPower: Math.max(...allSols.map(s => s.totalPowerMW || 0)),
-    systemRTE: Math.max(...allSols.map(s => s.efficiencyChain?.systemRTE || 0)),
-    capexPerMWh: Math.max(...allSols.map(s => s.estimatedCapex?.capexPerMWh || 0)),
-    dailyAux: Math.max(...allSols.map(s => s.auxPower?.dailyTotalAuxMWh || 0))
+    totalEnergy: Math.max(...allSols.map((s) => s.totalEnergyMwh || 0)),
+    totalPower: Math.max(...allSols.map((s) => s.totalPowerMW || 0)),
+    systemRTE: Math.max(...allSols.map((s) => s.efficiencyChain?.systemRTE || 0)),
+    capexPerMWh: Math.max(...allSols.map((s) => s.estimatedCapex?.capexPerMWh || 0)),
+    dailyAux: Math.max(...allSols.map((s) => s.auxPower?.dailyTotalAuxMWh || 0))
   }
 
   // Update indicator max values
@@ -236,7 +239,7 @@ function renderRadarChart() {
   indicators[4].max = maxVals.dailyAux || 1
 
   const seriesData = allSols.map((sol, idx) => ({
-    name: sol.container?.model || ('方案 ' + (idx + 1)),
+    name: sol.container?.model || '方案 ' + (idx + 1),
     value: [
       sol.totalEnergyMwh || 0,
       sol.totalPowerMW || 0,
@@ -248,18 +251,23 @@ function renderRadarChart() {
     ]
   }))
 
-  radarChart.setOption({
-    tooltip: { trigger: 'item' },
-    legend: {
-      data: seriesData.map(s => s.name),
-      bottom: 0
+  radarChart.setOption(
+    {
+      tooltip: { trigger: 'item' },
+      legend: {
+        data: seriesData.map((s) => s.name),
+        bottom: 0
+      },
+      radar: { indicators },
+      series: [
+        {
+          type: 'radar',
+          data: seriesData
+        }
+      ]
     },
-    radar: { indicators },
-    series: [{
-      type: 'radar',
-      data: seriesData
-    }]
-  }, true)
+    true
+  )
 }
 
 function renderBarChart() {
@@ -269,40 +277,43 @@ function renderBarChart() {
     barChart = echarts.init(barChartRef.value, themeObject.value)
   }
 
-  const names = selected.value.map((s, i) => s.container?.model || ('方案 ' + (i + 1)))
-  const capexData = selected.value.map(s => s.estimatedCapex?.totalCapex || 0)
-  const energyData = selected.value.map(s => s.totalEnergyMwh || 0)
+  const names = selected.value.map((s, i) => s.container?.model || '方案 ' + (i + 1))
+  const capexData = selected.value.map((s) => s.estimatedCapex?.totalCapex || 0)
+  const energyData = selected.value.map((s) => s.totalEnergyMwh || 0)
 
-  barChart.setOption({
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' }
-    },
-    legend: {
-      data: ['总 CAPEX ($)', '总容量 (MWh)'],
-      bottom: 0
-    },
-    xAxis: { type: 'category', data: names },
-    yAxis: [
-      { type: 'value', name: 'CAPEX ($)' },
-      { type: 'value', name: '容量 (MWh)' }
-    ],
-    series: [
-      {
-        name: '总 CAPEX ($)',
-        type: 'bar',
-        data: capexData,
-        itemStyle: { color: themeObject.value.primary }
+  barChart.setOption(
+    {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' }
       },
-      {
-        name: '总容量 (MWh)',
-        type: 'bar',
-        yAxisIndex: 1,
-        data: energyData,
-        itemStyle: { color: themeObject.value.success }
-      }
-    ]
-  }, true)
+      legend: {
+        data: ['总 CAPEX ($)', '总容量 (MWh)'],
+        bottom: 0
+      },
+      xAxis: { type: 'category', data: names },
+      yAxis: [
+        { type: 'value', name: 'CAPEX ($)' },
+        { type: 'value', name: '容量 (MWh)' }
+      ],
+      series: [
+        {
+          name: '总 CAPEX ($)',
+          type: 'bar',
+          data: capexData,
+          itemStyle: { color: themeObject.value.primary }
+        },
+        {
+          name: '总容量 (MWh)',
+          type: 'bar',
+          yAxisIndex: 1,
+          data: energyData,
+          itemStyle: { color: themeObject.value.success }
+        }
+      ]
+    },
+    true
+  )
 }
 
 function handleResize() {
@@ -310,20 +321,28 @@ function handleResize() {
   barChart?.resize()
 }
 
-watch(() => props.solutions, (val) => {
-  selected.value = (val || []).slice(0, 5)
-  nextTick(() => {
-    renderRadarChart()
-    renderBarChart()
-  })
-}, { immediate: true, deep: true })
+watch(
+  () => props.solutions,
+  (val) => {
+    selected.value = (val || []).slice(0, 5)
+    nextTick(() => {
+      renderRadarChart()
+      renderBarChart()
+    })
+  },
+  { immediate: true, deep: true }
+)
 
-watch(selected, debounce(() => {
-  nextTick(() => {
-    renderRadarChart()
-    renderBarChart()
-  })
-}), { deep: true })
+watch(
+  selected,
+  debounce(() => {
+    nextTick(() => {
+      renderRadarChart()
+      renderBarChart()
+    })
+  }),
+  { deep: true }
+)
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)
@@ -424,10 +443,19 @@ onBeforeUnmount(() => {
   color: var(--color-text-on-accent);
 }
 
-.rank-1 { background: var(--color-warning); }
-.rank-2 { background: var(--color-text-secondary); }
-.rank-3 { background: var(--color-text-muted); }
-.rank-4, .rank-5 { background: var(--color-border-light); }
+.rank-1 {
+  background: var(--color-warning);
+}
+.rank-2 {
+  background: var(--color-text-secondary);
+}
+.rank-3 {
+  background: var(--color-text-muted);
+}
+.rank-4,
+.rank-5 {
+  background: var(--color-border-light);
+}
 
 .row-label {
   font-weight: 500;

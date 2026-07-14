@@ -19,8 +19,14 @@
         <h4 class="dts-card-name">{{ tmpl.name }}</h4>
         <p class="dts-card-desc">{{ tmpl.description }}</p>
         <div v-if="tmpl.containerModel || tmpl.pcsModel" class="dts-card-products">
-          <span v-if="tmpl.containerModel" class="dts-product-tag"><AppIcon name="briefcase" size="12" /> {{ tmpl.containerModel }}</span>
-          <span v-if="tmpl.pcsModel" class="dts-product-tag"><AppIcon name="lightning" size="12" /> {{ tmpl.pcsModel }}</span>
+          <span v-if="tmpl.containerModel" class="dts-product-tag">
+            <AppIcon name="briefcase" size="12" />
+            {{ tmpl.containerModel }}
+          </span>
+          <span v-if="tmpl.pcsModel" class="dts-product-tag">
+            <AppIcon name="lightning" size="12" />
+            {{ tmpl.pcsModel }}
+          </span>
         </div>
       </div>
     </div>
@@ -29,11 +35,7 @@
       <button class="dts-btn dts-btn-secondary" @click="$emit('skip')">
         {{ $t('designTemplate.skipTemplate') }}
       </button>
-      <button
-        class="dts-btn dts-btn-primary"
-        :disabled="!selectedId"
-        @click="confirmSelection"
-      >
+      <button class="dts-btn dts-btn-primary" :disabled="!selectedId" @click="confirmSelection">
         {{ $t('designTemplate.confirmTemplate') }}
       </button>
     </div>
@@ -61,7 +63,7 @@ const strategyLabels = {
   economic: t('designTemplate.strategyEconomic'),
   balanced: t('designTemplate.strategyBalanced'),
   flexible: t('designTemplate.strategyFlexible'),
-  manufacturer: t('designTemplate.strategyManufacturer'),
+  manufacturer: t('designTemplate.strategyManufacturer')
 }
 
 function strategyLabel(key) {
@@ -74,7 +76,7 @@ async function loadTemplates() {
     const res = await api.get('/api/admin/design-templates')
     templates.value = res?.data || res?.items || []
     // 自动选中默认模板
-    const def = templates.value.find(t => t.isDefault)
+    const def = templates.value.find((t) => t.isDefault)
     if (def) {
       selectedId.value = def.id
       selectedTemplate.value = def
@@ -158,18 +160,20 @@ onMounted(() => {
   border-radius: 10px;
   padding: 1.125rem;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   background: var(--color-card);
 }
 
 .dts-card:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .dts-card.selected {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb, 59,130,246), 0.3);
+  box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb, 59, 130, 246), 0.3);
 }
 
 .dts-card-header {

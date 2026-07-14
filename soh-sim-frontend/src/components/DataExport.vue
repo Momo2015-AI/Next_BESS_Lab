@@ -78,7 +78,9 @@
           <button class="link-btn text-xs" @click="loadSimulations">{{ $t('dataExport.refresh') }}</button>
         </div>
 
-        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">{{ $t('dataExport.noHistory') }}</div>
+        <div v-if="simulations.length === 0" class="text-xs text-center py-2 text-muted">
+          {{ $t('dataExport.noHistory') }}
+        </div>
 
         <div v-else class="space-y-2 max-h-40 overflow-y-auto">
           <div
@@ -93,7 +95,9 @@
             </div>
             <div class="flex gap-2">
               <button class="link-btn" @click="loadSimulation(sim.id)">{{ $t('dataExport.load') }}</button>
-              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">{{ $t('dataExport.export') }}</button>
+              <button class="link-btn text-accent" @click="exportSimulationCSV(sim.id)">
+                {{ $t('dataExport.export') }}
+              </button>
             </div>
           </div>
         </div>

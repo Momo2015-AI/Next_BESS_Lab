@@ -26,10 +26,7 @@
     <div class="page-layout">
       <!-- 左侧：设计引擎面板 -->
       <div class="layout-left">
-        <DesignEnginePanel
-          @select="onSelectSolution"
-          @workflow-complete="onWorkflowComplete"
-        />
+        <DesignEnginePanel @select="onSelectSolution" @workflow-complete="onWorkflowComplete" />
       </div>
 
       <!-- 右侧：方案对比 + 补容对比 + What-If -->
@@ -42,29 +39,18 @@
         <!-- What-If 分析 -->
         <div v-if="baseSolution" class="panel-section what-if-section">
           <h3 class="section-title">
-            <span class="icon">🔬</span> {{ $t('orchestrator.whatIf') }}
+            <span class="icon">🔬</span>
+            {{ $t('orchestrator.whatIf') }}
           </h3>
           <div class="what-if-form">
             <div class="form-row">
               <div class="form-group">
                 <label>{{ $t('design.temperature') }} (°C)</label>
-                <input
-                  v-model.number="whatIf.temperature"
-                  type="number"
-                  min="-20"
-                  max="60"
-                  class="form-input"
-                />
+                <input v-model.number="whatIf.temperature" type="number" min="-20" max="60" class="form-input" />
               </div>
               <div class="form-group">
                 <label>{{ $t('design.dod') }} (%)</label>
-                <input
-                  v-model.number="whatIf.dod"
-                  type="number"
-                  min="50"
-                  max="100"
-                  class="form-input"
-                />
+                <input v-model.number="whatIf.dod" type="number" min="50" max="100" class="form-input" />
               </div>
               <div class="form-group">
                 <label>{{ $t('design.cyclesPerDay') }}</label>
@@ -78,11 +64,7 @@
                 />
               </div>
             </div>
-            <button
-              class="btn btn-accent"
-              :disabled="whatIfLoading"
-              @click="runWhatIf"
-            >
+            <button class="btn btn-accent" :disabled="whatIfLoading" @click="runWhatIf">
               <span v-if="whatIfLoading" class="spinner"></span>
               {{ whatIfLoading ? $t('orchestrator.analyzing') : $t('orchestrator.runWhatIf') }}
             </button>
@@ -91,11 +73,7 @@
           <div v-if="whatIfResult" class="what-if-results">
             <h4>{{ $t('orchestrator.whatIfResult') }}</h4>
             <div class="delta-grid">
-              <div
-                v-for="(val, key) in whatIfResult.delta"
-                :key="key"
-                class="delta-item"
-              >
+              <div v-for="(val, key) in whatIfResult.delta" :key="key" class="delta-item">
                 <span class="delta-label">{{ key }}</span>
                 <span :class="['delta-value', val > 0 ? 'positive' : 'negative']">
                   {{ val > 0 ? '+' : '' }}{{ val.toFixed(2) }}%
@@ -156,7 +134,7 @@ function onProjectChange() {
 
 function onSelectSolution(solution) {
   baseSolution.value = solution
-  const exists = compareSolutions.value.find(s => s.id === solution.id)
+  const exists = compareSolutions.value.find((s) => s.id === solution.id)
   if (!exists) {
     compareSolutions.value = [...compareSolutions.value, solution]
   }
@@ -164,7 +142,7 @@ function onSelectSolution(solution) {
 
 function onWorkflowComplete(data) {
   workflowResult.value = data
-  const designs = (data.solutions || []).map(s => s.design).filter(Boolean)
+  const designs = (data.solutions || []).map((s) => s.design).filter(Boolean)
   if (designs.length) {
     compareSolutions.value = designs
     baseSolution.value = designs[0]
@@ -344,7 +322,9 @@ async function runWhatIf() {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Layout */
@@ -442,6 +422,10 @@ async function runWhatIf() {
   font-weight: 600;
 }
 
-.delta-value.positive { color: var(--color-success); }
-.delta-value.negative { color: var(--color-danger); }
+.delta-value.positive {
+  color: var(--color-success);
+}
+.delta-value.negative {
+  color: var(--color-danger);
+}
 </style>

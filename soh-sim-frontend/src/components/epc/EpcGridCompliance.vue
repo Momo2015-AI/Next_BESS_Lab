@@ -70,7 +70,9 @@
             <div class="metric-value" :class="gcResult.reactive_pass ? 'pass-text' : 'fail-text'">
               {{ gcResult.reactive_pass ? 'PASS' : 'FAIL' }}
             </div>
-            <div class="metric-label">{{ $t('epcGrid.reactivePower') }} ({{ gcResult.reactive_capacity_mvar }}MVar)</div>
+            <div class="metric-label">
+              {{ $t('epcGrid.reactivePower') }} ({{ gcResult.reactive_capacity_mvar }}MVar)
+            </div>
           </div>
           <div class="metric-card">
             <div class="metric-value" :class="gcResult.power_quality_pass ? 'pass-text' : 'fail-text'">

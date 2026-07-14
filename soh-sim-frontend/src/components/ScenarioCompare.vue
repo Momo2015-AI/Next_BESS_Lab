@@ -12,11 +12,7 @@
         <div class="col-span-1 rounded-lg p-3 ins-4">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs ins-5">{{ $t('scenario.sceneList') }}</span>
-            <button
-              class="text-xs px-2 py-1 rounded transition-colors ins-6"
-             
-              @click="createScenario"
-            >
+            <button class="text-xs px-2 py-1 rounded transition-colors ins-6" @click="createScenario">
               + {{ $t('scenario.createNew') }}
             </button>
           </div>
@@ -79,22 +75,13 @@
               <input
                 v-model="editingScenario.name"
                 class="text-xs px-2 py-1 rounded ins-8"
-               
                 :placeholder="$t('scenario.namePlaceholder')"
               />
               <div class="flex gap-2">
-                <button
-                  class="text-xs px-3 py-1 rounded transition-colors ins-6"
-                 
-                  @click="saveScenario"
-                >
+                <button class="text-xs px-3 py-1 rounded transition-colors ins-6" @click="saveScenario">
                   {{ $t('common.save') }}
                 </button>
-                <button
-                  class="text-xs px-3 py-1 rounded transition-colors ins-9"
-                 
-                  @click="cancelEdit"
-                >
+                <button class="text-xs px-3 py-1 rounded transition-colors ins-9" @click="cancelEdit">
                   {{ $t('common.cancel') }}
                 </button>
               </div>
@@ -109,7 +96,6 @@
                   v-model.number="editingScenario.params.ratedEnergy"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -120,7 +106,6 @@
                   v-model.number="editingScenario.params.initContainerQty"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -131,7 +116,6 @@
                   v-model.number="editingScenario.params.initPcsQty"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -142,7 +126,6 @@
                   v-model.number="editingScenario.params.duration"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -153,7 +136,6 @@
                   v-model.number="editingScenario.params.cyclesPerDay"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -164,7 +146,6 @@
                   v-model.number="editingScenario.params.acEfficiency"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -175,7 +156,6 @@
                   v-model.number="editingScenario.params.bessAuxRun"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -186,7 +166,6 @@
                   v-model.number="editingScenario.params.bessAuxStandby"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
               <div>
@@ -197,7 +176,6 @@
                   v-model.number="editingScenario.params.requiredEnergy"
                   type="number"
                   class="w-full rounded px-2 py-1 ins-10"
-                 
                 />
               </div>
             </div>
@@ -215,11 +193,7 @@
               >
                 {{ calculating ? $t('scenario.calculating') : $t('scenario.calculateThis') }}
               </button>
-              <button
-                class="flex-1 text-xs px-3 py-1.5 rounded transition-colors ins-11"
-               
-                @click="useAsBase"
-              >
+              <button class="flex-1 text-xs px-3 py-1.5 rounded transition-colors ins-11" @click="useAsBase">
                 {{ $t('scenario.setAsBase') }}
               </button>
             </div>
@@ -548,32 +522,32 @@ function updateChart() {
           })
         }
       })
-	    } else if (showChart.value === 'energy') {
-	      scenarios.value.forEach((scenario, idx) => {
-	        if (scenario.results?.totalAcUsable) {
-	          series.push({
-	            name: scenario.name,
-	            type: 'line',
-	            smooth: true,
-	            data: scenario.results.totalAcUsable,
-	            connectNulls: true
-	          })
-	        }
-	      })
-	    } else if (showChart.value === 'cost') {
-	      // Cost comparison: show LCOS or NPV for each scenario
-	      scenarios.value.forEach((scenario, idx) => {
-	        const metrics = scenario.results?.metrics || {}
-	        if (metrics.lcos != null) {
-	          series.push({
-	            name: scenario.name,
-	            type: 'bar',
-	            data: [Number(metrics.lcos).toFixed(2)],
-	            label: { show: true, position: 'top', fontSize: 10 }
-	          })
-	        }
-	      })
-	    }
+    } else if (showChart.value === 'energy') {
+      scenarios.value.forEach((scenario, idx) => {
+        if (scenario.results?.totalAcUsable) {
+          series.push({
+            name: scenario.name,
+            type: 'line',
+            smooth: true,
+            data: scenario.results.totalAcUsable,
+            connectNulls: true
+          })
+        }
+      })
+    } else if (showChart.value === 'cost') {
+      // Cost comparison: show LCOS or NPV for each scenario
+      scenarios.value.forEach((scenario, idx) => {
+        const metrics = scenario.results?.metrics || {}
+        if (metrics.lcos != null) {
+          series.push({
+            name: scenario.name,
+            type: 'bar',
+            data: [Number(metrics.lcos).toFixed(2)],
+            label: { show: true, position: 'top', fontSize: 10 }
+          })
+        }
+      })
+    }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const tObj = themeObject.value
@@ -609,7 +583,7 @@ function updateChart() {
       },
       xAxis: {
         type: 'category',
-        data: showChart.value === 'cost' ? scenarios.value.map(s => s.name) : years,
+        data: showChart.value === 'cost' ? scenarios.value.map((s) => s.name) : years,
         name: showChart.value === 'cost' ? '' : t('scenario.year'),
         nameTextStyle: { color: colors.axisLabel, fontSize: 10 },
         axisLabel: { color: colors.axisLabel, fontSize: 10 },
@@ -617,7 +591,12 @@ function updateChart() {
       },
       yAxis: {
         type: 'value',
-        name: showChart.value === 'soh' ? t('scenario.sohPct') : showChart.value === 'cost' ? t('scenario.lcos') : t('scenario.netAvailableMwh'),
+        name:
+          showChart.value === 'soh'
+            ? t('scenario.sohPct')
+            : showChart.value === 'cost'
+              ? t('scenario.lcos')
+              : t('scenario.netAvailableMwh'),
         nameTextStyle: { color: colors.axisLabel, fontSize: 10 },
         axisLabel: { color: colors.axisLabel, fontSize: 10 },
         axisLine: { lineStyle: { color: colors.axisLine } },
@@ -657,32 +636,61 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
-.ins-2 { color: var(--color-accent) }
-.ins-3 { background-color: var(--color-accent) }
-.ins-4 { background-color: var(--color-card-dark) }
-.ins-5 { color: var(--color-text-muted) }
-.ins-6 { background-color: var(--color-accent); color: white }
-.ins-7 { color: var(--color-text-secondary) }
-.ins-8 { 
-                  background-color: var(--color-input-bg-dark);
-                  border: 1px solid var(--color-input-border);
-                  color: var(--color-text);
-                 }
-.ins-9 { 
-                    background-color: var(--color-card);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-text-secondary);
-                   }
-.ins-10 { 
-                    background-color: var(--color-input-bg-dark);
-                    border: 1px solid var(--color-input-border);
-                    color: var(--color-text);
-                   }
-.ins-11 { background-color: var(--color-accent-secondary); color: white }
-.ins-12 { color: var(--color-text-muted); border-bottom: 1px solid var(--color-border) }
-.ins-13 { color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border) }
-.ins-14 { color: var(--color-accent); font-weight: 500; border-bottom: 1px solid var(--color-border) }
+.ins-1 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.ins-2 {
+  color: var(--color-accent);
+}
+.ins-3 {
+  background-color: var(--color-accent);
+}
+.ins-4 {
+  background-color: var(--color-card-dark);
+}
+.ins-5 {
+  color: var(--color-text-muted);
+}
+.ins-6 {
+  background-color: var(--color-accent);
+  color: white;
+}
+.ins-7 {
+  color: var(--color-text-secondary);
+}
+.ins-8 {
+  background-color: var(--color-input-bg-dark);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text);
+}
+.ins-9 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+.ins-10 {
+  background-color: var(--color-input-bg-dark);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text);
+}
+.ins-11 {
+  background-color: var(--color-accent-secondary);
+  color: white;
+}
+.ins-12 {
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.ins-13 {
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+.ins-14 {
+  color: var(--color-accent);
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-border);
+}
 
 .scenario-compare {
   height: 100%;

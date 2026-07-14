@@ -82,7 +82,7 @@ const form = reactive({
   cyclesPerDay: 1,
   dod: 80,
   strategy: 'balanced',
-  manufacturer: '',
+  manufacturer: ''
 })
 
 const generating = ref(false)
@@ -113,7 +113,7 @@ async function runDesign() {
       cyclesPerDay: form.cyclesPerDay,
       dod: form.dod,
       strategy: form.strategy,
-      manufacturer: form.manufacturer || undefined,
+      manufacturer: form.manufacturer || undefined
     })
 
     const data = res?.data || res
@@ -232,7 +232,9 @@ async function runDesign() {
 }
 
 @keyframes dpc-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dpc-error {

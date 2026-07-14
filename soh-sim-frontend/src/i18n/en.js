@@ -857,7 +857,7 @@ export default {
     desc: 'Template selection → Parameter confirmation → Result preview, complete design in 3 steps',
     step1: '2.1 Template Selection',
     step2: '2.2 Parameter Confirmation',
-    step3: '2.3 Result Preview',
+    step3: '2.3 Result Preview'
   },
   phase3: {
     title: 'Phase 3: Performance Analysis',
@@ -1033,7 +1033,8 @@ export default {
     reportGuideMiddle: ' to view simulation results, or use ',
     reportGuideSim: 'Simulation Analysis',
     reportGuideSuffix: ' to run simulation and export CSV.',
-    reportIntro: 'Select a report type to generate a professional report with current project data. For the full five-step report workflow, go to Phase5.',
+    reportIntro:
+      'Select a report type to generate a professional report with current project data. For the full five-step report workflow, go to Phase5.',
     reportTechnical: 'Technical Report',
     reportTechnicalDesc: 'Includes system parameters, simulation results, SOH degradation curves, and technical data',
     reportFinancial: 'Financial Report',
@@ -1081,7 +1082,7 @@ export default {
       saveRules: 'Save Rules',
       saved: 'Rules saved',
       units: 'units',
-      years: 'years',
+      years: 'years'
     },
     templatesTitle: 'Correction Factor Templates',
     templatesDesc: 'Manage Arrhenius model correction factor templates',
@@ -1496,7 +1497,7 @@ export default {
     daysUnit: 'days',
     sohCurvePreview: 'SOH Curve',
     sohEnd: 'Year 25',
-    year: 'Year',
+    year: 'Year'
   },
   energyFlow: {
     title: 'Energy Flow Sankey',
@@ -1555,7 +1556,8 @@ export default {
     exportFailed: 'Export failed',
     csvHeaderTitle: 'BESS SOH Simulation Result',
     csvMatrix: '25-Year Lifecycle Matrix',
-    csvMatrixHeader: 'Year,Init Gross(MWh),Init Aux(MWh),Init Net AC(MWh),Aug Gross(MWh),Aug Aux(MWh),Aug Net AC(MWh),Total Net AC(MWh),Cumulative Aug,Meets Requirement',
+    csvMatrixHeader:
+      'Year,Init Gross(MWh),Init Aux(MWh),Init Net AC(MWh),Aug Gross(MWh),Aug Aux(MWh),Aug Net AC(MWh),Total Net AC(MWh),Cumulative Aug,Meets Requirement',
     csvYes: 'Yes',
     csvNo: 'No',
     csvSohRte: 'SOH/RTE Data',
@@ -1677,7 +1679,7 @@ export default {
     transformer3w: '3-Winding',
     transformerIntegrated: 'Integrated',
     transformerCapacity: 'Transformer Capacity',
-    transformerQty: 'Transformer Qty',
+    transformerQty: 'Transformer Qty'
   },
   epcArch: {
     title: 'System Architecture Design',
@@ -1834,13 +1836,16 @@ export default {
     formulaSandbox: 'Formula Sandbox & Real-Time Ledger',
     dcTotalAux: '1. DC Total Aux',
     dcFormula: 'DC Total Aux = (tRun × bRun + tStd × bStd) × units / 1000',
-    dcPhysics: 'Physics: Runtime energy calculated by cycle count, standby by total time minus runtime, summed and multiplied by unit count, converted to MWh.',
+    dcPhysics:
+      'Physics: Runtime energy calculated by cycle count, standby by total time minus runtime, summed and multiplied by unit count, converted to MWh.',
     acTotalAux: '2. AC Total Aux',
     acFormula: 'AC Total Aux = (tRun × pRun + tStd × pStd + days × 24 × pStation) / 1000',
-    acPhysics: 'Physics: PCS dynamic/static power aligned with DC time series, station main transformer aux runs 24/7 at full load.',
+    acPhysics:
+      'Physics: PCS dynamic/static power aligned with DC time series, station main transformer aux runs 24/7 at full load.',
     totalSystemAux: '3. Total System Aux',
     totalFormula: 'Total System Aux = DC Total Aux + AC Total Aux',
-    totalPhysics: 'Physics: Aggregated total dynamic/static consumption over the selected period, serves as the deduction base before POI settlement.',
+    totalPhysics:
+      'Physics: Aggregated total dynamic/static consumption over the selected period, serves as the deduction base before POI settlement.',
     poiNetDelivery: '4. POI Net Delivery',
     poiFormula: 'POI Net = cap × units × sqrtRte × cycles × days × acEff × pcsEff - totalSystemAux',
     poiPhysics: 'Physics: Discharge in parentheses scales linearly with days, subtract total aux for net delivery.',
@@ -1995,7 +2000,8 @@ export default {
     },
     tabProducts: 'Products',
     productLibrary: 'Product Library',
-    productLibraryDesc: 'Manage cell, container, and PCS product catalogs. The design engine auto-matches from this library.',
+    productLibraryDesc:
+      'Manage cell, container, and PCS product catalogs. The design engine auto-matches from this library.',
     cellLibrary: 'Cells',
     containerLibrary: 'Containers',
     pcsLibrary: 'PCS',
@@ -2036,7 +2042,7 @@ export default {
     cancel: 'Cancel',
     save: 'Save',
     edit: 'Edit',
-    delete: 'Delete',
+    delete: 'Delete'
   },
   designTemplate: {
     selectTitle: 'Select Design Template',
@@ -2075,7 +2081,7 @@ export default {
     strategyEconomic: 'Economic',
     strategyBalanced: 'Balanced',
     strategyFlexible: 'Flexible',
-    strategyManufacturer: 'Manufacturer',
+    strategyManufacturer: 'Manufacturer'
   },
   orchestrator: {
     title: 'One-Click Solution Engine',
@@ -2175,7 +2181,8 @@ export default {
   },
   hierarchy: {
     dcSizing: 'DC Capacity Sizing (DEWA §6.2)',
-    dcSizingDesc: 'Back-calculate DC installed capacity and container count from RFP-required usable energy and system losses',
+    dcSizingDesc:
+      'Back-calculate DC installed capacity and container count from RFP-required usable energy and system losses',
     targetPower: 'Target Power',
     targetEnergy: 'Target Energy',
     pRate: 'P-Rate (C-Rate)',

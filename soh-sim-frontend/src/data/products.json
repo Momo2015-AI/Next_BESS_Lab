@@ -1019,10 +1019,7 @@
           "clustersPerContainer": 8,
           "containerEnergyMWh": 3.44,
           "containerPowerMW": 1.725,
-          "compatibleContainerIds": [
-            "eve-3.44mwh-lf280k",
-            "catl-enerone-vanadium"
-          ]
+          "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"]
         },
         {
           "containerType": "20ft-H",
@@ -1084,9 +1081,7 @@
           "clustersPerContainer": 8,
           "containerEnergyMWh": 5.015,
           "containerPowerMW": 2.5,
-          "compatibleContainerIds": [
-            "eve-5mwh-lf628k"
-          ]
+          "compatibleContainerIds": ["eve-5mwh-lf628k"]
         },
         {
           "containerType": "20ft-H",
@@ -1148,10 +1143,7 @@
           "clustersPerContainer": 8,
           "containerEnergyMWh": 3.44,
           "containerPowerMW": 1.725,
-          "compatibleContainerIds": [
-            "catl-enerone-vanadium",
-            "eve-3.44mwh-lf280k"
-          ]
+          "compatibleContainerIds": ["catl-enerone-vanadium", "eve-3.44mwh-lf280k"]
         },
         {
           "containerType": "20ft-H",
@@ -1189,9 +1181,7 @@
           "clustersPerContainer": 12,
           "containerEnergyMWh": 5.669,
           "containerPowerMW": 2.8,
-          "compatibleContainerIds": [
-            "catl-enerone"
-          ]
+          "compatibleContainerIds": ["catl-enerone"]
         }
       ]
     },
@@ -1222,12 +1212,7 @@
           "clustersPerContainer": 12,
           "containerEnergyMWh": 5.824,
           "containerPowerMW": 2.9,
-          "compatibleContainerIds": [
-            "catl-enerone",
-            "sungrow-powertitan",
-            "hyperstrong-5mwh",
-            "envision-5mwh"
-          ]
+          "compatibleContainerIds": ["catl-enerone", "sungrow-powertitan", "hyperstrong-5mwh", "envision-5mwh"]
         }
       ]
     },
@@ -1258,9 +1243,7 @@
           "clustersPerContainer": 12,
           "containerEnergyMWh": 3.756,
           "containerPowerMW": 1.9,
-          "compatibleContainerIds": [
-            "byd-mc-cube"
-          ]
+          "compatibleContainerIds": ["byd-mc-cube"]
         }
       ]
     },
@@ -1284,10 +1267,7 @@
           "clustersPerContainer": 8,
           "containerEnergyMWh": 3.44,
           "containerPowerMW": 1.725,
-          "compatibleContainerIds": [
-            "eve-3.44mwh-lf280k",
-            "catl-enerone-vanadium"
-          ]
+          "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"]
         },
         {
           "containerType": "20ft-H",
@@ -1380,10 +1360,7 @@
           "clustersPerContainer": 8,
           "containerEnergyMWh": 3.44,
           "containerPowerMW": 1.725,
-          "compatibleContainerIds": [
-            "eve-3.44mwh-lf280k",
-            "catl-enerone-vanadium"
-          ]
+          "compatibleContainerIds": ["eve-3.44mwh-lf280k", "catl-enerone-vanadium"]
         },
         {
           "containerType": "20ft-H",
@@ -1421,10 +1398,7 @@
           "clustersPerContainer": 12,
           "containerEnergyMWh": 5.824,
           "containerPowerMW": 2.9,
-          "compatibleContainerIds": [
-            "sungrow-powertitan",
-            "hyperstrong-5mwh"
-          ]
+          "compatibleContainerIds": ["sungrow-powertitan", "hyperstrong-5mwh"]
         }
       ]
     }

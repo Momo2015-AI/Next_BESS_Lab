@@ -8,10 +8,7 @@
 
       <!-- PCS选型 -->
       <div class="grid grid-cols-2 gap-4 mb-4">
-        <div
-          class="rounded-lg p-4 ins-4"
-         
-        >
+        <div class="rounded-lg p-4 ins-4">
           <h4 class="text-xs mb-3 font-medium ins-5">
             {{ $t('pcsAC.pcsPowerSelection') }}
           </h4>
@@ -84,10 +81,7 @@
           </div>
         </div>
 
-        <div
-          class="rounded-lg p-4 ins-4"
-         
-        >
+        <div class="rounded-lg p-4 ins-4">
           <h4 class="text-xs mb-3 font-medium ins-5">
             {{ $t('pcsAC.pcsQtyConfig') }}
           </h4>
@@ -156,10 +150,7 @@
       </div>
 
       <!-- 变压器配置 -->
-      <div
-        class="rounded-lg p-4 mb-4 ins-4"
-       
-      >
+      <div class="rounded-lg p-4 mb-4 ins-4">
         <h4 class="text-xs mb-3 font-medium ins-5">
           {{ $t('pcsAC.transformerAndGrid') }}
         </h4>
@@ -243,10 +234,7 @@
       </div>
 
       <!-- 运行参数 -->
-      <div
-        class="rounded-lg p-4 mb-4 ins-4"
-       
-      >
+      <div class="rounded-lg p-4 mb-4 ins-4">
         <h4 class="text-xs mb-3 font-medium ins-5">{{ $t('acDesign.operatingParams') }}</h4>
 
         <div class="grid grid-cols-4 gap-3">
@@ -288,11 +276,11 @@
       </div>
 
       <!-- 配置规则 -->
-      <div
-        class="rounded-lg p-4 mb-4 ins-4"
-       
-      >
-        <h4 class="text-xs mb-3 font-medium ins-7"><AppIcon name="lightning" size="12" /> {{ $t('acDesign.configRules') }}</h4>
+      <div class="rounded-lg p-4 mb-4 ins-4">
+        <h4 class="text-xs mb-3 font-medium ins-7">
+          <AppIcon name="lightning" size="12" />
+          {{ $t('acDesign.configRules') }}
+        </h4>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="rounded p-3 ins-8">
@@ -324,27 +312,16 @@
           </div>
         </div>
 
-        <button
-          class="mt-3 text-xs px-3 py-1.5 rounded transition-colors ins-9"
-         
-          @click="applyConfigRules"
-        >
+        <button class="mt-3 text-xs px-3 py-1.5 rounded transition-colors ins-9" @click="applyConfigRules">
           {{ $t('acDesign.autoCalcFromBattery') }}
         </button>
       </div>
 
       <!-- 配置结果 -->
-      <div
-        class="rounded-lg p-4 ins-4"
-       
-      >
+      <div class="rounded-lg p-4 ins-4">
         <div class="flex items-center justify-between mb-3">
           <h4 class="text-xs font-medium ins-5">{{ $t('acDesign.result') }}</h4>
-          <button
-            class="text-xs px-3 py-1 rounded transition-colors ins-10"
-           
-            @click="calculatePcsConfig"
-          >
+          <button class="text-xs px-3 py-1 rounded transition-colors ins-10" @click="calculatePcsConfig">
             {{ $t('acDesign.checkConfig') }}
           </button>
         </div>
@@ -363,9 +340,7 @@
             <div class="text-[10px] ins-6">{{ $t('acDesign.totalPcsPower') }}</div>
           </div>
           <div class="text-center rounded p-2 ins-11">
-            <div class="text-lg font-bold ins-13">
-              {{ pcsConfig.powerRatio.toFixed(1) }}:1
-            </div>
+            <div class="text-lg font-bold ins-13">{{ pcsConfig.powerRatio.toFixed(1) }}:1</div>
             <div class="text-[10px] ins-6">{{ $t('acDesign.powerRatio') }}</div>
           </div>
           <div class="text-center rounded p-2 ins-11">
@@ -375,9 +350,7 @@
             <div class="text-[10px] ins-6">{{ $t('acDesign.transformerQty') }}</div>
           </div>
           <div class="text-center rounded p-2 ins-11">
-            <div class="text-lg font-bold ins-12">
-              {{ pcsConfig.transformerCapacity }}MVA
-            </div>
+            <div class="text-lg font-bold ins-12">{{ pcsConfig.transformerCapacity }}MVA</div>
             <div class="text-[10px] ins-6">{{ $t('acDesign.singleTransformerCapacity') }}</div>
           </div>
           <div class="text-center rounded p-2 ins-11">
@@ -387,18 +360,10 @@
         </div>
 
         <div class="mt-4 flex justify-end gap-2">
-          <button
-            class="text-xs px-3 py-1.5 rounded transition-colors ins-15"
-           
-            @click="resetPcsConfig"
-          >
+          <button class="text-xs px-3 py-1.5 rounded transition-colors ins-15" @click="resetPcsConfig">
             {{ $t('acDesign.reset') }}
           </button>
-          <button
-            class="text-xs px-4 py-1.5 rounded transition-colors ins-10"
-           
-            @click="applyPcsConfig"
-          >
+          <button class="text-xs px-4 py-1.5 rounded transition-colors ins-10" @click="applyPcsConfig">
             {{ $t('acDesign.applyConfig') }}
           </button>
         </div>
@@ -592,25 +557,57 @@ defineExpose({ setBatteryConfig, applyConfigRules })
 </script>
 
 <style scoped>
-.ins-1 { background-color: var(--color-card); border: 1px solid var(--color-border) }
-.ins-2 { color: var(--color-accent) }
-.ins-3 { background-color: var(--color-accent) }
-.ins-4 { background-color: var(--color-card-dark); border: 1px solid var(--color-border) }
-.ins-5 { color: var(--color-text-secondary) }
-.ins-6 { color: var(--color-text-muted) }
-.ins-7 { color: var(--color-warning) }
-.ins-8 { background-color: var(--color-input-bg-dark) }
-.ins-9 { background-color: var(--color-warning); color: white }
-.ins-10 { background-color: var(--color-accent); color: white }
-.ins-11 { background-color: var(--color-input-bg) }
-.ins-12 { color: var(--color-accent-secondary) }
-.ins-13 { color: var(--color-success) }
-.ins-14 { color: var(--color-danger) }
-.ins-15 { 
-              background-color: var(--color-card);
-              border: 1px solid var(--color-border);
-              color: var(--color-text-secondary);
-             }
+.ins-1 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.ins-2 {
+  color: var(--color-accent);
+}
+.ins-3 {
+  background-color: var(--color-accent);
+}
+.ins-4 {
+  background-color: var(--color-card-dark);
+  border: 1px solid var(--color-border);
+}
+.ins-5 {
+  color: var(--color-text-secondary);
+}
+.ins-6 {
+  color: var(--color-text-muted);
+}
+.ins-7 {
+  color: var(--color-warning);
+}
+.ins-8 {
+  background-color: var(--color-input-bg-dark);
+}
+.ins-9 {
+  background-color: var(--color-warning);
+  color: white;
+}
+.ins-10 {
+  background-color: var(--color-accent);
+  color: white;
+}
+.ins-11 {
+  background-color: var(--color-input-bg);
+}
+.ins-12 {
+  color: var(--color-accent-secondary);
+}
+.ins-13 {
+  color: var(--color-success);
+}
+.ins-14 {
+  color: var(--color-danger);
+}
+.ins-15 {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
 
 .pcs-ac-design {
   height: 100%;

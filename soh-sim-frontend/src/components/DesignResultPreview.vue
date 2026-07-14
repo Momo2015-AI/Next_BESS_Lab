@@ -99,9 +99,9 @@
             </template>
           </p>
           <p class="drp-degradation-params">
-            T={{ selectedSolution.degradationModel?.temperature || 25 }}°C,
-            CPD={{ selectedSolution.degradationModel?.cyclesPerDay || 1 }},
-            DOD={{ selectedSolution.degradationModel?.dod || 80 }}%
+            T={{ selectedSolution.degradationModel?.temperature || 25 }}°C, CPD={{
+              selectedSolution.degradationModel?.cyclesPerDay || 1
+            }}, DOD={{ selectedSolution.degradationModel?.dod || 80 }}%
           </p>
         </div>
       </div>
@@ -111,11 +111,7 @@
       <button class="drp-btn drp-btn-secondary" @click="$emit('back')">
         {{ $t('designTemplate.back') }}
       </button>
-      <button
-        class="drp-btn drp-btn-primary"
-        :disabled="selectedIdx === null"
-        @click="confirmSolution"
-      >
+      <button class="drp-btn drp-btn-primary" :disabled="selectedIdx === null" @click="confirmSolution">
         {{ $t('designTemplate.confirmSolution') }}
       </button>
     </div>
@@ -133,7 +129,7 @@ const store = useBessStore()
 
 const props = defineProps({
   solutions: { type: Array, default: () => [] },
-  strategy: { type: String, default: 'balanced' },
+  strategy: { type: String, default: 'balanced' }
 })
 
 const emit = defineEmits(['back', 'confirm'])
@@ -149,7 +145,7 @@ const strategyLabels = {
   economic: t('designTemplate.strategyEconomic'),
   balanced: t('designTemplate.strategyBalanced'),
   flexible: t('designTemplate.strategyFlexible'),
-  manufacturer: t('designTemplate.strategyManufacturer'),
+  manufacturer: t('designTemplate.strategyManufacturer')
 }
 
 function strategyLabel(key) {
@@ -172,14 +168,14 @@ function confirmSolution() {
   store.selectedProducts = {
     container: sol.container || {},
     pcs: sol.pcs || {},
-    cell: sol.container?.cellModel ? { model: sol.container.cellModel } : {},
+    cell: sol.container?.cellModel ? { model: sol.container.cellModel } : {}
   }
   store.systemParams = {
     ...store.systemParams,
     initContainerQty: sol.containerQty,
     initPcsQty: sol.pcsQty,
     ratedEnergy: sol.totalEnergyMwh,
-    strategy: sol.strategy_type || props.strategy,
+    strategy: sol.strategy_type || props.strategy
   }
 
   emit('confirm', sol)
@@ -227,7 +223,9 @@ onMounted(() => {
   border-radius: 10px;
   padding: 1rem;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   background: var(--color-card);
 }
 
@@ -237,7 +235,7 @@ onMounted(() => {
 
 .drp-card.selected {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
 
 .drp-card-header {

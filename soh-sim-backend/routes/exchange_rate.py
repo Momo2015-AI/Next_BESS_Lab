@@ -27,13 +27,15 @@ def get_latest_rate():
         return error_response(f"不支持的货币: {currency}", 400)
 
     rate_info, updated_str = result
-    return success_response(data={
-        "rate": rate_info["rate"],
-        "source": rate_info["source"],
-        "date": updated_str,
-        "currency": currency,
-        "base": "USD"
-    })
+    return success_response(
+        data={
+            "rate": rate_info["rate"],
+            "source": rate_info["source"],
+            "date": updated_str,
+            "currency": currency,
+            "base": "USD",
+        }
+    )
 
 
 @exchange_rate_bp.route("/api/exchange-rates/refresh", methods=["POST"])

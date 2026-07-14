@@ -6,23 +6,23 @@ import Sidebar from '../Sidebar.vue'
 // Mock vue-router: useRoute returns a reactive-like object
 const mockRoute = { path: '/', query: {} }
 vi.mock('vue-router', () => ({
-  useRoute: () => mockRoute,
+  useRoute: () => mockRoute
 }))
 
 // Mock vue-i18n so useI18n() works without installing the plugin
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key) => key,
-    locale: { value: 'zh' },
-  }),
+    locale: { value: 'zh' }
+  })
 }))
 
 // Mock usePermission composable
 vi.mock('../../composables/usePermission.js', () => ({
   usePermission: () => ({
     canView: () => true,
-    isAdmin: { value: false },
-  }),
+    isAdmin: { value: false }
+  })
 }))
 
 describe('Sidebar.vue', () => {
@@ -42,20 +42,20 @@ describe('Sidebar.vue', () => {
                   phase2: { status: 'active' },
                   phase3: { status: 'pending' },
                   phase4: { status: 'pending' },
-                  phase5: { status: 'pending' },
-                },
-              },
-            },
-          }),
+                  phase5: { status: 'pending' }
+                }
+              }
+            }
+          })
         ],
         stubs: {
           'router-link': {
             template: '<a :class="$attrs.class"><slot /></a>',
-            props: ['to'],
+            props: ['to']
           },
-          AppIcon: { template: '<span class="icon" />' },
-        },
-      },
+          AppIcon: { template: '<span class="icon" />' }
+        }
+      }
     })
   }
 

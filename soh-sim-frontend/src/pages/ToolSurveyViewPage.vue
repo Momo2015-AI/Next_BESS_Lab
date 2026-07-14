@@ -1,6 +1,5 @@
 <template>
   <AppPage :title-key="'sidebar.toolSurveyViewTitle'" :desc-key="'sidebar.toolSurveyViewDesc'">
-
     <!-- 搜索区域 -->
     <SectionCard number="01" :title="$t('sidebar.toolSurveyView.searchTitle')">
       <div class="form-grid-2">

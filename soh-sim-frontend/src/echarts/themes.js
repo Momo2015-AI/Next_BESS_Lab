@@ -8,8 +8,16 @@
 // ==================== 方案 A：ECharts 5 默认色板 ====================
 // 基于 ColorBrewer Set2 + Tableau 10
 const ECHARTS_DEFAULT_PALETTE = [
-  '#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE',
-  '#3BA272', '#FC8452', '#9A60B4', '#EA7CCC', '#546570'
+  '#5470C6',
+  '#91CC75',
+  '#FAC858',
+  '#EE6666',
+  '#73C0DE',
+  '#3BA272',
+  '#FC8452',
+  '#9A60B4',
+  '#EA7CCC',
+  '#546570'
 ]
 
 const eChartsDefaultLight = {
@@ -35,7 +43,7 @@ const eChartsDefaultLight = {
   legendText: '#86868b',
   tooltipBg: 'rgba(255,255,255,0.95)',
   tooltipText: '#1e293b',
-  splitLine: '#f1f5f9',
+  splitLine: '#f1f5f9'
 }
 
 const eChartsDefaultDark = {
@@ -60,13 +68,21 @@ const eChartsDefaultDark = {
   legendText: '#94a3b8',
   tooltipBg: 'rgba(30,41,59,0.95)',
   tooltipText: '#e5e7eb',
-  splitLine: '#1e293b',
+  splitLine: '#1e293b'
 }
 
 // ==================== 方案 B：Tailwind CSS 色板 ====================
 const TAILWIND_PALETTE = [
-  '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-  '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#6366f1'
+  '#3b82f6',
+  '#10b981',
+  '#f59e0b',
+  '#ef4444',
+  '#8b5cf6',
+  '#06b6d4',
+  '#f97316',
+  '#84cc16',
+  '#ec4899',
+  '#6366f1'
 ]
 
 const tailwindLight = {
@@ -91,14 +107,11 @@ const tailwindLight = {
   legendText: '#64748b',
   tooltipBg: 'rgba(255,255,255,0.95)',
   tooltipText: '#1e293b',
-  splitLine: '#f1f5f9',
+  splitLine: '#f1f5f9'
 }
 
 const tailwindDark = {
-  color: [
-    '#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa',
-    '#22d3ee', '#fb923c', '#a3e635', '#f472b6', '#818cf8'
-  ],
+  color: ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee', '#fb923c', '#a3e635', '#f472b6', '#818cf8'],
   backgroundColor: 'transparent',
   textStyle: { color: '#e2e8f0' },
   title: { textStyle: { color: '#e2e8f0' } },
@@ -119,13 +132,21 @@ const tailwindDark = {
   legendText: '#94a3b8',
   tooltipBg: 'rgba(30,41,59,0.95)',
   tooltipText: '#e2e8f0',
-  splitLine: '#1e293b',
+  splitLine: '#1e293b'
 }
 
 // ==================== 方案 C：AntV/G2 色板 ====================
 const ANTV_PALETTE = [
-  '#5B8FF9', '#61DDAA', '#65789B', '#F6BD16', '#7262FD',
-  '#78D3F8', '#9661BC', '#F6903D', '#008685', '#F08BB4'
+  '#5B8FF9',
+  '#61DDAA',
+  '#65789B',
+  '#F6BD16',
+  '#7262FD',
+  '#78D3F8',
+  '#9661BC',
+  '#F6903D',
+  '#008685',
+  '#F08BB4'
 ]
 
 const antvLight = {
@@ -150,14 +171,11 @@ const antvLight = {
   legendText: '#86868b',
   tooltipBg: 'rgba(255,255,255,0.95)',
   tooltipText: '#1e293b',
-  splitLine: '#f1f5f9',
+  splitLine: '#f1f5f9'
 }
 
 const antvDark = {
-  color: [
-    '#7BABFF', '#7BE8B8', '#8B95AD', '#FCD34D', '#9B8DFD',
-    '#9EDFF8', '#B08BCC', '#F8A86D', '#26A69A', '#F4A8C8'
-  ],
+  color: ['#7BABFF', '#7BE8B8', '#8B95AD', '#FCD34D', '#9B8DFD', '#9EDFF8', '#B08BCC', '#F8A86D', '#26A69A', '#F4A8C8'],
   backgroundColor: 'transparent',
   textStyle: { color: '#e5e7eb' },
   title: { textStyle: { color: '#e5e7eb' } },
@@ -178,20 +196,20 @@ const antvDark = {
   legendText: '#94a3b8',
   tooltipBg: 'rgba(30,41,59,0.95)',
   tooltipText: '#e5e7eb',
-  splitLine: '#1e293b',
+  splitLine: '#1e293b'
 }
 
 // ==================== 主题字典 ====================
 export const CHART_THEMES = {
   echarts: { light: eChartsDefaultLight, dark: eChartsDefaultDark },
   tailwind: { light: tailwindLight, dark: tailwindDark },
-  antv: { light: antvLight, dark: antvDark },
+  antv: { light: antvLight, dark: antvDark }
 }
 
 export const THEME_LABELS = {
   echarts: 'ECharts 默认',
   tailwind: 'Tailwind',
-  antv: 'AntV',
+  antv: 'AntV'
 }
 
 export const THEME_KEYS = Object.keys(CHART_THEMES)

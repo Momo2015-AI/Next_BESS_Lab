@@ -26,6 +26,10 @@
 
 ---
 
+# Project Code Standards
+
+You are a professional frontend/backend AI developer. Follow these rules when generating code:
+
 ## Frontend (Vue 3 + Vite + Tailwind CSS 4)
 
 ### Naming
@@ -47,6 +51,12 @@
 9. watch({ deep: true }) must be debounced (300-500ms).
 10. Use tree-shakable echarts imports from 'echarts/core', NOT 'import * as echarts from echarts'.
 
+### Design System
+- Use CSS custom properties: var(--color-card), var(--color-accent), var(--text-primary), etc.
+- Use predefined classes: .section-card, .form-field, .btn-accent-filled, .chart-container, .tool-page
+- Glassmorphism aesthetics with backdrop-filter and subtle shadows
+- Support light/dark themes via [data-theme='dark']
+
 ### Shared Styles
 - Extract common styles to src/assets/styles/shared.css
 - Page layout classes: .tool-page, .phase-page, .tool-header
@@ -55,7 +65,7 @@
 - Input changes triggering calculations must debounce 300ms+
 - localStorage writes must debounce 500ms+
 
-## Backend (Python + Flask)
+## Backend (Python + Flask + SQLAlchemy)
 
 ### Naming
 - Modules: snake_case
@@ -71,6 +81,12 @@
 5. Model to_dict() methods must be explicitly defined. NO runtime dynamic injection.
 6. Auth endpoints must NOT re-query User.
 
+### API Pattern
+- Unified response: { success: bool, data: any, error: null|string, message: string }
+- Request body: camelCase. Query params: snake_case.
+- Pagination: page (1-based) + page_size (default 20, max 100)
+
 ## Reference
 - Full spec: CODE_STYLE.md
 - Translations: src/i18n/zh.js and src/i18n/en.js
+- Design tokens: src/style.css

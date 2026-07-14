@@ -3,16 +3,16 @@
     <!-- Grid Code Rules -->
     <SectionCard :title="t('tools.rules.gridCode')">
       <div class="rules-grid">
-        <div class="rule-item" v-for="rule in gridCodeRules" :key="rule.key">
+        <div v-for="rule in gridCodeRules" :key="rule.key" class="rule-item">
           <label class="rule-label">{{ t(rule.labelKey) }}</label>
           <div class="rule-input-group">
             <input
+              v-model.number="form[rule.key]"
               type="number"
               class="rule-input"
               :min="rule.min"
               :max="rule.max"
               :step="rule.step"
-              v-model.number="form[rule.key]"
             />
             <span class="rule-unit">{{ rule.unit }}</span>
           </div>
@@ -24,16 +24,16 @@
     <!-- Battery Constraints -->
     <SectionCard :title="t('tools.rules.batteryConstraints')">
       <div class="rules-grid">
-        <div class="rule-item" v-for="rule in batteryRules" :key="rule.key">
+        <div v-for="rule in batteryRules" :key="rule.key" class="rule-item">
           <label class="rule-label">{{ t(rule.labelKey) }}</label>
           <div class="rule-input-group">
             <input
+              v-model.number="form[rule.key]"
               type="number"
               class="rule-input"
               :min="rule.min"
               :max="rule.max"
               :step="rule.step"
-              v-model.number="form[rule.key]"
             />
             <span class="rule-unit">{{ rule.unit }}</span>
           </div>
@@ -45,16 +45,16 @@
     <!-- Financial Rules -->
     <SectionCard :title="t('tools.rules.financialRules')">
       <div class="rules-grid">
-        <div class="rule-item" v-for="rule in financialRules" :key="rule.key">
+        <div v-for="rule in financialRules" :key="rule.key" class="rule-item">
           <label class="rule-label">{{ t(rule.labelKey) }}</label>
           <div class="rule-input-group">
             <input
+              v-model.number="form[rule.key]"
               type="number"
               class="rule-input"
               :min="rule.min"
               :max="rule.max"
               :step="rule.step"
-              v-model.number="form[rule.key]"
             />
             <span class="rule-unit">{{ rule.unit }}</span>
           </div>
@@ -92,7 +92,7 @@ const defaults = {
   minIrrThreshold: 6,
   maxPaybackYears: 12,
   discountRateDefault: 7,
-  inflationRateDefault: 2,
+  inflationRateDefault: 2
 }
 
 function loadFromStorage() {
@@ -118,7 +118,7 @@ const gridCodeRules = [
     min: 0.01,
     max: 10,
     step: 0.01,
-    unit: 'Hz',
+    unit: 'Hz'
   },
   {
     key: 'voltageDeviationMax',
@@ -127,7 +127,7 @@ const gridCodeRules = [
     min: 0.1,
     max: 30,
     step: 0.1,
-    unit: '%',
+    unit: '%'
   },
   {
     key: 'responseTimeMax',
@@ -136,7 +136,7 @@ const gridCodeRules = [
     min: 1,
     max: 10000,
     step: 1,
-    unit: 'ms',
+    unit: 'ms'
   },
   {
     key: 'rampRateMin',
@@ -145,8 +145,8 @@ const gridCodeRules = [
     min: 0.1,
     max: 100,
     step: 0.1,
-    unit: '%/min',
-  },
+    unit: '%/min'
+  }
 ]
 
 const batteryRules = [
@@ -157,7 +157,7 @@ const batteryRules = [
     min: 1,
     max: 50,
     step: 1,
-    unit: t('tools.rules.units'),
+    unit: t('tools.rules.units')
   },
   {
     key: 'minSocOperating',
@@ -166,7 +166,7 @@ const batteryRules = [
     min: 0,
     max: 50,
     step: 0.1,
-    unit: '%',
+    unit: '%'
   },
   {
     key: 'maxSocOperating',
@@ -175,7 +175,7 @@ const batteryRules = [
     min: 50,
     max: 100,
     step: 0.1,
-    unit: '%',
+    unit: '%'
   },
   {
     key: 'maxDodDaily',
@@ -184,8 +184,8 @@ const batteryRules = [
     min: 10,
     max: 100,
     step: 0.1,
-    unit: '%',
-  },
+    unit: '%'
+  }
 ]
 
 const financialRules = [
@@ -196,7 +196,7 @@ const financialRules = [
     min: 0,
     max: 50,
     step: 0.1,
-    unit: '%',
+    unit: '%'
   },
   {
     key: 'maxPaybackYears',
@@ -205,7 +205,7 @@ const financialRules = [
     min: 1,
     max: 30,
     step: 0.1,
-    unit: t('tools.rules.years'),
+    unit: t('tools.rules.years')
   },
   {
     key: 'discountRateDefault',
@@ -214,7 +214,7 @@ const financialRules = [
     min: 0,
     max: 30,
     step: 0.1,
-    unit: '%',
+    unit: '%'
   },
   {
     key: 'inflationRateDefault',
@@ -223,8 +223,8 @@ const financialRules = [
     min: 0,
     max: 20,
     step: 0.1,
-    unit: '%',
-  },
+    unit: '%'
+  }
 ]
 
 function resetDefaults() {

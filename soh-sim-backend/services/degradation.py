@@ -9,14 +9,14 @@ DEFAULT_MODEL_PARAMS = {
         # Calibrated to real LFP degradation: ~20% loss over 25 years
         # at 25°C, 1 cyc/day, 80% DOD, 0.5C. Temperature acceleration
         # matches Arrhenius behavior: ~2x at 45°C, ~3.5x at 60°C.
-        "A_cal": 1.950563,      # Calendar pre-exponential factor
-        "Ea_cal": 26000,        # Calendar activation energy (J/mol)
-        "alpha": 0.8,           # Calendar time exponent
-        "A_cyc": 12.556758,     # Cyclic pre-exponential factor
-        "Ea_cyc": 22000,        # Cyclic activation energy (J/mol)
-        "beta": 0.5,            # Cyclic cycle-count exponent
-        "gamma": 1.5,           # DOD exponent
-        "delta": 0.2,           # C-rate coefficient
+        "A_cal": 1.950563,  # Calendar pre-exponential factor
+        "Ea_cal": 26000,  # Calendar activation energy (J/mol)
+        "alpha": 0.8,  # Calendar time exponent
+        "A_cyc": 12.556758,  # Cyclic pre-exponential factor
+        "Ea_cyc": 22000,  # Cyclic activation energy (J/mol)
+        "beta": 0.5,  # Cyclic cycle-count exponent
+        "gamma": 1.5,  # DOD exponent
+        "delta": 0.2,  # C-rate coefficient
     },
     "NMC": {
         # NMC chemistry degrades ~30% faster than LFP in calendar,

@@ -18,7 +18,13 @@ from services.design.engine import DesignEngine
 logger = logging.getLogger(__name__)
 
 
-def run_full_workflow(survey_params: dict, strategy: str = "economic", target_metric: str = "lcos", project_id: str = None, user_id: str = None) -> dict:
+def run_full_workflow(
+    survey_params: dict,
+    strategy: str = "economic",
+    target_metric: str = "lcos",
+    project_id: str = None,
+    user_id: str = None,
+) -> dict:
     """
     从调研表输入到完整方案输出的端到端编排
 
@@ -63,13 +69,15 @@ def run_full_workflow(survey_params: dict, strategy: str = "economic", target_me
 
         except Exception as e:
             logger.warning(f"方案 {design.get('id')} 计算失败: {e}")
-            results.append({
-                "design": design,
-                "simulation": None,
-                "financial": None,
-                "score": float("inf"),
-                "error": str(e),
-            })
+            results.append(
+                {
+                    "design": design,
+                    "simulation": None,
+                    "financial": None,
+                    "score": float("inf"),
+                    "error": str(e),
+                }
+            )
 
     # 3. 按目标函数排序
     results.sort(key=lambda r: r.get("score", float("inf")))
@@ -103,14 +111,12 @@ def save_workflow_to_versions(project_id: str, workflow_result: dict, user_id: s
         [{"version_id": "...", "version_num": N, "name": "..."}, ...]
     """
     try:
-        from database import ProjectVersion, db as _db
+        from database import ProjectVersion
+        from database import db as _db
 
         # 获取当前最大版本号
         latest = (
-            ProjectVersion.query
-            .filter_by(project_id=project_id)
-            .order_by(ProjectVersion.version_num.desc())
-            .first()
+            ProjectVersion.query.filter_by(project_id=project_id).order_by(ProjectVersion.version_num.desc()).first()
         )
         next_num = (latest.version_num + 1) if latest else 1
 
@@ -132,7 +138,8 @@ def save_workflow_to_versions(project_id: str, workflow_result: dict, user_id: s
                 name=f"{strategy_type}_v{next_num}",
                 description=(
                     f"{strategy_type}方案 — LCOS: {lcos}, IRR: {irr}%"
-                    if lcos != "N/A" else f"{strategy_type}方案 v{next_num}"
+                    if lcos != "N/A"
+                    else f"{strategy_type}方案 v{next_num}"
                 ),
                 config_data=json.dumps(solution, default=str),
                 is_active=(next_num == 1),  # 第一个版本默认激活
@@ -141,11 +148,13 @@ def save_workflow_to_versions(project_id: str, workflow_result: dict, user_id: s
                 created_at=datetime.now(timezone.utc),
             )
             _db.session.add(version)
-            saved.append({
-                "version_id": version.id,
-                "version_num": next_num,
-                "name": version.name,
-            })
+            saved.append(
+                {
+                    "version_id": version.id,
+                    "version_num": next_num,
+                    "name": version.name,
+                }
+            )
             next_num += 1
 
         _db.session.commit()

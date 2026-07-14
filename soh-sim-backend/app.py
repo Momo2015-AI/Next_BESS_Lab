@@ -10,6 +10,7 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from database import Project, Survey, db, init_db
+from routes.admin import admin_bp
 from routes.ai_sim import ai_sim_bp, seed_manufacturers
 from routes.algorithm import algorithm_bp, seed_algorithms
 from routes.auth import auth_bp, hash_password, limiter
@@ -24,13 +25,12 @@ from routes.export import export_bp
 from routes.financial import financial_bp
 from routes.financial_engine import fin_engine_bp
 from routes.orchestrator import orchestrator_bp
-from routes.simulation_engine import sim_engine_bp
 from routes.products import products_bp, seed_products
 from routes.project import project_bp
-from routes.admin import admin_bp
 from routes.rbac import rbac_bp
 from routes.report import report_bp
 from routes.simulation import simulation_bp
+from routes.simulation_engine import sim_engine_bp
 from routes.survey import survey_bp
 from services.boq import seed_boq_sections
 from utils.api_response import error_response
@@ -219,9 +219,7 @@ with app.app_context():
         },
     ]
     for tmpl in _builtin_templates:
-        existing = DesignTemplate.query.filter_by(
-            name=tmpl["name"], is_builtin=True
-        ).first()
+        existing = DesignTemplate.query.filter_by(name=tmpl["name"], is_builtin=True).first()
         if not existing:
             db.session.add(
                 DesignTemplate(

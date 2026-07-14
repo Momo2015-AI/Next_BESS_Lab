@@ -2,22 +2,13 @@
   <div class="admin-panel">
     <!-- Tab 切换 -->
     <div class="admin-tabs">
-      <button
-        :class="['admin-tab', { active: activeTab === 'roles' }]"
-        @click="activeTab = 'roles'"
-      >
+      <button :class="['admin-tab', { active: activeTab === 'roles' }]" @click="activeTab = 'roles'">
         {{ $t('admin.tabRoles') }}
       </button>
-      <button
-        :class="['admin-tab', { active: activeTab === 'users' }]"
-        @click="activeTab = 'users'"
-      >
+      <button :class="['admin-tab', { active: activeTab === 'users' }]" @click="activeTab = 'users'">
         {{ $t('admin.tabUsers') }}
       </button>
-      <button
-        :class="['admin-tab', { active: activeTab === 'products' }]"
-        @click="activeTab = 'products'"
-      >
+      <button :class="['admin-tab', { active: activeTab === 'products' }]" @click="activeTab = 'products'">
         {{ $t('admin.tabProducts') }}
       </button>
     </div>
@@ -59,28 +50,13 @@
               <tr v-for="key in permissionKeys" :key="key">
                 <td class="perm-label">{{ $t(`admin.modules.${key}`) }}</td>
                 <td class="perm-cell">
-                  <input
-                    type="radio"
-                    :name="`perm-${key}`"
-                    :value="'full'"
-                    v-model="editingPerms[key]"
-                  />
+                  <input v-model="editingPerms[key]" type="radio" :name="`perm-${key}`" :value="'full'" />
                 </td>
                 <td class="perm-cell">
-                  <input
-                    type="radio"
-                    :name="`perm-${key}`"
-                    :value="'readonly'"
-                    v-model="editingPerms[key]"
-                  />
+                  <input v-model="editingPerms[key]" type="radio" :name="`perm-${key}`" :value="'readonly'" />
                 </td>
                 <td class="perm-cell">
-                  <input
-                    type="radio"
-                    :name="`perm-${key}`"
-                    :value="'hidden'"
-                    v-model="editingPerms[key]"
-                  />
+                  <input v-model="editingPerms[key]" type="radio" :name="`perm-${key}`" :value="'hidden'" />
                 </td>
                 <td class="perm-default">{{ getDefaultPerm(key) }}</td>
               </tr>
@@ -91,11 +67,7 @@
           <div class="override-controls">
             <div class="control-group">
               <label>{{ $t('admin.expiresAt') }}</label>
-              <input
-                type="datetime-local"
-                v-model="expiresAtInput"
-                class="control-input"
-              />
+              <input v-model="expiresAtInput" type="datetime-local" class="control-input" />
               <button class="control-clear-btn" @click="expiresAtInput = ''">
                 {{ $t('common.clear') }}
               </button>
@@ -103,12 +75,7 @@
             </div>
             <div class="control-group">
               <label>{{ $t('admin.note') }}</label>
-              <input
-                type="text"
-                v-model="noteInput"
-                class="control-input"
-                :placeholder="$t('admin.notePlaceholder')"
-              />
+              <input v-model="noteInput" type="text" class="control-input" :placeholder="$t('admin.notePlaceholder')" />
             </div>
             <div class="control-actions">
               <button class="admin-btn primary" @click="saveRolePermissions">
@@ -165,9 +132,7 @@
                 <td>
                   <span v-if="user.override && !user.override.is_expired" class="override-active">
                     {{ $t('admin.hasOverride') }}
-                    <span v-if="user.override.expires_at">
-                      ({{ formatDateTime(user.override.expires_at) }})
-                    </span>
+                    <span v-if="user.override.expires_at">({{ formatDateTime(user.override.expires_at) }})</span>
                   </span>
                   <span v-else-if="user.override && user.override.is_expired" class="override-expired">
                     {{ $t('admin.expired') }}
@@ -175,11 +140,7 @@
                   <span v-else class="override-none">{{ $t('admin.noOverride') }}</span>
                 </td>
                 <td>
-                  <button
-                    class="admin-btn small"
-                    @click="openUserEditor(user)"
-                    :disabled="user.role === 'admin'"
-                  >
+                  <button class="admin-btn small" :disabled="user.role === 'admin'" @click="openUserEditor(user)">
                     {{ $t('admin.editPermissions') }}
                   </button>
                 </td>
@@ -246,11 +207,7 @@
                 <!-- 失效时间 -->
                 <div class="control-group">
                   <label>{{ $t('admin.expiresAt') }}</label>
-                  <input
-                    type="datetime-local"
-                    v-model="userOverride.expiresAt"
-                    class="control-input"
-                  />
+                  <input v-model="userOverride.expiresAt" type="datetime-local" class="control-input" />
                   <button class="control-clear-btn" @click="userOverride.expiresAt = ''">
                     {{ $t('common.clear') }}
                   </button>
@@ -261,8 +218,8 @@
                 <div class="control-group">
                   <label>{{ $t('admin.note') }}</label>
                   <input
-                    type="text"
                     v-model="userOverride.note"
+                    type="text"
                     class="control-input"
                     :placeholder="$t('admin.notePlaceholder')"
                   />
@@ -320,7 +277,7 @@ const rolePermissions = ref({})
 
 // 当前选中的角色
 const selectedRole = ref('')
-const selectedRoleData = computed(() => roles.value.find(r => r.code === selectedRole.value))
+const selectedRoleData = computed(() => roles.value.find((r) => r.code === selectedRole.value))
 
 // 编辑中的权限
 const editingPerms = reactive({})
@@ -345,7 +302,9 @@ function showToast(message, type = 'info') {
   toast.message = message
   toast.type = type
   toast.show = true
-  setTimeout(() => { toast.show = false }, 3000)
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
 }
 
 // 加载角色和权限定义
@@ -381,8 +340,8 @@ function loadRoleToEditor() {
 
   // 使用有效权限（合并了覆盖后的）
   const effPerms = roleData.effective_permissions || roleData.default_permissions || {}
-  Object.keys(editingPerms).forEach(k => delete editingPerms[k])
-  permissionKeys.value.forEach(key => {
+  Object.keys(editingPerms).forEach((k) => delete editingPerms[k])
+  permissionKeys.value.forEach((key) => {
     editingPerms[key] = effPerms[key] || 'hidden'
   })
 
@@ -460,13 +419,12 @@ function openUserEditor(user) {
   // 初始化覆盖编辑器
   userOverride.temporaryRole = user.override?.temporary_role || null
   userOverride.note = user.override?.note || ''
-  userOverride.expiresAt = user.override?.expires_at && !user.override.is_expired
-    ? toLocalDatetimeInput(user.override.expires_at)
-    : ''
+  userOverride.expiresAt =
+    user.override?.expires_at && !user.override.is_expired ? toLocalDatetimeInput(user.override.expires_at) : ''
 
   // 初始化权限覆盖
-  Object.keys(userOverride.permissions).forEach(k => delete userOverride.permissions[k])
-  permissionKeys.value.forEach(key => {
+  Object.keys(userOverride.permissions).forEach((k) => delete userOverride.permissions[k])
+  permissionKeys.value.forEach((key) => {
     userOverride.permissions[key] = user.override?.permissions?.[key] || ''
   })
 }
@@ -528,7 +486,7 @@ async function resetUserOverride() {
 
 // 工具函数
 function getRoleLabel(code) {
-  const role = roles.value.find(r => r.code === code)
+  const role = roles.value.find((r) => r.code === code)
   return role ? role.label : code
 }
 
@@ -555,4 +513,3 @@ onMounted(() => {
   loadUsers()
 })
 </script>
-

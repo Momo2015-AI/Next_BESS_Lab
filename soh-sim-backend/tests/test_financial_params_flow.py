@@ -20,8 +20,8 @@ from app import app as _app  # noqa: E402
 from database import Tenant, User, db  # noqa: E402
 from routes.auth import generate_token, hash_password  # noqa: E402
 
-
 # ==================== Fixtures ====================
+
 
 @pytest.fixture(scope="session")
 def app():
@@ -91,6 +91,7 @@ def auth_headers_eng(seed_engineer):
 
 # ==================== Helper Functions ====================
 
+
 def _post(client, url, data, headers=None):
     """Convenience POST helper."""
     h = headers or {}
@@ -111,8 +112,9 @@ def _get(client, url, headers=None):
 def _assert_success(resp, status=200):
     """Assert response is successful and return parsed JSON data."""
     acceptable = status if isinstance(status, tuple) else (status,)
-    assert resp.status_code in acceptable, \
-        f"Expected {acceptable}, got {resp.status_code}: {resp.get_data(as_text=True)[:500]}"
+    assert (
+        resp.status_code in acceptable
+    ), f"Expected {acceptable}, got {resp.status_code}: {resp.get_data(as_text=True)[:500]}"
     body = resp.get_json()
     assert body is not None, "Response is not valid JSON"
     assert body.get("success") is True, f"success=False: {body.get('error', body.get('message', 'unknown'))}"
@@ -136,6 +138,7 @@ SURVEY_PARAMS = {
 
 # ==================== Simulation Fixture ====================
 
+
 @pytest.fixture()
 def simulation_output():
     """Standard simulation output for financial input."""
@@ -151,6 +154,7 @@ def simulation_output():
 
 # ==================== Test Class ====================
 
+
 class TestFinancialParamsFlow:
     """Verify the complete financial parameter flow from API through
     FinancialEngine to calculator.py."""
@@ -160,17 +164,22 @@ class TestFinancialParamsFlow:
         container={ratedEnergyMwh:5}, containerQty=100.
         Verify capexBreakdown.equipment is approximately 100,000,000
         (500MWh * $200,000/MWh), NOT the old default of 20,000,000."""
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 100,
-                "pcsQty": 100,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 100,
+                    "pcsQty": 100,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         capex = data.get("capexBreakdown", {})
@@ -179,28 +188,33 @@ class TestFinancialParamsFlow:
         # totalEnergyMwh = 5 * 100 = 500 MWh
         # equipment = 500 * 200000 = 100,000,000
         expected_equipment = 100_000_000
-        assert abs(equipment - expected_equipment) < 1_000, \
-            f"Expected equipment ~ {expected_equipment}, got {equipment}"
+        assert (
+            abs(equipment - expected_equipment) < 1_000
+        ), f"Expected equipment ~ {expected_equipment}, got {equipment}"
 
         # NOT the old default of 20,000,000
-        assert equipment > 50_000_000, \
-            f"Equipment {equipment} should be much larger than old default 20M"
+        assert equipment > 50_000_000, f"Equipment {equipment} should be much larger than old default 20M"
 
     def test_capex_from_explicit_totalEnergyMwh(self, client, auth_headers_eng, simulation_output):
         """POST with design_output containing totalEnergyMwh=200.
         Verify capexBreakdown.equipment is approximately 40,000,000."""
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": {
-                "totalEnergyMwh": 200,
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": {
+                    "totalEnergyMwh": 200,
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         capex = data.get("capexBreakdown", {})
@@ -208,72 +222,82 @@ class TestFinancialParamsFlow:
 
         # totalEnergyMwh=200 * $200,000/MWh = 40,000,000
         expected_equipment = 40_000_000
-        assert abs(equipment - expected_equipment) < 1_000, \
-            f"Expected equipment ~ {expected_equipment}, got {equipment}"
+        assert (
+            abs(equipment - expected_equipment) < 1_000
+        ), f"Expected equipment ~ {expected_equipment}, got {equipment}"
 
     def test_revenue_model_china(self, client, auth_headers_eng, simulation_output):
         """POST with survey_params.location='china'. Verify revenueModel has
         arbitrage.enabled=true, ancillary.enabled=false."""
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         revenue = data.get("revenueModel", {})
-        assert revenue.get("arbitrage", {}).get("enabled") is True, \
-            "China: arbitrage should be enabled"
-        assert revenue.get("ancillary", {}).get("enabled") is False, \
-            "China: ancillary should be disabled"
-        assert revenue.get("capacity", {}).get("enabled") is True, \
-            "China: capacity should be enabled"
+        assert revenue.get("arbitrage", {}).get("enabled") is True, "China: arbitrage should be enabled"
+        assert revenue.get("ancillary", {}).get("enabled") is False, "China: ancillary should be disabled"
+        assert revenue.get("capacity", {}).get("enabled") is True, "China: capacity should be enabled"
 
     def test_revenue_model_cambodia_default(self, client, auth_headers_eng, simulation_output):
         """POST with survey_params.location='cambodia' (no specific match).
         Verify revenueModel has all streams enabled (default)."""
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "cambodia", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "cambodia", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         revenue = data.get("revenueModel", {})
         # Default model has all streams enabled
-        assert revenue.get("arbitrage", {}).get("enabled") is True, \
-            "Default: arbitrage should be enabled"
-        assert revenue.get("capacity", {}).get("enabled") is True, \
-            "Default: capacity should be enabled"
-        assert revenue.get("ancillary", {}).get("enabled") is True, \
-            "Default: ancillary should be enabled"
+        assert revenue.get("arbitrage", {}).get("enabled") is True, "Default: arbitrage should be enabled"
+        assert revenue.get("capacity", {}).get("enabled") is True, "Default: capacity should be enabled"
+        assert revenue.get("ancillary", {}).get("enabled") is True, "Default: ancillary should be enabled"
 
     def test_financial_metrics_valid(self, client, auth_headers_eng, simulation_output):
         """POST with valid simulation_output (26-element totalAcUsable).
         Verify projectIrr is between 0 and 100, npv is a number, lcos is positive."""
-        resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
+        resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         metrics = data.get("metrics", {})
@@ -297,16 +321,22 @@ class TestFinancialParamsFlow:
 
         # NPV can be positive or negative but should be finite
         import math
+
         assert math.isfinite(npv), f"NPV {npv} should be finite"
 
     def test_sensitivity_analysis(self, client, auth_headers_eng, simulation_output):
         """POST /api/financial/sensitivity with total_ac_usable array.
         Verify returns 4 scenarios (capex_plus_15, capex_minus_15,
         price_plus_20, price_minus_20)."""
-        resp = _post(client, "/api/financial/sensitivity", {
-            "total_ac_usable": simulation_output["totalAcUsable"],
-            "financial_params": {},
-        }, auth_headers_eng)
+        resp = _post(
+            client,
+            "/api/financial/sensitivity",
+            {
+                "total_ac_usable": simulation_output["totalAcUsable"],
+                "financial_params": {},
+            },
+            auth_headers_eng,
+        )
         data = _assert_success(resp)
 
         # Should contain exactly 4 scenarios
@@ -324,8 +354,9 @@ class TestFinancialParamsFlow:
             irr_plus = data["capex_plus_15"].get("irr")
             irr_minus = data["capex_minus_15"].get("irr")
             if irr_plus is not None and irr_minus is not None:
-                assert irr_plus <= irr_minus, \
-                    f"Higher CAPEX ({irr_plus}) should not have higher IRR than lower CAPEX ({irr_minus})"
+                assert (
+                    irr_plus <= irr_minus
+                ), f"Higher CAPEX ({irr_plus}) should not have higher IRR than lower CAPEX ({irr_minus})"
 
     def test_discount_rate_affects_npv(self, client, auth_headers_eng, simulation_output):
         """Run financial calculate twice with different discountRate values.
@@ -340,44 +371,60 @@ class TestFinancialParamsFlow:
         survey_params = {"location": "china", "ratedEnergy": 100, "totalPower": 50}
 
         # Low discount rate
-        resp_low = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": design_output,
-            "survey_params": survey_params,
-            "financial_params": {"discountRate": 5.0},
-        }, auth_headers_eng)
+        resp_low = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": design_output,
+                "survey_params": survey_params,
+                "financial_params": {"discountRate": 5.0},
+            },
+            auth_headers_eng,
+        )
         data_low = _assert_success(resp_low)
         npv_low = data_low["metrics"]["npv"]
 
         # High discount rate
-        resp_high = _post(client, "/api/financial/calculate", {
-            "simulation_output": simulation_output,
-            "design_output": design_output,
-            "survey_params": survey_params,
-            "financial_params": {"discountRate": 12.0},
-        }, auth_headers_eng)
+        resp_high = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": simulation_output,
+                "design_output": design_output,
+                "survey_params": survey_params,
+                "financial_params": {"discountRate": 12.0},
+            },
+            auth_headers_eng,
+        )
         data_high = _assert_success(resp_high)
         npv_high = data_high["metrics"]["npv"]
 
         # Higher discount rate should produce lower NPV
-        assert npv_high < npv_low, \
-            f"Higher discount rate NPV ({npv_high}) should be less than lower discount rate NPV ({npv_low})"
+        assert (
+            npv_high < npv_low
+        ), f"Higher discount rate NPV ({npv_high}) should be less than lower discount rate NPV ({npv_low})"
 
     def test_full_financial_chain(self, client, auth_headers_eng):
         """POST /api/simulation/run -> extract totalAcUsable ->
         POST /api/financial/calculate with that data.
         Verify the chain works end-to-end and produces valid metrics."""
         # Step 1: Run simulation
-        sim_resp = _post(client, "/api/simulation/run", {
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
+        sim_resp = _post(
+            client,
+            "/api/simulation/run",
+            {
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": SURVEY_PARAMS,
             },
-            "survey_params": SURVEY_PARAMS,
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         sim_data = _assert_success(sim_resp)
 
         # Verify simulation produced usable data
@@ -386,22 +433,27 @@ class TestFinancialParamsFlow:
         assert total_ac[0] > 0, "Year 0 totalAcUsable should be positive"
 
         # Step 2: Run financial with simulation output
-        fin_resp = _post(client, "/api/financial/calculate", {
-            "simulation_output": {
-                "totalAcUsable": total_ac,
-                "soh": sim_data.get("soh", [100] * 26),
-                "rte": sim_data.get("rte", [97] * 26),
-                "meetsReq": sim_data.get("meetsReq", [True] * 26),
+        fin_resp = _post(
+            client,
+            "/api/financial/calculate",
+            {
+                "simulation_output": {
+                    "totalAcUsable": total_ac,
+                    "soh": sim_data.get("soh", [100] * 26),
+                    "rte": sim_data.get("rte", [97] * 26),
+                    "meetsReq": sim_data.get("meetsReq", [True] * 26),
+                },
+                "design_output": {
+                    "container": {"ratedEnergyMwh": 5},
+                    "pcs": {"ratedPowerMW": 2.5},
+                    "containerQty": 10,
+                    "pcsQty": 10,
+                    "duration": 2,
+                },
+                "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
             },
-            "design_output": {
-                "container": {"ratedEnergyMwh": 5},
-                "pcs": {"ratedPowerMW": 2.5},
-                "containerQty": 10,
-                "pcsQty": 10,
-                "duration": 2,
-            },
-            "survey_params": {"location": "china", "ratedEnergy": 100, "totalPower": 50},
-        }, auth_headers_eng)
+            auth_headers_eng,
+        )
         fin_data = _assert_success(fin_resp)
 
         # Verify financial metrics are valid

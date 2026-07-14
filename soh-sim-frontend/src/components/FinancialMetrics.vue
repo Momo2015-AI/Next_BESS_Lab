@@ -30,5 +30,7 @@ defineProps({
 </script>
 
 <style scoped>
-.ins-1 { color: var(--color-text-muted) }
+.ins-1 {
+  color: var(--color-text-muted);
+}
 </style>

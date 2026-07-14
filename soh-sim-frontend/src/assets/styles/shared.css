@@ -361,7 +361,9 @@
 }
 
 /* 表格固定宽度 */
-.actions-col { width: 100px; }
+.actions-col {
+  width: 100px;
+}
 
 /* ============================================
    11. 文本工具类
@@ -406,31 +408,73 @@
    ============================================ */
 
 /* 背景色 */
-.bg-accent       { background-color: var(--color-accent); }
-.bg-accent-2     { background-color: var(--color-accent-secondary); }
-.bg-accent-glow  { background: var(--color-accent-glow); }
-.bg-card-dark    { background-color: var(--color-card-dark); }
-.bg-danger       { background-color: var(--color-danger); }
-.bg-success      { background-color: var(--color-success); }
-.bg-warning      { background-color: var(--color-warning); }
-.bg-input        { background: var(--color-input-bg); }
-.bg-input-dark   { background-color: var(--color-input-bg-dark); }
-.bg-secondary    { background: var(--color-bg-secondary); }
+.bg-accent {
+  background-color: var(--color-accent);
+}
+.bg-accent-2 {
+  background-color: var(--color-accent-secondary);
+}
+.bg-accent-glow {
+  background: var(--color-accent-glow);
+}
+.bg-card-dark {
+  background-color: var(--color-card-dark);
+}
+.bg-danger {
+  background-color: var(--color-danger);
+}
+.bg-success {
+  background-color: var(--color-success);
+}
+.bg-warning {
+  background-color: var(--color-warning);
+}
+.bg-input {
+  background: var(--color-input-bg);
+}
+.bg-input-dark {
+  background-color: var(--color-input-bg-dark);
+}
+.bg-secondary {
+  background: var(--color-bg-secondary);
+}
 
 /* 文字色 */
-.text-accent      { color: var(--color-accent); }
-.text-accent-2    { color: var(--color-accent-secondary); }
-.text-danger      { color: var(--color-danger); }
-.text-default     { color: var(--color-text); }
-.text-muted       { color: var(--color-text-muted); }
-.text-secondary   { color: var(--color-text-secondary); }
-.text-success     { color: var(--color-success); }
-.text-warning     { color: var(--color-warning); }
+.text-accent {
+  color: var(--color-accent);
+}
+.text-accent-2 {
+  color: var(--color-accent-secondary);
+}
+.text-danger {
+  color: var(--color-danger);
+}
+.text-default {
+  color: var(--color-text);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-success {
+  color: var(--color-success);
+}
+.text-warning {
+  color: var(--color-warning);
+}
 
 /* 边框 */
-.border-b        { border-bottom: 1px solid var(--color-border); }
-.border-collapse { border-collapse: collapse; }
-.border-default  { border-color: var(--color-border); }
+.border-b {
+  border-bottom: 1px solid var(--color-border);
+}
+.border-collapse {
+  border-collapse: collapse;
+}
+.border-default {
+  border-color: var(--color-border);
+}
 
 /* 卡片 */
 .card-bordered {
@@ -439,19 +483,33 @@
 }
 
 /* 字体/尺寸 */
-.font-bold  { font-weight: bold; }
-.min-h-300  { min-height: 300px; }
-.opacity-50 { opacity: 0.5; }
-.accent-accent-2 { accent-color: var(--color-accent-secondary); }
-.w-50 { width: 50px; }
+.font-bold {
+  font-weight: bold;
+}
+.min-h-300 {
+  min-height: 300px;
+}
+.opacity-50 {
+  opacity: 0.5;
+}
+.accent-accent-2 {
+  accent-color: var(--color-accent-secondary);
+}
+.w-50 {
+  width: 50px;
+}
 
 /* ============================================
    14. u-* 自动生成工具类（Round 1）
    注意：这些类由工具自动生成，保留以兼容现有组件。
    后续 P1-4/P1-6 中逐步迁移到语义化类名。
    ============================================ */
-.u-accent-color-var-color-accent { accent-color: var(--color-accent); }
-.u-accent-color-var-color-success { accent-color: var(--color-success); }
+.u-accent-color-var-color-accent {
+  accent-color: var(--color-accent);
+}
+.u-accent-color-var-color-success {
+  accent-color: var(--color-success);
+}
 
 .u-background-color-rgba-139-92-246-0-2-color-var-color-accent {
   background-color: rgba(139, 92, 246, 0.2);
@@ -504,8 +562,12 @@
   color: white;
 }
 
-.u-background-rgba-0-0-0-0-5 { background: rgba(0, 0, 0, 0.5); }
-.u-background-rgba-16-185-129-0-08 { background: rgba(16, 185, 129, 0.08); }
+.u-background-rgba-0-0-0-0-5 {
+  background: rgba(0, 0, 0, 0.5);
+}
+.u-background-rgba-16-185-129-0-08 {
+  background: rgba(16, 185, 129, 0.08);
+}
 .u-background-rgba-16-185-129-0-15-color-var-color-success {
   background: rgba(16, 185, 129, 0.15);
   color: var(--color-success);
@@ -518,7 +580,9 @@
   background: rgba(245, 158, 11, 0.15);
   color: var(--color-warning);
 }
-.u-background-rgba-64-158-255-0-08 { background: rgba(64, 158, 255, 0.08); }
+.u-background-rgba-64-158-255-0-08 {
+  background: rgba(64, 158, 255, 0.08);
+}
 
 .u-background-var-color-accent-color-white {
   background: var(--color-accent);
@@ -632,8 +696,12 @@
   color: var(--color-danger);
   border-color: var(--color-danger);
 }
-.u-color-var-color-info { color: var(--color-info); }
-.u-color-var-color-muted { color: var(--color-muted); }
+.u-color-var-color-info {
+  color: var(--color-info);
+}
+.u-color-var-color-muted {
+  color: var(--color-muted);
+}
 .u-color-var-color-success-font-size-11px {
   color: var(--color-success);
   font-size: 11px;
@@ -667,25 +735,50 @@
   font-weight: bold;
 }
 
-.u-display-block-margin-bottom-4px { display: block; margin-bottom: 4px; }
-.u-display-none { display: none; }
+.u-display-block-margin-bottom-4px {
+  display: block;
+  margin-bottom: 4px;
+}
+.u-display-none {
+  display: none;
+}
 
-.u-font-weight-bold { font-weight: bold; }
+.u-font-weight-bold {
+  font-weight: bold;
+}
 .u-font-weight-bold-color-var-color-accent {
   font-weight: bold;
   color: var(--color-accent);
 }
 
-.u-max-height-160px { max-height: 160px; }
-.u-max-height-180px { max-height: 180px; }
-.u-min-height-0 { min-height: 0; }
+.u-max-height-160px {
+  max-height: 160px;
+}
+.u-max-height-180px {
+  max-height: 180px;
+}
+.u-min-height-0 {
+  min-height: 0;
+}
 
-.u-width-40px { width: 40px; }
-.u-width-45px { width: 45px; }
-.u-width-48px { width: 48px; }
-.u-width-60px { width: 60px; }
-.u-width-70px { width: 70px; }
-.u-width-80px { width: 80px; }
+.u-width-40px {
+  width: 40px;
+}
+.u-width-45px {
+  width: 45px;
+}
+.u-width-48px {
+  width: 48px;
+}
+.u-width-60px {
+  width: 60px;
+}
+.u-width-70px {
+  width: 70px;
+}
+.u-width-80px {
+  width: 80px;
+}
 
 /* ============================================
    15. u-* 自动生成工具类（Round 2）
@@ -857,14 +950,28 @@
   background-color: var(--color-card-dark);
   border-color: var(--color-border);
 }
-.algo-dot-selected { background-color: var(--color-accent); }
-.algo-dot-default { background-color: var(--color-text-muted); }
-.algo-name-selected { color: var(--color-accent); }
-.algo-name-default { color: var(--color-text); }
+.algo-dot-selected {
+  background-color: var(--color-accent);
+}
+.algo-dot-default {
+  background-color: var(--color-text-muted);
+}
+.algo-name-selected {
+  color: var(--color-accent);
+}
+.algo-name-default {
+  color: var(--color-text);
+}
 
 /* Toast */
-.toast-success { background-color: var(--color-success); color: white; }
-.toast-error   { background-color: var(--color-danger);  color: white; }
+.toast-success {
+  background-color: var(--color-success);
+  color: white;
+}
+.toast-error {
+  background-color: var(--color-danger);
+  color: white;
+}
 
 /* 按钮：已修改/可操作 */
 .btn-modified {
@@ -921,8 +1028,12 @@
 }
 
 /* 状态文字颜色 */
-.text-result-pos { color: var(--color-success); }
-.text-result-neg { color: var(--color-danger); }
+.text-result-pos {
+  color: var(--color-success);
+}
+.text-result-neg {
+  color: var(--color-danger);
+}
 
 /* 上传区 hover */
 .upload-zone-hover {
@@ -931,12 +1042,20 @@
 }
 
 /* 矩阵表格 */
-.matrix-pass { color: var(--color-accent); }
-.matrix-fail { color: var(--color-danger); }
+.matrix-pass {
+  color: var(--color-accent);
+}
+.matrix-fail {
+  color: var(--color-danger);
+}
 
 /* 仿真结果行 */
-.sim-row-pass { color: var(--color-success); }
-.sim-row-fail { color: var(--color-danger); }
+.sim-row-pass {
+  color: var(--color-success);
+}
+.sim-row-fail {
+  color: var(--color-danger);
+}
 
 /* 渐变按钮 */
 .btn-gradient-ready {
@@ -953,8 +1072,12 @@
 }
 
 /* 背景辅助 */
-.bg-success-10 { background: rgba(16, 185, 129, 0.1); }
-.bg-danger-10  { background: rgba(239, 68, 68, 0.1); }
+.bg-success-10 {
+  background: rgba(16, 185, 129, 0.1);
+}
+.bg-danger-10 {
+  background: rgba(239, 68, 68, 0.1);
+}
 
 /* 上传区边框 */
 .border-color-var-color-input-border {
@@ -962,4 +1085,6 @@
 }
 
 /* 行透明度 */
-.opacity-85 { opacity: 0.85; }
+.opacity-85 {
+  opacity: 0.85;
+}

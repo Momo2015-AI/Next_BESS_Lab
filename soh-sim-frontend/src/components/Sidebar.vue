@@ -103,35 +103,134 @@ const route = useRoute()
 const store = useBessStore()
 const { canView, isAdmin } = usePermission()
 
-const phaseItems = computed(() => [
-  { id: 'phase1', num: 1, path: '/phase1', label: t('sidebar.phaseSetup'), status: store.phases.phase1.status, perm: 'phase1' },
-  { id: 'phase2', num: 2, path: '/phase2', label: t('sidebar.phaseDesign'), status: store.phases.phase2.status, perm: 'phase2' },
-  { id: 'phase3', num: 3, path: '/phase3', label: t('sidebar.phasePerformance'), status: store.phases.phase3.status, perm: 'phase3' },
-  { id: 'phase4', num: 4, path: '/phase4', label: t('sidebar.phaseFinancial'), status: store.phases.phase4.status, perm: 'phase4' },
-  { id: 'phase5', num: 5, path: '/phase5', label: t('sidebar.phaseDeliverables'), status: store.phases.phase5.status, perm: 'phase5' }
-].filter(item => canView(item.perm)))
+const phaseItems = computed(() =>
+  [
+    {
+      id: 'phase1',
+      num: 1,
+      path: '/phase1',
+      label: t('sidebar.phaseSetup'),
+      status: store.phases.phase1.status,
+      perm: 'phase1'
+    },
+    {
+      id: 'phase2',
+      num: 2,
+      path: '/phase2',
+      label: t('sidebar.phaseDesign'),
+      status: store.phases.phase2.status,
+      perm: 'phase2'
+    },
+    {
+      id: 'phase3',
+      num: 3,
+      path: '/phase3',
+      label: t('sidebar.phasePerformance'),
+      status: store.phases.phase3.status,
+      perm: 'phase3'
+    },
+    {
+      id: 'phase4',
+      num: 4,
+      path: '/phase4',
+      label: t('sidebar.phaseFinancial'),
+      status: store.phases.phase4.status,
+      perm: 'phase4'
+    },
+    {
+      id: 'phase5',
+      num: 5,
+      path: '/phase5',
+      label: t('sidebar.phaseDeliverables'),
+      status: store.phases.phase5.status,
+      perm: 'phase5'
+    }
+  ].filter((item) => canView(item.perm))
+)
 
-const coreToolItems = computed(() => [
-  { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), iconName: 'flask', perm: 'tool_formula' },
-  { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), iconName: 'sliders', perm: 'tool_params' },
-  { id: 'conditions', path: '/tools/conditions', label: t('sidebar.toolConditions'), iconName: 'code', perm: 'tool_conditions' },
-  { id: 'auxpower', path: '/tools/auxpower', label: t('sidebar.toolAuxPower'), iconName: 'lightning', perm: 'tool_auxpower' },
-  { id: 'financial', path: '/tools/financial', label: t('sidebar.toolFinance'), iconName: 'dollar', perm: 'tool_financial' },
-  { id: 'engineering', path: '/tools/engineering', label: t('sidebar.toolEngineering'), iconName: 'grid', perm: 'tool_engineering' },
-  { id: 'orchestrator', path: '/orchestrator', label: t('sidebar.orchestrator'), iconName: 'zap', perm: 'orchestrator' },
-  { id: 'datainject', path: '/tools/datainject', label: t('sidebar.toolDataInject'), iconName: 'upload', perm: 'tool_datainject' }
-].filter(item => canView(item.perm)))
+const coreToolItems = computed(() =>
+  [
+    { id: 'formula', path: '/tools/formula', label: t('sidebar.toolFormula'), iconName: 'flask', perm: 'tool_formula' },
+    { id: 'params', path: '/tools/params', label: t('sidebar.toolParams'), iconName: 'sliders', perm: 'tool_params' },
+    {
+      id: 'conditions',
+      path: '/tools/conditions',
+      label: t('sidebar.toolConditions'),
+      iconName: 'code',
+      perm: 'tool_conditions'
+    },
+    {
+      id: 'auxpower',
+      path: '/tools/auxpower',
+      label: t('sidebar.toolAuxPower'),
+      iconName: 'lightning',
+      perm: 'tool_auxpower'
+    },
+    {
+      id: 'financial',
+      path: '/tools/financial',
+      label: t('sidebar.toolFinance'),
+      iconName: 'dollar',
+      perm: 'tool_financial'
+    },
+    {
+      id: 'engineering',
+      path: '/tools/engineering',
+      label: t('sidebar.toolEngineering'),
+      iconName: 'grid',
+      perm: 'tool_engineering'
+    },
+    {
+      id: 'orchestrator',
+      path: '/orchestrator',
+      label: t('sidebar.orchestrator'),
+      iconName: 'zap',
+      perm: 'orchestrator'
+    },
+    {
+      id: 'datainject',
+      path: '/tools/datainject',
+      label: t('sidebar.toolDataInject'),
+      iconName: 'upload',
+      perm: 'tool_datainject'
+    }
+  ].filter((item) => canView(item.perm))
+)
 
 const advToolItems = computed(() => {
   return [
     { id: 'config', path: '/tools/config', label: t('sidebar.toolConfig'), iconName: 'settings', perm: 'tool_config' },
-    { id: 'survey-view', path: '/tools/survey-view', label: t('sidebar.toolSurveyViewTitle'), iconName: 'eye', perm: 'tool_survey_view' },
-    { id: 'simulation-view', path: '/tools/simulation-view', label: t('sidebar.toolSimulation'), iconName: 'bar-chart', perm: 'tool_simulation_view' },
+    {
+      id: 'survey-view',
+      path: '/tools/survey-view',
+      label: t('sidebar.toolSurveyViewTitle'),
+      iconName: 'eye',
+      perm: 'tool_survey_view'
+    },
+    {
+      id: 'simulation-view',
+      path: '/tools/simulation-view',
+      label: t('sidebar.toolSimulation'),
+      iconName: 'bar-chart',
+      perm: 'tool_simulation_view'
+    },
     { id: 'report', path: '/tools/report', label: t('sidebar.toolReport'), iconName: 'document', perm: 'tool_report' },
-    { id: 'projects', path: '/tools/projects', label: t('sidebar.toolProjects'), iconName: 'folder', perm: 'tool_projects' },
-    { id: 'templates', path: '/tools/templates', label: t('sidebar.toolTemplates'), iconName: 'save', perm: 'tool_templates' },
+    {
+      id: 'projects',
+      path: '/tools/projects',
+      label: t('sidebar.toolProjects'),
+      iconName: 'folder',
+      perm: 'tool_projects'
+    },
+    {
+      id: 'templates',
+      path: '/tools/templates',
+      label: t('sidebar.toolTemplates'),
+      iconName: 'save',
+      perm: 'tool_templates'
+    },
     { id: 'rules', path: '/tools/rules', label: t('sidebar.toolRules'), iconName: 'shield', perm: 'tool_rules' }
-  ].filter(item => canView(item.perm))
+  ].filter((item) => canView(item.perm))
 })
 
 const adminItems = computed(() => [

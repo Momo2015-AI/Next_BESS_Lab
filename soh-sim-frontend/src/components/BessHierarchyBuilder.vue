@@ -85,21 +85,35 @@
         <div class="chain-level">
           <div class="chain-badge cell-badge">🔋 {{ $t('hierarchy.levelCell') }}</div>
           <div class="chain-detail">
-            {{ selectedCell?.mfr }} {{ selectedCell?.model }} |
-            {{ selectedCell?.capacityAh }}Ah | {{ selectedCell?.voltageNominal }}V
+            {{ selectedCell?.mfr }} {{ selectedCell?.model }} | {{ selectedCell?.capacityAh }}Ah |
+            {{ selectedCell?.voltageNominal }}V
           </div>
         </div>
-        <div class="chain-arrow">↓ {{ mapping.packConfig.seriesPerPack }}S{{ mapping.packConfig.parallelPerPack }}P</div>
+        <div class="chain-arrow">
+          ↓ {{ mapping.packConfig.seriesPerPack }}S{{ mapping.packConfig.parallelPerPack }}P
+        </div>
 
         <!-- Pack -->
         <div class="chain-level">
           <div class="chain-badge pack-badge">📦 {{ $t('hierarchy.levelPack') }}</div>
           <div class="chain-detail">
             <div class="grid grid-cols-3 gap-2">
-              <div><span class="text-muted">{{ $t('hierarchy.seriesPerPack') }}:</span> {{ mapping.packConfig.seriesPerPack }}</div>
-              <div><span class="text-muted">{{ $t('hierarchy.parallelPerPack') }}:</span> {{ mapping.packConfig.parallelPerPack }}</div>
-              <div><span class="text-muted">{{ $t('hierarchy.packVoltage') }}:</span> {{ packVoltage.toFixed(1) }}V</div>
-              <div class="col-span-2"><span class="text-muted">{{ $t('hierarchy.packEnergy') }}:</span> {{ packEnergyKwh.toFixed(2) }} kWh</div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.seriesPerPack') }}:</span>
+                {{ mapping.packConfig.seriesPerPack }}
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.parallelPerPack') }}:</span>
+                {{ mapping.packConfig.parallelPerPack }}
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.packVoltage') }}:</span>
+                {{ packVoltage.toFixed(1) }}V
+              </div>
+              <div class="col-span-2">
+                <span class="text-muted">{{ $t('hierarchy.packEnergy') }}:</span>
+                {{ packEnergyKwh.toFixed(2) }} kWh
+              </div>
             </div>
           </div>
         </div>
@@ -110,11 +124,25 @@
           <div class="chain-badge rack-badge">🗄️ {{ $t('hierarchy.levelRack') }}</div>
           <div class="chain-detail">
             <div class="grid grid-cols-3 gap-2">
-              <div><span class="text-muted">{{ $t('hierarchy.packsPerRack') }}:</span>
-                <input v-model.number="h.packsPerRack" type="number" min="1" max="20" class="chain-input" @input="recalcChain" />
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.packsPerRack') }}:</span>
+                <input
+                  v-model.number="h.packsPerRack"
+                  type="number"
+                  min="1"
+                  max="20"
+                  class="chain-input"
+                  @input="recalcChain"
+                />
               </div>
-              <div><span class="text-muted">{{ $t('hierarchy.rackVoltage') }}:</span> {{ rackVoltage.toFixed(1) }}V</div>
-              <div><span class="text-muted">{{ $t('hierarchy.rackEnergy') }}:</span> {{ rackEnergyKwh.toFixed(2) }} kWh</div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.rackVoltage') }}:</span>
+                {{ rackVoltage.toFixed(1) }}V
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.rackEnergy') }}:</span>
+                {{ rackEnergyKwh.toFixed(2) }} kWh
+              </div>
             </div>
           </div>
         </div>
@@ -125,9 +153,18 @@
           <div class="chain-badge cluster-badge">⚡ {{ $t('hierarchy.levelCluster') }}</div>
           <div class="chain-detail">
             <div class="grid grid-cols-3 gap-2">
-              <div><span class="text-muted">{{ $t('hierarchy.clusterVoltage') }}:</span> {{ clusterVoltage.toFixed(1) }}V</div>
-              <div><span class="text-muted">{{ $t('hierarchy.clusterEnergy') }}:</span> {{ clusterEnergyKwh.toFixed(2) }} kWh</div>
-              <div><span class="text-muted">{{ $t('hierarchy.racksPerCluster') }}:</span> {{ h.racksPerCluster }}</div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.clusterVoltage') }}:</span>
+                {{ clusterVoltage.toFixed(1) }}V
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.clusterEnergy') }}:</span>
+                {{ clusterEnergyKwh.toFixed(2) }} kWh
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.racksPerCluster') }}:</span>
+                {{ h.racksPerCluster }}
+              </div>
             </div>
           </div>
         </div>
@@ -138,9 +175,20 @@
           <div class="chain-badge container-badge">📐 {{ $t('hierarchy.levelContainer') }}</div>
           <div class="chain-detail">
             <div class="grid grid-cols-3 gap-2">
-              <div><span class="text-muted">{{ $t('hierarchy.containerEnergy') }}:</span> {{ containerEnergyMwh.toFixed(3) }} MWh</div>
-              <div><span class="text-muted">{{ $t('hierarchy.clustersPerContainer') }}:</span>
-                <input v-model.number="h.clustersPerContainer" type="number" min="1" max="20" class="chain-input" @input="recalcChain" />
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.containerEnergy') }}:</span>
+                {{ containerEnergyMwh.toFixed(3) }} MWh
+              </div>
+              <div>
+                <span class="text-muted">{{ $t('hierarchy.clustersPerContainer') }}:</span>
+                <input
+                  v-model.number="h.clustersPerContainer"
+                  type="number"
+                  min="1"
+                  max="20"
+                  class="chain-input"
+                  @input="recalcChain"
+                />
               </div>
             </div>
             <!-- 兼容容器匹配 -->
@@ -153,15 +201,19 @@
       </div>
 
       <!-- 容器数量验证 -->
-      <div v-if="selectedCellId && mapping" class="mt-4 p-3 rounded" :class="containerValidation.valid ? 'bg-success/10' : 'bg-danger/10'">
+      <div
+        v-if="selectedCellId && mapping"
+        class="mt-4 p-3 rounded"
+        :class="containerValidation.valid ? 'bg-success/10' : 'bg-danger/10'"
+      >
         <div class="flex items-center gap-2">
           <span :class="containerValidation.valid ? 'text-success' : 'text-danger'">
             {{ containerValidation.valid ? '✓' : '✗' }}
           </span>
           <span class="text-sm">
-            {{ $t('hierarchy.containerValidation') }}:
-            {{ dcSizing.requiredContainers }} {{ $t('hierarchy.containersNeeded') }}
-            ({{ dcSizing.dcInstalledMWh.toFixed(1) }} MWh ÷ {{ containerEnergyMwh.toFixed(3) }} MWh)
+            {{ $t('hierarchy.containerValidation') }}: {{ dcSizing.requiredContainers }}
+            {{ $t('hierarchy.containersNeeded') }} ({{ dcSizing.dcInstalledMWh.toFixed(1) }} MWh ÷
+            {{ containerEnergyMwh.toFixed(3) }} MWh)
             {{ containerValidation.valid ? '≥ ' + dcSizing.requiredContainers : '< ' + dcSizing.requiredContainers }}
           </span>
         </div>
@@ -174,7 +226,7 @@
 
     <!-- 操作按钮 -->
     <div class="flex gap-3">
-      <button class="btn-primary" @click="applyToDesign" :disabled="!selectedCellId">
+      <button class="btn-primary" :disabled="!selectedCellId" @click="applyToDesign">
         {{ $t('hierarchy.applyToDesign') }}
       </button>
       <button class="btn-secondary" @click="resetAll">
@@ -199,13 +251,13 @@ const selectedCellId = ref('')
 // 选中的电芯
 const selectedCell = computed(() => {
   const allCells = cells.value.length ? cells.value : localProducts.cells
-  return allCells.find(c => c.id === selectedCellId.value) || null
+  return allCells.find((c) => c.id === selectedCellId.value) || null
 })
 
 // 查找 cellPackMappings
 const mapping = computed(() => {
   if (!selectedCellId.value) return null
-  return localProducts.cellPackMappings.find(m => m.cellId === selectedCellId.value) || null
+  return localProducts.cellPackMappings.find((m) => m.cellId === selectedCellId.value) || null
 })
 
 // Pack 计算
@@ -239,7 +291,7 @@ const matchedContainers = computed(() => {
   // 查找当前 mapping 中 containerConfigs 里 compatibleContainerIds
   for (const cc of mapping.value.containerConfigs) {
     if (cc.clustersPerContainer === h.clustersPerContainer) {
-      return allContainers.filter(c => cc.compatibleContainerIds.includes(c.id))
+      return allContainers.filter((c) => cc.compatibleContainerIds.includes(c.id))
     }
   }
   return []
@@ -270,13 +322,21 @@ const containerValidation = computed(() => {
 
 const oversizeRate = computed(() => {
   if (!dcSizing.value.dcInstalledMWh) return 0
-  return ((dcSizing.value.requiredContainers * containerEnergyMwh.value - dcSizing.value.dcInstalledMWh) / dcSizing.value.dcInstalledMWh) * 100
+  return (
+    ((dcSizing.value.requiredContainers * containerEnergyMwh.value - dcSizing.value.dcInstalledMWh) /
+      dcSizing.value.dcInstalledMWh) *
+    100
+  )
 })
 
 // 双向同步 reactive → store
-watch(h, (val) => {
-  Object.assign(store.batteryHierarchy, val)
-}, { deep: true })
+watch(
+  h,
+  (val) => {
+    Object.assign(store.batteryHierarchy, val)
+  },
+  { deep: true }
+)
 
 // 电芯变更 → 自动填充层级参数
 function onCellChange() {
@@ -327,15 +387,36 @@ function applyToDesign() {
 function resetAll() {
   selectedCellId.value = ''
   Object.assign(h, {
-    cellModel: '', packModel: '', rackModel: '', clusterModel: '', containerModel: '',
-    cellVoltage: 3.2, cellCapacityAh: 280,
-    seriesPerPack: 52, parallelPerPack: 1, packVoltage: 0, packEnergyKwh: 0,
-    packsPerRack: 8, rackVoltage: 0, rackEnergyKwh: 0,
-    racksPerCluster: 1, clusterVoltage: 0, clusterEnergyKwh: 0,
-    clustersPerContainer: 12, containerEnergyMwh: 5.0,
-    targetPowerMW: 260, targetEnergyMWh: 1560, pRate: 0.167,
-    dodPercent: 90, voltageMismatchLoss: 1, oemDesignMargin: 3, sohInitial: 100,
-    deltaPercent: 0, dcFunctionalMWh: 0, dcInstalledMWh: 0, requiredContainers: 0,
+    cellModel: '',
+    packModel: '',
+    rackModel: '',
+    clusterModel: '',
+    containerModel: '',
+    cellVoltage: 3.2,
+    cellCapacityAh: 280,
+    seriesPerPack: 52,
+    parallelPerPack: 1,
+    packVoltage: 0,
+    packEnergyKwh: 0,
+    packsPerRack: 8,
+    rackVoltage: 0,
+    rackEnergyKwh: 0,
+    racksPerCluster: 1,
+    clusterVoltage: 0,
+    clusterEnergyKwh: 0,
+    clustersPerContainer: 12,
+    containerEnergyMwh: 5.0,
+    targetPowerMW: 260,
+    targetEnergyMWh: 1560,
+    pRate: 0.167,
+    dodPercent: 90,
+    voltageMismatchLoss: 1,
+    oemDesignMargin: 3,
+    sohInitial: 100,
+    deltaPercent: 0,
+    dcFunctionalMWh: 0,
+    dcInstalledMWh: 0,
+    requiredContainers: 0,
     source: 'manual'
   })
 }
@@ -347,7 +428,7 @@ function resetAll() {
 }
 
 .dc-result-panel {
-  background: var(--color-bg-muted, rgba(0,0,0,0.03));
+  background: var(--color-bg-muted, rgba(0, 0, 0, 0.03));
   border-radius: var(--radius-md);
   padding: 16px;
   margin-top: 12px;
@@ -356,7 +437,7 @@ function resetAll() {
 .formula-hint {
   margin-top: 10px;
   padding: 8px 12px;
-  background: var(--color-accent-glow, rgba(0,102,204,0.06));
+  background: var(--color-accent-glow, rgba(0, 102, 204, 0.06));
   border-radius: 6px;
   font-size: 0.75rem;
   color: var(--color-text-muted);
@@ -394,11 +475,26 @@ function resetAll() {
   text-align: center;
 }
 
-.cell-badge { background: rgba(59,130,246,0.1); color: #3b82f6; }
-.pack-badge { background: rgba(16,185,129,0.1); color: #10b981; }
-.rack-badge { background: rgba(245,158,11,0.1); color: #f59e0b; }
-.cluster-badge { background: rgba(139,92,246,0.1); color: #8b5cf6; }
-.container-badge { background: rgba(236,72,153,0.1); color: #ec4899; }
+.cell-badge {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+.pack-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+.rack-badge {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+.cluster-badge {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+}
+.container-badge {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+}
 
 .chain-detail {
   flex: 1;
@@ -424,7 +520,9 @@ function resetAll() {
   color: var(--color-text);
 }
 
-.accent { color: var(--color-accent); }
+.accent {
+  color: var(--color-accent);
+}
 
 .badge-sm {
   display: inline-block;
@@ -432,12 +530,20 @@ function resetAll() {
   border-radius: 3px;
   font-size: 0.65rem;
   margin-left: 4px;
-  background: var(--color-success-glow, rgba(5,150,105,0.1));
+  background: var(--color-success-glow, rgba(5, 150, 105, 0.1));
   color: var(--color-success);
 }
 
-.bg-success\\/10 { background: rgba(5,150,105,0.08); }
-.bg-danger\\/10 { background: rgba(220,38,38,0.08); }
-.text-success { color: var(--color-success); }
-.text-danger { color: var(--color-danger); }
+.bg-success\\/10 {
+  background: rgba(5, 150, 105, 0.08);
+}
+.bg-danger\\/10 {
+  background: rgba(220, 38, 38, 0.08);
+}
+.text-success {
+  color: var(--color-success);
+}
+.text-danger {
+  color: var(--color-danger);
+}
 </style>

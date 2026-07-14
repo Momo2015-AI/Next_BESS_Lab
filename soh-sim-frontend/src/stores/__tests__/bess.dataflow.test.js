@@ -21,7 +21,7 @@ vi.mock('../../services/api.js', () => ({
   post: (...args) => mockPost(...args),
   get: (...args) => mockGet(...args),
   put: (...args) => mockPut(...args),
-  del: (...args) => mockDel(...args),
+  del: (...args) => mockDel(...args)
 }))
 
 // Helpers
@@ -46,8 +46,8 @@ const simResponse = (overrides = {}) => ({
     efficiencyDetail: null,
     augmentationStrategy: { strategies: {}, recommended: 'on_demand' },
     augmentationComparison: { strategies: {}, recommended: 'on_demand', comparison_summary: {} },
-    ...overrides,
-  },
+    ...overrides
+  }
 })
 
 const finResponse = (overrides = {}) => ({
@@ -60,12 +60,12 @@ const finResponse = (overrides = {}) => ({
       lcos: 0.032,
       dscr: { min: 0.98, avg: 3.26 },
       payback: 3.0,
-      roi: 251.79,
+      roi: 251.79
     },
     cashflowTable: [],
     capexBreakdown: { equipment: 100000000, epc: 12500000, development: 2000000 },
-    ...overrides,
-  },
+    ...overrides
+  }
 })
 
 const workflowResponse = () => ({
@@ -81,7 +81,7 @@ const workflowResponse = () => ({
         containerQty: 100,
         pcsQty: 50,
         duration: 2,
-        estimatedCapex: { equipmentCost: 100000000, epcCost: 12500000, developmentCost: 2000000 },
+        estimatedCapex: { equipmentCost: 100000000, epcCost: 12500000, developmentCost: 2000000 }
       },
       simulation: {
         soh: arr26(100),
@@ -98,7 +98,7 @@ const workflowResponse = () => ({
         totalAcUsable: arr26(382),
         meetsReq: arr26(true),
         efficiencyCurves: null,
-        efficiencyDetail: null,
+        efficiencyDetail: null
       },
       financial: {
         metrics: {
@@ -108,16 +108,16 @@ const workflowResponse = () => ({
           lcos: 0.032,
           dscr: { min: 0.98, avg: 3.26 },
           payback: 3.0,
-          roi: 251.79,
+          roi: 251.79
         },
         cashflowTable: [],
         capexBreakdown: { equipment: 100000000, epc: 12500000, development: 2000000 },
         revenueModel: { arbitrage: { enabled: true } },
-        sensitivity: {},
-      },
+        sensitivity: {}
+      }
     },
-    pipeline_summary: { total_solutions: 3, successful: 3, failed: 0 },
-  },
+    pipeline_summary: { total_solutions: 3, successful: 3, failed: 0 }
+  }
 })
 
 describe('BESS Store — Data Flow', () => {
@@ -142,7 +142,7 @@ describe('BESS Store — Data Flow', () => {
       await store.runSimulationEngine()
 
       // 验证 POST /api/simulation/run 的参数
-      const simCall = mockPost.mock.calls.find(c => c[0] === '/api/simulation/run')
+      const simCall = mockPost.mock.calls.find((c) => c[0] === '/api/simulation/run')
       expect(simCall).toBeTruthy()
       const simBody = simCall[1]
       expect(simBody.survey_params.auxPowerMode).toBe('thermal')
@@ -165,17 +165,19 @@ describe('BESS Store — Data Flow', () => {
 
     it('应正确映射财务响应到 store state', async () => {
       mockPost.mockResolvedValueOnce(simResponse())
-      mockPost.mockResolvedValueOnce(finResponse({
-        metrics: {
-          projectIrr: 34.85,
-          equityIrr: 145.31,
-          npv: 142000000,
-          lcos: 0.032,
-          dscr: { min: 0.98, avg: 3.26 },
-          payback: 3.0,
-          roi: 251.79,
-        },
-      }))
+      mockPost.mockResolvedValueOnce(
+        finResponse({
+          metrics: {
+            projectIrr: 34.85,
+            equityIrr: 145.31,
+            npv: 142000000,
+            lcos: 0.032,
+            dscr: { min: 0.98, avg: 3.26 },
+            payback: 3.0,
+            roi: 251.79
+          }
+        })
+      )
 
       await store.runSimulationEngine()
 
@@ -191,7 +193,7 @@ describe('BESS Store — Data Flow', () => {
       await store.runSimulationEngine(null, null, { skipFinancial: true })
 
       // 只应调用 simulation API，不应调用 financial API
-      const finCall = mockPost.mock.calls.find(c => c[0] === '/api/financial/calculate')
+      const finCall = mockPost.mock.calls.find((c) => c[0] === '/api/financial/calculate')
       expect(finCall).toBeFalsy()
     })
 
@@ -229,12 +231,12 @@ describe('BESS Store — Data Flow', () => {
         auxPowerMode: 'thermal',
         ambientTemp: 32,
         coolingType: 'liquid',
-        efficiencyFactors: null,
+        efficiencyFactors: null
       }
 
       await store.runFullWorkflow(surveyParams, 'economic', 'lcos')
 
-      const call = mockPost.mock.calls.find(c => c[0] === '/api/workflow/full')
+      const call = mockPost.mock.calls.find((c) => c[0] === '/api/workflow/full')
       expect(call).toBeTruthy()
       const body = call[1]
       expect(body.survey_params.auxPowerMode).toBe('thermal')
@@ -267,12 +269,12 @@ describe('BESS Store — Data Flow', () => {
     it('应传递 survey_params 到设计引擎', async () => {
       mockPost.mockResolvedValueOnce({
         success: true,
-        data: { solutions: [], recommendation: {} },
+        data: { solutions: [], recommendation: {} }
       })
 
       await store.runDesignEngine({ ratedEnergy: 100, totalPower: 50 }, 'economic')
 
-      const call = mockPost.mock.calls.find(c => c[0] === '/api/design/auto')
+      const call = mockPost.mock.calls.find((c) => c[0] === '/api/design/auto')
       expect(call).toBeTruthy()
       expect(call[1].survey_params.ratedEnergy).toBe(100)
       expect(call[1].strategy).toBe('economic')

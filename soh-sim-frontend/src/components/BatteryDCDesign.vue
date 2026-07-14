@@ -1,18 +1,15 @@
 <template>
   <div class="battery-dc-design h-full overflow-auto p-4">
     <!-- 来源切换 -->
-    <div class="flex items-center gap-3 mb-3 p-3 rounded-lg" style="background: var(--color-accent-glow, rgba(0,102,204,0.05));">
+    <div
+      class="flex items-center gap-3 mb-3 p-3 rounded-lg"
+      style="background: var(--color-accent-glow, rgba(0, 102, 204, 0.05))"
+    >
       <span class="text-xs text-muted">{{ $t('batteryDC.configSource') }}:</span>
-      <button
-        :class="['tab-btn text-xs', { active: configSource === 'manual' }]"
-        @click="switchSource('manual')"
-      >
+      <button :class="['tab-btn text-xs', { active: configSource === 'manual' }]" @click="switchSource('manual')">
         {{ $t('batteryDC.manualInput') }}
       </button>
-      <button
-        :class="['tab-btn text-xs', { active: configSource === 'hierarchy' }]"
-        @click="switchSource('hierarchy')"
-      >
+      <button :class="['tab-btn text-xs', { active: configSource === 'hierarchy' }]" @click="switchSource('hierarchy')">
         {{ $t('batteryDC.fromHierarchy') }}
       </button>
       <span v-if="configSource === 'hierarchy'" class="text-xs text-success">
@@ -446,7 +443,7 @@ function importFromHierarchy() {
   if (!h.cellModel) return
 
   // 匹配电芯
-  const matchedCell = cells.value.find(c => c.model === h.cellModel)
+  const matchedCell = cells.value.find((c) => c.model === h.cellModel)
   if (matchedCell) {
     selectedCellId.value = matchedCell.id
   }
@@ -470,12 +467,15 @@ function importFromHierarchy() {
 }
 
 // 监听 hierarchy 来源变化
-watch(() => store.batteryHierarchy.source, (src) => {
-  if (src === 'hierarchy') {
-    configSource.value = 'hierarchy'
-    importFromHierarchy()
+watch(
+  () => store.batteryHierarchy.source,
+  (src) => {
+    if (src === 'hierarchy') {
+      configSource.value = 'hierarchy'
+      importFromHierarchy()
+    }
   }
-})
+)
 
 // 加载电芯库数据
 async function loadCellLibrary() {
