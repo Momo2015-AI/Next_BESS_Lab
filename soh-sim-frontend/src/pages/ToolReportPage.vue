@@ -59,23 +59,23 @@
 </template>
 
 <script setup>
-	import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import AppPage from '../components/AppPage.vue'
 import SectionCard from '../components/SectionCard.vue'
 import AppIcon from '../components/AppIcon.vue'
 import { post } from '../services/api.js'
 import { useBessStore } from '../stores/bess.js'
 
-	const store = useBessStore()
-	const generating = ref(null)
-	const downloadUrl = ref(store.exports.reportDownloadUrl || '')
-	const errorMsg = ref('')
+const store = useBessStore()
+const generating = ref(null)
+const downloadUrl = ref(store.exports.reportDownloadUrl || '')
+const errorMsg = ref('')
 
-	onMounted(() => {
-	  if (store.exports.reportDownloadUrl) {
-	    downloadUrl.value = store.exports.reportDownloadUrl
-	  }
-	})
+onMounted(() => {
+  if (store.exports.reportDownloadUrl) {
+    downloadUrl.value = store.exports.reportDownloadUrl
+  }
+})
 
 async function generateReport(type, url) {
   generating.value = type
@@ -85,13 +85,13 @@ async function generateReport(type, url) {
   try {
     const projectId = store.project.id || localStorage.getItem('current_project_id')
     const { data } = await post(url, projectId ? { project_id: projectId } : {})
-	    if (data && data.url) {
-	      downloadUrl.value = data.url
-	      store.exports.reportDownloadUrl = data.url
-	    } else if (data && data.download_url) {
-	      downloadUrl.value = data.download_url
-	      store.exports.reportDownloadUrl = data.download_url
-	    }
+    if (data && data.url) {
+      downloadUrl.value = data.url
+      store.exports.reportDownloadUrl = data.url
+    } else if (data && data.download_url) {
+      downloadUrl.value = data.download_url
+      store.exports.reportDownloadUrl = data.download_url
+    }
   } catch (err) {
     errorMsg.value = err.message || 'Report generation failed'
   } finally {

@@ -197,6 +197,7 @@ import { useBessStore } from '../stores/bess.js'
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
+const store = useBessStore()
 
 const toast = reactive({ show: false, message: '', type: 'info' })
 const showToast = (message, type = 'info') => {
@@ -210,43 +211,43 @@ const showToast = (message, type = 'info') => {
 
 const submitting = ref(false)
 
-	// 如果路由带 :id 参数，加载已有调研数据
-	onMounted(async () => {
-	  const surveyId = route.params.id
-	  if (surveyId) {
-	    try {
-	      const data = await api.get(`/api/survey/${surveyId}`)
-	      if (data.success) {
-	        const s = data.data
-	        formData.projectName = s.project_name || ''
-	        formData.contact = s.contact_person || ''
-	        formData.phone = s.contact_phone || ''
-	        formData.location = s.location || ''
-	        formData.ratedEnergy = s.total_mwh || null
-	        formData.ratedPower = s.total_mw || null
-	        formData.dischargeHours = s.duration || null
-	        formData.voltageLevel = s.grid_voltage || null
-	        formData.cyclesPerDay = s.cycles_per_day || 1
-	        formData.temperature = s.temp_avg || null
-	        formData.remarks = s.remarks || ''
-	        showToast(t('surveyForm.surveyLoaded'), 'success')
-	      }
-	    } catch (e) {
-	      console.error('加载调研数据失败:', e)
-	    }
-	  } else {
-	    // 从 store 恢复数据（无路由参数时）
-	    const s = store.survey
-	    if (s.ratedEnergy) formData.ratedEnergy = s.ratedEnergy
-	    if (s.totalPower) formData.ratedPower = s.totalPower
-	    if (s.duration) formData.dischargeHours = s.duration
-	    if (s.temperature) formData.temperature = s.temperature
-	    if (s.cyclesPerDay) formData.cyclesPerDay = s.cyclesPerDay
-	    if (s.location) formData.location = s.location
-	    if (s.projectName) formData.projectName = s.projectName
-	    if (s.gridVoltage) formData.voltageLevel = s.gridVoltage
-	  }
-	})
+// 如果路由带 :id 参数，加载已有调研数据
+onMounted(async () => {
+  const surveyId = route.params.id
+  if (surveyId) {
+    try {
+      const data = await api.get(`/api/survey/${surveyId}`)
+      if (data.success) {
+        const s = data.data
+        formData.projectName = s.project_name || ''
+        formData.contact = s.contact_person || ''
+        formData.phone = s.contact_phone || ''
+        formData.location = s.location || ''
+        formData.ratedEnergy = s.total_mwh || null
+        formData.ratedPower = s.total_mw || null
+        formData.dischargeHours = s.duration || null
+        formData.voltageLevel = s.grid_voltage || null
+        formData.cyclesPerDay = s.cycles_per_day || 1
+        formData.temperature = s.temp_avg || null
+        formData.remarks = s.remarks || ''
+        showToast(t('surveyForm.surveyLoaded'), 'success')
+      }
+    } catch (e) {
+      console.error('加载调研数据失败:', e)
+    }
+  } else {
+    // 从 store 恢复数据（无路由参数时）
+    const s = store.survey
+    if (s.ratedEnergy) formData.ratedEnergy = s.ratedEnergy
+    if (s.totalPower) formData.ratedPower = s.totalPower
+    if (s.duration) formData.dischargeHours = s.duration
+    if (s.temperature) formData.temperature = s.temperature
+    if (s.cyclesPerDay) formData.cyclesPerDay = s.cyclesPerDay
+    if (s.location) formData.location = s.location
+    if (s.projectName) formData.projectName = s.projectName
+    if (s.gridVoltage) formData.voltageLevel = s.gridVoltage
+  }
+})
 
 function goHome() {
   router.push('/')
@@ -393,16 +394,15 @@ async function submitSurvey() {
     localStorage.setItem('currentSurvey', JSON.stringify(surveyData))
 
     // 同步到 Pinia store，确保 Phase2/3 能读取调研数据
-    const store = useBessStore()
     store.survey.ratedEnergy = formData.ratedEnergy
     store.survey.totalPower = formData.ratedPower || 50
     store.survey.duration = formData.dischargeHours || 2
     store.survey.temperature = formData.temperature || 25
-	    store.survey.cyclesPerDay = formData.cyclesPerDay || 1
-	    if (formData.dod) store.survey.dod = formData.dod
-	    if (formData.cRate) store.survey.cRate = formData.cRate
-	    store.survey.requiredEnergy = +(formData.ratedEnergy * 0.9).toFixed(1)
-	    if (formData.location) store.survey.location = formData.location
+    store.survey.cyclesPerDay = formData.cyclesPerDay || 1
+    if (formData.dod) store.survey.dod = formData.dod
+    if (formData.cRate) store.survey.cRate = formData.cRate
+    store.survey.requiredEnergy = +(formData.ratedEnergy * 0.9).toFixed(1)
+    if (formData.location) store.survey.location = formData.location
     if (formData.projectName) store.survey.projectName = formData.projectName
     if (formData.voltageLevel) store.survey.gridVoltage = formData.voltageLevel
 

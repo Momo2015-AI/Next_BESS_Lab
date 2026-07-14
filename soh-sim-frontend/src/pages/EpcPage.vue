@@ -1,8 +1,5 @@
 ﻿<template>
-	  <AppPage
-	    :title-key="'epcPage.title'"
-	    :desc-key="'epcPage.desc'"
-	  >
+  <AppPage :title-key="'epcPage.title'" :desc-key="'epcPage.desc'">
     <!-- 模块标签页 -->
     <div class="epc-tabs">
       <button v-for="tab in tabs" :key="tab.id" :class="{ active: activeModule === tab.id }" @click="switchTab(tab.id)">
@@ -34,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useEpcModules } from '../composables/useEpcModules.js'
@@ -61,17 +58,17 @@ function switchTab(tabId) {
   sessionStorage.setItem('epcActiveModule', tabId)
 }
 
-	const tabs = [
-	  { id: 'architecture', label: t('epcPage.tabArchitecture'), priority: 'P0-3', iconName: 'home' },
-	  { id: 'gridCompliance', label: t('epcPage.tabGridCompliance'), priority: 'P0-1', iconName: 'target' },
-	  { id: 'safety', label: t('epcPage.tabSafety'), priority: 'P0-2', iconName: 'shield' },
-	  { id: 'ipp', label: t('epcPage.tabIpp'), priority: 'P0-4', iconName: 'dollar' },
-	  { id: 'matrix', label: t('epcPage.tabMatrix'), priority: 'P0-5', iconName: 'grid' },
-	  { id: 'thermal', label: t('epcPage.tabThermal'), priority: 'P1-1', iconName: 'thermometer' },
-	  { id: 'scada', label: t('epcPage.tabScada'), priority: 'P1-2', iconName: 'data-flow' },
-	  { id: 'hv', label: t('epcPage.tabHv'), priority: 'P1-3', iconName: 'lightning' },
-	  { id: 'bidDoc', label: t('epcPage.tabBidDoc'), priority: 'P1-4', iconName: 'document' }
-	]
+const tabs = computed(() => [
+  { id: 'architecture', label: t('epcPage.tabArchitecture'), priority: 'P0-3', iconName: 'home' },
+  { id: 'gridCompliance', label: t('epcPage.tabGridCompliance'), priority: 'P0-1', iconName: 'target' },
+  { id: 'safety', label: t('epcPage.tabSafety'), priority: 'P0-2', iconName: 'shield' },
+  { id: 'ipp', label: t('epcPage.tabIpp'), priority: 'P0-4', iconName: 'dollar' },
+  { id: 'matrix', label: t('epcPage.tabMatrix'), priority: 'P0-5', iconName: 'grid' },
+  { id: 'thermal', label: t('epcPage.tabThermal'), priority: 'P1-1', iconName: 'thermometer' },
+  { id: 'scada', label: t('epcPage.tabScada'), priority: 'P1-2', iconName: 'data-flow' },
+  { id: 'hv', label: t('epcPage.tabHv'), priority: 'P1-3', iconName: 'lightning' },
+  { id: 'bidDoc', label: t('epcPage.tabBidDoc'), priority: 'P1-4', iconName: 'document' }
+])
 
 // 壳组件不直接持有状态，仅负责 tab 导航与生命周期钩子；
 // 9 个子组件各自通过 useEpcModules() 共享同一份状态（composable 为模块级单例）。

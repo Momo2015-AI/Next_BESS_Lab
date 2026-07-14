@@ -194,43 +194,43 @@ function goToSimulation() {
   router.push('/phase3')
 }
 
-	async function saveAsVersion() {
-	  if (!selectedProjectId.value || !workflowResult.value) return
-	  savingVersion.value = true
-	  saveResult.value = null
-	  try {
-	    // 直接发送已有工作流结果保存为版本，避免重复计算
-	    const resp = await post('/api/versions/save', {
-	      project_id: selectedProjectId.value,
-	      workflow_result: workflowResult.value,
-	      strategy: workflowResult.value.strategy || 'economic',
-	      target_metric: workflowResult.value.target_metric || 'lcos'
-	    })
-	    if (resp.success) {
-	      const count = resp.data?.saved_versions?.length || resp.data?.version_count || 1
-	      saveResult.value = `已保存 ${count} 个方案版本`
-	    }
-	  } catch (e) {
-	    // 降级：如果 /api/versions/save 不可用，回退到重新调用 workflow
-	    try {
-	      const resp = await post('/api/workflow/full', {
-	        survey_params: workflowResult.value.solutions?.[0]?.design
-	          ? { ratedEnergy: workflowResult.value.solutions[0].design.totalEnergyMwh }
-	          : {},
-	        strategy: workflowResult.value.strategy || 'economic',
-	        target_metric: workflowResult.value.target_metric || 'lcos',
-	        project_id: selectedProjectId.value
-	      })
-	      if (resp.success) {
-	        const count = resp.data?.saved_versions?.length || 0
-	        saveResult.value = `已保存 ${count} 个方案版本`
-	      }
-	    } catch (e2) {
-	      saveResult.value = '保存失败: ' + (e2.message || '未知错误')
-	    }
-	  } finally {
-	    savingVersion.value = false
-	  }
+async function saveAsVersion() {
+  if (!selectedProjectId.value || !workflowResult.value) return
+  savingVersion.value = true
+  saveResult.value = null
+  try {
+    // 直接发送已有工作流结果保存为版本，避免重复计算
+    const resp = await post('/api/versions/save', {
+      project_id: selectedProjectId.value,
+      workflow_result: workflowResult.value,
+      strategy: workflowResult.value.strategy || 'economic',
+      target_metric: workflowResult.value.target_metric || 'lcos'
+    })
+    if (resp.success) {
+      const count = resp.data?.saved_versions?.length || resp.data?.version_count || 1
+      saveResult.value = `已保存 ${count} 个方案版本`
+    }
+  } catch (e) {
+    // 降级：如果 /api/versions/save 不可用，回退到重新调用 workflow
+    try {
+      const resp = await post('/api/workflow/full', {
+        survey_params: workflowResult.value.solutions?.[0]?.design
+          ? { ratedEnergy: workflowResult.value.solutions[0].design.totalEnergyMwh }
+          : {},
+        strategy: workflowResult.value.strategy || 'economic',
+        target_metric: workflowResult.value.target_metric || 'lcos',
+        project_id: selectedProjectId.value
+      })
+      if (resp.success) {
+        const count = resp.data?.saved_versions?.length || 0
+        saveResult.value = `已保存 ${count} 个方案版本`
+      }
+    } catch (e2) {
+      saveResult.value = '保存失败: ' + (e2.message || '未知错误')
+    }
+  } finally {
+    savingVersion.value = false
+  }
 }
 
 async function runWhatIf() {

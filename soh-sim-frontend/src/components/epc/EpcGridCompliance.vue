@@ -24,7 +24,7 @@
           />
         </div>
         <div>
-	          <label class="block text-xs mb-1 field-label">{{ $t('epcGrid.pcsCount') }}</label>
+          <label class="block text-xs mb-1 field-label">{{ $t('epcGrid.pcsCount') }}</label>
           <input v-model.number="gcForm.pcs_count" type="number" class="form-field-input" placeholder="10" />
         </div>
       </div>
@@ -40,7 +40,7 @@
           <span class="status-icon">{{ gcResult.overall_pass ? 'pass' : 'fail' }}</span>
           <div>
             <div class="font-bold" :class="gcResult.overall_pass ? 'pass-text' : 'fail-text'">
-	              {{ gcResult.overall_pass ? $t('epcGrid.allCompliant') : $t('epcGrid.hasNonCompliant') }}
+              {{ gcResult.overall_pass ? $t('epcGrid.allCompliant') : $t('epcGrid.hasNonCompliant') }}
             </div>
             <div v-if="gcResult.failed_items.length" class="text-xs tx-muted-dark">
               {{ $t('epcGrid.nonCompliant') }} {{ gcResult.failed_items.join(', ') }}

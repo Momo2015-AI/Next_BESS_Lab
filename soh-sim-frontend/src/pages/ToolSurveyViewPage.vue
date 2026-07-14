@@ -201,7 +201,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
@@ -244,14 +244,16 @@ const simParams = reactive({
   auxPower: 5
 })
 
-const batteryTypeOptions = [
+const batteryTypeOptions = computed(() => [
   { value: 'LFP', label: t('tools.batteryTypeLFP') },
   { value: 'NCM', label: t('tools.batteryTypeNCM') },
   { value: 'LTO', label: t('tools.batteryTypeLTO') }
-]
+])
 
-const simYearOptions = [10, 15, 20, 25, 30].map((v) => ({ value: v, label: v + t('tools.simYearUnit') }))
-const guaranteeYearOptions = [5, 10, 15, 20].map((v) => ({ value: v, label: v + t('tools.yearUnit') }))
+const simYearOptions = computed(() =>
+  [10, 15, 20, 25, 30].map((v) => ({ value: v, label: v + t('tools.simYearUnit') }))
+)
+const guaranteeYearOptions = computed(() => [5, 10, 15, 20].map((v) => ({ value: v, label: v + t('tools.yearUnit') })))
 
 async function loadSurveyById() {
   if (!surveyId.value) {
