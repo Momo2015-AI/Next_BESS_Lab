@@ -1196,11 +1196,6 @@ export default {
     correctionNotes: 'Correction Notes:',
     csvHeader: 'Year,SOH(%),RTE(%),NetAvail(MWh),Guarantee',
     csvUnnamed: 'unnamed',
-    colYear: 'Metric\\Year',
-    colSoh: 'SOH(%)',
-    colRte: 'RTE(%)',
-    colAvail: 'Net Avail(MWh)',
-    colGuarantee: 'Guarantee',
     dataPoints: 'Data Points',
     descriptionTemplate: 'Simulated with {algo}',
     enterProjectKeyword: 'Please enter project name keyword',
@@ -2306,6 +2301,11 @@ export default {
     lifecycleMatrix: '25-Year Lifecycle Matrix',
     sohRteData: 'SOH / RTE Data',
     eqHeader: '============================================',
-    eqFooter: '============================================'
+    eqFooter: '============================================',
+    colYear: 'Metric\\Year',
+    colSoh: 'SOH(%)',
+    colRte: 'RTE(%)',
+    colAvail: 'Net Avail(MWh)',
+    colGuarantee: 'Guarantee'
   }
 }

@@ -1282,7 +1282,7 @@ const runSimulation = async () => {
   store.degradation.soh = [...sohCurve]
   store.degradation.rte = [...rteCurve]
   store.results.totalAcUsable = [...netAvailCurve]
-  store.results.meetsReq = simulationResults.tableData.map(d => d.meetsReq)
+  store.results.meetsReq = simulationResults.tableData.map((d) => d.meetsReq)
 
   emit('applyConfig', {
     soh: simulationResults.sohCurve,
@@ -1644,11 +1644,14 @@ const exportResults = () => {
   // 竖排报表：指标为行，年份为列
   const years = simulationResults.tableData.map((r) => r.year)
   const simTitle = [sep + ' ' + t('export.sohRteProjection') + ' ' + sep]
-  const headerLine = [t('simLab.colYear'), ...years].join(',')
-  const sohLine = [t('simLab.colSoh'), ...simulationResults.tableData.map((r) => r.soh.toFixed(2))].join(',')
-  const rteLine = [t('simLab.colRte'), ...simulationResults.tableData.map((r) => r.rte.toFixed(2))].join(',')
-  const availLine = [t('simLab.colAvail'), ...simulationResults.tableData.map((r) => r.netAvail.toFixed(1))].join(',')
-  const guaranteeLine = [t('simLab.colGuarantee'), ...simulationResults.tableData.map((r) => (r.meetsReq ? t('simLab.pass') : t('simLab.fail')))].join(',')
+  const headerLine = [t('export.colYear'), ...years].join(',')
+  const sohLine = [t('export.colSoh'), ...simulationResults.tableData.map((r) => r.soh.toFixed(2))].join(',')
+  const rteLine = [t('export.colRte'), ...simulationResults.tableData.map((r) => r.rte.toFixed(2))].join(',')
+  const availLine = [t('export.colAvail'), ...simulationResults.tableData.map((r) => r.netAvail.toFixed(1))].join(',')
+  const guaranteeLine = [
+    t('export.colGuarantee'),
+    ...simulationResults.tableData.map((r) => (r.meetsReq ? t('simLab.pass') : t('simLab.fail')))
+  ].join(',')
 
   // 免责声明
   const footer = ['', sep, t('export.disclaimer')]

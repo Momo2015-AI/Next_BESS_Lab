@@ -1068,7 +1068,21 @@ function exportCSV() {
 
   // 按类别分组
   const categories = {
-    general: ['projectName', 'projectType', 'location', 'totalMW', 'totalMWh', 'durationHours', 'cyclesPerDay', 'installationType', 'omYears', 'prRequirement', 'warrantyYears', 'scadaReq', 'sparePartsStrategy'],
+    general: [
+      'projectName',
+      'projectType',
+      'location',
+      'totalMW',
+      'totalMWh',
+      'durationHours',
+      'cyclesPerDay',
+      'installationType',
+      'omYears',
+      'prRequirement',
+      'warrantyYears',
+      'scadaReq',
+      'sparePartsStrategy'
+    ],
     battery: ['rteTarget', 'availabilityTarget', 'sohYear1', 'sohYear25', 'calendarLife', 'cycleLife', 'auxConsumption'],
     pcs: ['dcVoltageRange', 'acVoltage', 'pfRange', 'thdiLimit'],
     env: ['altitude', 'tempMax', 'tempMin', 'tempAvg', 'humidity', 'seismicZone', 'corrosionClass'],

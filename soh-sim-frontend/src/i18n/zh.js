@@ -996,11 +996,6 @@ export default {
     correctionNotes: '校正因子说明：',
     csvHeader: '年份,SOH(%),RTE(%),净可用(MWh),保障判定',
     csvUnnamed: '未命名',
-    colYear: '指标\\年份',
-    colSoh: 'SOH(%)',
-    colRte: 'RTE(%)',
-    colAvail: '净可用(MWh)',
-    colGuarantee: '保障判定',
     dataPoints: '数据点',
     descriptionTemplate: '使用{algo}进行仿真',
     enterProjectKeyword: '请输入项目名称关键词',
@@ -1961,6 +1956,11 @@ export default {
     lifecycleMatrix: '25年全生命周期矩阵',
     sohRteData: 'SOH / RTE 数据',
     eqHeader: '============================================',
-    eqFooter: '============================================'
+    eqFooter: '============================================',
+    colYear: '指标\\年份',
+    colSoh: 'SOH(%)',
+    colRte: 'RTE(%)',
+    colAvail: '净可用(MWh)',
+    colGuarantee: '保障判定'
   }
 }

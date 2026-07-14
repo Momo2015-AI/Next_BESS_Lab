@@ -265,73 +265,73 @@ export const useBessStore = defineStore('bess', {
     async runSimulationEngine(designOutput, surveyParams, options = {}) {
       this.calculating = true
       this.calculationError = null
-	      try {
-	        let sim = null
-	        let simResp = null
+      try {
+        let sim = null
+        let simResp = null
 
-	        // Step 1: 调用仿真引擎（financialOnly 模式下跳过）
-	        if (!options.financialOnly) {
-        const simBody = {
-          design_output: designOutput || {
-            container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
-            pcs: { ratedPowerMW: this.systemParams.pcsPower },
-            containerQty: this.systemParams.initContainerQty,
-            pcsQty: this.systemParams.initPcsQty,
-            duration: this.systemParams.duration
-          },
-          survey_params: surveyParams || {
-            ratedEnergy: this.survey.ratedEnergy,
-            temperature: this.survey.temperature,
-            cyclesPerDay: this.survey.cyclesPerDay,
-            dod: 90,
-            requiredEnergy: this.survey.requiredEnergy,
-            cRate: this.systemParams.cRate || 0.5,
-            auxPowerMode: this.systemParams.auxPowerMode,
-            ambientTemp: this.systemParams.ambientTemp,
-            coolingType: this.systemParams.coolingType
-          },
-          degradation: {
-            soh: [...this.degradation.soh],
-            rte: [...this.degradation.rte],
-            dod: [...this.degradation.dod],
-            augQty: [...this.degradation.augQty]
-          },
-          algorithm: {
-            model: this.degradationModel,
-            correctionFactor: 1.0,
-            environmental: { ...this.environmental },
-            gb36276Curves: [...this.gb36276Curves]
+        // Step 1: 调用仿真引擎（financialOnly 模式下跳过）
+        if (!options.financialOnly) {
+          const simBody = {
+            design_output: designOutput || {
+              container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
+              pcs: { ratedPowerMW: this.systemParams.pcsPower },
+              containerQty: this.systemParams.initContainerQty,
+              pcsQty: this.systemParams.initPcsQty,
+              duration: this.systemParams.duration
+            },
+            survey_params: surveyParams || {
+              ratedEnergy: this.survey.ratedEnergy,
+              temperature: this.survey.temperature,
+              cyclesPerDay: this.survey.cyclesPerDay,
+              dod: 90,
+              requiredEnergy: this.survey.requiredEnergy,
+              cRate: this.systemParams.cRate || 0.5,
+              auxPowerMode: this.systemParams.auxPowerMode,
+              ambientTemp: this.systemParams.ambientTemp,
+              coolingType: this.systemParams.coolingType
+            },
+            degradation: {
+              soh: [...this.degradation.soh],
+              rte: [...this.degradation.rte],
+              dod: [...this.degradation.dod],
+              augQty: [...this.degradation.augQty]
+            },
+            algorithm: {
+              model: this.degradationModel,
+              correctionFactor: 1.0,
+              environmental: { ...this.environmental },
+              gb36276Curves: [...this.gb36276Curves]
+            }
           }
-        }
 
-        simResp = await post('/api/simulation/run', simBody)
-        if (!simResp.success || !simResp.data) {
-          throw new Error(simResp.message || 'Simulation engine failed')
-        }
+          simResp = await post('/api/simulation/run', simBody)
+          if (!simResp.success || !simResp.data) {
+            throw new Error(simResp.message || 'Simulation engine failed')
+          }
 
-        sim = simResp.data
+          sim = simResp.data
 
-        // 写入退化结果
-        this.degradation.soh = sim.soh || []
-        this.degradation.rte = sim.rte || []
-        this.degradation.dod = sim.dod || []
-        this.degradation.augQty = sim.augQty || []
+          // 写入退化结果
+          this.degradation.soh = sim.soh || []
+          this.degradation.rte = sim.rte || []
+          this.degradation.dod = sim.dod || []
+          this.degradation.augQty = sim.augQty || []
 
-        // 写入能量核算结果
-        this.results = {
-          initGross: sim.initGross || create26Array(0),
-          initAux: sim.initAux || create26Array(0),
-          initAcUsable: sim.initAcUsable || create26Array(0),
-          augGross: sim.augGross || create26Array(0),
-          augAux: sim.augAux || create26Array(0),
-          augAcUsable: sim.augAcUsable || create26Array(0),
-          augAccumQty: sim.augAccumQty || create26Array(0),
-          totalAcUsable: sim.totalAcUsable || create26Array(0),
-          meetsReq: sim.meetsReq || create26Array(false)
-        }
+          // 写入能量核算结果
+          this.results = {
+            initGross: sim.initGross || create26Array(0),
+            initAux: sim.initAux || create26Array(0),
+            initAcUsable: sim.initAcUsable || create26Array(0),
+            augGross: sim.augGross || create26Array(0),
+            augAux: sim.augAux || create26Array(0),
+            augAcUsable: sim.augAcUsable || create26Array(0),
+            augAccumQty: sim.augAccumQty || create26Array(0),
+            totalAcUsable: sim.totalAcUsable || create26Array(0),
+            meetsReq: sim.meetsReq || create26Array(false)
+          }
 
-        if (sim && sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
-        if (sim && sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
+          if (sim && sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
+          if (sim && sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
         } // end Step 1 (if !financialOnly)
 
         // Step 2: 调用财务引擎
@@ -341,9 +341,7 @@ export const useBessStore = defineStore('bess', {
             : (sim && sim.totalAcUsable) || create26Array(0)
           const simSoh = options.financialOnly ? this.degradation.soh : (sim && sim.soh) || []
           const simRte = options.financialOnly ? this.degradation.rte : (sim && sim.rte) || []
-          const simMeetsReq = options.financialOnly
-            ? this.results.meetsReq
-            : (sim && sim.meetsReq) || []
+          const simMeetsReq = options.financialOnly ? this.results.meetsReq : (sim && sim.meetsReq) || []
           const finBody = {
             simulation_output: {
               totalAcUsable: simTotalAcUsable,
