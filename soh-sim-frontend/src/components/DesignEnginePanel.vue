@@ -43,7 +43,7 @@
               v-else
               class="lock-btn"
               :title="$t('design.lockDuration') || '自动计算'"
-              @click="isDurationAuto = true; autoCalcDuration()"
+              @click="unlockAndCalcDuration"
             >
               🔒
             </button>
@@ -252,6 +252,11 @@ function autoCalcDuration() {
   if (form.ratedEnergy > 0 && form.totalPower > 0) {
     form.duration = +(form.ratedEnergy / form.totalPower).toFixed(2)
   }
+}
+
+function unlockAndCalcDuration() {
+  isDurationAuto.value = true
+  autoCalcDuration()
 }
 
 // 监听功率和容量变化，自动计算时长
