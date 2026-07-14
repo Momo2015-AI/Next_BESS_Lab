@@ -74,7 +74,9 @@ async function runPipeline() {
     ratedEnergy: store.survey.ratedEnergy,
     temperature: store.survey.temperature,
     cyclesPerDay: store.survey.cyclesPerDay,
-    dod: 90,
+    dod: store.survey.dod || 90,
+    cRate: store.survey.cRate || 0.5,
+    duration: store.survey.duration || store.systemParams.duration,
     requiredEnergy: store.survey.requiredEnergy
   }
   try {

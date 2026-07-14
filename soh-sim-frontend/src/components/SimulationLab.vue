@@ -279,13 +279,19 @@
             <div class="flex items-center gap-1 text-[10px]">
               <span class="text-muted">{{ $t('simLab.auxModeLabel') }}:</span>
               <button
-                :class="['px-2 py-0.5 rounded transition-all', simParams.auxPowerMode === 'manual' ? 'bg-accent text-white' : 'text-muted hover:text-secondary']"
+                :class="[
+                  'px-2 py-0.5 rounded transition-all',
+                  simParams.auxPowerMode === 'manual' ? 'bg-accent text-white' : 'text-muted hover:text-secondary'
+                ]"
                 @click="simParams.auxPowerMode = 'manual'"
               >
                 {{ $t('simLab.auxModeManual') }}
               </button>
               <button
-                :class="['px-2 py-0.5 rounded transition-all', simParams.auxPowerMode === 'thermal' ? 'bg-accent text-white' : 'text-muted hover:text-secondary']"
+                :class="[
+                  'px-2 py-0.5 rounded transition-all',
+                  simParams.auxPowerMode === 'thermal' ? 'bg-accent text-white' : 'text-muted hover:text-secondary'
+                ]"
                 @click="simParams.auxPowerMode = 'thermal'"
               >
                 {{ $t('simLab.auxModeThermal') }}
@@ -363,7 +369,10 @@
                 <span>{{ $t('simLab.fixedAuxNote') }}</span>
                 <span class="text-secondary">{{ FIXED_AUX }} kW</span>
               </div>
-              <div class="flex justify-between font-medium" style="border-top: 1px solid var(--color-border); padding-top: 2px; margin-top: 2px;">
+              <div
+                class="flex justify-between font-medium"
+                style="border-top: 1px solid var(--color-border); padding-top: 2px; margin-top: 2px"
+              >
                 <span>= {{ $t('simLab.labelBessAuxRun') }}</span>
                 <span class="text-accent">{{ estimatedCoolingPower?.totalRunKw ?? '—' }} kW</span>
               </div>
@@ -937,14 +946,17 @@ const simulationResults = reactive({
 })
 
 // 冷却功耗估算（前端预览，用于 thermal 模式 UI 展示）
-const FIXED_AUX = 3.0  // BMS/消防/照明固定功耗 kW
+const FIXED_AUX = 3.0 // BMS/消防/照明固定功耗 kW
 const COP_MAP = { 'forced-air': 2.0, liquid: 3.5, 'SiC-liquid': 5.0 }
 const estimatedCoolingPower = computed(() => {
   if (simParams.auxPowerMode !== 'thermal') return null
   const ambient = simParams.ambientTemp || 25
   const cop = COP_MAP[simParams.coolingType] || COP_MAP.liquid
   // 电芯发热: I²R × N_cells, 默认值
-  const cellAh = 280, cellR = 0.00025, cRate = 0.5, cells = 5000
+  const cellAh = 280,
+    cellR = 0.00025,
+    cRate = 0.5,
+    cells = 5000
   const cellHeatKw = ((cellAh * cRate) ** 2 * cellR * cells) / 1000
   // 热渗透: U × A × ΔT
   const deltaT = Math.max(0, ambient - 25)
@@ -1376,14 +1388,14 @@ const runBackendSimulation = async () => {
         modelParams[key] = algoParams[key] ?? cfg.default
       }
     }
-	    const body = {
-	      design_output: {
-	        container: { ratedEnergyMwh: surveyData.ratedEnergy || store.systemParams.ratedEnergy },
-	        pcs: { ratedPowerMW: store.systemParams.pcsPower },
-	        containerQty: surveyData.containerQty || store.systemParams.initContainerQty,
-	        pcsQty: store.systemParams.initPcsQty,
-	        duration: surveyData.duration || store.systemParams.duration
-	      },
+    const body = {
+      design_output: {
+        container: { ratedEnergyMwh: surveyData.ratedEnergy || store.systemParams.ratedEnergy },
+        pcs: { ratedPowerMW: store.systemParams.pcsPower },
+        containerQty: surveyData.containerQty || store.systemParams.initContainerQty,
+        pcsQty: store.systemParams.initPcsQty,
+        duration: surveyData.duration || store.systemParams.duration
+      },
       survey_params: {
         ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
         temperature: surveyData.temperature || store.systemParams.temperature,
@@ -1395,42 +1407,42 @@ const runBackendSimulation = async () => {
         ambientTemp: simParams.ambientTemp || store.systemParams.ambientTemp,
         coolingType: simParams.coolingType || store.systemParams.coolingType
       },
-	      degradation: {
-	        soh: [...store.degradation.soh],
-	        rte: [...store.degradation.rte],
-	        dod: [...store.degradation.dod],
-	        augQty: [...store.degradation.augQty]
-	      },
-	      algorithm: {
-	        model: modelType,
-	        correctionFactor: correctionFactors.sohFactor || 1.0,
-	        modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined
-	      }
-	    }
-	    const data = await api.post('/api/simulation/run', body)
-	    if (data.success && data.data) {
-	      const result = data.data
+      degradation: {
+        soh: [...store.degradation.soh],
+        rte: [...store.degradation.rte],
+        dod: [...store.degradation.dod],
+        augQty: [...store.degradation.augQty]
+      },
+      algorithm: {
+        model: modelType,
+        correctionFactor: correctionFactors.sohFactor || 1.0,
+        modelParams: Object.keys(modelParams).length > 0 ? modelParams : undefined
+      }
+    }
+    const data = await api.post('/api/simulation/run', body)
+    if (data.success && data.data) {
+      const result = data.data
       const sohArr = result.soh || []
       const rteArr = result.rte || []
       simulationResults.sohCurve = sohArr
       simulationResults.rteCurve = rteArr
-	      simulationResults.netAvailCurve = result.totalAcUsable || []
-	      simulationResults.initSoh = sohArr[0] || 100
-	      simulationResults.finalSoh = sohArr[sohArr.length - 1] || 0
-	      simulationResults.guaranteeEndSoh = sohArr[simParams.guaranteeYears] || 0
-	      simulationResults.meetsGuarantee = (sohArr[simParams.guaranteeYears] || 0) >= simParams.guaranteeSoh
-	      simulationResults.tableData = sohArr.map((s, i) => ({
-	        year: i,
-	        soh: s,
-	        rte: rteArr[i] || 0,
-	        netAvail: (result.totalAcUsable || [])[i] || 0,
-	        meetsReq: (result.meetsReq || [])[i] || false
-	      }))
-	      nextTick(() => setTimeout(() => renderChart(), 100))
-	      emit('applyConfig', {
-	        soh: sohArr,
-	        rte: rteArr,
-	        source: 'backend-simulation',
+      simulationResults.netAvailCurve = result.totalAcUsable || []
+      simulationResults.initSoh = sohArr[0] || 100
+      simulationResults.finalSoh = sohArr[sohArr.length - 1] || 0
+      simulationResults.guaranteeEndSoh = sohArr[simParams.guaranteeYears] || 0
+      simulationResults.meetsGuarantee = (sohArr[simParams.guaranteeYears] || 0) >= simParams.guaranteeSoh
+      simulationResults.tableData = sohArr.map((s, i) => ({
+        year: i,
+        soh: s,
+        rte: rteArr[i] || 0,
+        netAvail: (result.totalAcUsable || [])[i] || 0,
+        meetsReq: (result.meetsReq || [])[i] || false
+      }))
+      nextTick(() => setTimeout(() => renderChart(), 100))
+      emit('applyConfig', {
+        soh: sohArr,
+        rte: rteArr,
+        source: 'backend-simulation',
         algorithmType: modelType,
         simulationYears: simParams.simulationYears,
         guaranteeSoh: simParams.guaranteeSoh
@@ -1597,6 +1609,19 @@ const exportResults = () => {
 }
 
 onMounted(() => {
+  // 从 store 同步设计数据到表单（仅在 useDraft 为默认值时覆盖）
+  const designRatedEnergy = store.systemParams.ratedEnergy || store.survey.ratedEnergy
+  if (designRatedEnergy && (surveyData.ratedEnergy === 5 || !surveyData.ratedEnergy)) {
+    surveyData.ratedEnergy = designRatedEnergy
+  }
+  const designContainerQty = store.systemParams.initContainerQty
+  if (designContainerQty && (surveyData.containerQty === 62 || !surveyData.containerQty)) {
+    surveyData.containerQty = designContainerQty
+  }
+  const designReqEnergy = store.survey.requiredEnergy || store.systemParams.requiredEnergy
+  if (designReqEnergy && (simParams.requiredEnergy === 240 || !simParams.requiredEnergy)) {
+    simParams.requiredEnergy = designReqEnergy
+  }
   initYearlyCorrections()
   fetchAlgorithms()
   fetchManufacturers()

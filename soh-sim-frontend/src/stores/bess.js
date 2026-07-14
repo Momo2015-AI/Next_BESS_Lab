@@ -38,9 +38,9 @@ export const useBessStore = defineStore('bess', {
       bessAuxStandby: 3.5,
       pcsAuxRun: 6.5,
       pcsAuxStandby: 1.0,
-      auxPowerMode: 'manual',     // 'manual' | 'thermal'
-      coolingType: 'liquid',      // 'forced-air' | 'liquid' | 'SiC-liquid'
-      ambientTemp: 25,            // 环境温度(℃) — thermal 模式使用
+      auxPowerMode: 'manual', // 'manual' | 'thermal'
+      coolingType: 'liquid', // 'forced-air' | 'liquid' | 'SiC-liquid'
+      ambientTemp: 25, // 环境温度(℃) — thermal 模式使用
       requiredEnergy: 240
     },
     selectedProducts: {
@@ -161,6 +161,12 @@ export const useBessStore = defineStore('bess', {
     efficiencyDetail: null,
     degradationModel: 'arrhenius',
     gb36276Curves: [],
+    // Phase2 设计结果缓存（解决返回设计页面数据丢失问题）
+    designResults: {
+      solutions: [], // 设计方案列表
+      strategy: 'balanced', // 当前策略
+      confirmedSolution: null // 用户确认的方案
+    },
     environmental: {
       accelerate_temperature: true,
       accelerate_dust: false,
@@ -641,7 +647,7 @@ export const useBessStore = defineStore('bess', {
               ratedEnergy: data.design.container?.ratedEnergyMwh || this.systemParams.ratedEnergy,
               initContainerQty: data.design.containerQty || this.systemParams.initContainerQty,
               initPcsQty: data.design.pcsQty || this.systemParams.initPcsQty,
-              pcsPower: data.design.pcs?.ratedPowerMW || this.systemParams.pcsPower,
+              pcsPower: data.design.pcs?.ratedPowerMW || this.systemParams.pcsPower
             }
           }
           if (data.simulation) {

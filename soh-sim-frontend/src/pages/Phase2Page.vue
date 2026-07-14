@@ -14,18 +14,10 @@
 
     <div class="step-content">
       <!-- 步骤1: 方案模板选择 -->
-      <DesignTemplateSelector
-        v-if="activeStep === 0"
-        @confirm="onTemplateConfirm"
-        @skip="activeStep = 1"
-      />
+      <DesignTemplateSelector v-if="activeStep === 0" @confirm="onTemplateConfirm" @skip="activeStep = 1" />
 
       <!-- 步骤2: 设计参数确认 -->
-      <DesignParamsConfirm
-        v-if="activeStep === 1"
-        @back="activeStep = 0"
-        @result="onDesignResult"
-      />
+      <DesignParamsConfirm v-if="activeStep === 1" @back="activeStep = 0" @result="onDesignResult" />
 
       <!-- 步骤3: 方案结果预览 -->
       <DesignResultPreview
@@ -55,15 +47,16 @@ const store = useBessStore()
 
 const activeStep = ref(0)
 
-const steps = computed(() => [
-  { label: t('phase2.step1') },
-  { label: t('phase2.step2') },
-  { label: t('phase2.step3') },
-])
+const steps = computed(() => [{ label: t('phase2.step1') }, { label: t('phase2.step2') }, { label: t('phase2.step3') }])
 
-// 设计结果
-const designSolutions = ref([])
-const designStrategy = ref('balanced')
+// 设计结果 — 优先从 store 恢复（解决返回时数据丢失）
+const designSolutions = ref(store.designResults.solutions || [])
+const designStrategy = ref(store.designResults.strategy || 'balanced')
+
+// 如果 store 中有已确认的方案且 solutions 非空，直接跳到步骤 3
+if (store.designResults.confirmedSolution && store.designResults.solutions.length > 0) {
+  activeStep.value = 2
+}
 
 function onTemplateConfirm(tmpl) {
   // 模板已确认，直接跳到参数确认
@@ -73,10 +66,22 @@ function onTemplateConfirm(tmpl) {
 function onDesignResult(data) {
   designSolutions.value = data?.solutions || []
   designStrategy.value = data?.strategy || 'balanced'
+  // 持久化到 store，防止返回时丢失
+  store.designResults = {
+    solutions: designSolutions.value,
+    strategy: designStrategy.value,
+    confirmedSolution: null
+  }
   activeStep.value = 2
 }
 
 function onSolutionConfirm(sol) {
+  // 持久化确认的方案
+  store.designResults.confirmedSolution = sol
+  // 同步写入 survey 数据，确保仿真页面能读取
+  store.survey.ratedEnergy = sol.totalEnergyMwh || store.survey.ratedEnergy
+  store.survey.totalPower = sol.totalPowerMw || sol.totalEnergyMwh / (sol.duration || 2)
+  store.survey.duration = sol.duration || sol.totalEnergyMwh / (sol.totalPowerMw || 50)
   // 标记 Phase2 完成
   store.phases.phase2 = { status: 'completed' }
   // 跳转到 Phase3 仿真
@@ -133,15 +138,15 @@ function onSolutionConfirm(sol) {
   border-radius: 50%;
   font-size: 0.6875rem;
   font-weight: 700;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .steps-nav button.active .step-num {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .steps-nav button.done .step-num {
-  background: rgba(22,163,74,0.15);
+  background: rgba(22, 163, 74, 0.15);
 }
 
 .step-content {

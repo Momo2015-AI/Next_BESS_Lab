@@ -3,82 +3,63 @@
     <!-- 输入区域 -->
     <div class="panel-section">
       <h3 class="section-title">
-        <AppIcon name="settings" size="16" /> {{ $t('design.surveyInput') }}
+        <AppIcon name="settings" size="16" />
+        {{ $t('design.surveyInput') }}
       </h3>
       <div class="form-grid">
         <div class="form-group">
           <label>{{ $t('design.ratedEnergy') }} (MWh)</label>
-          <input
-            v-model.number="form.ratedEnergy"
-            type="number"
-            min="1"
-            step="1"
-            class="form-input"
-          />
+          <input v-model.number="form.ratedEnergy" type="number" min="1" step="1" class="form-input" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.totalPower') }} (MW)</label>
-          <input
-            v-model.number="form.totalPower"
-            type="number"
-            min="1"
-            step="0.1"
-            class="form-input"
-          />
+          <input v-model.number="form.totalPower" type="number" min="1" step="0.1" class="form-input" />
         </div>
         <div class="form-group">
-          <label>{{ $t('design.duration') }} (h)</label>
-          <input
-            v-model.number="form.duration"
-            type="number"
-            min="0.5"
-            max="24"
-            step="0.5"
-            class="form-input"
-          />
+          <label>
+            {{ $t('design.duration') }} (h)
+            <span v-if="isDurationAuto" class="auto-badge">自动</span>
+          </label>
+          <div class="duration-input-row">
+            <input
+              v-model.number="form.duration"
+              type="number"
+              min="0.5"
+              max="24"
+              step="0.5"
+              class="form-input"
+              :class="{ 'auto-disabled': isDurationAuto }"
+              :disabled="isDurationAuto"
+            />
+            <button
+              v-if="isDurationAuto"
+              class="unlock-btn"
+              :title="$t('design.unlockDuration') || '手动设置'"
+              @click="isDurationAuto = false"
+            >🔓</button>
+            <button
+              v-else
+              class="lock-btn"
+              :title="$t('design.lockDuration') || '自动计算'"
+              @click="isDurationAuto = true; autoCalcDuration()"
+            >🔒</button>
+          </div>
         </div>
         <div class="form-group">
           <label>{{ $t('design.temperature') }} (°C)</label>
-          <input
-            v-model.number="form.temperature"
-            type="number"
-            min="-20"
-            max="60"
-            step="1"
-            class="form-input"
-          />
+          <input v-model.number="form.temperature" type="number" min="-20" max="60" step="1" class="form-input" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.cyclesPerDay') }}</label>
-          <input
-            v-model.number="form.cyclesPerDay"
-            type="number"
-            min="0.5"
-            max="4"
-            step="0.5"
-            class="form-input"
-          />
+          <input v-model.number="form.cyclesPerDay" type="number" min="0.5" max="4" step="0.5" class="form-input" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.dod') }} (%)</label>
-          <input
-            v-model.number="form.dod"
-            type="number"
-            min="50"
-            max="100"
-            step="1"
-            class="form-input"
-          />
+          <input v-model.number="form.dod" type="number" min="50" max="100" step="1" class="form-input" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.requiredEnergy') }} (MWh/天)</label>
-          <input
-            v-model.number="form.requiredEnergy"
-            type="number"
-            min="1"
-            step="1"
-            class="form-input"
-          />
+          <input v-model.number="form.requiredEnergy" type="number" min="1" step="1" class="form-input" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.location') }}</label>
@@ -99,8 +80,8 @@
               v-for="s in strategies"
               :key="s.key"
               :class="['strategy-btn', { active: form.strategy === s.key }]"
-              @click="form.strategy = s.key"
               :title="s.description"
+              @click="form.strategy = s.key"
             >
               {{ s.label }}
             </button>
@@ -119,19 +100,11 @@
       </div>
 
       <div class="action-row">
-        <button
-          class="btn btn-primary"
-          :disabled="loading"
-          @click="runDesign"
-        >
+        <button class="btn btn-primary" :disabled="loading" @click="runDesign">
           <span v-if="loading" class="spinner"></span>
           {{ loading ? $t('design.generating') : $t('design.generateBtn') }}
         </button>
-        <button
-          class="btn btn-secondary"
-          :disabled="loading"
-          @click="runFullWorkflow"
-        >
+        <button class="btn btn-secondary" :disabled="loading" @click="runFullWorkflow">
           <span v-if="workflowLoading" class="spinner"></span>
           {{ workflowLoading ? $t('design.running') : $t('design.oneClickBtn') }}
         </button>
@@ -142,7 +115,8 @@
     <!-- 方案列表 -->
     <div v-if="solutions.length > 0" class="panel-section">
       <h3 class="section-title">
-        <span class="icon">📋</span> {{ $t('design.solutions') }} ({{ solutions.length }})
+        <span class="icon">📋</span>
+        {{ $t('design.solutions') }} ({{ solutions.length }})
       </h3>
       <div class="solutions-grid">
         <div
@@ -211,7 +185,8 @@
     <!-- 工作流结果 -->
     <div v-if="workflowResult" class="panel-section">
       <h3 class="section-title">
-        <span class="icon">🚀</span> {{ $t('design.workflowResult') }}
+        <span class="icon">🚀</span>
+        {{ $t('design.workflowResult') }}
       </h3>
       <div class="workflow-summary">
         <div class="summary-item">
@@ -245,7 +220,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { post } from '../services/api.js'
 import { useBessStore } from '../stores/bess.js'
 import AppIcon from './AppIcon.vue'
@@ -265,6 +240,28 @@ const form = reactive({
   strategy: 'economic',
   targetMetric: 'lcos'
 })
+
+// 储能时长自动计算
+const isDurationAuto = ref(true)
+
+function autoCalcDuration() {
+  if (form.ratedEnergy > 0 && form.totalPower > 0) {
+    form.duration = +(form.ratedEnergy / form.totalPower).toFixed(2)
+  }
+}
+
+// 监听功率和容量变化，自动计算时长
+watch(
+  () => [form.ratedEnergy, form.totalPower],
+  () => {
+    if (isDurationAuto.value) {
+      autoCalcDuration()
+    }
+  }
+)
+
+// 初始化时计算一次
+autoCalcDuration()
 
 const strategies = [
   { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },
@@ -301,8 +298,7 @@ function formatCurrency(val) {
 function formatMetric(key, val) {
   if (val == null) return '—'
   if (key === 'lcos' || key === 'lcoe') return Number(val).toFixed(4)
-  if (key === 'projectIrr' || key === 'equityIrr' || key === 'irr' || key === 'roi')
-    return Number(val).toFixed(2) + '%'
+  if (key === 'projectIrr' || key === 'equityIrr' || key === 'irr' || key === 'roi') return Number(val).toFixed(2) + '%'
   if (key === 'npv' || key === 'capex') return formatCurrency(val)
   if (key === 'payback') return Number(val).toFixed(1) + ' 年'
   if (typeof val === 'object') return JSON.stringify(val)
@@ -342,7 +338,7 @@ async function runFullWorkflow() {
     })
     if (resp.success) {
       workflowResult.value = resp.data
-      solutions.value = (resp.data.solutions || []).map(s => s.design).filter(Boolean)
+      solutions.value = (resp.data.solutions || []).map((s) => s.design).filter(Boolean)
       if (resp.data.recommendation) {
         emit('select', resp.data.recommendation.design)
       }
@@ -518,7 +514,9 @@ async function runFullWorkflow() {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Solutions Grid */
@@ -532,7 +530,9 @@ async function runFullWorkflow() {
   border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 8px;
   overflow: hidden;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .solution-card:hover {
@@ -566,10 +566,19 @@ async function runFullWorkflow() {
   color: var(--color-text-on-accent);
 }
 
-.rank-1 { background: var(--color-warning); }
-.rank-2 { background: var(--color-text-secondary); }
-.rank-3 { background: var(--color-text-muted); }
-.rank-4, .rank-5 { background: var(--color-border-light); }
+.rank-1 {
+  background: var(--color-warning);
+}
+.rank-2 {
+  background: var(--color-text-secondary);
+}
+.rank-3 {
+  background: var(--color-text-muted);
+}
+.rank-4,
+.rank-5 {
+  background: var(--color-border-light);
+}
 
 .strategy-tag {
   font-size: 0.75rem;
@@ -681,5 +690,58 @@ async function runFullWorkflow() {
   color: var(--text-secondary, #888);
   text-transform: uppercase;
   margin-top: 0.15rem;
+}
+
+/* 储能时长自动计算样式 */
+.auto-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.duration-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.duration-input-row .form-input {
+  flex: 1;
+}
+
+.duration-input-row .form-input.auto-disabled {
+  background: var(--color-bg, #f5f5f5);
+  color: var(--text-secondary, #888);
+  cursor: not-allowed;
+}
+
+.unlock-btn,
+.lock-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+  background: var(--card-bg, #fff);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.unlock-btn:hover,
+.lock-btn:hover {
+  border-color: var(--color-accent, #409eff);
+  background: var(--color-accent-light, #ecf5ff);
 }
 </style>
