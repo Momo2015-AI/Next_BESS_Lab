@@ -45,16 +45,22 @@ class SimulationEngine(BaseEngine):
             system_params, degradation, algorithm
         )
 
-        # 能量核算
-        efficiency_factors = system_params.get("efficiencyFactors", FACTOR_DEFAULTS)
+        # 能量核算 — 允许 efficiencyFactors=None 以使用自定义RTE数组
+        efficiency_factors = system_params.get("efficiencyFactors")
+        if efficiency_factors is None and "efficiencyFactors" not in system_params:
+            efficiency_factors = FACTOR_DEFAULTS
         energy_results = self._calculate_energy(
             system_params, soh, rte, dod, aug_qty, efficiency_factors
         )
 
-        # 效率曲线
-        eff_curves = calculate_efficiency_curves(efficiency_factors, soh, NUM_YEARS)
-        rte = eff_curves["rte"]
-        efficiency_detail = calculate_efficiency_chain(efficiency_factors, soh[0])
+        # 效率曲线 — 当 efficiency_factors 为 None 时跳过（使用自定义RTE）
+        if efficiency_factors is not None:
+            eff_curves = calculate_efficiency_curves(efficiency_factors, soh, NUM_YEARS)
+            rte = eff_curves["rte"]
+            efficiency_detail = calculate_efficiency_chain(efficiency_factors, soh[0])
+        else:
+            eff_curves = None
+            efficiency_detail = None
 
         # 补容策略
         aug_strategy = self._optimize_augmentation(
@@ -104,10 +110,10 @@ class SimulationEngine(BaseEngine):
             "pcsAuxRun": aux.get("pcsAuxRun", 6.5),
             "pcsAuxStandby": aux.get("pcsAuxStandby", 1.0),
             "auxPowerMode": survey_params.get("auxPowerMode", design_output.get("auxPowerMode", "manual")),
-            "ambientTemp": survey_params.get("tempAvg", design_output.get("ambientTemp", 25)),
+            "ambientTemp": survey_params.get("ambientTemp", survey_params.get("tempAvg", design_output.get("ambientTemp", 25))),
             "coolingType": survey_params.get("coolingType", design_output.get("coolingType", "liquid")),
             "requiredEnergy": survey_params.get("requiredEnergy", 240),
-            "efficiencyFactors": FACTOR_DEFAULTS,
+            "efficiencyFactors": survey_params.get("efficiencyFactors", FACTOR_DEFAULTS),
         }
 
     def _predict_degradation(self, system_params, degradation, algorithm):

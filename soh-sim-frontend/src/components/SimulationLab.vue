@@ -1043,8 +1043,8 @@ const prevStep = () => {
 const fetchAlgorithms = async () => {
   try {
     const [data, simData] = await Promise.all([
-      api.get('/api/algorithms/public?category=degradation'),
-      api.get('/api/algorithms/public?category=simulation')
+      api.get('/api/algorithm/builtin_models'),
+      api.get('/api/algorithm/builtin_models')
     ])
 
     let allAlgs = []
@@ -1384,14 +1384,17 @@ const runBackendSimulation = async () => {
 	        pcsQty: store.systemParams.initPcsQty,
 	        duration: surveyData.duration || store.systemParams.duration
 	      },
-	      survey_params: {
-	        ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
-	        temperature: surveyData.temperature || store.systemParams.temperature,
-	        cyclesPerDay: surveyData.cyclesPerDay || store.systemParams.cyclesPerDay,
-	        dod: surveyData.dod || store.systemParams.dod || 80,
-	        requiredEnergy: store.systemParams.requiredEnergy,
-	        cRate: store.systemParams.cRate || 0.5
-	      },
+      survey_params: {
+        ratedEnergy: surveyData.ratedEnergy || store.systemParams.ratedEnergy,
+        temperature: surveyData.temperature || store.systemParams.temperature,
+        cyclesPerDay: surveyData.cyclesPerDay || store.systemParams.cyclesPerDay,
+        dod: surveyData.dod || store.systemParams.dod || 80,
+        requiredEnergy: store.systemParams.requiredEnergy,
+        cRate: store.systemParams.cRate || 0.5,
+        auxPowerMode: simParams.auxPowerMode || store.systemParams.auxPowerMode,
+        ambientTemp: simParams.ambientTemp || store.systemParams.ambientTemp,
+        coolingType: simParams.coolingType || store.systemParams.coolingType
+      },
 	      degradation: {
 	        soh: [...store.degradation.soh],
 	        rte: [...store.degradation.rte],
@@ -1407,8 +1410,8 @@ const runBackendSimulation = async () => {
 	    const data = await api.post('/api/simulation/run', body)
 	    if (data.success && data.data) {
 	      const result = data.data
-	      const sohArr = result.soh || []
-      const rteArr = data.result.rte || []
+      const sohArr = result.soh || []
+      const rteArr = result.rte || []
       simulationResults.sohCurve = sohArr
       simulationResults.rteCurve = rteArr
 	      simulationResults.netAvailCurve = result.totalAcUsable || []

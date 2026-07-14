@@ -237,7 +237,7 @@ def calculate_full_pipeline(system_params, degradation=None, algorithm=None, fin
         aug_qty = [0] * NUM_YEARS
 
     efficiency_factors = system_params.get("efficiencyFactors")
-    if efficiency_factors is None:
+    if efficiency_factors is None and "efficiencyFactors" not in system_params:
         efficiency_factors = FACTOR_DEFAULTS
 
     energy_results = calculate_energy_accounting(system_params, soh, rte, dod, aug_qty, efficiency_factors)

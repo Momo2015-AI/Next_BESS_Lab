@@ -81,8 +81,13 @@ class FinancialEngine(BaseEngine):
                 "epc": estimated.get("epcCost", 0),
                 "development": estimated.get("developmentCost", 0),
             }
-        # 默认估算
-        total_energy = design_output.get("totalEnergyMwh", 100)
+        # 默认估算：优先用 totalEnergyMwh，否则从 container × containerQty 计算
+        total_energy = design_output.get("totalEnergyMwh")
+        if not total_energy:
+            container = design_output.get("container", {})
+            total_energy = float(container.get("ratedEnergyMwh", 5)) * int(design_output.get("containerQty", 10))
+        if total_energy <= 0:
+            total_energy = 100
         return {
             "equipment": round(total_energy * 200000, 2),
             "epc": round(total_energy * 200000 * 0.08, 2),

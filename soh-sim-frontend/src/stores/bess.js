@@ -269,7 +269,7 @@ export const useBessStore = defineStore('bess', {
             requiredEnergy: this.survey.requiredEnergy,
             cRate: this.systemParams.cRate || 0.5,
             auxPowerMode: this.systemParams.auxPowerMode,
-            tempAvg: this.systemParams.ambientTemp,
+            ambientTemp: this.systemParams.ambientTemp,
             coolingType: this.systemParams.coolingType
           },
           degradation: {

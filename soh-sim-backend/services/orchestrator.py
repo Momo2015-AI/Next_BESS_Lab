@@ -211,6 +211,10 @@ def _design_to_system_params(design: dict, survey_params: dict) -> dict:
         "bessAuxStandby": design.get("auxPower", {}).get("bessAuxStandby", 3.5),
         "pcsAuxRun": design.get("auxPower", {}).get("pcsAuxRun", 6.5),
         "pcsAuxStandby": design.get("auxPower", {}).get("pcsAuxStandby", 1.0),
+        "auxPowerMode": survey_params.get("auxPowerMode", design.get("auxPowerMode", "manual")),
+        "ambientTemp": survey_params.get("ambientTemp", survey_params.get("tempAvg", design.get("ambientTemp", 25))),
+        "coolingType": survey_params.get("coolingType", design.get("coolingType", "liquid")),
+        "efficiencyFactors": survey_params.get("efficiencyFactors"),
         "requiredEnergy": survey_params.get("requiredEnergy", 240),
     }
 
