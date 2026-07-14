@@ -158,12 +158,7 @@ const { themeObject } = useChartTheme()
 
 watch(themeObject, () => {
   nextTick(() => {
-    sohChart?.setOption(getCombinedOption())
-    rteChart?.setOption(getRteOption())
-    acChart?.setOption(getAcOption())
-    stackedChart?.setOption(getStackedOption())
-    degradationChart?.setOption(getDegradationOption())
-    dashChart?.setOption(getDashOption())
+    renderAll()
   })
 })
 

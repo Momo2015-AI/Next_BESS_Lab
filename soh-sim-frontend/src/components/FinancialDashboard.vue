@@ -48,6 +48,8 @@ const props = defineProps({
   augQty: { type: Array, default: () => [] }
 })
 
+const store = useBessStore()
+
 // 独立模式参数
 const standaloneParams = reactive({
   totalCapMWh: 100,

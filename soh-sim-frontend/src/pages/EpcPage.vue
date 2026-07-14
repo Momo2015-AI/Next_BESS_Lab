@@ -5,12 +5,7 @@
   >
     <!-- 模块标签页 -->
     <div class="epc-tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        :class="{ active: activeModule === tab.id }"
-        @click="switchTab(tab.id)"
-      >
+      <button v-for="tab in tabs" :key="tab.id" :class="{ active: activeModule === tab.id }" @click="switchTab(tab.id)">
         <AppIcon :name="tab.iconName" :size="18" class="tab-icon" />
         <span class="tab-label">{{ tab.label }}</span>
         <span class="tab-priority" :class="'pri-' + tab.priority">{{ tab.priority }}</span>

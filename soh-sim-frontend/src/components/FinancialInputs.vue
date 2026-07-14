@@ -435,18 +435,24 @@ const f = inject('financialParams', () => {
 
 // 债务/权益比例互补联动（总和始终为 100%）
 let _finSyncing = false
-watch(() => f.debtRatio, (val) => {
-  if (_finSyncing) return
-  _finSyncing = true
-  f.equityRatio = val != null ? 100 - val : 40
-  _finSyncing = false
-})
-watch(() => f.equityRatio, (val) => {
-  if (_finSyncing) return
-  _finSyncing = true
-  f.debtRatio = val != null ? 100 - val : 60
-  _finSyncing = false
-})
+watch(
+  () => f.debtRatio,
+  (val) => {
+    if (_finSyncing) return
+    _finSyncing = true
+    f.equityRatio = val != null ? 100 - val : 40
+    _finSyncing = false
+  }
+)
+watch(
+  () => f.equityRatio,
+  (val) => {
+    if (_finSyncing) return
+    _finSyncing = true
+    f.debtRatio = val != null ? 100 - val : 60
+    _finSyncing = false
+  }
+)
 </script>
 
 <style scoped>

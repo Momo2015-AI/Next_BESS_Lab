@@ -161,7 +161,11 @@ export function useFinancialModel(props) {
     const augQty = props.augQty || []
 
     // 独立模式 vs 项目模式：数据来源不同
-    let totalCapMWh, totalCapMW, cyclesPerDay, duration
+    let totalCapMWh,
+      totalCapMW,
+      cyclesPerDay,
+      duration,
+      ratedEnergy = 5
     const isStandalone = props.mode === 'standalone'
 
     if (isStandalone && props.standalone) {
@@ -174,7 +178,7 @@ export function useFinancialModel(props) {
       if (sp.operatingDays != null) f.operatingDays = sp.operatingDays
       if (sp.efficiencyLossPct != null) f.efficiencyLossPct = sp.efficiencyLossPct
     } else {
-      const ratedEnergy = p.ratedEnergy || 5
+      ratedEnergy = p.ratedEnergy || 5
       const initContainerQty = p.initContainerQty || 62
       cyclesPerDay = p.cyclesPerDay || 1
       duration = p.duration || 2

@@ -20,11 +20,7 @@
         <span v-if="savingVersion" class="spinner"></span>
         {{ savingVersion ? $t('orchestrator.saving') : $t('orchestrator.saveAsVersion') }}
       </button>
-      <button
-        v-if="workflowResult"
-        class="btn btn-sim"
-        @click="goToSimulation"
-      >
+      <button v-if="workflowResult" class="btn btn-sim" @click="goToSimulation">
         🔬 {{ $t('orchestrator.goSimulation') }}
       </button>
       <span v-if="saveResult" class="save-success">{{ saveResult }}</span>
@@ -141,18 +137,20 @@ onMounted(async () => {
 
   // 从 store 恢复之前的工作流结果（防止切换 tab 后数据丢失）
   if (store.results.totalAcUsable?.length) {
-    compareSolutions.value = [{
-      id: 'restored',
-      containerQty: store.systemParams.initContainerQty,
-      pcsQty: store.systemParams.initPcsQty,
-      totalEnergyMwh: store.systemParams.ratedEnergy,
-      totalPowerMW: store.systemParams.pcsPower,
-      duration: store.systemParams.duration,
-      degradationModel: {
-        soh: store.degradation.soh,
-        rte: store.degradation.rte
+    compareSolutions.value = [
+      {
+        id: 'restored',
+        containerQty: store.systemParams.initContainerQty,
+        pcsQty: store.systemParams.initPcsQty,
+        totalEnergyMwh: store.systemParams.ratedEnergy,
+        totalPowerMW: store.systemParams.pcsPower,
+        duration: store.systemParams.duration,
+        degradationModel: {
+          soh: store.degradation.soh,
+          rte: store.degradation.rte
+        }
       }
-    }]
+    ]
     baseSolution.value = compareSolutions.value[0]
   }
 })

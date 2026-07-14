@@ -66,9 +66,9 @@ async function request(url, options = {}, config = {}) {
     // 非 JSON 响应（如文件下载 blob）
     const contentType = resp.headers.get('content-type') || ''
     if (!contentType.includes('application/json')) {
-	      if (!resp.ok) {
-	        throw new ApiError(resp.statusText || 'Request failed', resp.status)
-	      }
+      if (!resp.ok) {
+        throw new ApiError(resp.statusText || 'Request failed', resp.status)
+      }
       return resp
     }
 
@@ -87,11 +87,11 @@ async function request(url, options = {}, config = {}) {
       if (window.location.pathname !== '/auth' && !skipErrorToast) {
         window.location.href = '/auth'
       }
-	      throw new ApiError(data.error || data.message || 'Session expired', 401)
+      throw new ApiError(data.error || data.message || 'Session expired', 401)
     }
 
     if (!resp.ok || data.success === false) {
-	      const errMsg = data.error || data.message || `Request failed (${resp.status})`
+      const errMsg = data.error || data.message || `Request failed (${resp.status})`
       if (!skipErrorToast) {
         console.error('[API Error]', url, errMsg)
       }
@@ -102,13 +102,13 @@ async function request(url, options = {}, config = {}) {
   } catch (err) {
     clearTimeout(timer)
     if (err.name === 'AbortError') {
-	      throw new ApiError('Request timeout', 408)
+      throw new ApiError('Request timeout', 408)
     }
     if (err instanceof ApiError) {
       throw err
     }
     // 网络错误
-	    throw new ApiError(err.message || 'Network error', 0)
+    throw new ApiError(err.message || 'Network error', 0)
   }
 }
 

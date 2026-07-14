@@ -1449,7 +1449,7 @@ const runBackendSimulation = async () => {
         augGross: result.augGross || [],
         augAux: result.augAux || [],
         augAcUsable: result.augAcUsable || [],
-        augAccumQty: result.augAccumQty || [],
+        augAccumQty: result.augAccumQty || []
       }
       store.degradation.soh = [...sohArr]
       store.degradation.rte = [...rteArr]

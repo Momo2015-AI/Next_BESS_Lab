@@ -175,25 +175,25 @@ function goToAdmin() {
   router.push('/admin')
 }
 
-	const ROLE_LABELS = {
-	  developer: 'Developer',
-	  solution_engineer: 'Solution Engineer',
-	  epc_contractor: 'EPC Contractor',
-	  financial_analyst: 'Financial Analyst',
-	  project_manager: 'Project Manager',
-	  admin: 'Admin'
-	}
-	
-	function getRoleLabel(role) {
-	  return ROLE_LABELS[role] || role || 'User'
-	}
+const ROLE_LABELS = {
+  developer: 'Developer',
+  solution_engineer: 'Solution Engineer',
+  epc_contractor: 'EPC Contractor',
+  financial_analyst: 'Financial Analyst',
+  project_manager: 'Project Manager',
+  admin: 'Admin'
+}
+
+function getRoleLabel(role) {
+  return ROLE_LABELS[role] || role || 'User'
+}
 
 function handleLogout() {
   sessionStorage.removeItem('auth_token')
   sessionStorage.removeItem('user_info')
   authUser.value = null
   userMenuOpen.value = false
-	  showToast('Logged out', 'info')
+  showToast('Logged out', 'info')
   if (router.currentRoute.value.path === '/auth') router.push('/')
 }
 

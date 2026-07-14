@@ -560,7 +560,9 @@ function autoCalcDuration() {
 
 watch(
   () => [form.total_mwh, form.total_mw],
-  () => { if (isDurationAuto.value) autoCalcDuration() }
+  () => {
+    if (isDurationAuto.value) autoCalcDuration()
+  }
 )
 
 const submitting = ref(false)

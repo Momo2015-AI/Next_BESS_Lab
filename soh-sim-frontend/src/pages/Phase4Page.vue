@@ -168,11 +168,7 @@
       <div v-if="activeStep === 3">
         <FinancialDashboard />
         <div class="calc-actions">
-          <button
-            class="calc-btn"
-            :disabled="store.calculating"
-            @click="runFinancialCalc"
-          >
+          <button class="calc-btn" :disabled="store.calculating" @click="runFinancialCalc">
             <span v-if="store.calculating" class="spinner"></span>
             {{ store.calculating ? $t('phase4.calculating') : $t('phase4.runFinancialCalc') }}
           </button>
@@ -331,7 +327,9 @@ function onError(msg) {
   margin-right: 6px;
 }
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .phase4-sticky-nav {
   display: flex;
