@@ -971,6 +971,242 @@ class TestRBAC:
             f"Permission modification failed: {resp.status_code}"
 
 
+# ==================== 套件 9: 新增参数数据流验证 ====================
+
+
+class TestNewParamsDataFlow:
+    """验证新增的 auxPowerMode/coolingType/ambientTemp/efficiencyFactors 参数流"""
+
+    # ---- 9.1 auxPowerMode=thermal 参数穿透 ----
+
+    def test_simulation_thermal_mode_params(self, client, auth_headers_eng):
+        """POST /api/simulation/run with auxPowerMode=thermal,ambientTemp=32,coolingType=liquid"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+        resp = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "thermal",
+                "ambientTemp": 32,
+                "coolingType": "liquid",
+            },
+        }, auth_headers_eng)
+        data = _assert_success(resp)
+
+        # 验证仿真结果有效
+        assert len(data["totalAcUsable"]) == 26
+        assert data["totalAcUsable"][0] > 0
+
+    # ---- 9.2 auxPowerMode=manual 参数穿透 ----
+
+    def test_simulation_manual_mode_params(self, client, auth_headers_eng):
+        """POST /api/simulation/run with auxPowerMode=manual"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+        resp = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "manual",
+            },
+        }, auth_headers_eng)
+        data = _assert_success(resp)
+        assert len(data["totalAcUsable"]) == 26
+
+    # ---- 9.3 热管理 vs 手动模式对比 ----
+
+    def test_thermal_vs_manual_energy_difference(self, client, auth_headers_eng):
+        """thermal 模式在 25°C 时 totalAcUsable 应高于 manual（默认 aux=18.124kW）"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+
+        resp_t = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "thermal",
+                "ambientTemp": 25,
+                "coolingType": "liquid",
+            },
+        }, auth_headers_eng)
+        data_t = _assert_success(resp_t)
+
+        resp_m = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "manual",
+            },
+        }, auth_headers_eng)
+        data_m = _assert_success(resp_m)
+
+        # 25°C 时冷却功耗为 0，thermal 模式 aux 更低
+        assert data_t["totalAcUsable"][0] > data_m["totalAcUsable"][0], \
+            f"Thermal ({data_t['totalAcUsable'][0]}) > Manual ({data_m['totalAcUsable'][0]}) at 25°C"
+
+    # ---- 9.4 高温时冷却影响 ----
+
+    def test_high_temp_reduces_usable_energy(self, client, auth_headers_eng):
+        """ambientTemp=45 比 ambientTemp=25 产生更低的 totalAcUsable"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+
+        resp_25 = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "thermal",
+                "ambientTemp": 25,
+                "coolingType": "liquid",
+            },
+        }, auth_headers_eng)
+        data_25 = _assert_success(resp_25)
+
+        resp_45 = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "auxPowerMode": "thermal",
+                "ambientTemp": 45,
+                "coolingType": "liquid",
+            },
+        }, auth_headers_eng)
+        data_45 = _assert_success(resp_45)
+
+        assert data_25["totalAcUsable"][0] > data_45["totalAcUsable"][0], \
+            f"25°C ({data_25['totalAcUsable'][0]}) > 45°C ({data_45['totalAcUsable'][0]})"
+
+    # ---- 9.5 efficiencyFactors=None 穿透 ----
+
+    def test_simulation_null_efficiency_factors(self, client, auth_headers_eng):
+        """POST /api/simulation/run with efficiencyFactors=None"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+        resp = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": {
+                **SURVEY_PARAMS,
+                "efficiencyFactors": None,
+            },
+        }, auth_headers_eng)
+        data = _assert_success(resp)
+
+        # efficiencyCurves 应为 None
+        assert data.get("efficiencyCurves") is None, \
+            "efficiencyCurves should be None when efficiencyFactors is None"
+
+    # ---- 9.6 efficiencyFactors 默认行为 ----
+
+    def test_simulation_default_efficiency_factors(self, client, auth_headers_eng):
+        """POST /api/simulation/run without efficiencyFactors — 使用默认 10 因子链"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+        resp = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": SURVEY_PARAMS,  # no efficiencyFactors key
+        }, auth_headers_eng)
+        data = _assert_success(resp)
+
+        # efficiencyCurves 不应为 None（使用了默认因子链）
+        assert data.get("efficiencyCurves") is not None, \
+            "efficiencyCurves should not be None with default factors"
+
+    # ---- 9.7 CAPEX 从 container×containerQty 计算 ----
+
+    def test_financial_capex_from_container_qty(self, client, auth_headers_eng):
+        """container.ratedEnergyMwh=5, containerQty=62 → equipment=62M"""
+        total_ac = [240 * (1 - 0.005 * i) for i in range(26)]
+        resp = _post(client, "/api/financial/calculate", {
+            "simulation_output": {
+                "totalAcUsable": total_ac,
+                "soh": [100] * 26,
+                "rte": [97] * 26,
+                "meetsReq": [True] * 26,
+            },
+            "design_output": {
+                "container": {"ratedEnergyMwh": 5},
+                "containerQty": 62,
+                "pcs": {"ratedPowerMW": 2.5},
+                "pcsQty": 62,
+                "duration": 2,
+            },
+            "survey_params": {"location": "china"},
+        }, auth_headers_eng)
+        data = _assert_success(resp)
+
+        equipment = data["capexBreakdown"]["equipment"]
+        # totalEnergy = 5 * 62 = 310 MWh
+        # equipment = 310 * 200000 = 62,000,000
+        assert equipment == 62_000_000, \
+            f"Expected equipment=62M (310MWh*$200k), got {equipment}"
+
+    # ---- 9.8 财务参数 chaining: 仿真输出直接给财务输入 ----
+
+    def test_simulation_to_financial_chaining(self, client, auth_headers_eng):
+        """运行仿真后直接使用其输出调用财务计算"""
+        design_output = {
+            "container": {"ratedEnergyMwh": 5},
+            "pcs": {"ratedPowerMW": 2.5},
+            "containerQty": 10,
+            "pcsQty": 10,
+            "duration": 2,
+        }
+
+        # Step 1: 仿真
+        sim_resp = _post(client, "/api/simulation/run", {
+            "design_output": design_output,
+            "survey_params": SURVEY_PARAMS,
+        }, auth_headers_eng)
+        sim_data = _assert_success(sim_resp)
+
+        # Step 2: 财务（直接使用仿真输出）
+        fin_resp = _post(client, "/api/financial/calculate", {
+            "simulation_output": {
+                "totalAcUsable": sim_data["totalAcUsable"],
+                "soh": sim_data["soh"],
+                "rte": sim_data["rte"],
+                "meetsReq": sim_data["meetsReq"],
+            },
+            "design_output": design_output,
+            "survey_params": SURVEY_PARAMS,
+        }, auth_headers_eng)
+        fin_data = _assert_success(fin_resp)
+
+        assert fin_data["metrics"]["projectIrr"] > 0
+        assert fin_data["metrics"]["lcos"] > 0
+
+
 def _put(client, url, data, headers=None):
     """Convenience PUT helper."""
     h = headers or {}
