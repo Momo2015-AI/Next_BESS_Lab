@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXBess High-Fidelity Geo-System (Precision Edition)</title>
+    <style>
+        /* ==========================================================================
+           1. 语义化变量矩阵 (Design Token Matrix)
+           ========================================================================== */
+        :root {
+            /* 🌌 暗色模态基因 (Cyber-Dark tokens) */
+            --ds-bg-main: linear-gradient(135deg, #0e0f14 0%, #141110 100%);
+            --ds-card-bg: linear-gradient(160deg, rgba(28, 25, 32, 0.8) 0%, rgba(16, 15, 18, 0.9) 100%);
+            --ds-card-border: 1px solid rgba(255, 255, 255, 0.06);
+            
+            /* 📐 全局圆角/几何规范 Token（锐化科技感核心） */
+            --ds-radius-main: 12px;       /* 主卡片：从 20px 锐化至 12px，体现精密仪器感 */
+            --ds-radius-sub: 8px;         /* 子面板：收紧至 8px，符合内小外大的嵌套美学 */
+            --ds-radius-btn: 6px;         /* 交互组件：极度克制的 6px 工业微圆角 */
+            
+            /* 精密内高光与外发光：严格限制在 8px */
+            --ds-card-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+            --ds-card-active-glow: 0 0 8px rgba(0, 229, 255, 0.4), 0 8px 20px rgba(0,0,0,0.4);
+            --ds-card-drop-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            
+            --ds-text-main: #FFFFFF;
+            --ds-text-muted: rgba(255, 255, 255, 0.35);
+            --ds-text-sub: rgba(255, 255, 255, 0.6);
+            --ds-icon-stroke: rgba(255, 255, 255, 0.75);
+            
+            --ds-panel-sub-bg: rgba(0, 0, 0, 0.2);
+            --ds-panel-sub-border: 1px solid rgba(255, 255, 255, 0.04);
+            --ds-item-bg: rgba(255, 255, 255, 0.01);
+            --ds-item-border: 1px solid rgba(255, 255, 255, 0.03);
+            
+            --ds-btn-action-bg: linear-gradient(90deg, rgba(0, 229, 255, 0.06) 0%, rgba(58, 139, 255, 0.1) 100%);
+            --ds-btn-action-border: 1px solid rgba(0, 229, 255, 0.25);
+            --ds-btn-action-text: #00E5FF;
+            
+            --ds-btn-hover-bg: linear-gradient(90deg, #00E5FF 0%, #1A73E8 100%);
+            --ds-btn-hover-glow: 0 0 15px rgba(0, 229, 255, 0.45);
+            --ds-grid-opacity: 0.015;
+        }
+
+        html.light-theme {
+            /* 💎 高定晶莹浅色科技模态基因 (Cyber-Light tokens) */
+            --ds-bg-main: linear-gradient(135deg, #E4E7F0 0%, #EAEFF8 100%);
+            --ds-card-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.88) 0%, rgba(245, 247, 251, 0.92) 100%);
+            --ds-card-border: 1px solid rgba(18, 43, 90, 0.06);
+            
+            /* 浅色模式下保持相同的精密圆角标准，由变量直接控制 */
+            --ds-radius-main: 12px;
+            --ds-radius-sub: 8px;
+            --ds-radius-btn: 6px;
+            
+            /* 浅色科技精髓：纯白阳极刻线内高光 + 钴蓝收紧 8px 微外发光 */
+            --ds-card-inner-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.95);
+            --ds-card-active-glow: 0 0 8px rgba(0, 102, 255, 0.22), 0 12px 24px rgba(18, 43, 90, 0.04);
+            --ds-card-drop-shadow: 0 12px 30px rgba(24, 28, 43, 0.03);
+            
+            --ds-text-main: #161920; 
+            --ds-text-muted: rgba(22, 25, 32, 0.45);
+            --ds-text-sub: rgba(22, 25, 32, 0.65);
+            --ds-icon-stroke: #161920;
+            
+            --ds-panel-sub-bg: rgba(18, 43, 90, 0.03);
+            --ds-panel-sub-border: 1px solid rgba(0, 0, 0, 0.02);
+            --ds-item-bg: rgba(0, 0, 0, 0.01);
+            --ds-item-border: 1px solid rgba(0, 0, 0, 0.03);
+            
+            --ds-btn-action-bg: linear-gradient(90deg, rgba(0, 102, 255, 0.02) 0%, rgba(67, 100, 247, 0.02) 100%);
+            --ds-btn-action-border: 1px solid rgba(0, 91, 148, 0.3);
+            --ds-btn-action-text: #005B94;
+            
+            --ds-btn-hover-bg: linear-gradient(90deg, #0052D4 0%, #4364F7 100%);
+            --ds-btn-hover-glow: 0 4px 12px rgba(0, 82, 212, 0.25);
+            --ds-grid-opacity: 0.04;
+        }
+
+        /* ==========================================================================
+           2. 基础框架布局与非侵入式网格
+           ========================================================================== */
+        body {
+            margin: 0; padding: 0; background: var(--ds-bg-main); min-height: 100vh;
+            display: flex; flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative; overflow-x: hidden;
+        }
+
+        body::before {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background-image: linear-gradient(to right, currentColor 1px, transparent 1px), 
+                              linear-gradient(to bottom, currentColor 1px, transparent 1px);
+            background-size: 32px 32px; opacity: var(--ds-grid-opacity); color: var(--ds-text-main);
+            transition: opacity 0.4s; z-index: 1;
+        }
+
+        .dashboard-header {
+            width: 100%; padding: 20px 40px; box-sizing: border-box;
+            display: flex; justify-content: space-between; align-items: center; z-index: 10;
+        }
+
+        .dashboard-grid {
+            flex: 1; display: grid; grid-template-columns: 360px 1fr 380px; gap: 30px;
+            padding: 10px 40px 40px 40px; box-sizing: border-box; align-items: start; z-index: 5;
+        }
+
+        /* ==========================================================================
+           3. 组件系统（完美绑定圆角 Token）
+           ========================================================================== */
+        
+        /* 核心卡片容器 */
+        .cyber-card-base {
+            background: var(--ds-card-bg);
+            border: var(--ds-card-border);
+            box-shadow: var(--ds-card-drop-shadow), var(--ds-card-inner-shadow);
+            border-radius: var(--ds-radius-main); /* 动态解耦消费 */
+            padding: 24px; box-sizing: border-box; color: var(--ds-text-main);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            transition: background 0.4s, color 0.4s, border 0.4s, box-shadow 0.4s, transform 0.3s;
+        }
+        .cyber-card-base:hover { transform: translateY(-2px); }
+
+        /* 纯净线框图标 */
+        .svg-icon {
+            stroke: var(--ds-icon-stroke); fill: none; stroke-width: 1.5;
+            stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.4s;
+        }
+        .svg-icon.muted { opacity: 0.5; }
+
+        /* 全局切换按钮 */
+        .theme-toggle-btn {
+            background: var(--ds-card-bg); border: var(--ds-card-border); color: var(--ds-text-main);
+            padding: 10px 22px; border-radius: 30px; font-weight: 600; font-size: 13px; cursor: pointer;
+            box-shadow: var(--ds-card-drop-shadow); transition: all 0.3s;
+        }
+        .theme-toggle-btn:hover { box-shadow: var(--ds-card-active-glow); transform: translateY(-1px); }
+
+        .left-menu-column { display: flex; flex-direction: column; gap: 20px; }
+        .city-matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .matrix-item {
+            background: var(--ds-item-bg); border: var(--ds-item-border); 
+            border-radius: var(--ds-radius-sub); /* 嵌套子面板采用小一号圆角 */
+            padding: 16px; position: relative; cursor: pointer; transition: all 0.3s;
+        }
+        .matrix-item:hover {
+            background: var(--ds-card-bg);
+            border: var(--ds-card-border);
+            box-shadow: var(--ds-card-active-glow);
+            transform: translateY(-1px);
+        }
+        
+        .matrix-label { font-size: 10px; color: var(--ds-text-muted); font-weight: 700; letter-spacing: 0.5px; }
+        .matrix-name { font-size: 16px; font-weight: 600; margin-top: 6px; display: block;}
+        .status-lock-svg { position: absolute; top: 16px; right: 16px; width: 15px; height: 15px; }
+
+        .list-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--ds-text-muted); margin: 0 0 16px 0; }
+        .list-container { display: flex; flex-direction: column; gap: 8px; }
+        
+        .list-row-item {
+            display: flex; align-items: center; gap: 14px; padding: 12px; 
+            border-radius: var(--ds-radius-sub);
+            cursor: pointer; border: 1px solid transparent; transition: all 0.3s;
+        }
+        .list-row-item:hover { background: var(--ds-panel-sub-bg); }
+        
+        .list-row-item.is-active {
+            background: var(--ds-card-bg);
+            border: var(--ds-card-border);
+            box-shadow: var(--ds-card-active-glow);
+        }
+
+        .row-avatar-box {
+            width: 34px; height: 34px; background: var(--ds-panel-sub-bg); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .row-info { flex: 1; }
+        .row-tag { font-size: 8px; font-weight: 700; color: var(--ds-text-muted); display: block; }
+        .row-main-title { font-size: 13px; font-weight: 600; margin-top: 2px; }
+
+        .main-detail-card {
+            width: 380px;
+            box-shadow: var(--ds-card-active-glow), var(--ds-card-inner-shadow);
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        
+        .holo-orbit {
+            width: 60px; height: 60px; background: var(--ds-panel-sub-bg);
+            border: 1px dashed var(--ds-text-muted); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .holo-planet { width: 14px; height: 14px; background: var(--ds-text-main); border-radius: 50%; transition: background 0.4s;}
+        .close-icon-btn { background: none; border: none; cursor: pointer; padding: 4px; display: flex;}
+
+        .card-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--ds-text-muted); margin-bottom: 8px; }
+        .card-title { font-size: 26px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: -0.5px; }
+        .card-coords { font-size: 12px; color: var(--ds-text-muted); margin: 0 0 16px 0; }
+        .card-desc { font-size: 13px; line-height: 1.6; color: var(--ds-text-sub); margin: 0 0 24px 0; }
+
+        /* 核心业务按钮：采用 6px 工业微圆角 */
+        .action-btn-fly {
+            width: 100%;
+            background: var(--ds-btn-action-bg);
+            border: var(--ds-btn-action-border);
+            color: var(--ds-btn-action-text);
+            border-radius: var(--ds-radius-btn);
+            padding: 14px; font-weight: 600; font-size: 14px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .action-btn-fly:hover {
+            background: var(--ds-btn-hover-bg);
+            box-shadow: var(--ds-btn-hover-glow);
+            border-color: transparent;
+            color: #FFFFFF;
+            transform: scale(1.02);
+        }
+        .action-btn-fly:hover .svg-icon { stroke: #FFFFFF; }
+
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+        .meta-item { background: var(--ds-item-bg); border: var(--ds-item-border); padding: 12px; border-radius: var(--ds-radius-sub); }
+        .meta-label { display: block; font-size: 9px; color: var(--ds-text-muted); letter-spacing: 0.8px; margin-bottom: 4px; }
+        .meta-value { font-size: 13px; font-weight: 600; color: var(--ds-text-sub); }
+
+        .weather-sub-panel { background: var(--ds-panel-sub-bg); border: var(--ds-panel-sub-border); border-radius: var(--ds-radius-sub); padding: 16px; }
+        .weather-main { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--ds-panel-sub-border); padding-bottom: 12px; margin-bottom: 12px; }
+        .weather-left-flex { display: flex; align-items: center; gap: 10px; }
+        .weather-status { font-size: 13px; font-weight: 500; }
+        .weather-temp { font-size: 28px; font-weight: 300; }
+        .weather-details { display: flex; justify-content: space-between; font-size: 11px; color: var(--ds-text-muted); }
+
+        /* LOGO 艺术区 */
+        .nexbess-x-brand-area { display: flex; align-items: center; gap: 16px; cursor: pointer; color: var(--ds-text-main); }
+        .sd-x-svg { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .dynamic-x-path { opacity: 0.85; stroke-dasharray: 400; stroke-dashoffset: 0; stroke: currentColor; transition: transform 0.4s ease; }
+        .nexbess-x-brand-area:hover .sd-x-svg { transform: scale(1.08) rotate(1deg); }
+        .nexbess-x-brand-area:hover .dynamic-x-path { stroke: url(#pureVoidGlow); animation: sdXFlow 3.2s linear infinite; }
+        @keyframes sdXFlow { 0% { stroke-dashoffset: 400; } 100% { stroke-dashoffset: -400; } }
+        .sd-text-area { display: flex; align-items: baseline; letter-spacing: -0.5px; }
+        .sd-nex { font-size: 26px; font-weight: 200; }
+        .sd-bess { font-size: 26px; font-weight: 700; }
+        .sd-dot { font-size: 26px; font-weight: 800; color: #3A8BFF; margin-left: 1px; }
+    </style>
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <div class="nexbess-x-brand-area">
+            <svg class="sd-x-svg" width="76" height="44" viewBox="0 0 88 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="dynamic-x-path" 
+                      d="M16 6C24 6 36 20 44 25C52 30 64 44 72 44C80 44 84 36 84 25C84 14 80 6 72 6C64 6 52 20 44 25C36 30 24 44 16 44C8 44 4 36 4 25C4 14 8 6 16 6Z" 
+                      stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="pureVoidGlow" x1="4" y1="25" x2="84" y2="25" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#00E5FF"/>
+                        <stop offset="50%" stop-color="#FFFFFF"/>
+                        <stop offset="100%" stop-color="#3A8BFF"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <div class="sd-text-area">
+                <span class="sd-nex">NEX</span><span class="sd-bess">Bess</span><span class="sd-dot">.</span>
+            </div>
+        </div>
+        <button class="theme-toggle-btn" id="themeToggle">🌓 切换视觉模式</button>
+    </header>
+
+    <main class="dashboard-grid">
+        
+        <div class="left-menu-column">
+            <section class="cyber-card-base">
+                <div class="city-matrix-grid">
+                    <div class="matrix-item">
+                        <span class="matrix-label">CITY</span>
+                        <span class="matrix-name">London</span>
+                        <svg class="svg-icon status-lock-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                    <div class="matrix-item">
+                        <span class="matrix-label">CITY</span>
+                        <span class="matrix-name">Paris</span>
+                        <svg class="svg-icon status-lock-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                    <div class="matrix-item">
+                        <span class="matrix-label">CITY</span>
+                        <span class="matrix-name">Tokyo</span>
+                        <svg class="svg-icon status-lock-svg" style="stroke:#2ED573" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                    </div>
+                    <div class="matrix-item">
+                        <span class="matrix-label">CITY</span>
+                        <span class="matrix-name">Singapore</span>
+                        <svg class="svg-icon status-lock-svg" style="stroke:#2ED573" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cyber-card-base">
+                <h3 class="list-title">WORLD ICONS</h3>
+                <div class="list-container">
+                    <div class="list-row-item">
+                        <div class="row-avatar-box">
+                            <svg class="svg-icon" width="15" height="15" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="16"></line><line x1="15" y1="22" x2="15" y2="16"></line><line x1="9" y1="16" x2="15" y2="16"></line></svg>
+                        </div>
+                        <div class="row-info">
+                            <span class="row-tag">LANDMARK</span>
+                            <div class="row-main-title">Eiffel Tower</div>
+                        </div>
+                    </div>
+                    <div class="list-row-item is-active"> 
+                        <div class="row-avatar-box">
+                            <svg class="svg-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div class="row-info">
+                            <span class="row-tag">LANDMARK</span>
+                            <div class="row-main-title">Taj Mahal</div>
+                        </div>
+                    </div>
+                    <div class="list-row-item">
+                        <div class="row-avatar-box">
+                            <svg class="svg-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div class="row-info">
+                            <span class="row-tag">LANDMARK</span>
+                            <div class="row-main-title">Big Ben</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div style="flex: 1;"></div>
+
+        <section class="cyber-card-base main-detail-card">
+            <div class="card-header">
+                <div class="holo-orbit">
+                    <div class="holo-planet"></div>
+                </div>
+                <button class="close-icon-btn" aria-label="Close">
+                    <svg class="svg-icon muted" width="14" height="14" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+
+            <div class="card-badge">🏛️ LANDMARK</div>
+            <h2 class="card-title">Taj Mahal</h2>
+            <p class="card-coords">Agra, India · 27.1751° N, 78.0421° E</p>
+            
+            <p class="card-desc">
+                A white marble Mughal mausoleum built by Shah Jahan on the banks of the Yamuna.
+            </p>
+
+            <button class="action-btn-fly">
+                <svg class="svg-icon" width="15" height="15" viewBox="0 0 24 24" style="stroke: inherit;"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                Fly to view
+            </button>
+
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <span class="meta-label">FORM / BED</span>
+                    <span class="meta-value">1653</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">MATERIAL</span>
+                    <span class="meta-value">Makrana marble</span>
+                </div>
+            </div>
+
+            <div class="weather-sub-panel">
+                <div class="weather-main">
+                    <div class="weather-left-flex">
+                        <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                        <div>
+                            <span class="weather-label">CONDITIONS NOW</span>
+                            <span class="weather-status">Towering clouds</span>
+                        </div>
+                    </div>
+                    <div class="weather-temp">18°</div>
+                </div>
+                <div class="weather-details">
+                    <span>🌡 Feels 17°</span>
+                    <span>💨 16 km/h</span>
+                    <span>💧 74%</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const rootHtml = document.documentElement;
+
+        toggleBtn.addEventListener('click', () => {
+            rootHtml.classList.toggle('light-theme');
+        });
+    </script>
+</body>
+</html>
