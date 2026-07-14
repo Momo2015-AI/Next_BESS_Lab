@@ -43,10 +43,7 @@
               v-else
               class="lock-btn"
               :title="$t('design.lockDuration') || '自动计算'"
-              @click="
-                isDurationAuto = true
-                autoCalcDuration()
-              "
+              @click="isDurationAuto = true; autoCalcDuration()"
             >
               🔒
             </button>
