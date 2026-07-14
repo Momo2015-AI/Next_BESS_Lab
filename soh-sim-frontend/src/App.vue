@@ -175,25 +175,25 @@ function goToAdmin() {
   router.push('/admin')
 }
 
-const ROLE_LABELS = {
-  developer: '开发商',
-  solution_engineer: '方案工程师',
-  epc_contractor: 'EPC承包商',
-  financial_analyst: '财务分析师',
-  project_manager: '项目经理',
-  admin: '管理员'
-}
-
-function getRoleLabel(role) {
-  return ROLE_LABELS[role] || role || '用户'
-}
+	const ROLE_LABELS = {
+	  developer: 'Developer',
+	  solution_engineer: 'Solution Engineer',
+	  epc_contractor: 'EPC Contractor',
+	  financial_analyst: 'Financial Analyst',
+	  project_manager: 'Project Manager',
+	  admin: 'Admin'
+	}
+	
+	function getRoleLabel(role) {
+	  return ROLE_LABELS[role] || role || 'User'
+	}
 
 function handleLogout() {
   sessionStorage.removeItem('auth_token')
   sessionStorage.removeItem('user_info')
   authUser.value = null
   userMenuOpen.value = false
-  showToast('已退出登录', 'info')
+	  showToast('Logged out', 'info')
   if (router.currentRoute.value.path === '/auth') router.push('/')
 }
 

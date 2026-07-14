@@ -1,13 +1,13 @@
 <template>
   <div class="h-full overflow-y-auto p-4">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-bold text-teal-400">算法试验场</h2>
+	      <h2 class="text-lg font-bold text-teal-400">Algorithm Lab</h2>
       <button
         class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
         @click="showAddModal = true"
       >
-        <span>+</span>
-        添加算法模型
+	        <span>+</span>
+	        Add Model
       </button>
     </div>
 
@@ -30,10 +30,10 @@
 
     <div v-if="filteredAlgorithms.length === 0" class="text-center py-16 text-slate-500">
       <div class="text-4xl mb-3">&#9312;</div>
-      <div>暂无算法模型</div>
-      <button class="mt-4 text-teal-400 hover:text-teal-300 text-sm underline" @click="initializeBuiltin">
-        初始化内置算法
-      </button>
+	      <div>No algorithm models</div>
+	      <button class="mt-4 text-teal-400 hover:text-teal-300 text-sm underline" @click="initializeBuiltin">
+	        Initialize Built-in
+	      </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,7 +54,7 @@
                   v-if="alg.is_builtin"
                   class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded shrink-0"
                 >
-                  内置
+	                  Built-in
                 </span>
               </div>
               <span :class="['text-[10px] px-1.5 py-0.5 rounded', getCategoryBadgeClass(alg.category)]">
@@ -71,32 +71,32 @@
           </div>
 
           <p class="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-3">
-            {{ alg.description || '暂无描述' }}
+	            {{ alg.description || 'No description' }}
           </p>
 
           <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 mb-3 text-[11px]">
             <div>
-              <span class="text-slate-500">精度:</span>
+	              <span class="text-slate-500">Accuracy:</span>
               <span :class="getAccuracyClass(alg.accuracy_level)">
                 {{ alg.accuracy_desc || getAccuracyLabel(alg.accuracy_level) }}
               </span>
             </div>
             <div>
-              <span class="text-slate-500">类型:</span>
+	              <span class="text-slate-500">Type:</span>
               <span class="text-slate-300">{{ getModelTypeLabel(alg.model_type) }}</span>
             </div>
             <div v-if="alg.name_en && alg.name_en !== alg.name">
-              <span class="text-slate-500">英文:</span>
+	              <span class="text-slate-500">EN:</span>
               <span class="text-slate-300 text-[10px]">{{ alg.name_en }}</span>
             </div>
             <div v-if="alg.mathematical_form">
-              <span class="text-slate-500">形式:</span>
+	              <span class="text-slate-500">Form:</span>
               <span class="text-slate-300 font-mono text-[10px]">{{ alg.mathematical_form }}</span>
             </div>
           </div>
 
           <div class="border-t border-slate-800/50 pt-2.5">
-            <div class="text-[10px] text-slate-500 mb-1.5">参数 ({{ paramCount(alg.parameters) }}):</div>
+	            <div class="text-[10px] text-slate-500 mb-1.5">Parameters ({{ paramCount(alg.parameters) }}):</div>
             <div class="flex flex-wrap gap-1">
               <span
                 v-for="(param, key) in alg.parameters"
@@ -122,29 +122,29 @@
     </div>
 
     <div v-if="filteredAlgorithms.length > 0" class="text-center text-[10px] text-slate-600 mt-6 mb-4">
-      共 {{ filteredAlgorithms.length }} 个算法模型 | 双击切换分类查看
+	      Total {{ filteredAlgorithms.length }} models | Double-click to switch category
     </div>
 
     <!-- 添加算法模型弹窗 -->
     <div v-if="showAddModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center p-4 border-b border-slate-700">
-          <h3 class="font-bold text-teal-400">添加算法模型</h3>
+	          <h3 class="font-bold text-teal-400">Add Algorithm Model</h3>
           <button class="text-slate-500 hover:text-slate-300" @click="showAddModal = false">&#10005;</button>
         </div>
 
         <div class="p-4 space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="text-xs text-slate-400 block mb-1">模型名称 *</label>
+	              <label class="text-xs text-slate-400 block mb-1">Model Name *</label>
               <input
                 v-model="newAlg.name"
                 class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
-                placeholder="如: 自定义衰减模型"
+	                placeholder="e.g. Custom Degradation Model"
               />
             </div>
             <div>
-              <label class="text-xs text-slate-400 block mb-1">英文名称</label>
+	              <label class="text-xs text-slate-400 block mb-1">English Name</label>
               <input
                 v-model="newAlg.name_en"
                 class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
@@ -155,57 +155,57 @@
 
           <div class="grid grid-cols-3 gap-4">
             <div>
-              <label class="text-xs text-slate-400 block mb-1">模型类型</label>
+	              <label class="text-xs text-slate-400 block mb-1">Model Type</label>
               <select
                 v-model="newAlg.model_type"
                 class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
               >
-                <option value="custom">自定义 Custom</option>
-                <option value="double_exponential">双指数模型</option>
-                <option value="linear_log">线性-对数模型</option>
-                <option value="arrhenius">Arrhenius模型</option>
-                <option value="rainflow">雨流计数法</option>
-                <option value="semi_empirical">半经验模型</option>
-                <option value="lcos">LCOS模型</option>
-                <option value="irr_newton">IRR模型</option>
-                <option value="dscr">DSCR模型</option>
-                <option value="payback">回收期模型</option>
-                <option value="revenue_stack">多收入模型</option>
-                <option value="gross_discharge">粗放电量</option>
-                <option value="aux_consumption">自辅耗校核</option>
-                <option value="aug_aging">增容老化</option>
-                <option value="soh_curve_config">SOH曲线配置</option>
-                <option value="rte_curve_config">RTE曲线配置</option>
-                <option value="temp_factor">温度加速配置</option>
+	                <option value="custom">Custom</option>
+	                <option value="double_exponential">Double Exponential</option>
+	                <option value="linear_log">Linear-Log</option>
+	                <option value="arrhenius">Arrhenius</option>
+	                <option value="rainflow">Rainflow Counting</option>
+	                <option value="semi_empirical">Semi-Empirical</option>
+	                <option value="lcos">LCOS</option>
+	                <option value="irr_newton">IRR Newton</option>
+	                <option value="dscr">DSCR</option>
+	                <option value="payback">Payback</option>
+	                <option value="revenue_stack">Revenue Stack</option>
+	                <option value="gross_discharge">Gross Discharge</option>
+	                <option value="aux_consumption">Aux Consumption</option>
+	                <option value="aug_aging">Augmentation Aging</option>
+	                <option value="soh_curve_config">SOH Curve Config</option>
+	                <option value="rte_curve_config">RTE Curve Config</option>
+	                <option value="temp_factor">Temp Factor Config</option>
               </select>
             </div>
             <div>
-              <label class="text-xs text-slate-400 block mb-1">分类</label>
+	              <label class="text-xs text-slate-400 block mb-1">Category</label>
               <select
                 v-model="newAlg.category"
                 class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
               >
-                <option value="degradation">容量衰减</option>
-                <option value="financial">财务模型</option>
-                <option value="engineering">工程计算</option>
-                <option value="simulation">仿真配置</option>
+	                <option value="degradation">Degradation</option>
+	                <option value="financial">Financial</option>
+	                <option value="engineering">Engineering</option>
+	                <option value="simulation">Simulation Config</option>
               </select>
             </div>
             <div>
-              <label class="text-xs text-slate-400 block mb-1">精度等级</label>
+	              <label class="text-xs text-slate-400 block mb-1">Accuracy Level</label>
               <select
                 v-model="newAlg.accuracy_level"
                 class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
               >
-                <option value="high">高</option>
-                <option value="medium">中</option>
-                <option value="low">低</option>
+	                <option value="high">High</option>
+	                <option value="medium">Medium</option>
+	                <option value="low">Low</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label class="text-xs text-slate-400 block mb-1">数学形式</label>
+	            <label class="text-xs text-slate-400 block mb-1">Mathematical Form</label>
             <input
               v-model="newAlg.mathematical_form"
               class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none font-mono"
@@ -214,7 +214,7 @@
           </div>
 
           <div>
-            <label class="text-xs text-slate-400 block mb-1">公式表达式 (JavaScript)</label>
+	            <label class="text-xs text-slate-400 block mb-1">Formula Expression (JavaScript)</label>
             <textarea
               v-model="newAlg.formula_expression"
               rows="2"
@@ -224,7 +224,7 @@
           </div>
 
           <div>
-            <label class="text-xs text-slate-400 block mb-1">精度描述</label>
+	            <label class="text-xs text-slate-400 block mb-1">Accuracy Description</label>
             <input
               v-model="newAlg.accuracy_desc"
               class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
@@ -233,7 +233,7 @@
           </div>
 
           <div>
-            <label class="text-xs text-slate-400 block mb-1">适用场景</label>
+	            <label class="text-xs text-slate-400 block mb-1">Applicable Scenarios</label>
             <div class="flex flex-wrap gap-2">
               <button
                 v-for="scenario in availableScenarios"
@@ -253,66 +253,66 @@
 
           <div>
             <div class="flex justify-between items-center mb-2">
-              <label class="text-xs text-slate-400">参数定义</label>
-              <button class="text-teal-400 hover:text-teal-300 text-xs" @click="addParameter">+ 添加参数</button>
+	              <label class="text-xs text-slate-400">Parameter Definitions</label>
+	              <button class="text-teal-400 hover:text-teal-300 text-xs" @click="addParameter">+ Add Parameter</button>
             </div>
             <div v-if="Object.keys(newAlg.parameters).length > 0" class="space-y-2">
               <div v-for="(param, key) in newAlg.parameters" :key="key" class="flex gap-2 items-center">
                 <input
                   v-model="param.label"
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-28"
-                  placeholder="参数名"
+	                  placeholder="Name"
                 />
                 <input
                   v-model.number="param.default"
                   type="number"
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-20"
-                  placeholder="默认值"
+	                  placeholder="Default"
                 />
                 <input
                   v-model.number="param.min"
                   type="number"
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-16"
-                  placeholder="最小值"
+	                  placeholder="Min"
                 />
                 <input
                   v-model.number="param.max"
                   type="number"
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-16"
-                  placeholder="最大值"
+	                  placeholder="Max"
                 />
                 <input
                   v-model="param.unit"
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-16"
-                  placeholder="单位"
+	                  placeholder="Unit"
                 />
                 <button class="text-red-400 hover:text-red-300" @click="removeParameter(key)">&#10005;</button>
               </div>
             </div>
-            <div v-else class="text-slate-500 text-xs text-center py-4">-- 点击上方按钮添加参数 --</div>
+	            <div v-else class="text-slate-500 text-xs text-center py-4">-- Click above to add parameters --</div>
           </div>
 
           <div>
-            <label class="text-xs text-slate-400 block mb-1">描述（支持中文说明）</label>
+	            <label class="text-xs text-slate-400 block mb-1">Description (supports Chinese)</label>
             <textarea
               v-model="newAlg.description"
               rows="3"
               class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
-              placeholder="模型描述..."
+	              placeholder="Model description..."
             />
           </div>
         </div>
 
         <div class="flex justify-end gap-3 p-4 border-t border-slate-700">
-          <button class="text-slate-400 hover:text-slate-200 text-sm px-4 py-2 rounded" @click="showAddModal = false">
-            取消
-          </button>
-          <button
-            class="bg-teal-600 hover:bg-teal-700 text-white text-sm px-4 py-2 rounded transition-colors"
-            @click="createAlgorithm"
-          >
-            创建
-          </button>
+	          <button class="text-slate-400 hover:text-slate-200 text-sm px-4 py-2 rounded" @click="showAddModal = false">
+	            Cancel
+	          </button>
+	          <button
+	            class="bg-teal-600 hover:bg-teal-700 text-white text-sm px-4 py-2 rounded transition-colors"
+	            @click="createAlgorithm"
+	          >
+	            Create
+	          </button>
         </div>
       </div>
     </div>
