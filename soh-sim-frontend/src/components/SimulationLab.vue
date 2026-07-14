@@ -1641,32 +1641,26 @@ const exportResults = () => {
     ''
   ]
 
-  // 竖排报表：指标为行，年份为列
-  const years = simulationResults.tableData.map((r) => r.year)
-  const simTitle = [sep + ' ' + t('export.sohRteProjection') + ' ' + sep]
-  const headerLine = [t('export.colYear'), ...years].join(',')
-  const sohLine = [t('export.colSoh'), ...simulationResults.tableData.map((r) => r.soh.toFixed(2))].join(',')
-  const rteLine = [t('export.colRte'), ...simulationResults.tableData.map((r) => r.rte.toFixed(2))].join(',')
-  const availLine = [t('export.colAvail'), ...simulationResults.tableData.map((r) => r.netAvail.toFixed(1))].join(',')
-  const guaranteeLine = [
-    t('export.colGuarantee'),
-    ...simulationResults.tableData.map((r) => (r.meetsReq ? t('simLab.pass') : t('simLab.fail')))
-  ].join(',')
+  // 竖排报表：年份为行，指标为列
+  const csvRows = [
+    [t('export.colYear'), t('export.colSoh'), t('export.colRte'), t('export.colAvail'), t('export.colGuarantee')].join(
+      ','
+    ),
+    ...simulationResults.tableData.map((r) =>
+      [
+        r.year,
+        r.soh.toFixed(2),
+        r.rte.toFixed(2),
+        r.netAvail.toFixed(1),
+        r.meetsReq ? t('simLab.pass') : t('simLab.fail')
+      ].join(',')
+    )
+  ]
 
   // 免责声明
   const footer = ['', sep, t('export.disclaimer')]
 
-  const csvContent = [
-    ...header,
-    ...params,
-    ...simTitle,
-    headerLine,
-    sohLine,
-    rteLine,
-    availLine,
-    guaranteeLine,
-    ...footer
-  ].join('\n')
+  const csvContent = [...header, ...params, ...csvRows, ...footer].join('\n')
 
   // 添加 UTF-8 BOM，解决 Excel 打开中文乱码
   const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
