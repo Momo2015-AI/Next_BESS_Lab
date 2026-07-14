@@ -228,6 +228,12 @@ function createSohChart() {
   sohChart.setOption({
     title: { text: t('sohChart.sohCurve'), left: 'center', textStyle: { color: colors.titleText, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
+    legend: {
+      data: [t('sohChart.sohCurve')],
+      top: 0,
+      right: 10,
+      textStyle: { color: colors.acLine, fontSize: 10 }
+    },
     grid: { top: 35, right: 20, bottom: 30, left: 55 },
     xAxis: {
       type: 'category',
@@ -243,6 +249,7 @@ function createSohChart() {
     },
     series: [
       {
+        name: t('sohChart.sohCurve'),
         type: 'line',
         data: sohPercent,
         smooth: true,
@@ -288,6 +295,12 @@ function createRteChart() {
   rteChart.setOption({
     title: { text: t('sohChart.rteCurve'), left: 'center', textStyle: { color: colors.rteLine, fontSize: 12 } },
     tooltip: { trigger: 'axis' },
+    legend: {
+      data: [t('sohChart.rteCurve')],
+      top: 0,
+      right: 10,
+      textStyle: { color: colors.rteLine, fontSize: 10 }
+    },
     grid: { top: 35, right: 20, bottom: 30, left: 55 },
     xAxis: {
       type: 'category',
@@ -301,6 +314,7 @@ function createRteChart() {
     },
     series: [
       {
+        name: t('sohChart.rteCurve'),
         type: 'line',
         data: rtePercent,
         smooth: true,
