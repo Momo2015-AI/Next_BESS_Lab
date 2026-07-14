@@ -9,7 +9,7 @@
         v-for="tab in tabs"
         :key="tab.id"
         :class="{ active: activeModule === tab.id }"
-        @click="activeModule = tab.id"
+        @click="switchTab(tab.id)"
       >
         <AppIcon :name="tab.iconName" :size="18" class="tab-icon" />
         <span class="tab-label">{{ tab.label }}</span>
@@ -58,7 +58,13 @@ import EpcBidDocument from '../components/epc/EpcBidDocument.vue'
 
 const emit = defineEmits(['error'])
 
-const activeModule = ref('architecture')
+const activeModule = ref(sessionStorage.getItem('epcActiveModule') || 'architecture')
+
+// 持久化当前 tab，防止路由切换后重置
+function switchTab(tabId) {
+  activeModule.value = tabId
+  sessionStorage.setItem('epcActiveModule', tabId)
+}
 
 const tabs = [
   { id: 'architecture', label: '系统架构', priority: 'P0-3', iconName: 'home' },

@@ -185,8 +185,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
 import AppPage from '../components/AppPage.vue'
@@ -194,6 +194,7 @@ import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
 
 const router = useRouter()
+const route = useRoute()
 const { t } = useI18n()
 
 const toast = reactive({ show: false, message: '', type: 'info' })
@@ -207,6 +208,32 @@ const showToast = (message, type = 'info') => {
 }
 
 const submitting = ref(false)
+
+// 如果路由带 :id 参数，加载已有调研数据
+onMounted(async () => {
+  const surveyId = route.params.id
+  if (!surveyId) return
+  try {
+    const data = await api.get(`/api/survey/${surveyId}`)
+    if (data.success) {
+      const s = data.data
+      formData.projectName = s.project_name || ''
+      formData.contact = s.contact_person || ''
+      formData.phone = s.contact_phone || ''
+      formData.location = s.location || ''
+      formData.ratedEnergy = s.total_mwh || null
+      formData.ratedPower = s.total_mw || null
+      formData.dischargeHours = s.duration || null
+      formData.voltageLevel = s.grid_voltage || null
+      formData.cyclesPerDay = s.cycles_per_day || 1
+      formData.temperature = s.temp_avg || null
+      formData.remarks = s.remarks || ''
+      showToast(t('surveyForm.surveyLoaded'), 'success')
+    }
+  } catch (e) {
+    console.error('加载调研数据失败:', e)
+  }
+})
 
 function goHome() {
   router.push('/')

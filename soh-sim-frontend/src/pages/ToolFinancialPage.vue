@@ -42,10 +42,11 @@ const store = useBessStore()
 // 默认模式：项目数据带入
 const mode = ref('project')
 
-// 判断是否有项目数据（survey 完成即有）
+// 判断是否有项目数据（survey 完成或 systemParams 有数据即有）
 const hasProjectData = computed(() => {
+  const s = store.survey || {}
   const p = store.systemParams || {}
-  return !!(p.ratedEnergy || p.initContainerQty || p.totalPower)
+  return !!(s.ratedEnergy || s.totalPower || p.ratedEnergy || p.initContainerQty || p.pcsPower)
 })
 
 const projectName = computed(() => {

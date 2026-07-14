@@ -125,7 +125,13 @@ async function saveProject() {
       soh: store.degradation.soh,
       rte: store.degradation.rte,
       dod: store.degradation.dod,
-      augQty: store.degradation.augQty
+      augQty: store.degradation.augQty,
+      financial: store.financial.metrics,
+      capex: store.financial.capex,
+      opex: store.financial.opex,
+      financing: store.financial.financing,
+      tax: store.financial.tax,
+      projectId: store.project.id
     })
     saveMsg.value = '项目已保存'
   } catch (e) {

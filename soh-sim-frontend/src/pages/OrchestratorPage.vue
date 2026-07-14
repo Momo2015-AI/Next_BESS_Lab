@@ -20,6 +20,13 @@
         <span v-if="savingVersion" class="spinner"></span>
         {{ savingVersion ? $t('orchestrator.saving') : $t('orchestrator.saveAsVersion') }}
       </button>
+      <button
+        v-if="workflowResult"
+        class="btn btn-sim"
+        @click="goToSimulation"
+      >
+        🔬 {{ $t('orchestrator.goSimulation') }}
+      </button>
       <span v-if="saveResult" class="save-success">{{ saveResult }}</span>
     </div>
 
@@ -90,6 +97,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { get, post } from '../services/api.js'
 import { useBessStore } from '../stores/bess.js'
 import AppPage from '../components/AppPage.vue'
@@ -98,6 +106,7 @@ import DesignComparePanel from '../components/DesignComparePanel.vue'
 import AugmentationCompare from '../components/AugmentationCompare.vue'
 
 const store = useBessStore()
+const router = useRouter()
 
 const compareSolutions = ref([])
 const baseSolution = ref(null)
@@ -181,6 +190,10 @@ function onWorkflowComplete(data) {
   if (selectedProjectId.value) {
     saveResult.value = `已保存 ${data.pipeline_summary?.successful || 0} 个方案版本`
   }
+}
+
+function goToSimulation() {
+  router.push('/phase3')
 }
 
 async function saveAsVersion() {
@@ -316,6 +329,15 @@ async function runWhatIf() {
 
 .btn-save:hover:not(:disabled) {
   background: var(--color-accent-secondary);
+}
+
+.btn-sim {
+  background: var(--color-success);
+  color: var(--color-text-on-accent);
+}
+
+.btn-sim:hover:not(:disabled) {
+  opacity: 0.88;
 }
 
 .btn-accent {

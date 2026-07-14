@@ -178,55 +178,9 @@ function toggleCompare(id) {
 
 async function restoreVersion(versionId) {
   try {
-    const resp = await post(`/api/versions/${versionId}/restore`)
-    if (resp.success) {
-      // 恢复到 Pinia store
-      const data = resp.data
-      if (data.design) {
-        store.selectedProducts = {
-          cell: data.design.container?.cellModel || null,
-          container: data.design.container?.model || null,
-          pcs: data.design.pcs?.model || null
-        }
-        store.systemParams = {
-          ...store.systemParams,
-          ratedEnergy: data.design.container?.ratedEnergyMwh || store.systemParams.ratedEnergy,
-          initContainerQty: data.design.containerQty || store.systemParams.initContainerQty,
-          initPcsQty: data.design.pcsQty || store.systemParams.initPcsQty,
-          pcsPower: data.design.pcs?.ratedPowerMW || store.systemParams.pcsPower
-        }
-      }
-      if (data.simulation) {
-        store.results = {
-          initGross: data.simulation.initGross || [],
-          initAux: data.simulation.initAux || [],
-          initAcUsable: data.simulation.initAcUsable || [],
-          augGross: data.simulation.augGross || [],
-          augAux: data.simulation.augAux || [],
-          augAcUsable: data.simulation.augAcUsable || [],
-          augAccumQty: data.simulation.augAccumQty || [],
-          totalAcUsable: data.simulation.totalAcUsable || [],
-          meetsReq: data.simulation.meetsReq || []
-        }
-        store.degradation.soh = data.simulation.soh || []
-        store.degradation.rte = data.simulation.rte || []
-        store.degradation.dod = data.simulation.dod || []
-      }
-      if (data.financial?.metrics) {
-        const m = data.financial.metrics
-        store.financial.metrics = {
-          projectIrr: m.projectIrr || m.irr || 0,
-          equityIrr: m.equityIrr || 0,
-          npv: m.npv || 0,
-          lcos: m.lcos || m.lcoe || 0,
-          dscr: m.dscr || { min: 0, avg: 0 },
-          payback: m.payback || -1,
-          roi: m.roi || 0
-        }
-      }
-      // 跳转到一键方案页面
-      router.push('/orchestrator')
-    }
+    await store.loadVersion(versionId)
+    // 跳转到一键方案页面
+    router.push('/orchestrator')
   } catch (e) {
     console.error('版本回溯失败:', e)
   }

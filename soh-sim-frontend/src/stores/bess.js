@@ -19,6 +19,8 @@ export const useBessStore = defineStore('bess', {
       temperature: 25,
       duration: 2,
       cyclesPerDay: 1,
+      dod: 90,
+      cRate: 0.5,
       requiredEnergy: 240,
       ratedEnergy: 5,
       totalPower: 50,
@@ -701,5 +703,5 @@ export const useBessStore = defineStore('bess', {
       }
     }
   },
-  persist: { storage: sessionStorage }
+  persist: { storage: localStorage }
 })

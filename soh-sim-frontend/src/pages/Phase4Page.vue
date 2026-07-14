@@ -167,6 +167,18 @@
       </div>
       <div v-if="activeStep === 3">
         <FinancialDashboard />
+        <div class="calc-actions">
+          <button
+            class="calc-btn"
+            :disabled="store.calculating"
+            @click="runFinancialCalc"
+          >
+            <span v-if="store.calculating" class="spinner"></span>
+            {{ store.calculating ? $t('phase4.calculating') : $t('phase4.runFinancialCalc') }}
+          </button>
+          <p v-if="calcMsg" class="calc-msg">{{ calcMsg }}</p>
+          <p v-if="store.calculationError" class="calc-err">{{ store.calculationError }}</p>
+        </div>
       </div>
       <div v-if="activeStep === 4">
         <SensitivityAnalysis :params="store.systemParams" :financial="store.financial.metrics" @error="onError" />
@@ -197,6 +209,7 @@ import FinancialDashboard from '../components/FinancialDashboard.vue'
 
 const store = useBessStore()
 const activeStep = ref(0)
+const calcMsg = ref('')
 const steps = [
   { label: 'phase4.stepBoq' },
   { label: 'phase4.stepCapex' },
@@ -209,6 +222,33 @@ const totalCapex = computed(() => {
   const c = store.financial.capex
   return (c.equipment || 0) + (c.epc || 0) + (c.development || 0)
 })
+
+async function runFinancialCalc() {
+  calcMsg.value = ''
+  store.calculationError = null
+  try {
+    const surveyParams = {
+      ratedEnergy: store.survey.ratedEnergy || store.systemParams.ratedEnergy,
+      temperature: store.survey.temperature || 25,
+      cyclesPerDay: store.survey.cyclesPerDay || 1,
+      dod: store.survey.dod || 90,
+      cRate: store.survey.cRate || 0.5,
+      duration: store.survey.duration || store.systemParams.duration,
+      requiredEnergy: store.survey.requiredEnergy || 240
+    }
+    const designOutput = {
+      container: { ratedEnergyMwh: store.systemParams.ratedEnergy },
+      pcs: { ratedPowerMW: store.systemParams.pcsPower },
+      containerQty: store.systemParams.initContainerQty,
+      pcsQty: store.systemParams.initPcsQty,
+      duration: store.systemParams.duration
+    }
+    await store.runSimulationEngine(designOutput, surveyParams, { financialOnly: true })
+    calcMsg.value = '财务计算完成'
+  } catch (e) {
+    store.calculationError = e.message || '财务计算失败'
+  }
+}
 
 function onError(msg) {
   store.calculationError = msg
@@ -244,6 +284,54 @@ function onError(msg) {
   margin-top: 0.5rem;
   border-top: 1px solid var(--color-border);
   color: var(--color-accent);
+}
+.calc-actions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.calc-btn {
+  padding: 10px 24px;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+.calc-btn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+.calc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.calc-msg {
+  font-size: 13px;
+  color: var(--color-success);
+  margin: 0;
+}
+.calc-err {
+  font-size: 13px;
+  color: var(--color-danger);
+  margin: 0;
+}
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 .phase4-sticky-nav {
   display: flex;

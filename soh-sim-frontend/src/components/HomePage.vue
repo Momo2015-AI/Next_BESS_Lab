@@ -218,18 +218,18 @@ function gotoPhase(phase) {
 
 const sohDisplay = computed(() => {
   const v = store.degradation.soh?.[0]
-  return v != null ? (v * 100).toFixed(1) : '--'
+  return v != null ? v.toFixed(1) : '--'
 })
 const sohPercent = computed(() => {
   const v = store.degradation.soh?.[0]
-  return v != null ? v * 100 : 0
+  return v != null ? v : 0
 })
 const npvDisplay = computed(() => {
   const v = store.financial?.metrics?.npv
   return v != null ? v.toFixed(0) : '--'
 })
 const irrDisplay = computed(() => {
-  const v = store.financial?.metrics?.irr
+  const v = store.financial?.metrics?.projectIrr
   return v != null ? (v * 100).toFixed(1) : '--'
 })
 </script>

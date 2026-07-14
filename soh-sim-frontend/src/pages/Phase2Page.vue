@@ -82,6 +82,9 @@ function onSolutionConfirm(sol) {
   store.survey.ratedEnergy = sol.totalEnergyMwh || store.survey.ratedEnergy
   store.survey.totalPower = sol.totalPowerMw || sol.totalEnergyMwh / (sol.duration || 2)
   store.survey.duration = sol.duration || sol.totalEnergyMwh / (sol.totalPowerMw || 50)
+  store.survey.dod = sol.dod || store.survey.dod
+  store.survey.cRate = sol.cRate || store.survey.cRate
+  // systemParams 和 selectedProducts 已由 DesignResultPreview.confirmSolution() 写入
   // 标记 Phase2 完成
   store.phases.phase2 = { status: 'completed' }
   // 跳转到 Phase3 仿真

@@ -64,7 +64,9 @@ import AppPage from '../components/AppPage.vue'
 import SectionCard from '../components/SectionCard.vue'
 import AppIcon from '../components/AppIcon.vue'
 import { post } from '../services/api.js'
+import { useBessStore } from '../stores/bess.js'
 
+const store = useBessStore()
 const generating = ref(null)
 const downloadUrl = ref('')
 const errorMsg = ref('')
@@ -75,7 +77,7 @@ async function generateReport(type, url) {
   errorMsg.value = ''
 
   try {
-    const projectId = localStorage.getItem('current_project_id')
+    const projectId = store.project.id || localStorage.getItem('current_project_id')
     const { data } = await post(url, projectId ? { project_id: projectId } : {})
     if (data && data.url) {
       downloadUrl.value = data.url
