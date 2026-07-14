@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import api from '../services/api.js'
@@ -59,12 +59,12 @@ const selectedId = ref(null)
 const selectedTemplate = ref(null)
 const loading = ref(false)
 
-const strategyLabels = {
-  economic: t('designTemplate.strategyEconomic'),
-  balanced: t('designTemplate.strategyBalanced'),
-  flexible: t('designTemplate.strategyFlexible'),
-  manufacturer: t('designTemplate.strategyManufacturer')
-}
+	const strategyLabels = computed(() => ({
+	  economic: t('designTemplate.strategyEconomic'),
+	  balanced: t('designTemplate.strategyBalanced'),
+	  flexible: t('designTemplate.strategyFlexible'),
+	  manufacturer: t('designTemplate.strategyManufacturer')
+	}))
 
 function strategyLabel(key) {
   return strategyLabels[key] || key

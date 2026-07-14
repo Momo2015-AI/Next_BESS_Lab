@@ -141,12 +141,12 @@ const selectedSolution = computed(() => {
   return props.solutions[selectedIdx.value] || null
 })
 
-const strategyLabels = {
-  economic: t('designTemplate.strategyEconomic'),
-  balanced: t('designTemplate.strategyBalanced'),
-  flexible: t('designTemplate.strategyFlexible'),
-  manufacturer: t('designTemplate.strategyManufacturer')
-}
+	const strategyLabels = computed(() => ({
+	  economic: t('designTemplate.strategyEconomic'),
+	  balanced: t('designTemplate.strategyBalanced'),
+	  flexible: t('designTemplate.strategyFlexible'),
+	  manufacturer: t('designTemplate.strategyManufacturer')
+	}))
 
 function strategyLabel(key) {
   return strategyLabels[key] || key

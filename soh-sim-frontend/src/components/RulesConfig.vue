@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionCard from './SectionCard.vue'
 
@@ -149,83 +149,83 @@ const gridCodeRules = [
   }
 ]
 
-const batteryRules = [
-  {
-    key: 'maxContainersPerString',
-    labelKey: 'tools.rules.maxContainersPerString',
-    descKey: 'tools.rules.maxContainersPerStringDesc',
-    min: 1,
-    max: 50,
-    step: 1,
-    unit: t('tools.rules.units')
-  },
-  {
-    key: 'minSocOperating',
-    labelKey: 'tools.rules.minSocOperating',
-    descKey: 'tools.rules.minSocOperatingDesc',
-    min: 0,
-    max: 50,
-    step: 0.1,
-    unit: '%'
-  },
-  {
-    key: 'maxSocOperating',
-    labelKey: 'tools.rules.maxSocOperating',
-    descKey: 'tools.rules.maxSocOperatingDesc',
-    min: 50,
-    max: 100,
-    step: 0.1,
-    unit: '%'
-  },
-  {
-    key: 'maxDodDaily',
-    labelKey: 'tools.rules.maxDodDaily',
-    descKey: 'tools.rules.maxDodDailyDesc',
-    min: 10,
-    max: 100,
-    step: 0.1,
-    unit: '%'
-  }
-]
+	const batteryRules = computed(() => [
+	  {
+	    key: 'maxContainersPerString',
+	    labelKey: 'tools.rules.maxContainersPerString',
+	    descKey: 'tools.rules.maxContainersPerStringDesc',
+	    min: 1,
+	    max: 50,
+	    step: 1,
+	    unit: t('tools.rules.units')
+	  },
+	  {
+	    key: 'minSocOperating',
+	    labelKey: 'tools.rules.minSocOperating',
+	    descKey: 'tools.rules.minSocOperatingDesc',
+	    min: 0,
+	    max: 50,
+	    step: 0.1,
+	    unit: '%'
+	  },
+	  {
+	    key: 'maxSocOperating',
+	    labelKey: 'tools.rules.maxSocOperating',
+	    descKey: 'tools.rules.maxSocOperatingDesc',
+	    min: 50,
+	    max: 100,
+	    step: 0.1,
+	    unit: '%'
+	  },
+	  {
+	    key: 'maxDodDaily',
+	    labelKey: 'tools.rules.maxDodDaily',
+	    descKey: 'tools.rules.maxDodDailyDesc',
+	    min: 10,
+	    max: 100,
+	    step: 0.1,
+	    unit: '%'
+	  }
+	])
 
-const financialRules = [
-  {
-    key: 'minIrrThreshold',
-    labelKey: 'tools.rules.minIrrThreshold',
-    descKey: 'tools.rules.minIrrThresholdDesc',
-    min: 0,
-    max: 50,
-    step: 0.1,
-    unit: '%'
-  },
-  {
-    key: 'maxPaybackYears',
-    labelKey: 'tools.rules.maxPaybackYears',
-    descKey: 'tools.rules.maxPaybackYearsDesc',
-    min: 1,
-    max: 30,
-    step: 0.1,
-    unit: t('tools.rules.years')
-  },
-  {
-    key: 'discountRateDefault',
-    labelKey: 'tools.rules.discountRateDefault',
-    descKey: 'tools.rules.discountRateDefaultDesc',
-    min: 0,
-    max: 30,
-    step: 0.1,
-    unit: '%'
-  },
-  {
-    key: 'inflationRateDefault',
-    labelKey: 'tools.rules.inflationRateDefault',
-    descKey: 'tools.rules.inflationRateDefaultDesc',
-    min: 0,
-    max: 20,
-    step: 0.1,
-    unit: '%'
-  }
-]
+	const financialRules = computed(() => [
+	  {
+	    key: 'minIrrThreshold',
+	    labelKey: 'tools.rules.minIrrThreshold',
+	    descKey: 'tools.rules.minIrrThresholdDesc',
+	    min: 0,
+	    max: 50,
+	    step: 0.1,
+	    unit: '%'
+	  },
+	  {
+	    key: 'maxPaybackYears',
+	    labelKey: 'tools.rules.maxPaybackYears',
+	    descKey: 'tools.rules.maxPaybackYearsDesc',
+	    min: 1,
+	    max: 30,
+	    step: 0.1,
+	    unit: t('tools.rules.years')
+	  },
+	  {
+	    key: 'discountRateDefault',
+	    labelKey: 'tools.rules.discountRateDefault',
+	    descKey: 'tools.rules.discountRateDefaultDesc',
+	    min: 0,
+	    max: 30,
+	    step: 0.1,
+	    unit: '%'
+	  },
+	  {
+	    key: 'inflationRateDefault',
+	    labelKey: 'tools.rules.inflationRateDefault',
+	    descKey: 'tools.rules.inflationRateDefaultDesc',
+	    min: 0,
+	    max: 20,
+	    step: 0.1,
+	    unit: '%'
+	  }
+	])
 
 function resetDefaults() {
   Object.assign(form, defaults)
