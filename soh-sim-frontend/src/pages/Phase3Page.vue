@@ -102,7 +102,8 @@ function onApplySimulationConfig(payload) {
   const sohData = payload.sohCurve || payload.soh
   const rteData = payload.rteCurve || payload.rte
   if (sohData && Array.isArray(sohData)) {
-    store.degradation.soh = sohData
+    // SimulationLab 传出百分比(0-100)，统一转为 0-1 小数存储
+    store.degradation.soh = sohData[0] <= 1 ? sohData : sohData.map((v) => v / 100)
   }
   if (rteData && Array.isArray(rteData)) {
     store.degradation.rte = rteData

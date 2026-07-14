@@ -93,7 +93,7 @@ export const useBessStore = defineStore('bess', {
       source: 'manual' // 'manual' | 'hierarchy'
     },
     degradation: {
-      soh: create26Array(100),
+      soh: create26Array(1.0),
       rte: create26Array(97.03),
       dod: create26Array(100),
       augQty: create26Array(0)

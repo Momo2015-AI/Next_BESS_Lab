@@ -1640,12 +1640,16 @@ onMounted(() => {
   }
   // 从 store 恢复之前的仿真结果（防止切换 tab 后图表数据丢失）
   if (store.results.totalAcUsable?.length) {
-    simulationResults.sohCurve = [...store.degradation.soh]
+    // DataInjection/MatrixTable 存储 SOH 为 0-1 小数，统一转为百分比显示
+    const rawSoh = [...store.degradation.soh]
+    const needsPct = rawSoh.length > 0 && rawSoh[0] <= 1
+    const sohPct = needsPct ? rawSoh.map((v) => v * 100) : rawSoh
+    simulationResults.sohCurve = sohPct
     simulationResults.rteCurve = [...store.degradation.rte]
     simulationResults.netAvailCurve = [...store.results.totalAcUsable]
-    simulationResults.initSoh = store.degradation.soh[0] || 100
-    simulationResults.finalSoh = store.degradation.soh[store.degradation.soh.length - 1] || 0
-    simulationResults.tableData = store.degradation.soh.map((s, i) => ({
+    simulationResults.initSoh = sohPct[0] || 100
+    simulationResults.finalSoh = sohPct[sohPct.length - 1] || 0
+    simulationResults.tableData = sohPct.map((s, i) => ({
       year: i,
       soh: s,
       rte: store.degradation.rte[i] || 0,
