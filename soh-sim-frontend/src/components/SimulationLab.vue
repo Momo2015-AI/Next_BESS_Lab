@@ -1277,6 +1277,12 @@ const runSimulation = async () => {
     }, 300)
   })
 
+  // 持久化前端仿真结果到 store（防止切换 tab 后数据丢失）
+  store.degradation.soh = [...sohCurve]
+  store.degradation.rte = [...rteCurve]
+  store.results.totalAcUsable = [...netAvailCurve]
+  store.results.meetsReq = simulationResults.tableData.map(d => d.meetsReq)
+
   emit('applyConfig', {
     soh: simulationResults.sohCurve,
     rte: simulationResults.rteCurve,
@@ -1605,20 +1611,63 @@ const resetSimulation = () => {
 }
 
 const exportResults = () => {
-  const csvContent =
-    t('simLab.csvHeader') +
-    '\n' +
-    simulationResults.tableData
-      .map(
-        (row) =>
-          `${row.year},${row.soh.toFixed(2)},${row.rte.toFixed(2)},${row.netAvail.toFixed(1)},${row.meetsReq ? t('simLab.pass') : t('simLab.fail')}`
-      )
-      .join('\n')
+  const N = simulationResults.tableData.length
+  if (!N) return
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const eq = t('export.eqHeader')
+  const sep = t('export.separator')
+  const date = new Date().toISOString().slice(0, 10)
+  const projectName = surveyData.projectName || store.survey.projectName || t('simLab.csvUnnamed')
+
+  // 报告标题头
+  const header = [
+    eq,
+    '  ' + t('export.reportTitle'),
+    '  ' + t('export.projectName') + ': ' + projectName,
+    '  ' + t('export.generatedDate') + ': ' + date,
+    '  ' + t('export.version') + ': v1.0',
+    eq,
+    ''
+  ]
+
+  // 关键参数
+  const params = [
+    sep + ' ' + t('export.keyParams') + ' ' + sep,
+    t('export.ratedEnergy') + ',' + (store.systemParams.ratedEnergy || store.survey.ratedEnergy || 'N/A'),
+    t('export.totalPower') + ',' + (store.systemParams.pcsPower || store.survey.totalPower || 'N/A'),
+    t('export.duration') + ',' + (store.systemParams.duration || store.survey.duration || 'N/A'),
+    t('export.simYears') + ',' + N,
+    ''
+  ]
+
+  // 竖排报表：指标为行，年份为列
+  const years = simulationResults.tableData.map((r) => r.year)
+  const simTitle = [sep + ' ' + t('export.sohRteProjection') + ' ' + sep]
+  const headerLine = [t('simLab.colYear'), ...years].join(',')
+  const sohLine = [t('simLab.colSoh'), ...simulationResults.tableData.map((r) => r.soh.toFixed(2))].join(',')
+  const rteLine = [t('simLab.colRte'), ...simulationResults.tableData.map((r) => r.rte.toFixed(2))].join(',')
+  const availLine = [t('simLab.colAvail'), ...simulationResults.tableData.map((r) => r.netAvail.toFixed(1))].join(',')
+  const guaranteeLine = [t('simLab.colGuarantee'), ...simulationResults.tableData.map((r) => (r.meetsReq ? t('simLab.pass') : t('simLab.fail')))].join(',')
+
+  // 免责声明
+  const footer = ['', sep, t('export.disclaimer')]
+
+  const csvContent = [
+    ...header,
+    ...params,
+    ...simTitle,
+    headerLine,
+    sohLine,
+    rteLine,
+    availLine,
+    guaranteeLine,
+    ...footer
+  ].join('\n')
+
+  // 添加 UTF-8 BOM，解决 Excel 打开中文乱码
+  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   const name = surveyData.projectName || t('simLab.csvUnnamed')
-  const date = new Date().toISOString().slice(0, 10)
   link.href = URL.createObjectURL(blob)
   link.download = t('simLab.simExportFilename', { name, date })
   link.click()
@@ -1637,6 +1686,27 @@ onMounted(() => {
   const designReqEnergy = store.survey.requiredEnergy || store.systemParams.requiredEnergy
   if (designReqEnergy && (simParams.requiredEnergy === 240 || !simParams.requiredEnergy)) {
     simParams.requiredEnergy = designReqEnergy
+  }
+  // 补充同步缺失的字段：temperature, dod, cRate, duration, pcsQty
+  const designTemp = store.survey.temperature
+  if (designTemp && (surveyData.temperature === 25 || !surveyData.temperature)) {
+    surveyData.temperature = designTemp
+  }
+  const designDod = store.survey.dod
+  if (designDod && (surveyData.dod === 100 || !surveyData.dod)) {
+    surveyData.dod = designDod
+  }
+  const designCRate = store.survey.cRate
+  if (designCRate && (surveyData.cRate === 0.5 || !surveyData.cRate)) {
+    surveyData.cRate = designCRate
+  }
+  const designDuration = store.survey.duration || store.systemParams.duration
+  if (designDuration && (surveyData.duration === 2 || !surveyData.duration)) {
+    surveyData.duration = designDuration
+  }
+  const designPcsQty = store.systemParams.initPcsQty
+  if (designPcsQty && (surveyData.pcsQty === 2 || !surveyData.pcsQty)) {
+    surveyData.pcsQty = designPcsQty
   }
   // 从 store 恢复之前的仿真结果（防止切换 tab 后图表数据丢失）
   if (store.results.totalAcUsable?.length) {

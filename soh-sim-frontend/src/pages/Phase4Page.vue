@@ -197,15 +197,19 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useBessStore } from '../stores/bess.js'
 import SensitivityAnalysis from '../components/SensitivityAnalysis.vue'
 import BoqEditor from '../components/BoqEditor.vue'
 import FinancialDashboard from '../components/FinancialDashboard.vue'
 
 const store = useBessStore()
-const activeStep = ref(0)
+const activeStep = ref(store.phase4ActiveStep || 0)
 const calcMsg = ref('')
+
+watch(activeStep, (v) => {
+  store.phase4ActiveStep = v
+})
 const steps = [
   { label: 'phase4.stepBoq' },
   { label: 'phase4.stepCapex' },

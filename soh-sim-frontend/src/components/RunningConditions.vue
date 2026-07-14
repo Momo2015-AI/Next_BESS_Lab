@@ -856,10 +856,12 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useBessStore } from '../stores/bess.js'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 
 const { t } = useI18n()
+const store = useBessStore()
 const emit = defineEmits(['applyParams'])
 
 const {
@@ -1055,16 +1057,57 @@ function applyExtracted() {
 }
 
 function exportCSV() {
-  const rows = [['Key', 'Value']]
-  for (const [k, v] of Object.entries(form)) {
-    rows.push([k, v ?? ''])
+  const eq = t('export.eqHeader')
+  const sep = t('export.separator')
+  const date = new Date().toISOString().slice(0, 10)
+  const projectName = form.projectName || store.survey.projectName || 'Untitled'
+
+  // 按类别分组
+  const categories = {
+    general: ['projectName', 'projectType', 'location', 'totalMW', 'totalMWh', 'durationHours', 'cyclesPerDay', 'installationType', 'omYears', 'prRequirement', 'warrantyYears', 'scadaReq', 'sparePartsStrategy'],
+    battery: ['rteTarget', 'availabilityTarget', 'sohYear1', 'sohYear25', 'calendarLife', 'cycleLife', 'auxConsumption'],
+    pcs: ['dcVoltageRange', 'acVoltage', 'pfRange', 'thdiLimit'],
+    env: ['altitude', 'tempMax', 'tempMin', 'tempAvg', 'humidity', 'seismicZone', 'corrosionClass'],
+    grid: ['gridVoltage', 'gridFreq', 'scCapacity', 'neutralGrounding']
   }
+
+  const catLabels = {
+    general: t('export.catGeneral'),
+    battery: t('export.catBattery'),
+    pcs: t('export.catPCS'),
+    env: t('export.catEnv'),
+    grid: t('export.catGrid')
+  }
+
+  const rows = []
+
+  // 报告标题头
+  rows.push([eq])
+  rows.push(['  ' + t('export.conditionsTitle')])
+  rows.push(['  ' + t('export.projectName') + ': ' + projectName])
+  rows.push(['  ' + t('export.generatedDate') + ': ' + date])
+  rows.push([eq])
+  rows.push([])
+
+  for (const [cat, keys] of Object.entries(categories)) {
+    rows.push([sep + ' ' + catLabels[cat] + ' ' + sep])
+    rows.push(['Key', 'Value'])
+    for (const k of keys) {
+      rows.push([k, form[k] ?? ''])
+    }
+    rows.push([])
+  }
+
+  // 免责声明
+  rows.push([sep])
+  rows.push([t('export.disclaimer')])
+
   const csv = '\uFEFF' + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `BESS_Conditions_${form.projectName || 'Export'}.csv`
+  a.download = `BESS_Conditions_${projectName}_${date}.csv`
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)

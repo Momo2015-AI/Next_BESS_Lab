@@ -651,6 +651,7 @@ function resetForm() {
     thdi: null,
     remarks: ''
   })
+  clearDraft()
 }
 
 function closeSuccess() {

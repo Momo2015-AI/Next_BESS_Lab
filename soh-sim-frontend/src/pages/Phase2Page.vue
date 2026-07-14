@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useBessStore } from '../stores/bess.js'
@@ -45,7 +45,11 @@ const { t } = useI18n()
 const router = useRouter()
 const store = useBessStore()
 
-const activeStep = ref(0)
+const activeStep = ref(store.phase2ActiveStep || 0)
+
+watch(activeStep, (v) => {
+  store.phase2ActiveStep = v
+})
 
 const steps = computed(() => [{ label: t('phase2.step1') }, { label: t('phase2.step2') }, { label: t('phase2.step3') }])
 
@@ -84,6 +88,9 @@ function onSolutionConfirm(sol) {
   store.survey.duration = sol.duration || sol.totalEnergyMwh / (sol.totalPowerMw || 50)
   store.survey.dod = sol.dod || store.survey.dod
   store.survey.cRate = sol.cRate || store.survey.cRate
+  store.survey.temperature = sol.temperature || sol.degradationModel?.temperature || store.survey.temperature
+  store.survey.cyclesPerDay = sol.cyclesPerDay || store.survey.cyclesPerDay
+  store.survey.requiredEnergy = sol.requiredEnergy || store.survey.requiredEnergy
   // systemParams 和 selectedProducts 已由 DesignResultPreview.confirmSolution() 写入
   // 标记 Phase2 完成
   store.phases.phase2 = { status: 'completed' }

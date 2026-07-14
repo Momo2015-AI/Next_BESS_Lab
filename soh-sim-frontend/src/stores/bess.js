@@ -172,6 +172,9 @@ export const useBessStore = defineStore('bess', {
     },
     // Phase3 当前步骤持久化（解决切换 tab 后步骤重置问题）
     phase3ActiveStep: 0,
+    // Phase2/Phase4 当前步骤持久化
+    phase2ActiveStep: 0,
+    phase4ActiveStep: 0,
     environmental: {
       accelerate_temperature: true,
       accelerate_dust: false,
@@ -262,8 +265,12 @@ export const useBessStore = defineStore('bess', {
     async runSimulationEngine(designOutput, surveyParams, options = {}) {
       this.calculating = true
       this.calculationError = null
-      try {
-        // Step 1: 调用仿真引擎
+	      try {
+	        let sim = null
+	        let simResp = null
+
+	        // Step 1: 调用仿真引擎（financialOnly 模式下跳过）
+	        if (!options.financialOnly) {
         const simBody = {
           design_output: designOutput || {
             container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
@@ -297,12 +304,12 @@ export const useBessStore = defineStore('bess', {
           }
         }
 
-        const simResp = await post('/api/simulation/run', simBody)
+        simResp = await post('/api/simulation/run', simBody)
         if (!simResp.success || !simResp.data) {
           throw new Error(simResp.message || 'Simulation engine failed')
         }
 
-        const sim = simResp.data
+        sim = simResp.data
 
         // 写入退化结果
         this.degradation.soh = sim.soh || []
@@ -323,17 +330,26 @@ export const useBessStore = defineStore('bess', {
           meetsReq: sim.meetsReq || create26Array(false)
         }
 
-        if (sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
-        if (sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
+        if (sim && sim.efficiencyCurves) this.efficiencyCurves = sim.efficiencyCurves
+        if (sim && sim.efficiencyDetail) this.efficiencyDetail = sim.efficiencyDetail
+        } // end Step 1 (if !financialOnly)
 
         // Step 2: 调用财务引擎
         if (!options.skipFinancial) {
+          const simTotalAcUsable = options.financialOnly
+            ? this.results.totalAcUsable
+            : (sim && sim.totalAcUsable) || create26Array(0)
+          const simSoh = options.financialOnly ? this.degradation.soh : (sim && sim.soh) || []
+          const simRte = options.financialOnly ? this.degradation.rte : (sim && sim.rte) || []
+          const simMeetsReq = options.financialOnly
+            ? this.results.meetsReq
+            : (sim && sim.meetsReq) || []
           const finBody = {
             simulation_output: {
-              totalAcUsable: sim.totalAcUsable || create26Array(0),
-              soh: sim.soh || [],
-              rte: sim.rte || [],
-              meetsReq: sim.meetsReq || []
+              totalAcUsable: simTotalAcUsable,
+              soh: simSoh,
+              rte: simRte,
+              meetsReq: simMeetsReq
             },
             design_output: designOutput || {
               container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
@@ -374,7 +390,7 @@ export const useBessStore = defineStore('bess', {
           }
         }
 
-        return simResp.data
+        return sim || simResp?.data
       } catch (e) {
         this.calculationError = e.message
         throw e

@@ -118,10 +118,12 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useBessStore } from '../stores/bess.js'
 import AppIcon from './AppIcon.vue'
 import api from '../services/api.js'
 
 const { t } = useI18n()
+const store = useBessStore()
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -328,11 +330,30 @@ async function exportSimulationCSV(simulationId) {
 
 // 生成CSV内容
 function generateCSV(data) {
-  let csv = t('dataExport.csvHeaderTitle') + '\n\n'
+  const eq = t('export.eqHeader')
+  const sep = t('export.separator')
+  const date = new Date().toISOString().slice(0, 10)
+  const projectName = store.survey.projectName || data.name || 'Untitled'
+
+  // 报告标题头
+  let csv = eq + '\n'
+  csv += '  ' + t('export.reportTitle') + '\n'
+  csv += '  ' + t('export.projectName') + ': ' + projectName + '\n'
+  csv += '  ' + t('export.generatedDate') + ': ' + date + '\n'
+  csv += '  ' + t('export.version') + ': v1.0\n'
+  csv += eq + '\n\n'
+
+  // 关键参数摘要
+  csv += sep + ' ' + t('export.keyParams') + ' ' + sep + '\n'
+  csv += t('export.ratedEnergy') + ',' + (store.systemParams.ratedEnergy || 'N/A') + '\n'
+  csv += t('export.totalPower') + ',' + (store.systemParams.pcsPower || 'N/A') + '\n'
+  csv += t('export.duration') + ',' + (store.systemParams.duration || 'N/A') + '\n'
+  csv += t('export.strategy') + ',' + (store.designResults.strategy || 'N/A') + '\n'
+  csv += '\n'
 
   // 矩阵数据
   if (data.results) {
-    csv += t('dataExport.csvMatrix') + '\n'
+    csv += sep + ' ' + t('export.lifecycleMatrix') + ' ' + sep + '\n'
     csv += t('dataExport.csvMatrixHeader') + '\n'
 
     const r = data.results
@@ -345,11 +366,16 @@ function generateCSV(data) {
 
   // SOH数据
   if (data.soh && data.soh.length > 0) {
-    csv += '\n' + t('dataExport.csvSohRte') + '\n' + t('dataExport.csvSohRteHeader') + '\n'
+    csv += '\n' + sep + ' ' + t('export.sohRteData') + ' ' + sep + '\n'
+    csv += t('dataExport.csvSohRteHeader') + '\n'
     for (let i = 0; i < data.soh.length; i++) {
       csv += `${i},${(data.soh[i] * 100).toFixed(2)},${data.rte?.[i] ? (data.rte[i] * 100).toFixed(2) : ''}\n`
     }
   }
+
+  // 免责声明
+  csv += '\n' + sep + '\n'
+  csv += t('export.disclaimer') + '\n'
 
   return csv
 }

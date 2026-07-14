@@ -176,7 +176,7 @@
 
           <div class="mt-3 flex gap-2">
             <button class="text-xs px-3 py-1.5 rounded transition-colors bg-accent text-white" @click="exportBOM">
-              导出BOM
+              {{ $t('simLab.btnExport') }}
             </button>
           </div>
         </div>
@@ -283,7 +283,12 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useBessStore } from '../stores/bess.js'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+
+const { t } = useI18n()
+const store = useBessStore()
 
 const emit = defineEmits(['error'])
 
@@ -479,22 +484,36 @@ function generateBOM() {
 function exportBOM() {
   if (bomResult.value.length === 0) return
 
-  let csv = '储能电站BOM清单\n\n'
-  csv += '序号,设备名称,规格型号,单位,数量,备注\n'
+  const sep = t('export.separator')
+  const eq = t('export.eqHeader')
+  const date = new Date().toISOString().slice(0, 10)
+  const projectName = store.survey.projectName || 'Untitled'
+
+  let csv = eq + '\n'
+  csv += '  ' + t('export.bomTitle') + '\n'
+  csv += '  ' + t('export.projectName') + ': ' + projectName + '\n'
+  csv += '  ' + t('export.generatedDate') + ': ' + date + '\n'
+  csv += eq + '\n\n'
+
+  csv += sep + ' ' + t('export.bomTitle') + ' ' + sep + '\n'
+  csv += t('export.bomHeader') + '\n'
 
   bomResult.value.forEach((item) => {
     csv += `${item.seq},${item.name},${item.spec},${item.unit},${item.qty},"${item.note}"\n`
   })
 
+  csv += '\n' + sep + '\n'
+  csv += t('export.disclaimer') + '\n'
+
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' })
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement('a')
-  link.download = `BOM_${new Date().toISOString().slice(0, 10)}.csv`
+  link.download = `BOM_${projectName}_${date}.csv`
   link.href = url
   link.click()
   window.URL.revokeObjectURL(url)
 
-  showToast('BOM已导出')
+  showToast(t('export.bomExported'))
 }
 
 const { state: spareData } = useDraft('eng-spare-data', {
