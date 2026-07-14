@@ -13,20 +13,20 @@
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.chemistryType') }}</label>
-          <select v-model="sfForm.chemistry_type" class="form-field-select">
-            <option value="LFP">LFP (磷酸铁锂)</option>
-            <option value="NCM">NCM (三元)</option>
-            <option value="NCA">NCA</option>
-            <option value="LTO">LTO (钛酸锂)</option>
-          </select>
+	          <select v-model="sfForm.chemistry_type" class="form-field-select">
+	            <option value="LFP">LFP</option>
+	            <option value="NCM">NCM</option>
+	            <option value="NCA">NCA</option>
+	            <option value="LTO">LTO</option>
+	          </select>
         </div>
         <div>
           <label class="block text-xs mb-1 field-label">{{ $t('epcSafety.suppressionType') }}</label>
-          <select v-model="sfForm.suppression_type" class="form-field-select">
-            <option value="Novec1230">Novec 1230</option>
-            <option value="Aerosol">气溶胶</option>
-            <option value="Water-mist">细水雾</option>
-          </select>
+	          <select v-model="sfForm.suppression_type" class="form-field-select">
+	            <option value="Novec1230">Novec 1230</option>
+	            <option value="Aerosol">Aerosol</option>
+	            <option value="Water-mist">Water Mist</option>
+	          </select>
         </div>
       </div>
       <button :disabled="loading" class="btn-primary" @click="analyzeSafety">
@@ -37,19 +37,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="metric-card">
             <div class="metric-value">{{ sfResult.zone_count }}</div>
-            <div class="metric-label">防火分区数</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ sfResult.container_spacing_m }}m</div>
-            <div class="metric-label">集装箱间距</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ sfResult.thermal_runaway_temp_c }}°C</div>
-            <div class="metric-label">热失控温度</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ sfResult.propagation_time_min }}min</div>
-            <div class="metric-label">蔓延时间</div>
+	            <div class="metric-label">{{ $t('epcSafety.fireZones') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ sfResult.container_spacing_m }}m</div>
+	            <div class="metric-label">{{ $t('epcSafety.containerSpacing') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ sfResult.thermal_runaway_temp_c }}°C</div>
+	            <div class="metric-label">{{ $t('epcSafety.thermalRunawayTemp') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ sfResult.propagation_time_min }}min</div>
+	            <div class="metric-label">{{ $t('epcSafety.propagationTime') }}</div>
           </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">

@@ -117,27 +117,33 @@ async function generateBom() {
   }
 }
 
-async function saveProject() {
-  saveMsg.value = ''
-  try {
-    await api.post('/api/project/sync-params', {
-      params: store.systemParams,
-      soh: store.degradation.soh,
-      rte: store.degradation.rte,
-      dod: store.degradation.dod,
-      augQty: store.degradation.augQty,
-      financial: store.financial.metrics,
-      capex: store.financial.capex,
-      opex: store.financial.opex,
-      financing: store.financial.financing,
-      tax: store.financial.tax,
-      projectId: store.project.id
-    })
-    saveMsg.value = '项目已保存'
-  } catch (e) {
-    saveMsg.value = '保存失败: ' + e.message
-  }
-}
+	async function saveProject() {
+	  saveMsg.value = ''
+	  try {
+	    await api.post('/api/project/sync-params', {
+	      params: store.systemParams,
+	      soh: store.degradation.soh,
+	      rte: store.degradation.rte,
+	      dod: store.degradation.dod,
+	      augQty: store.degradation.augQty,
+	      financial: store.financial.metrics,
+	      capex: store.financial.capex,
+	      opex: store.financial.opex,
+	      financing: store.financial.financing,
+	      tax: store.financial.tax,
+	      projectId: store.project.id,
+	      designResults: store.designResults,
+	      selectedProducts: store.selectedProducts,
+	      results: store.results,
+	      revenue: store.financial.revenue,
+	      boq: store.boq,
+	      cashflowTable: store.financial.cashflowTable
+	    })
+	    saveMsg.value = '项目已保存'
+	  } catch (e) {
+	    saveMsg.value = '保存失败: ' + e.message
+	  }
+	}
 </script>
 
 <style scoped>

@@ -62,7 +62,6 @@ import {
   LegendComponent,
   VisualMapComponent
 } from 'echarts/components'
-import { useDraft } from '../composables/useDraft'
 import { useChartTheme } from '../composables/useChartTheme.js'
 echarts.use([
   CanvasRenderer,

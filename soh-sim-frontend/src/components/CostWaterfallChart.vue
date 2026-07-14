@@ -75,7 +75,6 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
-import { useDraft } from '../composables/useDraft'
 import { useChartTheme } from '../composables/useChartTheme.js'
 
 const { t } = useI18n()

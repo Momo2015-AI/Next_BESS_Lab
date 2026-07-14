@@ -500,54 +500,55 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useProducts } from '../composables/useProducts'
-import { useBessStore } from '../stores/bess.js'
-import api from '../services/api.js'
+	import { ref, watch, onMounted } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useProducts } from '../composables/useProducts'
+	import { useBessStore } from '../stores/bess.js'
+	import { useDraft } from '../composables/useDraft'
+	import api from '../services/api.js'
 
 const { t } = useI18n()
 const emit = defineEmits(['error'])
 const store = useBessStore()
 
-const { cells, loadAll } = useProducts()
+	const { cells, loadAll } = useProducts()
 
-const form = reactive({
-  project_name: '',
-  contact_person: '',
-  contact_phone: '',
-  contact_email: '',
-  location: '',
-  altitude: null,
-  total_mw: null,
-  total_mwh: null,
-  duration: null,
-  cycles_per_day: 1,
-  temp_max: null,
-  temp_min: null,
-  temp_avg: null,
-  humidity: null,
-  grid_voltage: null,
-  pcc_voltage: null,
-  pcc_short_circuit_mva: null,
-  grid_code: '',
-  sand_protection: '',
-  humidity_cycle: '',
-  grid_frequency: null,
-  cell_model: '',
-  rte_target: null,
-  soh_year1: null,
-  soh_year25: null,
-  calendar_life: null,
-  cycle_life: null,
-  availability_target: null,
-  aux_consumption: null,
-  response_time: null,
-  dc_voltage_range: '',
-  ac_voltage: null,
-  thdi: null,
-  remarks: ''
-})
+	const { state: form, clearDraft } = useDraft('survey-form', {
+	  project_name: '',
+	  contact_person: '',
+	  contact_phone: '',
+	  contact_email: '',
+	  location: '',
+	  altitude: null,
+	  total_mw: null,
+	  total_mwh: null,
+	  duration: null,
+	  cycles_per_day: 1,
+	  temp_max: null,
+	  temp_min: null,
+	  temp_avg: null,
+	  humidity: null,
+	  grid_voltage: null,
+	  pcc_voltage: null,
+	  pcc_short_circuit_mva: null,
+	  grid_code: '',
+	  sand_protection: '',
+	  humidity_cycle: '',
+	  grid_frequency: null,
+	  cell_model: '',
+	  rte_target: null,
+	  soh_year1: null,
+	  soh_year25: null,
+	  calendar_life: null,
+	  cycle_life: null,
+	  availability_target: null,
+	  aux_consumption: null,
+	  response_time: null,
+	  dc_voltage_range: '',
+	  ac_voltage: null,
+	  thdi: null,
+	  remarks: ''
+	})
 
 // 储能时长自动计算
 const isDurationAuto = ref(true)
@@ -599,8 +600,9 @@ async function submitForm() {
       if (form.location) store.survey.location = form.location
       if (form.project_name) store.survey.projectName = form.project_name
       if (form.grid_voltage) store.survey.gridVoltage = form.grid_voltage
-      if (form.altitude != null) store.survey.altitude = form.altitude
-      resetForm()
+	      if (form.altitude != null) store.survey.altitude = form.altitude
+	      clearDraft()
+	      resetForm()
     } else {
       emit('error', t('surveyForm.submitFailed') + ': ' + (result.error || t('common.other')), 'error')
     }

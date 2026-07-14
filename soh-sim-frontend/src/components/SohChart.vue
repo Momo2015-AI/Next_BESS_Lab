@@ -115,7 +115,6 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, ScatterChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent, LegendComponent, GraphicComponent } from 'echarts/components'
-import { useDraft } from '../composables/useDraft'
 const { t } = useI18n()
 echarts.use([
   CanvasRenderer,

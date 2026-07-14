@@ -145,10 +145,11 @@ export const useBessStore = defineStore('bess', {
       activeVersion: 'main',
       totalPrice: 0
     },
-    exports: {
-      reportGenerated: false,
-      bomGenerated: false
-    },
+	    exports: {
+	      reportGenerated: false,
+	      bomGenerated: false,
+	      reportDownloadUrl: ''
+	    },
     phases: {
       phase1: { status: 'pending' },
       phase2: { status: 'pending' },

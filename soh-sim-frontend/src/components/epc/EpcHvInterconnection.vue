@@ -37,19 +37,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="metric-card">
             <div class="metric-value">{{ hvResult.transformer_count }}</div>
-            <div class="metric-label">变压器数量</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ hvResult.transformer_capacity_mva }}MVA</div>
-            <div class="metric-label">变压器容量</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ hvResult.transformer_ratio }}</div>
-            <div class="metric-label">变比</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">{{ hvResult.mv_breaker_rating_ka }}kA</div>
-            <div class="metric-label">断路器额定值</div>
+	            <div class="metric-label">{{ $t('epcHv.transformerCount') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ hvResult.transformer_capacity_mva }}MVA</div>
+	            <div class="metric-label">{{ $t('epcHv.transformerCapacity') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ hvResult.transformer_ratio }}</div>
+	            <div class="metric-label">{{ $t('epcHv.ratio') }}</div>
+	          </div>
+	          <div class="metric-card">
+	            <div class="metric-value">{{ hvResult.mv_breaker_rating_ka }}kA</div>
+	            <div class="metric-label">{{ $t('epcHv.breakerRating') }}</div>
           </div>
         </div>
         <div v-if="hvResult.protection_scheme" class="info-box">

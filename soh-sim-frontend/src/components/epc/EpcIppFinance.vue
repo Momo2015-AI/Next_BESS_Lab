@@ -135,7 +135,7 @@
             <div class="metric-label">{{ $t('epcIpp.minDscr') }}</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value">{{ ippResult.payback_years }}年</div>
+	            <div class="metric-value">{{ ippResult.payback_years }}{{ $t('epcIpp.yearUnit') }}</div>
             <div class="metric-label">{{ $t('epcIpp.payback') }}</div>
           </div>
         </div>
