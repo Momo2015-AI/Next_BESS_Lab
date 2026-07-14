@@ -16,7 +16,8 @@
     "lint-staged": "lint-staged",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepare": "cd .. && husky"
   },
   "lint-staged": {
     "src/**/*.{vue,js,ts}": [
@@ -45,6 +46,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-vue": "^9.33.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",

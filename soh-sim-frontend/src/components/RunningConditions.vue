@@ -1083,7 +1083,15 @@ function exportCSV() {
       'scadaReq',
       'sparePartsStrategy'
     ],
-    battery: ['rteTarget', 'availabilityTarget', 'sohYear1', 'sohYear25', 'calendarLife', 'cycleLife', 'auxConsumption'],
+    battery: [
+      'rteTarget',
+      'availabilityTarget',
+      'sohYear1',
+      'sohYear25',
+      'calendarLife',
+      'cycleLife',
+      'auxConsumption'
+    ],
     pcs: ['dcVoltageRange', 'acVoltage', 'pfRange', 'thdiLimit'],
     env: ['altitude', 'tempMax', 'tempMin', 'tempAvg', 'humidity', 'seismicZone', 'corrosionClass'],
     grid: ['gridVoltage', 'gridFreq', 'scCapacity', 'neutralGrounding']

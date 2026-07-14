@@ -14,8 +14,31 @@
           <input v-model.number="form.ratedEnergy" type="number" step="1" min="1" />
         </div>
         <div class="dpc-field">
-          <label>{{ $t('designTemplate.fieldDuration') }} (h)</label>
-          <input v-model.number="form.duration" type="number" step="0.5" min="0.5" />
+          <label>
+            {{ $t('designTemplate.fieldDuration') }} (h)
+            <span v-if="isDurationAuto" class="auto-badge">{{ $t('design.auto') }}</span>
+          </label>
+          <div class="duration-input-row">
+            <input
+              v-model.number="form.duration"
+              type="number"
+              step="0.5"
+              min="0.5"
+              :class="{ 'auto-disabled': isDurationAuto }"
+              :disabled="isDurationAuto"
+            />
+            <button
+              v-if="isDurationAuto"
+              class="lock-btn"
+              :title="$t('design.unlockDuration')"
+              @click="isDurationAuto = false"
+            >
+              🔒
+            </button>
+            <button v-else class="lock-btn unlocked" :title="$t('design.lockDuration')" @click="unlockAndCalcDuration">
+              🔓
+            </button>
+          </div>
         </div>
       </div>
       <div class="dpc-row">
@@ -64,7 +87,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore } from '../stores/bess.js'
 import api from '../services/api.js'
@@ -99,6 +122,27 @@ onMounted(() => {
   if (s.dod != null) form.dod = Number(s.dod)
   if (store.systemParams?.strategy) form.strategy = store.systemParams.strategy
 })
+
+// 储能时长自动计算
+const isDurationAuto = ref(true)
+
+function autoCalcDuration() {
+  if (form.ratedEnergy > 0 && form.totalPower > 0) {
+    form.duration = +(form.ratedEnergy / form.totalPower).toFixed(2)
+  }
+}
+
+function unlockAndCalcDuration() {
+  isDurationAuto.value = true
+  autoCalcDuration()
+}
+
+watch(
+  () => [form.ratedEnergy, form.totalPower],
+  () => {
+    if (isDurationAuto.value) autoCalcDuration()
+  }
+)
 
 async function runDesign() {
   generating.value = true
@@ -244,5 +288,48 @@ async function runDesign() {
   color: var(--color-danger);
   border-radius: 6px;
   font-size: 0.8125rem;
+}
+
+.auto-badge {
+  font-size: 0.65rem;
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.duration-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.duration-input-row input {
+  flex: 1;
+}
+
+.duration-input-row input.auto-disabled {
+  opacity: 0.6;
+  background: var(--color-bg-muted, #f0f0f0);
+}
+
+.unlock-btn,
+.lock-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.unlock-btn:hover,
+.lock-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light, #e8f4fd);
 }
 </style>

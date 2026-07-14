@@ -1,0 +1,16 @@
+#!/bin/sh
+# Pre-commit hook: run lint-staged to auto-format staged files
+# This prevents tab indentation and other formatting issues from entering the repo
+
+# Only run if there are staged frontend files
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep "^soh-sim-frontend/src/" || true)
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+echo "Running lint-staged on staged frontend files..."
+cd soh-sim-frontend
+node node_modules/lint-staged/bin/lint-staged.js || {
+  echo "lint-staged found issues and auto-fixed them. Please re-stage with 'git add' and retry."
+  exit 1
+}
