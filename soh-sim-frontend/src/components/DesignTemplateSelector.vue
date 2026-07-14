@@ -59,12 +59,12 @@ const selectedId = ref(null)
 const selectedTemplate = ref(null)
 const loading = ref(false)
 
-	const strategyLabels = computed(() => ({
-	  economic: t('designTemplate.strategyEconomic'),
-	  balanced: t('designTemplate.strategyBalanced'),
-	  flexible: t('designTemplate.strategyFlexible'),
-	  manufacturer: t('designTemplate.strategyManufacturer')
-	}))
+const strategyLabels = computed(() => ({
+  economic: t('designTemplate.strategyEconomic'),
+  balanced: t('designTemplate.strategyBalanced'),
+  flexible: t('designTemplate.strategyFlexible'),
+  manufacturer: t('designTemplate.strategyManufacturer')
+}))
 
 function strategyLabel(key) {
   return strategyLabels[key] || key

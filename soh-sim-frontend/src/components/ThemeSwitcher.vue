@@ -71,14 +71,14 @@ const theme = ref(localStorage.getItem('app-theme') || 'light')
 const open = ref(false)
 const rootRef = ref(null)
 
-	const languages = computed(() => [
-	  { value: 'zh', label: t('common.langZH') },
-	  { value: 'en', label: t('common.langEN') },
-	  { value: 'ar', label: t('common.langAR') }
-	])
+const languages = computed(() => [
+  { value: 'zh', label: t('common.langZH') },
+  { value: 'en', label: t('common.langEN') },
+  { value: 'ar', label: t('common.langAR') }
+])
 
 const currentLangLabel = computed(() => {
-  const cur = languages.find((l) => l.value === locale.value)
+  const cur = languages.value.find((l) => l.value === locale.value)
   return cur ? cur.label : ''
 })
 
