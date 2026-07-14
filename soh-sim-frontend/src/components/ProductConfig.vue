@@ -631,6 +631,10 @@ async function loadLibraryData() {
 async function seedLibrary() {
   try {
     const response = await fetch('/api/products/seed', { method: 'POST' })
+    const contentType = response.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      throw new Error(t('productConfig.seedFailed'))
+    }
     const data = await response.json()
     if (data.success) {
       await loadLibraryData()
@@ -870,6 +874,10 @@ async function onSpecUpload(e) {
     const formData = new FormData()
     formData.append('file', file)
     const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
+    const contentType = resp.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      throw new Error(t('productConfig.extractFailed'))
+    }
     const data = await resp.json()
     if (data.extracted) {
       const ext = data.extracted

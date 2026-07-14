@@ -994,6 +994,10 @@ async function parseFile(file) {
     const formData = new FormData()
     formData.append('file', file)
     const resp = await fetch('/api/upload/extract', { method: 'POST', body: formData })
+    const contentType = resp.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      throw new Error(t('runningConditions.parseUnavailable'))
+    }
     const data = await resp.json()
     if (data.extracted) {
       uploadResult.value = { extracted: data.extracted, fieldsExtracted: Object.keys(data.extracted).length }

@@ -5,9 +5,10 @@
         v-for="(step, idx) in steps"
         :key="idx"
         :class="[
-          'flex items-center gap-1 px-3 py-1 rounded text-xs transition-all',
+          'flex items-center gap-1 px-3 py-1 rounded text-xs transition-all cursor-pointer hover:opacity-80',
           currentStep >= idx ? 'text-teal-400 step-active' : 'text-slate-500'
         ]"
+        @click="currentStep = idx"
       >
         <span
           class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
@@ -1485,11 +1486,11 @@ const renderChart = () => {
   chartInstance = echarts.init(chartContainer.value, themeObject.value)
 
   const years = Array.from({ length: simulationResults.sohCurve.length }, (_, i) => i)
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  const textColor = isDark ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)'
+  const textColor = themeObject.value.legendText
   const accentColor = themeObject.value.primary
   const secondaryColor = themeObject.value.cyan
   const warningColor = themeObject.value.warning
+  const axisColor = themeObject.value.axisLabel
 
   chartInstance.setOption({
     tooltip: { trigger: 'axis' },
@@ -1499,8 +1500,8 @@ const renderChart = () => {
       textStyle: { color: textColor, fontSize: 10 }
     },
     grid: { left: 40, right: 20, top: 30, bottom: 20 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: textColor, fontSize: 10 } },
-    yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: textColor, fontSize: 10 } },
+    xAxis: { type: 'category', data: years, axisLabel: { color: axisColor, fontSize: 10 } },
+    yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: axisColor, fontSize: 10 } },
     series: [
       {
         name: t('simLab.chartSoh'),
