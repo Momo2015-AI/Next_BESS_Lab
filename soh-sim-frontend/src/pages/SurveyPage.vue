@@ -192,6 +192,7 @@ import SectionCard from '../components/SectionCard.vue'
 import AppPage from '../components/AppPage.vue'
 import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
+import { useBessStore } from '../stores/bess.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -378,6 +379,18 @@ async function submitSurvey() {
     localStorage.setItem('surveys', JSON.stringify(surveys))
     localStorage.setItem('currentSurveyId', surveyData.id)
     localStorage.setItem('currentSurvey', JSON.stringify(surveyData))
+
+    // 同步到 Pinia store，确保 Phase2/3 能读取调研数据
+    const store = useBessStore()
+    store.survey.ratedEnergy = formData.ratedEnergy
+    store.survey.totalPower = formData.ratedPower || 50
+    store.survey.duration = formData.dischargeHours || 2
+    store.survey.temperature = formData.temperature || 25
+    store.survey.cyclesPerDay = formData.cyclesPerDay || 1
+    if (formData.location) store.survey.location = formData.location
+    if (formData.projectName) store.survey.projectName = formData.projectName
+    if (formData.voltageLevel) store.survey.gridVoltage = formData.voltageLevel
+
     showToast(apiSuccess ? t('surveyForm.surveySubmittedServer') : t('surveyForm.surveySubmittedLocal'), 'success')
     setTimeout(() => router.push('/'), 1500)
   } catch (error) {

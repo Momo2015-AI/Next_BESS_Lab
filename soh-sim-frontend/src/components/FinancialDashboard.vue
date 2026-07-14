@@ -37,6 +37,7 @@ import FinancialInputs from './FinancialInputs.vue'
 import StandaloneParams from './StandaloneParams.vue'
 import FinancialCharts from './FinancialCharts.vue'
 import FinancialTable from './FinancialTable.vue'
+import { useBessStore } from '../stores/bess.js'
 
 const props = defineProps({
   mode: { type: String, default: 'project' },
@@ -85,12 +86,10 @@ function handleProductConfig(config) {
     f.bopCostPerMWh = config.autoCalculatedCapexPerMWh * 0.2
   }
   if (config.ratedEnergy) {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.params.ratedEnergy = config.ratedEnergy
+    store.systemParams.ratedEnergy = config.ratedEnergy
   }
   if (config.acEfficiency) {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.params.acEfficiency = config.acEfficiency
+    store.systemParams.acEfficiency = config.acEfficiency
   }
   computeAllWithCache()
 }

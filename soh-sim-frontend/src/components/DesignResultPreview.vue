@@ -175,6 +175,8 @@ function confirmSolution() {
     initContainerQty: sol.containerQty,
     initPcsQty: sol.pcsQty,
     ratedEnergy: sol.totalEnergyMwh,
+    pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMw || store.systemParams.pcsPower,
+    duration: sol.duration || store.systemParams.duration,
     strategy: sol.strategy_type || props.strategy
   }
 
