@@ -161,6 +161,19 @@ const store = useBessStore()
 
 const { cellMfrs, loadAll } = useProducts()
 
+const emit = defineEmits(['back', 'result'])
+
+const form = reactive({
+  totalPower: DEFAULT_SURVEY.totalPower,
+  ratedEnergy: DEFAULT_SURVEY.ratedEnergy,
+  duration: DEFAULT_SURVEY.duration,
+  temperature: DEFAULT_SURVEY.temperature,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
+  dod: DEFAULT_DOD,
+  strategy: 'balanced',
+  manufacturer: ''
+})
+
 const mfrOptions = computed(() => cellMfrs.value)
 
 const showMfrDropdown = ref(false)
@@ -178,19 +191,6 @@ function selectMfr(mfr) {
   form.manufacturer = mfr
   showMfrDropdown.value = false
 }
-
-const emit = defineEmits(['back', 'result'])
-
-const form = reactive({
-  totalPower: DEFAULT_SURVEY.totalPower,
-  ratedEnergy: DEFAULT_SURVEY.ratedEnergy,
-  duration: DEFAULT_SURVEY.duration,
-  temperature: DEFAULT_SURVEY.temperature,
-  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
-  dod: DEFAULT_DOD,
-  strategy: 'balanced',
-  manufacturer: ''
-})
 
 const generating = ref(false)
 const error = ref('')
