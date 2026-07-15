@@ -72,7 +72,7 @@
                 {{ item.project_name }}
               </p>
               <p class="text-[10px] text-muted">
-                {{ item.location }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh
+                {{ item.country || item.city || item.location || '' }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh
               </p>
             </div>
             <span class="text-[10px] px-2 py-1 rounded bg-accent">{{ $t('simLab.btnSelect') }}</span>
@@ -155,12 +155,16 @@
           </select>
         </div>
         <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelLocation') }}</label>
-          <input
-            v-model="surveyData.location"
-            type="text"
-            class="w-full rounded px-2 py-1 text-xs card-input text-accent"
-          />
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCountry') }}</label>
+          <input v-model="surveyData.country" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
+        </div>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCity') }}</label>
+          <input v-model="surveyData.city" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
+        </div>
+        <div class="rounded p-3 card-panel-bordered">
+          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSite') }}</label>
+          <input v-model="surveyData.site" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
         </div>
       </div>
 
@@ -902,7 +906,10 @@ const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-su
   dod: 100,
   cRate: 0.5,
   batteryType: 'LFP',
-  location: ''
+  location: '',
+  country: '',
+  city: '',
+  site: ''
 })
 
 const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-params', {
@@ -1091,7 +1098,12 @@ const mapSurveyData = (data) => {
   surveyData.dod = data.dod || 100
   surveyData.cRate = data.c_rate || 0.5
   surveyData.batteryType = data.battery_type || 'LFP'
-  surveyData.location = data.location || ''
+  surveyData.country = data.country || ''
+  surveyData.city = data.city || ''
+  surveyData.site = data.site || ''
+  if (!surveyData.country && !surveyData.city && !surveyData.site && data.location) {
+    surveyData.site = data.location
+  }
 
   simParams.requiredEnergy = data.total_mwh || 240
   simParams.duration = data.duration || 2

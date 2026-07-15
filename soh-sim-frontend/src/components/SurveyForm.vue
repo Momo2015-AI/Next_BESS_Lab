@@ -19,8 +19,24 @@
             <input v-model="form.project_name" class="form-field-input" :placeholder="$t('surveyForm.projectNamePh')" />
           </div>
           <div>
-            <label class="label-text">{{ $t('surveyForm.location') }}</label>
-            <input v-model="form.location" class="form-field-input" :placeholder="$t('surveyForm.locationPh')" />
+            <label class="label-text">{{ $t('surveyForm.country') }}</label>
+            <input v-model="form.country" class="form-field-input" :placeholder="$t('surveyForm.countryPh')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('surveyForm.city') }}</label>
+            <input v-model="form.city" class="form-field-input" :placeholder="$t('surveyForm.cityPh')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('surveyForm.site') }}</label>
+            <input v-model="form.site" class="form-field-input" :placeholder="$t('surveyForm.sitePh')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('surveyForm.lat') }}</label>
+            <input v-model.number="form.lat" type="number" step="0.0001" class="form-field-input" :placeholder="$t('surveyForm.latPh')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('surveyForm.lng') }}</label>
+            <input v-model.number="form.lng" type="number" step="0.0001" class="form-field-input" :placeholder="$t('surveyForm.lngPh')" />
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.contactPerson') }}</label>
@@ -514,7 +530,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useBessStore } from '../stores/bess.js'
@@ -532,7 +548,11 @@ const { state: form, clearDraft } = useDraft('survey-form', {
   contact_person: '',
   contact_phone: '',
   contact_email: '',
-  location: '',
+  country: '',
+  city: '',
+  site: '',
+  lat: null,
+  lng: null,
   altitude: null,
   total_mw: null,
   total_mwh: null,
@@ -562,6 +582,12 @@ const { state: form, clearDraft } = useDraft('survey-form', {
   ac_voltage: null,
   thdi: null,
   remarks: ''
+})
+
+// 项目地点汇总 computed（兼容后端 API）
+const formLocation = computed(() => {
+  const parts = [form.country, form.city, form.site].filter(Boolean)
+  return parts.join(', ')
 })
 
 // 储能时长自动计算
@@ -629,6 +655,11 @@ async function submitForm() {
         store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
       }
       if (form.location) store.survey.location = form.location
+      if (form.country) store.survey.country = form.country
+      if (form.city) store.survey.city = form.city
+      if (form.site) store.survey.site = form.site
+      if (form.lat != null) store.survey.lat = form.lat
+      if (form.lng != null) store.survey.lng = form.lng
       if (form.project_name) store.survey.projectName = form.project_name
       if (form.grid_voltage) store.survey.gridVoltage = form.grid_voltage
       if (form.altitude != null) store.survey.altitude = form.altitude
@@ -652,6 +683,11 @@ function resetForm() {
     contact_phone: '',
     contact_email: '',
     location: '',
+    country: '',
+    city: '',
+    site: '',
+    lat: null,
+    lng: null,
     altitude: null,
     total_mw: null,
     total_mwh: null,
@@ -692,7 +728,9 @@ function closeSuccess() {
 function fillTestData() {
   const testProjectName = t('surveyForm.testData.projectName')
   const testContactPerson = t('surveyForm.testData.contactPerson')
-  const testLocation = t('surveyForm.testData.location')
+  const testCountry = t('surveyForm.testData.country')
+  const testCity = t('surveyForm.testData.city')
+  const testSite = t('surveyForm.testData.site')
   const testRemarks = t('surveyForm.testData.remarks')
 
   Object.assign(form, {
@@ -700,7 +738,11 @@ function fillTestData() {
     contact_person: testContactPerson,
     contact_phone: '+86 138-0000-1234',
     contact_email: 'zhangwei@energypro.com',
-    location: testLocation,
+    country: testCountry,
+    city: testCity,
+    site: testSite,
+    lat: 11.55,
+    lng: 104.92,
     altitude: 15,
     total_mw: 200,
     total_mwh: 400,

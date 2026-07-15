@@ -50,10 +50,36 @@
           :placeholder="$t('sidebar.toolSurveyView.projectName')"
         />
         <FormField
-          v-model="formData.location"
-          :label="$t('sidebar.toolSurveyView.projectLocation')"
+          v-model="formData.country"
+          :label="$t('sidebar.toolSurveyView.country')"
           type="text"
-          :placeholder="$t('sidebar.toolSurveyView.projectLocation')"
+          :placeholder="$t('sidebar.toolSurveyView.country')"
+        />
+        <FormField
+          v-model="formData.city"
+          :label="$t('sidebar.toolSurveyView.city')"
+          type="text"
+          :placeholder="$t('sidebar.toolSurveyView.city')"
+        />
+        <FormField
+          v-model="formData.site"
+          :label="$t('sidebar.toolSurveyView.site')"
+          type="text"
+          :placeholder="$t('sidebar.toolSurveyView.site')"
+        />
+        <FormField
+          v-model.number="formData.lat"
+          :label="$t('sidebar.toolSurveyView.lat')"
+          type="number"
+          step="0.0001"
+          :placeholder="$t('sidebar.toolSurveyView.lat')"
+        />
+        <FormField
+          v-model.number="formData.lng"
+          :label="$t('sidebar.toolSurveyView.lng')"
+          type="number"
+          step="0.0001"
+          :placeholder="$t('sidebar.toolSurveyView.lng')"
         />
         <FormField
           v-model.number="formData.ratedEnergy"
@@ -248,7 +274,7 @@ import SectionCard from '../components/SectionCard.vue'
 import FormField from '../components/FormField.vue'
 import AppPage from '../components/AppPage.vue'
 import api from '../services/api.js'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
 
 const router = useRouter()
 const emit = defineEmits(['error'])
@@ -264,7 +290,11 @@ const isEnergyQtyLinked = ref(false)
 
 const formData = reactive({
   projectName: '',
-  location: '',
+  country: '',
+  city: '',
+  site: '',
+  lat: null,
+  lng: null,
   ratedEnergy: 5,
   containerQty: 1,
   pcsQty: 1,
@@ -273,6 +303,11 @@ const formData = reactive({
   dod: 90,
   cRate: 0.5,
   batteryType: 'LFP'
+})
+
+const formLocation = computed(() => {
+  const parts = [formData.country, formData.city, formData.site].filter(Boolean)
+  return parts.join(', ')
 })
 
 const simParams = reactive({
@@ -391,7 +426,14 @@ function mapSurveyData(data) {
   formData.dod = data.dod || 100
   formData.cRate = data.c_rate || 0.5
   formData.batteryType = data.battery_type || 'LFP'
-  formData.location = data.location || ''
+  formData.country = data.country || ''
+  formData.city = data.city || ''
+  formData.site = data.site || ''
+  formData.lat = data.lat || null
+  formData.lng = data.lng || null
+  if (!formData.country && !formData.city && !formData.site && data.location) {
+    formData.site = data.location
+  }
 }
 
 async function saveSurvey() {
@@ -399,7 +441,12 @@ async function saveSurvey() {
   try {
     const payload = {
       project_name: formData.projectName,
-      location: formData.location,
+      location: formLocation.value,
+      country: formData.country,
+      city: formData.city,
+      site: formData.site,
+      lat: formData.lat,
+      lng: formData.lng,
       total_mwh: formData.ratedEnergy,
       container_qty: formData.containerQty,
       pcs_qty: formData.pcsQty,
@@ -427,7 +474,12 @@ async function saveSurvey() {
       store.survey.cyclesPerDay = formData.cyclesPerDay
       store.survey.dod = formData.dod
       store.survey.cRate = formData.cRate
-      if (formData.location) store.survey.location = formData.location
+      if (formLocation.value) store.survey.location = formLocation.value
+      if (formData.country) store.survey.country = formData.country
+      if (formData.city) store.survey.city = formData.city
+      if (formData.site) store.survey.site = formData.site
+      if (formData.lat != null) store.survey.lat = formData.lat
+      if (formData.lng != null) store.survey.lng = formData.lng
       if (formData.projectName) store.survey.projectName = formData.projectName
     } else {
       emit('error', result.error || t('tools.saveFailed'), 'error')
@@ -442,7 +494,11 @@ async function saveSurvey() {
 function resetForm() {
   Object.assign(formData, {
     projectName: '',
-    location: '',
+    country: '',
+    city: '',
+    site: '',
+    lat: null,
+    lng: null,
     ratedEnergy: 5,
     containerQty: 1,
     pcsQty: 1,

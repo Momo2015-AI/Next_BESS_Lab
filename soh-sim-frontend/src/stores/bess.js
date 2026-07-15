@@ -2,6 +2,10 @@ import { defineStore } from 'pinia'
 import { get, post, put } from '../services/api.js'
 import { NUM_YEARS } from '../constants.js'
 
+// 全系统立项 DoD（放电深度）默认百分比。所有模块应从 store.survey.dod 取值，
+// 仅在无 survey 数据时回退到本常量，确保"改一处即全局联动"。
+export const DEFAULT_DOD = 90
+
 function create26Array(defaultVal = 0) {
   return Array.from({ length: NUM_YEARS }, () => defaultVal)
 }
@@ -16,10 +20,15 @@ export const useBessStore = defineStore('bess', {
     survey: {
       projectName: '',
       location: '',
+      country: '',
+      city: '',
+      site: '',
+      lat: null,
+      lng: null,
       temperature: 25,
       duration: 2,
       cyclesPerDay: 1,
-      dod: 90,
+      dod: DEFAULT_DOD,
       cRate: 0.5,
       requiredEnergy: 240,
       ratedEnergy: 5,
@@ -283,7 +292,7 @@ export const useBessStore = defineStore('bess', {
               ratedEnergy: this.survey.ratedEnergy,
               temperature: this.survey.temperature,
               cyclesPerDay: this.survey.cyclesPerDay,
-              dod: 90,
+              dod: DEFAULT_DOD,
               requiredEnergy: this.survey.requiredEnergy,
               cRate: this.systemParams.cRate || 0.5,
               auxPowerMode: this.systemParams.auxPowerMode,
@@ -358,6 +367,11 @@ export const useBessStore = defineStore('bess', {
             },
             survey_params: surveyParams || {
               location: this.survey.location,
+              country: this.survey.country,
+              city: this.survey.city,
+              site: this.survey.site,
+              lat: this.survey.lat,
+              lng: this.survey.lng,
               ratedEnergy: this.survey.ratedEnergy,
               totalPower: this.survey.totalPower
             },
@@ -491,9 +505,14 @@ export const useBessStore = defineStore('bess', {
             duration: this.survey.duration,
             temperature: this.survey.temperature,
             cyclesPerDay: this.survey.cyclesPerDay,
-            dod: 90,
+            dod: DEFAULT_DOD,
             requiredEnergy: this.survey.requiredEnergy,
-            location: this.survey.location
+            location: this.survey.location,
+            country: this.survey.country,
+            city: this.survey.city,
+            site: this.survey.site,
+            lat: this.survey.lat,
+            lng: this.survey.lng
           },
           strategy,
           target_metric: targetMetric
@@ -632,9 +651,14 @@ export const useBessStore = defineStore('bess', {
             duration: this.survey.duration,
             temperature: this.survey.temperature,
             cyclesPerDay: this.survey.cyclesPerDay,
-            dod: 90,
+            dod: DEFAULT_DOD,
             requiredEnergy: this.survey.requiredEnergy,
-            location: this.survey.location
+            location: this.survey.location,
+            country: this.survey.country,
+            city: this.survey.city,
+            site: this.survey.site,
+            lat: this.survey.lat,
+            lng: this.survey.lng
           },
           strategy: strategy || 'economic',
           target_metric: targetMetric || 'lcos',

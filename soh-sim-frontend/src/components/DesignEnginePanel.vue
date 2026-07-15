@@ -95,13 +95,24 @@
           </div>
         </div>
         <div class="form-group">
-          <label>{{ $t('design.location') }}</label>
-          <select v-model="form.location" class="form-input">
-            <option value="china">{{ $t('design.locationChina') }}</option>
-            <option value="europe">{{ $t('design.locationEurope') }}</option>
-            <option value="middle_east">{{ $t('design.locationMiddleEast') }}</option>
-            <option value="other">{{ $t('design.locationOther') }}</option>
-          </select>
+          <label>{{ $t('design.country') }}</label>
+          <input v-model="form.country" type="text" class="form-input" :placeholder="$t('design.country')" />
+        </div>
+        <div class="form-group">
+          <label>{{ $t('design.city') }}</label>
+          <input v-model="form.city" type="text" class="form-input" :placeholder="$t('design.city')" />
+        </div>
+        <div class="form-group">
+          <label>{{ $t('design.site') }}</label>
+          <input v-model="form.site" type="text" class="form-input" :placeholder="$t('design.site')" />
+        </div>
+        <div class="form-group">
+          <label>{{ $t('design.lat') }}</label>
+          <input v-model.number="form.lat" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lat')" />
+        </div>
+        <div class="form-group">
+          <label>{{ $t('design.lng') }}</label>
+          <input v-model.number="form.lng" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lng')" />
         </div>
       </div>
 
@@ -253,9 +264,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import { post } from '../services/api.js'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
 import AppIcon from './AppIcon.vue'
 
 const store = useBessStore()
@@ -269,9 +280,18 @@ const form = reactive({
   cyclesPerDay: store.survey.cyclesPerDay || 1,
   dod: store.survey.dod || 90,
   requiredEnergy: store.survey.requiredEnergy || 240,
-  location: store.survey.location || 'china',
+  country: store.survey.country || '',
+  city: store.survey.city || '',
+  site: store.survey.site || '',
+  lat: store.survey.lat || null,
+  lng: store.survey.lng || null,
   strategy: 'economic',
   targetMetric: 'lcos'
+})
+
+const formLocation = computed(() => {
+  const parts = [form.country, form.city, form.site].filter(Boolean)
+  return parts.join(', ')
 })
 
 // 储能时长自动计算
@@ -375,7 +395,7 @@ async function runDesign() {
   error.value = null
   try {
     const resp = await post('/api/design/auto', {
-      survey_params: { ...form },
+      survey_params: { ...form, location: formLocation.value },
       strategy: form.strategy
     })
     if (resp.success) {
@@ -397,7 +417,7 @@ async function runFullWorkflow() {
   workflowResult.value = null
   try {
     const resp = await post('/api/workflow/full', {
-      survey_params: { ...form },
+      survey_params: { ...form, location: formLocation.value },
       strategy: form.strategy,
       target_metric: form.targetMetric
     })

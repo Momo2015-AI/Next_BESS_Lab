@@ -46,8 +46,16 @@
             </select>
           </div>
           <div>
-            <label class="label-text">{{ $t('runningConditions.location') }}</label>
-            <input v-model="form.location" class="form-field-input" :placeholder="$t('runningConditions.location')" />
+            <label class="label-text">{{ $t('runningConditions.country') }}</label>
+            <input v-model="form.country" class="form-field-input" :placeholder="$t('runningConditions.country')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.city') }}</label>
+            <input v-model="form.city" class="form-field-input" :placeholder="$t('runningConditions.city')" />
+          </div>
+          <div>
+            <label class="label-text">{{ $t('runningConditions.site') }}</label>
+            <input v-model="form.site" class="form-field-input" :placeholder="$t('runningConditions.site')" />
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.ratedPower') }}</label>
@@ -922,7 +930,9 @@ const autoMatchEnabled = useDraftRef('rc-auto-match-enabled', true).state
 const { state: form, clearDraft: clearFormDraft } = useDraft('rc-form', {
   projectName: '',
   projectType: '',
-  location: '',
+  country: '',
+  city: '',
+  site: '',
   totalMW: null,
   totalMWh: null,
   durationHours: null,
@@ -1089,7 +1099,9 @@ function applyExtracted() {
   const mapping = {
     project_name: 'projectName',
     project_type: 'projectType',
-    location: 'location',
+    country: 'country',
+    city: 'city',
+    site: 'site',
     total_mw: 'totalMW',
     total_mwh: 'totalMWh',
     duration_h: 'durationHours',
@@ -1140,7 +1152,9 @@ function exportCSV() {
     general: [
       'projectName',
       'projectType',
-      'location',
+      'country',
+      'city',
+      'site',
       'totalMW',
       'totalMWh',
       'durationHours',
@@ -1374,7 +1388,10 @@ function applyToSimulation() {
     availabilityTarget: form.availabilityTarget,
     projectName: form.projectName,
     projectType: form.projectType,
-    location: form.location
+    country: form.country,
+    city: form.city,
+    site: form.site,
+    location: [form.country, form.city, form.site].filter(Boolean).join(', ')
   }
   emit('applyParams', mapped)
 }

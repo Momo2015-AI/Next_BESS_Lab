@@ -23,11 +23,36 @@
               :placeholder="$t('surveyForm.projectNamePh')"
             />
             <FormField
-              v-model="formData.location"
-              :label="$t('surveyForm.location')"
-              required
+              v-model="formData.country"
+              :label="$t('surveyForm.country')"
               type="text"
-              :placeholder="$t('surveyForm.locationPhShort')"
+              :placeholder="$t('surveyForm.countryPh')"
+            />
+            <FormField
+              v-model="formData.city"
+              :label="$t('surveyForm.city')"
+              type="text"
+              :placeholder="$t('surveyForm.cityPh')"
+            />
+            <FormField
+              v-model="formData.site"
+              :label="$t('surveyForm.site')"
+              type="text"
+              :placeholder="$t('surveyForm.sitePh')"
+            />
+            <FormField
+              v-model.number="formData.lat"
+              :label="$t('surveyForm.lat')"
+              type="number"
+              step="0.0001"
+              :placeholder="$t('surveyForm.latPh')"
+            />
+            <FormField
+              v-model.number="formData.lng"
+              :label="$t('surveyForm.lng')"
+              type="number"
+              step="0.0001"
+              :placeholder="$t('surveyForm.lngPh')"
             />
             <FormField
               v-model="formData.contact"
@@ -232,7 +257,15 @@ onMounted(async () => {
         formData.projectName = s.project_name || ''
         formData.contact = s.contact_person || ''
         formData.phone = s.contact_phone || ''
-        formData.location = s.location || ''
+        formData.country = s.country || ''
+        formData.city = s.city || ''
+        formData.site = s.site || ''
+        formData.lat = s.lat || null
+        formData.lng = s.lng || null
+        // fallback for old data that only has location field
+        if (!formData.country && !formData.city && !formData.site && s.location) {
+          formData.site = s.location
+        }
         formData.ratedEnergy = s.total_mwh || null
         formData.ratedPower = s.total_mw || null
         formData.dischargeHours = s.duration || null
@@ -253,7 +286,12 @@ onMounted(async () => {
     if (s.duration) formData.dischargeHours = s.duration
     if (s.temperature) formData.temperature = s.temperature
     if (s.cyclesPerDay) formData.cyclesPerDay = s.cyclesPerDay
-    if (s.location) formData.location = s.location
+    if (s.country) formData.country = s.country
+    if (s.city) formData.city = s.city
+    if (s.site) formData.site = s.site
+    if (s.lat != null) formData.lat = s.lat
+    if (s.lng != null) formData.lng = s.lng
+    if (s.location && !formData.site) formData.site = s.location
     if (s.projectName) formData.projectName = s.projectName
     if (s.gridVoltage) formData.voltageLevel = s.gridVoltage
   }
@@ -339,7 +377,11 @@ const containerOptions = computed(() => [
 
 const formData = reactive({
   projectName: '',
-  location: '',
+  country: '',
+  city: '',
+  site: '',
+  lat: null,
+  lng: null,
   contact: '',
   phone: '',
   ratedEnergy: 10,
@@ -360,6 +402,11 @@ const formData = reactive({
 })
 
 const defaults = { ...formData }
+
+const formLocation = computed(() => {
+  const parts = [formData.country, formData.city, formData.site].filter(Boolean)
+  return parts.join(', ')
+})
 
 function resetForm() {
   Object.assign(formData, { ...defaults })
@@ -388,7 +435,12 @@ const CONTAINER_CAPACITY_MWH = {
       project_name: formData.projectName,
       contact_person: formData.contact || '',
       contact_phone: formData.phone || '',
-      location: formData.location || '',
+      location: formLocation.value || '',
+      country: formData.country || '',
+      city: formData.city || '',
+      site: formData.site || '',
+      lat: formData.lat || null,
+      lng: formData.lng || null,
       total_mwh: formData.ratedEnergy,
       total_mw: formData.ratedPower || null,
       duration: formData.dischargeHours || null,
@@ -435,7 +487,12 @@ const CONTAINER_CAPACITY_MWH = {
     if (formData.dod) store.survey.dod = formData.dod
     if (formData.cRate) store.survey.cRate = formData.cRate
     store.survey.requiredEnergy = +(formData.ratedEnergy * ((formData.dod || 90) / 100)).toFixed(1)
-    if (formData.location) store.survey.location = formData.location
+    if (formLocation.value) store.survey.location = formLocation.value
+    if (formData.country) store.survey.country = formData.country
+    if (formData.city) store.survey.city = formData.city
+    if (formData.site) store.survey.site = formData.site
+    if (formData.lat != null) store.survey.lat = formData.lat
+    if (formData.lng != null) store.survey.lng = formData.lng
     if (formData.projectName) store.survey.projectName = formData.projectName
     if (formData.voltageLevel) store.survey.gridVoltage = formData.voltageLevel
 
