@@ -112,7 +112,10 @@
                 {{ mfr }}
               </div>
             </div>
-            <div v-else-if="showMfrDropdown && form.manufacturer && filteredMfrs.length === 0" class="dpc-combobox-dropdown">
+            <div
+              v-else-if="showMfrDropdown && form.manufacturer && filteredMfrs.length === 0"
+              class="dpc-combobox-dropdown"
+            >
               <div class="dpc-combobox-empty">{{ $t('simLab.noMatch') }}</div>
             </div>
           </div>

@@ -325,7 +325,7 @@
           </div>
         </div>
         <div class="mt-3 text-xs">
-          <span class="text-muted">{{ $t('batteryDC.usableEnergy') }}: </span>
+          <span class="text-muted">{{ $t('batteryDC.usableEnergy') }}:</span>
           <span class="font-bold text-accent-secondary">{{ usableEnergy }} MWh</span>
         </div>
       </div>

@@ -9,11 +9,25 @@
       <div class="form-grid">
         <div class="form-group">
           <label>{{ $t('design.ratedEnergy') }} (MWh)</label>
-          <input v-model.number="form.ratedEnergy" type="number" min="1" step="1" class="form-input" @input="markEdited('ratedEnergy')" />
+          <input
+            v-model.number="form.ratedEnergy"
+            type="number"
+            min="1"
+            step="1"
+            class="form-input"
+            @input="markEdited('ratedEnergy')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.totalPower') }} (MW)</label>
-          <input v-model.number="form.totalPower" type="number" min="1" step="0.1" class="form-input" @input="markEdited('totalPower')" />
+          <input
+            v-model.number="form.totalPower"
+            type="number"
+            min="1"
+            step="0.1"
+            class="form-input"
+            @input="markEdited('totalPower')"
+          />
         </div>
         <div class="form-group">
           <label>
@@ -52,15 +66,39 @@
         </div>
         <div class="form-group">
           <label>{{ $t('design.temperature') }} (°C)</label>
-          <input v-model.number="form.temperature" type="number" min="-20" max="60" step="1" class="form-input" @input="markEdited('temperature')" />
+          <input
+            v-model.number="form.temperature"
+            type="number"
+            min="-20"
+            max="60"
+            step="1"
+            class="form-input"
+            @input="markEdited('temperature')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.cyclesPerDay') }}</label>
-          <input v-model.number="form.cyclesPerDay" type="number" min="0.5" max="4" step="0.5" class="form-input" @input="markEdited('cyclesPerDay')" />
+          <input
+            v-model.number="form.cyclesPerDay"
+            type="number"
+            min="0.5"
+            max="4"
+            step="0.5"
+            class="form-input"
+            @input="markEdited('cyclesPerDay')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.dod') }} (%)</label>
-          <input v-model.number="form.dod" type="number" min="50" max="100" step="1" class="form-input" @input="markEdited('dod')" />
+          <input
+            v-model.number="form.dod"
+            type="number"
+            min="50"
+            max="100"
+            step="1"
+            class="form-input"
+            @input="markEdited('dod')"
+          />
         </div>
         <div class="form-group">
           <label>
@@ -123,19 +161,45 @@
         </div>
         <div class="form-group">
           <label>{{ $t('design.city') }}</label>
-          <input v-model="form.city" type="text" class="form-input" :placeholder="$t('design.city')" @input="markEdited('city')" />
+          <input
+            v-model="form.city"
+            type="text"
+            class="form-input"
+            :placeholder="$t('design.city')"
+            @input="markEdited('city')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.site') }}</label>
-          <input v-model="form.site" type="text" class="form-input" :placeholder="$t('design.site')" @input="markEdited('site')" />
+          <input
+            v-model="form.site"
+            type="text"
+            class="form-input"
+            :placeholder="$t('design.site')"
+            @input="markEdited('site')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.lat') }}</label>
-          <input v-model.number="form.lat" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lat')" @input="markEdited('lat')" />
+          <input
+            v-model.number="form.lat"
+            type="number"
+            step="0.0001"
+            class="form-input"
+            :placeholder="$t('design.lat')"
+            @input="markEdited('lat')"
+          />
         </div>
         <div class="form-group">
           <label>{{ $t('design.lng') }}</label>
-          <input v-model.number="form.lng" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lng')" @input="markEdited('lng')" />
+          <input
+            v-model.number="form.lng"
+            type="number"
+            step="0.0001"
+            class="form-input"
+            :placeholder="$t('design.lng')"
+            @input="markEdited('lng')"
+          />
         </div>
       </div>
 
@@ -310,7 +374,9 @@ function onCountryInput() {
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   form.country = c
@@ -437,9 +503,12 @@ watch(
 autoCalcReqEnergy()
 
 // 国家输入框同步
-watch(() => form.country, (val) => {
-  if (val && val !== countryInput.value) countryInput.value = val
-})
+watch(
+  () => form.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
 
 const strategies = [
   { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },

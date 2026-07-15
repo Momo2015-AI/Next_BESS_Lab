@@ -633,7 +633,7 @@ def predict_soh_rainflow(
 
         # DOD归一化因子
         dod_normalized = (dod / 100.0) / dod_ref
-        dod_damage = dod_normalized ** m
+        dod_damage = dod_normalized**m
 
         # 总损伤（损伤比 × DOD权重）
         total_damage = damage_ratio * dod_damage * correction_factor
@@ -753,7 +753,7 @@ def predict_soh_arrhenius_hybrid(
     Ea_cyc = p["Ea_cyc"]
     beta = p["beta"]
     gamma = 1.5  # fixed DOD exponent (consistent with Arrhenius model)
-    delta = 0.2    # fixed c-rate coefficient
+    delta = 0.2  # fixed c-rate coefficient
 
     T_kelvin = temperature + 273.15
 
@@ -776,13 +776,13 @@ def predict_soh_arrhenius_hybrid(
         cycles = year * 365 * cycles_per_day
 
         # 日历老化（时间驱动）
-        q_cal = A_cal * math.exp(-Ea_cal / (R * T_kelvin)) * (days ** alpha) * 10000  # scale to %
+        q_cal = A_cal * math.exp(-Ea_cal / (R * T_kelvin)) * (days**alpha) * 10000  # scale to %
 
         # 循环老化（次数驱动）
         q_cyc = (
             A_cyc
             * math.exp(-Ea_cyc / (R * T_kelvin))
-            * (cycles ** beta)
+            * (cycles**beta)
             * dod_factor
             * c_rate_factor
             * 10000  # scale to %
@@ -844,20 +844,34 @@ def predict_soh(
 
     if model_type == "gb36276":
         return handler(
-            cycles_per_day, dod, c_rate, temperature,
-            gb_curves=gb_curves, environmental=environmental,
-            correction_factor=correction_factor, correction_table=correction_table,
+            cycles_per_day,
+            dod,
+            c_rate,
+            temperature,
+            gb_curves=gb_curves,
+            environmental=environmental,
+            correction_factor=correction_factor,
+            correction_table=correction_table,
         )
     elif model_type == "arrhenius":
         return handler(
-            temperature, cycles_per_day, dod, c_rate,
-            model_params=model_params, correction_factor=correction_factor,
-            correction_table=correction_table, environmental=environmental,
+            temperature,
+            cycles_per_day,
+            dod,
+            c_rate,
+            model_params=model_params,
+            correction_factor=correction_factor,
+            correction_table=correction_table,
+            environmental=environmental,
         )
     else:
         return handler(
-            temperature, cycles_per_day, dod, c_rate,
-            model_params=model_params, correction_factor=correction_factor,
+            temperature,
+            cycles_per_day,
+            dod,
+            c_rate,
+            model_params=model_params,
+            correction_factor=correction_factor,
             correction_table=correction_table,
         )
 

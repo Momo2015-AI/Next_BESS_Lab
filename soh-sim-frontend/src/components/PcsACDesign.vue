@@ -519,9 +519,7 @@ watch(
   () => [pcsConfig.totalPcsPower, pcsConfig.powerFactor],
   () => {
     if (pcsConfig.totalPcsPower > 0 && pcsConfig.powerFactor > 0) {
-      pcsConfig.acRatedCurrent = Math.round(
-        (pcsConfig.totalPcsPower * 1000) / (1.732 * 0.69 * pcsConfig.powerFactor)
-      )
+      pcsConfig.acRatedCurrent = Math.round((pcsConfig.totalPcsPower * 1000) / (1.732 * 0.69 * pcsConfig.powerFactor))
     }
   }
 )
@@ -530,8 +528,7 @@ watch(
   () => [pcsConfig.totalPcsPower, pcsConfig.transformerQty],
   () => {
     if (pcsConfig.totalPcsPower > 0 && pcsConfig.transformerQty > 0) {
-      pcsConfig.transformerCapacity =
-        Math.ceil((pcsConfig.totalPcsPower / pcsConfig.transformerQty) * 1.1 * 10) / 10
+      pcsConfig.transformerCapacity = Math.ceil((pcsConfig.totalPcsPower / pcsConfig.transformerQty) * 1.1 * 10) / 10
     }
   }
 )

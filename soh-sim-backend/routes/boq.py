@@ -37,9 +37,7 @@ def get_boq_items():
     if project_id:
         # 租户隔离：非 admin 必须校验 project_id 归属，避免读取任意租户 BOQ
         project = Project.query.get(project_id)
-        if not project or (
-            getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id
-        ):
+        if not project or (getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id):
             return error_response("项目不存在", 404)  # 不暴露存在性，避免信息泄露
         query = query.filter_by(project_id=project_id)
     query = query.filter_by(is_alternative=is_alternative)
@@ -72,9 +70,7 @@ def save_boq_items_api():
     # 租户隔离：写入前校验 project 归属，避免越权写入他人 BOQ
     user = request.current_user
     project = Project.query.get(project_id)
-    if not project or (
-        getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id
-    ):
+    if not project or (getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id):
         return error_response("项目不存在或无权访问", 403)
 
     try:
@@ -100,9 +96,7 @@ def create_boq_version():
     # 租户隔离：改版前校验 project 归属，避免越权操作他人 BOQ 版本
     user = request.current_user
     project = Project.query.get(project_id)
-    if not project or (
-        getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id
-    ):
+    if not project or (getattr(user, "role", None) != "admin" and project.tenant_id != user.tenant_id):
         return error_response("项目不存在或无权访问", 403)
 
     new_version = bump_boq_version(db, BoqItem, project_id)

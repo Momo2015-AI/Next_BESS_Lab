@@ -133,7 +133,9 @@
         </div>
 
         <div class="text-xs text-muted mt-2">
-          单箱容量: <span class="text-default font-bold">{{ batteryPerContainer }}</span> MWh
+          单箱容量:
+          <span class="text-default font-bold">{{ batteryPerContainer }}</span>
+          MWh
         </div>
 
         <button class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white" @click="generateBOM">
@@ -353,7 +355,14 @@ function calculateSiteArea(silent = false) {
 }
 
 watch(
-  () => [siteData.containerQty, siteData.pcsQty, siteData.transformerQty, siteData.containerLength, siteData.containerWidth, siteData.spacingFactor],
+  () => [
+    siteData.containerQty,
+    siteData.pcsQty,
+    siteData.transformerQty,
+    siteData.containerLength,
+    siteData.containerWidth,
+    siteData.spacingFactor
+  ],
   () => {
     calculateSiteArea(true)
   },

@@ -56,9 +56,7 @@
                 <template v-else-if="col.key === 'ratedEnergyMWh'">
                   {{ formatNumber(item.ratedEnergyMWh) }} MWh
                 </template>
-                <template v-else-if="col.key === 'ratedPowerMW'">
-                  {{ formatNumber(item.ratedPowerMW) }} MW
-                </template>
+                <template v-else-if="col.key === 'ratedPowerMW'">{{ formatNumber(item.ratedPowerMW) }} MW</template>
                 <template v-else>
                   {{ item[col.key] ?? '-' }}
                 </template>

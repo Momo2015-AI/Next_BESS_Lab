@@ -35,9 +35,7 @@
             class="w-full rounded px-2 py-1 text-xs ins-6"
           />
         </div>
-        <div class="col-span-2 text-[10px] ins-5 mt-0.5">
-          Spread: ${{ priceSpread }}/kWh
-        </div>
+        <div class="col-span-2 text-[10px] ins-5 mt-0.5">Spread: ${{ priceSpread }}/kWh</div>
         <div>
           <label class="block mb-0.5 ins-5">
             {{ $t('financial.labelCalendarDays') }}
@@ -270,9 +268,7 @@
             class="w-full rounded px-2 py-1 text-xs ins-6"
           />
         </div>
-        <div class="text-[10px] ins-5">
-          WACC: {{ wacc }}%
-        </div>
+        <div class="text-[10px] ins-5">WACC: {{ wacc }}%</div>
         <div>
           <label class="block mb-0.5 ins-5">
             {{ $t('financial.labelLoanTenure') }}
