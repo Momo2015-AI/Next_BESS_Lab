@@ -16,29 +16,15 @@
       <!-- 步骤1: 方案模板选择 -->
       <DesignTemplateSelector v-if="activeStep === 0" @confirm="onTemplateConfirm" @skip="activeStep = 1" />
 
-      <!-- 步骤2: AC/DC 详细设计 -->
-      <div v-if="activeStep === 1" class="acdc-design-section">
-        <div class="acdc-header">
-          <h3 class="section-title-sm">{{ $t('phase2.acdcDesign') }}</h3>
-          <p class="section-desc">{{ $t('phase2.acdcDesignDesc') }}</p>
-        </div>
-        <BatteryDCDesign class="mt-4" />
-        <PcsACDesign class="mt-4" />
-        <div class="acdc-actions">
-          <button class="btn-secondary" @click="activeStep = 0">{{ $t('phase2.back') }}</button>
-          <button class="btn-primary" @click="activeStep = 2">{{ $t('phase2.goToParams') }}</button>
-        </div>
-      </div>
+      <!-- 步骤2: 设计参数确认 + AC/DC 详细设计（合并） -->
+      <DesignParamsConfirm v-if="activeStep === 1" @back="activeStep = 0" @result="onDesignResult" />
 
-      <!-- 步骤3: 设计参数确认 -->
-      <DesignParamsConfirm v-if="activeStep === 2" @back="activeStep = 1" @result="onDesignResult" />
-
-      <!-- 步骤4: 方案结果预览 -->
+      <!-- 步骤3: 方案结果预览 -->
       <DesignResultPreview
-        v-if="activeStep === 3"
+        v-if="activeStep === 2"
         :solutions="designSolutions"
         :strategy="designStrategy"
-        @back="activeStep = 2"
+        @back="activeStep = 1"
         @confirm="onSolutionConfirm"
       />
     </div>
@@ -54,8 +40,6 @@ import AppPage from '../components/AppPage.vue'
 import DesignTemplateSelector from '../components/DesignTemplateSelector.vue'
 import DesignParamsConfirm from '../components/DesignParamsConfirm.vue'
 import DesignResultPreview from '../components/DesignResultPreview.vue'
-import BatteryDCDesign from '../components/BatteryDCDesign.vue'
-import PcsACDesign from '../components/PcsACDesign.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -67,24 +51,19 @@ watch(activeStep, (v) => {
   store.phase2ActiveStep = v
 })
 
-const steps = computed(() => [
-  { label: t('phase2.step1') },
-  { label: t('phase2.step2') },
-  { label: t('phase2.step3') },
-  { label: t('phase2.step4') }
-])
+const steps = computed(() => [{ label: t('phase2.step1') }, { label: t('phase2.step2') }, { label: t('phase2.step3') }])
 
 // 设计结果 — 优先从 store 恢复（解决返回时数据丢失）
 const designSolutions = ref(store.designResults.solutions || [])
 const designStrategy = ref(store.designResults.strategy || 'balanced')
 
-// 如果 store 中有已确认的方案且 solutions 非空，直接跳到步骤 4（方案预览）
+// 如果 store 中有已确认的方案且 solutions 非空，直接跳到步骤 3（方案预览）
 if (store.designResults.confirmedSolution && store.designResults.solutions.length > 0) {
-  activeStep.value = 3
+  activeStep.value = 2
 }
 
 function onTemplateConfirm(tmpl) {
-  // 模板已确认，进入 AC/DC 详细设计
+  // 模板已确认，进入参数确认 + AC/DC 设计
   activeStep.value = 1
 }
 
@@ -97,7 +76,7 @@ function onDesignResult(data) {
     strategy: designStrategy.value,
     confirmedSolution: null
   }
-  activeStep.value = 3
+  activeStep.value = 2
 }
 
 function onSolutionConfirm(sol) {
@@ -181,53 +160,5 @@ function onSolutionConfirm(sol) {
 
 .step-content {
   min-height: 300px;
-}
-
-.acdc-design-section {
-  margin-top: 0;
-}
-.acdc-header {
-  margin-bottom: 1rem;
-}
-.section-title-sm {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-accent);
-  margin: 0 0 0.25rem;
-}
-.section-desc {
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-.acdc-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  justify-content: flex-end;
-}
-.btn-secondary {
-  padding: 0.5rem 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-card);
-  color: var(--color-text);
-  cursor: pointer;
-  font-size: 0.8125rem;
-}
-.btn-secondary:hover {
-  border-color: var(--color-accent);
-}
-.btn-primary {
-  padding: 0.5rem 1.25rem;
-  border: none;
-  border-radius: 6px;
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-  cursor: pointer;
-  font-size: 0.8125rem;
-}
-.btn-primary:hover {
-  opacity: 0.9;
 }
 </style>

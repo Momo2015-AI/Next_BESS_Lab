@@ -56,11 +56,24 @@
       <div class="dpc-row">
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldTemperature') }} (°C)</label>
-          <input v-model.number="form.temperature" type="number" step="1" min="-20" max="60" @input="markEdited('temperature')" />
+          <input
+            v-model.number="form.temperature"
+            type="number"
+            step="1"
+            min="-20"
+            max="60"
+            @input="markEdited('temperature')"
+          />
         </div>
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldCyclesPerDay') }}</label>
-          <input v-model.number="form.cyclesPerDay" type="number" step="0.1" min="0" @input="markEdited('cyclesPerDay')" />
+          <input
+            v-model.number="form.cyclesPerDay"
+            type="number"
+            step="0.1"
+            min="0"
+            @input="markEdited('cyclesPerDay')"
+          />
         </div>
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldDod') }} (%)</label>
@@ -84,6 +97,14 @@
       </div>
     </div>
 
+    <!-- AC/DC 详细设计（与参数同页） -->
+    <div class="dpc-acdc-section">
+      <h4 class="dpc-section-title">{{ $t('phase2.acdcDesign') }}</h4>
+      <p class="dpc-section-desc">{{ $t('phase2.acdcDesignDesc') }}</p>
+      <BatteryDCDesign class="dpc-acdc-component" />
+      <PcsACDesign class="dpc-acdc-component" />
+    </div>
+
     <div class="dpc-actions">
       <button class="dpc-btn dpc-btn-secondary" @click="$emit('back')">
         {{ $t('designTemplate.back') }}
@@ -104,6 +125,8 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useBessStore, DEFAULT_SURVEY, DEFAULT_DOD } from '../stores/bess.js'
 import api from '../services/api.js'
+import BatteryDCDesign from './BatteryDCDesign.vue'
+import PcsACDesign from './PcsACDesign.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -276,6 +299,29 @@ async function runDesign() {
   background: var(--color-card);
   color: var(--color-text);
   font-size: 0.875rem;
+}
+
+.dpc-acdc-section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.dpc-section-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0 0 0.25rem;
+}
+
+.dpc-section-desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 1rem;
+}
+
+.dpc-acdc-component {
+  margin-bottom: 1rem;
 }
 
 .dpc-actions {
