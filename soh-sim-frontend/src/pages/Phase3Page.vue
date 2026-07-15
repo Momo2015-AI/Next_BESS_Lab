@@ -67,7 +67,7 @@ const steps = computed(() => [
 
 async function runPipeline() {
   const designOutput = {
-    container: { ratedEnergyMwh: store.systemParams.ratedEnergy },
+    container: { ratedEnergyMWh: store.systemParams.ratedEnergy },
     pcs: { ratedPowerMW: store.systemParams.pcsPower },
     containerQty: store.systemParams.initContainerQty,
     pcsQty: store.systemParams.initPcsQty,

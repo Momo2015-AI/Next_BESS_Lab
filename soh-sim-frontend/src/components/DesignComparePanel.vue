@@ -156,8 +156,8 @@ const compareRows = computed(() => {
     {
       key: 'totalEnergy',
       label: '总容量',
-      bestIdx: findBest((s) => s.totalEnergyMwh, false),
-      format: (sol) => fmt(sol.totalEnergyMwh, ' MWh', 1)
+      bestIdx: findBest((s) => s.totalEnergyMWh, false),
+      format: (sol) => fmt(sol.totalEnergyMWh, ' MWh', 1)
     },
     {
       key: 'totalPower',
@@ -224,7 +224,7 @@ function renderRadarChart() {
   // Normalize values to 0-1
   const allSols = selected.value
   const maxVals = {
-    totalEnergy: Math.max(...allSols.map((s) => s.totalEnergyMwh || 0)),
+    totalEnergy: Math.max(...allSols.map((s) => s.totalEnergyMWh || 0)),
     totalPower: Math.max(...allSols.map((s) => s.totalPowerMW || 0)),
     systemRTE: Math.max(...allSols.map((s) => s.efficiencyChain?.systemRTE || 0)),
     capexPerMWh: Math.max(...allSols.map((s) => s.estimatedCapex?.capexPerMWh || 0)),
@@ -241,7 +241,7 @@ function renderRadarChart() {
   const seriesData = allSols.map((sol, idx) => ({
     name: sol.container?.model || '方案 ' + (idx + 1),
     value: [
-      sol.totalEnergyMwh || 0,
+      sol.totalEnergyMWh || 0,
       sol.totalPowerMW || 0,
       sol.efficiencyChain?.systemRTE || 0,
       // Invert capex: lower is better
@@ -279,7 +279,7 @@ function renderBarChart() {
 
   const names = selected.value.map((s, i) => s.container?.model || '方案 ' + (i + 1))
   const capexData = selected.value.map((s) => s.estimatedCapex?.totalCapex || 0)
-  const energyData = selected.value.map((s) => s.totalEnergyMwh || 0)
+  const energyData = selected.value.map((s) => s.totalEnergyMWh || 0)
 
   barChart.setOption(
     {

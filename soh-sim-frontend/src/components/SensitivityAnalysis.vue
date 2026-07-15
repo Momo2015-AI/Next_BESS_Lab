@@ -329,7 +329,7 @@ async function analyzeSingleParam(param) {
       // 构建仿真请求
       const simBody = {
         design_output: {
-          container: { ratedEnergyMwh: testParams.ratedEnergy || DEFAULT_SURVEY.ratedEnergy },
+          container: { ratedEnergyMWh: testParams.ratedEnergy || DEFAULT_SURVEY.ratedEnergy },
           pcs: { ratedPowerMW: testParams.pcsPower || 2.5 },
           containerQty: testParams.initContainerQty || 10,
           pcsQty: testParams.initPcsQty || 2,

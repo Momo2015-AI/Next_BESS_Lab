@@ -310,7 +310,7 @@ export const useBessStore = defineStore('bess', {
         if (!options.financialOnly) {
           const simBody = {
             design_output: designOutput || {
-              container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
+              container: { ratedEnergyMWh: this.systemParams.ratedEnergy },
               pcs: { ratedPowerMW: this.systemParams.pcsPower },
               containerQty: this.systemParams.initContainerQty,
               pcsQty: this.systemParams.initPcsQty,
@@ -387,7 +387,7 @@ export const useBessStore = defineStore('bess', {
               meetsReq: simMeetsReq
             },
             design_output: designOutput || {
-              container: { ratedEnergyMwh: this.systemParams.ratedEnergy },
+              container: { ratedEnergyMWh: this.systemParams.ratedEnergy },
               pcs: { ratedPowerMW: this.systemParams.pcsPower },
               containerQty: this.systemParams.initContainerQty,
               pcsQty: this.systemParams.initPcsQty,
@@ -567,7 +567,7 @@ export const useBessStore = defineStore('bess', {
         const d = rec.design
         this.systemParams = {
           ...this.systemParams,
-          ratedEnergy: d.container?.ratedEnergyMwh || this.systemParams.ratedEnergy,
+          ratedEnergy: d.container?.ratedEnergyMWh || this.systemParams.ratedEnergy,
           initContainerQty: d.containerQty || this.systemParams.initContainerQty,
           initPcsQty: d.pcsQty || this.systemParams.initPcsQty,
           pcsPower: d.pcs?.ratedPowerMW || this.systemParams.pcsPower,
@@ -715,7 +715,7 @@ export const useBessStore = defineStore('bess', {
             }
             this.systemParams = {
               ...this.systemParams,
-              ratedEnergy: data.design.container?.ratedEnergyMwh || this.systemParams.ratedEnergy,
+              ratedEnergy: data.design.container?.ratedEnergyMWh || this.systemParams.ratedEnergy,
               initContainerQty: data.design.containerQty || this.systemParams.initContainerQty,
               initPcsQty: data.design.pcsQty || this.systemParams.initPcsQty,
               pcsPower: data.design.pcs?.ratedPowerMW || this.systemParams.pcsPower

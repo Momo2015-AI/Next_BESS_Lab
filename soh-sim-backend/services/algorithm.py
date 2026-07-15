@@ -11,6 +11,7 @@ def get_builtin_algorithms():
     return [
         # ========== 容量衰减类 (degradation) — 6 种内置模型 ==========
         {
+            "id": "builtin-arrhenius",
             "name": "阿伦尼乌斯模型 (Arrhenius)",
             "name_en": "Arrhenius Model",
             "model_type": "arrhenius",
@@ -30,6 +31,7 @@ def get_builtin_algorithms():
             "description": "基于阿伦尼乌斯化学动力学方程的温度加速老化模型。核心原理：温度每升高10°C，电化学反应速率约翻倍，老化也随之加速。指前因子（A）描述基础反应速率，活化能（Ea=35 kJ/mol）为LFP电池标准值。",
         },
         {
+            "id": "builtin-double-exp",
             "name": "双指数模型 (Double Exponential)",
             "name_en": "Double Exponential Model",
             "model_type": "double_exponential",
@@ -69,6 +71,7 @@ def get_builtin_algorithms():
             "description": "适用于RTE衰减和效率衰减建模。采用线性-对数形式描述RTE随时间的变化过程：线性部分（αt）描述初期快速衰减；对数部分（β·ln(1+γt)）描述后期缓慢衰减。适用于大规模储能电站的长期RTE预测。",
         },
         {
+            "id": "builtin-rainflow",
             "name": "雨流计数模型 (Rainflow)",
             "name_en": "Rainflow Counting Model",
             "model_type": "rainflow",
@@ -87,6 +90,7 @@ def get_builtin_algorithms():
             "description": "基于Miner线性损伤累积法则和雨流计数法的循环寿命预测模型。将实际运行中不规则、变幅的充放电循环统计为等效标准循环次数，按DOD加权计算累积损伤。参考循环寿命（6000次）为LFP电池在100%DOD、25°C下的行业标准值。",
         },
         {
+            "id": "builtin-semi-empirical",
             "name": "半经验综合模型 (Semi-Empirical)",
             "name_en": "Semi-Empirical Comprehensive Model",
             "model_type": "semi_empirical",
@@ -106,6 +110,7 @@ def get_builtin_algorithms():
             "description": "综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。温度每偏离25°C 1°C，衰减速率变化0.2%；DOD从50%升至100%时衰减速率翻倍；0.5C充电相比1C充电衰减减半。",
         },
         {
+            "id": "builtin-hybrid",
             "name": "默认混合模型 (Default Hybrid)",
             "name_en": "Default Hybrid Model",
             "model_type": "arrhenius_hybrid",

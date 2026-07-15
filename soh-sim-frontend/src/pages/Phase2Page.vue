@@ -83,9 +83,9 @@ function onSolutionConfirm(sol) {
   // 持久化确认的方案
   store.designResults.confirmedSolution = sol
   // 同步写入 survey 数据，确保仿真页面能读取
-  store.survey.ratedEnergy = sol.totalEnergyMwh || store.survey.ratedEnergy
-  store.survey.totalPower = sol.totalPowerMW || sol.totalEnergyMwh / (sol.duration || 2)
-  store.survey.duration = sol.duration || sol.totalEnergyMwh / (sol.totalPowerMW || 50)
+  store.survey.ratedEnergy = sol.totalEnergyMWh || store.survey.ratedEnergy
+  store.survey.totalPower = sol.totalPowerMW || sol.totalEnergyMWh / (sol.duration || 2)
+  store.survey.duration = sol.duration || sol.totalEnergyMWh / (sol.totalPowerMW || 50)
   store.survey.dod = sol.dod || store.survey.dod
   store.survey.cRate = sol.cRate || store.survey.cRate
   store.survey.temperature = sol.temperature || sol.degradationModel?.temperature || store.survey.temperature

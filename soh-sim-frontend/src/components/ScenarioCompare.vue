@@ -460,7 +460,7 @@ async function calculateScenario() {
     const params = editingScenario.value.params
     const body = {
       design_output: {
-        container: { ratedEnergyMwh: params.ratedEnergy },
+        container: { ratedEnergyMWh: params.ratedEnergy },
         pcs: { ratedPowerMW: 2.5 },
         containerQty: params.initContainerQty,
         pcsQty: params.initPcsQty,

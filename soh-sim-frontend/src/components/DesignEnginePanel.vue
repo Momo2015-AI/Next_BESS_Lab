@@ -188,7 +188,7 @@
             </div>
             <div class="card-row">
               <span class="label">{{ $t('design.totalEnergy') }}</span>
-              <span class="value highlight">{{ sol.totalEnergyMwh }} MWh</span>
+              <span class="value highlight">{{ sol.totalEnergyMWh }} MWh</span>
             </div>
             <div class="card-row">
               <span class="label">{{ $t('design.pcsModel') }}</span>

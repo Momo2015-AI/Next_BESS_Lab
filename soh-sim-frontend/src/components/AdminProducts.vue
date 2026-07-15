@@ -53,8 +53,8 @@
                 <template v-else-if="col.key === 'efficiency' && item.efficiency != null">
                   {{ item.efficiency }}%
                 </template>
-                <template v-else-if="col.key === 'ratedEnergyMWh' || col.key === 'ratedEnergyMwh'">
-                  {{ formatNumber(item.ratedEnergyMWh || item.ratedEnergyMwh) }} MWh
+                <template v-else-if="col.key === 'ratedEnergyMWh'">
+                  {{ formatNumber(item.ratedEnergyMWh) }} MWh
                 </template>
                 <template v-else-if="col.key === 'ratedPowerMW' || col.key === 'ratedPowerMw'">
                   {{ formatNumber(item.ratedPowerMW || item.ratedPowerMw) }} MW
@@ -167,7 +167,7 @@ const columnDefs = {
   containers: [
     { key: 'model', labelKey: 'admin.colModel', width: '140px' },
     { key: 'mfr', labelKey: 'admin.colMfr', width: '100px' },
-    { key: 'ratedEnergyMwh', labelKey: 'admin.colEnergy', width: '100px' },
+    { key: 'ratedEnergyMWh', labelKey: 'admin.colEnergy', width: '100px' },
     { key: 'ratedPowerMW', labelKey: 'admin.colPower', width: '90px' },
     { key: 'cooling', labelKey: 'admin.colCooling', width: '100px' },
     { key: 'cycleLife', labelKey: 'admin.colCycleLife', width: '80px' },
@@ -198,7 +198,7 @@ const formFieldDefs = {
   containers: [
     { key: 'model', labelKey: 'admin.fieldModel', type: 'text', placeholder: 'e.g. TENER-6.25' },
     { key: 'mfr', labelKey: 'admin.fieldMfr', type: 'text', placeholder: 'e.g. CATL' },
-    { key: 'ratedEnergyMwh', labelKey: 'admin.fieldEnergy', type: 'number', step: '0.01' },
+    { key: 'ratedEnergyMWh', labelKey: 'admin.fieldEnergy', type: 'number', step: '0.01' },
     { key: 'ratedPowerMW', labelKey: 'admin.fieldPower', type: 'number', step: '0.1' },
     {
       key: 'cooling',

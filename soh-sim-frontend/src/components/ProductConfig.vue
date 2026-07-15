@@ -671,7 +671,7 @@ function localFiltered(key, mfrFilter, powerFilter) {
       voltageNominal: c.voltageNominal,
       voltageMax: c.voltageMax,
       voltageMin: c.voltageMin,
-      ratedEnergyMwh: c.ratedEnergyMWh,
+      ratedEnergyMWh: c.ratedEnergyMWh,
       cycleLife: c.cycleLife,
       calendarLife: c.calendarLife,
       dimensions: c.dimensions,
@@ -811,11 +811,11 @@ async function saveProduct() {
     apiData.voltageNominal = f.voltageNominal
     apiData.voltageMax = f.voltageMax || null
     apiData.voltageMin = f.voltageMin || null
-    apiData.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
+    apiData.ratedEnergyMWh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     apiData.cycleLife = f.cycleLife
     apiData.calendarLife = f.calendarLife || 20
     apiData.energyDensity =
-      f.energyDensity || (f.weight > 0 ? Math.round((apiData.ratedEnergyMwh * 1e6) / f.weight) : null)
+      f.energyDensity || (f.weight > 0 ? Math.round((apiData.ratedEnergyMWh * 1e6) / f.weight) : null)
     apiData.dimensions = f.dimensions
     apiData.weight = f.weight ? parseFloat(f.weight) : null
   } else if (type === 'container') {
@@ -843,12 +843,12 @@ async function saveProduct() {
   const id = type + '-' + f.model?.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36)
   const item = { id, ...f }
   if (type === 'cell') {
-    item.ratedEnergyMwh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
+    item.ratedEnergyMWh = parseFloat((((f.capacityAh || 0) * (f.voltageNominal || 3.2)) / 1e6).toFixed(6))
     item.voltageMax = f.voltageMax || null
     item.voltageMin = f.voltageMin || null
     item.voltageRange = f.voltageMin && f.voltageMax ? `${f.voltageMin}-${f.voltageMax}` : '2.5-3.65'
     item.calendarLife = f.calendarLife || 20
-    item.energyDensity = f.weight > 0 ? Math.round((item.ratedEnergyMwh * 1e6) / f.weight) : null
+    item.energyDensity = f.weight > 0 ? Math.round((item.ratedEnergyMWh * 1e6) / f.weight) : null
     item.sohCurve = 'default'
   } else if (type === 'container') {
     item.type = '20ft Standard'

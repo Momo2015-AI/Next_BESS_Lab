@@ -142,7 +142,7 @@ onMounted(async () => {
         id: 'restored',
         containerQty: store.systemParams.initContainerQty,
         pcsQty: store.systemParams.initPcsQty,
-        totalEnergyMwh: store.systemParams.ratedEnergy,
+        totalEnergyMWh: store.systemParams.ratedEnergy,
         totalPowerMW: store.systemParams.pcsPower,
         duration: store.systemParams.duration,
         degradationModel: {
@@ -215,7 +215,7 @@ async function saveAsVersion() {
     try {
       const resp = await post('/api/workflow/full', {
         survey_params: workflowResult.value.solutions?.[0]?.design
-          ? { ratedEnergy: workflowResult.value.solutions[0].design.totalEnergyMwh }
+          ? { ratedEnergy: workflowResult.value.solutions[0].design.totalEnergyMWh }
           : {},
         strategy: workflowResult.value.strategy || 'economic',
         target_metric: workflowResult.value.target_metric || 'lcos',
@@ -244,7 +244,7 @@ async function runWhatIf() {
       base_design: baseSolution.value,
       adjustments: { ...whatIf },
       survey_params: {
-        ratedEnergy: baseSolution.value.totalEnergyMwh || 100,
+        ratedEnergy: baseSolution.value.totalEnergyMWh || 100,
         totalPower: baseSolution.value.totalPowerMW || 50,
         duration: baseSolution.value.duration || 2,
         temperature: baseSolution.value.degradationModel?.temperature || 25,

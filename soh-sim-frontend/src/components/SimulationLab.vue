@@ -1475,7 +1475,7 @@ const runBackendSimulation = async () => {
     }
     const body = {
       design_output: {
-        container: { ratedEnergyMwh: surveyData.ratedEnergy || store.systemParams.ratedEnergy },
+        container: { ratedEnergyMWh: surveyData.ratedEnergy || store.systemParams.ratedEnergy },
         pcs: { ratedPowerMW: store.systemParams.pcsPower },
         containerQty: surveyData.containerQty || store.systemParams.initContainerQty,
         pcsQty: store.systemParams.initPcsQty,

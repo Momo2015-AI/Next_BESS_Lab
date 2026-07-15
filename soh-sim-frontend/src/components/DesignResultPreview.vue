@@ -36,7 +36,7 @@
 
           <div class="drp-stats">
             <div class="drp-stat">
-              <span class="drp-stat-val">{{ sol.totalEnergyMwh }}</span>
+              <span class="drp-stat-val">{{ sol.totalEnergyMWh }}</span>
               <span class="drp-stat-label">MWh</span>
             </div>
             <div class="drp-stat">
@@ -178,7 +178,7 @@ function confirmSolution() {
     ...store.systemParams,
     initContainerQty: sol.containerQty,
     initPcsQty: sol.pcsQty,
-    ratedEnergy: sol.totalEnergyMwh,
+    ratedEnergy: sol.totalEnergyMWh,
     pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMW || store.systemParams.pcsPower,
     duration: sol.duration || store.systemParams.duration,
     strategy: sol.strategy_type || props.strategy

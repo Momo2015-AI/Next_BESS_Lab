@@ -23,7 +23,7 @@ STRATEGIES = ["economic", "balanced", "flexible", "manufacturer"]
 
 # DB snake_case → camelCase 字段映射（与前端 useProducts.js 对齐）
 _FIELD_MAP = {
-    "rated_energy_mwh": "ratedEnergyMwh",
+    "rated_energy_mwh": "ratedEnergyMWh",
     "rated_power_mw": "ratedPowerMW",
     "rated_power_mva": "ratedPowerMVA",
     "unit_price": "unitPrice",
@@ -51,6 +51,9 @@ def _db_row_to_camel(row_dict: dict) -> dict:
     # Container 需要 ratedPowerMw（小写 w）兼容旧代码
     if "ratedPowerMW" in result and "ratedPowerMw" not in result:
         result["ratedPowerMw"] = result["ratedPowerMW"]
+    # Container 需要 ratedEnergyMwh（小写 w）兼容旧代码
+    if "ratedEnergyMWh" in result and "ratedEnergyMwh" not in result:
+        result["ratedEnergyMwh"] = result["ratedEnergyMWh"]
     return result
 
 

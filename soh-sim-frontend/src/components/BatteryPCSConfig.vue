@@ -308,7 +308,7 @@ async function loadLibraryData() {
       const mapped = { ...c }
       mapped.id = c.id
       mapped.name = c.model
-      mapped.energy = c.ratedEnergyMWh ?? c.ratedEnergyMwh ?? 0
+      mapped.energy = c.ratedEnergyMWh ?? 0
       mapped.power = c.ratedPowerMW ?? c.ratedPowerMw ?? 0
       mapped.voltage = 600
       mapped.cells = (c.seriesCount || 0) * (c.parallelCount || 0) || 120
