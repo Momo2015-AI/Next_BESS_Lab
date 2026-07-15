@@ -598,35 +598,14 @@ const store = useBessStore()
 const { cells, loadAll } = useProducts()
 const { filterCountries } = useCountryList()
 
-// 国家 combobox 状态
+// 国家 combobox 状态（ref 声明在 form 之前，但引用 form 的逻辑在 form 之后）
 const countryInput = ref('')
 const countryDropdown = ref(false)
 const filteredCountries = computed(() => {
   return filterCountries(countryInput.value)
 })
-function onCountryInput() {
-  form.country = countryInput.value
-  countryDropdown.value = true
-}
-function onCountryBlur() {
-  setTimeout(() => {
-    countryDropdown.value = false
-  }, 150)
-}
-function selectCountry(c) {
-  form.country = c
-  countryInput.value = c
-  countryDropdown.value = false
-}
-// 初始化回填
-watch(
-  () => form.country,
-  (val) => {
-    if (val && val !== countryInput.value) countryInput.value = val
-  }
-)
 
-// 电芯型号 combobox 状态
+// 电芯型号 combobox 状态（ref 声明在 form 之前，但引用 form 的逻辑在 form 之后）
 const cellModelInput = ref('')
 const cellDropdown = ref(false)
 const filteredCells = computed(() => {
@@ -638,37 +617,6 @@ const filteredCells = computed(() => {
       (c.model || '').toLowerCase().includes(q) ||
       String(c.capacityAh || '').includes(q)
   )
-})
-function onCellInput() {
-  form.cell_model = ''
-  cellDropdown.value = true
-}
-function onCellBlur() {
-  setTimeout(() => {
-    cellDropdown.value = false
-  }, 150)
-}
-function selectCell(cell) {
-  form.cell_model = cell.model
-  cellModelInput.value = `${cell.mfr} - ${cell.model} (${cell.capacityAh}Ah)`
-  cellDropdown.value = false
-}
-// 初始化时如果 form.cell_model 已有值，回填输入框
-watch(
-  () => form.cell_model,
-  (val) => {
-    if (val && cells.value.length > 0) {
-      const found = cells.value.find((c) => c.model === val)
-      if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
-    }
-  }
-)
-// 电芯列表加载完成后回填
-watch(cells, (list) => {
-  if (list.length > 0 && form.cell_model) {
-    const found = list.find((c) => c.model === form.cell_model)
-    if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
-  }
 })
 
 // 合并 store.survey 数据到默认值（处理刷新场景：Pinia persist 恢复 → useDraft 初始化）
@@ -752,6 +700,57 @@ watch(
     if (isTempAvgAuto.value) autoCalcTempAvg()
   }
 )
+
+// ── combobox 事件处理（必须在 form 声明之后）──
+
+// 国家
+function onCountryInput() {
+  form.country = countryInput.value
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  form.country = c
+  countryInput.value = c
+  countryDropdown.value = false
+}
+watch(
+  () => form.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
+
+// 电芯型号
+function onCellInput() {
+  form.cell_model = ''
+  cellDropdown.value = true
+}
+function onCellBlur() {
+  setTimeout(() => { cellDropdown.value = false }, 150)
+}
+function selectCell(cell) {
+  form.cell_model = cell.model
+  cellModelInput.value = `${cell.mfr} - ${cell.model} (${cell.capacityAh}Ah)`
+  cellDropdown.value = false
+}
+watch(
+  () => form.cell_model,
+  (val) => {
+    if (val && cells.value.length > 0) {
+      const found = cells.value.find((c) => c.model === val)
+      if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+    }
+  }
+)
+watch(cells, (list) => {
+  if (list.length > 0 && form.cell_model) {
+    const found = list.find((c) => c.model === form.cell_model)
+    if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+  }
+})
 
 const submitting = ref(false)
 const showSuccess = ref(false)
