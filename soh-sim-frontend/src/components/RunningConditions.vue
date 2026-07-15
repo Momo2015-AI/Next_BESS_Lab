@@ -513,7 +513,7 @@
                 {{ $t('common.select') }}
               </option>
               <option v-for="container in availableContainers" :key="container.id" :value="container.model">
-                {{ container.model }} ({{ container.ratedEnergyMwh }}MWh)
+                {{ container.model }} ({{ container.ratedEnergyMWh }}MWh)
               </option>
             </select>
           </div>
