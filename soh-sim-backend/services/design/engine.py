@@ -51,9 +51,6 @@ def _db_row_to_camel(row_dict: dict) -> dict:
     # Container 需要 ratedPowerMw（小写 w）兼容旧代码
     if "ratedPowerMW" in result and "ratedPowerMw" not in result:
         result["ratedPowerMw"] = result["ratedPowerMW"]
-    # Container 需要 ratedEnergyMwh（小写 w）兼容旧代码
-    if "ratedEnergyMWh" in result and "ratedEnergyMwh" not in result:
-        result["ratedEnergyMwh"] = result["ratedEnergyMWh"]
     return result
 
 
@@ -181,12 +178,12 @@ class DesignEngine(BaseEngine):
             containers = [c for c in containers if manufacturer.lower() in c.get("mfr", "").lower()]
 
         # 按容量从大到小排序
-        containers = sorted(containers, key=lambda c: c.get("ratedEnergyMwh", 0), reverse=True)
+        containers = sorted(containers, key=lambda c: c.get("ratedEnergyMWh", 0), reverse=True)
 
         candidates = []
         for strategy_type, container_subset in self._group_by_strategy(containers):
             for container in container_subset:
-                energy = container.get("ratedEnergyMwh", 5)
+                energy = container.get("ratedEnergyMWh", 5)
                 if energy <= 0:
                     continue
                 qty = max(1, math.ceil(target_energy / energy))
@@ -200,14 +197,14 @@ class DesignEngine(BaseEngine):
                             "id": container.get("id"),
                             "model": container.get("model"),
                             "mfr": container.get("mfr"),
-                            "ratedEnergyMwh": energy,
+                            "ratedEnergyMWh": energy,
                             "ratedPowerMw": container.get("ratedPowerMw", 2.5),
                             "cooling": container.get("cooling", "Liquid Cooling"),
                             "cellModel": container.get("cellModel"),
                             "clustersPerContainer": container.get("clustersPerContainer", 2),
                         },
                         "containerQty": qty,
-                        "totalEnergyMwh": round(total_energy, 2),
+                        "totalEnergyMWh": round(total_energy, 2),
                         "duration": round(total_energy / target_power, 1) if target_power > 0 else duration,
                     }
                 )
@@ -218,7 +215,7 @@ class DesignEngine(BaseEngine):
         if not containers:
             return [("economic", [])]
 
-        sorted_c = sorted(containers, key=lambda c: c.get("ratedEnergyMwh", 0), reverse=True)
+        sorted_c = sorted(containers, key=lambda c: c.get("ratedEnergyMWh", 0), reverse=True)
         n = len(sorted_c)
         if n <= 3:
             return [("economic", [sorted_c[0]]), ("balanced", sorted_c[:1]), ("flexible", sorted_c[-1:])]
@@ -366,7 +363,7 @@ class DesignEngine(BaseEngine):
         for c in candidates:
             container_qty = c.get("containerQty", 10)
             pcs_qty = c.get("pcsQty", 10)
-            total_energy = c.get("totalEnergyMwh", 100)
+            total_energy = c.get("totalEnergyMWh", 100)
 
             # 从产品库获取单价（如有）
             container_unit_price = self._get_unit_price("containers", c.get("container", {}).get("id"))

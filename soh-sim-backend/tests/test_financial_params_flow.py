@@ -161,7 +161,7 @@ class TestFinancialParamsFlow:
 
     def test_capex_computed_from_design(self, client, auth_headers_eng, simulation_output):
         """POST /api/financial/calculate with design_output containing
-        container={ratedEnergyMwh:5}, containerQty=100.
+        container={ratedEnergyMWh:5}, containerQty=100.
         Verify capexBreakdown.equipment is approximately 100,000,000
         (500MWh * $200,000/MWh), NOT the old default of 20,000,000."""
         resp = _post(
@@ -170,7 +170,7 @@ class TestFinancialParamsFlow:
             {
                 "simulation_output": simulation_output,
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 100,
                     "pcsQty": 100,
@@ -185,7 +185,7 @@ class TestFinancialParamsFlow:
         capex = data.get("capexBreakdown", {})
         equipment = capex.get("equipment", 0)
 
-        # totalEnergyMwh = 5 * 100 = 500 MWh
+        # totalEnergyMWh = 5 * 100 = 500 MWh
         # equipment = 500 * 200000 = 100,000,000
         expected_equipment = 100_000_000
         assert (
@@ -195,8 +195,8 @@ class TestFinancialParamsFlow:
         # NOT the old default of 20,000,000
         assert equipment > 50_000_000, f"Equipment {equipment} should be much larger than old default 20M"
 
-    def test_capex_from_explicit_totalEnergyMwh(self, client, auth_headers_eng, simulation_output):
-        """POST with design_output containing totalEnergyMwh=200.
+    def test_capex_from_explicit_totalEnergyMWh(self, client, auth_headers_eng, simulation_output):
+        """POST with design_output containing totalEnergyMWh=200.
         Verify capexBreakdown.equipment is approximately 40,000,000."""
         resp = _post(
             client,
@@ -204,8 +204,8 @@ class TestFinancialParamsFlow:
             {
                 "simulation_output": simulation_output,
                 "design_output": {
-                    "totalEnergyMwh": 200,
-                    "container": {"ratedEnergyMwh": 5},
+                    "totalEnergyMWh": 200,
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -220,7 +220,7 @@ class TestFinancialParamsFlow:
         capex = data.get("capexBreakdown", {})
         equipment = capex.get("equipment", 0)
 
-        # totalEnergyMwh=200 * $200,000/MWh = 40,000,000
+        # totalEnergyMWh=200 * $200,000/MWh = 40,000,000
         expected_equipment = 40_000_000
         assert (
             abs(equipment - expected_equipment) < 1_000
@@ -235,7 +235,7 @@ class TestFinancialParamsFlow:
             {
                 "simulation_output": simulation_output,
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -261,7 +261,7 @@ class TestFinancialParamsFlow:
             {
                 "simulation_output": simulation_output,
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -288,7 +288,7 @@ class TestFinancialParamsFlow:
             {
                 "simulation_output": simulation_output,
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -362,7 +362,7 @@ class TestFinancialParamsFlow:
         """Run financial calculate twice with different discountRate values.
         Verify higher discount rate produces lower npv."""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -415,7 +415,7 @@ class TestFinancialParamsFlow:
             "/api/simulation/run",
             {
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -444,7 +444,7 @@ class TestFinancialParamsFlow:
                     "meetsReq": sim_data.get("meetsReq", [True] * 26),
                 },
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,

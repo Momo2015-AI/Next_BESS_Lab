@@ -375,7 +375,7 @@ class TestEfficiencyFactorsNull:
         efficiencyFactors=None and degradation containing custom rte array.
         Verify the response rte matches custom values."""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,

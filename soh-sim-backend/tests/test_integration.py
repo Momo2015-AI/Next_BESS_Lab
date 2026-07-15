@@ -281,7 +281,7 @@ class TestDesignEngine:
             assert field in sol, f"Solution missing field: {field}"
 
         # 检查嵌套字段
-        assert "ratedEnergyMwh" in sol["container"], "container missing ratedEnergyMwh"
+        assert "ratedEnergyMWh" in sol["container"], "container missing ratedEnergyMWh"
         assert "ratedPowerMW" in sol["pcs"], "pcs missing ratedPowerMW"
         assert "totalCapex" in sol["estimatedCapex"], "estimatedCapex missing totalCapex"
 
@@ -347,7 +347,7 @@ class TestSimulationEngine:
     def design_output(self):
         """标准设计方案输出，作为仿真输入"""
         return {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -469,7 +469,7 @@ class TestFinancialEngine:
         return {
             "simulation_output": simulation_output,
             "design_output": {
-                "container": {"ratedEnergyMwh": 5},
+                "container": {"ratedEnergyMWh": 5},
                 "pcs": {"ratedPowerMW": 2.5},
                 "containerQty": 10,
                 "pcsQty": 10,
@@ -593,7 +593,7 @@ class TestEnginePipeline:
         # Step 1: 先跑仿真
         sim_body = {
             "design_output": {
-                "container": {"ratedEnergyMwh": 5},
+                "container": {"ratedEnergyMWh": 5},
                 "pcs": {"ratedPowerMW": 2.5},
                 "containerQty": 10,
                 "pcsQty": 10,
@@ -734,7 +734,7 @@ class TestEnginePipeline:
             "/api/simulation/run",
             {
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -843,7 +843,7 @@ class TestOrchestrator:
             "/api/workflow/what-if",
             {
                 "base_design": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 5,
                     "pcsQty": 5,
@@ -1248,7 +1248,7 @@ class TestNewParamsDataFlow:
     def test_simulation_thermal_mode_params(self, client, auth_headers_eng):
         """POST /api/simulation/run with auxPowerMode=thermal,ambientTemp=32,coolingType=liquid"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1279,7 +1279,7 @@ class TestNewParamsDataFlow:
     def test_simulation_manual_mode_params(self, client, auth_headers_eng):
         """POST /api/simulation/run with auxPowerMode=manual"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1305,7 +1305,7 @@ class TestNewParamsDataFlow:
     def test_thermal_vs_manual_energy_difference(self, client, auth_headers_eng):
         """thermal 模式在 25°C 时 totalAcUsable 应高于 manual（默认 aux=18.124kW）"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1352,7 +1352,7 @@ class TestNewParamsDataFlow:
     def test_high_temp_reduces_usable_energy(self, client, auth_headers_eng):
         """ambientTemp=45 比 ambientTemp=25 产生更低的 totalAcUsable"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1400,7 +1400,7 @@ class TestNewParamsDataFlow:
     def test_simulation_null_efficiency_factors(self, client, auth_headers_eng):
         """POST /api/simulation/run with efficiencyFactors=None"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1428,7 +1428,7 @@ class TestNewParamsDataFlow:
     def test_simulation_default_efficiency_factors(self, client, auth_headers_eng):
         """POST /api/simulation/run without efficiencyFactors — 使用默认 10 因子链"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -1451,7 +1451,7 @@ class TestNewParamsDataFlow:
     # ---- 9.7 CAPEX 从 container×containerQty 计算 ----
 
     def test_financial_capex_from_container_qty(self, client, auth_headers_eng):
-        """container.ratedEnergyMwh=5, containerQty=62 → equipment=62M"""
+        """container.ratedEnergyMWh=5, containerQty=62 → equipment=62M"""
         total_ac = [240 * (1 - 0.005 * i) for i in range(26)]
         resp = _post(
             client,
@@ -1464,7 +1464,7 @@ class TestNewParamsDataFlow:
                     "meetsReq": [True] * 26,
                 },
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "containerQty": 62,
                     "pcs": {"ratedPowerMW": 2.5},
                     "pcsQty": 62,
@@ -1486,7 +1486,7 @@ class TestNewParamsDataFlow:
     def test_simulation_to_financial_chaining(self, client, auth_headers_eng):
         """运行仿真后直接使用其输出调用财务计算"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,

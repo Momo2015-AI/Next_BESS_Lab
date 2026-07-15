@@ -206,7 +206,7 @@ def _run_financial(sim_result: dict, design: dict, survey_params: dict) -> dict:
 def _design_to_system_params(design: dict, survey_params: dict) -> dict:
     """将设计方案转为 systemParams 格式"""
     return {
-        "ratedEnergy": design.get("container", {}).get("ratedEnergyMwh", 5),
+        "ratedEnergy": design.get("container", {}).get("ratedEnergyMWh", 5),
         "initContainerQty": design.get("containerQty", 10),
         "initPcsQty": design.get("pcsQty", 10),
         "pcsPower": design.get("pcs", {}).get("ratedPowerMW", 2.5),

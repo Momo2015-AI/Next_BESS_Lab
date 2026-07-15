@@ -374,7 +374,7 @@ class TestOrchestratorParamsFlow:
         from services.orchestrator import _design_to_system_params
 
         design = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,

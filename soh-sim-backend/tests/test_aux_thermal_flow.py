@@ -85,7 +85,7 @@ class TestThermalCoolingFlow:
     def test_thermal_mode_vs_manual_mode_energy(self, client, auth_headers):
         """thermal 模式 totalAcUsable 应高于 manual 模式（32C 液冷功耗低于默认 18.124kW）"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -139,7 +139,7 @@ class TestThermalCoolingFlow:
     def test_ambient_temp_affects_cooling(self, client, auth_headers):
         """ambientTemp=45 比 ambientTemp=25 产生更低的 totalAcUsable（更多冷却需求）"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,

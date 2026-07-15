@@ -89,7 +89,7 @@ class TestArrheniusModel:
         """温度越高，SOH衰减越快（阿伦尼乌斯定律）"""
         base_body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -144,7 +144,7 @@ class TestArrheniusModel:
         """DOD越大，SOH衰减越快"""
         base_body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -192,7 +192,7 @@ class TestArrheniusModel:
         """循环次数越多，SOH衰减越快"""
         base_body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -238,7 +238,7 @@ class TestArrheniusModel:
         """第0年 SOH 必须为 100%"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -277,7 +277,7 @@ class TestArrheniusModel:
         """SOH 必须单调递减（或非增）"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -317,7 +317,7 @@ class TestArrheniusModel:
         """RTE 应与 SOH 正相关：SOH 降低时 RTE 不应升高"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -373,7 +373,7 @@ class TestPhysicalPrinciples:
             json.dumps(
                 {
                     "design_output": {
-                        "container": {"id": "c1", "ratedEnergyMwh": 10},
+                        "container": {"id": "c1", "ratedEnergyMWh": 10},
                         "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                         "containerQty": 10,
                         "pcsQty": 2,
@@ -449,7 +449,7 @@ class TestPhysicalPrinciples:
             client,
             auth_headers,
             design_output={
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 2,
                 "pcsQty": 1,
@@ -600,7 +600,7 @@ class TestDesignEngineCorrectness:
         data = resp.get_json().get("data", resp.get_json())
         for sol in data.get("solutions", []):
             container = sol.get("container", {})
-            rated_energy_mwh = container.get("ratedEnergyMwh", 0)
+            rated_energy_mwh = container.get("ratedEnergyMWh", 0)
             if rated_energy_mwh > 0:
                 total_energy = sol["containerQty"] * rated_energy_mwh
                 assert (
@@ -948,7 +948,7 @@ class TestEnginePipelineConsistency:
         """验证：运行5年后，SOH低于初始值"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -1074,7 +1074,7 @@ class TestEdgeCases:
         """最小系统（1个集装箱）可正常仿真"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 5},
+                "container": {"id": "c1", "ratedEnergyMWh": 5},
                 "pcs": {"id": "p1", "ratedPowerMw": 2.5, "efficiency": 98},
                 "containerQty": 1,
                 "pcsQty": 1,
@@ -1109,7 +1109,7 @@ class TestEdgeCases:
         """大型系统（100个集装箱）可正常仿真"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 100,
                 "pcsQty": 20,
@@ -1144,7 +1144,7 @@ class TestEdgeCases:
         """极端高温（60°C）不导致崩溃，且退化比常温快"""
         body_25 = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -1191,7 +1191,7 @@ class TestEdgeCases:
         """低温（0°C）不导致崩溃"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -1226,7 +1226,7 @@ class TestEdgeCases:
         """DOD=100% 不导致崩溃"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
@@ -1261,7 +1261,7 @@ class TestEdgeCases:
         """cyclesPerDay=0.01（近似仅日历老化）不导致崩溃"""
         body = {
             "design_output": {
-                "container": {"id": "c1", "ratedEnergyMwh": 10},
+                "container": {"id": "c1", "ratedEnergyMWh": 10},
                 "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,

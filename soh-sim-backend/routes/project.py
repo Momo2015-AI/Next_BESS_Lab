@@ -366,7 +366,7 @@ def _compute_version_delta(versions_data: list) -> dict:
             "payback": m.get("payback"),
             "roi": m.get("roi"),
             "containerQty": design.get("containerQty"),
-            "totalEnergy": design.get("totalEnergyMwh"),
+            "totalEnergy": design.get("totalEnergyMWh"),
             "totalPower": design.get("totalPowerMW"),
             "totalCapex": (design.get("estimatedCapex") or {}).get("totalCapex"),
         }

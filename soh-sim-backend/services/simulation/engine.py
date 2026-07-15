@@ -94,7 +94,7 @@ class SimulationEngine(BaseEngine):
         deg = design_output.get("degradationModel", {})
 
         return {
-            "ratedEnergy": container.get("ratedEnergyMwh", survey_params.get("ratedEnergy", 5)),
+            "ratedEnergy": container.get("ratedEnergyMWh", survey_params.get("ratedEnergy", 5)),
             "initContainerQty": design_output.get("containerQty", 10),
             "initPcsQty": design_output.get("pcsQty", 10),
             "pcsPower": pcs.get("ratedPowerMW", 2.5),

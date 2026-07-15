@@ -81,11 +81,11 @@ class FinancialEngine(BaseEngine):
                 "epc": estimated.get("epcCost", 0),
                 "development": estimated.get("developmentCost", 0),
             }
-        # 默认估算：优先用 totalEnergyMwh，否则从 container × containerQty 计算
-        total_energy = design_output.get("totalEnergyMwh")
+        # 默认估算：优先用 totalEnergyMWh，否则从 container × containerQty 计算
+        total_energy = design_output.get("totalEnergyMWh")
         if not total_energy:
             container = design_output.get("container", {})
-            total_energy = float(container.get("ratedEnergyMwh", 5)) * int(design_output.get("containerQty", 10))
+            total_energy = float(container.get("ratedEnergyMWh", 5)) * int(design_output.get("containerQty", 10))
         if total_energy <= 0:
             total_energy = 100
         return {
@@ -192,7 +192,7 @@ class FinancialEngine(BaseEngine):
     def _extract_system_params(self, design_output: dict, survey_params: dict) -> dict:
         return {
             "pcsPower": design_output.get("totalPowerMW", 50),
-            "ratedEnergy": design_output.get("container", {}).get("ratedEnergyMwh", 5),
+            "ratedEnergy": design_output.get("container", {}).get("ratedEnergyMWh", 5),
             "initContainerQty": design_output.get("containerQty", 10),
         }
 

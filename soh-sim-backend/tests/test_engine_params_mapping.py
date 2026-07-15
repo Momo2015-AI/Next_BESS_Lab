@@ -129,7 +129,7 @@ class TestSimulationEngineParamsMapping:
         """传入所有新参数，验证每一个都映射正确"""
         params = self._extract(
             design_output={
-                "container": {"ratedEnergyMwh": 5},
+                "container": {"ratedEnergyMWh": 5},
                 "pcs": {"ratedPowerMW": 2.5},
                 "containerQty": 20,
                 "pcsQty": 20,
@@ -198,7 +198,7 @@ class TestFinancialEngineParamsMapping:
         engine = FinancialEngine()
         capex = engine._estimate_capex(
             design_output={
-                "container": {"ratedEnergyMwh": 5},
+                "container": {"ratedEnergyMWh": 5},
                 "containerQty": 100,
             },
             survey_params={},
@@ -213,13 +213,13 @@ class TestFinancialEngineParamsMapping:
             capex["equipment"] != 100 * 200000
         ), "equipment should use totalEnergy (container * qty), not just containerQty"
 
-    # ---- 10. CAPEX fallback 使用 totalEnergyMwh ----
+    # ---- 10. CAPEX fallback 使用 totalEnergyMWh ----
 
     def test_financial_engine_capex_fallback(self):
-        """totalEnergyMwh 存在时直接使用"""
+        """totalEnergyMWh 存在时直接使用"""
         engine = FinancialEngine()
         capex = engine._estimate_capex(
-            design_output={"totalEnergyMwh": 200},
+            design_output={"totalEnergyMWh": 200},
             survey_params={},
         )
         expected_equipment = 200 * 200000  # 40,000,000

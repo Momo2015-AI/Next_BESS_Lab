@@ -36,7 +36,7 @@ class TestApiEndpointConnectivity:
     def test_simulation_run_thermal_mode(self, client, auth_headers):
         """POST /api/simulation/run — 热管理模式，验证 bessAuxRun 非默认值"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -74,7 +74,7 @@ class TestApiEndpointConnectivity:
     def test_simulation_run_manual_mode(self, client, auth_headers):
         """POST /api/simulation/run — 手动模式"""
         design_output = {
-            "container": {"ratedEnergyMwh": 5},
+            "container": {"ratedEnergyMWh": 5},
             "pcs": {"ratedPowerMW": 2.5},
             "containerQty": 10,
             "pcsQty": 10,
@@ -113,7 +113,7 @@ class TestApiEndpointConnectivity:
                     "meetsReq": [v >= 200 for v in total_ac],
                 },
                 "design_output": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 10,
                     "pcsQty": 10,
@@ -331,7 +331,7 @@ class TestApiEndpointConnectivity:
             "/api/workflow/what-if",
             {
                 "base_design": {
-                    "container": {"ratedEnergyMwh": 5},
+                    "container": {"ratedEnergyMWh": 5},
                     "pcs": {"ratedPowerMW": 2.5},
                     "containerQty": 5,
                     "pcsQty": 5,
