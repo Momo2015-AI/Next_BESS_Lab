@@ -101,18 +101,18 @@ export const useBessStore = defineStore('bess', {
       seriesPerPack: 52,
       parallelPerPack: 1,
       packVoltage: 0,
-      packEnergyKwh: 0,
+      packEnergykWh: 0,
       // Rack 层级
       packsPerRack: 8,
       rackVoltage: 0,
-      rackEnergyKwh: 0,
+      rackEnergykWh: 0,
       // Cluster 层级
       racksPerCluster: 1,
       clusterVoltage: 0,
-      clusterEnergyKwh: 0,
+      clusterEnergykWh: 0,
       // Container 层级
       clustersPerContainer: 12,
-      containerEnergyMwh: 5.0,
+      containerEnergyMWh: 5.0,
       // DC 容量推导 (DEWA §6.2)
       targetPowerMW: 260,
       targetEnergyMWh: 1560,
@@ -153,8 +153,8 @@ export const useBessStore = defineStore('bess', {
         insurance: 0,
         grid: 0,
         landLease: 0,
-        fixedOpexPerMw: 5000,
-        variableOpexPerMwh: 2.5,
+        fixedOpexPerMW: 5000,
+        variableOpexPerMWh: 2.5,
         insuranceRate: 0.5
       },
       revenue: {

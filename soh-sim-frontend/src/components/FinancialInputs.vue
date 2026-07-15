@@ -177,7 +177,7 @@
         <div>
           <label class="block mb-0.5 ins-5">{{ $t('financial.labelFixedOm') }}</label>
           <input
-            v-model.number="f.fixedOpexPerKW"
+            v-model.number="f.fixedOpexPerkW"
             type="number"
             step="0.5"
             class="w-full rounded px-2 py-1 text-xs ins-6"

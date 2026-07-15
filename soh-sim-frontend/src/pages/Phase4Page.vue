@@ -36,7 +36,7 @@
               <div>
                 <label class="label-text">{{ $t('phase4.fixedOpex') }}</label>
                 <input
-                  v-model.number="store.financial.opex.fixedOpexPerMw"
+                  v-model.number="store.financial.opex.fixedOpexPerMW"
                   type="number"
                   step="100"
                   class="form-field-input"
@@ -45,7 +45,7 @@
               <div>
                 <label class="label-text">{{ $t('phase4.variableOpex') }}</label>
                 <input
-                  v-model.number="store.financial.opex.variableOpexPerMwh"
+                  v-model.number="store.financial.opex.variableOpexPerMWh"
                   type="number"
                   step="0.1"
                   class="form-field-input"
@@ -227,8 +227,8 @@ const totalCapex = computed(() => {
 
 const totalAnnualOpex = computed(() => {
   const o = store.financial.opex
-  return (o.fixedOpexPerMw || 0) * (store.survey.totalPower || 0) +
-    (o.variableOpexPerMwh || 0) * (store.survey.ratedEnergy || 0) * (store.survey.cyclesPerDay || 1) * 365 +
+  return (o.fixedOpexPerMW || 0) * (store.survey.totalPower || 0) +
+    (o.variableOpexPerMWh || 0) * (store.survey.ratedEnergy || 0) * (store.survey.cyclesPerDay || 1) * 365 +
     (o.insuranceRate || 0) + (o.landLease || 0)
 })
 

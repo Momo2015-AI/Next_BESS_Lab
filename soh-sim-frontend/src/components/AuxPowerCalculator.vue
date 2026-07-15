@@ -15,7 +15,7 @@
       <div class="rounded-xl p-4 card-bordered">
         <div class="text-xs font-bold mb-2 text-muted">{{ $t('auxCalc.singleDaily') }}</div>
         <div class="text-2xl font-bold text-default">
-          {{ results.singleUnitDailyKwh.toFixed(2) }}
+          {{ results.singleUnitDailykWh.toFixed(2) }}
           <span class="text-sm ml-1 text-accent-2">{{ $t('auxCalc.kwhPerUnitDay') }}</span>
         </div>
       </div>

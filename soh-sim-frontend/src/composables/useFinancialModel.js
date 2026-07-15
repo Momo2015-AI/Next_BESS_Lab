@@ -56,7 +56,7 @@ export function useFinancialModel(props) {
     landCostPerMW: 8,
     substationCostPerMW: 15,
     transmissionCostPerMW: 10,
-    fixedOpexPerKW: 35,
+    fixedOpexPerkW: 35,
     varOpexPerMWh: 3,
     insuranceRate: 0.4,
     opexEscalation: 2.0,
@@ -277,7 +277,7 @@ export function useFinancialModel(props) {
       const ancillaryRev = ((totalCapMW * f.ancillaryPrice) / 10000) * priceFactor
       const totalRevenue = arbitrageRev + capacityRev + ancillaryRev
 
-      const fixedOpex = ((f.fixedOpexPerKW * totalCapMW * 1000) / 10000) * opexFactor
+      const fixedOpex = ((f.fixedOpexPerkW * totalCapMW * 1000) / 10000) * opexFactor
       const varOpex = ((f.varOpexPerMWh * yearEnergy) / 10000) * opexFactor
       const insurance = (totalCapex * f.insuranceRate) / 100
       const landLease = (totalCapMW * 2) / 10000

@@ -597,7 +597,7 @@ function updateChart() {
             ? t('scenario.sohPct')
             : showChart.value === 'cost'
               ? t('scenario.lcos')
-              : t('scenario.netAvailableMwh'),
+              : t('scenario.netAvailableMWh'),
         nameTextStyle: { color: colors.axisLabel, fontSize: 10 },
         axisLabel: { color: colors.axisLabel, fontSize: 10 },
         axisLine: { lineStyle: { color: colors.axisLine } },

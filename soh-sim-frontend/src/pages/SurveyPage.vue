@@ -459,7 +459,7 @@ async function submitSurvey() {
       // PCS rated power defaults to 5 MW per unit; can be configured via PCS_RATED_POWER_MW
       pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
       totalEnergyMWh: formData.ratedEnergy,
-      totalPowerMw: formData.ratedPower
+      totalPowerMW: formData.ratedPower
     }
     let apiSuccess = false
     try {

@@ -397,8 +397,8 @@
       "mfr": "EVE (亿纬锂能)",
       "model": "5.015MWh Container",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.015,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.015,
+      "ratedPowerMW": 2.5,
       "clusterModel": "Cluster LF628K-52S",
       "clustersPerContainer": 2,
       "cellModel": "LF628K",
@@ -414,8 +414,8 @@
       "mfr": "EVE (亿纬锂能)",
       "model": "3.44MWh Container",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 3.44,
-      "ratedPowerMw": 1.725,
+      "ratedEnergyMWh": 3.44,
+      "ratedPowerMW": 1.725,
       "clusterModel": "Cluster LF280K-52S",
       "clustersPerContainer": 1,
       "cellModel": "LF280K",
@@ -431,8 +431,8 @@
       "mfr": "CATL (宁德时代)",
       "model": "EnerOne Plus",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.5,
       "clusterModel": "Cluster LFP314-52S",
       "clustersPerContainer": 2,
       "cellModel": "LFP 306/314Ah",
@@ -448,8 +448,8 @@
       "mfr": "CATL (宁德时代)",
       "model": "EnerOne 3.72MWh",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 3.72,
-      "ratedPowerMw": 1.725,
+      "ratedEnergyMWh": 3.72,
+      "ratedPowerMW": 1.725,
       "clusterModel": "Cluster LFP314-52S",
       "clustersPerContainer": 1,
       "cellModel": "LFP 280Ah",
@@ -465,8 +465,8 @@
       "mfr": "BYD (比亚迪)",
       "model": "MC Cube",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.5,
       "clusterModel": "Cluster Blade-4S",
       "clustersPerContainer": 2,
       "cellModel": "Blade LFP",
@@ -482,8 +482,8 @@
       "mfr": "Sungrow (阳光电源)",
       "model": "PowerTitan 2.0",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.75,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.75,
       "clusterModel": "Cluster LFP314-52S",
       "clustersPerContainer": 2,
       "cellModel": "LFP 314Ah",
@@ -499,8 +499,8 @@
       "mfr": "HyperStrong (海博思创)",
       "model": "5.0MWh Container",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.5,
       "clusterModel": "Cluster LFP314-52S",
       "clustersPerContainer": 2,
       "cellModel": "LFP 314Ah",
@@ -516,8 +516,8 @@
       "mfr": "Envision (远景动力)",
       "model": "5.0MWh Container",
       "type": "20ft Standard",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.5,
       "clusterModel": "Cluster LFP315-52S",
       "clustersPerContainer": 2,
       "cellModel": "LFP 315Ah",
@@ -533,8 +533,8 @@
       "mfr": "CATL (宁德时代)",
       "model": "TENER 6.25MWh",
       "type": "20英尺集装箱",
-      "ratedEnergyMwh": 6.25,
-      "ratedPowerMw": 3.45,
+      "ratedEnergyMWh": 6.25,
+      "ratedPowerMW": 3.45,
       "clusterModel": "catl-cluster-lfp314-52s",
       "clustersPerContainer": 2,
       "cellModel": "catl-565ah",
@@ -550,8 +550,8 @@
       "mfr": "Sungrow (阳光电源)",
       "model": "PowerTitan 2.0 5MWh",
       "type": "20英尺集装箱",
-      "ratedEnergyMwh": 5.0,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.0,
+      "ratedPowerMW": 2.5,
       "clusterModel": "sungrow-cluster-5mwh",
       "clustersPerContainer": 2,
       "cellModel": "catl-lfp-314",
@@ -567,8 +567,8 @@
       "mfr": "Envision (远景动力)",
       "model": "5.5MWh Container",
       "type": "20英尺集装箱",
-      "ratedEnergyMwh": 5.5,
-      "ratedPowerMw": 2.5,
+      "ratedEnergyMWh": 5.5,
+      "ratedPowerMW": 2.5,
       "clusterModel": "envision-cluster-lfp315-52s",
       "clustersPerContainer": 2,
       "cellModel": "envision-lfp-315",
@@ -1011,7 +1011,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 280,
-        "clusterEnergyKWh": 46.592
+        "clusterEnergykWh": 46.592
       },
       "containerConfigs": [
         {
@@ -1042,7 +1042,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 314,
-        "clusterEnergyKWh": 52.25
+        "clusterEnergykWh": 52.25
       },
       "containerConfigs": [
         {
@@ -1073,7 +1073,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 628,
-        "clusterEnergyKWh": 104.499
+        "clusterEnergykWh": 104.499
       },
       "containerConfigs": [
         {
@@ -1104,7 +1104,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 560,
-        "clusterEnergyKWh": 93.184
+        "clusterEnergykWh": 93.184
       },
       "containerConfigs": [
         {
@@ -1135,7 +1135,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 280,
-        "clusterEnergyKWh": 46.592
+        "clusterEnergykWh": 46.592
       },
       "containerConfigs": [
         {
@@ -1166,7 +1166,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 306,
-        "clusterEnergyKWh": 50.918
+        "clusterEnergykWh": 50.918
       },
       "containerConfigs": [
         {
@@ -1197,7 +1197,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 314,
-        "clusterEnergyKWh": 52.25
+        "clusterEnergykWh": 52.25
       },
       "containerConfigs": [
         {
@@ -1228,7 +1228,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 202,
-        "clusterEnergyKWh": 33.613
+        "clusterEnergykWh": 33.613
       },
       "containerConfigs": [
         {
@@ -1259,7 +1259,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 280,
-        "clusterEnergyKWh": 46.592
+        "clusterEnergykWh": 46.592
       },
       "containerConfigs": [
         {
@@ -1290,7 +1290,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 320,
-        "clusterEnergyKWh": 53.248
+        "clusterEnergykWh": 53.248
       },
       "containerConfigs": [
         {
@@ -1321,7 +1321,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 230,
-        "clusterEnergyKWh": 38.272
+        "clusterEnergykWh": 38.272
       },
       "containerConfigs": [
         {
@@ -1352,7 +1352,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 280,
-        "clusterEnergyKWh": 46.592
+        "clusterEnergykWh": 46.592
       },
       "containerConfigs": [
         {
@@ -1383,7 +1383,7 @@
       "clusterConfig": {
         "clusterVoltage": 166.4,
         "clusterCapacityAh": 314,
-        "clusterEnergyKWh": 52.25
+        "clusterEnergykWh": 52.25
       },
       "containerConfigs": [
         {
@@ -1409,8 +1409,8 @@
       "mfr": "Sungrow (阳光电源)",
       "model": "PowerStack 510CS",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.88,
@@ -1427,8 +1427,8 @@
       "mfr": "Huawei (华为)",
       "model": "LUNA2000-215",
       "type": "工商业风液智冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.913,
@@ -1445,8 +1445,8 @@
       "mfr": "HyperStrong (海博思创)",
       "model": "HyperCube 215",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.875,
@@ -1463,8 +1463,8 @@
       "mfr": "BYD (比亚迪)",
       "model": "MC-I 215",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.88,
@@ -1481,8 +1481,8 @@
       "mfr": "JDEnergy (奇点能源)",
       "model": "eBlock-215",
       "type": "工商业分布式储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.89,
@@ -1499,8 +1499,8 @@
       "mfr": "TrinaSolar (天合光能)",
       "model": "Elementa 2 215kWh",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.88,
@@ -1517,8 +1517,8 @@
       "mfr": "CRRC (中车株洲所)",
       "model": "CESS-215-1C",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.87,
@@ -1535,8 +1535,8 @@
       "mfr": "NARI (南瑞继保)",
       "model": "NR ESS-215",
       "type": "工商业液冷储能柜",
-      "ratedEnergyKwh": 215,
-      "ratedPowerKw": 100,
+      "ratedEnergykWh": 215,
+      "ratedPowerkW": 100,
       "acVoltage": "3P4W 400V",
       "dcVoltageRange": "600-900V",
       "efficiency": 0.88,

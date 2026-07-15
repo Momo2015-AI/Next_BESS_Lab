@@ -309,7 +309,7 @@ async function loadLibraryData() {
       mapped.id = c.id
       mapped.name = c.model
       mapped.energy = c.ratedEnergyMWh ?? 0
-      mapped.power = c.ratedPowerMW ?? c.ratedPowerMw ?? 0
+      mapped.power = c.ratedPowerMW ?? 0
       mapped.voltage = 600
       mapped.cells = (c.seriesCount || 0) * (c.parallelCount || 0) || 120
       return mapped
@@ -319,7 +319,7 @@ async function loadLibraryData() {
       const mapped = { ...p }
       mapped.id = p.id
       mapped.name = p.model
-      mapped.power = p.ratedPowerMW ?? p.ratedPowerMw ?? 0
+      mapped.power = p.ratedPowerMW ?? 0
       mapped.voltage = p.acVoltage || 380
       mapped.dcVoltage = p.dcVoltageRange || '--'
       mapped.efficiency = p.efficiency || 97

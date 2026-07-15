@@ -462,7 +462,7 @@ function importFromHierarchy() {
   batteryConfig.stringQty = h.clustersPerContainer * h.requiredContainers
   batteryConfig.clustersPerContainer = h.clustersPerContainer
   batteryConfig.containerQty = h.requiredContainers
-  batteryConfig.containerEnergy = h.containerEnergyMwh
+  batteryConfig.containerEnergy = h.containerEnergyMWh
   batteryConfig.dodSet = h.dodPercent
   batteryConfig.cyclesPerDay = 1
 
@@ -687,7 +687,7 @@ function applyBatteryConfig() {
 
 // 从调研表加载数据
 function loadFromSurvey(surveyData) {
-  if (surveyData.totalMwh) batteryConfig.containerEnergy = surveyData.totalMwh / surveyData.containerQty || 5
+  if (surveyData.totalMWh) batteryConfig.containerEnergy = surveyData.totalMWh / surveyData.containerQty || 5
   if (surveyData.tempAvg) batteryConfig.operatingTemp = surveyData.tempAvg
   if (surveyData.cyclesPerDay) batteryConfig.cyclesPerDay = surveyData.cyclesPerDay
   if (surveyData.dod) batteryConfig.dodSet = surveyData.dod * 100

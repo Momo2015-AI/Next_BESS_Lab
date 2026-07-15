@@ -39,8 +39,8 @@ _FIELD_MAP = {
         "capacityAh": "capacity_ah",
         "voltageNominal": "voltage_nominal",
         "voltageRange": "voltage_range",
-        "ratedEnergyMwh": "rated_energy_mwh",
         "ratedEnergyMWh": "rated_energy_mwh",
+        "ratedEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
         "energyWh": "rated_energy_mwh",
         "voltageMax": "voltage_max",
         "voltageMin": "voltage_min",
@@ -58,10 +58,11 @@ _FIELD_MAP = {
         "parallelCount": "parallel_count",
         "nominalVoltage": "nominal_voltage",
         "nominalCapacityAh": "nominal_capacity_ah",
-        "ratedEnergyMwh": "rated_energy_mwh",
         "ratedEnergyMWh": "rated_energy_mwh",
-        "nominalEnergyKwh": "rated_energy_mwh",
-        "nominalEnergyKWh": "rated_energy_mwh",
+        "ratedEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
+        "nominalEnergykWh": "rated_energy_mwh",
+        "nominalEnergyKwh": "rated_energy_mwh",  # 兼容旧写法
+        "nominalEnergyKWh": "rated_energy_mwh",  # 兼容旧写法
         "maxChargeCurrent": "max_charge_current",
         "maxDischargeCurrent": "max_discharge_current",
         "cellModel": "cell_model",
@@ -73,10 +74,11 @@ _FIELD_MAP = {
         "parallelCount": "parallel_count",
         "nominalVoltage": "nominal_voltage",
         "nominalCapacityAh": "nominal_capacity_ah",
-        "ratedEnergyMwh": "rated_energy_mwh",
         "ratedEnergyMWh": "rated_energy_mwh",
-        "nominalEnergyKwh": "rated_energy_mwh",
-        "nominalEnergyKWh": "rated_energy_mwh",
+        "ratedEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
+        "nominalEnergykWh": "rated_energy_mwh",
+        "nominalEnergyKwh": "rated_energy_mwh",  # 兼容旧写法
+        "nominalEnergyKWh": "rated_energy_mwh",  # 兼容旧写法
         "packModel": "pack_model",
     },
     "clusters": {
@@ -85,22 +87,22 @@ _FIELD_MAP = {
         "parallelCount": "parallel_count",
         "nominalVoltage": "nominal_voltage",
         "nominalCapacityAh": "nominal_capacity_ah",
-        "ratedEnergyMwh": "rated_energy_mwh",
         "ratedEnergyMWh": "rated_energy_mwh",
-        "nominalEnergyMwh": "rated_energy_mwh",
+        "ratedEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
         "nominalEnergyMWh": "rated_energy_mwh",
-        "ratedPowerMw": "rated_power_mw",
+        "nominalEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
         "ratedPowerMW": "rated_power_mw",
-        "nominalPowerMw": "rated_power_mw",
+        "ratedPowerMw": "rated_power_mw",  # 兼容旧写法
         "nominalPowerMW": "rated_power_mw",
+        "nominalPowerMw": "rated_power_mw",  # 兼容旧写法
         "rackModel": "rack_model",
         "bmuType": "bmu_type",
     },
     "containers": {
         "ratedEnergyMWh": "rated_energy_mwh",
-        "ratedEnergyMwh": "rated_energy_mwh",
+        "ratedEnergyMwh": "rated_energy_mwh",  # 兼容旧写法
         "ratedPowerMW": "rated_power_mw",
-        "ratedPowerMw": "rated_power_mw",
+        "ratedPowerMw": "rated_power_mw",  # 兼容旧写法
         "cellModel": "cell_model",
         "cellConfig": "cell_config",
         "cycleLife": "cycle_life",
@@ -120,9 +122,9 @@ _FIELD_MAP = {
     },
     "pcs": {
         "ratedPowerMW": "rated_power_mw",
-        "ratedPowerMw": "rated_power_mw",
+        "ratedPowerMw": "rated_power_mw",  # 兼容旧写法
         "ratedPowerKVA": "rated_power_kva",
-        "ratedPowerKva": "rated_power_kva",
+        "ratedPowerKva": "rated_power_kva",  # 兼容旧写法
         "acVoltage": "ac_voltage",
         "dcVoltageRange": "dc_voltage_range",
         "maxDcCurrent": "max_dc_current",
@@ -157,16 +159,22 @@ _FIELD_MAP = {
         "parallelPerCluster": "parallel_per_cluster",
         "packNominalVoltage": "pack_nominal_voltage",
         "packNominalCapacityAh": "pack_nominal_capacity_ah",
-        "packNominalEnergyKwh": "pack_nominal_energy_kwh",
+        "packNominalEnergykWh": "pack_nominal_energy_kwh",
+        "packNominalEnergyKwh": "pack_nominal_energy_kwh",  # 兼容旧写法
         "rackNominalVoltage": "rack_nominal_voltage",
         "rackNominalCapacityAh": "rack_nominal_capacity_ah",
-        "rackNominalEnergyKwh": "rack_nominal_energy_kwh",
+        "rackNominalEnergykWh": "rack_nominal_energy_kwh",
+        "rackNominalEnergyKwh": "rack_nominal_energy_kwh",  # 兼容旧写法
         "clusterNominalVoltage": "cluster_nominal_voltage",
         "clusterNominalCapacityAh": "cluster_nominal_capacity_ah",
-        "clusterNominalEnergyMwh": "cluster_nominal_energy_mwh",
-        "clusterNominalPowerMw": "cluster_nominal_power_mw",
-        "containerNominalEnergyMwh": "container_nominal_energy_mwh",
-        "containerNominalPowerMw": "container_nominal_power_mw",
+        "clusterNominalEnergyMWh": "cluster_nominal_energy_mwh",
+        "clusterNominalEnergyMwh": "cluster_nominal_energy_mwh",  # 兼容旧写法
+        "clusterNominalPowerMW": "cluster_nominal_power_mw",
+        "clusterNominalPowerMw": "cluster_nominal_power_mw",  # 兼容旧写法
+        "containerNominalEnergyMWh": "container_nominal_energy_mwh",
+        "containerNominalEnergyMwh": "container_nominal_energy_mwh",  # 兼容旧写法
+        "containerNominalPowerMW": "container_nominal_power_mw",
+        "containerNominalPowerMw": "container_nominal_power_mw",  # 兼容旧写法
         "isDefault": "is_default",
     },
 }

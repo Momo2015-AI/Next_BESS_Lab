@@ -287,15 +287,15 @@
             <div class="text-xs mb-2 ins-5">{{ $t('acDesign.commonRules') }}</div>
             <div class="space-y-1 text-[10px]">
               <div class="flex justify-between">
-                <span class="ins-6">{{ $t('acDesign.container5mwh') }}</span>
+                <span class="ins-6">{{ $t('acDesign.container5MWh') }}</span>
                 <span class="ins-2">→ 2台 2.5MW PCS</span>
               </div>
               <div class="flex justify-between">
-                <span class="ins-6">{{ $t('acDesign.container10mwh') }}</span>
+                <span class="ins-6">{{ $t('acDesign.container10MWh') }}</span>
                 <span class="ins-2">→ 2台 5MW PCS</span>
               </div>
               <div class="flex justify-between">
-                <span class="ins-6">{{ $t('acDesign.container20mwh') }}</span>
+                <span class="ins-6">{{ $t('acDesign.container20MWh') }}</span>
                 <span class="ins-2">→ 4台 5MW PCS</span>
               </div>
             </div>

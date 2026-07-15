@@ -90,7 +90,7 @@ class TestArrheniusModel:
         base_body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -145,7 +145,7 @@ class TestArrheniusModel:
         base_body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -193,7 +193,7 @@ class TestArrheniusModel:
         base_body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -239,7 +239,7 @@ class TestArrheniusModel:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -278,7 +278,7 @@ class TestArrheniusModel:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -318,7 +318,7 @@ class TestArrheniusModel:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -374,7 +374,7 @@ class TestPhysicalPrinciples:
                 {
                     "design_output": {
                         "container": {"id": "c1", "ratedEnergyMWh": 10},
-                        "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                        "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                         "containerQty": 10,
                         "pcsQty": 2,
                         "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -450,7 +450,7 @@ class TestPhysicalPrinciples:
             auth_headers,
             design_output={
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 2,
                 "pcsQty": 1,
                 "estimatedCapex": {"equipment": 1e6, "epc": 2e5, "development": 1e5},
@@ -949,7 +949,7 @@ class TestEnginePipelineConsistency:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -1075,7 +1075,7 @@ class TestEdgeCases:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 5},
-                "pcs": {"id": "p1", "ratedPowerMw": 2.5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 2.5, "efficiency": 98},
                 "containerQty": 1,
                 "pcsQty": 1,
                 "estimatedCapex": {"equipment": 500000, "epc": 100000, "development": 50000},
@@ -1110,7 +1110,7 @@ class TestEdgeCases:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 100,
                 "pcsQty": 20,
                 "estimatedCapex": {"equipment": 50e6, "epc": 10e6, "development": 5e6},
@@ -1145,7 +1145,7 @@ class TestEdgeCases:
         body_25 = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipmentCost": 5e6, "epcCost": 1e6, "developmentCost": 5e5, "totalCapex": 6.5e6},
@@ -1192,7 +1192,7 @@ class TestEdgeCases:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -1227,7 +1227,7 @@ class TestEdgeCases:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipment": 5e6, "epc": 1e6, "development": 5e5},
@@ -1262,7 +1262,7 @@ class TestEdgeCases:
         body = {
             "design_output": {
                 "container": {"id": "c1", "ratedEnergyMWh": 10},
-                "pcs": {"id": "p1", "ratedPowerMw": 5, "efficiency": 98},
+                "pcs": {"id": "p1", "ratedPowerMW": 5, "efficiency": 98},
                 "containerQty": 10,
                 "pcsQty": 2,
                 "estimatedCapex": {"equipmentCost": 5e6, "epcCost": 1e6, "developmentCost": 5e5, "totalCapex": 6.5e6},

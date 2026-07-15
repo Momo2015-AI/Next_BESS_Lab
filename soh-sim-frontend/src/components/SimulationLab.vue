@@ -403,7 +403,7 @@
             <div class="rounded p-2 text-[10px] space-y-0.5" style="background: var(--color-input-bg)">
               <div class="flex justify-between text-muted">
                 <span>{{ $t('simLab.coolingPowerEstimate') }}</span>
-                <span class="text-secondary">{{ estimatedCoolingPower?.coolingKw ?? '—' }} kW</span>
+                <span class="text-secondary">{{ estimatedCoolingPower?.coolingkW ?? '—' }} kW</span>
               </div>
               <div class="flex justify-between text-muted">
                 <span>{{ $t('simLab.fixedAuxNote') }}</span>
@@ -414,11 +414,11 @@
                 style="border-top: 1px solid var(--color-border); padding-top: 2px; margin-top: 2px"
               >
                 <span>= {{ $t('simLab.labelBessAuxRun') }}</span>
-                <span class="text-accent">{{ estimatedCoolingPower?.totalRunKw ?? '—' }} kW</span>
+                <span class="text-accent">{{ estimatedCoolingPower?.totalRunkW ?? '—' }} kW</span>
               </div>
               <div class="flex justify-between text-muted">
                 <span>{{ $t('simLab.standbyAuxNote') }}</span>
-                <span class="text-secondary">{{ estimatedCoolingPower?.standbyKw ?? '—' }} kW</span>
+                <span class="text-secondary">{{ estimatedCoolingPower?.standbykW ?? '—' }} kW</span>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
@@ -1010,18 +1010,18 @@ const estimatedCoolingPower = computed(() => {
     cellR = 0.00025,
     cRate = 0.5,
     cells = 5000
-  const cellHeatKw = ((cellAh * cRate) ** 2 * cellR * cells) / 1000
+  const cellHeatkW = ((cellAh * cRate) ** 2 * cellR * cells) / 1000
   // 热渗透: U × A × ΔT
   const deltaT = Math.max(0, ambient - 25)
-  const infiltrationKw = (0.5 * 60 * deltaT) / 1000
-  const totalHeatKw = (cellHeatKw + infiltrationKw) * 1.2
-  const coolingKw = totalHeatKw / cop
+  const infiltrationkW = (0.5 * 60 * deltaT) / 1000
+  const totalHeatkW = (cellHeatkW + infiltrationkW) * 1.2
+  const coolingkW = totalHeatkW / cop
   return {
-    coolingKw: +coolingKw.toFixed(2),
-    standbyKw: +(coolingKw * 0.15).toFixed(2),
-    totalRunKw: +(coolingKw + FIXED_AUX).toFixed(2),
-    cellHeatKw: +cellHeatKw.toFixed(2),
-    infiltrationKw: +infiltrationKw.toFixed(2),
+    coolingkW: +coolingkW.toFixed(2),
+    standbykW: +(coolingkW * 0.15).toFixed(2),
+    totalRunkW: +(coolingkW + FIXED_AUX).toFixed(2),
+    cellHeatkW: +cellHeatkW.toFixed(2),
+    infiltrationkW: +infiltrationkW.toFixed(2),
     cop
   }
 })
@@ -1040,11 +1040,11 @@ const annualEnergyThroughput = computed(() => {
 })
 
 const totalRunAux = computed(() => {
-  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.totalRunKw || 0
+  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.totalRunkW || 0
   return (simParams.bessAuxRun || 0) + (simParams.pcsAuxRun || 0)
 })
 const totalStandbyAux = computed(() => {
-  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.standbyKw || 0
+  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.standbykW || 0
   return (simParams.bessAuxStandby || 0) + (simParams.pcsAuxStandby || 0)
 })
 
@@ -1317,7 +1317,7 @@ const runSimulation = async () => {
     // 前端预览: thermal 模式使用动态 aux，manual 模式使用手动值
     const bessAux =
       simParams.auxPowerMode === 'thermal' && estimatedCoolingPower.value
-        ? estimatedCoolingPower.value.totalRunKw
+        ? estimatedCoolingPower.value.totalRunkW
         : simParams.bessAuxRun
     const auxEnergy = ((bessAux + simParams.pcsAuxRun) * i) / 1000
     const netAvail = Math.max(0, grossEnergy - auxEnergy) * correctionFactors.capacityFactor
@@ -1415,7 +1415,7 @@ const runAISimulation = async () => {
           (simParams.acEfficiency / 100)
         const bessAuxAi =
           simParams.auxPowerMode === 'thermal' && estimatedCoolingPower.value
-            ? estimatedCoolingPower.value.totalRunKw
+            ? estimatedCoolingPower.value.totalRunkW
             : simParams.bessAuxRun
         const auxEnergy = ((bessAuxAi + simParams.pcsAuxRun) * i) / 1000
         const netAvail = Math.max(0, grossEnergy - auxEnergy)

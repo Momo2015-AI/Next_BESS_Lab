@@ -523,12 +523,12 @@
             {{ $t('runningConditions.matchedConfig') }}: {{ matchedConfig.name }}
           </div>
           <div class="text-[10px] space-y-0.5 ins-3">
-            <div>{{ $t('runningConditions.packEnergy') }}: {{ matchedConfig.packNominalEnergyKwh }} kWh</div>
+            <div>{{ $t('runningConditions.packEnergy') }}: {{ matchedConfig.packNominalEnergykWh }} kWh</div>
             <div>
-              {{ $t('runningConditions.rackEnergy') }}: {{ (matchedConfig.rackNominalEnergyKwh / 1000).toFixed(2) }} MWh
+              {{ $t('runningConditions.rackEnergy') }}: {{ (matchedConfig.rackNominalEnergykWh / 1000).toFixed(2) }} MWh
             </div>
-            <div>{{ $t('runningConditions.clusterEnergy') }}: {{ matchedConfig.clusterNominalEnergyMwh }} MWh</div>
-            <div>{{ $t('runningConditions.containerEnergy') }}: {{ matchedConfig.containerNominalEnergyMwh }} MWh</div>
+            <div>{{ $t('runningConditions.clusterEnergy') }}: {{ matchedConfig.clusterNominalEnergyMWh }} MWh</div>
+            <div>{{ $t('runningConditions.containerEnergy') }}: {{ matchedConfig.containerNominalEnergyMWh }} MWh</div>
           </div>
         </div>
       </div>

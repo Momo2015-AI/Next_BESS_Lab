@@ -247,18 +247,18 @@
             <div class="text-xs mb-2 font-medium text-accent-2">{{ $t('paramPanel.containerPcsRule') }}</div>
             <div class="text-[10px] space-y-1 text-muted">
               <div>
-                • {{ $t('paramPanel.rule5mwh') }}
-                <span>{{ $t('paramPanel.rule5mwhVal') }}</span>
+                • {{ $t('paramPanel.rule5MWh') }}
+                <span>{{ $t('paramPanel.rule5MWhVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • {{ $t('paramPanel.rule10mwh') }}
-                <span>{{ $t('paramPanel.rule10mwhVal') }}</span>
+                • {{ $t('paramPanel.rule10MWh') }}
+                <span>{{ $t('paramPanel.rule10MWhVal') }}</span>
                 class="text-accent-2"
               </div>
               <div>
-                • {{ $t('paramPanel.rule20mwh') }}
-                <span>{{ $t('paramPanel.rule20mwhVal') }}</span>
+                • {{ $t('paramPanel.rule20MWh') }}
+                <span>{{ $t('paramPanel.rule20MWhVal') }}</span>
                 class="text-accent-2"
               </div>
             </div>

@@ -48,9 +48,6 @@ def _db_row_to_camel(row_dict: dict) -> dict:
         # 同时保留 snake_case 键，兼容两种访问方式
         if camel != key:
             result[key] = value
-    # Container 需要 ratedPowerMw（小写 w）兼容旧代码
-    if "ratedPowerMW" in result and "ratedPowerMw" not in result:
-        result["ratedPowerMw"] = result["ratedPowerMW"]
     return result
 
 
@@ -198,7 +195,7 @@ class DesignEngine(BaseEngine):
                             "model": container.get("model"),
                             "mfr": container.get("mfr"),
                             "ratedEnergyMWh": energy,
-                            "ratedPowerMw": container.get("ratedPowerMw", 2.5),
+                            "ratedPowerMW": container.get("ratedPowerMW", 2.5),
                             "cooling": container.get("cooling", "Liquid Cooling"),
                             "cellModel": container.get("cellModel"),
                             "clustersPerContainer": container.get("clustersPerContainer", 2),

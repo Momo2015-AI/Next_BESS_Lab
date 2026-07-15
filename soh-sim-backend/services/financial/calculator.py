@@ -302,8 +302,8 @@ def calculate_full_financial(total_ac_usable, financial_params=None, boq_data=No
     capex_development = float(capExInternal.get("development", 0))
     total_capex = capex_equipment + capex_epc + capex_development
 
-    fixed_opex_per_mw = float(opex_params.get("fixedOpexPerMw", 5000))
-    variable_opex_per_mwh = float(opex_params.get("variableOpexPerMwh", 2.5))
+    fixed_opex_per_mw = float(opex_params.get("fixedOpexPerMW", 5000))
+    variable_opex_per_mwh = float(opex_params.get("variableOpexPerMWh", 2.5))
     insurance_rate = float(opex_params.get("insuranceRate", 0.5)) / 100
     land_lease = float(opex_params.get("landLease", 150000))
     annual_opex_base = (system_power_mw * fixed_opex_per_mw) + (total_capex * insurance_rate) + land_lease

@@ -102,8 +102,8 @@ class FinancialEngine(BaseEngine):
             "insurance": round(total_power * 2000, 2),
             "grid": round(total_power * 1000, 2),
             "landLease": 150000,
-            "fixedOpexPerMw": 5000,
-            "variableOpexPerMwh": 2.5,
+            "fixedOpexPerMW": 5000,
+            "variableOpexPerMWh": 2.5,
             "insuranceRate": 0.5,
         }
 

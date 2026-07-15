@@ -124,7 +124,7 @@
           </div>
           <div class="flex justify-between text-[9px]">
             <span class="text-muted">{{ $t('capexLink.unitPrice') }}</span>
-            <span class="text-secondary">{{ capexPerMWh.toFixed(0) }} {{ $t('capexLink.yuan10kPerMwh') }}</span>
+            <span class="text-secondary">{{ capexPerMWh.toFixed(0) }} {{ $t('capexLink.yuan10kPerMWh') }}</span>
           </div>
         </div>
       </div>

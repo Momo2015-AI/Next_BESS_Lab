@@ -112,7 +112,7 @@
               </div>
               <div class="col-span-2">
                 <span class="text-muted">{{ $t('hierarchy.packEnergy') }}:</span>
-                {{ packEnergyKwh.toFixed(2) }} kWh
+                {{ packEnergykWh.toFixed(2) }} kWh
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@
               </div>
               <div>
                 <span class="text-muted">{{ $t('hierarchy.rackEnergy') }}:</span>
-                {{ rackEnergyKwh.toFixed(2) }} kWh
+                {{ rackEnergykWh.toFixed(2) }} kWh
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@
               </div>
               <div>
                 <span class="text-muted">{{ $t('hierarchy.clusterEnergy') }}:</span>
-                {{ clusterEnergyKwh.toFixed(2) }} kWh
+                {{ clusterEnergykWh.toFixed(2) }} kWh
               </div>
               <div>
                 <span class="text-muted">{{ $t('hierarchy.racksPerCluster') }}:</span>
@@ -177,7 +177,7 @@
             <div class="grid grid-cols-3 gap-2">
               <div>
                 <span class="text-muted">{{ $t('hierarchy.containerEnergy') }}:</span>
-                {{ containerEnergyMwh.toFixed(3) }} MWh
+                {{ containerEnergyMWh.toFixed(3) }} MWh
               </div>
               <div>
                 <span class="text-muted">{{ $t('hierarchy.clustersPerContainer') }}:</span>
@@ -213,12 +213,12 @@
           <span class="text-sm">
             {{ $t('hierarchy.containerValidation') }}: {{ dcSizing.requiredContainers }}
             {{ $t('hierarchy.containersNeeded') }} ({{ dcSizing.dcInstalledMWh.toFixed(1) }} MWh ÷
-            {{ containerEnergyMwh.toFixed(3) }} MWh)
+            {{ containerEnergyMWh.toFixed(3) }} MWh)
             {{ containerValidation.valid ? '≥ ' + dcSizing.requiredContainers : '< ' + dcSizing.requiredContainers }}
           </span>
         </div>
         <div v-if="containerValidation.valid" class="text-xs text-muted mt-1">
-          {{ $t('hierarchy.totalInstalled') }}: {{ (dcSizing.requiredContainers * containerEnergyMwh).toFixed(1) }} MWh
+          {{ $t('hierarchy.totalInstalled') }}: {{ (dcSizing.requiredContainers * containerEnergyMWh).toFixed(1) }} MWh
           ({{ $t('hierarchy.oversizeRate') }}: {{ oversizeRate.toFixed(1) }}%)
         </div>
       </div>
@@ -266,7 +266,7 @@ const packVoltage = computed(() => {
   return mapping.value.packConfig.seriesPerPack * (selectedCell.value?.voltageNominal || 3.2)
 })
 
-const packEnergyKwh = computed(() => {
+const packEnergykWh = computed(() => {
   if (!mapping.value) return 0
   return (packVoltage.value * mapping.value.cellAh * mapping.value.packConfig.parallelPerPack) / 1000
 })
@@ -274,15 +274,15 @@ const packEnergyKwh = computed(() => {
 // Rack 计算
 const rackVoltage = computed(() => packVoltage.value * h.packsPerRack)
 
-const rackEnergyKwh = computed(() => packEnergyKwh.value * h.packsPerRack)
+const rackEnergykWh = computed(() => packEnergykWh.value * h.packsPerRack)
 
 // Cluster 计算
 const clusterVoltage = computed(() => rackVoltage.value * h.racksPerCluster)
 
-const clusterEnergyKwh = computed(() => rackEnergyKwh.value * h.racksPerCluster)
+const clusterEnergykWh = computed(() => rackEnergykWh.value * h.racksPerCluster)
 
 // Container 计算
-const containerEnergyMwh = computed(() => (clusterEnergyKwh.value * h.clustersPerContainer) / 1000)
+const containerEnergyMWh = computed(() => (clusterEnergykWh.value * h.clustersPerContainer) / 1000)
 
 // 匹配兼容容器
 const matchedContainers = computed(() => {
@@ -303,7 +303,7 @@ const dcSizing = computed(() => {
   const deltaPercent = dodLoss + h.voltageMismatchLoss + h.oemDesignMargin
   const dcFunctionalMWh = h.targetEnergyMWh
   const dcInstalledMWh = dcFunctionalMWh / ((1 - deltaPercent / 100) * (h.sohInitial / 100))
-  const requiredContainers = Math.ceil(dcInstalledMWh / (containerEnergyMwh.value || 5.0))
+  const requiredContainers = Math.ceil(dcInstalledMWh / (containerEnergyMWh.value || 5.0))
 
   return {
     deltaPercent,
@@ -316,14 +316,14 @@ const dcSizing = computed(() => {
 // 容器数量验证
 const containerValidation = computed(() => {
   return {
-    valid: dcSizing.value.requiredContainers * containerEnergyMwh.value >= dcSizing.value.dcInstalledMWh
+    valid: dcSizing.value.requiredContainers * containerEnergyMWh.value >= dcSizing.value.dcInstalledMWh
   }
 })
 
 const oversizeRate = computed(() => {
   if (!dcSizing.value.dcInstalledMWh) return 0
   return (
-    ((dcSizing.value.requiredContainers * containerEnergyMwh.value - dcSizing.value.dcInstalledMWh) /
+    ((dcSizing.value.requiredContainers * containerEnergyMWh.value - dcSizing.value.dcInstalledMWh) /
       dcSizing.value.dcInstalledMWh) *
     100
   )
@@ -351,7 +351,7 @@ function onCellChange() {
   if (mapping.value.containerConfigs.length > 0) {
     const cfg = mapping.value.containerConfigs[0]
     h.clustersPerContainer = cfg.clustersPerContainer
-    h.containerEnergyMwh = cfg.containerEnergyMWh
+    h.containerEnergyMWh = cfg.containerEnergyMWh
   }
   recalcChain()
 }
@@ -360,12 +360,12 @@ function recalcChain() {
   // 更新 store
   Object.assign(store.batteryHierarchy, {
     packVoltage: packVoltage.value,
-    packEnergyKwh: packEnergyKwh.value,
+    packEnergykWh: packEnergykWh.value,
     rackVoltage: rackVoltage.value,
-    rackEnergyKwh: rackEnergyKwh.value,
+    rackEnergykWh: rackEnergykWh.value,
     clusterVoltage: clusterVoltage.value,
-    clusterEnergyKwh: clusterEnergyKwh.value,
-    containerEnergyMwh: containerEnergyMwh.value,
+    clusterEnergykWh: clusterEnergykWh.value,
+    containerEnergyMWh: containerEnergyMWh.value,
     deltaPercent: dcSizing.value.deltaPercent,
     dcFunctionalMWh: dcSizing.value.dcFunctionalMWh,
     dcInstalledMWh: dcSizing.value.dcInstalledMWh,
@@ -378,7 +378,7 @@ function applyToDesign() {
   recalcChain()
   store.batteryHierarchy.source = 'hierarchy'
   // 同步到 systemParams
-  store.systemParams.ratedEnergy = containerEnergyMwh.value
+  store.systemParams.ratedEnergy = containerEnergyMWh.value
   store.systemParams.initContainerQty = dcSizing.value.requiredContainers
   store.systemParams.requiredEnergy = h.targetEnergyMWh
   store.systemParams.duration = 1 / h.pRate
@@ -397,15 +397,15 @@ function resetAll() {
     seriesPerPack: 52,
     parallelPerPack: 1,
     packVoltage: 0,
-    packEnergyKwh: 0,
+    packEnergykWh: 0,
     packsPerRack: 8,
     rackVoltage: 0,
-    rackEnergyKwh: 0,
+    rackEnergykWh: 0,
     racksPerCluster: 1,
     clusterVoltage: 0,
-    clusterEnergyKwh: 0,
+    clusterEnergykWh: 0,
     clustersPerContainer: 12,
-    containerEnergyMwh: 5.0,
+    containerEnergyMWh: 5.0,
     targetPowerMW: 260,
     targetEnergyMWh: 1560,
     pRate: 0.167,

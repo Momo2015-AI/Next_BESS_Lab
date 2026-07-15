@@ -55,7 +55,7 @@ export function useAuxPower() {
     const annualGrossDischarge =
       state.cap * state.units * sqrtRte * state.cycles * state.days * state.acEff * state.pcsEff
     const annualNetDischarge = annualGrossDischarge - totalSystemAux
-    const singleUnitDailyKwh = (dcTotalAux * 1000) / Math.max(state.units, 1) / Math.max(state.days, 1)
+    const singleUnitDailykWh = (dcTotalAux * 1000) / Math.max(state.units, 1) / Math.max(state.days, 1)
 
     return {
       tRun: Math.round(tRun * 10) / 10,
@@ -66,7 +66,7 @@ export function useAuxPower() {
       totalSystemAux: Math.round(totalSystemAux * 100) / 100,
       annualGrossDischarge: Math.round(annualGrossDischarge * 100) / 100,
       annualNetDischarge: Math.round(annualNetDischarge * 100) / 100,
-      singleUnitDailyKwh: Math.round(singleUnitDailyKwh * 100) / 100
+      singleUnitDailykWh: Math.round(singleUnitDailykWh * 100) / 100
     }
   })
 

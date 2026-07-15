@@ -275,9 +275,9 @@
             </div>
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px]">
               <div class="text-muted">{{ $t('productConfig.capacity') }}</div>
-              <div class="text-secondary text-right">{{ c.ratedEnergyKwh }} kWh</div>
+              <div class="text-secondary text-right">{{ c.ratedEnergykWh }} kWh</div>
               <div class="text-muted">{{ $t('productConfig.power') }}</div>
-              <div class="text-secondary text-right">{{ c.ratedPowerKw }} kW</div>
+              <div class="text-secondary text-right">{{ c.ratedPowerkW }} kW</div>
               <div class="text-muted">{{ $t('productConfig.acVoltage') }}</div>
               <div class="text-secondary text-right">
                 {{ c.acVoltage }}

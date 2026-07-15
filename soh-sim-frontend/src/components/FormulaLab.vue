@@ -323,7 +323,7 @@
           FixedO&M
           <sub>year</sub>
           = FixedRate
-          <sub>perKW</sub>
+          <sub>perkW</sub>
           × TotalMW × 1000 × (1+escalation)
           <sup>year</sup>
           <br />

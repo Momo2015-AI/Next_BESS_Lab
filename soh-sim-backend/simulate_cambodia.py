@@ -212,7 +212,7 @@ fin = calculate_full_financial(
             "initContainerQty": system_params["initContainerQty"],
             "ratedEnergy": system_params["ratedEnergy"],
         },
-        "opex": {"fixedOpexPerMw": 5000, "variableOpexPerMwh": 2.5, "insuranceRate": 0.5, "landLease": 150000},
+        "opex": {"fixedOpexPerMW": 5000, "variableOpexPerMWh": 2.5, "insuranceRate": 0.5, "landLease": 150000},
         "revenue": {
             "arbitrage": {
                 "enabled": True,
