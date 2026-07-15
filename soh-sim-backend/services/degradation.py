@@ -428,25 +428,27 @@ LFP@100%DOD/25°C参考寿命6000次; 损伤指数m=1.5(典型值).
 
 _SEMI_EMP_DEFAULTS = {
     "temp_coeff": 0.002,
-    "dod_coeff": 0.5,
-    "c_rate_coeff": 0.1,
-    "soc_coeff": 0.3,
+    "dod_coeff": 0.15,
+    "c_rate_coeff": 0.08,
+    "soc_coeff": 0.15,
 }
 """半经验综合: SOH=1-(1-fT·fDOD·fCr·fSOC)·t/25
-四应力耦合; 温度偏离25°C每度±0.2%; DOD 50→100%翻倍; 0.5C vs 1C减半.
+校准目标@25°C/90%DOD/0.5C → 25年SOH≈79%.
+温度偏离25°C每度±0.2%; DOD/SOC窗口因子缩小; 另叠加循环贡献项(N/6000)*(DOD/100)^1.2*5%.
 """
 
 _HYBRID_DEFAULTS = {
-    "A_cal": 0.001,
-    "Ea_cal": 35000,
-    "alpha": 0.5,
-    "A_cyc": 1e-5,
-    "Ea_cyc": 25000,
-    "beta": 0.7,
+    "A_cal": 0.01,
+    "Ea_cal": 20000,
+    "alpha": 0.65,
+    "A_cyc": 0.001,
+    "Ea_cyc": 18000,
+    "beta": 0.55,
 }
 """Arrhenius混合: 日历+循环双路径.
-日历: Qcal=Acal·exp(-Eacal/(R·T))·t^α; 循环: Qcyc=Acyc·exp(-Ecyc/(R·T))·N^β·DOD^γ·(1+δ(Cr-0.5))
-参数经多款主流LFP电芯公开数据平均化校准."""
+校准目标@25°C/1cpc/day/90%DOD/0.5C → 25年SOH≈82%, 15年≈89%.
+日历Qcal=Acal·exp(-Eacal/(R·T))·t^α×10⁴; 循环Qcyc=Acyc·exp(-Ecyc/(R·T))·N^β·DOD^γ·CrFac×10⁴
+内部固定γ=1.5(DOD指数), δ=0.2(倍率系数). 参数经LFP公开数据校准."""
 
 
 # ==================== 双指数模型 ====================

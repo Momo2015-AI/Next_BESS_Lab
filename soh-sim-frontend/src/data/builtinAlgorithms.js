@@ -31,15 +31,15 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     mathematical_form: 'SOH(t) = A*e^(-k1*t) + B*e^(-k2*t) + C',
     formula_expression: 'A * Math.exp(-k1 * t) + B * Math.exp(-k2 * t) + C',
     description:
-      '适用于LFP电池的日历衰减和循环衰减。双指数形式：快速衰减阶段（A项）描述SEI膜形成导致的初期快速容量损失；慢速衰减阶段（B项）描述活性物质损失导致的长期缓慢衰减。C为25年末剩余容量。',
+      '适用于LFP电池的日历衰减和循环衰减。双指数形式：快速衰减阶段（A项，k₁=0.12）描述SEI膜形成导致的初期快速容量损失；慢速衰减阶段（B项，k₂=0.02）描述活性物质损失导致的长期缓慢衰减。C为25年末剩余容量基线。校准目标：LFP@25°C、1次/日、90%DOD → 25年SOH≈80%，15年≈87%。',
     is_builtin: true,
     applicable_scenarios: ['LFP日历衰减', '循环衰减', '综合衰减预测'],
     parameters: {
       A: { label: '快速衰减幅度', default: 0.15, min: 0, max: 0.5, unit: '' },
       B: { label: '慢速衰减幅度', default: 0.08, min: 0, max: 0.3, unit: '' },
-      k1: { label: '快速衰减系数', default: 0.05, min: 0, max: 0.2, unit: '/年' },
-      k2: { label: '慢速衰减系数', default: 0.008, min: 0, max: 0.05, unit: '/年' },
-      C: { label: '剩余容量', default: 0.77, min: 0.5, max: 0.9, unit: '' }
+      k1: { label: '快速衰减系数', default: 0.12, min: 0, max: 0.3, unit: '/年' },
+      k2: { label: '慢速衰减系数', default: 0.02, min: 0, max: 0.08, unit: '/年' },
+      C: { label: '剩余容量', default: 0.75, min: 0.5, max: 0.9, unit: '' }
     }
   },
   {
@@ -53,7 +53,7 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     mathematical_form: 'RTE(t) = RTE0 - a*t - b*ln(1+g*t)',
     formula_expression: 'RTE0 - alpha * t - beta * Math.log(1 + gamma * t)',
     description:
-      '适用于RTE往返效率衰减建模。线性项描述设备老化导致的效率线性下降；对数项描述效率下降随时间的减缓趋势——初期衰减快，后期趋于平稳。适合液冷系统在25°C标准工况下。',
+      '适用于RTE往返效率衰减建模。线性项描述设备老化导致的效率线性下降；对数项描述效率下降随时间的减缓趋势——初期衰减快，后期趋于平稳。液冷系统在25°C标准工况下25年末RTE≈86.6%。SOH从RTE经验推导。',
     is_builtin: true,
     applicable_scenarios: ['RTE衰减', '效率衰减建模'],
     parameters: {
@@ -92,16 +92,17 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     accuracy_level: 'medium',
     accuracy_desc: 'R^2 > 0.97',
     mathematical_form: 'SOH = f(T) * f(DOD) * f(C-rate) * f(SOC)',
-    formula_expression: '1 - (1 - temp_factor * dod_factor * c_rate_factor * soc_factor) * t / 25',
+    formula_expression:
+      '1 - (1 - temp_coeff_factor * dod_coeff_factor * c_rate_coeff_factor * soc_coeff_factor) * t / 25',
     description:
-      '综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。温度每偏离25°C 1°C，衰减速率变化0.2%；DOD从50%升至100%时衰减速率翻倍；0.5C充电相比1C充电衰减减半。',
+      '综合考虑温度、DOD、C-rate、SOC窗口四大应力因素的半经验综合衰减模型。四因子均为0~1健康系数，乘积为综合健康度；SOH(t)=1-(1-乘积)*t/25。温度以25°C基准每偏离1°C±0.2%；DOD以50%中性点向两端递减；C-rate以0.5C基准；SOC窗口近似以DOD值作为窗口宽度。另叠加循环次数贡献项(N/6000)*(DOD/100)^1.2*5%。',
     is_builtin: true,
     applicable_scenarios: ['多应力耦合', '综合衰减', '复杂工况预测'],
     parameters: {
       temp_coeff: { label: '温度系数', default: 0.002, min: 0, max: 0.01, unit: '/°C' },
-      dod_coeff: { label: 'DOD系数', default: 0.5, min: 0, max: 2.0, unit: '' },
-      c_rate_coeff: { label: '倍率系数', default: 0.1, min: 0, max: 1.0, unit: '' },
-      soc_coeff: { label: 'SOC窗口系数', default: 0.3, min: 0, max: 1.0, unit: '' }
+      dod_coeff: { label: 'DOD系数', default: 0.15, min: 0, max: 2.0, unit: '' },
+      c_rate_coeff: { label: '倍率系数', default: 0.08, min: 0, max: 1.0, unit: '' },
+      soc_coeff: { label: 'SOC窗口系数', default: 0.15, min: 0, max: 1.0, unit: '' }
     }
   },
   {
@@ -112,19 +113,20 @@ export const BUILTIN_DEGRADATION_ALGORITHMS = [
     category: 'degradation',
     accuracy_level: 'medium',
     accuracy_desc: '通用默认模型，适用广泛',
-    mathematical_form: '基于Arrhenius方程的综合混合模型',
-    formula_expression: 'A_cal * Math.exp(-Ea_cal * 1000 / (R * T)) * Math.pow(t + 0.5, alpha)',
+    mathematical_form: 'Q_cal + Q_cyc = A_cal·exp(-Ea_c/RT)·t^α + A_cyc·exp(-Ea_cyc/RT)·N^β·DOD^γ·(1+δ(Cr-0.5))',
+    formula_expression:
+      'A_cal * Math.exp(-Ea_cal * 1000 / (R * T)) * Math.pow(t, alpha) + A_cyc * Math.exp(-Ea_cyc * 1000 / (R * T)) * Math.pow(N_cycles, beta) * Math.pow(DOD / 100, gamma) * (1 + delta * (c_rate - 0.5))',
     description:
-      '通用默认混合衰减模型，基于Arrhenius框架同时处理日历老化和循环老化。日历老化因子（A_cal=0.001）和循环老化因子（A_cyc=1e-5）分别为两个老化路径的基础速率。参数参考多款主流LFP电芯公开数据平均值。',
+      '通用默认混合衰减模型，基于Arrhenius框架同时处理日历老化和循环老化两条独立路径。日历老化Qcal=Acal·exp(-Eacal/(R·T))·t^α（时间驱动）；循环老化Qcyc=Acyc·exp(-Ecyc/(R·T))·N^β·(DOD/100)^γ·[1+δ(Cr-0.5)]（次数驱动）。内部固定γ=1.5、δ=0.2。参数参考多款主流LFP电芯公开数据平均值。',
     is_builtin: true,
     applicable_scenarios: ['通用默认', '快速评估', '无详细数据时使用'],
     parameters: {
-      A_cal: { label: '日历老化因子', default: 0.001, min: 0.0001, max: 0.01, unit: '' },
-      Ea_cal: { label: '日历活化能', default: 35, min: 20, max: 60, unit: 'kJ/mol' },
-      alpha: { label: '时间指数', default: 0.5, min: 0.3, max: 0.7, unit: '' },
-      A_cyc: { label: '循环老化因子', default: 0.00001, min: 1e-7, max: 1e-4, unit: '' },
-      Ea_cyc: { label: '循环活化能', default: 25, min: 15, max: 50, unit: 'kJ/mol' },
-      beta: { label: '循环指数', default: 0.7, min: 0.5, max: 0.9, unit: '' }
+      A_cal: { label: '日历老化因子', default: 0.01, min: 0.0001, max: 0.05, unit: '' },
+      Ea_cal: { label: '日历活化能', default: 20, min: 15, max: 40, unit: 'kJ/mol' },
+      alpha: { label: '时间指数', default: 0.65, min: 0.3, max: 0.8, unit: '' },
+      A_cyc: { label: '循环老化因子', default: 0.001, min: 1e-5, max: 0.01, unit: '' },
+      Ea_cyc: { label: '循环活化能', default: 18, min: 12, max: 35, unit: 'kJ/mol' },
+      beta: { label: '循环指数', default: 0.55, min: 0.4, max: 0.8, unit: '' }
     }
   }
 ]
