@@ -88,7 +88,7 @@ function toCamel(obj) {
 async function fetchCategory(category, _force = false) {
   try {
     const data = await api.get(`/api/products/${category}`)
-    return (data.items || []).map(toCamel)
+    return (data.data?.items || []).map(toCamel)
   } catch {
     return []
   }
@@ -97,7 +97,7 @@ async function fetchCategory(category, _force = false) {
 async function fetchConfigRules(_force = false) {
   try {
     const data = await api.get('/api/products/config-rules')
-    return (data.items || []).map(toCamel)
+    return (data.data?.items || []).map(toCamel)
   } catch {
     return []
   }

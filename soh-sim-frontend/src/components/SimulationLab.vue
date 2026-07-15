@@ -1044,7 +1044,7 @@ const loadSurveyData = async () => {
   }
   try {
     const data = await api.get(`/api/survey/${surveyId.value}`)
-    mapSurveyData(data)
+    mapSurveyData(data.data)
   } catch (e) {
     if (e.status === 404) {
       emit('error', t('simLab.surveyNotFound'), 'warning')
@@ -1062,8 +1062,8 @@ const searchByProjectName = async () => {
   try {
     const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
     if (data.success) {
-      searchResults.value = data.surveys
-      if (data.surveys.length === 0) {
+      searchResults.value = data.data?.surveys || []
+      if ((data.data?.surveys || []).length === 0) {
         emit('error', t('simLab.noMatchingProject'), 'warning')
       }
     } else {

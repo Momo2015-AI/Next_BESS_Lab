@@ -222,7 +222,7 @@ const fetchRate = async () => {
       apiRate.value = d.rate
       rateSource.value = d.source
       lastUpdated.value = d.date
-      rateStatus.value = resp.cached ? 'cached' : 'online'
+      rateStatus.value = resp.data?.cached ? 'cached' : 'online'
       if (!isManualRate.value) {
         manualRate.value = d.rate
       }

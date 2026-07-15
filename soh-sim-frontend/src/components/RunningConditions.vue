@@ -1268,12 +1268,12 @@ async function onCellChange() {
   }
 
   const result = await matchConfigRule({ cellModel: selectedCellModel.value })
-  if (result.success && result.matched && result.rule) {
-    matchedConfig.value = result.rule
-    selectedPackModel.value = result.rule.packModel || selectedPackModel.value
-    selectedRackModel.value = result.rule.rackModel || ''
-    selectedClusterModel.value = result.rule.clusterModel || ''
-    selectedContainerModel.value = result.rule.containerModel || ''
+  if (result.success && result.data?.matched && result.data?.rule) {
+    matchedConfig.value = result.data.rule
+    selectedPackModel.value = result.data.rule.packModel || selectedPackModel.value
+    selectedRackModel.value = result.data.rule.rackModel || ''
+    selectedClusterModel.value = result.data.rule.clusterModel || ''
+    selectedContainerModel.value = result.data.rule.containerModel || ''
   }
 }
 
@@ -1293,11 +1293,11 @@ async function onPackChange() {
 
   if (selectedCellModel.value) {
     const result = await matchConfigRule({ cellModel: selectedCellModel.value, packModel: selectedPackModel.value })
-    if (result.success && result.matched && result.rule) {
-      matchedConfig.value = result.rule
-      selectedRackModel.value = result.rule.rackModel || selectedRackModel.value
-      selectedClusterModel.value = result.rule.clusterModel || ''
-      selectedContainerModel.value = result.rule.containerModel || ''
+    if (result.success && result.data?.matched && result.data?.rule) {
+      matchedConfig.value = result.data.rule
+      selectedRackModel.value = result.data.rule.rackModel || selectedRackModel.value
+      selectedClusterModel.value = result.data.rule.clusterModel || ''
+      selectedContainerModel.value = result.data.rule.containerModel || ''
     }
   }
 }
@@ -1321,10 +1321,10 @@ async function onRackChange() {
       packModel: selectedPackModel.value,
       rackModel: selectedRackModel.value
     })
-    if (result.success && result.matched && result.rule) {
-      matchedConfig.value = result.rule
-      selectedClusterModel.value = result.rule.clusterModel || selectedClusterModel.value
-      selectedContainerModel.value = result.rule.containerModel || ''
+    if (result.success && result.data?.matched && result.data?.rule) {
+      matchedConfig.value = result.data.rule
+      selectedClusterModel.value = result.data.rule.clusterModel || selectedClusterModel.value
+      selectedContainerModel.value = result.data.rule.containerModel || ''
     }
   }
 }
@@ -1348,9 +1348,9 @@ async function onClusterChange() {
       rackModel: selectedRackModel.value,
       clusterModel: selectedClusterModel.value
     })
-    if (result.success && result.matched && result.rule) {
-      matchedConfig.value = result.rule
-      selectedContainerModel.value = result.rule.containerModel || selectedContainerModel.value
+    if (result.success && result.data?.matched && result.data?.rule) {
+      matchedConfig.value = result.data.rule
+      selectedContainerModel.value = result.data.rule.containerModel || selectedContainerModel.value
     }
   }
 }

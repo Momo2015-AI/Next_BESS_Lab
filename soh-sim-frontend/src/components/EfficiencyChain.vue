@@ -295,7 +295,7 @@ onMounted(async () => {
 async function loadFactors() {
   try {
     const data = await api.get('/api/efficiency/factors')
-    factors.value = data.factors.map((f) => ({
+    factors.value = (data.data?.factors || []).map((f) => ({
       ...f,
       abbr: ABBR_MAP[f.id] || `F${f.id}`,
       _eta_c: f.eta_c,

@@ -356,8 +356,8 @@ async function searchByProjectName() {
   try {
     const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
     if (data.success) {
-      searchResults.value = data.surveys
-      if (data.surveys.length === 0) emit('error', t('tools.errorNoMatch'), 'warning')
+      searchResults.value = data.data?.surveys || []
+      if ((data.data?.surveys || []).length === 0) emit('error', t('tools.errorNoMatch'), 'warning')
     }
   } catch (e) {
     emit('error', t('tools.errorNetwork') + ': ' + e.message, 'error')

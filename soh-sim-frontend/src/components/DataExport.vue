@@ -287,7 +287,7 @@ async function saveSimulation() {
 async function loadSimulations() {
   try {
     const data = await api.get('/api/simulation/list')
-    simulations.value = data.simulations || []
+    simulations.value = data.data?.simulations || []
   } catch (error) {
     console.error('加载仿真列表失败:', error)
   }
@@ -298,7 +298,7 @@ async function loadSimulation(simulationId) {
   try {
     const data = await api.get(`/api/simulation/${simulationId}`)
 
-    emit('load-simulation', data)
+    emit('load-simulation', data.data)
     showToast(t('dataExport.resultLoaded'))
   } catch (error) {
     console.error('Load simulation failed:', error)
@@ -312,11 +312,12 @@ async function exportSimulationCSV(simulationId) {
     const data = await api.get(`/api/simulation/${simulationId}`)
 
     if (data) {
-      const csvContent = generateCSV(data) // 传入完整data对象
+      const simData = data.data
+      const csvContent = generateCSV(simData) // 传入data字段
       const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
-      link.download = `${data.name || 'simulation'}_${new Date().toISOString().slice(0, 10)}.csv`
+      link.download = `${simData.name || 'simulation'}_${new Date().toISOString().slice(0, 10)}.csv`
       link.href = url
       link.click()
       window.URL.revokeObjectURL(url)

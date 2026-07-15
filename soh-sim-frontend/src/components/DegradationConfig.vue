@@ -376,8 +376,8 @@ async function runPreview() {
   }
   try {
     const result = await store.previewDegradation(params)
-    previewData.value = result.soh
-    previewRte.value = result.rte
+    previewData.value = result.data?.soh
+    previewRte.value = result.data?.rte
   } catch (e) {
     console.error('Preview failed:', e)
   }

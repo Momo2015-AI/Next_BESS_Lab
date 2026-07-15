@@ -212,7 +212,7 @@ export const useBessStore = defineStore('bess', {
     async loadEfficiencyFactors() {
       try {
         const data = await get('/api/efficiency/factors')
-        this.efficiencyFactors = data.factors
+        this.efficiencyFactors = data.data?.factors || []
       } catch (e) {
         console.error('Failed to load efficiency factors:', e)
       }
@@ -224,8 +224,8 @@ export const useBessStore = defineStore('bess', {
           get('/api/degradation/gb36276-curves'),
           get('/api/degradation/environmental')
         ])
-        this.gb36276Curves = curvesData.curves
-        this.environmental = envData.environmental
+        this.gb36276Curves = curvesData.data?.curves || []
+        this.environmental = envData.data?.environmental || []
       } catch (e) {
         console.error('Failed to load degradation config:', e)
       }
@@ -233,22 +233,22 @@ export const useBessStore = defineStore('bess', {
 
     async updateGb36276Curves(curves) {
       const data = await put('/api/degradation/gb36276-curves', { curves })
-      this.gb36276Curves = data.curves
+      this.gb36276Curves = data.data?.curves || []
     },
 
     async resetGb36276Curves() {
       const data = await post('/api/degradation/gb36276-curves/reset')
-      this.gb36276Curves = data.curves
+      this.gb36276Curves = data.data?.curves || []
     },
 
     async updateEnvironmental(env) {
       const data = await put('/api/degradation/environmental', env)
-      this.environmental = data.environmental
+      this.environmental = data.data?.environmental || []
     },
 
     async resetEnvironmental() {
       const data = await post('/api/degradation/environmental/reset')
-      this.environmental = data.environmental
+      this.environmental = data.data?.environmental || []
     },
 
     async previewDegradation(params) {
@@ -460,7 +460,7 @@ export const useBessStore = defineStore('bess', {
     async loadProject(id) {
       try {
         const data = await get(`/api/projects/${id}`)
-        this.project = data.project || this.project
+        this.project = data.data?.project || this.project
       } catch (e) {
         console.error('Failed to load project:', e)
       }
