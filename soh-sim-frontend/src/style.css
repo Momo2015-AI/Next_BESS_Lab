@@ -874,9 +874,14 @@
 
   /* ── 按钮工具类 ── */
   .btn-accent-filled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--color-accent);
     color: white;
+    border: none;
     border-radius: var(--radius-sm);
+    cursor: pointer;
     transition: opacity 0.2s var(--ease-precision);
   }
 
@@ -885,10 +890,14 @@
   }
 
   .btn-card-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
     border-radius: var(--radius-sm);
+    cursor: pointer;
     transition: opacity 0.2s var(--ease-precision);
   }
 

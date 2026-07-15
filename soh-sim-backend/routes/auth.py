@@ -353,6 +353,19 @@ def token_required(f):
     return decorated
 
 
+def optional_token_required(f):
+    """可选认证装饰器：有 token 则解析用户，无 token 或 token 无效时不报错，仅 request.current_user 为 None"""
+
+    @functools.wraps(f)
+    def decorated(*args, **kwargs):
+        user, error = _get_user_from_token()
+        request.current_user = user if not error else None
+        request.user_id = user.id if user else None
+        return f(*args, **kwargs)
+
+    return decorated
+
+
 # 角色权限检查装饰器（不内嵌 token_required，调用方需自行确保已认证）
 def role_required(*roles):
     """角色权限装饰器"""

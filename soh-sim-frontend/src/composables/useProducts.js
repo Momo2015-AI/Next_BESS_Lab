@@ -87,8 +87,9 @@ function toCamel(obj) {
 
 async function fetchCategory(category, _force = false) {
   try {
-    const data = await api.get(`/api/products/${category}`)
-    return (data.data?.items || []).map(toCamel)
+    const data = await api.get(`/api/products/${category}`, { skipAuth: true })
+    const items = Array.isArray(data.data) ? data.data : data.data?.items || []
+    return items.map(toCamel)
   } catch {
     return []
   }
@@ -96,8 +97,9 @@ async function fetchCategory(category, _force = false) {
 
 async function fetchConfigRules(_force = false) {
   try {
-    const data = await api.get('/api/products/config-rules')
-    return (data.data?.items || []).map(toCamel)
+    const data = await api.get('/api/products/config-rules', { skipAuth: true })
+    const items = Array.isArray(data.data) ? data.data : data.data?.items || []
+    return items.map(toCamel)
   } catch {
     return []
   }
@@ -133,7 +135,7 @@ export function useProducts() {
       const totalFromApi = c.length + p.length + r.length + cl.length + ct.length + pc.length
       if (totalFromApi === 0) {
         try {
-          await api.post('/api/products/seed')
+          await api.post('/api/products/seed', {}, { skipAuth: true })
           const [c2, p2, r2, cl2, ct2, pc2, rules2] = await Promise.all([
             fetchCategory('cells', true),
             fetchCategory('packs', true),

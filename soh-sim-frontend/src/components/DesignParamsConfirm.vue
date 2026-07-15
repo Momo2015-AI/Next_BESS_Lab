@@ -92,7 +92,30 @@
         </div>
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldManufacturer') }}</label>
-          <input v-model="form.manufacturer" type="text" :placeholder="$t('designTemplate.mfrPlaceholder')" />
+          <div class="dpc-combobox">
+            <input
+              v-model="form.manufacturer"
+              type="text"
+              :placeholder="$t('designTemplate.mfrPlaceholder')"
+              @focus="showMfrDropdown = true"
+              @blur="showMfrDropdown = false"
+              @input="onMfrInput"
+            />
+            <div v-if="showMfrDropdown && filteredMfrs.length > 0" class="dpc-combobox-dropdown">
+              <div
+                v-for="mfr in filteredMfrs"
+                :key="mfr"
+                class="dpc-combobox-option"
+                :class="{ active: mfr === form.manufacturer }"
+                @mousedown.prevent="selectMfr(mfr)"
+              >
+                {{ mfr }}
+              </div>
+            </div>
+            <div v-else-if="showMfrDropdown && form.manufacturer && filteredMfrs.length === 0" class="dpc-combobox-dropdown">
+              <div class="dpc-combobox-empty">{{ $t('simLab.noMatch') }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -124,6 +147,7 @@ import { reactive, ref, watch, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useBessStore, DEFAULT_SURVEY, DEFAULT_DOD } from '../stores/bess.js'
+import { useProducts } from '../composables/useProducts'
 import api from '../services/api.js'
 import BatteryDCDesign from './BatteryDCDesign.vue'
 import PcsACDesign from './PcsACDesign.vue'
@@ -131,6 +155,26 @@ import PcsACDesign from './PcsACDesign.vue'
 const { t } = useI18n()
 const router = useRouter()
 const store = useBessStore()
+
+const { cellMfrs, loadAll } = useProducts()
+
+const mfrOptions = computed(() => cellMfrs.value)
+
+const showMfrDropdown = ref(false)
+const filteredMfrs = computed(() => {
+  const q = (form.manufacturer || '').trim().toLowerCase()
+  if (!q) return mfrOptions.value
+  return mfrOptions.value.filter((m) => m.toLowerCase().includes(q))
+})
+
+function onMfrInput() {
+  showMfrDropdown.value = true
+}
+
+function selectMfr(mfr) {
+  form.manufacturer = mfr
+  showMfrDropdown.value = false
+}
 
 const emit = defineEmits(['back', 'result'])
 
@@ -157,6 +201,7 @@ function goToSurvey() {
 }
 
 onMounted(() => {
+  loadAll()
   // 从 survey store 预填
   const s = store.survey || {}
   if (s.totalPower) form.totalPower = Number(s.totalPower)
@@ -322,6 +367,51 @@ async function runDesign() {
 
 .dpc-acdc-component {
   margin-bottom: 1rem;
+}
+
+.dpc-combobox {
+  position: relative;
+}
+
+.dpc-combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dpc-combobox-option {
+  padding: 0.4rem 0.625rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.dpc-combobox-option:last-child {
+  border-bottom: none;
+}
+
+.dpc-combobox-option:hover,
+.dpc-combobox-option.active {
+  background: var(--color-accent-glow);
+  color: var(--color-accent);
+}
+
+.dpc-combobox-empty {
+  padding: 0.5rem 0.625rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
 .dpc-actions {

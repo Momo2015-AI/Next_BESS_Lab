@@ -24,7 +24,7 @@ from database import (
     User,
     db,
 )
-from routes.auth import token_required
+from routes.auth import optional_token_required, token_required
 from services.products import apply_tenant_filter as _apply_tenant_filter
 from services.products import camel_to_snake as _camel_to_snake
 from services.products import get_models as _get_models
@@ -41,7 +41,7 @@ _MODELS = _get_models()
 
 
 @products_bp.route("/api/products/seed", methods=["POST"])
-@token_required
+@optional_token_required
 def seed_api():
     """手动触发种子数据初始化"""
     try:
@@ -73,9 +73,9 @@ def refresh_products():
 
 
 @products_bp.route("/api/products/<category>", methods=["GET"])
-@token_required
+@optional_token_required
 def list_products(category):
-    """获取产品列表（支持企业隔离）"""
+    """获取产品列表（支持企业隔离，未登录时返回内置数据）"""
     if category not in _MODELS:
         return error_response(f"未知产品类别: {category}", status_code=400)
 
@@ -98,7 +98,11 @@ def list_products(category):
         else:
             query = query.filter(False)
     else:
-        query = _apply_tenant_filter(query, model_cls, user)
+        if user:
+            query = _apply_tenant_filter(query, model_cls, user)
+        elif hasattr(model_cls, "is_builtin"):
+            # 未登录时仅返回内置数据
+            query = query.filter(model_cls.is_builtin.is_(True))
 
     if mfr:
         query = query.filter(model_cls.mfr == mfr)
@@ -332,12 +336,15 @@ def match_config_rule():
 
 
 @products_bp.route("/api/products/config-rules", methods=["GET"])
-@token_required
+@optional_token_required
 def list_config_rules():
-    """获取所有配置规则列表（受企业隔离影响）"""
+    """获取所有配置规则列表（受企业隔离影响，未登录时返回内置数据）"""
     status = request.args.get("status", "active")
     user = request.current_user
-    query = _apply_tenant_filter(BatteryConfigRule.query, BatteryConfigRule, user)
+    if user:
+        query = _apply_tenant_filter(BatteryConfigRule.query, BatteryConfigRule, user)
+    else:
+        query = BatteryConfigRule.query.filter(BatteryConfigRule.is_builtin.is_(True))
 
     if status:
         query = query.filter(BatteryConfigRule.status == status)
