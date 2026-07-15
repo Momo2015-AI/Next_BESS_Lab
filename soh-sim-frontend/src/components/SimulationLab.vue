@@ -36,7 +36,7 @@
               :placeholder="$t('simLab.placeholderSurveyId')"
               class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
             />
-            <button class="text-xs px-3 py-1.5 rounded transition-all bg-accent" @click="loadSurveyData">
+            <button class="text-xs px-3 py-1.5 transition-all btn-accent-filled" @click="loadSurveyData">
               {{ $t('simLab.btnLoad') }}
             </button>
           </div>
@@ -51,7 +51,7 @@
               :placeholder="$t('simLab.placeholderProjectSearch')"
               class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
             />
-            <button class="text-xs px-3 py-1.5 rounded transition-all bg-info" @click="searchByProjectName">
+            <button class="text-xs px-3 py-1.5 transition-all btn-card-outline" @click="searchByProjectName">
               {{ $t('simLab.btnSearch') }}
             </button>
           </div>

@@ -40,10 +40,15 @@ def submit_survey():
 @survey_bp.route("/api/survey/<survey_id>", methods=["GET"])
 @token_required
 def get_survey(survey_id):
-    """获取调研表详情"""
+    """获取调研表详情（按 tenant 隔离：仅同租户或 admin 可访问）"""
+    user = request.current_user
     survey = Survey.query.options(selectinload(Survey.project)).get(survey_id)
     if not survey:
         return error_response("调研表不存在", 404)
+
+    # 租户隔离：admin 可跨租户，其余用户仅可访问同租户的调研表（通过 project.tenant_id 间接校验）
+    if getattr(user, "role", None) != "admin" and survey.project and survey.project.tenant_id != user.tenant_id:
+        return error_response("调研表不存在", 404)  # 不暴露存在性，避免信息泄露
 
     result = survey.to_dict()
     if survey.project:
@@ -55,7 +60,9 @@ def get_survey(survey_id):
 @survey_bp.route("/api/survey/list", methods=["GET"])
 @token_required
 def list_surveys():
-    """获取调研表列表"""
+    """获取调研表列表（按 tenant 隔离）"""
+    user = request.current_user
+
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
     status = request.args.get("status")
@@ -66,6 +73,10 @@ def list_surveys():
         query = query.filter(Survey.status == status)
     if keyword:
         query = query.filter(Survey.project_name.ilike(f"%{keyword}%"))
+
+    # 租户隔离：非 admin 仅看同租户的调研表（通过 project.tenant_id 间接过滤）
+    if getattr(user, "role", None) != "admin" and user.tenant_id:
+        query = query.join(Project, Survey.project_id == Project.id).filter(Project.tenant_id == user.tenant_id)
 
     pagination = query.order_by(Survey.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
@@ -80,13 +91,20 @@ def list_surveys():
 @survey_bp.route("/api/survey/search", methods=["GET"])
 @token_required
 def search_survey():
-    """通过项目名称搜索调研表"""
+    """通过项目名称搜索调研表（按 tenant 隔离）"""
+    user = request.current_user
     keyword = request.args.get("keyword", "")
 
     if not keyword:
         return error_response("请输入搜索关键词", 400)
 
-    surveys = Survey.query.filter(Survey.project_name.ilike(f"%{keyword}%")).limit(10).all()
+    query = Survey.query.filter(Survey.project_name.ilike(f"%{keyword}%"))
+
+    # 租户隔离：非 admin 仅搜同租户的调研表
+    if getattr(user, "role", None) != "admin" and user.tenant_id:
+        query = query.join(Project, Survey.project_id == Project.id).filter(Project.tenant_id == user.tenant_id)
+
+    surveys = query.limit(10).all()
 
     return success_response(data={"surveys": [s.to_dict() for s in surveys]})
 
