@@ -465,7 +465,7 @@
         <div
           v-for="algo in algorithms"
           :key="algo.id"
-          class="rounded-lg p-4 border-2 cursor-pointer transition-all"
+          class="rounded-lg p-4 border-2 cursor-pointer transition-all flex flex-col"
           :class="selectedAlgorithm === algo.id ? 'algo-selected' : 'algo-default'"
           @click="selectAlgorithm(algo)"
         >
@@ -481,7 +481,10 @@
               {{ algo.name }}
             </h4>
           </div>
-          <p class="text-[10px] mb-2 text-secondary">
+          <p v-if="algo.name_en" class="text-[10px] mb-2 text-muted italic">
+            {{ algo.name_en }}
+          </p>
+          <p class="text-[10px] mb-2 text-secondary flex-1">
             {{ algo.description }}
           </p>
           <div class="text-[10px] text-muted">
@@ -492,6 +495,13 @@
           </div>
           <div class="mt-2 text-[10px] font-mono truncate text-accent">
             {{ algo.mathematical_form }}
+          </div>
+          <div
+            v-if="algo.formula_expression"
+            class="mt-1 text-[10px] font-mono truncate text-secondary opacity-75"
+            :title="algo.formula_expression"
+          >
+            = {{ algo.formula_expression }}
           </div>
         </div>
       </div>
@@ -1134,21 +1144,10 @@ const prevStep = () => {
 
 const fetchAlgorithms = async () => {
   try {
-    const [data, simData] = await Promise.all([
-      api.get('/api/algorithm/builtin_models'),
-      api.get('/api/algorithm/builtin_models')
-    ])
+    const data = await api.get('/api/algorithm/builtin_models')
 
-    let allAlgs = []
     if (data.success && data.data.length > 0) {
-      allAlgs = allAlgs.concat(data.data)
-    }
-    if (simData.success && simData.data.length > 0) {
-      allAlgs = allAlgs.concat(simData.data)
-    }
-
-    if (allAlgs.length > 0) {
-      algorithms.value = allAlgs.map((alg) => ({
+      algorithms.value = data.data.map((alg) => ({
         id: alg.id,
         name: alg.name,
         name_en: alg.name_en || '',
