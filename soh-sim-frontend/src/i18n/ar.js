@@ -775,5 +775,10 @@ export default {
       orchestrator: 'One-Click Engine',
       admin_panel: 'Admin Panel'
     }
+  },
+  designTemplate: {
+    fromSurvey: 'من استبيان المشروع',
+    surveyNotCompleted: 'لم يكتمل استبيان المشروع. يتم عرض المعلمات الافتراضية. يُنصح بإكمال المرحلة 1 أولاً.',
+    goToSurvey: 'الذهاب إلى الاستبيان'
   }
 }

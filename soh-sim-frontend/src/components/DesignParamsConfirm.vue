@@ -3,14 +3,25 @@
     <h3 class="dpc-title">{{ $t('designTemplate.paramsTitle') }}</h3>
     <p class="dpc-desc">{{ $t('designTemplate.paramsDesc') }}</p>
 
+    <div v-if="!surveyCompleted" class="dpc-survey-warn">
+      <span>{{ $t('designTemplate.surveyNotCompleted') }}</span>
+      <button class="dpc-survey-link" @click="goToSurvey">{{ $t('designTemplate.goToSurvey') }}</button>
+    </div>
+
     <div class="dpc-form">
       <div class="dpc-row">
         <div class="dpc-field">
-          <label>{{ $t('designTemplate.fieldTotalPower') }} (MW)</label>
+          <label>
+            {{ $t('designTemplate.fieldTotalPower') }} (MW)
+            <span v-if="surveyCompleted" class="dpc-source-badge">{{ $t('designTemplate.fromSurvey') }}</span>
+          </label>
           <input v-model.number="form.totalPower" type="number" step="0.1" min="1" />
         </div>
         <div class="dpc-field">
-          <label>{{ $t('designTemplate.fieldRatedEnergy') }} (MWh)</label>
+          <label>
+            {{ $t('designTemplate.fieldRatedEnergy') }} (MWh)
+            <span v-if="surveyCompleted" class="dpc-source-badge">{{ $t('designTemplate.fromSurvey') }}</span>
+          </label>
           <input v-model.number="form.ratedEnergy" type="number" step="1" min="1" />
         </div>
         <div class="dpc-field">
@@ -87,29 +98,39 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, onMounted } from 'vue'
+import { reactive, ref, watch, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useBessStore } from '../stores/bess.js'
 import api from '../services/api.js'
 
 const { t } = useI18n()
+const router = useRouter()
 const store = useBessStore()
 
 const emit = defineEmits(['back', 'result'])
 
 const form = reactive({
   totalPower: 50,
-  ratedEnergy: 100,
+  ratedEnergy: 5,
   duration: 2,
   temperature: 25,
   cyclesPerDay: 1,
-  dod: 80,
+  dod: 90,
   strategy: 'balanced',
   manufacturer: ''
 })
 
 const generating = ref(false)
 const error = ref('')
+
+const surveyCompleted = computed(() => {
+  return !!(store.survey?.projectName && store.survey?.ratedEnergy)
+})
+
+function goToSurvey() {
+  router.push('/phase1')
+}
 
 onMounted(() => {
   // 从 survey store 预填
@@ -298,6 +319,48 @@ async function runDesign() {
   border-radius: 3px;
   margin-left: 4px;
   vertical-align: middle;
+}
+
+.dpc-source-badge {
+  font-size: 0.625rem;
+  background: var(--color-success, #10b981);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+  font-weight: 400;
+}
+
+.dpc-survey-warn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  margin-bottom: 1rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.dpc-survey-link {
+  flex-shrink: 0;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dpc-survey-link:hover {
+  opacity: 0.85;
 }
 
 .duration-input-row {

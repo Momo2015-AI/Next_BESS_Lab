@@ -1788,7 +1788,10 @@ export default {
     strategyEconomic: '经济优先',
     strategyBalanced: '均衡方案',
     strategyFlexible: '灵活分期',
-    strategyManufacturer: '指定厂家'
+    strategyManufacturer: '指定厂家',
+    fromSurvey: '来自项目立项',
+    surveyNotCompleted: '尚未完成项目立项，以下为默认参数。建议先完成 Phase 1 调研。',
+    goToSurvey: '前往项目立项'
   },
   orchestrator: {
     title: '一键方案引擎',

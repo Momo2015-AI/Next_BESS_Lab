@@ -2132,7 +2132,10 @@ export default {
     strategyEconomic: 'Economic',
     strategyBalanced: 'Balanced',
     strategyFlexible: 'Flexible',
-    strategyManufacturer: 'Manufacturer'
+    strategyManufacturer: 'Manufacturer',
+    fromSurvey: 'From Project Survey',
+    surveyNotCompleted: 'Project survey not completed. Default parameters shown. Consider completing Phase 1 first.',
+    goToSurvey: 'Go to Survey'
   },
   orchestrator: {
     title: 'One-Click Solution Engine',
