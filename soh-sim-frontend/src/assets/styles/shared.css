@@ -382,6 +382,9 @@
    12. 主按钮
    ============================================ */
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
@@ -391,6 +394,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  line-height: 1;
 }
 
 .btn-primary:hover:not(:disabled) {
