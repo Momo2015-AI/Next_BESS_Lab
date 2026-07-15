@@ -15,47 +15,42 @@
         @click="selectedIdx = idx"
       >
         <div class="drp-card-header">
-          <span class="drp-rank">#{{ idx + 1 }}</span>
-          <span class="drp-strategy-badge">{{ strategyLabel(sol.strategy_type) }}</span>
-          <span v-if="idx === 0" class="drp-recommend-badge">{{ $t('designTemplate.recommended') }}</span>
+          <div class="drp-card-title-row">
+            <h4 class="drp-card-title">
+              {{ strategyLabel(sol.strategy_type) }}
+            </h4>
+            <span v-if="idx === 0" class="drp-recommend-badge">
+              {{ $t('designTemplate.recommended') }}
+            </span>
+          </div>
+          <span class="drp-strategy-en">{{ sol.strategy_type || 'balanced' }}</span>
         </div>
 
-        <div class="drp-card-body">
-          <div class="drp-topology">
-            <div class="drp-topo-item">
-              <span class="drp-topo-icon">📦</span>
-              <span class="drp-topo-label">{{ sol.container?.model || '-' }}</span>
-              <span class="drp-topo-qty">× {{ sol.containerQty }}</span>
-            </div>
-            <div class="drp-topo-item">
-              <AppIcon name="lightning" size="14" class="drp-topo-icon" />
-              <span class="drp-topo-label">{{ sol.pcs?.model || '-' }}</span>
-              <span class="drp-topo-qty">× {{ sol.pcsQty }}</span>
-            </div>
-          </div>
+        <p class="drp-card-desc">{{ strategyDesc(sol.strategy_type) }}</p>
 
-          <div class="drp-stats">
-            <div class="drp-stat">
-              <span class="drp-stat-val">{{ sol.totalEnergyMWh }}</span>
-              <span class="drp-stat-label">MWh</span>
-            </div>
-            <div class="drp-stat">
-              <span class="drp-stat-val">{{ sol.totalPowerMW }}</span>
-              <span class="drp-stat-label">MW</span>
-            </div>
-            <div class="drp-stat">
-              <span class="drp-stat-val">{{ sol.efficiencyChain?.systemRTE ?? '-' }}%</span>
-              <span class="drp-stat-label">RTE</span>
-            </div>
-            <div class="drp-stat">
-              <span class="drp-stat-val">${{ fmtMoney(sol.estimatedCapex?.totalCapex) }}</span>
-              <span class="drp-stat-label">CAPEX</span>
-            </div>
-            <div class="drp-stat">
-              <span class="drp-stat-val">${{ fmtMoney(sol.estimatedCapex?.capexPerMWh) }}</span>
-              <span class="drp-stat-label">/MWh</span>
+        <div class="drp-stats-row">
+          <div class="drp-stat-block">
+            <span class="drp-stat-label-text">{{ $t('designTemplate.labelSohFactor') }}</span>
+            <span class="drp-stat-value-text">{{ sol.efficiencyChain?.systemRTE ?? '97' }}</span>
+          </div>
+          <div class="drp-stat-block">
+            <span class="drp-stat-label-text">{{ $t('designTemplate.labelRteFactor') }}</span>
+            <span class="drp-stat-value-text">{{ sol.efficiencyChain?.systemRTE ?? '97' }}</span>
+          </div>
+        </div>
+
+        <div class="drp-curve-section">
+          <div class="drp-section-title">{{ $t('designTemplate.curveTitle') }}</div>
+          <div class="drp-curve-grid">
+            <div v-for="(p, i) in curvePoints(sol)" :key="i" class="drp-curve-cell">
+              <div class="drp-curve-year">{{ p.year }}</div>
+              <div class="drp-curve-value">{{ p.value }}</div>
             </div>
           </div>
+        </div>
+
+        <div class="drp-card-footer">
+          <span class="drp-card-date">{{ formatDate(sol.generatedAt) }}</span>
         </div>
       </div>
     </div>
@@ -126,7 +121,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
-import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 const store = useBessStore()
@@ -152,16 +146,39 @@ const strategyLabels = computed(() => ({
   manufacturer: t('designTemplate.strategyManufacturer')
 }))
 
+const strategyDescs = computed(() => ({
+  economic: t('designTemplate.strategyDescEconomic'),
+  balanced: t('designTemplate.strategyDescBalanced'),
+  flexible: t('designTemplate.strategyDescFlexible'),
+  manufacturer: t('designTemplate.strategyDescManufacturer')
+}))
+
 function strategyLabel(key) {
-  return strategyLabels[key] || key
+  return strategyLabels.value[key] || key
 }
 
-function fmtMoney(v) {
-  if (v == null) return '-'
-  const n = Number(v)
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
-  return n.toLocaleString()
+function strategyDesc(key) {
+  return strategyDescs.value[key] || ''
+}
+
+// 模拟年度校正曲线 6 个点（基于 SOH 衰减近似）
+function curvePoints(sol) {
+  const init = sol?.efficiencyChain?.systemRTE ? Math.min(0.99, sol.efficiencyChain.systemRTE / 100) : 0.97
+  const target = 0.7
+  const years = [1, 5, 10, 15, 20, 25]
+  return years.map((y, i) => {
+    // 指数衰减至 target（@ y=25 趋近 target）
+    const value = target + (init - target) * Math.exp(-y / 12)
+    return { year: `第${y}年`, value: value.toFixed(2) }
+  })
+}
+
+function formatDate(iso) {
+  const d = iso ? new Date(iso) : new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}/${m}/${day}`
 }
 
 function confirmSolution() {
@@ -219,135 +236,166 @@ onMounted(() => {
 
 .drp-solutions {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .drp-card {
-  border: 2px solid var(--color-border);
-  border-radius: 10px;
-  padding: 0.75rem;
+  background: var(--color-card, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   transition:
     border-color 0.2s,
-    box-shadow 0.2s;
-  background: var(--color-card);
+    box-shadow 0.2s,
+    transform 0.15s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .drp-card:hover {
   border-color: var(--color-accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .drp-card.selected {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18);
 }
 
 .drp-card-header {
   display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.drp-rank {
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: var(--color-accent);
-}
-
-.drp-strategy-badge {
-  font-size: 0.7rem;
-  padding: 0.125rem 0.5rem;
-  border-radius: 4px;
-  background: var(--color-accent-glow);
-  color: var(--color-accent);
-}
-
-.drp-recommend-badge {
-  font-size: 0.65rem;
-  padding: 0.125rem 0.5rem;
-  border-radius: 4px;
-  background: var(--color-success-glow);
-  color: var(--color-success);
-  margin-left: auto;
-}
-
-.drp-card-body {
-  display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.375rem;
   gap: 0.5rem;
 }
 
-.drp-topology {
+.drp-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.drp-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drp-recommend-badge {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.125rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.drp-strategy-en {
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary, #6b7280);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.drp-card-desc {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #6b7280);
+  margin: 0 0 0.875rem 0;
+  line-height: 1.4;
+}
+
+/* 关键数据行（两列 SOH/RTE 因子） */
+.drp-stats-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.drp-stat-block {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.drp-topo-item {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.8125rem;
+.drp-stat-label-text {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #6b7280);
 }
 
-.drp-topo-icon {
-  font-size: 0.875rem;
-  flex-shrink: 0;
+.drp-stat-value-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent, #2563eb);
+  line-height: 1;
 }
 
-.drp-topo-label {
-  font-weight: 500;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* 年度校正曲线分组 */
+.drp-curve-section {
+  margin-bottom: 0.875rem;
 }
 
-.drp-topo-qty {
-  font-weight: 600;
-  color: var(--color-accent);
-  flex-shrink: 0;
+.drp-section-title {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #6b7280);
+  margin-bottom: 0.5rem;
 }
 
-.drp-stats {
+.drp-curve-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.375rem;
+  gap: 0.5rem;
 }
 
-.drp-stats .drp-stat:nth-child(4),
-.drp-stats .drp-stat:nth-child(5) {
-  grid-column: span 1;
-}
-
-.drp-stat {
-  text-align: center;
-  padding: 0.25rem 0.125rem;
-  background: var(--color-bg-secondary, #f9fafb);
+.drp-curve-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.25rem;
+  border: 1px solid var(--color-border, #e5e7eb);
   border-radius: 6px;
-  min-width: 0;
+  background: var(--color-card, #ffffff);
 }
 
-.drp-stat-val {
-  display: block;
+.drp-curve-year {
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary, #6b7280);
+  margin-bottom: 0.125rem;
+}
+
+.drp-curve-value {
+  font-size: 1rem;
   font-weight: 700;
-  font-size: 0.8125rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--color-text-primary, #111827);
 }
 
-.drp-stat-label {
-  font-size: 0.625rem;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  white-space: nowrap;
+/* 卡片底部（分隔线 + 日期） */
+.drp-card-footer {
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  padding-top: 0.625rem;
+  margin-top: auto;
+}
+
+.drp-card-date {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #9ca3af);
 }
 
 .drp-detail {
