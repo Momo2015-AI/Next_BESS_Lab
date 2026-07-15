@@ -52,6 +52,7 @@ def get_builtin_algorithms():
             "description": "适用于LFP电池的日历衰减和循环衰减。采用双指数形式描述容量衰减过程：快速衰减阶段（A项，k₁系数较大）描述SEI膜形成导致的初期快速容量损失；慢速衰减阶段（B项，k₂系数较小）描述活性物质损失导致的长期缓慢衰减。C为25年末剩余容量。行业标准：快速衰减约占15%，慢速衰减约占8%，25年末剩余约77%。适用于大规模储能电站的长期SOH预测。",
         },
         {
+            "id": "builtin-linear-log",
             "name": "线性-对数模型 (Linear-Log)",
             "name_en": "Linear-Log Model",
             "model_type": "linear_log",
