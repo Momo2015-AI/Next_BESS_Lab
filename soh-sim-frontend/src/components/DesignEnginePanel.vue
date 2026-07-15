@@ -362,13 +362,6 @@ const emit = defineEmits(['select', 'workflow-complete'])
 
 const { filterCountries } = useCountryList()
 
-// 国家 combobox 状态（ref 声明在 form 之前）
-const countryInput = ref('')
-const countryDropdown = ref(false)
-const filteredCountries = computed(() => {
-  return filterCountries(countryInput.value)
-})
-
 const form = reactive({
   ratedEnergy: store.survey.ratedEnergy || 100,
   totalPower: store.survey.totalPower || 50,
@@ -388,6 +381,34 @@ const form = reactive({
 
 // 跟踪哪些字段被用户手动修改过
 const userEdited = reactive({})
+
+// 标记字段被用户手动修改
+function markEdited(field) {
+  userEdited[field] = true
+}
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  form.country = countryInput.value
+  markEdited('country')
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
+}
+function selectCountry(c) {
+  form.country = c
+  countryInput.value = c
+  markEdited('country')
+  countryDropdown.value = false
+}
 
 // 监听 store.survey 变化，仅在用户未手动修改时更新 form
 watch(
@@ -421,11 +442,6 @@ watch(
   },
   { immediate: true }
 )
-
-// 标记字段被用户手动修改
-function markEdited(field) {
-  userEdited[field] = true
-}
 
 const formLocation = computed(() => {
   const parts = [form.country, form.city, form.site].filter(Boolean)
@@ -493,22 +509,6 @@ watch(
     if (val && val !== countryInput.value) countryInput.value = val
   }
 )
-
-// 国家 combobox 事件处理（必须在 form 声明之后）
-function onCountryInput() {
-  form.country = countryInput.value
-  markEdited('country')
-  countryDropdown.value = true
-}
-function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
-}
-function selectCountry(c) {
-  form.country = c
-  countryInput.value = c
-  markEdited('country')
-  countryDropdown.value = false
-}
 
 const strategies = [
   { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },

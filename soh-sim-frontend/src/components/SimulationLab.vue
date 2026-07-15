@@ -977,16 +977,6 @@ const store = useBessStore()
 const { themeObject } = useChartTheme()
 const { filterCountries } = useCountryList()
 
-// 国家 combobox 状态（ref 声明在 surveyData 之前）
-const countryInput = ref('')
-const countryDropdown = ref(false)
-const filteredCountries = computed(() => {
-  return filterCountries(countryInput.value)
-})
-
-watch(themeObject, () => {
-  nextTick(renderChart)
-})
 const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
 
 const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-survey-data', {
@@ -1005,27 +995,6 @@ const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-su
   site: ''
 })
 
-// 国家 combobox 事件处理（必须在 surveyData 声明之后）
-function onCountryInput() {
-  surveyData.country = countryInput.value
-  countryDropdown.value = true
-}
-function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
-}
-function selectCountry(c) {
-  surveyData.country = c
-  countryInput.value = c
-  countryDropdown.value = false
-}
-// 同步回填
-watch(
-  () => surveyData.country,
-  (val) => {
-    if (val && val !== countryInput.value) countryInput.value = val
-  }
-)
-
 const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-params', {
   simulationYears: 25,
   guaranteeYears: 10,
@@ -1042,6 +1011,33 @@ const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-para
   auxPowerMode: 'manual',
   coolingType: 'liquid',
   ambientTemp: 25
+})
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  surveyData.country = countryInput.value
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  surveyData.country = c
+  countryInput.value = c
+  countryDropdown.value = false
+}
+// 同步回填
+watch(() => surveyData.country, (val) => {
+  if (val && val !== countryInput.value) countryInput.value = val
+})
+
+watch(themeObject, () => {
+  nextTick(renderChart)
 })
 
 const algorithms = ref([])

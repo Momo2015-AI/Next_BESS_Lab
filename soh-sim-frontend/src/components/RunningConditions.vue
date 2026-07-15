@@ -935,13 +935,6 @@ const emit = defineEmits(['applyParams'])
 
 const { filterCountries } = useCountryList()
 
-// 国家 combobox 状态（ref 声明在 form 之前）
-const countryInput = ref('')
-const countryDropdown = ref(false)
-const filteredCountries = computed(() => {
-  return filterCountries(countryInput.value)
-})
-
 const {
   cells,
   packs,
@@ -1039,22 +1032,30 @@ const certKeys = {
   gridCode: ['UK G99', 'VDE-AR-N 4110', 'EN 50549-1', 'IEEE 2800', 'AEMO Grid Code', 'SASO/IEC']
 }
 
-// --- auto-calc: durationHours ---
-const isDurationAuto = ref(true)
-
-// 国家 combobox 事件处理（必须在 form 声明之后）
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
 function onCountryInput() {
   form.country = countryInput.value
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   form.country = c
   countryInput.value = c
   countryDropdown.value = false
 }
+
+// --- auto-calc: durationHours ---
+const isDurationAuto = ref(true)
+
 // 国家输入框同步
 watch(
   () => form.country,
