@@ -71,7 +71,13 @@
               <span v-if="isDurationAuto" class="auto-badge">AUTO</span>
             </label>
             <div class="duration-input-row">
-              <input v-model.number="form.durationHours" type="number" class="form-field-input" :disabled="isDurationAuto" placeholder="4" />
+              <input
+                v-model.number="form.durationHours"
+                type="number"
+                class="form-field-input"
+                :disabled="isDurationAuto"
+                placeholder="4"
+              />
               <button
                 type="button"
                 class="lock-toggle-btn"
@@ -117,7 +123,13 @@
               <span v-if="isTempAvgAuto" class="auto-badge">AUTO</span>
             </label>
             <div class="duration-input-row">
-              <input v-model.number="form.tempAvg" type="number" class="form-field-input" :disabled="isTempAvgAuto" placeholder="25" />
+              <input
+                v-model.number="form.tempAvg"
+                type="number"
+                class="form-field-input"
+                :disabled="isTempAvgAuto"
+                placeholder="25"
+              />
               <button
                 type="button"
                 class="lock-toggle-btn"
@@ -321,9 +333,7 @@
               class="form-field-input"
               placeholder="60"
             />
-            <div v-if="annualSohDecline !== null" class="text-xs text-muted mt-1">
-              ~{{ annualSohDecline }}% / year
-            </div>
+            <div v-if="annualSohDecline !== null" class="text-xs text-muted mt-1">~{{ annualSohDecline }}% / year</div>
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.calendarLife') }}</label>

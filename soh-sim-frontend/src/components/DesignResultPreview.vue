@@ -40,6 +40,10 @@
               <span class="drp-stat-label">MWh</span>
             </div>
             <div class="drp-stat">
+              <span class="drp-stat-val">{{ sol.totalPowerMW }}</span>
+              <span class="drp-stat-label">MW</span>
+            </div>
+            <div class="drp-stat">
               <span class="drp-stat-val">{{ sol.efficiencyChain?.systemRTE ?? '-' }}%</span>
               <span class="drp-stat-label">RTE</span>
             </div>
@@ -175,7 +179,7 @@ function confirmSolution() {
     initContainerQty: sol.containerQty,
     initPcsQty: sol.pcsQty,
     ratedEnergy: sol.totalEnergyMwh,
-    pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMw || store.systemParams.pcsPower,
+    pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMW || store.systemParams.pcsPower,
     duration: sol.duration || store.systemParams.duration,
     strategy: sol.strategy_type || props.strategy
   }
@@ -305,7 +309,7 @@ onMounted(() => {
 
 .drp-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
 }
 
