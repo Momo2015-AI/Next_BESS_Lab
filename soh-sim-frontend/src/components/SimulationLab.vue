@@ -30,23 +30,33 @@
         <div class="space-y-2">
           <label class="text-xs text-secondary">{{ $t('simLab.labelSurveyId') }}</label>
           <div class="flex gap-2">
-            <input
-              v-model="surveyIdInput"
-              type="text"
-              :placeholder="$t('simLab.placeholderSurveyId')"
-              class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
-              list="sim-survey-list"
-              @input="onSurveyIdInput"
-              @change="onSurveyIdChange"
-            />
-            <datalist id="sim-survey-list">
-              <option
-                v-for="s in filteredSurveyList"
-                :key="s.id"
-                :value="s.id"
-                :label="s.project_name + ' (' + s.id.slice(0, 8) + '...)'"
+            <div class="combobox-wrapper flex-1">
+              <input
+                v-model="surveyIdInput"
+                type="text"
+                :placeholder="$t('simLab.placeholderSurveyId')"
+                class="w-full rounded px-3 py-1.5 text-xs card-input-dark"
+                @focus="onSurveyInputFocus"
+                @blur="onSurveyInputBlur"
+                @input="onSurveyIdInput"
+                @keydown.enter.prevent="onSurveyInputEnter"
               />
-            </datalist>
+              <div v-if="showDropdown && filteredSurveyList.length > 0" class="combobox-dropdown">
+                <div
+                  v-for="s in filteredSurveyList"
+                  :key="s.id"
+                  class="combobox-option"
+                  :class="{ active: s.id === surveyId }"
+                  @mousedown.prevent="selectSurveyFromDropdown(s)"
+                >
+                  <span class="option-name">{{ s.project_name }}</span>
+                  <span class="option-code">{{ s.id.slice(0, 8) }}...</span>
+                </div>
+              </div>
+              <div v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0" class="combobox-dropdown">
+                <div class="combobox-empty">{{ $t('simLab.noMatch') }}</div>
+              </div>
+            </div>
             <button class="text-xs px-3 py-1.5 transition-all btn-accent-filled" @click="loadSurveyData">
               {{ $t('simLab.btnLoad') }}
             </button>
@@ -918,6 +928,7 @@ const currentStep = useDraftRef('sim-current-step', 0).state
 const surveyId = useDraftRef('sim-survey-id', '').state
 const surveyIdInput = ref('')
 const surveyList = ref([])
+const showDropdown = ref(false)
 const searchKeyword = ref('')
 const searchResults = ref([])
 
@@ -1087,17 +1098,43 @@ const filteredSurveyList = computed(() => {
   ).slice(0, 20)
 })
 
-// 输入时同步 surveyId
+// 输入时显示下拉
 function onSurveyIdInput() {
-  surveyId.value = surveyIdInput.value
+  surveyId.value = ''
+  showDropdown.value = true
 }
 
-// datalist 选中后自动加载
-function onSurveyIdChange() {
-  surveyId.value = surveyIdInput.value
-  if (surveyId.value) {
+// 聚焦时显示下拉
+function onSurveyInputFocus() {
+  if (surveyList.value.length > 0) {
+    showDropdown.value = true
+  }
+}
+
+// 失焦时延迟关闭下拉
+function onSurveyInputBlur() {
+  setTimeout(() => {
+    showDropdown.value = false
+  }, 150)
+}
+
+// 回车：优先选第一个匹配项，否则按手动输入 ID 加载
+function onSurveyInputEnter() {
+  if (showDropdown.value && filteredSurveyList.value.length > 0) {
+    selectSurveyFromDropdown(filteredSurveyList.value[0])
+  } else if (surveyIdInput.value.trim()) {
+    surveyId.value = surveyIdInput.value.trim()
+    showDropdown.value = false
     loadSurveyData()
   }
+}
+
+// 从下拉选中调研表
+function selectSurveyFromDropdown(survey) {
+  surveyId.value = survey.id
+  surveyIdInput.value = survey.project_name
+  showDropdown.value = false
+  mapSurveyData(survey)
 }
 
 // 页面加载时预读取调研表列表
@@ -1886,5 +1923,56 @@ textarea:focus {
 
 button:not(:disabled):hover {
   opacity: 0.9;
+}
+
+/* Combobox 下拉面板 */
+.combobox-wrapper {
+  position: relative;
+}
+.combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--color-bg-card, #1a1d2e);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.combobox-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.combobox-option:last-child {
+  border-bottom: none;
+}
+.combobox-option:hover,
+.combobox-option.active {
+  background: rgba(37, 99, 235, 0.12);
+}
+.option-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-default);
+}
+.option-code {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+.combobox-empty {
+  padding: 8px 10px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 </style>

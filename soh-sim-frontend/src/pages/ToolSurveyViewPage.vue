@@ -12,18 +12,26 @@
                 type="text"
                 :placeholder="$t('sidebar.toolSurveyView.idPlaceholder')"
                 class="form-input"
-                list="survey-list"
+                @focus="onSurveyInputFocus"
+                @blur="onSurveyInputBlur"
                 @input="onSurveyIdInput"
-                @change="onSurveyIdChange"
+                @keydown.enter.prevent="onSurveyInputEnter"
               />
-              <datalist id="survey-list">
-                <option
+              <div v-if="showDropdown && filteredSurveyList.length > 0" class="combobox-dropdown">
+                <div
                   v-for="s in filteredSurveyList"
                   :key="s.id"
-                  :value="s.id"
-                  :label="s.project_name + ' (' + s.id.slice(0, 8) + '...)'"
-                />
-              </datalist>
+                  class="combobox-option"
+                  :class="{ active: s.id === surveyId }"
+                  @mousedown.prevent="selectSurveyFromDropdown(s)"
+                >
+                  <span class="option-name">{{ s.project_name }}</span>
+                  <span class="option-code">{{ s.id.slice(0, 8) }}...</span>
+                </div>
+              </div>
+              <div v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0" class="combobox-dropdown">
+                <div class="combobox-empty">{{ $t('sidebar.toolSurveyView.noMatch') }}</div>
+              </div>
             </div>
           </div>
           <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="loadSurveyById">
@@ -301,6 +309,7 @@ const loading = ref(false)
 const surveyId = ref('')
 const surveyIdInput = ref('')
 const surveyList = ref([])
+const showDropdown = ref(false)
 const searchKeyword = ref('')
 const searchResults = ref([])
 const isReqEnergyAuto = ref(true)
@@ -398,17 +407,43 @@ watch(
   }
 )
 
-// 输入时更新 surveyId（如果输入了完整的 UUID）
+// 输入时更新过滤并显示下拉
 function onSurveyIdInput() {
-  surveyId.value = surveyIdInput.value
+  surveyId.value = '' // 清除旧 ID，等用户确认选择
+  showDropdown.value = true
 }
 
-// datalist 选中后触发
-function onSurveyIdChange() {
-  surveyId.value = surveyIdInput.value
-  if (surveyId.value) {
+// 聚焦时显示下拉
+function onSurveyInputFocus() {
+  if (surveyList.value.length > 0) {
+    showDropdown.value = true
+  }
+}
+
+// 失焦时延迟关闭下拉（让 mousedown 先触发选中）
+function onSurveyInputBlur() {
+  setTimeout(() => {
+    showDropdown.value = false
+  }, 150)
+}
+
+// 回车时：如果下拉可见且有匹配项，选第一个；否则按手动输入 ID 加载
+function onSurveyInputEnter() {
+  if (showDropdown.value && filteredSurveyList.value.length > 0) {
+    selectSurveyFromDropdown(filteredSurveyList.value[0])
+  } else if (surveyIdInput.value.trim()) {
+    surveyId.value = surveyIdInput.value.trim()
+    showDropdown.value = false
     loadSurveyById()
   }
+}
+
+// 从下拉选中调研表
+function selectSurveyFromDropdown(survey) {
+  surveyId.value = survey.id
+  surveyIdInput.value = survey.project_name
+  showDropdown.value = false
+  mapSurveyData(survey)
 }
 
 // 页面加载时预读取调研表列表
@@ -601,6 +636,53 @@ function goToSimulation() {
 }
 .combobox-wrapper .form-input {
   width: 100%;
+}
+
+.combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--color-bg-card, #1a1d2e);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.combobox-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-light, rgba(255,255,255,0.04));
+}
+.combobox-option:last-child {
+  border-bottom: none;
+}
+.combobox-option:hover,
+.combobox-option.active {
+  background: var(--color-accent-glow, rgba(37, 99, 235, 0.12));
+}
+.option-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-default);
+}
+.option-code {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+.combobox-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
 .search-results {
