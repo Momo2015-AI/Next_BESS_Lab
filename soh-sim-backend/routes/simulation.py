@@ -4,6 +4,7 @@
 """
 
 from flask import Blueprint, current_app, request
+from sqlalchemy.orm import selectinload
 
 from database import (
     CorrectionTemplate,
@@ -37,9 +38,13 @@ def get_simulation_results(version_id):
     """获取版本的所有仿真结果"""
     user = request.current_user
 
-    version = ProjectVersion.query.get(version_id)
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(version_id)
     if not version:
         return error_response("版本不存在", 404)
+
+    # 租户隔离：admin 可跨租户，其余用户仅可访问同租户版本（通过 project.tenant_id 间接校验）
+    if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
+        return error_response("版本不存在", 404)  # 不暴露存在性，避免信息泄露
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 20, type=int)
@@ -91,9 +96,21 @@ def create_simulation_result(version_id):
 @token_required
 def get_simulation_result(result_id):
     """获取单条仿真结果详情"""
-    result = SimulationResult.query.get(result_id)
+    user = request.current_user
+    result = SimulationResult.query.options(
+        selectinload(SimulationResult.version).selectinload(ProjectVersion.project)
+    ).get(result_id)
     if not result:
         return error_response("仿真结果不存在", 404)
+
+    # 租户隔离：admin 可跨租户，其余用户仅可访问同租户结果（通过 version.project.tenant_id 间接校验）
+    if (
+        getattr(user, "role", None) != "admin"
+        and result.version
+        and result.version.project
+        and result.version.project.tenant_id != user.tenant_id
+    ):
+        return error_response("仿真结果不存在", 404)  # 不暴露存在性，避免信息泄露
 
     return success_response(data=result.to_dict())
 
@@ -103,9 +120,21 @@ def get_simulation_result(result_id):
 @role_required("engineer", "admin")
 def delete_simulation_result(result_id):
     """删除仿真结果"""
-    result = SimulationResult.query.get(result_id)
+    user = request.current_user
+    result = SimulationResult.query.options(
+        selectinload(SimulationResult.version).selectinload(ProjectVersion.project)
+    ).get(result_id)
     if not result:
         return error_response("仿真结果不存在", 404)
+
+    # 租户隔离：即使限定 engineer/admin，跨租户同角色用户也不可互删
+    if (
+        getattr(user, "role", None) != "admin"
+        and result.version
+        and result.version.project
+        and result.version.project.tenant_id != user.tenant_id
+    ):
+        return error_response("仿真结果不存在", 404)  # 不暴露存在性，避免信息泄露
 
     try:
         db.session.delete(result)
