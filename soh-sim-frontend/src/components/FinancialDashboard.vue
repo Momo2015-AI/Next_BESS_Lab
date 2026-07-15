@@ -6,6 +6,12 @@
       <!-- 独立模式：系统规模 + 电量参数区 -->
       <StandaloneParams v-if="mode === 'standalone'" v-model="standaloneParams" @change="onStandaloneChange" />
 
+      <!-- Tier 3: 年吞吐电量 & SOH 曲线摘要 -->
+      <div v-if="mode === 'standalone'" class="text-xs text-gray-500 dark:text-gray-400 mt-1 px-1 space-y-0.5">
+        <div>Annual Energy Throughput: {{ annualEnergyThroughput.toLocaleString() }} MWh</div>
+        <div>SOH Year 1 → Year 25: {{ projectedSohCurve[0] }}% → {{ projectedSohCurve[projectedSohCurve.length - 1] }}%</div>
+      </div>
+
       <FinancialInputs />
 
       <FinancialCharts
@@ -59,6 +65,26 @@ const standaloneParams = reactive({
   efficiencyLossPct: 5,
   sohStart: 100,
   sohAnnualDecline: 2.0
+})
+
+// Tier 3: 年吞吐电量 = 容量 * 循环次数 * 运行天数
+const annualEnergyThroughput = computed(() => {
+  const capMWh = standaloneParams.totalCapMWh || 0
+  const cycles = standaloneParams.cyclesPerDay || 1
+  const days = standaloneParams.operatingDays || 365
+  return +(capMWh * cycles * days).toFixed(1)
+})
+
+// Tier 3: 预估 SOH 曲线（年化线性衰减，25 年）
+const projectedSohCurve = computed(() => {
+  const start = standaloneParams.sohStart || 100
+  const decline = standaloneParams.sohAnnualDecline || 0.5
+  const years = 25
+  const curve = []
+  for (let i = 0; i < years; i++) {
+    curve.push(+(start - decline * i).toFixed(2))
+  }
+  return curve
 })
 
 // 将 standalone 参数注入到 props 中传给 useFinancialModel

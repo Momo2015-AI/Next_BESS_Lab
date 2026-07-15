@@ -164,6 +164,10 @@
         </div>
       </div>
 
+      <div class="mt-3 text-[10px] text-muted">
+        {{ $t('simLab.annualThroughput') }}: {{ annualEnergyThroughput }} MWh/yr
+      </div>
+
       <div class="mt-4 flex justify-end">
         <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="nextStep">
           {{ $t('simLab.btnNextParams') }}
@@ -272,6 +276,14 @@
               />
             </div>
           </div>
+          <div class="mt-2 space-y-1">
+            <div class="text-[10px] text-muted">
+              {{ $t('simLab.systemRTE') }}: {{ systemRTE }}%
+            </div>
+            <div class="text-[10px] text-muted">
+              {{ $t('simLab.grossEnergyPreview') }}: {{ grossEnergyPreview }} MWh
+            </div>
+          </div>
         </div>
 
         <div class="col-span-2 rounded p-3 card-panel-bordered">
@@ -301,42 +313,55 @@
           </div>
 
           <!-- Manual 模式 -->
-          <div v-if="simParams.auxPowerMode === 'manual'" class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxRun') }}</label>
-              <input
-                v-model.number="simParams.bessAuxRun"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
+          <div v-if="simParams.auxPowerMode === 'manual'">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxRun') }}</label>
+                <input
+                  v-model.number="simParams.bessAuxRun"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxStandby') }}</label>
+                <input
+                  v-model.number="simParams.bessAuxStandby"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxRun') }}</label>
+                <input
+                  v-model.number="simParams.pcsAuxRun"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxStandby') }}</label>
+                <input
+                  v-model.number="simParams.pcsAuxStandby"
+                  type="number"
+                  step="0.1"
+                  class="w-full rounded px-2 py-1 text-xs card-input"
+                />
+              </div>
             </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelBessAuxStandby') }}</label>
-              <input
-                v-model.number="simParams.bessAuxStandby"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-            </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxRun') }}</label>
-              <input
-                v-model.number="simParams.pcsAuxRun"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-            </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelPcsAuxStandby') }}</label>
-              <input
-                v-model.number="simParams.pcsAuxStandby"
-                type="number"
-                step="0.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
+
+            <div class="mt-2 text-[10px] text-muted space-y-0.5">
+              <div class="flex justify-between">
+                <span>{{ $t('simLab.totalRunAux') }}:</span>
+                <span class="text-accent">{{ totalRunAux }} kW</span>
+              </div>
+              <div class="flex justify-between">
+                <span>{{ $t('simLab.totalStandbyAux') }}:</span>
+                <span class="text-accent">{{ totalStandbyAux }} kW</span>
+              </div>
             </div>
           </div>
 
@@ -972,6 +997,38 @@ const estimatedCoolingPower = computed(() => {
     infiltrationKw: +infiltrationKw.toFixed(2),
     cop
   }
+})
+
+const systemRTE = computed(() => {
+  const ac = simParams.acEfficiency || 97
+  const dc = simParams.dcEfficiency || 98.5
+  return +((ac / 100) * (dc / 100) * 100).toFixed(2)
+})
+
+const annualEnergyThroughput = computed(() => {
+  const energy = surveyData.ratedEnergy || 0
+  const qty = surveyData.containerQty || 0
+  const cycles = surveyData.cyclesPerDay || 1
+  return +(energy * qty * cycles * 365).toFixed(1)
+})
+
+const totalRunAux = computed(() => {
+  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.totalRunKw || 0
+  return (simParams.bessAuxRun || 0) + (simParams.pcsAuxRun || 0)
+})
+const totalStandbyAux = computed(() => {
+  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.standbyKw || 0
+  return (simParams.bessAuxStandby || 0) + (simParams.pcsAuxStandby || 0)
+})
+
+const grossEnergyPreview = computed(() => {
+  const energy = surveyData.ratedEnergy || 0
+  const qty = surveyData.containerQty || 0
+  const dod = (surveyData.dod || 100) / 100
+  const soh = 1.0  // assume new
+  const rte = systemRTE.value / 100
+  const acEff = (simParams.acEfficiency || 97) / 100
+  return +(energy * qty * dod * rte * soh * acEff).toFixed(1)
 })
 
 const chartContainer = ref(null)

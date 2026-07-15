@@ -58,8 +58,21 @@
             <input v-model.number="form.totalMWh" type="number" class="form-field-input" placeholder="800" />
           </div>
           <div>
-            <label class="label-text">{{ $t('runningConditions.chargeDuration') }}</label>
-            <input v-model.number="form.durationHours" type="number" class="form-field-input" placeholder="4" />
+            <label class="label-text">
+              {{ $t('runningConditions.chargeDuration') }}
+              <span v-if="isDurationAuto" class="auto-badge">AUTO</span>
+            </label>
+            <div class="duration-input-row">
+              <input v-model.number="form.durationHours" type="number" class="form-field-input" :disabled="isDurationAuto" placeholder="4" />
+              <button
+                type="button"
+                class="lock-toggle-btn"
+                :title="isDurationAuto ? 'Unlock' : 'Lock'"
+                @click="isDurationAuto = !isDurationAuto"
+              >
+                {{ isDurationAuto ? '🔒' : '🔓' }}
+              </button>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.dayCycles') }}</label>
@@ -91,8 +104,21 @@
             <input v-model.number="form.tempMin" type="number" class="form-field-input" placeholder="-20" />
           </div>
           <div>
-            <label class="label-text">{{ $t('runningConditions.avgTemp') }}</label>
-            <input v-model.number="form.tempAvg" type="number" class="form-field-input" placeholder="25" />
+            <label class="label-text">
+              {{ $t('runningConditions.avgTemp') }}
+              <span v-if="isTempAvgAuto" class="auto-badge">AUTO</span>
+            </label>
+            <div class="duration-input-row">
+              <input v-model.number="form.tempAvg" type="number" class="form-field-input" :disabled="isTempAvgAuto" placeholder="25" />
+              <button
+                type="button"
+                class="lock-toggle-btn"
+                :title="isTempAvgAuto ? 'Unlock' : 'Lock'"
+                @click="isTempAvgAuto = !isTempAvgAuto"
+              >
+                {{ isTempAvgAuto ? '🔒' : '🔓' }}
+              </button>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.humidity') }}</label>
@@ -287,6 +313,9 @@
               class="form-field-input"
               placeholder="60"
             />
+            <div v-if="annualSohDecline !== null" class="text-xs text-muted mt-1">
+              ~{{ annualSohDecline }}% / year
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.calendarLife') }}</label>
@@ -959,6 +988,46 @@ const certKeys = {
   gridCode: ['UK G99', 'VDE-AR-N 4110', 'EN 50549-1', 'IEEE 2800', 'AEMO Grid Code', 'SASO/IEC']
 }
 
+// --- auto-calc: durationHours ---
+const isDurationAuto = ref(true)
+
+function autoCalcDuration() {
+  if (form.totalMWh > 0 && form.totalMW > 0) {
+    form.durationHours = +(form.totalMWh / form.totalMW).toFixed(2)
+  }
+}
+
+watch(
+  () => [form.totalMWh, form.totalMW],
+  () => {
+    if (isDurationAuto.value) autoCalcDuration()
+  }
+)
+
+// --- auto-calc: tempAvg ---
+const isTempAvgAuto = ref(true)
+
+function autoCalcTempAvg() {
+  if (form.tempMax != null && form.tempMin != null) {
+    form.tempAvg = +((form.tempMax + form.tempMin) / 2).toFixed(1)
+  }
+}
+
+watch(
+  () => [form.tempMax, form.tempMin],
+  () => {
+    if (isTempAvgAuto.value) autoCalcTempAvg()
+  }
+)
+
+// --- computed: annualSohDecline ---
+const annualSohDecline = computed(() => {
+  if (form.sohYear1 != null && form.sohYear25 != null) {
+    return +((form.sohYear1 - form.sohYear25) / 24).toFixed(2)
+  }
+  return null
+})
+
 const certOptionsI18n = computed(() => ({
   cell: certKeys.cell.map((c) => t(`runningConditions.certificates.${c}`)),
   system: certKeys.system.map((s) => t(`runningConditions.certificates.${s}`)),
@@ -1346,5 +1415,57 @@ function applyToSimulation() {
   background: var(--color-input-bg);
   border: 1px solid var(--color-input-border);
   color: var(--color-text-secondary);
+}
+
+/* auto-calc styles */
+.auto-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.duration-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.duration-input-row .form-field-input {
+  flex: 1;
+}
+
+.duration-input-row .form-field-input:disabled {
+  background: var(--color-bg, #f5f5f5);
+  color: var(--text-secondary, #888);
+  cursor: not-allowed;
+}
+
+.lock-toggle-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+  background: var(--color-card, #fff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  padding: 0;
+}
+
+.lock-toggle-btn:hover {
+  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
+}
+
+.text-muted {
+  color: var(--color-text-muted, #999);
 }
 </style>

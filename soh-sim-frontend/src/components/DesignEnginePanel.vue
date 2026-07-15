@@ -62,8 +62,37 @@
           <input v-model.number="form.dod" type="number" min="50" max="100" step="1" class="form-input" />
         </div>
         <div class="form-group">
-          <label>{{ $t('design.requiredEnergy') }} (MWh/天)</label>
-          <input v-model.number="form.requiredEnergy" type="number" min="1" step="1" class="form-input" />
+          <label>
+            {{ $t('design.requiredEnergy') }} (MWh/天)
+            <span v-if="isReqEnergyAuto" class="auto-badge">自动</span>
+          </label>
+          <div class="duration-input-row">
+            <input
+              v-model.number="form.requiredEnergy"
+              type="number"
+              min="1"
+              step="1"
+              class="form-input"
+              :class="{ 'auto-disabled': isReqEnergyAuto }"
+              :disabled="isReqEnergyAuto"
+            />
+            <button
+              v-if="isReqEnergyAuto"
+              class="unlock-btn"
+              :title="$t('design.unlockRequiredEnergy') || '手动设置'"
+              @click="isReqEnergyAuto = false"
+            >
+              🔓
+            </button>
+            <button
+              v-else
+              class="lock-btn"
+              :title="$t('design.lockRequiredEnergy') || '自动计算'"
+              @click="unlockAndCalcReqEnergy"
+            >
+              🔒
+            </button>
+          </div>
         </div>
         <div class="form-group">
           <label>{{ $t('design.location') }}</label>
@@ -271,6 +300,33 @@ watch(
 
 // 初始化时计算一次
 autoCalcDuration()
+
+// 所需能量自动计算
+const isReqEnergyAuto = ref(true)
+
+function autoCalcReqEnergy() {
+  if (form.ratedEnergy > 0 && form.dod > 0) {
+    form.requiredEnergy = +(form.ratedEnergy * (form.dod / 100)).toFixed(2)
+  }
+}
+
+function unlockAndCalcReqEnergy() {
+  isReqEnergyAuto.value = true
+  autoCalcReqEnergy()
+}
+
+// 监听额定能量和DOD变化，自动计算所需能量
+watch(
+  () => [form.ratedEnergy, form.dod],
+  () => {
+    if (isReqEnergyAuto.value) {
+      autoCalcReqEnergy()
+    }
+  }
+)
+
+// 初始化时计算一次
+autoCalcReqEnergy()
 
 const strategies = [
   { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },

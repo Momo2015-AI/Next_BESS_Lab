@@ -324,6 +324,10 @@
             />
           </div>
         </div>
+        <div class="mt-3 text-xs">
+          <span class="text-muted">{{ $t('batteryDC.usableEnergy') }}: </span>
+          <span class="font-bold text-accent-secondary">{{ usableEnergy }} MWh</span>
+        </div>
       </div>
 
       <!-- 计算结果 -->
@@ -584,6 +588,28 @@ watch(
 const totalStrings = computed(() => {
   return Math.ceil(batteryConfig.containerQty * batteryConfig.clustersPerContainer)
 })
+
+// 计算可用能量 (Usable Energy = Total DC Energy * DoD)
+const usableEnergy = computed(() => {
+  const total = batteryConfig.totalDcEnergy || 0
+  const dod = (batteryConfig.dodSet || 90) / 100
+  return +(total * dod).toFixed(2)
+})
+
+// 同步 totalStrings 到 stringQty
+watch(totalStrings, (val) => {
+  if (val > 0 && batteryConfig.stringQty !== val) {
+    batteryConfig.stringQty = val
+  }
+})
+
+// 实时更新 actualDod 跟随 dodSet 变化
+watch(
+  () => batteryConfig.dodSet,
+  (val) => {
+    batteryConfig.actualDod = Math.min(val || 90, 95)
+  }
+)
 
 // 计算配置
 function calculateBatteryConfig() {

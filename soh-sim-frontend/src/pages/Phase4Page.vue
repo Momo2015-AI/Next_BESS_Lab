@@ -69,6 +69,7 @@
                   class="form-field-input"
                 />
               </div>
+              <div class="phase4-total-row">{{ $t('phase4.totalOpex') }}: ${{ totalAnnualOpex.toLocaleString() }}</div>
             </div>
           </div>
         </div>
@@ -97,6 +98,7 @@
                   class="form-field-input"
                 />
               </div>
+              <div class="phase4-total-row">{{ $t('phase4.equityRatio') }}: {{ equityRatio }}%</div>
               <div>
                 <label class="label-text">{{ $t('phase4.interestRate') }}</label>
                 <input
@@ -221,6 +223,17 @@ const steps = [
 const totalCapex = computed(() => {
   const c = store.financial.capex
   return (c.equipment || 0) + (c.epc || 0) + (c.development || 0)
+})
+
+const totalAnnualOpex = computed(() => {
+  const o = store.financial.opex
+  return (o.fixedOpexPerMw || 0) * (store.survey.totalPower || 0) +
+    (o.variableOpexPerMwh || 0) * (store.survey.ratedEnergy || 0) * (store.survey.cyclesPerDay || 1) * 365 +
+    (o.insuranceRate || 0) + (o.landLease || 0)
+})
+
+const equityRatio = computed(() => {
+  return 100 - (store.financial.financing.debtRatio || 0)
 })
 
 async function runFinancialCalc() {

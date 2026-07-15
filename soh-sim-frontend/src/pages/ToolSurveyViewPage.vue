@@ -62,12 +62,27 @@
           step="0.1"
           :placeholder="5"
         />
-        <FormField
-          v-model.number="formData.containerQty"
-          :label="$t('sidebar.toolSurveyView.containerQty')"
-          type="number"
-          :placeholder="1"
-        />
+        <div class="form-field">
+          <label class="form-label">{{ $t('sidebar.toolSurveyView.containerQty') }}</label>
+          <div class="input-with-lock">
+            <FormField
+              v-model.number="formData.containerQty"
+              :label="$t('sidebar.toolSurveyView.containerQty')"
+              type="number"
+              :placeholder="1"
+              class="no-label"
+            />
+            <button
+              type="button"
+              class="lock-toggle"
+              :class="{ linked: isEnergyQtyLinked }"
+              :title="isEnergyQtyLinked ? $t('sidebar.toolSurveyView.unlinkEnergyQty') : $t('sidebar.toolSurveyView.linkEnergyQty')"
+              @click="isEnergyQtyLinked = !isEnergyQtyLinked"
+            >
+              {{ isEnergyQtyLinked ? '🔗' : '⛓️‍💥' }}
+            </button>
+          </div>
+        </div>
         <FormField
           v-model.number="formData.pcsQty"
           :label="$t('sidebar.toolSurveyView.pcsQty')"
@@ -145,13 +160,26 @@
           max="90"
           :placeholder="70"
         />
-        <FormField
-          v-model.number="simParams.requiredEnergy"
-          :label="$t('sidebar.toolSurveyView.requiredEnergy')"
-          type="number"
-          step="1"
-          :placeholder="100"
-        />
+        <div class="form-field">
+          <label class="form-label">{{ $t('sidebar.toolSurveyView.requiredEnergy') }}</label>
+          <div class="input-with-lock">
+            <input
+              v-model.number="simParams.requiredEnergy"
+              type="number"
+              step="1"
+              class="form-input"
+              :disabled="isReqEnergyAuto"
+            />
+            <button
+              type="button"
+              class="lock-toggle"
+              :title="isReqEnergyAuto ? $t('sidebar.toolSurveyView.unlockReqEnergy') : $t('sidebar.toolSurveyView.lockReqEnergy')"
+              @click="isReqEnergyAuto = !isReqEnergyAuto"
+            >
+              {{ isReqEnergyAuto ? '🔒' : '🔓' }}
+            </button>
+          </div>
+        </div>
         <FormField
           v-model.number="simParams.initRte"
           :label="$t('sidebar.toolSurveyView.initRte')"
@@ -179,6 +207,10 @@
           max="99"
           :placeholder="97.5"
         />
+        <div class="form-field">
+          <label class="form-label">{{ $t('sidebar.toolSurveyView.systemRTE') }}</label>
+          <div class="form-value-readonly">{{ systemRTE }}%</div>
+        </div>
         <FormField
           v-model.number="simParams.auxPower"
           :label="$t('sidebar.toolSurveyView.auxPower')"
@@ -201,7 +233,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
@@ -219,6 +251,8 @@ const loading = ref(false)
 const surveyId = ref('')
 const searchKeyword = ref('')
 const searchResults = ref([])
+const isReqEnergyAuto = ref(true)
+const isEnergyQtyLinked = ref(false)
 
 const formData = reactive({
   projectName: '',
@@ -244,6 +278,12 @@ const simParams = reactive({
   auxPower: 5
 })
 
+const systemRTE = computed(() => {
+  const ac = simParams.acEfficiency || 97
+  const dc = simParams.dcEfficiency || 97.5
+  return +((ac / 100) * (dc / 100) * 100).toFixed(2)
+})
+
 const batteryTypeOptions = computed(() => [
   { value: 'LFP', label: t('tools.batteryTypeLFP') },
   { value: 'NCM', label: t('tools.batteryTypeNCM') },
@@ -254,6 +294,38 @@ const simYearOptions = computed(() =>
   [10, 15, 20, 25, 30].map((v) => ({ value: v, label: v + t('tools.simYearUnit') }))
 )
 const guaranteeYearOptions = computed(() => [5, 10, 15, 20].map((v) => ({ value: v, label: v + t('tools.yearUnit') })))
+
+// Auto-calc requiredEnergy from ratedEnergy * dod%
+watch(
+  () => [formData.ratedEnergy, formData.dod],
+  ([energy, dod]) => {
+    if (isReqEnergyAuto.value) {
+      simParams.requiredEnergy = +((energy || 5) * ((dod || 80) / 100)).toFixed(1)
+    }
+  },
+  { immediate: true }
+)
+
+// Bidirectional ratedEnergy <-> containerQty (1 container = 5 MWh)
+let _energyQtyGuard = false
+watch(
+  () => formData.containerQty,
+  (qty) => {
+    if (!isEnergyQtyLinked.value || _energyQtyGuard) return
+    _energyQtyGuard = true
+    formData.ratedEnergy = +(qty * 5).toFixed(1)
+    _energyQtyGuard = false
+  }
+)
+watch(
+  () => formData.ratedEnergy,
+  (energy) => {
+    if (!isEnergyQtyLinked.value || _energyQtyGuard) return
+    _energyQtyGuard = true
+    formData.containerQty = Math.ceil(energy / 5)
+    _energyQtyGuard = false
+  }
+)
 
 async function loadSurveyById() {
   if (!surveyId.value) {
@@ -445,5 +517,50 @@ function goToSimulation() {
   display: flex;
   gap: 10px;
   margin-top: 8px;
+}
+
+.form-value-readonly {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-bg-input, rgba(255,255,255,0.06));
+  border-radius: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+}
+
+.input-with-lock {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+.input-with-lock .form-input {
+  flex: 1;
+}
+.input-with-lock .no-label :deep(.form-label) {
+  display: none;
+}
+.lock-toggle {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  line-height: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+.lock-toggle:hover {
+  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
+}
+.lock-toggle.linked {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow, rgba(37, 99, 235, 0.12));
 }
 </style>

@@ -99,8 +99,15 @@
               step="0.5"
               min="0"
               :placeholder="$t('surveyForm.cyclesPerDayPh')"
-              :hint="$t('surveyForm.cyclesPerDayHint')"
-            />
+            >
+              <template #hint>
+                <span v-if="suggestedCyclesPerDay !== null" class="text-xs text-muted">
+                  {{ $t('surveyForm.cyclesPerDayHint') }}
+                  &bull; {{ $t('surveyForm.suggestedHint') }}: {{ suggestedCyclesPerDay }}
+                </span>
+                <span v-else>{{ $t('surveyForm.cyclesPerDayHint') }}</span>
+              </template>
+            </FormField>
             <FormField
               v-model.number="formData.dod"
               :label="$t('surveyForm.dodLabel')"
@@ -185,7 +192,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
@@ -210,6 +217,9 @@ const showToast = (message, type = 'info') => {
 }
 
 const submitting = ref(false)
+
+// Auto-calc ratedPower from ratedEnergy / dischargeHours
+const isPowerAuto = ref(true)
 
 // 如果路由带 :id 参数，加载已有调研数据
 onMounted(async () => {
@@ -306,10 +316,26 @@ const cellCapacityOptions = computed(() => [
 ])
 
 const containerOptions = computed(() => [
-  { value: '20ft', label: t('surveyForm.container20ft') },
-  { value: '20ft-H', label: t('surveyForm.container20ftH') },
-  { value: '40ft', label: t('surveyForm.container40ft') }
-])
+	  { value: '20ft', label: t('surveyForm.container20ft') },
+	  { value: '20ft-H', label: t('surveyForm.container20ftH') },
+	  { value: '40ft', label: t('surveyForm.container40ft') }
+	])
+
+	// Suggested cycles per day based on discharge duration
+	const suggestedCyclesPerDay = computed(() => {
+	  if (!formData.dischargeHours || formData.dischargeHours <= 0) return null
+	  return Math.floor(24 / (2 * formData.dischargeHours))
+	})
+
+	// Auto-calc ratedPower from ratedEnergy / dischargeHours
+	watch(
+	  () => [formData.ratedEnergy, formData.dischargeHours],
+	  ([energy, hours]) => {
+	    if (isPowerAuto.value && energy > 0 && hours > 0) {
+	      formData.ratedPower = +(energy / hours).toFixed(1)
+	    }
+	  }
+	)
 
 const formData = reactive({
   projectName: '',
@@ -340,18 +366,24 @@ function resetForm() {
   showToast(t('surveyForm.formReset'))
 }
 
-async function submitSurvey() {
-  if (!formData.projectName) {
-    showToast(t('surveyForm.required'), 'error')
-    return
-  }
-  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
-    showToast(t('surveyForm.ratedEnergyRequired'), 'error')
-    return
-  }
+const CONTAINER_CAPACITY_MWH = {
+	  '20ft': 3.7,
+	  '20ft-H': 5,
+	  '40ft': 10
+	}
 
-  submitting.value = true
-  try {
+	async function submitSurvey() {
+	  if (!formData.projectName) {
+	    showToast(t('surveyForm.required'), 'error')
+	    return
+	  }
+	  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
+	    showToast(t('surveyForm.ratedEnergyRequired'), 'error')
+	    return
+	  }
+
+	  submitting.value = true
+	  try {
     const mappedData = {
       project_name: formData.projectName,
       contact_person: formData.contact || '',
@@ -371,8 +403,9 @@ async function submitSurvey() {
       ...formData,
       submittedAt: new Date().toISOString(),
       status: 'pending',
-      containerQty: Math.ceil(formData.ratedEnergy / 5),
-      pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
+	      containerQty: Math.ceil(formData.ratedEnergy / (CONTAINER_CAPACITY_MWH[formData.containerSpec] || 5)),
+	      // PCS rated power defaults to 5 MW per unit; can be configured via PCS_RATED_POWER_MW
+	      pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
       totalEnergyMwh: formData.ratedEnergy,
       totalPowerMw: formData.ratedPower
     }
@@ -401,7 +434,7 @@ async function submitSurvey() {
     store.survey.cyclesPerDay = formData.cyclesPerDay || 1
     if (formData.dod) store.survey.dod = formData.dod
     if (formData.cRate) store.survey.cRate = formData.cRate
-    store.survey.requiredEnergy = +(formData.ratedEnergy * 0.9).toFixed(1)
+    store.survey.requiredEnergy = +(formData.ratedEnergy * ((formData.dod || 90) / 100)).toFixed(1)
     if (formData.location) store.survey.location = formData.location
     if (formData.projectName) store.survey.projectName = formData.projectName
     if (formData.voltageLevel) store.survey.gridVoltage = formData.voltageLevel

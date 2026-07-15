@@ -132,6 +132,10 @@
           </div>
         </div>
 
+        <div class="text-xs text-muted mt-2">
+          单箱容量: <span class="text-default font-bold">{{ batteryPerContainer }}</span> MWh
+        </div>
+
         <button class="text-xs px-4 py-2 rounded transition-colors bg-accent-2 text-white" @click="generateBOM">
           生成BOM清单
         </button>
@@ -326,7 +330,7 @@ const { state: siteData } = useDraft('eng-site-data', {
 
 const siteAreaResult = ref(null)
 
-function calculateSiteArea() {
+function calculateSiteArea(silent = false) {
   const containerArea = siteData.containerQty * siteData.containerLength * siteData.containerWidth
   const pcsArea = siteData.pcsQty * 5 * 3
   const transformerArea = siteData.transformerQty * 10
@@ -343,8 +347,18 @@ function calculateSiteArea() {
     landAcres
   }
 
-  showToast('场地面积计算完成')
+  if (!silent) {
+    showToast('场地面积计算完成')
+  }
 }
+
+watch(
+  () => [siteData.containerQty, siteData.pcsQty, siteData.transformerQty, siteData.containerLength, siteData.containerWidth, siteData.spacingFactor],
+  () => {
+    calculateSiteArea(true)
+  },
+  { immediate: true }
+)
 
 const { state: bomData } = useDraft('eng-bom-data', {
   energy: 100,
@@ -360,6 +374,11 @@ watch(
   },
   { immediate: true }
 )
+
+const batteryPerContainer = computed(() => {
+  if (!bomData.containerQty || bomData.containerQty <= 0) return 0
+  return +(bomData.energy / bomData.containerQty).toFixed(2)
+})
 
 const bomResult = ref([])
 

@@ -474,10 +474,35 @@ const externalBatteryConfig = reactive({
   containerEnergy: 5
 })
 
+// --- systemRTE computed (Tier 3) ---
+const systemRTE = computed(() => {
+  const pcsEff = pcsConfig.pcsEfficiency || 98.5
+  const dcEff = 98.5 // default DC efficiency
+  return +((dcEff / 100) * (pcsEff / 100) * 100).toFixed(2)
+})
+
+// --- Bidirectional pcsQty / totalPcsPower watchers with guard flag ---
+let pcsCalcGuard = false
+
 watch(
   () => [pcsConfig.pcsQty, pcsConfig.pcsPower],
   () => {
+    if (pcsCalcGuard) return
+    pcsCalcGuard = true
     pcsConfig.totalPcsPower = pcsConfig.pcsQty * pcsConfig.pcsPower
+    pcsCalcGuard = false
+  }
+)
+
+watch(
+  () => [pcsConfig.totalPcsPower, pcsConfig.pcsPower],
+  () => {
+    if (pcsCalcGuard) return
+    pcsCalcGuard = true
+    if (pcsConfig.pcsPower > 0) {
+      pcsConfig.pcsQty = Math.ceil(pcsConfig.totalPcsPower / pcsConfig.pcsPower)
+    }
+    pcsCalcGuard = false
   }
 )
 
@@ -486,6 +511,28 @@ watch(
   () => {
     pcsConfig.transformerQty = Math.ceil(pcsConfig.totalPcsPower / 5)
     pcsConfig.transformerCapacity = 6.3
+  }
+)
+
+// --- Live reactive acRatedCurrent & transformerCapacity (Tier 3) ---
+watch(
+  () => [pcsConfig.totalPcsPower, pcsConfig.powerFactor],
+  () => {
+    if (pcsConfig.totalPcsPower > 0 && pcsConfig.powerFactor > 0) {
+      pcsConfig.acRatedCurrent = Math.round(
+        (pcsConfig.totalPcsPower * 1000) / (1.732 * 0.69 * pcsConfig.powerFactor)
+      )
+    }
+  }
+)
+
+watch(
+  () => [pcsConfig.totalPcsPower, pcsConfig.transformerQty],
+  () => {
+    if (pcsConfig.totalPcsPower > 0 && pcsConfig.transformerQty > 0) {
+      pcsConfig.transformerCapacity =
+        Math.ceil((pcsConfig.totalPcsPower / pcsConfig.transformerQty) * 1.1 * 10) / 10
+    }
   }
 )
 

@@ -167,13 +167,27 @@
             />
           </div>
           <div>
-            <label class="label-text">{{ $t('surveyForm.tempAvg') }}</label>
-            <input
-              v-model.number="form.temp_avg"
-              type="number"
-              class="form-field-input"
-              :placeholder="$t('surveyForm.tempAvgPh')"
-            />
+            <label class="label-text">
+              {{ $t('surveyForm.tempAvg') }}
+              <span v-if="isTempAvgAuto" class="auto-badge">{{ $t('design.auto') }}</span>
+            </label>
+            <div class="duration-input-row">
+              <input
+                v-model.number="form.temp_avg"
+                type="number"
+                class="form-field-input"
+                :disabled="isTempAvgAuto"
+                :placeholder="$t('surveyForm.tempAvgPh')"
+              />
+              <button
+                type="button"
+                class="lock-toggle-btn"
+                :title="isTempAvgAuto ? $t('design.unlock') : $t('design.lock')"
+                @click="isTempAvgAuto = !isTempAvgAuto"
+              >
+                {{ isTempAvgAuto ? '🔒' : '🔓' }}
+              </button>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.humidity') }}</label>
@@ -553,6 +567,9 @@ const { state: form, clearDraft } = useDraft('survey-form', {
 // 储能时长自动计算
 const isDurationAuto = ref(true)
 
+// 平均温度自动计算
+const isTempAvgAuto = ref(true)
+
 function autoCalcDuration() {
   if (form.total_mwh > 0 && form.total_mw > 0) {
     form.duration = +(form.total_mwh / form.total_mw).toFixed(2)
@@ -563,6 +580,19 @@ watch(
   () => [form.total_mwh, form.total_mw],
   () => {
     if (isDurationAuto.value) autoCalcDuration()
+  }
+)
+
+function autoCalcTempAvg() {
+  if (form.temp_max != null && form.temp_min != null) {
+    form.temp_avg = +((form.temp_max + form.temp_min) / 2).toFixed(1)
+  }
+}
+
+watch(
+  () => [form.temp_max, form.temp_min],
+  () => {
+    if (isTempAvgAuto.value) autoCalcTempAvg()
   }
 )
 
@@ -595,6 +625,7 @@ async function submitForm() {
       if (form.temp_avg != null) store.survey.temperature = form.temp_avg
       if (form.cycles_per_day) store.survey.cyclesPerDay = form.cycles_per_day
       if (form.total_mwh && form.duration) {
+        // 默认使用90% DOD; 如调研表有DOD字段应使用实际值
         store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
       }
       if (form.location) store.survey.location = form.location

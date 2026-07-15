@@ -35,6 +35,9 @@
             class="w-full rounded px-2 py-1 text-xs ins-6"
           />
         </div>
+        <div class="col-span-2 text-[10px] ins-5 mt-0.5">
+          Spread: ${{ priceSpread }}/kWh
+        </div>
         <div>
           <label class="block mb-0.5 ins-5">
             {{ $t('financial.labelCalendarDays') }}
@@ -168,6 +171,9 @@
             class="w-full rounded px-2 py-1 text-xs ins-6"
           />
         </div>
+        <div class="col-span-2 text-[10px] ins-5 mt-0.5">
+          Est. Total CAPEX: ${{ totalCapexEstimate.toLocaleString() }}
+        </div>
         <div>
           <label class="block mb-0.5 ins-5">{{ $t('financial.labelFixedOm') }}</label>
           <input
@@ -263,6 +269,9 @@
             step="0.5"
             class="w-full rounded px-2 py-1 text-xs ins-6"
           />
+        </div>
+        <div class="text-[10px] ins-5">
+          WACC: {{ wacc }}%
         </div>
         <div>
           <label class="block mb-0.5 ins-5">
@@ -395,7 +404,10 @@
 </template>
 
 <script setup>
-import { inject, watch } from 'vue'
+import { inject, watch, computed } from 'vue'
+import { useBessStore } from '../stores/bess.js'
+
+const store = useBessStore()
 
 const f = inject('financialParams', () => {
   console.warn('financialParams not provided, using defaults')
@@ -453,6 +465,35 @@ watch(
     _finSyncing = false
   }
 )
+
+// ---- Computed properties ----
+
+// Tier 3: Price spread (peak - offPeak)
+const priceSpread = computed(() => {
+  return +((f.peakPrice || 0) - (f.offPeakPrice || 0)).toFixed(2)
+})
+
+// Tier 2: WACC (Weighted Average Cost of Capital)
+const wacc = computed(() => {
+  const debtPct = (f.debtRatio || 60) / 100
+  const equityPct = 1 - debtPct
+  const afterTaxDebtCost = (f.interestRate || 4.5) * (1 - (f.taxRate || 25) / 100)
+  return +(debtPct * afterTaxDebtCost + equityPct * (f.costOfEquity || 10)).toFixed(2)
+})
+
+// Tier 2: Total CAPEX estimate based on unit costs and store survey scale
+const totalCapexEstimate = computed(() => {
+  const totalMWh = store.survey.ratedEnergy || 100
+  const totalMW = store.survey.totalPower || 50
+  const containerCost = (f.containerCostPerMWh || 200000) * totalMWh
+  const pcsCost = (f.pcsCostPerMW || 80000) * totalMW
+  const bopCost = (f.bopCostPerMWh || 50000) * totalMWh
+  const substationCost = (f.substationCostPerMW || 30000) * totalMW
+  const transmissionCost = (f.transmissionCostPerMW || 20000) * totalMW
+  const landCost = (f.landCostPerMW || 10000) * totalMW
+  const devCost = (f.developmentCostPerMW || 50000) * totalMW
+  return containerCost + pcsCost + bopCost + substationCost + transmissionCost + landCost + devCost
+})
 </script>
 
 <style scoped>
