@@ -16,20 +16,8 @@
       <!-- 步骤1: 方案模板选择 -->
       <DesignTemplateSelector v-if="activeStep === 0" @confirm="onTemplateConfirm" @skip="activeStep = 1" />
 
-      <!-- 步骤2: 设计参数确认 -->
-      <DesignParamsConfirm v-if="activeStep === 1" @back="activeStep = 0" @result="onDesignResult" />
-
-      <!-- 步骤3: 方案结果预览 -->
-      <DesignResultPreview
-        v-if="activeStep === 2"
-        :solutions="designSolutions"
-        :strategy="designStrategy"
-        @back="activeStep = 1"
-        @confirm="onSolutionConfirm"
-      />
-
-      <!-- 步骤4: AC/DC 详细设计 -->
-      <div v-if="activeStep === 3" class="acdc-design-section">
+      <!-- 步骤2: AC/DC 详细设计 -->
+      <div v-if="activeStep === 1" class="acdc-design-section">
         <div class="acdc-header">
           <h3 class="section-title-sm">{{ $t('phase2.acdcDesign') }}</h3>
           <p class="section-desc">{{ $t('phase2.acdcDesignDesc') }}</p>
@@ -37,10 +25,22 @@
         <BatteryDCDesign class="mt-4" />
         <PcsACDesign class="mt-4" />
         <div class="acdc-actions">
-          <button class="btn-secondary" @click="activeStep = 2">{{ $t('phase2.back') }}</button>
-          <button class="btn-primary" @click="goToPhase3">{{ $t('phase2.goToPhase3') }}</button>
+          <button class="btn-secondary" @click="activeStep = 0">{{ $t('phase2.back') }}</button>
+          <button class="btn-primary" @click="activeStep = 2">{{ $t('phase2.goToParams') }}</button>
         </div>
       </div>
+
+      <!-- 步骤3: 设计参数确认 -->
+      <DesignParamsConfirm v-if="activeStep === 2" @back="activeStep = 1" @result="onDesignResult" />
+
+      <!-- 步骤4: 方案结果预览 -->
+      <DesignResultPreview
+        v-if="activeStep === 3"
+        :solutions="designSolutions"
+        :strategy="designStrategy"
+        @back="activeStep = 2"
+        @confirm="onSolutionConfirm"
+      />
     </div>
   </AppPage>
 </template>
@@ -78,13 +78,13 @@ const steps = computed(() => [
 const designSolutions = ref(store.designResults.solutions || [])
 const designStrategy = ref(store.designResults.strategy || 'balanced')
 
-// 如果 store 中有已确认的方案且 solutions 非空，直接跳到步骤 3
+// 如果 store 中有已确认的方案且 solutions 非空，直接跳到步骤 4（方案预览）
 if (store.designResults.confirmedSolution && store.designResults.solutions.length > 0) {
-  activeStep.value = 2
+  activeStep.value = 3
 }
 
 function onTemplateConfirm(tmpl) {
-  // 模板已确认，直接跳到参数确认
+  // 模板已确认，进入 AC/DC 详细设计
   activeStep.value = 1
 }
 
@@ -97,7 +97,7 @@ function onDesignResult(data) {
     strategy: designStrategy.value,
     confirmedSolution: null
   }
-  activeStep.value = 2
+  activeStep.value = 3
 }
 
 function onSolutionConfirm(sol) {
@@ -113,11 +113,7 @@ function onSolutionConfirm(sol) {
   store.survey.cyclesPerDay = sol.cyclesPerDay || store.survey.cyclesPerDay
   store.survey.requiredEnergy = sol.requiredEnergy || store.survey.requiredEnergy
   // systemParams 和 selectedProducts 已由 DesignResultPreview.confirmSolution() 写入
-  // 进入 AC/DC 详细设计步骤
-  activeStep.value = 3
-}
-
-function goToPhase3() {
+  // 标记 Phase2 完成，进入 Phase3 仿真
   store.phases.phase2 = { status: 'completed' }
   router.push('/phase3')
 }

@@ -629,6 +629,7 @@ function goToSimulation() {
   flex: 1;
 }
 
+/* Combobox 下拉面板 — 跟随页面浅色/深色主题 */
 .combobox-field {
   flex: 1;
 }
@@ -647,34 +648,52 @@ function goToSimulation() {
   z-index: 100;
   max-height: 220px;
   overflow-y: auto;
-  background: var(--color-bg-card, #1a1d2e);
+  overflow-x: hidden;
+  background: var(--color-card);
+  backdrop-filter: var(--backdrop-filter, blur(12px));
+  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
   border: 1px solid var(--color-border);
   border-radius: 6px;
   margin-top: 2px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 .combobox-option {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
   padding: 8px 12px;
   cursor: pointer;
   transition: background 0.15s ease;
-  border-bottom: 1px solid var(--color-border-light, rgba(255, 255, 255, 0.04));
+  border-bottom: 1px solid var(--color-border-light);
 }
 .combobox-option:last-child {
   border-bottom: none;
 }
 .combobox-option:hover,
 .combobox-option.active {
-  background: var(--color-accent-glow, rgba(37, 99, 235, 0.12));
+  background: var(--color-accent);
+  color: #fff;
+}
+.combobox-option:hover .option-name,
+.combobox-option.active .option-name {
+  color: #fff;
+}
+.combobox-option:hover .option-code,
+.combobox-option.active .option-code {
+  color: rgba(255, 255, 255, 0.7);
 }
 .option-name {
+  flex: 1;
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-text-default);
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 .option-code {
+  flex-shrink: 0;
   font-size: 11px;
   color: var(--color-text-muted);
   font-family: monospace;

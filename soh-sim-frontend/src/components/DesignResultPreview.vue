@@ -181,6 +181,14 @@ function formatDate(iso) {
   return `${y}/${m}/${day}`
 }
 
+function fmtMoney(v) {
+  if (v == null) return '-'
+  const n = Number(v)
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
+  return n.toLocaleString()
+}
+
 function confirmSolution() {
   if (!selectedSolution.value) return
 
