@@ -47,7 +47,28 @@
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.country') }}</label>
-            <input v-model="form.country" class="form-field-input" :placeholder="$t('runningConditions.country')" />
+            <div class="combobox-wrapper">
+              <input
+                v-model="countryInput"
+                type="text"
+                class="form-field-input"
+                :placeholder="$t('runningConditions.country')"
+                @focus="countryDropdown = true"
+                @blur="onCountryBlur"
+                @input="onCountryInput"
+              />
+              <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
+                <div
+                  v-for="c in filteredCountries"
+                  :key="c"
+                  class="combobox-option"
+                  :class="{ active: c === form.country }"
+                  @mousedown.prevent="selectCountry(c)"
+                >
+                  <span class="option-name">{{ c }}</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('runningConditions.city') }}</label>
@@ -906,10 +927,32 @@ import { useI18n } from 'vue-i18n'
 import { useBessStore, DEFAULT_SURVEY } from '../stores/bess.js'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
+import { useCountryList } from '../composables/useCountryList'
 
 const { t } = useI18n()
 const store = useBessStore()
 const emit = defineEmits(['applyParams'])
+
+const { filterCountries } = useCountryList()
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  form.country = countryInput.value
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  form.country = c
+  countryInput.value = c
+  countryDropdown.value = false
+}
 
 const {
   cells,
@@ -1010,6 +1053,11 @@ const certKeys = {
 
 // --- auto-calc: durationHours ---
 const isDurationAuto = ref(true)
+
+// 国家输入框同步
+watch(() => form.country, (val) => {
+  if (val && val !== countryInput.value) countryInput.value = val
+})
 
 function autoCalcDuration() {
   if (form.totalMWh > 0 && form.totalMW > 0) {
@@ -1494,5 +1542,61 @@ function applyToSimulation() {
 
 .text-muted {
   color: var(--color-text-muted, #999);
+}
+
+/* Combobox 下拉面板 */
+.combobox-wrapper {
+  position: relative;
+}
+.combobox-wrapper .form-field-input {
+  width: 100%;
+}
+.combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-card);
+  backdrop-filter: var(--backdrop-filter, blur(12px));
+  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+.combobox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.combobox-option:last-child {
+  border-bottom: none;
+}
+.combobox-option:hover,
+.combobox-option.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+.combobox-option:hover .option-name,
+.combobox-option.active .option-name {
+  color: #fff;
+}
+.option-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 </style>

@@ -20,7 +20,28 @@
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.country') }}</label>
-            <input v-model="form.country" class="form-field-input" :placeholder="$t('surveyForm.countryPh')" />
+            <div class="combobox-wrapper">
+              <input
+                v-model="countryInput"
+                type="text"
+                class="form-field-input"
+                :placeholder="$t('surveyForm.countryPh')"
+                @focus="countryDropdown = true"
+                @blur="onCountryBlur"
+                @input="onCountryInput"
+              />
+              <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
+                <div
+                  v-for="c in filteredCountries"
+                  :key="c"
+                  class="combobox-option"
+                  :class="{ active: c === form.country }"
+                  @mousedown.prevent="selectCountry(c)"
+                >
+                  <span class="option-name">{{ c }}</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.city') }}</label>
@@ -331,12 +352,32 @@
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.cellModel') }}</label>
-            <select v-model="form.cell_model" class="form-field-select">
-              <option value="">{{ $t('surveyForm.cellModelPh') }}</option>
-              <option v-for="cell in cells" :key="cell.id" :value="cell.model">
-                {{ cell.mfr }} - {{ cell.model }} ({{ cell.capacityAh }}Ah)
-              </option>
-            </select>
+            <div class="combobox-wrapper">
+              <input
+                v-model="cellModelInput"
+                type="text"
+                class="form-field-input"
+                :placeholder="$t('surveyForm.cellModelPh')"
+                @focus="cellDropdown = true"
+                @blur="onCellBlur"
+                @input="onCellInput"
+              />
+              <div v-if="cellDropdown && filteredCells.length > 0" class="combobox-dropdown">
+                <div
+                  v-for="cell in filteredCells"
+                  :key="cell.id"
+                  class="combobox-option"
+                  :class="{ active: cell.model === form.cell_model }"
+                  @mousedown.prevent="selectCell(cell)"
+                >
+                  <span class="option-name">{{ cell.mfr }} - {{ cell.model }}</span>
+                  <span class="option-code">{{ cell.capacityAh }}Ah</span>
+                </div>
+              </div>
+              <div v-else-if="cellDropdown && cellModelInput && filteredCells.length === 0" class="combobox-dropdown">
+                <div class="combobox-empty">{{ $t('common.noMatch') }}</div>
+              </div>
+            </div>
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.rteTarget') }}</label>
@@ -547,6 +588,7 @@ import { useI18n } from 'vue-i18n'
 import { useProducts } from '../composables/useProducts'
 import { useBessStore } from '../stores/bess.js'
 import { useDraft } from '../composables/useDraft'
+import { useCountryList } from '../composables/useCountryList'
 import api from '../services/api.js'
 
 const { t } = useI18n()
@@ -554,6 +596,69 @@ const emit = defineEmits(['error'])
 const store = useBessStore()
 
 const { cells, loadAll } = useProducts()
+const { filterCountries } = useCountryList()
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  form.country = countryInput.value
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  form.country = c
+  countryInput.value = c
+  countryDropdown.value = false
+}
+// 初始化回填
+watch(() => form.country, (val) => {
+  if (val && val !== countryInput.value) countryInput.value = val
+})
+
+// 电芯型号 combobox 状态
+const cellModelInput = ref('')
+const cellDropdown = ref(false)
+const filteredCells = computed(() => {
+  const q = cellModelInput.value.trim().toLowerCase()
+  if (!q) return cells.value
+  return cells.value.filter(c =>
+    (c.mfr || '').toLowerCase().includes(q) ||
+    (c.model || '').toLowerCase().includes(q) ||
+    String(c.capacityAh || '').includes(q)
+  )
+})
+function onCellInput() {
+  form.cell_model = ''
+  cellDropdown.value = true
+}
+function onCellBlur() {
+  setTimeout(() => { cellDropdown.value = false }, 150)
+}
+function selectCell(cell) {
+  form.cell_model = cell.model
+  cellModelInput.value = `${cell.mfr} - ${cell.model} (${cell.capacityAh}Ah)`
+  cellDropdown.value = false
+}
+// 初始化时如果 form.cell_model 已有值，回填输入框
+watch(() => form.cell_model, (val) => {
+  if (val && cells.value.length > 0) {
+    const found = cells.value.find(c => c.model === val)
+    if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+  }
+})
+// 电芯列表加载完成后回填
+watch(cells, (list) => {
+  if (list.length > 0 && form.cell_model) {
+    const found = list.find(c => c.model === form.cell_model)
+    if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+  }
+})
 
 // 合并 store.survey 数据到默认值（处理刷新场景：Pinia persist 恢复 → useDraft 初始化）
 const surveyDefaults = {
@@ -878,5 +983,77 @@ function fillTestData() {
 
 .lock-toggle-btn:hover {
   background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
+}
+
+/* Combobox 下拉面板 */
+.combobox-wrapper {
+  position: relative;
+}
+.combobox-wrapper .form-field-input {
+  width: 100%;
+}
+.combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-card);
+  backdrop-filter: var(--backdrop-filter, blur(12px));
+  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+.combobox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.combobox-option:last-child {
+  border-bottom: none;
+}
+.combobox-option:hover,
+.combobox-option.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+.combobox-option:hover .option-name,
+.combobox-option.active .option-name {
+  color: #fff;
+}
+.combobox-option:hover .option-code,
+.combobox-option.active .option-code {
+  color: rgba(255, 255, 255, 0.7);
+}
+.option-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+.option-code {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+.combobox-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 </style>

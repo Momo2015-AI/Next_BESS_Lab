@@ -180,11 +180,28 @@
         </div>
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCountry') }}</label>
-          <input
-            v-model="surveyData.country"
-            type="text"
-            class="w-full rounded px-2 py-1 text-xs card-input text-accent"
-          />
+          <div class="combobox-wrapper">
+            <input
+              v-model="countryInput"
+              type="text"
+              :placeholder="$t('simLab.labelCountry')"
+              class="w-full rounded px-2 py-1 text-xs card-input text-accent"
+              @focus="countryDropdown = true"
+              @blur="onCountryBlur"
+              @input="onCountryInput"
+            />
+            <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
+              <div
+                v-for="c in filteredCountries"
+                :key="c"
+                class="combobox-option"
+                :class="{ active: c === surveyData.country }"
+                @mousedown.prevent="selectCountry(c)"
+              >
+                <span class="option-name">{{ c }}</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCity') }}</label>
@@ -571,12 +588,32 @@
         <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelManufacturer') }}</label>
-            <select v-model="aiSimParams.manufacturerId" class="w-full rounded px-2 py-1 text-xs card-input">
-              <option value="">{{ $t('simLab.manufacturerPlaceholder') }}</option>
-              <option v-for="mfr in manufacturers" :key="mfr.id" :value="mfr.id">
-                {{ mfr.name }} ({{ mfr.chemistry_type }})
-              </option>
-            </select>
+            <div class="combobox-wrapper">
+              <input
+                v-model="mfrInput"
+                type="text"
+                :placeholder="$t('simLab.manufacturerPlaceholder')"
+                class="w-full rounded px-2 py-1 text-xs card-input"
+                @focus="mfrDropdown = true"
+                @blur="onMfrBlur"
+                @input="onMfrInput"
+              />
+              <div v-if="mfrDropdown && filteredManufacturers.length > 0" class="combobox-dropdown">
+                <div
+                  v-for="mfr in filteredManufacturers"
+                  :key="mfr.id"
+                  class="combobox-option"
+                  :class="{ active: mfr.id === aiSimParams.manufacturerId }"
+                  @mousedown.prevent="selectMfr(mfr)"
+                >
+                  <span class="option-name">{{ mfr.name }}</span>
+                  <span class="option-code">{{ mfr.chemistry_type || '' }}</span>
+                </div>
+              </div>
+              <div v-else-if="mfrDropdown && mfrInput && filteredManufacturers.length === 0" class="combobox-dropdown">
+                <div class="combobox-empty">{{ $t('simLab.noMatch') }}</div>
+              </div>
+            </div>
           </div>
           <div>
             <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSimYears') }}</label>
@@ -914,6 +951,7 @@ import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from
 import { useDraft, useDraftRef } from '../composables/useDraft'
 import api from '../services/api.js'
 import { useChartTheme } from '../composables/useChartTheme.js'
+import { useCountryList } from '../composables/useCountryList'
 echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
 
 const emit = defineEmits(['applyConfig', 'error'])
@@ -937,6 +975,30 @@ const searchResults = ref([])
 
 const store = useBessStore()
 const { themeObject } = useChartTheme()
+const { filterCountries } = useCountryList()
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  surveyData.country = countryInput.value
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  surveyData.country = c
+  countryInput.value = c
+  countryDropdown.value = false
+}
+// 同步回填
+watch(() => surveyData.country, (val) => {
+  if (val && val !== countryInput.value) countryInput.value = val
+})
 
 watch(themeObject, () => {
   nextTick(renderChart)
@@ -982,6 +1044,16 @@ const algoParams = reactive({})
 const selectedAlgoDetail = ref(null)
 
 const manufacturers = ref([])
+const mfrInput = ref('')
+const mfrDropdown = ref(false)
+const filteredManufacturers = computed(() => {
+  const q = mfrInput.value.trim().toLowerCase()
+  if (!q) return manufacturers.value
+  return manufacturers.value.filter(m =>
+    (m.name || '').toLowerCase().includes(q) ||
+    (m.chemistry_type || '').toLowerCase().includes(q)
+  )
+})
 const aiSimParams = reactive({
   manufacturerId: '',
   simulationYears: 25,
@@ -993,6 +1065,26 @@ const aiSimParams = reactive({
 
 const selectedManufacturer = computed(() => {
   return manufacturers.value.find((m) => m.id === aiSimParams.manufacturerId)
+})
+
+// 厂家 combobox 事件处理
+function onMfrInput() {
+  aiSimParams.manufacturerId = ''
+  mfrDropdown.value = true
+}
+function onMfrBlur() {
+  setTimeout(() => { mfrDropdown.value = false }, 150)
+}
+function selectMfr(mfr) {
+  aiSimParams.manufacturerId = mfr.id
+  mfrInput.value = mfr.name
+  mfrDropdown.value = false
+}
+// 当外部数据加载完成或 selectedManufacturer 变化时同步输入框
+watch(selectedManufacturer, (mfr) => {
+  if (mfr && !mfrInput.value) {
+    mfrInput.value = mfr.name
+  }
 })
 
 const { state: correctionFactors, clearDraft: clearCorrectionFactorsDraft } = useDraft('sim-correction-factors', {

@@ -98,7 +98,28 @@
         </div>
         <div class="form-group">
           <label>{{ $t('design.country') }}</label>
-          <input v-model="form.country" type="text" class="form-input" :placeholder="$t('design.country')" @input="markEdited('country')" />
+          <div class="combobox-wrapper">
+            <input
+              v-model="countryInput"
+              type="text"
+              class="form-input"
+              :placeholder="$t('design.country')"
+              @focus="countryDropdown = true"
+              @blur="onCountryBlur"
+              @input="onCountryInput"
+            />
+            <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
+              <div
+                v-for="c in filteredCountries"
+                :key="c"
+                class="combobox-option"
+                :class="{ active: c === form.country }"
+                @mousedown.prevent="selectCountry(c)"
+              >
+                <span class="option-name">{{ c }}</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label>{{ $t('design.city') }}</label>
@@ -270,9 +291,33 @@ import { ref, reactive, watch, computed } from 'vue'
 import { post } from '../services/api.js'
 import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
 import AppIcon from './AppIcon.vue'
+import { useCountryList } from '../composables/useCountryList'
 
 const store = useBessStore()
 const emit = defineEmits(['select', 'workflow-complete'])
+
+const { filterCountries } = useCountryList()
+
+// 国家 combobox 状态
+const countryInput = ref('')
+const countryDropdown = ref(false)
+const filteredCountries = computed(() => {
+  return filterCountries(countryInput.value)
+})
+function onCountryInput() {
+  form.country = countryInput.value
+  markEdited('country')
+  countryDropdown.value = true
+}
+function onCountryBlur() {
+  setTimeout(() => { countryDropdown.value = false }, 150)
+}
+function selectCountry(c) {
+  form.country = c
+  countryInput.value = c
+  markEdited('country')
+  countryDropdown.value = false
+}
 
 const form = reactive({
   ratedEnergy: store.survey.ratedEnergy || 100,
@@ -390,6 +435,11 @@ watch(
 
 // 初始化时计算一次
 autoCalcReqEnergy()
+
+// 国家输入框同步
+watch(() => form.country, (val) => {
+  if (val && val !== countryInput.value) countryInput.value = val
+})
 
 const strategies = [
   { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },
@@ -871,5 +921,61 @@ async function runFullWorkflow() {
 .lock-btn:hover {
   border-color: var(--color-accent, #409eff);
   background: var(--color-accent-light, #ecf5ff);
+}
+
+/* Combobox 下拉面板 */
+.combobox-wrapper {
+  position: relative;
+}
+.combobox-wrapper .form-input {
+  width: 100%;
+}
+.combobox-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-card);
+  backdrop-filter: var(--backdrop-filter, blur(12px));
+  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+.combobox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.combobox-option:last-child {
+  border-bottom: none;
+}
+.combobox-option:hover,
+.combobox-option.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+.combobox-option:hover .option-name,
+.combobox-option.active .option-name {
+  color: #fff;
+}
+.option-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 </style>

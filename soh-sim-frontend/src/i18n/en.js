@@ -15,6 +15,7 @@ export default {
     none: 'None',
     select: 'Please select',
     or: 'or',
+    noMatch: 'No matching results',
     searching: 'Parsing...',
     done: 'Parsing complete',
     yes: 'Yes',

@@ -15,6 +15,7 @@ export default {
     none: '无',
     select: '请选择',
     or: '或',
+    noMatch: '无匹配结果',
     searching: '解析中...',
     done: '解析完成',
     yes: '是',
