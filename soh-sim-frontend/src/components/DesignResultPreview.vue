@@ -219,20 +219,21 @@ onMounted(() => {
 
 .drp-solutions {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
 .drp-card {
   border: 2px solid var(--color-border);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.75rem;
   cursor: pointer;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
   background: var(--color-card);
+  overflow: hidden;
 }
 
 .drp-card:hover {
@@ -247,8 +248,9 @@ onMounted(() => {
 .drp-card-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .drp-rank {
@@ -277,59 +279,75 @@ onMounted(() => {
 .drp-card-body {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .drp-topology {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.25rem;
 }
 
 .drp-topo-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
 }
 
 .drp-topo-icon {
-  font-size: 1rem;
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 
 .drp-topo-label {
   font-weight: 500;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .drp-topo-qty {
   font-weight: 600;
   color: var(--color-accent);
+  flex-shrink: 0;
 }
 
 .drp-stats {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.375rem;
+}
+
+.drp-stats .drp-stat:nth-child(4),
+.drp-stats .drp-stat:nth-child(5) {
+  grid-column: span 1;
 }
 
 .drp-stat {
   text-align: center;
-  padding: 0.375rem;
+  padding: 0.25rem 0.125rem;
   background: var(--color-bg-secondary, #f9fafb);
   border-radius: 6px;
+  min-width: 0;
 }
 
 .drp-stat-val {
   display: block;
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .drp-stat-label {
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   color: var(--color-text-secondary);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .drp-detail {
