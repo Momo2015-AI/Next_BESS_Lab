@@ -497,11 +497,11 @@
           <div class="p-4 rounded-lg mb-5 text-left u-background-var-color-card-dark">
             <p class="text-sm mb-1 text-default">
               <strong>{{ $t('surveyForm.surveyId') }}:</strong>
-              {{ submittedData.survey_id }}
+              {{ submittedData.data?.survey_id }}
             </p>
             <p class="text-sm text-default">
               <strong>{{ $t('surveyForm.projectCode') }}:</strong>
-              {{ submittedData.project_code }}
+              {{ submittedData.data?.project_code }}
             </p>
           </div>
           <button class="btn-primary w-full" @click="closeSuccess">
