@@ -267,7 +267,7 @@ const form = reactive({
   duration: store.survey.duration || 2,
   temperature: store.survey.temperature || 25,
   cyclesPerDay: store.survey.cyclesPerDay || 1,
-  dod: 90,
+  dod: store.survey.dod || 90,
   requiredEnergy: store.survey.requiredEnergy || 240,
   location: store.survey.location || 'china',
   strategy: 'economic',

@@ -76,7 +76,11 @@
               type="button"
               class="lock-toggle"
               :class="{ linked: isEnergyQtyLinked }"
-              :title="isEnergyQtyLinked ? $t('sidebar.toolSurveyView.unlinkEnergyQty') : $t('sidebar.toolSurveyView.linkEnergyQty')"
+              :title="
+                isEnergyQtyLinked
+                  ? $t('sidebar.toolSurveyView.unlinkEnergyQty')
+                  : $t('sidebar.toolSurveyView.linkEnergyQty')
+              "
               @click="isEnergyQtyLinked = !isEnergyQtyLinked"
             >
               {{ isEnergyQtyLinked ? '🔗' : '⛓️‍💥' }}
@@ -173,7 +177,11 @@
             <button
               type="button"
               class="lock-toggle"
-              :title="isReqEnergyAuto ? $t('sidebar.toolSurveyView.unlockReqEnergy') : $t('sidebar.toolSurveyView.lockReqEnergy')"
+              :title="
+                isReqEnergyAuto
+                  ? $t('sidebar.toolSurveyView.unlockReqEnergy')
+                  : $t('sidebar.toolSurveyView.lockReqEnergy')
+              "
               @click="isReqEnergyAuto = !isReqEnergyAuto"
             >
               {{ isReqEnergyAuto ? '🔒' : '🔓' }}
@@ -262,7 +270,7 @@ const formData = reactive({
   pcsQty: 1,
   temperature: 25,
   cyclesPerDay: 1,
-  dod: 80,
+  dod: 90,
   cRate: 0.5,
   batteryType: 'LFP'
 })
@@ -300,7 +308,7 @@ watch(
   () => [formData.ratedEnergy, formData.dod],
   ([energy, dod]) => {
     if (isReqEnergyAuto.value) {
-      simParams.requiredEnergy = +((energy || 5) * ((dod || 80) / 100)).toFixed(1)
+      simParams.requiredEnergy = +((energy || 5) * ((dod || 90) / 100)).toFixed(1)
     }
   },
   { immediate: true }
@@ -440,7 +448,7 @@ function resetForm() {
     pcsQty: 1,
     temperature: 25,
     cyclesPerDay: 1,
-    dod: 80,
+    dod: 90,
     cRate: 0.5,
     batteryType: 'LFP'
   })
@@ -526,7 +534,7 @@ function goToSimulation() {
   font-size: 14px;
   font-weight: 600;
   color: var(--color-accent);
-  background: var(--color-bg-input, rgba(255,255,255,0.06));
+  background: var(--color-bg-input, rgba(255, 255, 255, 0.06));
   border-radius: 6px;
   padding: 0 12px;
   border: 1px solid var(--color-border);

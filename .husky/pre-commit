@@ -2,6 +2,16 @@
 # Pre-commit hook: run lint-staged to auto-format staged files
 # This prevents tab indentation and other formatting issues from entering the repo
 
+# Ensure node is available (workbuddy-managed node may be absent from git hook shell PATH)
+if ! command -v node >/dev/null 2>&1; then
+  for cand in "$HOME/.workbuddy/binaries/node/versions"/*/node.exe; do
+    if [ -x "$cand" ]; then
+      export PATH="$(dirname "$cand"):$PATH"
+      break
+    fi
+  done
+fi
+
 # Only run if there are staged frontend files
 STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep "^soh-sim-frontend/src/" || true)
 if [ -z "$STAGED" ]; then
