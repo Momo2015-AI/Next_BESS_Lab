@@ -53,7 +53,10 @@
                   <span class="option-code">{{ s.id.slice(0, 8) }}...</span>
                 </div>
               </div>
-              <div v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0" class="combobox-dropdown">
+              <div
+                v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0"
+                class="combobox-dropdown"
+              >
                 <div class="combobox-empty">{{ $t('simLab.noMatch') }}</div>
               </div>
             </div>
@@ -1092,10 +1095,9 @@ const toast = reactive({ show: false, message: '', type: 'success' })
 const filteredSurveyList = computed(() => {
   const q = surveyIdInput.value.trim().toLowerCase()
   if (!q) return surveyList.value.slice(0, 20)
-  return surveyList.value.filter(s =>
-    s.id.toLowerCase().includes(q) ||
-    (s.project_name || '').toLowerCase().includes(q)
-  ).slice(0, 20)
+  return surveyList.value
+    .filter((s) => s.id.toLowerCase().includes(q) || (s.project_name || '').toLowerCase().includes(q))
+    .slice(0, 20)
 })
 
 // 输入时显示下拉
@@ -1141,11 +1143,10 @@ function selectSurveyFromDropdown(survey) {
 async function fetchSurveyList() {
   try {
     const data = await api.get('/api/survey/list?per_page=200')
-    if (data.success) {
-      surveyList.value = data.data?.items || []
-    }
-  } catch {
-    // 静默失败
+    // 后端 paginated_response 返回 data 为数组（不是 { items: [...] }）
+    surveyList.value = Array.isArray(data.data) ? data.data : data.data?.items || []
+  } catch (e) {
+    console.error('[SimulationLab] 获取调研表列表失败:', e)
   }
 }
 
@@ -1950,7 +1951,7 @@ button:not(:disabled):hover {
   padding: 6px 10px;
   cursor: pointer;
   transition: background 0.15s ease;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .combobox-option:last-child {
   border-bottom: none;

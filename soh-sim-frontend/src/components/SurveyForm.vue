@@ -32,11 +32,23 @@
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.lat') }}</label>
-            <input v-model.number="form.lat" type="number" step="0.0001" class="form-field-input" :placeholder="$t('surveyForm.latPh')" />
+            <input
+              v-model.number="form.lat"
+              type="number"
+              step="0.0001"
+              class="form-field-input"
+              :placeholder="$t('surveyForm.latPh')"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.lng') }}</label>
-            <input v-model.number="form.lng" type="number" step="0.0001" class="form-field-input" :placeholder="$t('surveyForm.lngPh')" />
+            <input
+              v-model.number="form.lng"
+              type="number"
+              step="0.0001"
+              class="form-field-input"
+              :placeholder="$t('surveyForm.lngPh')"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.contactPerson') }}</label>
@@ -543,26 +555,27 @@ const store = useBessStore()
 
 const { cells, loadAll } = useProducts()
 
-const { state: form, clearDraft } = useDraft('survey-form', {
-  project_name: '',
+// 合并 store.survey 数据到默认值（处理刷新场景：Pinia persist 恢复 → useDraft 初始化）
+const surveyDefaults = {
+  project_name: store.survey.projectName || '',
   contact_person: '',
   contact_phone: '',
   contact_email: '',
-  country: '',
-  city: '',
-  site: '',
-  lat: null,
-  lng: null,
-  altitude: null,
-  total_mw: null,
-  total_mwh: null,
-  duration: null,
-  cycles_per_day: 1,
+  country: store.survey.country || '',
+  city: store.survey.city || '',
+  site: store.survey.site || '',
+  lat: store.survey.lat || null,
+  lng: store.survey.lng || null,
+  altitude: store.survey.altitude || null,
+  total_mw: store.survey.totalPower || null,
+  total_mwh: store.survey.ratedEnergy || null,
+  duration: store.survey.duration || null,
+  cycles_per_day: store.survey.cyclesPerDay || 1,
   temp_max: null,
   temp_min: null,
-  temp_avg: null,
+  temp_avg: store.survey.temperature || null,
   humidity: null,
-  grid_voltage: null,
+  grid_voltage: store.survey.gridVoltage || null,
   pcc_voltage: null,
   pcc_short_circuit_mva: null,
   grid_code: '',
@@ -582,7 +595,9 @@ const { state: form, clearDraft } = useDraft('survey-form', {
   ac_voltage: null,
   thdi: null,
   remarks: ''
-})
+}
+
+const { state: form, clearDraft } = useDraft('survey-form', surveyDefaults)
 
 // 项目地点汇总 computed（兼容后端 API）
 const formLocation = computed(() => {

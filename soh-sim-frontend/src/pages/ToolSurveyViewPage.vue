@@ -29,7 +29,10 @@
                   <span class="option-code">{{ s.id.slice(0, 8) }}...</span>
                 </div>
               </div>
-              <div v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0" class="combobox-dropdown">
+              <div
+                v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0"
+                class="combobox-dropdown"
+              >
                 <div class="combobox-empty">{{ $t('sidebar.toolSurveyView.noMatch') }}</div>
               </div>
             </div>
@@ -341,10 +344,9 @@ const formLocation = computed(() => {
 const filteredSurveyList = computed(() => {
   const q = surveyIdInput.value.trim().toLowerCase()
   if (!q) return surveyList.value.slice(0, 20)
-  return surveyList.value.filter(s =>
-    s.id.toLowerCase().includes(q) ||
-    (s.project_name || '').toLowerCase().includes(q)
-  ).slice(0, 20)
+  return surveyList.value
+    .filter((s) => s.id.toLowerCase().includes(q) || (s.project_name || '').toLowerCase().includes(q))
+    .slice(0, 20)
 })
 
 const simParams = reactive({
@@ -450,11 +452,10 @@ function selectSurveyFromDropdown(survey) {
 async function fetchSurveyList() {
   try {
     const data = await api.get('/api/survey/list?per_page=200')
-    if (data.success) {
-      surveyList.value = data.data?.items || []
-    }
-  } catch {
-    // 静默失败，用户仍可手动输入
+    // 后端 paginated_response 返回 data 为数组（不是 { items: [...] }）
+    surveyList.value = Array.isArray(data.data) ? data.data : data.data?.items || []
+  } catch (e) {
+    console.error('[ToolSurveyView] 获取调研表列表失败:', e)
   }
 }
 
@@ -659,7 +660,7 @@ function goToSimulation() {
   padding: 8px 12px;
   cursor: pointer;
   transition: background 0.15s ease;
-  border-bottom: 1px solid var(--color-border-light, rgba(255,255,255,0.04));
+  border-bottom: 1px solid var(--color-border-light, rgba(255, 255, 255, 0.04));
 }
 .combobox-option:last-child {
   border-bottom: none;

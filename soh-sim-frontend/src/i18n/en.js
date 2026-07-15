@@ -907,10 +907,16 @@ export default {
   },
   phase2: {
     title: 'Phase 2: System Design',
-    desc: 'Template selection → Parameter confirmation → Result preview, complete design in 3 steps',
+    desc: 'Template selection → Parameter confirmation → Result preview → AC/DC detailed design',
     step1: '2.1 Template Selection',
     step2: '2.2 Parameter Confirmation',
-    step3: '2.3 Result Preview'
+    step3: '2.3 Result Preview',
+    step4: '2.4 AC/DC Design',
+    acdcDesign: 'AC/DC Detailed Design',
+    acdcDesignDesc:
+      'After confirming the solution, you can further adjust battery DC side and AC side configuration parameters',
+    back: 'Back',
+    goToPhase3: 'Go to Performance Analysis →'
   },
   phase3: {
     title: 'Phase 3: Performance Analysis',

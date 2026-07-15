@@ -27,6 +27,20 @@
         @back="activeStep = 1"
         @confirm="onSolutionConfirm"
       />
+
+      <!-- 步骤4: AC/DC 详细设计 -->
+      <div v-if="activeStep === 3" class="acdc-design-section">
+        <div class="acdc-header">
+          <h3 class="section-title-sm">{{ $t('phase2.acdcDesign') }}</h3>
+          <p class="section-desc">{{ $t('phase2.acdcDesignDesc') }}</p>
+        </div>
+        <BatteryDCDesign class="mt-4" />
+        <PcsACDesign class="mt-4" />
+        <div class="acdc-actions">
+          <button class="btn-secondary" @click="activeStep = 2">{{ $t('phase2.back') }}</button>
+          <button class="btn-primary" @click="goToPhase3">{{ $t('phase2.goToPhase3') }}</button>
+        </div>
+      </div>
     </div>
   </AppPage>
 </template>
@@ -40,6 +54,8 @@ import AppPage from '../components/AppPage.vue'
 import DesignTemplateSelector from '../components/DesignTemplateSelector.vue'
 import DesignParamsConfirm from '../components/DesignParamsConfirm.vue'
 import DesignResultPreview from '../components/DesignResultPreview.vue'
+import BatteryDCDesign from '../components/BatteryDCDesign.vue'
+import PcsACDesign from '../components/PcsACDesign.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -51,7 +67,12 @@ watch(activeStep, (v) => {
   store.phase2ActiveStep = v
 })
 
-const steps = computed(() => [{ label: t('phase2.step1') }, { label: t('phase2.step2') }, { label: t('phase2.step3') }])
+const steps = computed(() => [
+  { label: t('phase2.step1') },
+  { label: t('phase2.step2') },
+  { label: t('phase2.step3') },
+  { label: t('phase2.step4') }
+])
 
 // 设计结果 — 优先从 store 恢复（解决返回时数据丢失）
 const designSolutions = ref(store.designResults.solutions || [])
@@ -92,9 +113,12 @@ function onSolutionConfirm(sol) {
   store.survey.cyclesPerDay = sol.cyclesPerDay || store.survey.cyclesPerDay
   store.survey.requiredEnergy = sol.requiredEnergy || store.survey.requiredEnergy
   // systemParams 和 selectedProducts 已由 DesignResultPreview.confirmSolution() 写入
-  // 标记 Phase2 完成
+  // 进入 AC/DC 详细设计步骤
+  activeStep.value = 3
+}
+
+function goToPhase3() {
   store.phases.phase2 = { status: 'completed' }
-  // 跳转到 Phase3 仿真
   router.push('/phase3')
 }
 </script>
@@ -161,5 +185,53 @@ function onSolutionConfirm(sol) {
 
 .step-content {
   min-height: 300px;
+}
+
+.acdc-design-section {
+  margin-top: 0;
+}
+.acdc-header {
+  margin-bottom: 1rem;
+}
+.section-title-sm {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0 0 0.25rem;
+}
+.section-desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.acdc-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+.btn-secondary {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+}
+.btn-primary {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+.btn-primary:hover {
+  opacity: 0.9;
 }
 </style>

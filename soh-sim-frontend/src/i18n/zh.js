@@ -804,10 +804,15 @@ export default {
   },
   phase2: {
     title: 'Phase 2: 系统设计',
-    desc: '方案模板选择 → 设计参数确认 → 方案结果预览，三步完成系统设计',
+    desc: '方案模板选择 → 设计参数确认 → 方案结果预览 → AC/DC详细设计',
     step1: '2.1 方案模板选择',
     step2: '2.2 设计参数确认',
-    step3: '2.3 方案结果预览'
+    step3: '2.3 方案结果预览',
+    step4: '2.4 AC/DC设计',
+    acdcDesign: 'AC/DC 详细设计',
+    acdcDesignDesc: '确认方案后，可进一步调整电池直流侧和交流侧配置参数',
+    back: '返回',
+    goToPhase3: '进入性能分析 →'
   },
   phase3: {
     title: 'Phase 3: 性能分析',
