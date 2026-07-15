@@ -630,6 +630,47 @@ onMounted(() => {
   loadAll()
 })
 
+// 实时同步关键字段到 Pinia store，确保 Phase2/3/4 即时读取
+watch(
+  () => ({
+    ratedEnergy: form.total_mwh,
+    totalPower: form.total_mw,
+    duration: form.duration,
+    temperature: form.temp_avg,
+    cyclesPerDay: form.cycles_per_day,
+    country: form.country,
+    city: form.city,
+    site: form.site,
+    lat: form.lat,
+    lng: form.lng,
+    projectName: form.project_name,
+    gridVoltage: form.grid_voltage,
+    altitude: form.altitude,
+    dod: form.dod
+  }),
+  (vals) => {
+    if (vals.ratedEnergy) store.survey.ratedEnergy = vals.ratedEnergy
+    if (vals.totalPower) store.survey.totalPower = vals.totalPower
+    if (vals.duration) store.survey.duration = vals.duration
+    if (vals.temperature != null) store.survey.temperature = vals.temperature
+    if (vals.cyclesPerDay) store.survey.cyclesPerDay = vals.cyclesPerDay
+    if (vals.country) store.survey.country = vals.country
+    if (vals.city) store.survey.city = vals.city
+    if (vals.site) store.survey.site = vals.site
+    if (vals.lat != null) store.survey.lat = vals.lat
+    if (vals.lng != null) store.survey.lng = vals.lng
+    if (vals.projectName) store.survey.projectName = vals.projectName
+    if (vals.gridVoltage) store.survey.gridVoltage = vals.gridVoltage
+    if (vals.altitude != null) store.survey.altitude = vals.altitude
+    if (vals.dod != null) store.survey.dod = vals.dod
+    // 自动计算 requiredEnergy
+    if (vals.ratedEnergy) {
+      store.survey.requiredEnergy = +(vals.ratedEnergy * ((vals.dod || 90) / 100)).toFixed(1)
+    }
+  },
+  { deep: true }
+)
+
 async function submitForm() {
   if (!form.project_name) {
     emit('error', t('surveyForm.required'), 'warning')

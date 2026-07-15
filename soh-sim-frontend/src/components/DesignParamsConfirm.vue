@@ -15,14 +15,14 @@
             {{ $t('designTemplate.fieldTotalPower') }} (MW)
             <span v-if="surveyCompleted" class="dpc-source-badge">{{ $t('designTemplate.fromSurvey') }}</span>
           </label>
-          <input v-model.number="form.totalPower" type="number" step="0.1" min="1" />
+          <input v-model.number="form.totalPower" type="number" step="0.1" min="1" @input="markEdited('totalPower')" />
         </div>
         <div class="dpc-field">
           <label>
             {{ $t('designTemplate.fieldRatedEnergy') }} (MWh)
             <span v-if="surveyCompleted" class="dpc-source-badge">{{ $t('designTemplate.fromSurvey') }}</span>
           </label>
-          <input v-model.number="form.ratedEnergy" type="number" step="1" min="1" />
+          <input v-model.number="form.ratedEnergy" type="number" step="1" min="1" @input="markEdited('ratedEnergy')" />
         </div>
         <div class="dpc-field">
           <label>
@@ -37,6 +37,7 @@
               min="0.5"
               :class="{ 'auto-disabled': isDurationAuto }"
               :disabled="isDurationAuto"
+              @input="markEdited('duration')"
             />
             <button
               v-if="isDurationAuto"
@@ -55,15 +56,15 @@
       <div class="dpc-row">
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldTemperature') }} (°C)</label>
-          <input v-model.number="form.temperature" type="number" step="1" min="-20" max="60" />
+          <input v-model.number="form.temperature" type="number" step="1" min="-20" max="60" @input="markEdited('temperature')" />
         </div>
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldCyclesPerDay') }}</label>
-          <input v-model.number="form.cyclesPerDay" type="number" step="0.1" min="0" />
+          <input v-model.number="form.cyclesPerDay" type="number" step="0.1" min="0" @input="markEdited('cyclesPerDay')" />
         </div>
         <div class="dpc-field">
           <label>{{ $t('designTemplate.fieldDod') }} (%)</label>
-          <input v-model.number="form.dod" type="number" step="1" min="10" max="100" />
+          <input v-model.number="form.dod" type="number" step="1" min="10" max="100" @input="markEdited('dod')" />
         </div>
       </div>
       <div class="dpc-row">
@@ -143,6 +144,31 @@ onMounted(() => {
   if (s.dod != null) form.dod = Number(s.dod)
   if (store.systemParams?.strategy) form.strategy = store.systemParams.strategy
 })
+
+// 持续监听 store.survey 变化，即时更新表单（但允许用户覆盖）
+const _userEdited = reactive({})
+watch(
+  () => ({
+    totalPower: store.survey.totalPower,
+    ratedEnergy: store.survey.ratedEnergy,
+    duration: store.survey.duration,
+    temperature: store.survey.temperature,
+    cyclesPerDay: store.survey.cyclesPerDay,
+    dod: store.survey.dod
+  }),
+  (vals) => {
+    if (!_userEdited.totalPower && vals.totalPower) form.totalPower = Number(vals.totalPower)
+    if (!_userEdited.ratedEnergy && vals.ratedEnergy) form.ratedEnergy = Number(vals.ratedEnergy)
+    if (!_userEdited.duration && vals.duration) form.duration = Number(vals.duration)
+    if (!_userEdited.temperature && vals.temperature != null) form.temperature = Number(vals.temperature)
+    if (!_userEdited.cyclesPerDay && vals.cyclesPerDay != null) form.cyclesPerDay = Number(vals.cyclesPerDay)
+    if (!_userEdited.dod && vals.dod != null) form.dod = Number(vals.dod)
+  }
+)
+
+function markEdited(field) {
+  _userEdited[field] = true
+}
 
 // 储能时长自动计算
 const isDurationAuto = ref(true)

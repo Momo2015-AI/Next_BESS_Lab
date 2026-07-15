@@ -9,11 +9,11 @@
       <div class="form-grid">
         <div class="form-group">
           <label>{{ $t('design.ratedEnergy') }} (MWh)</label>
-          <input v-model.number="form.ratedEnergy" type="number" min="1" step="1" class="form-input" />
+          <input v-model.number="form.ratedEnergy" type="number" min="1" step="1" class="form-input" @input="markEdited('ratedEnergy')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.totalPower') }} (MW)</label>
-          <input v-model.number="form.totalPower" type="number" min="1" step="0.1" class="form-input" />
+          <input v-model.number="form.totalPower" type="number" min="1" step="0.1" class="form-input" @input="markEdited('totalPower')" />
         </div>
         <div class="form-group">
           <label>
@@ -30,6 +30,7 @@
               class="form-input"
               :class="{ 'auto-disabled': isDurationAuto }"
               :disabled="isDurationAuto"
+              @input="markEdited('duration')"
             />
             <button
               v-if="isDurationAuto"
@@ -51,15 +52,15 @@
         </div>
         <div class="form-group">
           <label>{{ $t('design.temperature') }} (°C)</label>
-          <input v-model.number="form.temperature" type="number" min="-20" max="60" step="1" class="form-input" />
+          <input v-model.number="form.temperature" type="number" min="-20" max="60" step="1" class="form-input" @input="markEdited('temperature')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.cyclesPerDay') }}</label>
-          <input v-model.number="form.cyclesPerDay" type="number" min="0.5" max="4" step="0.5" class="form-input" />
+          <input v-model.number="form.cyclesPerDay" type="number" min="0.5" max="4" step="0.5" class="form-input" @input="markEdited('cyclesPerDay')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.dod') }} (%)</label>
-          <input v-model.number="form.dod" type="number" min="50" max="100" step="1" class="form-input" />
+          <input v-model.number="form.dod" type="number" min="50" max="100" step="1" class="form-input" @input="markEdited('dod')" />
         </div>
         <div class="form-group">
           <label>
@@ -75,6 +76,7 @@
               class="form-input"
               :class="{ 'auto-disabled': isReqEnergyAuto }"
               :disabled="isReqEnergyAuto"
+              @input="markEdited('requiredEnergy')"
             />
             <button
               v-if="isReqEnergyAuto"
@@ -96,23 +98,23 @@
         </div>
         <div class="form-group">
           <label>{{ $t('design.country') }}</label>
-          <input v-model="form.country" type="text" class="form-input" :placeholder="$t('design.country')" />
+          <input v-model="form.country" type="text" class="form-input" :placeholder="$t('design.country')" @input="markEdited('country')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.city') }}</label>
-          <input v-model="form.city" type="text" class="form-input" :placeholder="$t('design.city')" />
+          <input v-model="form.city" type="text" class="form-input" :placeholder="$t('design.city')" @input="markEdited('city')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.site') }}</label>
-          <input v-model="form.site" type="text" class="form-input" :placeholder="$t('design.site')" />
+          <input v-model="form.site" type="text" class="form-input" :placeholder="$t('design.site')" @input="markEdited('site')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.lat') }}</label>
-          <input v-model.number="form.lat" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lat')" />
+          <input v-model.number="form.lat" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lat')" @input="markEdited('lat')" />
         </div>
         <div class="form-group">
           <label>{{ $t('design.lng') }}</label>
-          <input v-model.number="form.lng" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lng')" />
+          <input v-model.number="form.lng" type="number" step="0.0001" class="form-input" :placeholder="$t('design.lng')" @input="markEdited('lng')" />
         </div>
       </div>
 
@@ -288,6 +290,47 @@ const form = reactive({
   strategy: 'economic',
   targetMetric: 'lcos'
 })
+
+// 跟踪哪些字段被用户手动修改过
+const userEdited = reactive({})
+
+// 监听 store.survey 变化，仅在用户未手动修改时更新 form
+watch(
+  () => ({
+    ratedEnergy: store.survey.ratedEnergy,
+    totalPower: store.survey.totalPower,
+    duration: store.survey.duration,
+    temperature: store.survey.temperature,
+    cyclesPerDay: store.survey.cyclesPerDay,
+    dod: store.survey.dod,
+    requiredEnergy: store.survey.requiredEnergy,
+    country: store.survey.country,
+    city: store.survey.city,
+    site: store.survey.site,
+    lat: store.survey.lat,
+    lng: store.survey.lng
+  }),
+  (vals) => {
+    if (!userEdited.ratedEnergy && vals.ratedEnergy) form.ratedEnergy = vals.ratedEnergy
+    if (!userEdited.totalPower && vals.totalPower) form.totalPower = vals.totalPower
+    if (!userEdited.duration && vals.duration) form.duration = vals.duration
+    if (!userEdited.temperature && vals.temperature != null) form.temperature = vals.temperature
+    if (!userEdited.cyclesPerDay && vals.cyclesPerDay) form.cyclesPerDay = vals.cyclesPerDay
+    if (!userEdited.dod && vals.dod != null) form.dod = vals.dod
+    if (!userEdited.requiredEnergy && vals.requiredEnergy) form.requiredEnergy = vals.requiredEnergy
+    if (!userEdited.country && vals.country) form.country = vals.country
+    if (!userEdited.city && vals.city) form.city = vals.city
+    if (!userEdited.site && vals.site) form.site = vals.site
+    if (!userEdited.lat && vals.lat != null) form.lat = vals.lat
+    if (!userEdited.lng && vals.lng != null) form.lng = vals.lng
+  },
+  { immediate: true }
+)
+
+// 标记字段被用户手动修改
+function markEdited(field) {
+  userEdited[field] = true
+}
 
 const formLocation = computed(() => {
   const parts = [form.country, form.city, form.site].filter(Boolean)
