@@ -127,7 +127,7 @@ export default {
     toolSurveyView: {
       searchTitle: '查找调研数据',
       idLabel: '调研表串码ID',
-      idPlaceholder: '输入调研表ID',
+      idPlaceholder: '输入或选择调研表ID',
       loadBtn: '加载',
       loading: '加载中...',
       nameSearchLabel: '项目名称搜索',
@@ -1084,7 +1084,7 @@ export default {
     pass: '达标',
     paramsReset: '参数已恢复为默认值',
     placeholderProjectSearch: '输入项目名称搜索',
-    placeholderSurveyId: '输入调研表ID或扫描二维码',
+    placeholderSurveyId: '输入或选择调研表ID',
     pleaseLogin: '请先登录',
     rangeDefault1: '范围: 0.9-1.1，默认1.0',
     rangeDefault1_5: '范围: 1.0-1.5，默认1.0',

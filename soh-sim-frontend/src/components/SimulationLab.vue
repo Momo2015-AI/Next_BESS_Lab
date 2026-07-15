@@ -31,11 +31,22 @@
           <label class="text-xs text-secondary">{{ $t('simLab.labelSurveyId') }}</label>
           <div class="flex gap-2">
             <input
-              v-model="surveyId"
+              v-model="surveyIdInput"
               type="text"
               :placeholder="$t('simLab.placeholderSurveyId')"
               class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
+              list="sim-survey-list"
+              @input="onSurveyIdInput"
+              @change="onSurveyIdChange"
             />
+            <datalist id="sim-survey-list">
+              <option
+                v-for="s in filteredSurveyList"
+                :key="s.id"
+                :value="s.id"
+                :label="s.project_name + ' (' + s.id.slice(0, 8) + '...)'"
+              />
+            </datalist>
             <button class="text-xs px-3 py-1.5 transition-all btn-accent-filled" @click="loadSurveyData">
               {{ $t('simLab.btnLoad') }}
             </button>
@@ -905,6 +916,8 @@ const steps = [
 
 const currentStep = useDraftRef('sim-current-step', 0).state
 const surveyId = useDraftRef('sim-survey-id', '').state
+const surveyIdInput = ref('')
+const surveyList = ref([])
 const searchKeyword = ref('')
 const searchResults = ref([])
 
@@ -1064,6 +1077,45 @@ let _resizeHandler = null
 
 const toast = reactive({ show: false, message: '', type: 'success' })
 
+// 过滤后的调研表列表（根据输入模糊匹配）
+const filteredSurveyList = computed(() => {
+  const q = surveyIdInput.value.trim().toLowerCase()
+  if (!q) return surveyList.value.slice(0, 20)
+  return surveyList.value.filter(s =>
+    s.id.toLowerCase().includes(q) ||
+    (s.project_name || '').toLowerCase().includes(q)
+  ).slice(0, 20)
+})
+
+// 输入时同步 surveyId
+function onSurveyIdInput() {
+  surveyId.value = surveyIdInput.value
+}
+
+// datalist 选中后自动加载
+function onSurveyIdChange() {
+  surveyId.value = surveyIdInput.value
+  if (surveyId.value) {
+    loadSurveyData()
+  }
+}
+
+// 页面加载时预读取调研表列表
+async function fetchSurveyList() {
+  try {
+    const data = await api.get('/api/survey/list?per_page=200')
+    if (data.success) {
+      surveyList.value = data.data?.items || []
+    }
+  } catch {
+    // 静默失败
+  }
+}
+
+onMounted(() => {
+  fetchSurveyList()
+})
+
 const loadSurveyData = async () => {
   if (!surveyId.value) {
     emit('error', t('simLab.enterSurveyId'), 'warning')
@@ -1105,6 +1157,7 @@ const selectSurvey = (survey) => {
   searchResults.value = []
   searchKeyword.value = survey.project_name
   surveyId.value = survey.id
+  surveyIdInput.value = survey.project_name + ' (' + survey.id.slice(0, 8) + '...)'
   mapSurveyData(survey)
 }
 

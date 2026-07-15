@@ -128,7 +128,7 @@ export default {
     toolSurveyView: {
       searchTitle: 'Find Survey Data',
       idLabel: 'Survey ID',
-      idPlaceholder: 'Enter survey ID',
+      idPlaceholder: 'Enter or select survey ID',
       loadBtn: 'Load',
       loading: 'Loading...',
       nameSearchLabel: 'Project Name Search',
@@ -1277,7 +1277,7 @@ export default {
     pass: 'Pass',
     paramsReset: 'Parameters restored to defaults',
     placeholderProjectSearch: 'Enter project name to search',
-    placeholderSurveyId: 'Enter survey ID or scan QR code',
+    placeholderSurveyId: 'Enter or select survey ID',
     pleaseLogin: 'Please login first',
     rangeDefault1: 'Range: 0.9-1.1, default 1.0',
     rangeDefault1_5: 'Range: 1.0-1.5, default 1.0',

@@ -4,12 +4,28 @@
     <SectionCard number="01" :title="$t('sidebar.toolSurveyView.searchTitle')">
       <div class="form-grid-2">
         <div class="search-field-row">
-          <FormField
-            v-model="surveyId"
-            :label="$t('sidebar.toolSurveyView.idLabel')"
-            type="text"
-            :placeholder="$t('sidebar.toolSurveyView.idPlaceholder')"
-          />
+          <div class="form-field combobox-field">
+            <label class="form-label">{{ $t('sidebar.toolSurveyView.idLabel') }}</label>
+            <div class="combobox-wrapper">
+              <input
+                v-model="surveyIdInput"
+                type="text"
+                :placeholder="$t('sidebar.toolSurveyView.idPlaceholder')"
+                class="form-input"
+                list="survey-list"
+                @input="onSurveyIdInput"
+                @change="onSurveyIdChange"
+              />
+              <datalist id="survey-list">
+                <option
+                  v-for="s in filteredSurveyList"
+                  :key="s.id"
+                  :value="s.id"
+                  :label="s.project_name + ' (' + s.id.slice(0, 8) + '...)'"
+                />
+              </datalist>
+            </div>
+          </div>
           <button :disabled="loading" class="btn-primary-sm btn-search-inline" @click="loadSurveyById">
             {{ loading ? $t('sidebar.toolSurveyView.loading') : $t('sidebar.toolSurveyView.loadBtn') }}
           </button>
@@ -267,7 +283,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SectionCard from '../components/SectionCard.vue'
@@ -283,6 +299,8 @@ const store = useBessStore()
 
 const loading = ref(false)
 const surveyId = ref('')
+const surveyIdInput = ref('')
+const surveyList = ref([])
 const searchKeyword = ref('')
 const searchResults = ref([])
 const isReqEnergyAuto = ref(true)
@@ -308,6 +326,16 @@ const formData = reactive({
 const formLocation = computed(() => {
   const parts = [formData.country, formData.city, formData.site].filter(Boolean)
   return parts.join(', ')
+})
+
+// 过滤后的调研表列表（根据输入模糊匹配 ID 或项目名称）
+const filteredSurveyList = computed(() => {
+  const q = surveyIdInput.value.trim().toLowerCase()
+  if (!q) return surveyList.value.slice(0, 20)
+  return surveyList.value.filter(s =>
+    s.id.toLowerCase().includes(q) ||
+    (s.project_name || '').toLowerCase().includes(q)
+  ).slice(0, 20)
 })
 
 const simParams = reactive({
@@ -370,6 +398,35 @@ watch(
   }
 )
 
+// 输入时更新 surveyId（如果输入了完整的 UUID）
+function onSurveyIdInput() {
+  surveyId.value = surveyIdInput.value
+}
+
+// datalist 选中后触发
+function onSurveyIdChange() {
+  surveyId.value = surveyIdInput.value
+  if (surveyId.value) {
+    loadSurveyById()
+  }
+}
+
+// 页面加载时预读取调研表列表
+async function fetchSurveyList() {
+  try {
+    const data = await api.get('/api/survey/list?per_page=200')
+    if (data.success) {
+      surveyList.value = data.data?.items || []
+    }
+  } catch {
+    // 静默失败，用户仍可手动输入
+  }
+}
+
+onMounted(() => {
+  fetchSurveyList()
+})
+
 async function loadSurveyById() {
   if (!surveyId.value) {
     emit('error', t('tools.errorIdRequired'), 'warning')
@@ -412,6 +469,7 @@ async function searchByProjectName() {
 function selectSurvey(survey) {
   searchKeyword.value = survey.project_name
   surveyId.value = survey.id
+  surveyIdInput.value = survey.project_name + ' (' + survey.id.slice(0, 8) + '...)'
   searchResults.value = []
   mapSurveyData(survey)
 }
@@ -533,6 +591,16 @@ function goToSimulation() {
 }
 .search-field-row .form-field {
   flex: 1;
+}
+
+.combobox-field {
+  flex: 1;
+}
+.combobox-wrapper {
+  position: relative;
+}
+.combobox-wrapper .form-input {
+  width: 100%;
 }
 
 .search-results {
