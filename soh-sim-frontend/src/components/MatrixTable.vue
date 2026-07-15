@@ -320,6 +320,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { DEFAULT_SURVEY } from '../stores/bess.js'
 
 const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, dod: Array, augQty: Array })
 const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty', 'update:param', 'recalculate'])
@@ -332,7 +333,7 @@ const dashboardMetrics = computed(() => {
   const res = props.results || {}
   const ratedEnergy = p.ratedEnergy || 0
   const initContainerQty = p.initContainerQty || 0
-  const duration = p.duration || 1
+  const duration = p.duration || DEFAULT_SURVEY.duration
   const cyclesPerDay = p.cyclesPerDay || 1
   const acEff = (p.acEfficiency || 97) / 100
 

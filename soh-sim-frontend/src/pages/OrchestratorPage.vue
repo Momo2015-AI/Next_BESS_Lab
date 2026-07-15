@@ -117,7 +117,7 @@ const saveResult = ref(null)
 
 const whatIf = reactive({
   temperature: 45,
-  dod: 85,
+  dod: 85, // what-if 预设基准（有意区别于系统标准 DEFAULT_DOD=90）
   cyclesPerDay: 1
 })
 

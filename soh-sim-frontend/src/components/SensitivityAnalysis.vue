@@ -196,6 +196,7 @@ import { useI18n } from 'vue-i18n'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 import { useSensitivityCharts } from '../composables/useSensitivityCharts.js'
 import { post } from '../services/api.js'
+import { DEFAULT_SURVEY, DEFAULT_DOD } from '../stores/bess.js'
 const { t } = useI18n()
 
 const props = defineProps({
@@ -328,18 +329,18 @@ async function analyzeSingleParam(param) {
       // 构建仿真请求
       const simBody = {
         design_output: {
-          container: { ratedEnergyMwh: testParams.ratedEnergy || 5 },
+          container: { ratedEnergyMwh: testParams.ratedEnergy || DEFAULT_SURVEY.ratedEnergy },
           pcs: { ratedPowerMW: testParams.pcsPower || 2.5 },
           containerQty: testParams.initContainerQty || 10,
           pcsQty: testParams.initPcsQty || 2,
-          duration: testParams.duration || 2
+          duration: testParams.duration || DEFAULT_SURVEY.duration
         },
         survey_params: {
-          ratedEnergy: testParams.ratedEnergy || 5,
-          temperature: testParams.temperature || 25,
-          cyclesPerDay: testParams.cyclesPerDay || 1,
-          dod: 90,
-          requiredEnergy: testParams.requiredEnergy || 240
+          ratedEnergy: testParams.ratedEnergy || DEFAULT_SURVEY.ratedEnergy,
+          temperature: testParams.temperature || DEFAULT_SURVEY.temperature,
+          cyclesPerDay: testParams.cyclesPerDay || DEFAULT_SURVEY.cyclesPerDay,
+          dod: DEFAULT_DOD,
+          requiredEnergy: testParams.requiredEnergy || DEFAULT_SURVEY.requiredEnergy
         }
       }
       const simResult = await post('/api/simulation/run', simBody)

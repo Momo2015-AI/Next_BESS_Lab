@@ -6,6 +6,69 @@ import { NUM_YEARS } from '../constants.js'
 // 仅在无 survey 数据时回退到本常量，确保"改一处即全局联动"。
 export const DEFAULT_DOD = 90
 
+// ---------------------------------------------------------------------------
+// 单一数据源（Single Source of Truth）
+// 全系统立项/设计默认参数集中定义于此。所有组件的表单初始值与 fallback
+// (`|| 25` 之类) 都应引用这里，禁止再在各文件写死字面量，确保"改一处即全局联动"。
+// ---------------------------------------------------------------------------
+
+// Phase1 立项调研默认参数
+export const DEFAULT_SURVEY = {
+  projectName: '',
+  location: '',
+  country: '',
+  city: '',
+  site: '',
+  lat: null,
+  lng: null,
+  temperature: 25, // 运行环境温度(℃)
+  duration: 2, // 时长(h) = ratedEnergy / totalPower
+  cyclesPerDay: 1, // 日循环次数
+  dod: DEFAULT_DOD, // 放电深度(%)
+  cRate: 0.5, // 倍率(1/h) = totalPower / ratedEnergy
+  requiredEnergy: 240, // 需量电量(MWh)
+  ratedEnergy: 5, // 单元额定电量(MWh)
+  totalPower: 50, // 额定功率(MW)
+  gridVoltage: '110kV',
+  altitude: 0
+}
+
+// Phase2 系统设计默认参数（含仿真/质保/效率级联，均为全系统 canonical 值）
+export const DEFAULT_SYSTEM_PARAMS = {
+  ratedEnergy: DEFAULT_SURVEY.ratedEnergy,
+  initContainerQty: 10,
+  initPcsQty: 2,
+  pcsPower: 5,
+  duration: DEFAULT_SURVEY.duration,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
+  temperature: DEFAULT_SURVEY.temperature,
+  requiredEnergy: DEFAULT_SURVEY.requiredEnergy,
+  // 效率级联组
+  acEfficiency: 97.03, // 交流侧效率(%)
+  dcEfficiency: 98.5, // 直流侧效率(%)
+  initRte: 94.1, // 初始往返效率(%)
+  selfDischarge: 2, // 自放电(%)
+  // 辅助功耗组
+  bessAuxRun: 18.124,
+  bessAuxStandby: 3.5,
+  pcsAuxRun: 6.5,
+  pcsAuxStandby: 1.0,
+  auxPowerMode: 'manual', // 'manual' | 'thermal'
+  coolingType: 'liquid', // 'forced-air' | 'liquid' | 'SiC-liquid'
+  ambientTemp: 25, // 环境温度(℃) — thermal 模式使用
+  // 退化/质保/投影年限组
+  simulationYears: 25, // 投影运行年数(第0年为投产年，时间序列长度为 NUM_YEARS)
+  guaranteeYears: 10, // 质保年限
+  guaranteeSoh: 70 // 质保末端 SOH(%)
+}
+
+// 物理推导助手：能量-功率-时长-倍率-需量本质是同一系统的不同表达，应互推而非各填各的。
+export const deriveDuration = (ratedEnergy, totalPower) =>
+  totalPower ? +(ratedEnergy / totalPower).toFixed(3) : DEFAULT_SURVEY.duration
+export const deriveCRate = (ratedEnergy, totalPower) =>
+  ratedEnergy ? +(totalPower / ratedEnergy).toFixed(3) : DEFAULT_SURVEY.cRate
+export const deriveRequiredEnergy = (ratedEnergy, dod = DEFAULT_DOD) => +(ratedEnergy * (dod / 100)).toFixed(1)
+
 function create26Array(defaultVal = 0) {
   return Array.from({ length: NUM_YEARS }, () => defaultVal)
 }
@@ -17,43 +80,8 @@ export const useBessStore = defineStore('bess', {
       name: '',
       status: 'draft'
     },
-    survey: {
-      projectName: '',
-      location: '',
-      country: '',
-      city: '',
-      site: '',
-      lat: null,
-      lng: null,
-      temperature: 25,
-      duration: 2,
-      cyclesPerDay: 1,
-      dod: DEFAULT_DOD,
-      cRate: 0.5,
-      requiredEnergy: 240,
-      ratedEnergy: 5,
-      totalPower: 50,
-      gridVoltage: '110kV',
-      altitude: 0
-    },
-    systemParams: {
-      ratedEnergy: 5,
-      initContainerQty: 10,
-      initPcsQty: 2,
-      pcsPower: 5,
-      duration: 2,
-      cyclesPerDay: 1,
-      temperature: 25,
-      acEfficiency: 97.03,
-      bessAuxRun: 18.124,
-      bessAuxStandby: 3.5,
-      pcsAuxRun: 6.5,
-      pcsAuxStandby: 1.0,
-      auxPowerMode: 'manual', // 'manual' | 'thermal'
-      coolingType: 'liquid', // 'forced-air' | 'liquid' | 'SiC-liquid'
-      ambientTemp: 25, // 环境温度(℃) — thermal 模式使用
-      requiredEnergy: 240
-    },
+    survey: { ...DEFAULT_SURVEY },
+    systemParams: { ...DEFAULT_SYSTEM_PARAMS },
     selectedProducts: {
       cell: null,
       container: null,

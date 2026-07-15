@@ -101,7 +101,7 @@
 import { reactive, ref, watch, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_SURVEY, DEFAULT_DOD } from '../stores/bess.js'
 import api from '../services/api.js'
 
 const { t } = useI18n()
@@ -111,12 +111,12 @@ const store = useBessStore()
 const emit = defineEmits(['back', 'result'])
 
 const form = reactive({
-  totalPower: 50,
-  ratedEnergy: 5,
-  duration: 2,
-  temperature: 25,
-  cyclesPerDay: 1,
-  dod: 90,
+  totalPower: DEFAULT_SURVEY.totalPower,
+  ratedEnergy: DEFAULT_SURVEY.ratedEnergy,
+  duration: DEFAULT_SURVEY.duration,
+  temperature: DEFAULT_SURVEY.temperature,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
+  dod: DEFAULT_DOD,
   strategy: 'balanced',
   manufacturer: ''
 })

@@ -903,7 +903,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_SURVEY } from '../stores/bess.js'
 import { useProducts } from '../composables/useProducts'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 
@@ -946,7 +946,7 @@ const { state: form, clearDraft: clearFormDraft } = useDraft('rc-form', {
   totalMW: null,
   totalMWh: null,
   durationHours: null,
-  cyclesPerDay: 1,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
   altitude: null,
   tempMax: null,
   tempMin: null,

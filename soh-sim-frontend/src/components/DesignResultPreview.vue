@@ -105,7 +105,7 @@
           <p class="drp-degradation-params">
             T={{ selectedSolution.degradationModel?.temperature || 25 }}°C, CPD={{
               selectedSolution.degradationModel?.cyclesPerDay || 1
-            }}, DOD={{ selectedSolution.degradationModel?.dod || 80 }}%
+            }}, DOD={{ selectedSolution.degradationModel?.dod || DEFAULT_DOD }}%
           </p>
         </div>
       </div>
@@ -125,7 +125,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
 import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()

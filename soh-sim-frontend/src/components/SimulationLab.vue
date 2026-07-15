@@ -156,15 +156,27 @@
         </div>
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCountry') }}</label>
-          <input v-model="surveyData.country" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
+          <input
+            v-model="surveyData.country"
+            type="text"
+            class="w-full rounded px-2 py-1 text-xs card-input text-accent"
+          />
         </div>
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCity') }}</label>
-          <input v-model="surveyData.city" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
+          <input
+            v-model="surveyData.city"
+            type="text"
+            class="w-full rounded px-2 py-1 text-xs card-input text-accent"
+          />
         </div>
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSite') }}</label>
-          <input v-model="surveyData.site" type="text" class="w-full rounded px-2 py-1 text-xs card-input text-accent" />
+          <input
+            v-model="surveyData.site"
+            type="text"
+            class="w-full rounded px-2 py-1 text-xs card-input text-accent"
+          />
         </div>
       </div>
 
@@ -281,9 +293,7 @@
             </div>
           </div>
           <div class="mt-2 space-y-1">
-            <div class="text-[10px] text-muted">
-              {{ $t('simLab.systemRTE') }}: {{ systemRTE }}%
-            </div>
+            <div class="text-[10px] text-muted">{{ $t('simLab.systemRTE') }}: {{ systemRTE }}%</div>
             <div class="text-[10px] text-muted">
               {{ $t('simLab.grossEnergyPreview') }}: {{ grossEnergyPreview }} MWh
             </div>
@@ -862,7 +872,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
@@ -903,7 +913,7 @@ const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-su
   pcsQty: 1,
   temperature: 25,
   cyclesPerDay: 1,
-  dod: 100,
+  dod: DEFAULT_DOD,
   cRate: 0.5,
   batteryType: 'LFP',
   location: '',
@@ -940,7 +950,7 @@ const aiSimParams = reactive({
   simulationYears: 25,
   temperature: 25,
   cyclesPerDay: 1,
-  dod: 80,
+  dod: DEFAULT_DOD,
   cRate: 0.5
 })
 
@@ -1032,7 +1042,7 @@ const grossEnergyPreview = computed(() => {
   const energy = surveyData.ratedEnergy || 0
   const qty = surveyData.containerQty || 0
   const dod = (surveyData.dod || 100) / 100
-  const soh = 1.0  // assume new
+  const soh = 1.0 // assume new
   const rte = systemRTE.value / 100
   const acEff = (simParams.acEfficiency || 97) / 100
   return +(energy * qty * dod * rte * soh * acEff).toFixed(1)

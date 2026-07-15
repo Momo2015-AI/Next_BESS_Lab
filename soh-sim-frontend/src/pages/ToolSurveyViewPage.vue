@@ -300,7 +300,7 @@ const formData = reactive({
   pcsQty: 1,
   temperature: 25,
   cyclesPerDay: 1,
-  dod: 90,
+  dod: DEFAULT_DOD,
   cRate: 0.5,
   batteryType: 'LFP'
 })
@@ -504,7 +504,7 @@ function resetForm() {
     pcsQty: 1,
     temperature: 25,
     cyclesPerDay: 1,
-    dod: 90,
+    dod: DEFAULT_DOD,
     cRate: 0.5,
     batteryType: 'LFP'
   })

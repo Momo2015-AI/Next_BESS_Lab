@@ -9,7 +9,9 @@
       <!-- Tier 3: 年吞吐电量 & SOH 曲线摘要 -->
       <div v-if="mode === 'standalone'" class="text-xs text-gray-500 dark:text-gray-400 mt-1 px-1 space-y-0.5">
         <div>Annual Energy Throughput: {{ annualEnergyThroughput.toLocaleString() }} MWh</div>
-        <div>SOH Year 1 → Year 25: {{ projectedSohCurve[0] }}% → {{ projectedSohCurve[projectedSohCurve.length - 1] }}%</div>
+        <div>
+          SOH Year 1 → Year 25: {{ projectedSohCurve[0] }}% → {{ projectedSohCurve[projectedSohCurve.length - 1] }}%
+        </div>
       </div>
 
       <FinancialInputs />
@@ -43,7 +45,7 @@ import FinancialInputs from './FinancialInputs.vue'
 import StandaloneParams from './StandaloneParams.vue'
 import FinancialCharts from './FinancialCharts.vue'
 import FinancialTable from './FinancialTable.vue'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_SURVEY } from '../stores/bess.js'
 
 const props = defineProps({
   mode: { type: String, default: 'project' },
@@ -60,7 +62,7 @@ const store = useBessStore()
 const standaloneParams = reactive({
   totalCapMWh: 100,
   totalCapMW: 50,
-  cyclesPerDay: 1,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
   operatingDays: 330,
   efficiencyLossPct: 5,
   sohStart: 100,

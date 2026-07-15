@@ -224,7 +224,7 @@ import SectionCard from '../components/SectionCard.vue'
 import AppPage from '../components/AppPage.vue'
 import FormField from '../components/FormField.vue'
 import api from '../services/api.js'
-import { useBessStore } from '../stores/bess.js'
+import { useBessStore, DEFAULT_SURVEY, DEFAULT_DOD } from '../stores/bess.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -354,26 +354,26 @@ const cellCapacityOptions = computed(() => [
 ])
 
 const containerOptions = computed(() => [
-	  { value: '20ft', label: t('surveyForm.container20ft') },
-	  { value: '20ft-H', label: t('surveyForm.container20ftH') },
-	  { value: '40ft', label: t('surveyForm.container40ft') }
-	])
+  { value: '20ft', label: t('surveyForm.container20ft') },
+  { value: '20ft-H', label: t('surveyForm.container20ftH') },
+  { value: '40ft', label: t('surveyForm.container40ft') }
+])
 
-	// Suggested cycles per day based on discharge duration
-	const suggestedCyclesPerDay = computed(() => {
-	  if (!formData.dischargeHours || formData.dischargeHours <= 0) return null
-	  return Math.floor(24 / (2 * formData.dischargeHours))
-	})
+// Suggested cycles per day based on discharge duration
+const suggestedCyclesPerDay = computed(() => {
+  if (!formData.dischargeHours || formData.dischargeHours <= 0) return null
+  return Math.floor(24 / (2 * formData.dischargeHours))
+})
 
-	// Auto-calc ratedPower from ratedEnergy / dischargeHours
-	watch(
-	  () => [formData.ratedEnergy, formData.dischargeHours],
-	  ([energy, hours]) => {
-	    if (isPowerAuto.value && energy > 0 && hours > 0) {
-	      formData.ratedPower = +(energy / hours).toFixed(1)
-	    }
-	  }
-	)
+// Auto-calc ratedPower from ratedEnergy / dischargeHours
+watch(
+  () => [formData.ratedEnergy, formData.dischargeHours],
+  ([energy, hours]) => {
+    if (isPowerAuto.value && energy > 0 && hours > 0) {
+      formData.ratedPower = +(energy / hours).toFixed(1)
+    }
+  }
+)
 
 const formData = reactive({
   projectName: '',
@@ -389,10 +389,10 @@ const formData = reactive({
   dischargeHours: 2,
   application: '',
   voltageLevel: 35,
-  cyclesPerDay: 1,
-  dod: 90,
-  cRate: 0.5,
-  temperature: 25,
+  cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
+  dod: DEFAULT_DOD,
+  cRate: DEFAULT_SURVEY.cRate,
+  temperature: DEFAULT_SURVEY.temperature,
   guaranteeYears: 10,
   batteryType: 'LFP',
   cellCapacity: '280',
@@ -414,23 +414,23 @@ function resetForm() {
 }
 
 const CONTAINER_CAPACITY_MWH = {
-	  '20ft': 3.7,
-	  '20ft-H': 5,
-	  '40ft': 10
-	}
+  '20ft': 3.7,
+  '20ft-H': 5,
+  '40ft': 10
+}
 
-	async function submitSurvey() {
-	  if (!formData.projectName) {
-	    showToast(t('surveyForm.required'), 'error')
-	    return
-	  }
-	  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
-	    showToast(t('surveyForm.ratedEnergyRequired'), 'error')
-	    return
-	  }
+async function submitSurvey() {
+  if (!formData.projectName) {
+    showToast(t('surveyForm.required'), 'error')
+    return
+  }
+  if (formData.ratedEnergy == null || formData.ratedEnergy <= 0) {
+    showToast(t('surveyForm.ratedEnergyRequired'), 'error')
+    return
+  }
 
-	  submitting.value = true
-	  try {
+  submitting.value = true
+  try {
     const mappedData = {
       project_name: formData.projectName,
       contact_person: formData.contact || '',
@@ -455,9 +455,9 @@ const CONTAINER_CAPACITY_MWH = {
       ...formData,
       submittedAt: new Date().toISOString(),
       status: 'pending',
-	      containerQty: Math.ceil(formData.ratedEnergy / (CONTAINER_CAPACITY_MWH[formData.containerSpec] || 5)),
-	      // PCS rated power defaults to 5 MW per unit; can be configured via PCS_RATED_POWER_MW
-	      pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
+      containerQty: Math.ceil(formData.ratedEnergy / (CONTAINER_CAPACITY_MWH[formData.containerSpec] || 5)),
+      // PCS rated power defaults to 5 MW per unit; can be configured via PCS_RATED_POWER_MW
+      pcsQty: Math.ceil((formData.ratedPower || 5) / 5),
       totalEnergyMwh: formData.ratedEnergy,
       totalPowerMw: formData.ratedPower
     }

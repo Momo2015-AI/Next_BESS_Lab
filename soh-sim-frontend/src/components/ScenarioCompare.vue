@@ -330,6 +330,7 @@ import { LineChart } from 'echarts/charts'
 import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
 import { useDraftRef } from '../composables/useDraft'
 import { post } from '../services/api.js'
+import { DEFAULT_SURVEY, DEFAULT_SYSTEM_PARAMS, DEFAULT_DOD } from '../stores/bess.js'
 import { useChartTheme } from '../composables/useChartTheme.js'
 const { t } = useI18n()
 const { themeObject } = useChartTheme()
@@ -374,17 +375,17 @@ function createScenario() {
   editingScenario.value = {
     name: t('scenario.sceneDefaultName', { count: scenarios.value.length + 1 }),
     params: {
-      ratedEnergy: 5,
+      ratedEnergy: DEFAULT_SURVEY.ratedEnergy,
       initContainerQty: 62,
       initPcsQty: 1,
-      duration: 2,
-      cyclesPerDay: 1,
-      acEfficiency: 97.03,
-      bessAuxRun: 18.124,
-      bessAuxStandby: 3.5,
-      pcsAuxRun: 6.5,
-      pcsAuxStandby: 1.0,
-      requiredEnergy: 240
+      duration: DEFAULT_SURVEY.duration,
+      cyclesPerDay: DEFAULT_SURVEY.cyclesPerDay,
+      acEfficiency: DEFAULT_SYSTEM_PARAMS.acEfficiency,
+      bessAuxRun: DEFAULT_SYSTEM_PARAMS.bessAuxRun,
+      bessAuxStandby: DEFAULT_SYSTEM_PARAMS.bessAuxStandby,
+      pcsAuxRun: DEFAULT_SYSTEM_PARAMS.pcsAuxRun,
+      pcsAuxStandby: DEFAULT_SYSTEM_PARAMS.pcsAuxStandby,
+      requiredEnergy: DEFAULT_SURVEY.requiredEnergy
     },
     results: null
   }
@@ -467,9 +468,9 @@ async function calculateScenario() {
       },
       survey_params: {
         ratedEnergy: params.ratedEnergy,
-        temperature: 25,
+        temperature: DEFAULT_SURVEY.temperature,
         cyclesPerDay: params.cyclesPerDay,
-        dod: 90,
+        dod: DEFAULT_DOD,
         requiredEnergy: params.requiredEnergy
       }
     }
