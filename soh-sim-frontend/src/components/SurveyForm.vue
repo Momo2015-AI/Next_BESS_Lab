@@ -609,7 +609,9 @@ function onCountryInput() {
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   form.country = c
@@ -617,9 +619,12 @@ function selectCountry(c) {
   countryDropdown.value = false
 }
 // 初始化回填
-watch(() => form.country, (val) => {
-  if (val && val !== countryInput.value) countryInput.value = val
-})
+watch(
+  () => form.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
 
 // 电芯型号 combobox 状态
 const cellModelInput = ref('')
@@ -627,10 +632,11 @@ const cellDropdown = ref(false)
 const filteredCells = computed(() => {
   const q = cellModelInput.value.trim().toLowerCase()
   if (!q) return cells.value
-  return cells.value.filter(c =>
-    (c.mfr || '').toLowerCase().includes(q) ||
-    (c.model || '').toLowerCase().includes(q) ||
-    String(c.capacityAh || '').includes(q)
+  return cells.value.filter(
+    (c) =>
+      (c.mfr || '').toLowerCase().includes(q) ||
+      (c.model || '').toLowerCase().includes(q) ||
+      String(c.capacityAh || '').includes(q)
   )
 })
 function onCellInput() {
@@ -638,7 +644,9 @@ function onCellInput() {
   cellDropdown.value = true
 }
 function onCellBlur() {
-  setTimeout(() => { cellDropdown.value = false }, 150)
+  setTimeout(() => {
+    cellDropdown.value = false
+  }, 150)
 }
 function selectCell(cell) {
   form.cell_model = cell.model
@@ -646,16 +654,19 @@ function selectCell(cell) {
   cellDropdown.value = false
 }
 // 初始化时如果 form.cell_model 已有值，回填输入框
-watch(() => form.cell_model, (val) => {
-  if (val && cells.value.length > 0) {
-    const found = cells.value.find(c => c.model === val)
-    if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+watch(
+  () => form.cell_model,
+  (val) => {
+    if (val && cells.value.length > 0) {
+      const found = cells.value.find((c) => c.model === val)
+      if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
+    }
   }
-})
+)
 // 电芯列表加载完成后回填
 watch(cells, (list) => {
   if (list.length > 0 && form.cell_model) {
-    const found = list.find(c => c.model === form.cell_model)
+    const found = list.find((c) => c.model === form.cell_model)
     if (found) cellModelInput.value = `${found.mfr} - ${found.model} (${found.capacityAh}Ah)`
   }
 })

@@ -946,7 +946,9 @@ function onCountryInput() {
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   form.country = c
@@ -1055,9 +1057,12 @@ const certKeys = {
 const isDurationAuto = ref(true)
 
 // 国家输入框同步
-watch(() => form.country, (val) => {
-  if (val && val !== countryInput.value) countryInput.value = val
-})
+watch(
+  () => form.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
 
 function autoCalcDuration() {
   if (form.totalMWh > 0 && form.totalMW > 0) {

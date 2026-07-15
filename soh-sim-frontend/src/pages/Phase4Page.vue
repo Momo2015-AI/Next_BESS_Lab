@@ -227,9 +227,12 @@ const totalCapex = computed(() => {
 
 const totalAnnualOpex = computed(() => {
   const o = store.financial.opex
-  return (o.fixedOpexPerMW || 0) * (store.survey.totalPower || 0) +
+  return (
+    (o.fixedOpexPerMW || 0) * (store.survey.totalPower || 0) +
     (o.variableOpexPerMWh || 0) * (store.survey.ratedEnergy || 0) * (store.survey.cyclesPerDay || 1) * 365 +
-    (o.insuranceRate || 0) + (o.landLease || 0)
+    (o.insuranceRate || 0) +
+    (o.landLease || 0)
+  )
 })
 
 const equityRatio = computed(() => {

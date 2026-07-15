@@ -988,7 +988,9 @@ function onCountryInput() {
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   surveyData.country = c
@@ -996,9 +998,12 @@ function selectCountry(c) {
   countryDropdown.value = false
 }
 // 同步回填
-watch(() => surveyData.country, (val) => {
-  if (val && val !== countryInput.value) countryInput.value = val
-})
+watch(
+  () => surveyData.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
 
 watch(themeObject, () => {
   nextTick(renderChart)
@@ -1049,9 +1054,8 @@ const mfrDropdown = ref(false)
 const filteredManufacturers = computed(() => {
   const q = mfrInput.value.trim().toLowerCase()
   if (!q) return manufacturers.value
-  return manufacturers.value.filter(m =>
-    (m.name || '').toLowerCase().includes(q) ||
-    (m.chemistry_type || '').toLowerCase().includes(q)
+  return manufacturers.value.filter(
+    (m) => (m.name || '').toLowerCase().includes(q) || (m.chemistry_type || '').toLowerCase().includes(q)
   )
 })
 const aiSimParams = reactive({
@@ -1073,7 +1077,9 @@ function onMfrInput() {
   mfrDropdown.value = true
 }
 function onMfrBlur() {
-  setTimeout(() => { mfrDropdown.value = false }, 150)
+  setTimeout(() => {
+    mfrDropdown.value = false
+  }, 150)
 }
 function selectMfr(mfr) {
   aiSimParams.manufacturerId = mfr.id

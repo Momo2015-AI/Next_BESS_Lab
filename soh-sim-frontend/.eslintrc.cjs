@@ -3,21 +3,17 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
+    node: true
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    'eslint-config-prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'eslint-config-prettier'],
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
     // 通用规则
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'quotes': ['error', 'single'],
-    'semi': ['error', 'never'],
+    quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+    semi: ['error', 'never'],
     'no-var': 'error',
     'prefer-const': 'error',
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
@@ -25,9 +21,12 @@ module.exports = {
     // Vue 规则
     'vue/multi-word-component-names': 'off',
     'vue/no-unused-vars': 'warn',
-    'vue/block-order': ['error', {
-      order: ['template', 'script', 'style'],
-    }],
+    'vue/block-order': [
+      'error',
+      {
+        order: ['template', 'script', 'style']
+      }
+    ],
     'vue/component-name-in-template-casing': ['error', 'PascalCase'],
 
     // 禁止内联事件处理器（自定义规则思路：检查模板中的 onfocus 等）
@@ -35,7 +34,7 @@ module.exports = {
     // 当前通过 CI check-code-style.sh 脚本检测
 
     // 组件大小
-    'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }],
+    'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }]
 
     // 禁止使用 any（TypeScript 规则，js 文件忽略）
     // '@typescript-eslint/no-explicit-any': 'error',
@@ -47,25 +46,23 @@ module.exports = {
       parserOptions: {
         parser: '@typescript-eslint/parser',
         ecmaVersion: 'latest',
-        sourceType: 'module',
+        sourceType: 'module'
       },
-      extends: [
-        'plugin:@typescript-eslint/recommended',
-      ],
+      extends: ['plugin:@typescript-eslint/recommended'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'warn',
-      },
+        '@typescript-eslint/no-non-null-assertion': 'warn'
+      }
     },
     {
       files: ['*.jsx', '*.js'],
       parserOptions: {
         ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-  ],
+          jsx: true
+        }
+      }
+    }
+  ]
 }
