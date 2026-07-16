@@ -728,7 +728,12 @@ const isDurationAuto = ref(true)
 const isTempAvgAuto = ref(true)
 
 function autoCalcDuration() {
-  if (form.total_mwh > 0 && form.total_mw > 0) {
+  if (
+    form.total_mwh > 0 &&
+    form.total_mw > 0 &&
+    typeof form.total_mwh === 'number' &&
+    typeof form.total_mw === 'number'
+  ) {
     form.duration = +(form.total_mwh / form.total_mw).toFixed(2)
   }
 }
@@ -741,7 +746,12 @@ watch(
 )
 
 function autoCalcTempAvg() {
-  if (form.temp_max != null && form.temp_min != null) {
+  if (
+    form.temp_max != null &&
+    form.temp_min != null &&
+    typeof form.temp_max === 'number' &&
+    typeof form.temp_min === 'number'
+  ) {
     form.temp_avg = +((form.temp_max + form.temp_min) / 2).toFixed(1)
   }
 }
@@ -780,23 +790,28 @@ watch(
     dod: form.dod
   }),
   (vals) => {
-    if (vals.ratedEnergy) store.survey.ratedEnergy = vals.ratedEnergy
-    if (vals.totalPower) store.survey.totalPower = vals.totalPower
-    if (vals.duration) store.survey.duration = vals.duration
-    if (vals.temperature != null) store.survey.temperature = vals.temperature
-    if (vals.cyclesPerDay) store.survey.cyclesPerDay = vals.cyclesPerDay
-    if (vals.country) store.survey.country = vals.country
-    if (vals.city) store.survey.city = vals.city
-    if (vals.site) store.survey.site = vals.site
-    if (vals.lat != null) store.survey.lat = vals.lat
-    if (vals.lng != null) store.survey.lng = vals.lng
-    if (vals.projectName) store.survey.projectName = vals.projectName
-    if (vals.gridVoltage) store.survey.gridVoltage = vals.gridVoltage
-    if (vals.altitude != null) store.survey.altitude = vals.altitude
-    if (vals.dod != null) store.survey.dod = vals.dod
-    // 自动计算 requiredEnergy
-    if (vals.ratedEnergy) {
-      store.survey.requiredEnergy = +(vals.ratedEnergy * ((vals.dod || 90) / 100)).toFixed(1)
+    try {
+      if (vals.ratedEnergy != null) store.survey.ratedEnergy = vals.ratedEnergy
+      if (vals.totalPower != null) store.survey.totalPower = vals.totalPower
+      if (vals.duration != null) store.survey.duration = vals.duration
+      if (vals.temperature != null) store.survey.temperature = vals.temperature
+      if (vals.cyclesPerDay != null) store.survey.cyclesPerDay = vals.cyclesPerDay
+      if (vals.country != null) store.survey.country = vals.country
+      if (vals.city != null) store.survey.city = vals.city
+      if (vals.site != null) store.survey.site = vals.site
+      if (vals.lat != null) store.survey.lat = vals.lat
+      if (vals.lng != null) store.survey.lng = vals.lng
+      if (vals.projectName != null) store.survey.projectName = vals.projectName
+      if (vals.gridVoltage != null) store.survey.gridVoltage = vals.gridVoltage
+      if (vals.altitude != null) store.survey.altitude = vals.altitude
+      if (vals.dod != null) store.survey.dod = vals.dod
+      // 自动计算 requiredEnergy（必须确保 ratedEnergy 是有效数字）
+      if (vals.ratedEnergy != null && typeof vals.ratedEnergy === 'number' && !isNaN(vals.ratedEnergy)) {
+        const dod = vals.dod != null && typeof vals.dod === 'number' ? vals.dod : 90
+        store.survey.requiredEnergy = +(vals.ratedEnergy * (dod / 100)).toFixed(1)
+      }
+    } catch (e) {
+      console.warn('[SurveyForm] store sync error:', e)
     }
   },
   { deep: true }
@@ -822,7 +837,7 @@ async function submitForm() {
       if (form.duration) store.survey.duration = form.duration
       if (form.temp_avg != null) store.survey.temperature = form.temp_avg
       if (form.cycles_per_day) store.survey.cyclesPerDay = form.cycles_per_day
-      if (form.total_mwh && form.duration) {
+      if (form.total_mwh != null && form.duration != null && typeof form.total_mwh === 'number') {
         // 默认使用90% DOD; 如调研表有DOD字段应使用实际值
         store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
       }

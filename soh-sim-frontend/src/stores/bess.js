@@ -64,10 +64,11 @@ export const DEFAULT_SYSTEM_PARAMS = {
 
 // 物理推导助手：能量-功率-时长-倍率-需量本质是同一系统的不同表达，应互推而非各填各的。
 export const deriveDuration = (ratedEnergy, totalPower) =>
-  totalPower ? +(ratedEnergy / totalPower).toFixed(3) : DEFAULT_SURVEY.duration
+  totalPower && ratedEnergy != null ? +(ratedEnergy / totalPower).toFixed(3) : DEFAULT_SURVEY.duration
 export const deriveCRate = (ratedEnergy, totalPower) =>
-  ratedEnergy ? +(totalPower / ratedEnergy).toFixed(3) : DEFAULT_SURVEY.cRate
-export const deriveRequiredEnergy = (ratedEnergy, dod = DEFAULT_DOD) => +(ratedEnergy * (dod / 100)).toFixed(1)
+  ratedEnergy && totalPower != null ? +(totalPower / ratedEnergy).toFixed(3) : DEFAULT_SURVEY.cRate
+export const deriveRequiredEnergy = (ratedEnergy, dod = DEFAULT_DOD) =>
+  ratedEnergy != null ? +(ratedEnergy * (dod / 100)).toFixed(1) : DEFAULT_SURVEY.requiredEnergy
 
 function create26Array(defaultVal = 0) {
   return Array.from({ length: NUM_YEARS }, () => defaultVal)

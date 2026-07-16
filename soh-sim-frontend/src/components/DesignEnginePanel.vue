@@ -452,7 +452,12 @@ const formLocation = computed(() => {
 const isDurationAuto = ref(true)
 
 function autoCalcDuration() {
-  if (form.ratedEnergy > 0 && form.totalPower > 0) {
+  if (
+    form.ratedEnergy > 0 &&
+    form.totalPower > 0 &&
+    typeof form.ratedEnergy === 'number' &&
+    typeof form.totalPower === 'number'
+  ) {
     form.duration = +(form.ratedEnergy / form.totalPower).toFixed(2)
   }
 }
@@ -479,7 +484,7 @@ autoCalcDuration()
 const isReqEnergyAuto = ref(true)
 
 function autoCalcReqEnergy() {
-  if (form.ratedEnergy > 0 && form.dod > 0) {
+  if (form.ratedEnergy > 0 && form.dod > 0 && typeof form.ratedEnergy === 'number' && typeof form.dod === 'number') {
     form.requiredEnergy = +(form.ratedEnergy * (form.dod / 100)).toFixed(2)
   }
 }

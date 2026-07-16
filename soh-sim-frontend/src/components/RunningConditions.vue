@@ -1065,7 +1065,7 @@ watch(
 )
 
 function autoCalcDuration() {
-  if (form.totalMWh > 0 && form.totalMW > 0) {
+  if (form.totalMWh > 0 && form.totalMW > 0 && typeof form.totalMWh === 'number' && typeof form.totalMW === 'number') {
     form.durationHours = +(form.totalMWh / form.totalMW).toFixed(2)
   }
 }
@@ -1081,7 +1081,12 @@ watch(
 const isTempAvgAuto = ref(true)
 
 function autoCalcTempAvg() {
-  if (form.tempMax != null && form.tempMin != null) {
+  if (
+    form.tempMax != null &&
+    form.tempMin != null &&
+    typeof form.tempMax === 'number' &&
+    typeof form.tempMin === 'number'
+  ) {
     form.tempAvg = +((form.tempMax + form.tempMin) / 2).toFixed(1)
   }
 }
@@ -1095,7 +1100,12 @@ watch(
 
 // --- computed: annualSohDecline ---
 const annualSohDecline = computed(() => {
-  if (form.sohYear1 != null && form.sohYear25 != null) {
+  if (
+    form.sohYear1 != null &&
+    form.sohYear25 != null &&
+    typeof form.sohYear1 === 'number' &&
+    typeof form.sohYear25 === 'number'
+  ) {
     return +((form.sohYear1 - form.sohYear25) / 24).toFixed(2)
   }
   return null

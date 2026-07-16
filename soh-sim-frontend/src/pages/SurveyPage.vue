@@ -359,22 +359,6 @@ const containerOptions = computed(() => [
   { value: '40ft', label: t('surveyForm.container40ft') }
 ])
 
-// Suggested cycles per day based on discharge duration
-const suggestedCyclesPerDay = computed(() => {
-  if (!formData.dischargeHours || formData.dischargeHours <= 0) return null
-  return Math.floor(24 / (2 * formData.dischargeHours))
-})
-
-// Auto-calc ratedPower from ratedEnergy / dischargeHours
-watch(
-  () => [formData.ratedEnergy, formData.dischargeHours],
-  ([energy, hours]) => {
-    if (isPowerAuto.value && energy > 0 && hours > 0) {
-      formData.ratedPower = +(energy / hours).toFixed(1)
-    }
-  }
-)
-
 const formData = reactive({
   projectName: '',
   country: '',
@@ -407,6 +391,22 @@ const formLocation = computed(() => {
   const parts = [formData.country, formData.city, formData.site].filter(Boolean)
   return parts.join(', ')
 })
+
+// Suggested cycles per day based on discharge duration
+const suggestedCyclesPerDay = computed(() => {
+  if (!formData.dischargeHours || formData.dischargeHours <= 0) return null
+  return Math.floor(24 / (2 * formData.dischargeHours))
+})
+
+// Auto-calc ratedPower from ratedEnergy / dischargeHours
+watch(
+  () => [formData.ratedEnergy, formData.dischargeHours],
+  ([energy, hours]) => {
+    if (isPowerAuto.value && energy > 0 && hours > 0) {
+      formData.ratedPower = +(energy / hours).toFixed(1)
+    }
+  }
+)
 
 function resetForm() {
   Object.assign(formData, { ...defaults })
@@ -486,7 +486,10 @@ async function submitSurvey() {
     store.survey.cyclesPerDay = formData.cyclesPerDay || 1
     if (formData.dod) store.survey.dod = formData.dod
     if (formData.cRate) store.survey.cRate = formData.cRate
-    store.survey.requiredEnergy = +(formData.ratedEnergy * ((formData.dod || 90) / 100)).toFixed(1)
+    store.survey.requiredEnergy =
+      formData.ratedEnergy != null
+        ? +(formData.ratedEnergy * ((formData.dod || 90) / 100)).toFixed(1)
+        : DEFAULT_SURVEY.requiredEnergy
     if (formLocation.value) store.survey.location = formLocation.value
     if (formData.country) store.survey.country = formData.country
     if (formData.city) store.survey.city = formData.city

@@ -245,7 +245,12 @@ function markEdited(field) {
 const isDurationAuto = ref(true)
 
 function autoCalcDuration() {
-  if (form.ratedEnergy > 0 && form.totalPower > 0) {
+  if (
+    form.ratedEnergy > 0 &&
+    form.totalPower > 0 &&
+    typeof form.ratedEnergy === 'number' &&
+    typeof form.totalPower === 'number'
+  ) {
     form.duration = +(form.ratedEnergy / form.totalPower).toFixed(2)
   }
 }
