@@ -225,7 +225,7 @@
 
             <!-- Initial Stock -->
             <td class="p-1 text-secondary">
-              {{ params.ratedEnergy.toFixed(1) }}
+              {{ params.ratedEnergy != null ? params.ratedEnergy.toFixed(1) : '--' }}
             </td>
             <td class="p-0.5 bg-input">
               <input
@@ -309,7 +309,7 @@
               {{ results.meetsReq[i - 1] ? $t('matrixTable.meetsYes') : $t('matrixTable.meetsNo') }}
             </td>
             <td class="p-1 font-semibold text-warning">
-              {{ params.requiredEnergy.toFixed(2) }}
+              {{ params.requiredEnergy != null ? params.requiredEnergy.toFixed(2) : '--' }}
             </td>
           </tr>
         </tbody>
