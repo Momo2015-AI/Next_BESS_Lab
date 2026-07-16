@@ -1332,7 +1332,9 @@ export default {
     titleSurvey: 'Survey Data Retrieval',
     unknown: 'Unknown',
     unnamedProject: 'Unnamed Project',
-    years: '{n}yr'
+    years: '{n}yr',
+    annualThroughput: 'Annual Throughput',
+    systemRTE: 'System RTE'
   },
   auth: {
     loginTitle: 'Login',
@@ -1545,8 +1547,6 @@ export default {
     labelStatus: 'Status',
     statusOnline: 'Online',
     statusCached: 'Cached',
-
-    // Standalone mode
     dataSource: 'Data Source',
     modeProject: 'From Project',
     modeStandalone: 'Standalone',
@@ -2239,7 +2239,9 @@ export default {
     lock: 'Lock',
     unlock: 'Unlock',
     lockDuration: 'Lock Duration',
-    unlockDuration: 'Unlock Duration'
+    unlockDuration: 'Unlock Duration',
+    lockRequiredEnergy: 'Lock Required Energy',
+    unlockRequiredEnergy: 'Unlock Required Energy'
   },
   compare: {
     selectHint: 'Generate design solutions first to compare',
