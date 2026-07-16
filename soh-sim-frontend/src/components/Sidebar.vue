@@ -188,6 +188,13 @@ const coreToolItems = computed(() =>
       perm: 'orchestrator'
     },
     {
+      id: 'quickcfg',
+      path: '/tools/quick-config',
+      label: t('sidebar.toolQuickConfig'),
+      iconName: 'grid',
+      perm: 'tool_quick_config'
+    },
+    {
       id: 'datainject',
       path: '/tools/datainject',
       label: t('sidebar.toolDataInject'),

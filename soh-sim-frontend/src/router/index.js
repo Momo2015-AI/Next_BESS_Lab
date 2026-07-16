@@ -154,6 +154,12 @@ const routes = [
     name: 'orchestrator',
     component: () => import('../pages/OrchestratorPage.vue'),
     meta: { permission: 'orchestrator' }
+  },
+  {
+    path: '/tools/quick-config',
+    name: 'tool-quick-config',
+    component: () => import('../pages/QuickConfigPage.vue'),
+    meta: { permission: 'tool_quick_config' }
   }
 ]
 
