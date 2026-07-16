@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useBessStore } from '../stores/bess.js'
@@ -44,6 +44,7 @@ import DesignResultPreview from '../components/DesignResultPreview.vue'
 const { t } = useI18n()
 const router = useRouter()
 const store = useBessStore()
+const showToast = inject('showToast', () => {})
 
 const activeStep = ref(store.phase2ActiveStep || 0)
 
@@ -81,6 +82,23 @@ function onDesignResult(data) {
 
 function onSolutionConfirm(sol) {
   try {
+    // 校验关键数据完整性
+    const missing = []
+    if (sol.totalEnergyMWh == null || isNaN(sol.totalEnergyMWh)) missing.push(t('designTemplate.totalEnergyMWh'))
+    if (sol.totalPowerMW == null || isNaN(sol.totalPowerMW)) {
+      if (sol.totalEnergyMWh == null || sol.duration == null) missing.push(t('designTemplate.totalPowerMW'))
+    }
+    if (sol.containerQty == null || isNaN(sol.containerQty)) missing.push(t('designTemplate.containerQty'))
+    if (sol.pcsQty == null || isNaN(sol.pcsQty)) missing.push(t('designTemplate.pcsQty'))
+    if (sol.duration == null || isNaN(sol.duration)) {
+      if (sol.totalEnergyMWh == null || sol.totalPowerMW == null) missing.push(t('designTemplate.duration'))
+    }
+
+    if (missing.length > 0) {
+      showToast(t('designTemplate.dataIncomplete', { fields: missing.join('、') }), 'warning')
+      return
+    }
+
     // 持久化确认的方案
     store.designResults.confirmedSolution = sol
     // 同步写入 survey 数据，确保仿真页面能读取
@@ -98,6 +116,7 @@ function onSolutionConfirm(sol) {
     router.push('/phase3')
   } catch (e) {
     console.error('[Phase2Page] onSolutionConfirm error:', e)
+    showToast(t('designTemplate.confirmError'), 'error')
   }
 }
 </script>
