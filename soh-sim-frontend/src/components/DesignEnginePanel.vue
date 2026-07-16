@@ -541,6 +541,7 @@ function getStrategyLabel(type) {
 function formatCurrency(val) {
   if (val == null) return '—'
   const num = Number(val)
+  if (isNaN(num)) return '—'
   if (num >= 1e8) return '$' + (num / 1e8).toFixed(2) + ' 亿'
   if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M'
   if (num >= 1e3) return '$' + (num / 1e3).toFixed(0) + 'K'
@@ -549,12 +550,14 @@ function formatCurrency(val) {
 
 function formatMetric(key, val) {
   if (val == null) return '—'
-  if (key === 'lcos' || key === 'lcoe') return Number(val).toFixed(4)
-  if (key === 'projectIrr' || key === 'equityIrr' || key === 'irr' || key === 'roi') return Number(val).toFixed(2) + '%'
+  const num = Number(val)
+  if (isNaN(num)) return '—'
+  if (key === 'lcos' || key === 'lcoe') return num.toFixed(4)
+  if (key === 'projectIrr' || key === 'equityIrr' || key === 'irr' || key === 'roi') return num.toFixed(2) + '%'
   if (key === 'npv' || key === 'capex') return formatCurrency(val)
-  if (key === 'payback') return Number(val).toFixed(1) + ' 年'
+  if (key === 'payback') return num.toFixed(1) + ' 年'
   if (typeof val === 'object') return JSON.stringify(val)
-  return Number(val).toFixed(2)
+  return num.toFixed(2)
 }
 
 async function runDesign() {

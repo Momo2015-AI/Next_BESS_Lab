@@ -166,10 +166,10 @@ function curvePoints(sol) {
   const init = sol?.efficiencyChain?.systemRTE ? Math.min(0.99, sol.efficiencyChain.systemRTE / 100) : 0.97
   const target = 0.7
   const years = [1, 5, 10, 15, 20, 25]
-  return years.map((y, i) => {
+  return years.map((y) => {
     // 指数衰减至 target（@ y=25 趋近 target）
     const value = target + (init - target) * Math.exp(-y / 12)
-    return { year: `第${y}年`, value: value.toFixed(2) }
+    return { year: `第${y}年`, value: value != null && !isNaN(value) ? value.toFixed(2) : '--' }
   })
 }
 
@@ -184,32 +184,37 @@ function formatDate(iso) {
 function fmtMoney(v) {
   if (v == null) return '-'
   const n = Number(v)
+  if (isNaN(n)) return '-'
   if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'
   if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
   return n.toLocaleString()
 }
 
 function confirmSolution() {
-  if (!selectedSolution.value) return
+  try {
+    if (!selectedSolution.value) return
 
-  const sol = selectedSolution.value
-  // 将选中方案写入 store
-  store.selectedProducts = {
-    container: sol.container || {},
-    pcs: sol.pcs || {},
-    cell: sol.container?.cellModel ? { model: sol.container.cellModel } : {}
-  }
-  store.systemParams = {
-    ...store.systemParams,
-    initContainerQty: sol.containerQty,
-    initPcsQty: sol.pcsQty,
-    ratedEnergy: sol.totalEnergyMWh,
-    pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMW || store.systemParams.pcsPower,
-    duration: sol.duration || store.systemParams.duration,
-    strategy: sol.strategy_type || props.strategy
-  }
+    const sol = selectedSolution.value
+    // 将选中方案写入 store
+    store.selectedProducts = {
+      container: sol.container || {},
+      pcs: sol.pcs || {},
+      cell: sol.container?.cellModel ? { model: sol.container.cellModel } : {}
+    }
+    store.systemParams = {
+      ...store.systemParams,
+      initContainerQty: sol.containerQty,
+      initPcsQty: sol.pcsQty,
+      ratedEnergy: sol.totalEnergyMWh,
+      pcsPower: sol.pcs?.ratedPowerMW || sol.totalPowerMW || store.systemParams.pcsPower,
+      duration: sol.duration || store.systemParams.duration,
+      strategy: sol.strategy_type || props.strategy
+    }
 
-  emit('confirm', sol)
+    emit('confirm', sol)
+  } catch (e) {
+    console.error('[DesignResultPreview] confirmSolution error:', e)
+  }
 }
 
 onMounted(() => {
