@@ -620,6 +620,10 @@ function goToSimulation() {
 </script>
 
 <style scoped>
+:deep(.section-card:first-child) {
+  position: relative;
+  z-index: 1;
+}
 .search-field-row {
   display: flex;
   align-items: flex-end;
@@ -645,7 +649,7 @@ function goToSimulation() {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999;
   max-height: 220px;
   overflow-y: auto;
   overflow-x: hidden;

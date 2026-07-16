@@ -1012,7 +1012,7 @@ async function runFullWorkflow() {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999;
   max-height: 220px;
   overflow-y: auto;
   overflow-x: hidden;

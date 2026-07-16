@@ -1940,6 +1940,7 @@ const exportResults = () => {
 }
 
 onMounted(() => {
+  try {
   // 从 store 同步设计数据到表单（仅在 useDraft 为默认值时覆盖）
   const designRatedEnergy = store.systemParams.ratedEnergy || store.survey.ratedEnergy
   if (designRatedEnergy && (surveyData.ratedEnergy === 5 || !surveyData.ratedEnergy)) {
@@ -1975,30 +1976,37 @@ onMounted(() => {
     surveyData.pcsQty = designPcsQty
   }
   // 从 store 恢复之前的仿真结果（防止切换 tab 后图表数据丢失）
-  if (store.results.totalAcUsable?.length) {
-    // DataInjection/MatrixTable 存储 SOH 为 0-1 小数，统一转为百分比显示
-    const rawSoh = [...store.degradation.soh]
-    const needsPct = rawSoh.length > 0 && rawSoh[0] <= 1
-    const sohPct = needsPct ? rawSoh.map((v) => v * 100) : rawSoh
-    simulationResults.sohCurve = sohPct
-    simulationResults.rteCurve = [...store.degradation.rte]
-    simulationResults.netAvailCurve = [...store.results.totalAcUsable]
-    simulationResults.initSoh = sohPct[0] || 100
-    simulationResults.finalSoh = sohPct[sohPct.length - 1] || 0
-    simulationResults.tableData = sohPct.map((s, i) => ({
-      year: i,
-      soh: s,
-      rte: store.degradation.rte[i] || 0,
-      netAvail: store.results.totalAcUsable[i] || 0,
-      meetsReq: store.results.meetsReq?.[i] || false
-    }))
-    nextTick(() => setTimeout(() => renderChart(), 200))
+  if (store.results.totalAcUsable?.length && Array.isArray(store.degradation?.soh) && Array.isArray(store.degradation?.rte)) {
+    try {
+      // DataInjection/MatrixTable 存储 SOH 为 0-1 小数，统一转为百分比显示
+      const rawSoh = [...store.degradation.soh]
+      const needsPct = rawSoh.length > 0 && rawSoh[0] <= 1
+      const sohPct = needsPct ? rawSoh.map((v) => (v != null ? v * 100 : 0)) : rawSoh
+      simulationResults.sohCurve = sohPct
+      simulationResults.rteCurve = [...store.degradation.rte]
+      simulationResults.netAvailCurve = [...store.results.totalAcUsable]
+      simulationResults.initSoh = sohPct[0] ?? 100
+      simulationResults.finalSoh = sohPct[sohPct.length - 1] ?? 0
+      simulationResults.tableData = sohPct.map((s, i) => ({
+        year: i,
+        soh: s ?? 0,
+        rte: store.degradation.rte[i] ?? 0,
+        netAvail: store.results.totalAcUsable[i] ?? 0,
+        meetsReq: store.results.meetsReq?.[i] || false
+      }))
+      nextTick(() => setTimeout(() => renderChart(), 200))
+    } catch (e) {
+      console.error('[SimulationLab] 恢复仿真结果失败:', e)
+    }
   }
   initYearlyCorrections()
   fetchAlgorithms()
   fetchManufacturers()
   _resizeHandler = handleResize
   window.addEventListener('resize', _resizeHandler)
+  } catch (e) {
+    console.error('[SimulationLab] onMounted 初始化失败:', e)
+  }
 })
 
 onUnmounted(() => {
@@ -2034,7 +2042,7 @@ button:not(:disabled):hover {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999;
   max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
