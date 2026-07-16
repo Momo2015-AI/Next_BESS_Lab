@@ -239,7 +239,7 @@
             <td class="p-0.5 bg-input">
               <input
                 type="number"
-                :value="(rte[i - 1] * 100).toFixed(2)"
+                :value="rte[i - 1] != null ? (rte[i - 1] * 100).toFixed(2) : ''"
                 step="0.01"
                 class="form-field-input w-14 rounded text-center font-mono text-[11px]"
                 @input="updateRte(i - 1, $event.target.value)"
@@ -248,7 +248,7 @@
             <td class="p-0.5 bg-input">
               <input
                 type="number"
-                :value="(soh[i - 1] * 100).toFixed(2)"
+                :value="soh[i - 1] != null ? (soh[i - 1] * 100).toFixed(2) : ''"
                 step="0.01"
                 class="form-field-input w-14 rounded text-center font-bold font-mono text-[11px]"
                 @input="updateSoh(i - 1, $event.target.value)"
@@ -271,7 +271,7 @@
 
             <!-- Augmentation Stream -->
             <td class="p-1 text-muted">
-              {{ params.ratedEnergy.toFixed(1) }}
+              {{ params.ratedEnergy != null ? params.ratedEnergy.toFixed(1) : '--' }}
             </td>
             <td class="p-0.5 bg-input">
               <input

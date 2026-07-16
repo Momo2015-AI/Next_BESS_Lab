@@ -43,7 +43,7 @@
                   {{ row.diff > 0 ? '+' : '' }}{{ row.formatDiff(row.diff) }}
                 </td>
                 <td :class="['row-pct', row.pct > 0 ? 'positive' : 'negative']">
-                  {{ row.pct > 0 ? '+' : '' }}{{ row.pct.toFixed(1) }}%
+                  {{ row.pct > 0 ? '+' : '' }}{{ row.pct != null ? row.pct.toFixed(1) : '--' }}%
                 </td>
               </tr>
             </tbody>

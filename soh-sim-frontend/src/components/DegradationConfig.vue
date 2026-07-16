@@ -106,7 +106,7 @@
                     getSohAt8000(c) >= 80 ? 'text-success' : getSohAt8000(c) >= 60 ? 'text-warning' : 'text-danger'
                   "
                 >
-                  {{ getSohAt8000(c).toFixed(1) }}%
+                  {{ getSohAt8000(c) != null ? getSohAt8000(c).toFixed(1) : '--' }}%
                 </td>
               </tr>
             </tbody>
@@ -384,12 +384,13 @@ async function runPreview() {
 }
 
 function getSohAt8000(curve) {
-  if (!curve.data || curve.data.length === 0) return 100
+  if (!curve || !curve.data || curve.data.length === 0) return 100
   const sorted = [...curve.data].sort((a, b) => a.cycles - b.cycles)
   for (const d of sorted) {
-    if (d.cycles >= 8000) return d.soh
+    if (d.cycles >= 8000) return d.soh != null ? d.soh : 100
   }
-  return sorted[sorted.length - 1].soh
+  const last = sorted[sorted.length - 1]
+  return last && last.soh != null ? last.soh : 100
 }
 
 async function resetAll() {

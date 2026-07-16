@@ -66,7 +66,7 @@
             {{ $t('dataInjection.sohLabel') }}
           </div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in soh" :key="'s-' + i">
+            <div v-for="(v, i) in soh || []" :key="'s-' + i">
               class="text-warning" {{ 'Y' + i }}:{{ (v * 100).toFixed(1) }}%
             </div>
           </div>
@@ -76,7 +76,7 @@
             {{ $t('dataInjection.rteLabel') }}
           </div>
           <div class="grid grid-cols-7 gap-x-1 gap-y-0.5">
-            <div v-for="(v, i) in rte" :key="'r-' + i">
+            <div v-for="(v, i) in rte || []" :key="'r-' + i">
               class="text-accent-2" {{ 'Y' + i }}:{{ (v * 100).toFixed(1) }}%
             </div>
           </div>

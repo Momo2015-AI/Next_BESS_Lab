@@ -103,8 +103,8 @@
               <tr class="ins-8">
                 <th class="text-left py-2 px-2">{{ $t('sensitivity.parameter') }}</th>
                 <th v-for="(result, idx) in analysisResults" :key="idx" class="text-right py-2 px-2">
-                  {{ result.param }} ({{ (result.minValue * 100).toFixed(0) }}%~{{
-                    (result.maxValue * 100).toFixed(0)
+                  {{ result.param }} ({{ result.minValue != null ? (result.minValue * 100).toFixed(0) : '--' }}%~{{
+                    result.maxValue != null ? (result.maxValue * 100).toFixed(0) : '--'
                   }}%)
                 </th>
               </tr>
@@ -118,7 +118,8 @@
                   class="text-right py-2 px-2"
                   :style="result.npvImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
-                  {{ result.npvImpact > 0 ? '+' : '' }}{{ result.npvImpact.toFixed(2) }}%
+                  {{ result.npvImpact > 0 ? '+' : ''
+                  }}{{ result.npvImpact != null ? result.npvImpact.toFixed(2) : '--' }}%
                 </td>
               </tr>
               <tr class="ins-9">
@@ -129,7 +130,8 @@
                   class="text-right py-2 px-2"
                   :style="result.irrImpact > 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
-                  {{ result.irrImpact > 0 ? '+' : '' }}{{ result.irrImpact.toFixed(2) }}%
+                  {{ result.irrImpact > 0 ? '+' : ''
+                  }}{{ result.irrImpact != null ? result.irrImpact.toFixed(2) : '--' }}%
                 </td>
               </tr>
               <tr class="ins-9">
@@ -142,7 +144,8 @@
                     result.paybackImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }
                   "
                 >
-                  {{ result.paybackImpact > 0 ? '+' : '' }}{{ result.paybackImpact.toFixed(2)
+                  {{ result.paybackImpact > 0 ? '+' : ''
+                  }}{{ result.paybackImpact != null ? result.paybackImpact.toFixed(2) : '--'
                   }}{{ $t('sensitivity.yearUnit') }}
                 </td>
               </tr>
@@ -154,7 +157,8 @@
                   class="text-right py-2 px-2"
                   :style="result.lcosImpact < 0 ? { color: 'var(--color-success)' } : { color: 'var(--color-danger)' }"
                 >
-                  {{ result.lcosImpact > 0 ? '+' : '' }}{{ result.lcosImpact.toFixed(2) }}%
+                  {{ result.lcosImpact > 0 ? '+' : ''
+                  }}{{ result.lcosImpact != null ? result.lcosImpact.toFixed(2) : '--' }}%
                 </td>
               </tr>
             </tbody>

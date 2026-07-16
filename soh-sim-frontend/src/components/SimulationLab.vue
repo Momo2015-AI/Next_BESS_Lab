@@ -902,13 +902,13 @@
                 {{ row.year }}
               </td>
               <td class="py-1 px-2 text-accent">
-                {{ row.soh.toFixed(2) }}
+                {{ row.soh != null ? row.soh.toFixed(2) : '--' }}
               </td>
               <td class="py-1 px-2 text-accent-secondary">
-                {{ row.rte.toFixed(2) }}
+                {{ row.rte != null ? row.rte.toFixed(2) : '--' }}
               </td>
               <td class="py-1 px-2 text-success">
-                {{ row.netAvail.toFixed(1) }}
+                {{ row.netAvail != null ? row.netAvail.toFixed(1) : '--' }}
               </td>
               <td class="py-1 px-2" :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'">
                 {{ row.meetsReq ? $t('simLab.pass') : $t('simLab.fail') }}
@@ -1024,7 +1024,9 @@ function onCountryInput() {
   countryDropdown.value = true
 }
 function onCountryBlur() {
-  setTimeout(() => { countryDropdown.value = false }, 150)
+  setTimeout(() => {
+    countryDropdown.value = false
+  }, 150)
 }
 function selectCountry(c) {
   surveyData.country = c
@@ -1032,9 +1034,12 @@ function selectCountry(c) {
   countryDropdown.value = false
 }
 // 同步回填
-watch(() => surveyData.country, (val) => {
-  if (val && val !== countryInput.value) countryInput.value = val
-})
+watch(
+  () => surveyData.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
 
 watch(themeObject, () => {
   nextTick(renderChart)
@@ -1912,9 +1917,9 @@ const exportResults = () => {
     ...simulationResults.tableData.map((r) =>
       [
         r.year,
-        r.soh.toFixed(2),
-        r.rte.toFixed(2),
-        r.netAvail.toFixed(1),
+        r.soh != null ? r.soh.toFixed(2) : '',
+        r.rte != null ? r.rte.toFixed(2) : '',
+        r.netAvail != null ? r.netAvail.toFixed(1) : '',
         r.meetsReq ? t('simLab.pass') : t('simLab.fail')
       ].join(',')
     )
