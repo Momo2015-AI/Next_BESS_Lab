@@ -1,7 +1,7 @@
 <template>
   <div class="h-full overflow-y-auto custom-scrollbar">
     <div class="max-w-5xl mx-auto space-y-4 py-2">
-      <div class="card p-4">
+      <div class="card p-4" style="position: relative; z-index: 1">
         <div class="flex items-center gap-2 mb-3">
           <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold ins-1">01</span>
           <div>
@@ -1571,7 +1571,7 @@ function applyToSimulation() {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999;
   max-height: 220px;
   overflow-y: auto;
   overflow-x: hidden;

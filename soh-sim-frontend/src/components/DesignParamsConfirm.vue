@@ -386,7 +386,7 @@ async function runDesign() {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999;
   max-height: 200px;
   overflow-y: auto;
   background: var(--color-card);
