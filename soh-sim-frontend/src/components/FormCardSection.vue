@@ -7,6 +7,9 @@
       <div>
         <h3 class="section-title text-accent border-accent">{{ title }}</h3>
       </div>
+      <div v-if="$slots.extra" class="ml-auto">
+        <slot name="extra" />
+      </div>
     </div>
     <slot />
   </div>
