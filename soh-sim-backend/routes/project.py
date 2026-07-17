@@ -340,7 +340,11 @@ def compare_versions():
                 return error_response(f"版本 {vid} 不存在", 404)
 
             # 租户隔离：admin 可跨租户，其余用户仅可访问同租户版本
-            if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
+            if (
+                getattr(user, "role", None) != "admin"
+                and version.project
+                and version.project.tenant_id != user.tenant_id
+            ):
                 return error_response(f"版本 {vid} 不存在", 404)
 
             config = {}
