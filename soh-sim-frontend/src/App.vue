@@ -58,8 +58,8 @@
       </div>
     </header>
 
-    <div class="app-body">
-      <Sidebar />
+    <div class="app-body" :class="{ 'no-sidebar': !authUser }">
+      <Sidebar v-if="authUser" />
       <main class="app-main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
