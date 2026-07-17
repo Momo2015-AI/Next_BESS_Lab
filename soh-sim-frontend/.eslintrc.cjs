@@ -33,7 +33,9 @@ module.exports = {
     // NOTE: ESLint 原生不支持提取模板中的属性，需要 vue-eslint-parser + 自定义规则
     // 当前通过 CI check-code-style.sh 脚本检测
 
-    // 组件大小
+    // 组件/文件大小：软限制（Warning，不阻断发布）。详见 CODE_STYLE.md §1.2 与 §9。
+    // 仅作提醒，是否需拆分由 Code Review 依据可读性判断，而非单纯数行数。
+    // 注：eslint-plugin-vue v9+ 已移除 vue/max-lines-per-file，统一使用核心 max-lines。
     'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }]
 
     // 禁止使用 any（TypeScript 规则，js 文件忽略）

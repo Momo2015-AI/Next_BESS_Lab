@@ -20,89 +20,15 @@
       </div>
     </div>
 
-    <div v-show="currentStep === 0" class="rounded-lg p-4 card-panel">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
-        <span class="w-2 h-2 rounded-full bg-accent" />
-        {{ $t('simLab.titleSurvey') }}
-      </h3>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-2">
-          <label class="text-xs text-secondary">{{ $t('simLab.labelSurveyId') }}</label>
-          <div class="flex gap-2">
-            <div class="combobox-wrapper flex-1">
-              <input
-                v-model="surveyIdInput"
-                type="text"
-                :placeholder="$t('simLab.placeholderSurveyId')"
-                class="w-full rounded px-3 py-1.5 text-xs card-input-dark"
-                @focus="onSurveyInputFocus"
-                @blur="onSurveyInputBlur"
-                @input="onSurveyIdInput"
-                @keydown.enter.prevent="onSurveyInputEnter"
-              />
-              <div v-if="showDropdown && filteredSurveyList.length > 0" class="combobox-dropdown">
-                <div
-                  v-for="s in filteredSurveyList"
-                  :key="s.id"
-                  class="combobox-option"
-                  :class="{ active: s.id === surveyId }"
-                  @mousedown.prevent="selectSurveyFromDropdown(s)"
-                >
-                  <span class="option-name">{{ s.project_name }}</span>
-                  <span class="option-code">{{ s.id.slice(0, 8) }}...</span>
-                </div>
-              </div>
-              <div
-                v-else-if="showDropdown && surveyIdInput && filteredSurveyList.length === 0"
-                class="combobox-dropdown"
-              >
-                <div class="combobox-empty">{{ $t('simLab.noMatch') }}</div>
-              </div>
-            </div>
-            <button class="text-xs px-3 py-1.5 transition-all btn-accent-filled" @click="loadSurveyData">
-              {{ $t('simLab.btnLoad') }}
-            </button>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="text-xs text-secondary">{{ $t('simLab.labelProjectSearch') }}</label>
-          <div class="flex gap-2">
-            <input
-              v-model="searchKeyword"
-              type="text"
-              :placeholder="$t('simLab.placeholderProjectSearch')"
-              class="flex-1 rounded px-3 py-1.5 text-xs card-input-dark"
-            />
-            <button class="text-xs px-3 py-1.5 transition-all btn-card-outline" @click="searchByProjectName">
-              {{ $t('simLab.btnSearch') }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="searchResults.length > 0" class="mt-4 rounded-lg p-3 card-panel-bordered">
-        <h4 class="text-xs font-medium mb-2">{{ $t('simLab.searchResults') }}</h4>
-        <div class="max-h-40 overflow-auto">
-          <div
-            v-for="item in searchResults"
-            :key="item.id"
-            class="flex justify-between items-center p-2 rounded cursor-pointer transition-all mb-1 card-panel"
-            @click="selectSurvey(item)"
-          >
-            <div>
-              <p class="text-xs text-accent">
-                {{ item.project_name }}
-              </p>
-              <p class="text-[10px] text-muted">
-                {{ item.country || item.city || item.location || '' }} | {{ item.total_mw }}MW / {{ item.total_mwh }}MWh
-              </p>
-            </div>
-            <span class="text-[10px] px-2 py-1 rounded bg-accent">{{ $t('simLab.btnSelect') }}</span>
-          </div>
-        </div>
-      </div>
+    <!-- Step 0: Survey Data -->
+    <div v-show="currentStep === 0">
+      <SurveySelector
+        :survey-list="surveyList"
+        :search-results="searchResults"
+        @load="loadSurveyData"
+        @search="searchByProjectName"
+        @select-survey="selectSurvey"
+      />
 
       <div class="mt-4 grid grid-cols-3 gap-3">
         <div class="rounded p-3 card-panel-bordered">
@@ -178,31 +104,20 @@
             <option value="LTO">{{ $t('simLab.batteryLto') }}</option>
           </select>
         </div>
-        <div class="rounded p-3 card-panel-bordered">
-          <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCountry') }}</label>
-          <div class="combobox-wrapper">
-            <input
-              v-model="countryInput"
-              type="text"
-              :placeholder="$t('simLab.labelCountry')"
-              class="w-full rounded px-2 py-1 text-xs card-input text-accent"
-              @focus="countryDropdown = true"
-              @blur="onCountryBlur"
-              @input="onCountryInput"
-            />
-            <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
-              <div
-                v-for="c in filteredCountries"
-                :key="c"
-                class="combobox-option"
-                :class="{ active: c === surveyData.country }"
-                @mousedown.prevent="selectCountry(c)"
-              >
-                <span class="option-name">{{ c }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ComboboxInput
+          v-model="countryInput"
+          :options="countryOptions"
+          :placeholder="$t('simLab.labelCountry')"
+          :empty-text="$t('simLab.noMatch')"
+          wrapper-class="rounded p-3 card-panel-bordered"
+          label-class="text-[10px] block mb-1 text-muted"
+          :label="$t('simLab.labelCountry')"
+          @select="
+            (opt) => {
+              surveyData.country = opt.label
+            }
+          "
+        />
         <div class="rounded p-3 card-panel-bordered">
           <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCity') }}</label>
           <input
@@ -232,6 +147,7 @@
       </div>
     </div>
 
+    <!-- Step 1: Simulation Params -->
     <div v-show="currentStep === 1" class="rounded-lg p-4 card-panel">
       <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
         <span class="w-2 h-2 rounded-full bg-accent" />
@@ -249,17 +165,13 @@
                 class="w-full rounded px-2 py-1 text-xs card-input"
                 @change="initYearlyCorrections"
               >
-                <option v-for="n in [10, 15, 20, 25, 30]" :key="n" :value="n">
-                  {{ $t('simLab.years', { n }) }}
-                </option>
+                <option v-for="n in [10, 15, 20, 25, 30]" :key="n" :value="n">{{ $t('simLab.years', { n }) }}</option>
               </select>
             </div>
             <div>
               <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelGuaranteeYears') }}</label>
               <select v-model.number="simParams.guaranteeYears" class="w-full rounded px-2 py-1 text-xs card-input">
-                <option v-for="n in [5, 10, 15, 20]" :key="n" :value="n">
-                  {{ $t('simLab.years', { n }) }}
-                </option>
+                <option v-for="n in [5, 10, 15, 20]" :key="n" :value="n">{{ $t('simLab.years', { n }) }}</option>
               </select>
             </div>
             <div>
@@ -367,7 +279,6 @@
             </div>
           </div>
 
-          <!-- Manual 模式 -->
           <div v-if="simParams.auxPowerMode === 'manual'">
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -407,7 +318,6 @@
                 />
               </div>
             </div>
-
             <div class="mt-2 text-[10px] text-muted space-y-0.5">
               <div class="flex justify-between">
                 <span>{{ $t('simLab.totalRunAux') }}:</span>
@@ -420,7 +330,6 @@
             </div>
           </div>
 
-          <!-- Thermal 模式 -->
           <div v-else class="space-y-2">
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -496,85 +405,17 @@
       </div>
     </div>
 
+    <!-- Step 2: Algorithm Selection -->
     <div v-show="currentStep === 2" class="rounded-lg p-4 card-panel">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
-        <span class="w-2 h-2 rounded-full bg-accent" />
-        {{ $t('simLab.titleAlgorithm') }}
-      </h3>
-
-      <div class="grid grid-cols-3 gap-3">
-        <div
-          v-for="algo in algorithms"
-          :key="algo.id"
-          class="rounded-lg p-4 border-2 cursor-pointer transition-all flex flex-col"
-          :class="selectedAlgorithm === algo.id ? 'algo-selected' : 'algo-default'"
-          @click="selectAlgorithm(algo)"
-        >
-          <div class="flex items-center gap-2 mb-2">
-            <span
-              class="w-4 h-4 rounded-full"
-              :class="selectedAlgorithm === algo.id ? 'algo-dot-selected' : 'algo-dot-default'"
-            />
-            <h4
-              class="text-xs font-bold"
-              :class="selectedAlgorithm === algo.id ? 'algo-name-selected' : 'algo-name-default'"
-            >
-              {{ algo.name }}
-            </h4>
-          </div>
-          <p v-if="algo.name_en" class="text-[10px] mb-2 text-muted italic">
-            {{ algo.name_en }}
-          </p>
-          <p class="text-[10px] mb-2 text-secondary flex-1">
-            {{ algo.description }}
-          </p>
-          <div class="text-[10px] text-muted">
-            <span class="inline-block rounded px-1.5 py-0.5 mr-1 theme-bg-card">
-              {{ algo.type }}
-            </span>
-            <span class="text-secondary">{{ $t('simLab.accuracy') }}: {{ algo.accuracy }}</span>
-          </div>
-          <div class="mt-2 text-[10px] font-mono truncate text-accent">
-            {{ algo.mathematical_form }}
-          </div>
-          <div
-            v-if="algo.formula_expression"
-            class="mt-1 text-[10px] font-mono truncate text-secondary opacity-75"
-            :title="algo.formula_expression"
-          >
-            = {{ algo.formula_expression }}
-          </div>
-        </div>
-      </div>
-
-      <div v-if="algorithms.length === 0" class="text-center py-8 text-muted">
-        <div>{{ $t('simLab.noAlgo') }}</div>
-      </div>
-
-      <div v-if="selectedAlgoDetail" class="mt-4 rounded p-3 card-panel-bordered">
-        <div class="flex justify-between items-center mb-2">
-          <h4 class="text-xs font-medium">{{ $t('simLab.algoParams', { name: selectedAlgoDetail.name }) }}</h4>
-          <button
-            class="text-[10px] rounded px-2 py-0.5 transition-colors theme-bg-card text-muted"
-            @click="resetAlgoParams"
-          >
-            {{ $t('simLab.btnRestoreDefault') }}
-          </button>
-        </div>
-        <div class="grid grid-cols-4 gap-3">
-          <div v-for="(param, key) in selectedAlgoDetail.parameters" :key="key">
-            <label class="text-[10px] block mb-1 text-muted">{{ param.label }} ({{ param.unit || '' }})</label>
-            <input
-              v-model.number="algoParams[key]"
-              type="number"
-              :step="param.step || 0.01"
-              :min="param.min"
-              :max="param.max"
-              class="w-full rounded px-2 py-1 text-xs card-input"
-            />
-          </div>
-        </div>
-      </div>
+      <AlgorithmSelector
+        :algorithms="algorithms"
+        :selected-id="selectedAlgorithm"
+        :selected-detail="selectedAlgoDetail"
+        :algo-params="algoParams"
+        @select="selectAlgorithm"
+        @reset-params="resetAlgoParams"
+        @update-param="({ key, value }) => (algoParams[key] = value)"
+      />
 
       <div
         v-if="selectedAlgorithm === 'builtin-ai_simulation'"
@@ -584,36 +425,16 @@
           <span>🤖</span>
           {{ $t('simLab.titleAiConfig') }}
         </h4>
-
         <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelManufacturer') }}</label>
-            <div class="combobox-wrapper">
-              <input
-                v-model="mfrInput"
-                type="text"
-                :placeholder="$t('simLab.manufacturerPlaceholder')"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-                @focus="mfrDropdown = true"
-                @blur="onMfrBlur"
-                @input="onMfrInput"
-              />
-              <div v-if="mfrDropdown && filteredManufacturers.length > 0" class="combobox-dropdown">
-                <div
-                  v-for="mfr in filteredManufacturers"
-                  :key="mfr.id"
-                  class="combobox-option"
-                  :class="{ active: mfr.id === aiSimParams.manufacturerId }"
-                  @mousedown.prevent="selectMfr(mfr)"
-                >
-                  <span class="option-name">{{ mfr.name }}</span>
-                  <span class="option-code">{{ mfr.chemistry_type || '' }}</span>
-                </div>
-              </div>
-              <div v-else-if="mfrDropdown && mfrInput && filteredManufacturers.length === 0" class="combobox-dropdown">
-                <div class="combobox-empty">{{ $t('simLab.noMatch') }}</div>
-              </div>
-            </div>
+            <ComboboxInput
+              v-model="mfrInput"
+              :options="manufacturerOptions"
+              :placeholder="$t('simLab.manufacturerPlaceholder')"
+              :empty-text="$t('simLab.noMatch')"
+              @select="onMfrSelect"
+            />
           </div>
           <div>
             <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSimYears') }}</label>
@@ -670,7 +491,6 @@
             />
           </div>
         </div>
-
         <div v-if="selectedManufacturer" class="mt-3 rounded p-2 card-panel">
           <p class="text-[10px] text-muted">
             <strong class="text-accent">{{ selectedManufacturer.name }}</strong>
@@ -700,117 +520,21 @@
       </div>
     </div>
 
+    <!-- Step 3: Correction Factors -->
     <div v-show="currentStep === 3" class="rounded-lg p-4 card-panel">
-      <h3 class="text-sm font-bold mb-3 flex items-center gap-2 text-accent">
-        <span class="w-2 h-2 rounded-full bg-accent" />
-        {{ $t('simLab.titleCorrection') }}
-      </h3>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.sectionGlobalCorrection') }}</h4>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelSohFactor') }}</label>
-              <input
-                v-model.number="correctionFactors.sohFactor"
-                type="number"
-                step="0.01"
-                min="0.9"
-                max="1.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
-            </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelRteFactor') }}</label>
-              <input
-                v-model.number="correctionFactors.rteFactor"
-                type="number"
-                step="0.01"
-                min="0.9"
-                max="1.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
-            </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelCapacityFactor') }}</label>
-              <input
-                v-model.number="correctionFactors.capacityFactor"
-                type="number"
-                step="0.01"
-                min="0.9"
-                max="1.1"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1') }}</p>
-            </div>
-            <div>
-              <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.labelAgingFactor') }}</label>
-              <input
-                v-model.number="correctionFactors.agingFactor"
-                type="number"
-                step="0.01"
-                min="1.0"
-                max="1.5"
-                class="w-full rounded px-2 py-1 text-xs card-input"
-              />
-              <p class="text-[10px] mt-1 text-muted">{{ $t('simLab.rangeDefault1_5') }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="rounded p-3 card-panel-bordered">
-          <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.annualCorrection') }}</h4>
-          <div class="overflow-auto max-h-40">
-            <table class="w-full text-[10px]">
-              <thead>
-                <tr class="text-muted">
-                  <th class="py-1 px-2 text-left">{{ $t('simLab.colYear') }}</th>
-                  <th class="py-1 px-2 text-left">{{ $t('simLab.colSohCorrection') }}</th>
-                  <th class="py-1 px-2 text-left">{{ $t('simLab.colRteCorrection') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(row, idx) in yearlyCorrections" :key="idx" class="border-t">
-                  <td class="py-1 px-2 text-secondary">
-                    {{ row.year }}
-                  </td>
-                  <td class="py-1 px-2">
-                    <input
-                      v-model.number="row.sohCorrection"
-                      type="number"
-                      step="0.001"
-                      class="w-16 rounded px-1 py-0.5 text-xs card-input"
-                    />
-                  </td>
-                  <td class="py-1 px-2">
-                    <input
-                      v-model.number="row.rteCorrection"
-                      type="number"
-                      step="0.001"
-                      class="w-16 rounded px-1 py-0.5 text-xs card-input"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-3 rounded p-2 card-panel-bordered">
-        <p class="text-secondary">
-          <strong>{{ $t('simLab.correctionNotes') }}</strong>
-        </p>
-        <ul class="list-disc list-inside mt-1 space-y-0.5 text-secondary">
-          <li>{{ $t('simLab.correctionNoteFactorGt') }}</li>
-          <li>{{ $t('simLab.correctionNoteFactorLt') }}</li>
-          <li>{{ $t('simLab.correctionNoteAnnual') }}</li>
-          <li>{{ $t('simLab.correctionNoteApplied') }}</li>
-        </ul>
-      </div>
+      <CorrectionFactorsPanel
+        :factors="correctionFactors"
+        :yearly-data="yearlyCorrections"
+        @update:soh-factor="correctionFactors.sohFactor = $event"
+        @update:rte-factor="correctionFactors.rteFactor = $event"
+        @update:capacity-factor="correctionFactors.capacityFactor = $event"
+        @update:aging-factor="correctionFactors.agingFactor = $event"
+        @update:yearly="
+          ({ idx, field, value }) => {
+            if (yearlyCorrections[idx]) yearlyCorrections[idx][field] = value
+          }
+        "
+      />
 
       <div class="mt-4 flex justify-between">
         <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="prevStep">
@@ -835,99 +559,19 @@
       </div>
     </div>
 
+    <!-- Step 4: Results -->
     <div v-show="currentStep === 4" class="rounded-lg p-4 card-panel">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="text-sm font-bold flex items-center gap-2 text-accent">
-          <span class="w-2 h-2 rounded-full bg-accent" />
-          {{ $t('simLab.titleResults') }}
-        </h3>
-        <button
-          class="text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1 bg-info"
-          @click="saveSimulationResult"
-        >
-          <span>💾</span>
-          {{ $t('simLab.btnSaveResult') }}
-        </button>
-      </div>
-
-      <div class="grid grid-cols-4 gap-3 mb-4">
-        <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">{{ $t('simLab.labelInitSoh') }}</p>
-          <p class="text-lg font-bold text-accent">{{ simulationResults.initSoh?.toFixed(2) || '--' }}%</p>
-        </div>
-        <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">{{ $t('simLab.labelGuaranteeEndSoh') }}</p>
-          <p
-            class="text-lg font-bold"
-            :class="simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh ? 'text-success' : 'text-danger'"
-          >
-            {{ simulationResults.guaranteeEndSoh?.toFixed(2) || '--' }}%
-          </p>
-        </div>
-        <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">{{ $t('simLab.labelFinalSoh') }}</p>
-          <p class="text-lg font-bold text-accent-secondary">{{ simulationResults.finalSoh?.toFixed(2) || '--' }}%</p>
-        </div>
-        <div class="rounded p-3 text-center card-panel-bordered">
-          <p class="text-[10px] text-muted">{{ $t('simLab.labelGuaranteeCheck') }}</p>
-          <p class="text-lg font-bold" :class="simulationResults.meetsGuarantee ? 'text-success' : 'text-danger'">
-            {{ simulationResults.meetsGuarantee ? $t('simLab.pass') : $t('simLab.fail') }}
-          </p>
-        </div>
-      </div>
-
-      <div class="rounded p-3 card-panel-bordered">
-        <h4 class="text-xs mb-2 font-medium">{{ $t('simLab.titleSohCurve') }}</h4>
-        <div ref="chartContainer" class="chart-container-sm" />
-      </div>
-
-      <div class="mt-3 rounded p-3 overflow-auto max-h-32 card-panel-bordered">
-        <table class="w-full text-[10px]">
-          <thead>
-            <tr class="text-muted">
-              <th class="py-1 px-2 text-left">{{ $t('simLab.colYear') }}</th>
-              <th class="py-1 px-2 text-left">{{ $t('simLab.colSoh') }}</th>
-              <th class="py-1 px-2 text-left">{{ $t('simLab.colRte') }}</th>
-              <th class="py-1 px-2 text-left">{{ $t('simLab.colNetAvail') }}</th>
-              <th class="py-1 px-2 text-left">{{ $t('simLab.colGuaranteeLine') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(row, idx) in simulationResults.tableData"
-              :key="idx"
-              :class="['border-t', { 'bg-danger-10': !row.meetsReq }]"
-            >
-              <td class="py-1 px-2 text-secondary">
-                {{ row.year }}
-              </td>
-              <td class="py-1 px-2 text-accent">
-                {{ row.soh != null ? row.soh.toFixed(2) : '--' }}
-              </td>
-              <td class="py-1 px-2 text-accent-secondary">
-                {{ row.rte != null ? row.rte.toFixed(2) : '--' }}
-              </td>
-              <td class="py-1 px-2 text-success">
-                {{ row.netAvail != null ? row.netAvail.toFixed(1) : '--' }}
-              </td>
-              <td class="py-1 px-2" :class="row.meetsReq ? 'sim-row-pass' : 'sim-row-fail'">
-                {{ row.meetsReq ? $t('simLab.pass') : $t('simLab.fail') }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="mt-4 flex justify-between">
-        <button class="text-xs px-4 py-2 rounded transition-all theme-btn-secondary" @click="resetSimulation">
-          {{ $t('simLab.btnReSimulate') }}
-        </button>
-        <button class="text-xs px-4 py-2 rounded transition-all btn-accent-filled" @click="exportResults">
-          {{ $t('simLab.btnExport') }}
-        </button>
-      </div>
+      <SimulationResults
+        ref="resultsComp"
+        :results="simulationResults"
+        :guarantee-soh="simParams.guaranteeSoh"
+        @save="saveSimulationResult"
+        @re-simulate="resetSimulation"
+        @export="exportResults"
+      />
     </div>
 
+    <!-- Toast -->
     <div
       v-if="toast.show"
       :class="[
@@ -941,22 +585,24 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBessStore, DEFAULT_DOD } from '../stores/bess.js'
-import * as echarts from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
-import { LineChart } from 'echarts/charts'
-import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { useDraft, useDraftRef } from '../composables/useDraft'
 import api from '../services/api.js'
-import { useChartTheme } from '../composables/useChartTheme.js'
 import { useCountryList } from '../composables/useCountryList'
-echarts.use([CanvasRenderer, LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent])
+import ComboboxInput from './ComboboxInput.vue'
+import SurveySelector from './SurveySelector.vue'
+import AlgorithmSelector from './AlgorithmSelector.vue'
+import CorrectionFactorsPanel from './CorrectionFactorsPanel.vue'
+import SimulationResults from './SimulationResults.vue'
 
 const emit = defineEmits(['applyConfig', 'error'])
 const { t } = useI18n()
+const store = useBessStore()
+const { filterCountries } = useCountryList()
 
+// ====== Wizard ======
 const steps = [
   { label: 'simLab.stepSurvey' },
   { label: 'simLab.stepParams' },
@@ -964,22 +610,83 @@ const steps = [
   { label: 'simLab.stepCorrection' },
   { label: 'simLab.stepResults' }
 ]
-
 const currentStep = useDraftRef('sim-current-step', 0).state
-const surveyId = useDraftRef('sim-survey-id', '').state
-const surveyIdInput = ref('')
+function nextStep() {
+  if (currentStep.value < steps.length - 1) currentStep.value++
+}
+function prevStep() {
+  if (currentStep.value > 0) currentStep.value--
+}
+
+// ====== Survey lookup ======
 const surveyList = ref([])
-const showDropdown = ref(false)
-const searchKeyword = ref('')
 const searchResults = ref([])
 
-const store = useBessStore()
-const { themeObject } = useChartTheme()
-const { filterCountries } = useCountryList()
+async function fetchSurveyList() {
+  try {
+    const data = await api.get('/api/survey/list?per_page=200')
+    surveyList.value = Array.isArray(data.data) ? data.data : data.data?.items || []
+  } catch (e) {
+    console.error('[SimulationLab] 获取调研表列表失败:', e)
+  }
+}
 
-const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
+async function loadSurveyData() {
+  const surveyId = useDraftRef('sim-survey-id', '').state
+  if (!surveyId.value) {
+    emit('error', t('simLab.enterSurveyId'), 'warning')
+    return
+  }
+  try {
+    const data = await api.get(`/api/survey/${surveyId.value}`)
+    mapSurveyData(data.data)
+  } catch (e) {
+    emit('error', e.status === 404 ? t('simLab.surveyNotFound') : t('simLab.networkErrorManual'), 'warning')
+  }
+}
 
-const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-survey-data', {
+async function searchByProjectName(keyword) {
+  if (!keyword?.trim()) {
+    emit('error', t('simLab.enterProjectKeyword'), 'warning')
+    return
+  }
+  try {
+    const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(keyword)}`)
+    if (data.success) {
+      searchResults.value = data.data?.surveys || []
+      if (!searchResults.value.length) emit('error', t('simLab.noMatchingProject'), 'warning')
+    }
+  } catch {
+    emit('error', t('simLab.networkErrorSearch'), 'error')
+  }
+}
+
+function selectSurvey(survey) {
+  searchResults.value = []
+  const surveyId = useDraftRef('sim-survey-id', '').state
+  surveyId.value = survey.id
+  mapSurveyData(survey)
+}
+
+function mapSurveyData(data) {
+  surveyData.projectName = data.project_name || ''
+  surveyData.ratedEnergy = data.total_mwh || 5
+  surveyData.containerQty = data.container_qty || 1
+  surveyData.pcsQty = data.pcs_qty || 1
+  surveyData.temperature = data.temp_avg || 25
+  surveyData.cyclesPerDay = data.cycles_per_day || 1
+  surveyData.dod = data.dod || 100
+  surveyData.cRate = data.c_rate || 0.5
+  surveyData.batteryType = data.battery_type || 'LFP'
+  surveyData.country = data.country || ''
+  surveyData.city = data.city || ''
+  surveyData.site = data.site || ''
+  if (!surveyData.country && !surveyData.city && !surveyData.site && data.location) surveyData.site = data.location
+  simParams.requiredEnergy = data.total_mwh || 240
+}
+
+// ====== Survey data form ======
+const { state: surveyData } = useDraft('sim-survey-data', {
   projectName: '',
   ratedEnergy: 5,
   containerQty: 62,
@@ -995,7 +702,20 @@ const { state: surveyData, clearDraft: clearSurveyDataDraft } = useDraft('sim-su
   site: ''
 })
 
-const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-params', {
+// ====== Country combobox ======
+const countryInput = ref('')
+const countryOptions = computed(() => {
+  return filterCountries(countryInput.value).map((c) => ({ label: c, value: c }))
+})
+watch(
+  () => surveyData.country,
+  (val) => {
+    if (val && val !== countryInput.value) countryInput.value = val
+  }
+)
+
+// ====== Simulation params ======
+const { state: simParams } = useDraft('sim-params', {
   simulationYears: 25,
   guaranteeYears: 10,
   guaranteeSoh: 70,
@@ -1013,131 +733,18 @@ const { state: simParams, clearDraft: clearSimParamsDraft } = useDraft('sim-para
   ambientTemp: 25
 })
 
-// 国家 combobox 状态
-const countryInput = ref('')
-const countryDropdown = ref(false)
-const filteredCountries = computed(() => {
-  return filterCountries(countryInput.value)
-})
-function onCountryInput() {
-  surveyData.country = countryInput.value
-  countryDropdown.value = true
-}
-function onCountryBlur() {
-  setTimeout(() => {
-    countryDropdown.value = false
-  }, 150)
-}
-function selectCountry(c) {
-  surveyData.country = c
-  countryInput.value = c
-  countryDropdown.value = false
-}
-// 同步回填
-watch(
-  () => surveyData.country,
-  (val) => {
-    if (val && val !== countryInput.value) countryInput.value = val
-  }
-)
-
-watch(themeObject, () => {
-  nextTick(renderChart)
-})
-
-const algorithms = ref([])
-const algoParams = reactive({})
-const selectedAlgoDetail = ref(null)
-
-const manufacturers = ref([])
-const mfrInput = ref('')
-const mfrDropdown = ref(false)
-const filteredManufacturers = computed(() => {
-  const q = mfrInput.value.trim().toLowerCase()
-  if (!q) return manufacturers.value
-  return manufacturers.value.filter(
-    (m) => (m.name || '').toLowerCase().includes(q) || (m.chemistry_type || '').toLowerCase().includes(q)
-  )
-})
-const aiSimParams = reactive({
-  manufacturerId: '',
-  simulationYears: 25,
-  temperature: 25,
-  cyclesPerDay: 1,
-  dod: DEFAULT_DOD,
-  cRate: 0.5
-})
-
-const selectedManufacturer = computed(() => {
-  return manufacturers.value.find((m) => m.id === aiSimParams.manufacturerId)
-})
-
-// 厂家 combobox 事件处理
-function onMfrInput() {
-  aiSimParams.manufacturerId = ''
-  mfrDropdown.value = true
-}
-function onMfrBlur() {
-  setTimeout(() => {
-    mfrDropdown.value = false
-  }, 150)
-}
-function selectMfr(mfr) {
-  aiSimParams.manufacturerId = mfr.id
-  mfrInput.value = mfr.name
-  mfrDropdown.value = false
-}
-// 当外部数据加载完成或 selectedManufacturer 变化时同步输入框
-watch(selectedManufacturer, (mfr) => {
-  if (mfr && !mfrInput.value) {
-    mfrInput.value = mfr.name
-  }
-})
-
-const { state: correctionFactors, clearDraft: clearCorrectionFactorsDraft } = useDraft('sim-correction-factors', {
-  sohFactor: 1.0,
-  rteFactor: 1.0,
-  capacityFactor: 1.0,
-  agingFactor: 1.0
-})
-
-const yearlyCorrections = useDraftRef('sim-yearly-corrections', []).state
-const initYearlyCorrections = () => {
-  yearlyCorrections.value = []
-  for (let i = 0; i <= simParams.simulationYears; i++) {
-    yearlyCorrections.value.push({
-      year: i,
-      sohCorrection: 0,
-      rteCorrection: 0
-    })
-  }
-}
-
-const simulationResults = reactive({
-  initSoh: null,
-  guaranteeEndSoh: null,
-  finalSoh: null,
-  meetsGuarantee: false,
-  sohCurve: [],
-  rteCurve: [],
-  netAvailCurve: [],
-  tableData: []
-})
-
-// 冷却功耗估算（前端预览，用于 thermal 模式 UI 展示）
-const FIXED_AUX = 3.0 // BMS/消防/照明固定功耗 kW
+// ====== Cooling estimates ======
+const FIXED_AUX = 3.0
 const COP_MAP = { 'forced-air': 2.0, liquid: 3.5, 'SiC-liquid': 5.0 }
 const estimatedCoolingPower = computed(() => {
   if (simParams.auxPowerMode !== 'thermal') return null
   const ambient = simParams.ambientTemp || 25
   const cop = COP_MAP[simParams.coolingType] || COP_MAP.liquid
-  // 电芯发热: I²R × N_cells, 默认值
   const cellAh = 280,
     cellR = 0.00025,
     cRate = 0.5,
     cells = 5000
   const cellHeatkW = ((cellAh * cRate) ** 2 * cellR * cells) / 1000
-  // 热渗透: U × A × ΔT
   const deltaT = Math.max(0, ambient - 25)
   const infiltrationkW = (0.5 * 60 * deltaT) / 1000
   const totalHeatkW = (cellHeatkW + infiltrationkW) * 1.2
@@ -1152,190 +759,86 @@ const estimatedCoolingPower = computed(() => {
   }
 })
 
-const systemRTE = computed(() => {
-  const ac = simParams.acEfficiency || 97
-  const dc = simParams.dcEfficiency || 98.5
-  return +((ac / 100) * (dc / 100) * 100).toFixed(2)
-})
-
-const annualEnergyThroughput = computed(() => {
-  const energy = surveyData.ratedEnergy || 0
-  const qty = surveyData.containerQty || 0
-  const cycles = surveyData.cyclesPerDay || 1
-  return +(energy * qty * cycles * 365).toFixed(1)
-})
-
-const totalRunAux = computed(() => {
-  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.totalRunkW || 0
-  return (simParams.bessAuxRun || 0) + (simParams.pcsAuxRun || 0)
-})
-const totalStandbyAux = computed(() => {
-  if (simParams.auxPowerMode === 'thermal') return estimatedCoolingPower.value?.standbykW || 0
-  return (simParams.bessAuxStandby || 0) + (simParams.pcsAuxStandby || 0)
-})
-
+const systemRTE = computed(
+  () => +(((((simParams.acEfficiency || 97) / 100) * (simParams.dcEfficiency || 98.5)) / 100) * 100).toFixed(2)
+)
+const annualEnergyThroughput = computed(
+  () => +(surveyData.ratedEnergy || 0) * (surveyData.containerQty || 0) * (surveyData.cyclesPerDay || 1) * 365
+)
+const totalRunAux = computed(() =>
+  simParams.auxPowerMode === 'thermal'
+    ? estimatedCoolingPower.value?.totalRunkW || 0
+    : (simParams.bessAuxRun || 0) + (simParams.pcsAuxRun || 0)
+)
+const totalStandbyAux = computed(() =>
+  simParams.auxPowerMode === 'thermal'
+    ? estimatedCoolingPower.value?.standbykW || 0
+    : (simParams.bessAuxStandby || 0) + (simParams.pcsAuxStandby || 0)
+)
 const grossEnergyPreview = computed(() => {
   const energy = surveyData.ratedEnergy || 0
   const qty = surveyData.containerQty || 0
   const dod = (surveyData.dod || 100) / 100
-  const soh = 1.0 // assume new
   const rte = systemRTE.value / 100
   const acEff = (simParams.acEfficiency || 97) / 100
-  return +(energy * qty * dod * rte * soh * acEff).toFixed(1)
+  return +(energy * qty * dod * rte * 1.0 * acEff).toFixed(1)
 })
 
-const chartContainer = ref(null)
-let chartInstance = null
-let _resizeHandler = null
+// ====== Algorithm state ======
+const selectedAlgorithm = useDraftRef('sim-selected-algorithm', '').state
+const algorithms = ref([])
+const algoParams = reactive({})
+const selectedAlgoDetail = ref(null)
 
-const toast = reactive({ show: false, message: '', type: 'success' })
-
-// 过滤后的调研表列表（根据输入模糊匹配）
-const filteredSurveyList = computed(() => {
-  const q = surveyIdInput.value.trim().toLowerCase()
-  if (!q) return surveyList.value.slice(0, 20)
-  return surveyList.value
-    .filter((s) => s.id.toLowerCase().includes(q) || (s.project_name || '').toLowerCase().includes(q))
-    .slice(0, 20)
+function selectAlgorithm(algo) {
+  selectedAlgorithm.value = algo.id
+  selectedAlgoDetail.value = algo
+  Object.keys(algoParams).forEach((k) => delete algoParams[k])
+  if (algo.parameters)
+    Object.keys(algo.parameters).forEach((key) => {
+      algoParams[key] = algo.parameters[key].default || 0
+    })
+}
+function resetAlgoParams() {
+  const algo = selectedAlgoDetail.value
+  if (!algo?.parameters) return
+  Object.keys(algo.parameters).forEach((key) => {
+    algoParams[key] = algo.parameters[key].default || 0
+  })
+  showToast(t('simLab.paramsReset'))
+}
+watch(selectedAlgorithm, (newId) => {
+  if (newId) {
+    const algo = algorithms.value.find((a) => a.id === newId)
+    if (algo) selectAlgorithm(algo)
+  }
 })
 
-// 输入时显示下拉
-function onSurveyIdInput() {
-  surveyId.value = ''
-  showDropdown.value = true
+// ====== AI / Manufacturers ======
+const manufacturers = ref([])
+const mfrInput = ref('')
+const aiSimParams = reactive({
+  manufacturerId: '',
+  simulationYears: 25,
+  temperature: 25,
+  cyclesPerDay: 1,
+  dod: DEFAULT_DOD,
+  cRate: 0.5
+})
+const selectedManufacturer = computed(() => manufacturers.value.find((m) => m.id === aiSimParams.manufacturerId))
+const manufacturerOptions = computed(() =>
+  manufacturers.value.map((m) => ({ label: m.name, value: m.id, sub: m.chemistry_type || '' }))
+)
+function onMfrSelect(opt) {
+  aiSimParams.manufacturerId = opt.value
 }
-
-// 聚焦时显示下拉
-function onSurveyInputFocus() {
-  if (surveyList.value.length > 0) {
-    showDropdown.value = true
-  }
-}
-
-// 失焦时延迟关闭下拉
-function onSurveyInputBlur() {
-  setTimeout(() => {
-    showDropdown.value = false
-  }, 150)
-}
-
-// 回车：优先选第一个匹配项，否则按手动输入 ID 加载
-function onSurveyInputEnter() {
-  if (showDropdown.value && filteredSurveyList.value.length > 0) {
-    selectSurveyFromDropdown(filteredSurveyList.value[0])
-  } else if (surveyIdInput.value.trim()) {
-    surveyId.value = surveyIdInput.value.trim()
-    showDropdown.value = false
-    loadSurveyData()
-  }
-}
-
-// 从下拉选中调研表
-function selectSurveyFromDropdown(survey) {
-  surveyId.value = survey.id
-  surveyIdInput.value = survey.project_name
-  showDropdown.value = false
-  mapSurveyData(survey)
-}
-
-// 页面加载时预读取调研表列表
-async function fetchSurveyList() {
-  try {
-    const data = await api.get('/api/survey/list?per_page=200')
-    // 后端 paginated_response 返回 data 为数组（不是 { items: [...] }）
-    surveyList.value = Array.isArray(data.data) ? data.data : data.data?.items || []
-  } catch (e) {
-    console.error('[SimulationLab] 获取调研表列表失败:', e)
-  }
-}
-
-onMounted(() => {
-  fetchSurveyList()
+watch(selectedManufacturer, (mfr) => {
+  if (mfr && !mfrInput.value) mfrInput.value = mfr.name
 })
 
-const loadSurveyData = async () => {
-  if (!surveyId.value) {
-    emit('error', t('simLab.enterSurveyId'), 'warning')
-    return
-  }
-  try {
-    const data = await api.get(`/api/survey/${surveyId.value}`)
-    mapSurveyData(data.data)
-  } catch (e) {
-    if (e.status === 404) {
-      emit('error', t('simLab.surveyNotFound'), 'warning')
-    } else {
-      emit('error', t('simLab.networkErrorManual'), 'error')
-    }
-  }
-}
-
-const searchByProjectName = async () => {
-  if (!searchKeyword.value.trim()) {
-    emit('error', t('simLab.enterProjectKeyword'), 'warning')
-    return
-  }
-  try {
-    const data = await api.get(`/api/survey/search?keyword=${encodeURIComponent(searchKeyword.value)}`)
-    if (data.success) {
-      searchResults.value = data.data?.surveys || []
-      if ((data.data?.surveys || []).length === 0) {
-        emit('error', t('simLab.noMatchingProject'), 'warning')
-      }
-    } else {
-      emit('error', data.error || t('simLab.searchFailed'), 'error')
-    }
-  } catch {
-    emit('error', t('simLab.networkErrorSearch'), 'error')
-  }
-}
-
-const selectSurvey = (survey) => {
-  searchResults.value = []
-  searchKeyword.value = survey.project_name
-  surveyId.value = survey.id
-  surveyIdInput.value = survey.project_name + ' (' + survey.id.slice(0, 8) + '...)'
-  mapSurveyData(survey)
-}
-
-const mapSurveyData = (data) => {
-  surveyData.projectName = data.project_name || ''
-  surveyData.ratedEnergy = data.total_mwh || 5
-  surveyData.containerQty = data.container_qty || 1
-  surveyData.pcsQty = data.pcs_qty || 1
-  surveyData.temperature = data.temp_avg || 25
-  surveyData.cyclesPerDay = data.cycles_per_day || 1
-  surveyData.dod = data.dod || 100
-  surveyData.cRate = data.c_rate || 0.5
-  surveyData.batteryType = data.battery_type || 'LFP'
-  surveyData.country = data.country || ''
-  surveyData.city = data.city || ''
-  surveyData.site = data.site || ''
-  if (!surveyData.country && !surveyData.city && !surveyData.site && data.location) {
-    surveyData.site = data.location
-  }
-
-  simParams.requiredEnergy = data.total_mwh || 240
-  simParams.duration = data.duration || 2
-  simParams.cyclesPerDay = data.cycles_per_day || 1
-}
-
-const nextStep = () => {
-  if (currentStep.value < steps.length - 1) {
-    currentStep.value++
-  }
-}
-
-const prevStep = () => {
-  if (currentStep.value > 0) {
-    currentStep.value--
-  }
-}
-
-const fetchAlgorithms = async () => {
+async function fetchAlgorithms() {
   try {
     const data = await api.get('/api/algorithm/builtin_models')
-
     if (data.success && data.data.length > 0) {
       algorithms.value = data.data.map((alg) => ({
         id: alg.id,
@@ -1353,24 +856,20 @@ const fetchAlgorithms = async () => {
   } catch (e) {
     console.error('Failed to fetch algorithms:', e)
   }
-
-  if (algorithms.value.length === 0) {
+  if (!algorithms.value.length) {
     const { BUILTIN_DEGRADATION_ALGORITHMS, mapToSimulationLabFormat } = await import('../data/builtinAlgorithms.js')
     algorithms.value = BUILTIN_DEGRADATION_ALGORITHMS.map(mapToSimulationLabFormat)
   }
-
   if (!selectedAlgorithm.value && algorithms.value.length > 0) {
     selectedAlgorithm.value = algorithms.value[0].id
     selectAlgorithm(algorithms.value[0])
   }
 }
 
-const fetchManufacturers = async () => {
+async function fetchManufacturers() {
   try {
     const data = await api.get('/api/ai-sim/manufacturers')
-    if (data.success && data.data.length > 0) {
-      manufacturers.value = data.data
-    }
+    if (data.success && data.data.length > 0) manufacturers.value = data.data
   } catch (e) {
     console.error('Failed to fetch manufacturers:', e)
   }
@@ -1386,71 +885,63 @@ function getCategoryLabel(category) {
   return labels[category] || category
 }
 
-const selectAlgorithm = (algo) => {
-  selectedAlgorithm.value = algo.id
-  selectedAlgoDetail.value = algo
-  algoParams.value = {}
-  if (algo.parameters) {
-    Object.keys(algo.parameters).forEach((key) => {
-      algoParams[key] = algo.parameters[key].default || 0
-    })
-  }
-}
-
-const resetAlgoParams = () => {
-  const algo = selectedAlgoDetail.value
-  if (!algo || !algo.parameters) return
-  Object.keys(algo.parameters).forEach((key) => {
-    algoParams[key] = algo.parameters[key].default || 0
-  })
-  showToast(t('simLab.paramsReset'))
-}
-
-watch(selectedAlgorithm, (newId) => {
-  if (newId) {
-    const algo = algorithms.value.find((a) => a.id === newId)
-    if (algo) {
-      selectAlgorithm(algo)
-    }
-  }
+// ====== Correction factors ======
+const { state: correctionFactors } = useDraft('sim-correction-factors', {
+  sohFactor: 1.0,
+  rteFactor: 1.0,
+  capacityFactor: 1.0,
+  agingFactor: 1.0
 })
+const yearlyCorrections = useDraftRef('sim-yearly-corrections', []).state
+function initYearlyCorrections() {
+  yearlyCorrections.value = []
+  for (let i = 0; i <= simParams.simulationYears; i++)
+    yearlyCorrections.value.push({ year: i, sohCorrection: 0, rteCorrection: 0 })
+}
 
-const calculateSOH = (modelType, params, t) => {
+// ====== Results ======
+const simulationResults = reactive({
+  initSoh: null,
+  guaranteeEndSoh: null,
+  finalSoh: null,
+  meetsGuarantee: false,
+  sohCurve: [],
+  rteCurve: [],
+  netAvailCurve: [],
+  tableData: []
+})
+const resultsComp = ref(null)
+
+// ====== SOH calculation engine ======
+function calculateSOH(modelType, params, t) {
   const R = 8.314
   const T = surveyData.temperature + 273.15
   const N_cycles = surveyData.cyclesPerDay * 365 * t
   const DOD_factor = Math.pow(surveyData.dod / 100, 0.5)
   const C_rate_factor = Math.pow(surveyData.cRate, 0.3)
-
   switch (modelType) {
     case 'double_exponential':
       return params.A * Math.exp(-params.k1 * t) + params.B * Math.exp(-params.k2 * t) + params.C
-
     case 'linear_log':
       return params.RTE0 - params.alpha * t - params.beta * Math.log(1 + params.gamma * t)
-
     case 'arrhenius': {
       const Q_cal = params.A * Math.exp((-params.Ea * 1000) / (R * T)) * Math.pow(t + 0.5, 0.5)
       const Q_cyc =
         params.A * Math.exp((-params.Ea * 1000) / (R * T)) * Math.pow(N_cycles, 0.7) * DOD_factor * C_rate_factor
       return Math.max(0.6, 1 - (Q_cal + Q_cyc))
     }
-
     case 'rainflow': {
       const damage =
         Math.pow(N_cycles / params.cycle_life_ref, params.damage_exponent) *
         Math.pow(surveyData.dod / 100 / params.dod_ref, 1.5)
       return Math.max(0.6, 1 - damage)
     }
-
     case 'semi_empirical': {
       const temp_factor = 1 - (params.temp_coeff * (surveyData.temperature - 25)) / 100
       const dod_factor = 1 - (params.dod_coeff * (surveyData.dod / 100 - 0.5)) / 100
       const c_rate_factor = 1 - params.c_rate_coeff * (surveyData.cRate - 0.5)
-      const soc_factor = 0.98
-      return Math.max(0.6, 1 - ((1 - temp_factor * dod_factor * c_rate_factor * soc_factor) * t) / 25)
+      return Math.max(0.6, 1 - ((1 - temp_factor * dod_factor * c_rate_factor * 0.98) * t) / 25)
     }
-
     default: {
       const A_cal = params.A_cal || 0.001
       const Ea_cal = params.Ea_cal || 35
@@ -1458,7 +949,6 @@ const calculateSOH = (modelType, params, t) => {
       const A_cyc = params.A_cyc || 0.00001
       const Ea_cyc = params.Ea_cyc || 25
       const beta = params.beta || 0.7
-
       const Q_cal = A_cal * Math.exp((-Ea_cal * 1000) / (R * T)) * Math.pow(t + 0.5, alpha)
       const Q_cyc = A_cyc * Math.exp((-Ea_cyc * 1000) / (R * T)) * Math.pow(N_cycles, beta) * DOD_factor * C_rate_factor
       return Math.max(0.6, 1 - (Q_cal + Q_cyc))
@@ -1466,37 +956,18 @@ const calculateSOH = (modelType, params, t) => {
   }
 }
 
-const runSimulation = async () => {
-  currentStep.value = 4
-
-  const algo = algorithms.value.find((a) => a.id === selectedAlgorithm.value)
-
-  if (algo?.model_type === 'ai_simulation') {
-    await runAISimulation()
-    return
-  }
-
+// ====== Simulation runners ======
+function buildSohCurves(algo, getSoh) {
   const N = simParams.simulationYears + 1
   const sohCurve = []
   const rteCurve = []
   const netAvailCurve = []
-
-  const modelType = algo?.model_type || 'arrhenius'
-
   for (let i = 0; i < N; i++) {
-    const t = i
-    let soh = calculateSOH(modelType, algoParams, t)
-
+    let soh = getSoh(i)
     soh = soh * correctionFactors.sohFactor
-    if (yearlyCorrections.value[i]?.sohCorrection) {
-      soh += yearlyCorrections.value[i].sohCorrection
-    }
-
+    if (yearlyCorrections.value[i]?.sohCorrection) soh += yearlyCorrections.value[i].sohCorrection
     let rte = simParams.initRte / 100 - 0.002 * i * correctionFactors.rteFactor
-    if (yearlyCorrections.value[i]?.rteCorrection) {
-      rte += yearlyCorrections.value[i].rteCorrection
-    }
-
+    if (yearlyCorrections.value[i]?.rteCorrection) rte += yearlyCorrections.value[i].rteCorrection
     const grossEnergy =
       surveyData.ratedEnergy *
       surveyData.containerQty *
@@ -1504,59 +975,46 @@ const runSimulation = async () => {
       rte *
       soh *
       (simParams.acEfficiency / 100)
-    // 前端预览: thermal 模式使用动态 aux，manual 模式使用手动值
     const bessAux =
       simParams.auxPowerMode === 'thermal' && estimatedCoolingPower.value
         ? estimatedCoolingPower.value.totalRunkW
         : simParams.bessAuxRun
     const auxEnergy = ((bessAux + simParams.pcsAuxRun) * i) / 1000
     const netAvail = Math.max(0, grossEnergy - auxEnergy) * correctionFactors.capacityFactor
-
     sohCurve.push(Math.min(100, Math.max(60, soh * 100)))
     rteCurve.push(Math.min(100, Math.max(80, rte * 100)))
     netAvailCurve.push(netAvail)
   }
+  return { sohCurve, rteCurve, netAvailCurve }
+}
 
-  simulationResults.sohCurve = sohCurve
-  simulationResults.rteCurve = rteCurve
-  simulationResults.netAvailCurve = netAvailCurve
-  simulationResults.initSoh = sohCurve[0]
-  simulationResults.guaranteeEndSoh = sohCurve[simParams.guaranteeYears]
-  simulationResults.finalSoh = sohCurve[N - 1]
-  simulationResults.meetsGuarantee = sohCurve[simParams.guaranteeYears] >= simParams.guaranteeSoh
-
+function populateResults(curves) {
+  const N = curves.sohCurve.length
+  simulationResults.sohCurve = curves.sohCurve
+  simulationResults.rteCurve = curves.rteCurve
+  simulationResults.netAvailCurve = curves.netAvailCurve
+  simulationResults.initSoh = curves.sohCurve[0]
+  simulationResults.guaranteeEndSoh = curves.sohCurve[simParams.guaranteeYears]
+  simulationResults.finalSoh = curves.sohCurve[N - 1]
+  simulationResults.meetsGuarantee = curves.sohCurve[simParams.guaranteeYears] >= simParams.guaranteeSoh
   simulationResults.tableData = []
   for (let i = 0; i < N; i++) {
     simulationResults.tableData.push({
       year: i,
-      soh: sohCurve[i],
-      rte: rteCurve[i],
-      netAvail: netAvailCurve[i],
-      meetsReq: netAvailCurve[i] >= simParams.requiredEnergy
+      soh: curves.sohCurve[i],
+      rte: curves.rteCurve[i],
+      netAvail: curves.netAvailCurve[i],
+      meetsReq: curves.netAvailCurve[i] >= simParams.requiredEnergy
     })
   }
-
-  nextTick(() => {
-    setTimeout(() => {
-      const container = chartContainer.value
-      if (container) {
-        container.style.height = '12rem'
-        renderChart()
-      }
-    }, 300)
-  })
-
-  // 持久化前端仿真结果到 store（防止切换 tab 后数据丢失）
-  store.degradation.soh = [...sohCurve]
-  store.degradation.rte = [...rteCurve]
-  store.results.totalAcUsable = [...netAvailCurve]
+  store.degradation.soh = [...curves.sohCurve]
+  store.degradation.rte = [...curves.rteCurve]
+  store.results.totalAcUsable = [...curves.netAvailCurve]
   store.results.meetsReq = simulationResults.tableData.map((d) => d.meetsReq)
-
   emit('applyConfig', {
-    soh: simulationResults.sohCurve,
-    rte: simulationResults.rteCurve,
+    soh: curves.sohCurve,
+    rte: curves.rteCurve,
     source: 'simulation',
-    algorithmType: simParams.algorithmType,
     simulationYears: simParams.simulationYears,
     guaranteeSoh: simParams.guaranteeSoh,
     auxPowerMode: simParams.auxPowerMode,
@@ -1565,9 +1023,20 @@ const runSimulation = async () => {
   })
 }
 
-const runAISimulation = async () => {
+async function runSimulation() {
+  currentStep.value = 4
+  const algo = algorithms.value.find((a) => a.id === selectedAlgorithm.value)
+  if (algo?.model_type === 'ai_simulation') {
+    await runAISimulation()
+    return
+  }
+  const curves = buildSohCurves(algo, (t) => calculateSOH(algo?.model_type || 'arrhenius', algoParams, t))
+  populateResults(curves)
+}
+
+async function runAISimulation() {
   try {
-    const data = {
+    const result = await api.post('/api/ai-sim/simulation', {
       manufacturer_id: aiSimParams.manufacturerId || null,
       simulation_years: aiSimParams.simulationYears,
       temperature: aiSimParams.temperature,
@@ -1575,24 +1044,18 @@ const runAISimulation = async () => {
       dod: aiSimParams.dod / 100,
       c_rate: aiSimParams.cRate,
       rte_initial: simParams.initRte
-    }
-
-    const result = await api.post('/api/ai-sim/simulation', data)
-
+    })
     if (result.success && result.data) {
       const aiData = result.data
+      const N = aiData.soh_curve.length
       simulationResults.sohCurve = aiData.soh_curve
       simulationResults.rteCurve = aiData.rte_curve
       simulationResults.initSoh = aiData.soh_curve[0]
-      simulationResults.guaranteeEndSoh =
-        aiData.soh_curve[Math.min(simParams.guaranteeYears, aiData.soh_curve.length - 1)]
-      simulationResults.finalSoh = aiData.soh_curve[aiData.soh_curve.length - 1]
+      simulationResults.guaranteeEndSoh = aiData.soh_curve[Math.min(simParams.guaranteeYears, N - 1)]
+      simulationResults.finalSoh = aiData.soh_curve[N - 1]
       simulationResults.meetsGuarantee = simulationResults.guaranteeEndSoh >= simParams.guaranteeSoh
-
-      const N = aiData.soh_curve.length
       simulationResults.netAvailCurve = []
       simulationResults.tableData = []
-
       for (let i = 0; i < N; i++) {
         const soh = aiData.soh_curve[i] / 100
         const rte = aiData.rte_curve[i] / 100
@@ -1609,50 +1072,35 @@ const runAISimulation = async () => {
             : simParams.bessAuxRun
         const auxEnergy = ((bessAuxAi + simParams.pcsAuxRun) * i) / 1000
         const netAvail = Math.max(0, grossEnergy - auxEnergy)
-
         simulationResults.netAvailCurve.push(netAvail)
         simulationResults.tableData.push({
           year: i,
           soh: aiData.soh_curve[i],
           rte: aiData.rte_curve[i],
-          netAvail: netAvail,
+          netAvail,
           meetsReq: netAvail >= simParams.requiredEnergy
         })
       }
-
-      nextTick(() => {
-        setTimeout(() => {
-          const container = chartContainer.value
-          if (container) {
-            container.style.height = '12rem'
-            renderChart()
-          }
-        }, 300)
-      })
-
       emit('applyConfig', {
         soh: simulationResults.sohCurve,
         rte: simulationResults.rteCurve,
         source: 'ai_simulation',
-        algorithmType: 'ai_simulation',
         simulationYears: aiSimParams.simulationYears,
         guaranteeSoh: simParams.guaranteeSoh,
         auxPowerMode: simParams.auxPowerMode,
         coolingType: simParams.coolingType,
         ambientTemp: simParams.ambientTemp
       })
-
       showToast(t('simLab.aiSimComplete'))
     } else {
       showToast(result.error || t('simLab.aiSimFailed'), 'error')
     }
   } catch (e) {
-    console.error('AI simulation failed:', e)
     showToast(t('simLab.aiSimFailedWithError', { message: e.message }), 'error')
   }
 }
 
-const runBackendSimulation = async () => {
+async function runBackendSimulation() {
   currentStep.value = 4
   try {
     const algo = algorithms.value.find((a) => a.id === selectedAlgorithm.value)
@@ -1713,8 +1161,6 @@ const runBackendSimulation = async () => {
         netAvail: (result.totalAcUsable || [])[i] || 0,
         meetsReq: (result.meetsReq || [])[i] || false
       }))
-      nextTick(() => setTimeout(() => renderChart(), 100))
-      // 持久化仿真结果到 store，防止切换 tab 后数据丢失
       store.results = {
         ...store.results,
         totalAcUsable: result.totalAcUsable || [],
@@ -1734,7 +1180,6 @@ const runBackendSimulation = async () => {
         soh: sohArr,
         rte: rteArr,
         source: 'backend-simulation',
-        algorithmType: modelType,
         simulationYears: simParams.simulationYears,
         guaranteeSoh: simParams.guaranteeSoh
       })
@@ -1744,89 +1189,24 @@ const runBackendSimulation = async () => {
   }
 }
 
-const renderChart = () => {
-  if (!chartContainer.value) return
-
-  if (chartInstance) {
-    chartInstance.dispose()
-  }
-
-  chartInstance = echarts.init(chartContainer.value, themeObject.value)
-
-  const years = Array.from({ length: simulationResults.sohCurve.length }, (_, i) => i)
-  const textColor = themeObject.value.legendText
-  const accentColor = themeObject.value.primary
-  const secondaryColor = themeObject.value.cyan
-  const warningColor = themeObject.value.warning
-  const axisColor = themeObject.value.axisLabel
-
-  chartInstance.setOption({
-    tooltip: { trigger: 'axis' },
-    legend: {
-      data: [t('simLab.chartSoh'), t('simLab.chartRte'), t('simLab.chartGuaranteeLine')],
-      top: 0,
-      textStyle: { color: textColor, fontSize: 10 }
-    },
-    grid: { left: 40, right: 20, top: 30, bottom: 20 },
-    xAxis: { type: 'category', data: years, axisLabel: { color: axisColor, fontSize: 10 } },
-    yAxis: { type: 'value', min: 50, max: 100, axisLabel: { color: axisColor, fontSize: 10 } },
-    series: [
-      {
-        name: t('simLab.chartSoh'),
-        type: 'line',
-        data: simulationResults.sohCurve,
-        smooth: true,
-        lineStyle: { color: accentColor },
-        itemStyle: { color: accentColor }
-      },
-      {
-        name: t('simLab.chartRte'),
-        type: 'line',
-        data: simulationResults.rteCurve,
-        smooth: true,
-        lineStyle: { color: secondaryColor },
-        itemStyle: { color: secondaryColor }
-      },
-      {
-        name: t('simLab.chartGuaranteeLine'),
-        type: 'line',
-        data: Array.from({ length: years.length }, () => simParams.guaranteeSoh),
-        lineStyle: { color: warningColor, type: 'dashed' },
-        itemStyle: { color: warningColor }
-      }
-    ]
-  })
-
-  chartInstance.resize()
-}
-
-const handleResize = () => {
-  if (chartInstance) {
-    chartInstance.resize()
-  }
-}
-
-const saveSimulationResult = async () => {
+// ====== Save / Export / Reset ======
+async function saveSimulationResult() {
   const token = sessionStorage.getItem('auth_token')
   if (!token) {
     showToast(t('simLab.pleaseLogin'), 'error')
     return
   }
-
+  const algo = algorithms.value.find((a) => a.id === selectedAlgorithm.value)
   const projectName = surveyData.projectName || t('simLab.unnamedProject')
   const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T:]/g, '')
-  const resultName = `${projectName}_${timestamp}`
-
-  const algo = algorithms.value.find((a) => a.id === selectedAlgorithm.value)
-
   const data = {
-    name: resultName,
+    name: `${projectName}_${timestamp}`,
     description: t('simLab.descriptionTemplate', { algo: algo?.name || t('simLab.unknown') }),
     simulation_type: algo?.category || 'comprehensive',
     algorithm_model_id: selectedAlgorithm.value,
     params: {
-      surveyData: surveyData,
-      simParams: simParams,
+      surveyData,
+      simParams,
       algoParams: { ...algoParams },
       correctionFactors: { ...correctionFactors },
       yearlyCorrections: yearlyCorrections.value
@@ -1845,50 +1225,22 @@ const saveSimulationResult = async () => {
     },
     status: 'completed'
   }
-
   try {
     const respData = await api.post('/api/versions/default/results', data)
-    if (respData.success) {
-      showToast(t('simLab.saveSuccess'))
-    } else {
-      showToast(respData.error || t('simLab.saveFailed'), 'error')
-    }
+    if (respData.success) showToast(t('simLab.saveSuccess'))
+    else showToast(respData.error || t('simLab.saveFailed'), 'error')
   } catch (e) {
     showToast(t('simLab.saveFailedWithError', { message: e.message }), 'error')
   }
 }
 
-const showToast = (message, type = 'success') => {
-  toast.message = message
-  toast.type = type
-  toast.show = true
-  setTimeout(() => {
-    toast.show = false
-  }, 3000)
-}
-
-const resetSimulation = () => {
-  currentStep.value = 0
-  simulationResults.initSoh = null
-  simulationResults.guaranteeEndSoh = null
-  simulationResults.finalSoh = null
-  simulationResults.meetsGuarantee = false
-  simulationResults.sohCurve = []
-  simulationResults.rteCurve = []
-  simulationResults.netAvailCurve = []
-  simulationResults.tableData = []
-}
-
-const exportResults = () => {
+function exportResults() {
   const N = simulationResults.tableData.length
   if (!N) return
-
   const eq = t('export.eqHeader')
   const sep = t('export.separator')
   const date = new Date().toISOString().slice(0, 10)
   const projectName = surveyData.projectName || store.survey.projectName || t('simLab.csvUnnamed')
-
-  // 报告标题头
   const header = [
     eq,
     '  ' + t('export.reportTitle'),
@@ -1898,8 +1250,6 @@ const exportResults = () => {
     eq,
     ''
   ]
-
-  // 关键参数
   const params = [
     sep + ' ' + t('export.keyParams') + ' ' + sep,
     t('export.ratedEnergy') + ',' + (store.systemParams.ratedEnergy || store.survey.ratedEnergy || 'N/A'),
@@ -1908,8 +1258,6 @@ const exportResults = () => {
     t('export.simYears') + ',' + N,
     ''
   ]
-
-  // 竖排报表：年份为行，指标为列
   const csvRows = [
     [t('export.colYear'), t('export.colSoh'), t('export.colRte'), t('export.colAvail'), t('export.colGuarantee')].join(
       ','
@@ -1924,99 +1272,89 @@ const exportResults = () => {
       ].join(',')
     )
   ]
-
-  // 免责声明
   const footer = ['', sep, t('export.disclaimer')]
-
   const csvContent = [...header, ...params, ...csvRows, ...footer].join('\n')
-
-  // 添加 UTF-8 BOM，解决 Excel 打开中文乱码
   const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
-  const name = surveyData.projectName || t('simLab.csvUnnamed')
   link.href = URL.createObjectURL(blob)
-  link.download = t('simLab.simExportFilename', { name, date })
+  link.download = t('simLab.simExportFilename', { name: projectName, date })
   link.click()
 }
 
-onMounted(() => {
+function resetSimulation() {
+  currentStep.value = 0
+  simulationResults.initSoh = null
+  simulationResults.guaranteeEndSoh = null
+  simulationResults.finalSoh = null
+  simulationResults.meetsGuarantee = false
+  simulationResults.sohCurve = []
+  simulationResults.rteCurve = []
+  simulationResults.netAvailCurve = []
+  simulationResults.tableData = []
+}
+
+// ====== Toast ======
+const toast = reactive({ show: false, message: '', type: 'success' })
+function showToast(message, type = 'success') {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
+}
+
+// ====== Lifecycle ======
+onMounted(async () => {
   try {
-  // 从 store 同步设计数据到表单（仅在 useDraft 为默认值时覆盖）
-  const designRatedEnergy = store.systemParams.ratedEnergy || store.survey.ratedEnergy
-  if (designRatedEnergy && (surveyData.ratedEnergy === 5 || !surveyData.ratedEnergy)) {
-    surveyData.ratedEnergy = designRatedEnergy
-  }
-  const designContainerQty = store.systemParams.initContainerQty
-  if (designContainerQty && (surveyData.containerQty === 62 || !surveyData.containerQty)) {
-    surveyData.containerQty = designContainerQty
-  }
-  const designReqEnergy = store.survey.requiredEnergy || store.systemParams.requiredEnergy
-  if (designReqEnergy && (simParams.requiredEnergy === 240 || !simParams.requiredEnergy)) {
-    simParams.requiredEnergy = designReqEnergy
-  }
-  // 补充同步缺失的字段：temperature, dod, cRate, duration, pcsQty
-  const designTemp = store.survey.temperature
-  if (designTemp && (surveyData.temperature === 25 || !surveyData.temperature)) {
-    surveyData.temperature = designTemp
-  }
-  const designDod = store.survey.dod
-  if (designDod && (surveyData.dod === 100 || !surveyData.dod)) {
-    surveyData.dod = designDod
-  }
-  const designCRate = store.survey.cRate
-  if (designCRate && (surveyData.cRate === 0.5 || !surveyData.cRate)) {
-    surveyData.cRate = designCRate
-  }
-  const designDuration = store.survey.duration || store.systemParams.duration
-  if (designDuration && (surveyData.duration === 2 || !surveyData.duration)) {
-    surveyData.duration = designDuration
-  }
-  const designPcsQty = store.systemParams.initPcsQty
-  if (designPcsQty && (surveyData.pcsQty === 2 || !surveyData.pcsQty)) {
-    surveyData.pcsQty = designPcsQty
-  }
-  // 从 store 恢复之前的仿真结果（防止切换 tab 后图表数据丢失）
-  if (store.results.totalAcUsable?.length && Array.isArray(store.degradation?.soh) && Array.isArray(store.degradation?.rte)) {
-    try {
-      // DataInjection/MatrixTable 存储 SOH 为 0-1 小数，统一转为百分比显示
-      const rawSoh = [...store.degradation.soh]
-      const needsPct = rawSoh.length > 0 && rawSoh[0] <= 1
-      const sohPct = needsPct ? rawSoh.map((v) => (v != null ? v * 100 : 0)) : rawSoh
-      simulationResults.sohCurve = sohPct
-      simulationResults.rteCurve = [...store.degradation.rte]
-      simulationResults.netAvailCurve = [...store.results.totalAcUsable]
-      simulationResults.initSoh = sohPct[0] ?? 100
-      simulationResults.finalSoh = sohPct[sohPct.length - 1] ?? 0
-      simulationResults.tableData = sohPct.map((s, i) => ({
-        year: i,
-        soh: s ?? 0,
-        rte: store.degradation.rte[i] ?? 0,
-        netAvail: store.results.totalAcUsable[i] ?? 0,
-        meetsReq: store.results.meetsReq?.[i] || false
-      }))
-      nextTick(() => setTimeout(() => renderChart(), 200))
-    } catch (e) {
-      console.error('[SimulationLab] 恢复仿真结果失败:', e)
+    await fetchSurveyList()
+    const designRatedEnergy = store.systemParams.ratedEnergy || store.survey.ratedEnergy
+    if (designRatedEnergy && (surveyData.ratedEnergy === 5 || !surveyData.ratedEnergy))
+      surveyData.ratedEnergy = designRatedEnergy
+    const designContainerQty = store.systemParams.initContainerQty
+    if (designContainerQty && (surveyData.containerQty === 62 || !surveyData.containerQty))
+      surveyData.containerQty = designContainerQty
+    const designReqEnergy = store.survey.requiredEnergy || store.systemParams.requiredEnergy
+    if (designReqEnergy && (simParams.requiredEnergy === 240 || !simParams.requiredEnergy))
+      simParams.requiredEnergy = designReqEnergy
+    const designTemp = store.survey.temperature
+    if (designTemp && (surveyData.temperature === 25 || !surveyData.temperature)) surveyData.temperature = designTemp
+    const designDod = store.survey.dod
+    if (designDod && (surveyData.dod === 100 || !surveyData.dod)) surveyData.dod = designDod
+    const designCRate = store.survey.cRate
+    if (designCRate && (surveyData.cRate === 0.5 || !surveyData.cRate)) surveyData.cRate = designCRate
+    const designPcsQty = store.systemParams.initPcsQty
+    if (designPcsQty && (surveyData.pcsQty === 2 || !surveyData.pcsQty)) surveyData.pcsQty = designPcsQty
+    if (
+      store.results.totalAcUsable?.length &&
+      Array.isArray(store.degradation?.soh) &&
+      Array.isArray(store.degradation?.rte)
+    ) {
+      try {
+        const rawSoh = [...store.degradation.soh]
+        const needsPct = rawSoh.length > 0 && rawSoh[0] <= 1
+        const sohPct = needsPct ? rawSoh.map((v) => (v != null ? v * 100 : 0)) : rawSoh
+        simulationResults.sohCurve = sohPct
+        simulationResults.rteCurve = [...store.degradation.rte]
+        simulationResults.netAvailCurve = [...store.results.totalAcUsable]
+        simulationResults.initSoh = sohPct[0] ?? 100
+        simulationResults.finalSoh = sohPct[sohPct.length - 1] ?? 0
+        simulationResults.tableData = sohPct.map((s, i) => ({
+          year: i,
+          soh: s ?? 0,
+          rte: store.degradation.rte[i] ?? 0,
+          netAvail: store.results.totalAcUsable[i] ?? 0,
+          meetsReq: store.results.meetsReq?.[i] || false
+        }))
+      } catch (e) {
+        console.error('[SimulationLab] 恢复仿真结果失败:', e)
+      }
     }
-  }
-  initYearlyCorrections()
-  fetchAlgorithms()
-  fetchManufacturers()
-  _resizeHandler = handleResize
-  window.addEventListener('resize', _resizeHandler)
+    initYearlyCorrections()
+    await fetchAlgorithms()
+    await fetchManufacturers()
   } catch (e) {
     console.error('[SimulationLab] onMounted 初始化失败:', e)
-  }
-})
-
-onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.dispose()
-    chartInstance = null
-  }
-  if (_resizeHandler) {
-    window.removeEventListener('resize', _resizeHandler)
-    _resizeHandler = null
   }
 })
 </script>
@@ -2028,12 +1366,9 @@ textarea:focus {
   border-color: var(--color-input-focus);
   outline: none;
 }
-
 button:not(:disabled):hover {
   opacity: 0.9;
 }
-
-/* Combobox 下拉面板 — 跟随页面浅色/深色主题 */
 .combobox-wrapper {
   position: relative;
 }
@@ -2045,60 +1380,35 @@ button:not(:disabled):hover {
   z-index: 999;
   max-height: 200px;
   overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--color-card);
-  backdrop-filter: var(--backdrop-filter, blur(12px));
-  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
-  border: 1px solid var(--color-border);
   border-radius: 6px;
-  margin-top: 2px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .combobox-option {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   cursor: pointer;
-  transition: background 0.15s ease;
-  border-bottom: 1px solid var(--color-border-light);
-}
-.combobox-option:last-child {
-  border-bottom: none;
+  font-size: 11px;
+  transition: background 0.15s;
 }
 .combobox-option:hover,
 .combobox-option.active {
-  background: var(--color-accent);
-  color: #fff;
-}
-.combobox-option:hover .option-name,
-.combobox-option.active .option-name {
-  color: #fff;
-}
-.combobox-option:hover .option-code,
-.combobox-option.active .option-code {
-  color: rgba(255, 255, 255, 0.7);
+  background: var(--color-accent-glow);
 }
 .option-name {
-  flex: 1;
-  font-size: 12px;
-  font-weight: 500;
   color: var(--color-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
 }
 .option-code {
-  flex-shrink: 0;
+  color: var(--color-text-secondary);
   font-size: 10px;
-  color: var(--color-text-muted);
-  font-family: monospace;
 }
 .combobox-empty {
   padding: 8px 10px;
+  color: var(--color-text-secondary);
   font-size: 11px;
-  color: var(--color-text-muted);
   text-align: center;
 }
 </style>
