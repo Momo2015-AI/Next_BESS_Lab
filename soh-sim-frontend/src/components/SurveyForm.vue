@@ -2,17 +2,7 @@
   <div class="h-full overflow-y-auto custom-scrollbar">
     <div class="max-w-5xl mx-auto space-y-4 py-2">
       <!-- 01: 基本信息 -->
-      <div class="card p-4" style="position: relative; z-index: 1">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            01
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section01') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'01'" :title="$t('surveyForm.section01')" :z-index="1">
         <div class="grid grid-cols-4 gap-3">
           <div class="col-span-2">
             <label class="label-text">{{ $t('surveyForm.projectName') }} *</label>
@@ -20,28 +10,13 @@
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.country') }}</label>
-            <div class="combobox-wrapper">
-              <input
-                v-model="countryInput"
-                type="text"
-                class="form-field-input"
-                :placeholder="$t('surveyForm.countryPh')"
-                @focus="countryDropdown = true"
-                @blur="onCountryBlur"
-                @input="onCountryInput"
-              />
-              <div v-if="countryDropdown && filteredCountries.length > 0" class="combobox-dropdown">
-                <div
-                  v-for="c in filteredCountries"
-                  :key="c"
-                  class="combobox-option"
-                  :class="{ active: c === form.country }"
-                  @mousedown.prevent="selectCountry(c)"
-                >
-                  <span class="option-name">{{ c }}</span>
-                </div>
-              </div>
-            </div>
+            <ComboboxInput
+              v-model="countryInput"
+              :options="countryOptions"
+              :placeholder="$t('surveyForm.countryPh')"
+              :empty-text="$t('common.noMatch')"
+              @select="onCountrySelect"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.city') }}</label>
@@ -96,20 +71,10 @@
             />
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 02: 项目规模 -->
-      <div class="card p-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            02
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section02') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'02'" :title="$t('surveyForm.section02')">
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.totalPower') }}</label>
@@ -172,20 +137,10 @@
             />
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 03: 环境条件 -->
-      <div class="card p-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            03
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section03') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'03'" :title="$t('surveyForm.section03')">
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.altitude') }}</label>
@@ -268,20 +223,10 @@
             </select>
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 04: 电网参数 -->
-      <div class="card p-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            04
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section04') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'04'" :title="$t('surveyForm.section04')">
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.gridVoltage') }}</label>
@@ -335,49 +280,20 @@
             </select>
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 05: 性能要求 -->
-      <div class="card p-4" style="position: relative; z-index: 1">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            05
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section05') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'05'" :title="$t('surveyForm.section05')" :z-index="1">
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.cellModel') }}</label>
-            <div class="combobox-wrapper">
-              <input
-                v-model="cellModelInput"
-                type="text"
-                class="form-field-input"
-                :placeholder="$t('surveyForm.cellModelPh')"
-                @focus="cellDropdown = true"
-                @blur="onCellBlur"
-                @input="onCellInput"
-              />
-              <div v-if="cellDropdown && filteredCells.length > 0" class="combobox-dropdown">
-                <div
-                  v-for="cell in filteredCells"
-                  :key="cell.id"
-                  class="combobox-option"
-                  :class="{ active: cell.model === form.cell_model }"
-                  @mousedown.prevent="selectCell(cell)"
-                >
-                  <span class="option-name">{{ cell.mfr }} - {{ cell.model }}</span>
-                  <span class="option-code">{{ cell.capacityAh }}Ah</span>
-                </div>
-              </div>
-              <div v-else-if="cellDropdown && cellModelInput && filteredCells.length === 0" class="combobox-dropdown">
-                <div class="combobox-empty">{{ $t('common.noMatch') }}</div>
-              </div>
-            </div>
+            <ComboboxInput
+              v-model="cellModelInput"
+              :options="cellOptions"
+              :placeholder="$t('surveyForm.cellModelPh')"
+              :empty-text="$t('common.noMatch')"
+              @select="onCellSelect"
+            />
           </div>
           <div>
             <label class="label-text">{{ $t('surveyForm.rteTarget') }}</label>
@@ -445,20 +361,10 @@
             />
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 06: 其他参数 -->
-      <div class="card p-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            06
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section06') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'06'" :title="$t('surveyForm.section06')">
         <div class="grid grid-cols-4 gap-3">
           <div>
             <label class="label-text">{{ $t('surveyForm.auxConsumption') }}</label>
@@ -511,20 +417,10 @@
             />
           </div>
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 07: 备注信息 -->
-      <div class="card p-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
-            07
-          </span>
-          <div>
-            <h3 class="section-title text-accent border-accent">
-              {{ $t('surveyForm.section07') }}
-            </h3>
-          </div>
-        </div>
+      <FormCardSection :number="'07'" :title="$t('surveyForm.section07')">
         <div>
           <label class="label-text">{{ $t('surveyForm.remarks') }}</label>
           <textarea
@@ -534,16 +430,12 @@
             :placeholder="$t('surveyForm.remarksPh')"
           />
         </div>
-      </div>
+      </FormCardSection>
 
       <!-- 操作按钮 -->
       <div class="flex justify-end gap-3 pt-2">
-        <button type="button" class="btn-secondary" @click="resetForm">
-          {{ $t('surveyForm.reset') }}
-        </button>
-        <button type="button" class="btn-secondary" @click="fillTestData">
-          {{ $t('surveyForm.fillTestData') }}
-        </button>
+        <button type="button" class="btn-secondary" @click="resetForm">{{ $t('surveyForm.reset') }}</button>
+        <button type="button" class="btn-secondary" @click="fillTestData">{{ $t('surveyForm.fillTestData') }}</button>
         <button type="button" class="btn-primary" :disabled="submitting" @click="submitForm">
           {{ submitting ? $t('surveyForm.submitting') : $t('surveyForm.submit') }}
         </button>
@@ -557,12 +449,8 @@
           >
             &#10003;
           </div>
-          <h3 class="text-xl font-semibold mb-2 text-default">
-            {{ $t('surveyForm.successTitle') }}
-          </h3>
-          <p class="mb-4 text-secondary">
-            {{ $t('surveyForm.successDesc') }}
-          </p>
+          <h3 class="text-xl font-semibold mb-2 text-default">{{ $t('surveyForm.successTitle') }}</h3>
+          <p class="mb-4 text-secondary">{{ $t('surveyForm.successDesc') }}</p>
           <div class="p-4 rounded-lg mb-5 text-left u-background-var-color-card-dark">
             <p class="text-sm mb-1 text-default">
               <strong>{{ $t('surveyForm.surveyId') }}:</strong>
@@ -573,9 +461,7 @@
               {{ submittedData.data?.project_code }}
             </p>
           </div>
-          <button class="btn-primary w-full" @click="closeSuccess">
-            {{ $t('surveyForm.confirm') }}
-          </button>
+          <button class="btn-primary w-full" @click="closeSuccess">{{ $t('surveyForm.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -590,15 +476,15 @@ import { useBessStore } from '../stores/bess.js'
 import { useDraft } from '../composables/useDraft'
 import { useCountryList } from '../composables/useCountryList'
 import api from '../services/api.js'
+import FormCardSection from './FormCardSection.vue'
+import ComboboxInput from './ComboboxInput.vue'
 
 const { t } = useI18n()
 const emit = defineEmits(['error'])
 const store = useBessStore()
-
 const { cells, loadAll } = useProducts()
 const { filterCountries } = useCountryList()
 
-// 合并 store.survey 数据到默认值（处理刷新场景：Pinia persist 恢复 → useDraft 初始化）
 const surveyDefaults = {
   project_name: store.survey.projectName || '',
   contact_person: '',
@@ -642,27 +528,12 @@ const surveyDefaults = {
 
 const { state: form, clearDraft } = useDraft('survey-form', surveyDefaults)
 
-// 国家 combobox 状态
-const countryInput = ref('')
-const countryDropdown = ref(false)
-const filteredCountries = computed(() => {
-  return filterCountries(countryInput.value)
-})
-function onCountryInput() {
-  form.country = countryInput.value
-  countryDropdown.value = true
+// Country combobox via ComboboxInput
+const countryInput = ref(form.country || '')
+const countryOptions = computed(() => filterCountries(countryInput.value).map((c) => ({ label: c, value: c })))
+function onCountrySelect(opt) {
+  form.country = opt.label
 }
-function onCountryBlur() {
-  setTimeout(() => {
-    countryDropdown.value = false
-  }, 150)
-}
-function selectCountry(c) {
-  form.country = c
-  countryInput.value = c
-  countryDropdown.value = false
-}
-// 初始化回填
 watch(
   () => form.country,
   (val) => {
@@ -670,34 +541,15 @@ watch(
   }
 )
 
-// 电芯型号 combobox 状态
+// Cell model combobox via ComboboxInput
 const cellModelInput = ref('')
-const cellDropdown = ref(false)
-const filteredCells = computed(() => {
-  const q = cellModelInput.value.trim().toLowerCase()
-  if (!q) return cells.value
-  return cells.value.filter(
-    (c) =>
-      (c.mfr || '').toLowerCase().includes(q) ||
-      (c.model || '').toLowerCase().includes(q) ||
-      String(c.capacityAh || '').includes(q)
-  )
-})
-function onCellInput() {
-  form.cell_model = ''
-  cellDropdown.value = true
+const cellOptions = computed(() =>
+  cells.value.map((c) => ({ label: `${c.mfr} - ${c.model}`, value: c.model, sub: `${c.capacityAh}Ah` }))
+)
+function onCellSelect(opt) {
+  form.cell_model = opt.value
+  cellModelInput.value = `${opt.label} (${opt.sub})`
 }
-function onCellBlur() {
-  setTimeout(() => {
-    cellDropdown.value = false
-  }, 150)
-}
-function selectCell(cell) {
-  form.cell_model = cell.model
-  cellModelInput.value = `${cell.mfr} - ${cell.model} (${cell.capacityAh}Ah)`
-  cellDropdown.value = false
-}
-// 初始化时如果 form.cell_model 已有值，回填输入框
 watch(
   () => form.cell_model,
   (val) => {
@@ -707,7 +559,6 @@ watch(
     }
   }
 )
-// 电芯列表加载完成后回填
 watch(cells, (list) => {
   if (list.length > 0 && form.cell_model) {
     const found = list.find((c) => c.model === form.cell_model)
@@ -715,16 +566,7 @@ watch(cells, (list) => {
   }
 })
 
-// 项目地点汇总 computed（兼容后端 API）
-const formLocation = computed(() => {
-  const parts = [form.country, form.city, form.site].filter(Boolean)
-  return parts.join(', ')
-})
-
-// 储能时长自动计算
 const isDurationAuto = ref(true)
-
-// 平均温度自动计算
 const isTempAvgAuto = ref(true)
 
 function autoCalcDuration() {
@@ -737,7 +579,6 @@ function autoCalcDuration() {
     form.duration = +(form.total_mwh / form.total_mw).toFixed(2)
   }
 }
-
 watch(
   () => [form.total_mwh, form.total_mw],
   () => {
@@ -755,7 +596,6 @@ function autoCalcTempAvg() {
     form.temp_avg = +((form.temp_max + form.temp_min) / 2).toFixed(1)
   }
 }
-
 watch(
   () => [form.temp_max, form.temp_min],
   () => {
@@ -771,7 +611,7 @@ onMounted(() => {
   loadAll()
 })
 
-// 实时同步关键字段到 Pinia store，确保 Phase2/3/4 即时读取
+// Sync to Pinia store
 watch(
   () => ({
     ratedEnergy: form.total_mwh,
@@ -805,7 +645,6 @@ watch(
       if (vals.gridVoltage != null) store.survey.gridVoltage = vals.gridVoltage
       if (vals.altitude != null) store.survey.altitude = vals.altitude
       if (vals.dod != null) store.survey.dod = vals.dod
-      // 自动计算 requiredEnergy（必须确保 ratedEnergy 是有效数字）
       if (vals.ratedEnergy != null && typeof vals.ratedEnergy === 'number' && !isNaN(vals.ratedEnergy)) {
         const dod = vals.dod != null && typeof vals.dod === 'number' ? vals.dod : 90
         store.survey.requiredEnergy = +(vals.ratedEnergy * (dod / 100)).toFixed(1)
@@ -822,23 +661,18 @@ async function submitForm() {
     emit('error', t('surveyForm.required'), 'warning')
     return
   }
-
   submitting.value = true
-
   try {
     const result = await api.post('/api/survey/submit', form)
-
     if (result.success) {
       submittedData.value = result
       showSuccess.value = true
-      // 同步到 Pinia store，确保 Phase2/3/4 能读取调研数据
       if (form.total_mwh) store.survey.ratedEnergy = form.total_mwh
       if (form.total_mw) store.survey.totalPower = form.total_mw
       if (form.duration) store.survey.duration = form.duration
       if (form.temp_avg != null) store.survey.temperature = form.temp_avg
       if (form.cycles_per_day) store.survey.cyclesPerDay = form.cycles_per_day
       if (form.total_mwh != null && form.duration != null && typeof form.total_mwh === 'number') {
-        // 默认使用90% DOD; 如调研表有DOD字段应使用实际值
         store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
       }
       if (form.location) store.survey.location = form.location
@@ -913,21 +747,14 @@ function closeSuccess() {
 }
 
 function fillTestData() {
-  const testProjectName = t('surveyForm.testData.projectName')
-  const testContactPerson = t('surveyForm.testData.contactPerson')
-  const testCountry = t('surveyForm.testData.country')
-  const testCity = t('surveyForm.testData.city')
-  const testSite = t('surveyForm.testData.site')
-  const testRemarks = t('surveyForm.testData.remarks')
-
   Object.assign(form, {
-    project_name: testProjectName,
-    contact_person: testContactPerson,
+    project_name: t('surveyForm.testData.projectName'),
+    contact_person: t('surveyForm.testData.contactPerson'),
     contact_phone: '+86 138-0000-1234',
     contact_email: 'zhangwei@energypro.com',
-    country: testCountry,
-    city: testCity,
-    site: testSite,
+    country: t('surveyForm.testData.country'),
+    city: t('surveyForm.testData.city'),
+    site: t('surveyForm.testData.site'),
     lat: 11.55,
     lng: 104.92,
     altitude: 15,
@@ -957,13 +784,12 @@ function fillTestData() {
     dc_voltage_range: '1000-1500V',
     ac_voltage: 380,
     thdi: 3,
-    remarks: testRemarks
+    remarks: t('surveyForm.testData.remarks')
   })
 }
 </script>
 
 <style scoped>
-/* 储能时长自动计算样式 */
 .auto-badge {
   display: inline-block;
   font-size: 0.65rem;
@@ -975,23 +801,19 @@ function fillTestData() {
   margin-left: 6px;
   vertical-align: middle;
 }
-
 .duration-input-row {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-
 .duration-input-row .form-field-input {
   flex: 1;
 }
-
 .duration-input-row .form-field-input:disabled {
   background: var(--color-bg, #f5f5f5);
   color: var(--text-secondary, #888);
   cursor: not-allowed;
 }
-
 .lock-toggle-btn {
   flex-shrink: 0;
   width: 28px;
@@ -1006,80 +828,7 @@ function fillTestData() {
   font-size: 13px;
   padding: 0;
 }
-
 .lock-toggle-btn:hover {
   background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-}
-
-/* Combobox 下拉面板 */
-.combobox-wrapper {
-  position: relative;
-}
-.combobox-wrapper .form-field-input {
-  width: 100%;
-}
-.combobox-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  max-height: 220px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--color-card);
-  backdrop-filter: var(--backdrop-filter, blur(12px));
-  -webkit-backdrop-filter: var(--backdrop-filter, blur(12px));
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  margin-top: 2px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-.combobox-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  border-bottom: 1px solid var(--color-border-light);
-}
-.combobox-option:last-child {
-  border-bottom: none;
-}
-.combobox-option:hover,
-.combobox-option.active {
-  background: var(--color-accent);
-  color: #fff;
-}
-.combobox-option:hover .option-name,
-.combobox-option.active .option-name {
-  color: #fff;
-}
-.combobox-option:hover .option-code,
-.combobox-option.active .option-code {
-  color: rgba(255, 255, 255, 0.7);
-}
-.option-name {
-  flex: 1;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
-}
-.option-code {
-  flex-shrink: 0;
-  font-size: 11px;
-  color: var(--color-text-muted);
-  font-family: monospace;
-}
-.combobox-empty {
-  padding: 10px 12px;
-  font-size: 12px;
-  color: var(--color-text-muted);
-  text-align: center;
 }
 </style>
