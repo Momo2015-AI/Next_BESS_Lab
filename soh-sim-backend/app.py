@@ -50,13 +50,16 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# JWT Secret Key（生产环境必须设置环境变量，开发环境使用 fallback）
+# JWT Secret Key — 生产环境必须设置环境变量，否则拒绝启动
 _secret_key = os.environ.get("SECRET_KEY")
 if not _secret_key:
     import logging
+    import sys
 
-    logging.warning("⚠ SECRET_KEY 未设置，使用默认开发密钥。" "生产环境请设置环境变量 SECRET_KEY！")
-    _secret_key = "dev-secret-change-in-production"
+    logging.critical("❌ SECRET_KEY 环境变量未设置！生产环境拒绝启动。")
+    logging.critical("   请在环境变量中设置: export SECRET_KEY=<your-secure-random-key>")
+    logging.critical("   可使用 python -c \"import secrets; print(secrets.token_hex(32))\" 生成强密钥")
+    sys.exit(1)
 app.config["SECRET_KEY"] = _secret_key
 
 # 初始化数据库
@@ -137,27 +140,40 @@ def internal_error(e):
 
 
 def seed_users():
-    """初始化默认用户（管理员 + 演示工程师），仅当数据库中无用户时执行"""
+    """初始化默认用户（管理员 + 演示工程师），仅当数据库中无用户时执行
+
+    种子密码使用随机强密码，首次登录后建议立即修改。
+    种子密码仅在首次数据库初始化时创建，已有用户时跳过。
+    """
     from database import User
 
     if User.query.first() is not None:
         return  # 已有用户，跳过种子
 
+    import secrets
     import uuid as _uuid
+
+    # 生成随机强密码（16 字符，含大小写字母+数字）
+    def _gen_pwd():
+        alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return "".join(secrets.choice(alphabet) for _ in range(16))
+
+    admin_pwd = _gen_pwd()
+    eng_pwd = _gen_pwd()
 
     default_users = [
         {
             "id": "admin-000000000000000000000001",
             "username": "admin",
             "email": "admin@soh-sim.com",
-            "password": "admin123",
+            "password": admin_pwd,
             "role": "admin",
         },
         {
             "id": "eng-000000000000000000000001",
             "username": "engineer",
             "email": "engineer@soh-sim.com",
-            "password": "engineer123",
+            "password": eng_pwd,
             "role": "solution_engineer",
         },
     ]
@@ -177,7 +193,9 @@ def seed_users():
     db.session.commit()
     import logging
 
-    logging.info("种子用户已创建: admin/admin123, engineer/engineer123")
+    logging.info("种子用户已创建: admin / engineer")
+    logging.info("⚠ admin  密码: %s （请妥善保存，首次登录后修改）", admin_pwd)
+    logging.info("⚠ engineer 密码: %s （请妥善保存，首次登录后修改）", eng_pwd)
 
 
 with app.app_context():

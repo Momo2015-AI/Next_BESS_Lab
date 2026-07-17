@@ -4,6 +4,7 @@
 """
 
 from flask import Blueprint, current_app, request
+from sqlalchemy.orm import selectinload
 
 from database import Project, ProjectVersion, SohRteData, db
 from routes.auth import role_required, token_required
@@ -213,8 +214,12 @@ def get_version(version_id):
     if not user:
         return error_response("用户不存在", 404)
 
-    version = ProjectVersion.query.get(version_id)
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(version_id)
     if not version:
+        return error_response("版本不存在", 404)
+
+    # 租户隔离：admin 可跨租户，其余用户仅可访问同租户版本
+    if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
         return error_response("版本不存在", 404)
 
     return success_response(data=version.to_dict())
@@ -229,6 +234,13 @@ def update_version(version_id):
     user = request.current_user
     if not user:
         return error_response("用户不存在", 404)
+
+    # 租户隔离：先校验版本归属
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(version_id)
+    if not version:
+        return error_response("版本不存在", 404)
+    if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
+        return error_response("版本不存在", 404)
 
     try:
         version, err = update_version_service(db, ProjectVersion, version_id, data, user)
@@ -248,6 +260,13 @@ def activate_version(version_id):
     user = request.current_user
     if not user:
         return error_response("用户不存在", 404)
+
+    # 租户隔离：先校验版本归属
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(version_id)
+    if not version:
+        return error_response("版本不存在", 404)
+    if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
+        return error_response("版本不存在", 404)
 
     try:
         version, err = activate_version_service(db, ProjectVersion, version_id, user)
@@ -305,6 +324,10 @@ def compare_versions():
     if not data:
         return error_response("无效的请求数据", 400)
 
+    user = request.current_user
+    if not user:
+        return error_response("用户不存在", 404)
+
     version_ids = data.get("version_ids", [])
     if len(version_ids) < 2:
         return error_response("至少需要 2 个版本ID进行对比", 400)
@@ -312,8 +335,12 @@ def compare_versions():
     try:
         versions_data = []
         for vid in version_ids:
-            version = ProjectVersion.query.get(vid)
+            version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(vid)
             if not version:
+                return error_response(f"版本 {vid} 不存在", 404)
+
+            # 租户隔离：admin 可跨租户，其余用户仅可访问同租户版本
+            if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
                 return error_response(f"版本 {vid} 不存在", 404)
 
             config = {}
@@ -404,8 +431,16 @@ def restore_version(version_id):
     """
     import json
 
-    version = ProjectVersion.query.get(version_id)
+    user = request.current_user
+    if not user:
+        return error_response("用户不存在", 404)
+
+    version = ProjectVersion.query.options(selectinload(ProjectVersion.project)).get(version_id)
     if not version:
+        return error_response("版本不存在", 404)
+
+    # 租户隔离：admin 可跨租户，其余用户仅可访问同租户版本
+    if getattr(user, "role", None) != "admin" and version.project and version.project.tenant_id != user.tenant_id:
         return error_response("版本不存在", 404)
 
     try:

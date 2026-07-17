@@ -20,7 +20,8 @@ os.environ.setdefault("SECRET_KEY", "test-deep-validation-secret")
 os.environ.setdefault("CORS_ORIGINS", "*")
 
 from app import app as _app  # noqa: E402
-from database import db  # noqa: E402
+from database import User, db  # noqa: E402
+from routes.auth import generate_token, hash_password  # noqa: E402
 
 # ============================================================
 # Fixtures
@@ -44,14 +45,29 @@ def client(app):
 
 @pytest.fixture(scope="session")
 def auth_headers(app):
-    """获取认证 token（session scope，只登录一次）"""
-    # app.py seed_users 已创建 admin 用户
+    """获取认证 token（session scope，只创建一次测试用户）"""
+    with app.app_context():
+        # 创建测试专用 admin 用户（避免依赖种子随机密码）
+        test_admin = User.query.filter_by(username="test_admin").first()
+        if not test_admin:
+            test_admin = User(
+                id="test-admin-deep-validation-001",
+                tenant_id="00000000-0000-0000-0000-000000000001",
+                username="test_admin",
+                email="test_admin@test.com",
+                password_hash=hash_password("test_admin_pwd_2026"),
+                role="admin",
+                is_active=True,
+            )
+            db.session.add(test_admin)
+            db.session.commit()
+
     with app.test_client() as c:
         resp = c.post(
             "/api/auth/login",
             json={
-                "username": "admin",
-                "password": "admin123",
+                "username": "test_admin",
+                "password": "test_admin_pwd_2026",
             },
         )
         data = resp.get_json()
