@@ -76,6 +76,7 @@ PERMISSION_KEYS = [
     "epc_ipp",  # IPP 财务模型
     # 引擎
     "orchestrator",  # 一键方案引擎
+    "tool_quick_config",  # 快速配置器
     # 管理
     "admin_panel",  # 管理面板（仅 admin）
 ]
@@ -107,6 +108,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "readonly",
         "epc_ipp": "full",
         "orchestrator": "full",
+        "tool_quick_config": "readonly",
         "admin_panel": "hidden",
     },
     "solution_engineer": {
@@ -132,6 +134,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "readonly",
         "epc_ipp": "hidden",
         "orchestrator": "full",
+        "tool_quick_config": "full",
         "admin_panel": "hidden",
     },
     "epc_contractor": {
@@ -157,6 +160,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "full",
         "epc_ipp": "hidden",
         "orchestrator": "readonly",
+        "tool_quick_config": "readonly",
         "admin_panel": "hidden",
     },
     "financial_analyst": {
@@ -182,6 +186,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "readonly",
         "epc_ipp": "full",
         "orchestrator": "full",
+        "tool_quick_config": "readonly",
         "admin_panel": "hidden",
     },
     "project_manager": {
@@ -207,6 +212,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "full",
         "epc_ipp": "full",
         "orchestrator": "full",
+        "tool_quick_config": "full",
         "admin_panel": "hidden",
     },
     "admin": {
@@ -232,6 +238,7 @@ DEFAULT_ROLE_PERMISSIONS = {
         "epc": "full",
         "epc_ipp": "full",
         "orchestrator": "full",
+        "tool_quick_config": "full",
         "admin_panel": "full",
     },
 }

@@ -169,7 +169,17 @@ const router = createRouter({
 })
 
 /** 需要登录才能访问的路由 */
-const protectedRoutes = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5', 'survey', 'epc', 'admin']
+const protectedRoutes = [
+  'phase1',
+  'phase2',
+  'phase3',
+  'phase4',
+  'phase5',
+  'survey',
+  'epc',
+  'admin',
+  'tool-quick-config'
+]
 
 router.beforeEach((to, from, next) => {
   // 检查是否需要登录
