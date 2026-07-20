@@ -471,6 +471,7 @@
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { debounce } from 'lodash-es'
 import { useProducts } from '../composables/useProducts'
 import { useBessStore } from '../stores/bess.js'
 import { useDraft } from '../composables/useDraft'
@@ -611,7 +612,35 @@ onMounted(() => {
   loadAll()
 })
 
-// Sync to Pinia store
+// --- shared: sync form → Pinia store ---
+function syncToStore() {
+  try {
+    if (form.total_mwh != null) store.survey.ratedEnergy = form.total_mwh
+    if (form.total_mw != null) store.survey.totalPower = form.total_mw
+    if (form.duration != null) store.survey.duration = form.duration
+    if (form.temp_avg != null) store.survey.temperature = form.temp_avg
+    if (form.cycles_per_day != null) store.survey.cyclesPerDay = form.cycles_per_day
+    if (form.country != null) store.survey.country = form.country
+    if (form.city != null) store.survey.city = form.city
+    if (form.site != null) store.survey.site = form.site
+    if (form.lat != null) store.survey.lat = form.lat
+    if (form.lng != null) store.survey.lng = form.lng
+    if (form.project_name != null) store.survey.projectName = form.project_name
+    if (form.grid_voltage != null) store.survey.gridVoltage = form.grid_voltage
+    if (form.altitude != null) store.survey.altitude = form.altitude
+    if (form.dod != null) store.survey.dod = form.dod
+    if (form.total_mwh != null && typeof form.total_mwh === 'number' && !isNaN(form.total_mwh)) {
+      const dod = form.dod != null && typeof form.dod === 'number' ? form.dod : 90
+      store.survey.requiredEnergy = +(form.total_mwh * (dod / 100)).toFixed(1)
+    }
+    if (form.location != null) store.survey.location = form.location
+  } catch (e) {
+    console.warn('[SurveyForm] store sync error:', e)
+  }
+}
+
+const debouncedSyncToStore = debounce(syncToStore, 300)
+
 watch(
   () => ({
     ratedEnergy: form.total_mwh,
@@ -627,32 +656,10 @@ watch(
     projectName: form.project_name,
     gridVoltage: form.grid_voltage,
     altitude: form.altitude,
-    dod: form.dod
+    dod: form.dod,
+    location: form.location
   }),
-  (vals) => {
-    try {
-      if (vals.ratedEnergy != null) store.survey.ratedEnergy = vals.ratedEnergy
-      if (vals.totalPower != null) store.survey.totalPower = vals.totalPower
-      if (vals.duration != null) store.survey.duration = vals.duration
-      if (vals.temperature != null) store.survey.temperature = vals.temperature
-      if (vals.cyclesPerDay != null) store.survey.cyclesPerDay = vals.cyclesPerDay
-      if (vals.country != null) store.survey.country = vals.country
-      if (vals.city != null) store.survey.city = vals.city
-      if (vals.site != null) store.survey.site = vals.site
-      if (vals.lat != null) store.survey.lat = vals.lat
-      if (vals.lng != null) store.survey.lng = vals.lng
-      if (vals.projectName != null) store.survey.projectName = vals.projectName
-      if (vals.gridVoltage != null) store.survey.gridVoltage = vals.gridVoltage
-      if (vals.altitude != null) store.survey.altitude = vals.altitude
-      if (vals.dod != null) store.survey.dod = vals.dod
-      if (vals.ratedEnergy != null && typeof vals.ratedEnergy === 'number' && !isNaN(vals.ratedEnergy)) {
-        const dod = vals.dod != null && typeof vals.dod === 'number' ? vals.dod : 90
-        store.survey.requiredEnergy = +(vals.ratedEnergy * (dod / 100)).toFixed(1)
-      }
-    } catch (e) {
-      console.warn('[SurveyForm] store sync error:', e)
-    }
-  },
+  debouncedSyncToStore,
   { deep: true }
 )
 
@@ -667,23 +674,7 @@ async function submitForm() {
     if (result.success) {
       submittedData.value = result
       showSuccess.value = true
-      if (form.total_mwh) store.survey.ratedEnergy = form.total_mwh
-      if (form.total_mw) store.survey.totalPower = form.total_mw
-      if (form.duration) store.survey.duration = form.duration
-      if (form.temp_avg != null) store.survey.temperature = form.temp_avg
-      if (form.cycles_per_day) store.survey.cyclesPerDay = form.cycles_per_day
-      if (form.total_mwh != null && form.duration != null && typeof form.total_mwh === 'number') {
-        store.survey.requiredEnergy = +(form.total_mwh * 0.9).toFixed(1)
-      }
-      if (form.location) store.survey.location = form.location
-      if (form.country) store.survey.country = form.country
-      if (form.city) store.survey.city = form.city
-      if (form.site) store.survey.site = form.site
-      if (form.lat != null) store.survey.lat = form.lat
-      if (form.lng != null) store.survey.lng = form.lng
-      if (form.project_name) store.survey.projectName = form.project_name
-      if (form.grid_voltage) store.survey.gridVoltage = form.grid_voltage
-      if (form.altitude != null) store.survey.altitude = form.altitude
+      syncToStore()
       clearDraft()
       resetForm()
     } else {
@@ -789,46 +780,4 @@ function fillTestData() {
 }
 </script>
 
-<style scoped>
-.auto-badge {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-.duration-input-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.duration-input-row .form-field-input {
-  flex: 1;
-}
-.duration-input-row .form-field-input:disabled {
-  background: var(--color-bg, #f5f5f5);
-  color: var(--text-secondary, #888);
-  cursor: not-allowed;
-}
-.lock-toggle-btn {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 4px;
-  background: var(--color-card, #fff);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  padding: 0;
-}
-.lock-toggle-btn:hover {
-  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-}
-</style>
+<style scoped></style>

@@ -217,9 +217,12 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppIcon from './AppIcon.vue'
 import ComboboxInput from './ComboboxInput.vue'
 import { useCountryList } from '../composables/useCountryList'
+
+const { t } = useI18n()
 
 const form = defineModel('form', { type: Object, required: true })
 
@@ -258,9 +261,13 @@ watch(
 )
 
 const strategies = [
-  { key: 'economic', label: '经济优先', description: '最大容量集装箱 → 最少 BOP 成本' },
-  { key: 'balanced', label: '均衡方案', description: '中等容量 → CAPEX/MWh 最优' },
-  { key: 'flexible', label: '灵活分期', description: '小型集装箱 → 便于分期扩容' },
-  { key: 'manufacturer', label: '指定厂家', description: '限定厂家产品匹配' }
+  { key: 'economic', label: t('orchestrator.strategyEconomic'), description: t('orchestrator.strategyDescEconomic') },
+  { key: 'balanced', label: t('orchestrator.strategyBalanced'), description: t('orchestrator.strategyDescBalanced') },
+  { key: 'flexible', label: t('orchestrator.strategyFlexible'), description: t('orchestrator.strategyDescFlexible') },
+  {
+    key: 'manufacturer',
+    label: t('orchestrator.strategyManufacturer'),
+    description: t('orchestrator.strategyDescManufacturer')
+  }
 ]
 </script>

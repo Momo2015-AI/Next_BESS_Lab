@@ -5,11 +5,7 @@
     </p>
     <div
       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
-      :style="
-        uploadHover
-          ? 'border-color: var(--color-accent); background: var(--color-accent-glow);'
-          : 'border-color: var(--color-input-border);'
-      "
+      :class="uploadHover ? 'upload-zone-active' : 'upload-zone-idle'"
       @dragover.prevent="uploadHover = true"
       @dragleave.prevent="uploadHover = false"
       @drop.prevent="onDrop"
@@ -179,5 +175,14 @@ defineExpose({
 }
 .ins-9 {
   color: var(--color-text-muted);
+}
+
+.upload-zone-active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+.upload-zone-idle {
+  border-color: var(--color-input-border);
 }
 </style>

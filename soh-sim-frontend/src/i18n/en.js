@@ -35,6 +35,8 @@ export default {
     register: 'Sign up',
     logout: 'Logout',
     other: 'Other',
+    hundredMillion: '100M',
+    yearUnit: 'yr',
     generating: 'Generating...',
     generate: 'Generate',
     loading: 'Loading...',

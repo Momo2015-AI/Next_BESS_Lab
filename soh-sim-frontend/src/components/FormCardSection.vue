@@ -1,5 +1,5 @@
 <template>
-  <div class="card p-4" :style="{ position: 'relative', zIndex: zIndex }">
+  <div class="card p-4 relative" :style="{ zIndex: zIndex }">
     <div class="flex items-center gap-2 mb-3">
       <span class="w-6 h-6 rounded text-xs flex items-center justify-center font-bold bg-accent-glow text-accent">
         {{ number }}

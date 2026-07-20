@@ -35,6 +35,8 @@ export default {
     register: '注册',
     logout: '退出',
     other: '其他',
+    hundredMillion: '亿',
+    yearUnit: '年',
     generating: '生成中...',
     generate: '生成',
     loading: '加载中...',

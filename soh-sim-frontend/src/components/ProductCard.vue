@@ -1,7 +1,7 @@
 <template>
   <div
     class="border rounded-lg p-3 cursor-pointer transition-all group relative"
-    :style="cardStyle"
+    :class="{ 'border-accent bg-accent-glow': selected }"
     @click="$emit('select', item.id)"
   >
     <button
@@ -13,7 +13,10 @@
     </button>
     <div class="flex justify-between items-start mb-1">
       <span class="text-xs font-bold">{{ item.model }}</span>
-      <span class="text-[10px] px-1.5 py-0.5 rounded" :style="statusStyle">
+      <span
+        class="text-[10px] px-1.5 py-0.5 rounded"
+        :class="item.status === 'mass-production' ? 'tag-success' : 'tag-warning'"
+      >
         {{ statusText }}
       </span>
     </div>
@@ -51,19 +54,6 @@ const props = defineProps({
 
 defineEmits(['select', 'delete'])
 
-const cardStyle = computed(() => ({
-  borderColor: props.selected ? props.accentColor : 'var(--color-border)',
-  backgroundColor: props.selected ? props.accentGlow : 'var(--color-card-dark)'
-}))
-
-const statusStyle = computed(() => {
-  const status = props.item.status
-  if (status === 'mass-production') {
-    return { backgroundColor: 'var(--color-success-glow)', color: 'var(--color-success)' }
-  }
-  return { backgroundColor: 'var(--color-warning-glow)', color: 'var(--color-warning)' }
-})
-
 const statusText = computed(() => {
   if (props.item.status === 'mass-production') return t('productConfig.massProduction')
   if (props.item.status === 'in-development') return t('productConfig.inDevelopment')
@@ -88,12 +78,6 @@ const FIELD_DEFS = {
   pcs: [
     { key: 'ratedPowerMW', label: 'productConfig.power' },
     { key: 'efficiency', label: 'productConfig.efficiency' },
-    { key: 'acVoltage', label: 'productConfig.acVoltage' },
-    { key: 'cooling', label: 'productConfig.coolingMethod' }
-  ],
-  cabinet: [
-    { key: 'ratedEnergykWh', label: 'productConfig.capacity' },
-    { key: 'ratedPowerkW', label: 'productConfig.power' },
     { key: 'acVoltage', label: 'productConfig.acVoltage' },
     { key: 'cooling', label: 'productConfig.coolingMethod' }
   ]
@@ -125,3 +109,13 @@ function formatValue(item, field) {
   return val ?? '--'
 }
 </script>
+
+<style scoped>
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+.bg-accent-glow {
+  background: var(--color-accent-glow);
+}
+</style>

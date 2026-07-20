@@ -900,54 +900,6 @@ function applyToSimulation() {
 </script>
 
 <style scoped>
-/* auto-calc styles */
-.auto-badge {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-
-.duration-input-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.duration-input-row .form-field-input {
-  flex: 1;
-}
-
-.duration-input-row .form-field-input:disabled {
-  background: var(--color-bg, #f5f5f5);
-  color: var(--text-secondary, #888);
-  cursor: not-allowed;
-}
-
-.lock-toggle-btn {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 4px;
-  background: var(--color-card, #fff);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  padding: 0;
-}
-
-.lock-toggle-btn:hover {
-  background: var(--color-accent-glow, rgba(37, 99, 235, 0.08));
-}
-
 .text-muted {
   color: var(--color-text-muted, #999);
 }

@@ -246,56 +246,48 @@ const form = reactive({
   dcVoltageRange: ''
 })
 
-function resetCell() {
-  Object.assign(form, {
-    mfr: '',
-    model: '',
-    chemistry: 'LFP',
-    capacityAh: '',
-    voltageNominal: 3.2,
-    voltageMax: '',
-    voltageMin: '',
-    cycleLife: '',
-    calendarLife: 20,
-    dimensions: '',
-    weight: '',
-    status: 'mass-production'
-  })
-}
-
-function resetContainer() {
-  Object.assign(form, {
-    mfr: '',
-    model: '',
-    ratedEnergyMWh: '',
-    ratedPowerMW: '',
-    cellModel: '',
-    cooling: '',
-    dimensions: '',
-    weight: '',
-    status: 'mass-production'
-  })
-}
-
-function resetPcs() {
-  Object.assign(form, {
-    mfr: '',
-    model: '',
-    ratedPowerMW: '',
-    efficiency: '',
-    acVoltage: '',
-    dcVoltageRange: '',
-    cooling: '',
-    status: 'mass-production'
-  })
-}
-
 watch(
   () => props.type,
   (t) => {
-    if (t === 'cell') resetCell()
-    else if (t === 'container') resetContainer()
-    else resetPcs()
+    if (t === 'cell') {
+      Object.assign(form, {
+        mfr: '',
+        model: '',
+        chemistry: 'LFP',
+        capacityAh: '',
+        voltageNominal: 3.2,
+        voltageMax: '',
+        voltageMin: '',
+        cycleLife: '',
+        calendarLife: 20,
+        dimensions: '',
+        weight: '',
+        status: 'mass-production'
+      })
+    } else if (t === 'container') {
+      Object.assign(form, {
+        mfr: '',
+        model: '',
+        ratedEnergyMWh: '',
+        ratedPowerMW: '',
+        cellModel: '',
+        cooling: '',
+        dimensions: '',
+        weight: '',
+        status: 'mass-production'
+      })
+    } else {
+      Object.assign(form, {
+        mfr: '',
+        model: '',
+        ratedPowerMW: '',
+        efficiency: '',
+        acVoltage: '',
+        dcVoltageRange: '',
+        cooling: '',
+        status: 'mass-production'
+      })
+    }
   },
   { immediate: true }
 )

@@ -62,6 +62,11 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { formatCurrency } from '../utils/format.js'
+
+const { t } = useI18n()
+
 defineProps({
   solutions: { type: Array, default: () => [] }
 })
@@ -69,17 +74,12 @@ defineProps({
 defineEmits(['select'])
 
 function getStrategyLabel(type) {
-  const map = { economic: '经济优先', balanced: '均衡方案', flexible: '灵活分期', manufacturer: '指定厂家' }
+  const map = {
+    economic: t('orchestrator.strategyEconomic'),
+    balanced: t('orchestrator.strategyBalanced'),
+    flexible: t('orchestrator.strategyFlexible'),
+    manufacturer: t('orchestrator.strategyManufacturer')
+  }
   return map[type] || type || '—'
-}
-
-function formatCurrency(val) {
-  if (val == null) return '—'
-  const num = Number(val)
-  if (isNaN(num)) return '—'
-  if (num >= 1e8) return '$' + (num / 1e8).toFixed(2) + ' 亿'
-  if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M'
-  if (num >= 1e3) return '$' + (num / 1e3).toFixed(0) + 'K'
-  return '$' + num.toFixed(0)
 }
 </script>
