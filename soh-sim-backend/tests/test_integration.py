@@ -943,7 +943,18 @@ class TestBusinessModules:
 
     def test_boq_save_and_load(self, client, auth_headers_eng):
         """7.5 BOQ 物料清单保存和加载"""
-        # 先保存
+        # 先创建项目（BOQ 路由有租户隔离校验，需要真实存在的 project）
+        proj_resp = _post(
+            client,
+            "/api/projects",
+            {"name": "BOQ Test Project", "code": "BOQ-001"},
+            auth_headers_eng,
+        )
+        proj_data = _assert_success(proj_resp, status=(200, 201))
+        project_id = proj_data.get("id") or proj_data.get("project", {}).get("id")
+        assert project_id, "Failed to create project for BOQ test"
+
+        # 保存 BOQ
         boq_items = [
             {
                 "sectionCode": "B01",
@@ -961,7 +972,7 @@ class TestBusinessModules:
             client,
             "/api/boq/items",
             {
-                "projectId": "test-project-001",
+                "projectId": project_id,
                 "isAlternative": False,
                 "items": boq_items,
             },
@@ -970,7 +981,7 @@ class TestBusinessModules:
         _assert_success(resp)
 
         # 再加载
-        resp2 = _get(client, "/api/boq/items?project_id=test-project-001", auth_headers_eng)
+        resp2 = _get(client, f"/api/boq/items?project_id={project_id}", auth_headers_eng)
         data2 = _assert_success(resp2)
         assert len(data2) >= 1, "BOQ items not saved"
 
