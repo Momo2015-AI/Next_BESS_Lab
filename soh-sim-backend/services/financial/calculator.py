@@ -436,7 +436,7 @@ def calculate_full_financial(total_ac_usable, financial_params=None, boq_data=No
     total_discounted_energy = 0.0
     total_discounted_cost = total_capex
     for y in range(1, NUM_YEARS):
-        total_discounted_energy += float(total_ac_usable[y]) * 365 / ((1 + discount_rate) ** y)
+        total_discounted_energy += (float(total_ac_usable[y]) if y < len(total_ac_usable) else float(total_ac_usable[-1])) * 365 / ((1 + discount_rate) ** y)
         total_discounted_cost += annual_opex_base / ((1 + discount_rate) ** y)
     lcos = total_discounted_cost / total_discounted_energy if total_discounted_energy > 0 else 0
 

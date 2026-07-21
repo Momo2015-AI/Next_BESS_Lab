@@ -21,7 +21,7 @@ from utils.api_response import error_response, success_response
 auth_bp = Blueprint("auth", __name__)
 
 # 速率限制器（延迟初始化，避免在模块导入时访问 current_app）
-limiter = Limiter(key_func=get_remote_address, default_limits=[])
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
 
 # JWT token 黑名单
 # 默认进程内 dict；若设置环境变量 REDIS_URL 则改用 Redis

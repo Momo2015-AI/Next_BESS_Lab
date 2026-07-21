@@ -23,7 +23,7 @@ from database import (
     get_user_effective_role,
 )
 from routes.auth import role_required, token_required
-from utils.api_response import error_response, success_response
+from utils.api_response import error_response, paginated_response, success_response
 
 rbac_bp = Blueprint("rbac", __name__)
 
@@ -203,12 +203,24 @@ def reset_role_permission(role_code):
 @token_required
 @role_required("admin")
 def list_users():
-    """获取所有用户列表（含权限覆盖信息）"""
-    # 管理员可查看所有租户的用户
-    users = User.query.options(selectinload(User.permission_override)).order_by(User.created_at.desc()).all()
+    """获取所有用户列表（含权限覆盖信息，分页）"""
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 20, type=int)
+    per_page = min(per_page, 100)
+
+    # 批量预加载 RolePermission 避免 N+1
+    role_perms_map = {}
+    for rp in RolePermission.query.all():
+        role_perms_map[rp.role] = rp.permissions
+
+    pagination = (
+        User.query.options(selectinload(User.permission_override))
+        .order_by(User.created_at.desc())
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
 
     result = []
-    for user in users:
+    for user in pagination.items:
         override = user.permission_override
         override_data = None
         if override:
@@ -246,7 +258,12 @@ def list_users():
             }
         )
 
-    return success_response(data=result)
+    return paginated_response(
+        items=result,
+        page=pagination.page,
+        page_size=pagination.per_page,
+        total=pagination.total,
+    )
 
 
 @rbac_bp.route("/api/rbac/users/<user_id>/override", methods=["PUT"])

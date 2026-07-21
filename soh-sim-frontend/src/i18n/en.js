@@ -1101,7 +1101,12 @@ export default {
     bomBtn: 'Generate Equipment List',
     archiveTitle: 'Project Archive',
     archiveDesc: 'Save all current project data to the database.',
-    archiveBtn: 'Save Project'
+    archiveBtn: 'Save Project',
+    reportGenerated: 'Report generated and downloaded',
+    bomGenerated: 'BOM list generated and downloaded',
+    projectSaved: 'Project saved',
+    saveFailed: 'Save failed',
+    errorPrefix: 'Error'
   },
   tools: {
     auxPowerTitle: 'Auxiliary Power Calculation',

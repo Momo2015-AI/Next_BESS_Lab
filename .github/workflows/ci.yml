@@ -40,6 +40,9 @@ jobs:
         run: npm run type-check
         continue-on-error: true
 
+      - name: Run frontend tests
+        run: npx vitest run
+
   backend:
     runs-on: ubuntu-latest
     defaults:
@@ -52,8 +55,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dev dependencies
-        run: pip install black isort flake8
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black isort flake8 pytest pytest-cov
 
       - name: Black check
         run: black --check .
@@ -63,6 +68,9 @@ jobs:
 
       - name: Flake8
         run: flake8
+
+      - name: Run backend tests
+        run: pytest --tb=short
 
   rules-consistency:
     runs-on: ubuntu-latest

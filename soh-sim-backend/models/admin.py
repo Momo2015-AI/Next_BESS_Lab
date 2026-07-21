@@ -6,7 +6,7 @@
 
 import uuid
 
-from models import db
+from models import _utcnow, db
 
 
 def _new_uuid():
@@ -41,8 +41,12 @@ class DesignTemplate(db.Model):
     is_builtin = db.Column(db.Boolean, default=False, comment="是否内置模板")
     sort_order = db.Column(db.Integer, default=0)
     status = db.Column(db.String(20), default="active")
-    created_at = db.Column(db.DateTime, default=db.func.now())
-    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
+
+    __table_args__ = (
+        db.Index("idx_design_templates_tenant_id", "tenant_id"),
+    )
 
     def to_dict(self):
         return {

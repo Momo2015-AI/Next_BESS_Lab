@@ -4,9 +4,13 @@
 整合：容量仿真 + 寿命预测 + 补容策略 + 能量核算
 """
 
+import logging
+
 from services.degradation import NUM_YEARS, predict_soh
 from services.efficiency import FACTOR_DEFAULTS, calculate_efficiency_chain, calculate_efficiency_curves
 from services.engine_base import BaseEngine
+
+logger = logging.getLogger(__name__)
 
 
 class SimulationEngine(BaseEngine):
@@ -180,10 +184,11 @@ class SimulationEngine(BaseEngine):
 
         # 策略A: 固定周期补容（每5年）
         fixed_aug = [0] * NUM_YEARS
+        rated_energy = max(system_params.get("ratedEnergy", 5), 0.01)
         for i in range(5, NUM_YEARS, 5):
             if i < len(meets_req) and not meets_req[i]:
                 shortfall = required_energy - total_ac[i]
-                aug_units = max(0, int(shortfall / (system_params.get("ratedEnergy", 5) * 0.5)))
+                aug_units = max(0, int(shortfall / (rated_energy * 0.5)))
                 fixed_aug[i] = aug_units
 
         # 策略B: 按需补容
@@ -191,7 +196,7 @@ class SimulationEngine(BaseEngine):
         for i in range(NUM_YEARS):
             if i < len(meets_req) and not meets_req[i]:
                 shortfall = required_energy - total_ac[i]
-                aug_units = max(0, int(shortfall / (system_params.get("ratedEnergy", 5) * 0.5)))
+                aug_units = max(0, int(shortfall / (rated_energy * 0.5)))
                 ondemand_aug[i] = aug_units
 
         # 策略C: 初始超配 20%（初始多装，前几年无需补容）
@@ -295,7 +300,8 @@ class SimulationEngine(BaseEngine):
                     financial_params={"_capexInternal": adjusted_capex},
                 )
                 metrics = fin_result.get("metrics", {})
-            except Exception:
+            except Exception as e:
+                logger.warning("补容策略 %s 财务计算失败: %s", strat_name, e)
                 metrics = {}
 
             comparison[strat_name] = {
