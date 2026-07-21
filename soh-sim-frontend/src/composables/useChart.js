@@ -1,5 +1,6 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useChartTheme } from './useChartTheme.js'
+import { debounce } from 'lodash-es'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, PieChart, RadarChart, GaugeChart, HeatmapChart, SankeyChart } from 'echarts/charts'
@@ -75,11 +76,11 @@ export function useChart(chartRef, options, dependencies = []) {
 
   watch(
     [options, ...dependencies],
-    () => {
+    debounce(() => {
       if (chart.value && options.value) {
         chart.value.setOption(options.value, true)
       }
-    },
+    }, 300),
     { deep: true }
   )
 
@@ -132,13 +133,13 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
 
   watch(
     [optionsList, ...dependencies],
-    () => {
+    debounce(() => {
       charts.value.forEach((chart, index) => {
         if (chart && optionsList.value[index]) {
           chart.setOption(optionsList.value[index], true)
         }
       })
-    },
+    }, 300),
     { deep: true }
   )
 

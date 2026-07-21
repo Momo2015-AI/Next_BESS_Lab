@@ -86,9 +86,9 @@ async function generateReport() {
     a.click()
     URL.revokeObjectURL(url)
     store.exports.reportGenerated = true
-    reportMsg.value = '报告已生成并下载'
+    reportMsg.value = t('phase5.reportGenerated')
   } catch (e) {
-    reportMsg.value = '错误: ' + e.message
+    reportMsg.value = t('phase5.errorPrefix') + ': ' + e.message
   } finally {
     generating.value = false
   }
@@ -109,9 +109,9 @@ async function generateBom() {
     a.click()
     URL.revokeObjectURL(url)
     store.exports.bomGenerated = true
-    bomMsg.value = 'BOM 清单已生成并下载'
+    bomMsg.value = t('phase5.bomGenerated')
   } catch (e) {
-    bomMsg.value = '错误: ' + e.message
+    bomMsg.value = t('phase5.errorPrefix') + ': ' + e.message
   } finally {
     generatingBom.value = false
   }
@@ -146,9 +146,9 @@ async function saveProject() {
       currency: store.financial.currency,
       capexBreakdown: store.financial.capexBreakdown
     })
-    saveMsg.value = '项目已保存'
+    saveMsg.value = t('phase5.projectSaved')
   } catch (e) {
-    saveMsg.value = '保存失败: ' + e.message
+    saveMsg.value = t('phase5.saveFailed') + ': ' + e.message
   }
 }
 </script>

@@ -194,8 +194,6 @@ def seed_users():
     import logging
 
     logging.info("种子用户已创建: admin / engineer")
-    logging.info("⚠ admin  密码: %s （请妥善保存，首次登录后修改）", admin_pwd)
-    logging.info("⚠ engineer 密码: %s （请妥善保存，首次登录后修改）", eng_pwd)
 
 
 with app.app_context():

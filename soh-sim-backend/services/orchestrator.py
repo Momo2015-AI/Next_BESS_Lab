@@ -41,8 +41,15 @@ def run_full_workflow(
     """
     logger.info(f"编排层启动: strategy={strategy}, target_metric={target_metric}")
 
+    # 0. 输入验证
+    design_engine = DesignEngine()
+    validation_errors = design_engine.validate_input(survey_params)
+    if validation_errors:
+        err_msgs = [f"{e['field']}: {e['error']}" for e in validation_errors]
+        return {"error": f"参数验证失败: {'; '.join(err_msgs)}", "solutions": [], "recommendation": None}
+
     # 1. 设计引擎: 生成 3-5 个候选方案
-    design_result = DesignEngine().run(survey_params=survey_params, strategy=strategy)
+    design_result = design_engine.run(survey_params=survey_params, strategy=strategy)
     solutions = design_result.get("solutions", [])
 
     if not solutions:
@@ -304,8 +311,12 @@ def _compute_delta(base_fin: dict, adjusted_fin: dict) -> dict:
     am = adjusted_fin.get("metrics", adjusted_fin)
     delta = {}
     for key in ["irr", "projectIrr", "npv", "lcos", "lcoe", "payback"]:
-        bv = float(bm.get(key, 0)) if bm.get(key) is not None else 0
-        av = float(am.get(key, 0)) if am.get(key) is not None else 0
+        try:
+            bv = float(bm.get(key, 0)) if bm.get(key) is not None else 0
+            av = float(am.get(key, 0)) if am.get(key) is not None else 0
+        except (ValueError, TypeError):
+            delta[key] = None
+            continue
         if bv != 0:
             delta[key] = round((av - bv) / abs(bv) * 100, 2)
         else:

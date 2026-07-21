@@ -185,7 +185,7 @@ def sync_params_service(db, Project, SohRteData, data):
             project.updated_at = datetime.now(timezone.utc)
             db.session.commit()
 
-    soh_rte_record = SohRteData.query.first()
+    soh_rte_record = SohRteData.query.filter_by(project_id=project_id).first()
     if soh_rte_record:
         soh_rte_record.soh_values = json.dumps(soh_data) if soh_data else None
         soh_rte_record.rte_values = json.dumps(rte_data) if rte_data else None
@@ -195,6 +195,7 @@ def sync_params_service(db, Project, SohRteData, data):
     else:
         soh_rte_record = SohRteData(
             id=str(uuid.uuid4()),
+            project_id=project_id,
             soh_values=(json.dumps(soh_data) if soh_data else None),
             rte_values=(json.dumps(rte_data) if rte_data else None),
             dod_values=(json.dumps(dod_data) if dod_data else None),

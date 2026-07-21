@@ -186,36 +186,11 @@ __all__ = [
 ]
 
 
-# ==================== to_dict 显式声明（替代运行时动态注入） ====================
-Tenant.to_dict = _model_to_dict
-User.to_dict = _model_to_dict
-Survey.to_dict = _model_to_dict
-Project.to_dict = _model_to_dict
-ProjectVersion.to_dict = _model_to_dict
-Simulation.to_dict = _model_to_dict
-SimulationResult.to_dict = _model_to_dict
-CorrectionTemplate.to_dict = _model_to_dict
-BatteryPCSConfig.to_dict = _model_to_dict
-SohRteData.to_dict = _model_to_dict
-FinancialData.to_dict = _model_to_dict
-ProductConfig.to_dict = _model_to_dict
-FormulaConfig.to_dict = _model_to_dict
-AlgorithmModel.to_dict = _model_to_dict
-BoqSection.to_dict = _model_to_dict
-BoqItem.to_dict = _model_to_dict
-BatteryManufacturer.to_dict = _model_to_dict
-PinnModelWeights.to_dict = _model_to_dict
+# ==================== to_dict 显式声明 ====================
+# 仅对未在各自模型文件中定义 to_dict() 的模型统一赋值
 RolePermission.to_dict = _model_to_dict
 UserPermissionOverride.to_dict = _model_to_dict
-SystemArchitecture.to_dict = _model_to_dict
-GridComplianceAnalysis.to_dict = _model_to_dict
-SafetyFireDesign.to_dict = _model_to_dict
-IPPFinancialModel.to_dict = _model_to_dict
-ComplianceMatrix.to_dict = _model_to_dict
-ThermalManagement.to_dict = _model_to_dict
-ScadaEmsDesign.to_dict = _model_to_dict
-HVInterconnection.to_dict = _model_to_dict
-BidDocument.to_dict = _model_to_dict
+PinnModelWeights.to_dict = _model_to_dict
 
 
 @event.listens_for(_OrmSession, "before_flush")
