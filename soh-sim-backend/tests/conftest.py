@@ -28,6 +28,8 @@ from routes.auth import generate_token  # noqa: E402
 @pytest.fixture(scope="session")
 def app():
     """Session-scoped Flask app — in-memory DB with schema created once."""
+    # Disable rate limiting in test environment to avoid 429 in CI
+    _app.config["TESTING"] = True
     with _app.app_context():
         db.create_all()
     yield _app
