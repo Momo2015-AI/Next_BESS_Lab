@@ -58,7 +58,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install flask flask-cors flask-limiter flask-sqlalchemy numpy pandas plotly openpyxl PyJWT reportlab scipy
+          pip install flask flask-cors flask-limiter flask-sqlalchemy numpy pandas plotly openpyxl PyJWT reportlab scipy requests
           pip install black isort flake8 pytest pytest-cov pytest-flask
 
       - name: Black check
