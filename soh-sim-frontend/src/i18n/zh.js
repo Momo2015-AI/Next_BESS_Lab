@@ -589,11 +589,7 @@ export default {
     calcFailedMsg: '计算失败: ',
     year: '年',
     sohPct: 'SOH (%)',
-    netAvailableMWh: '净可用 (MWh)',
-    initNetAvailable: '初始净可用能量',
-    year10NetAvailable: '第10年净可用能量',
-    year25NetAvailable: '第25年净可用能量',
-    cumulativeAug25: '25年累计增补'
+    netAvailableMWh: '净可用 (MWh)'
   },
   productConfig: {
     cellLibrary: '电芯选型库',
