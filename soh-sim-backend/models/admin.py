@@ -44,9 +44,7 @@ class DesignTemplate(db.Model):
     created_at = db.Column(db.DateTime, default=_utcnow)
     updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
-    __table_args__ = (
-        db.Index("idx_design_templates_tenant_id", "tenant_id"),
-    )
+    __table_args__ = (db.Index("idx_design_templates_tenant_id", "tenant_id"),)
 
     def to_dict(self):
         return {

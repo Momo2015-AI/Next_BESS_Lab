@@ -58,7 +58,7 @@ if not _secret_key:
 
     logging.critical("❌ SECRET_KEY 环境变量未设置！生产环境拒绝启动。")
     logging.critical("   请在环境变量中设置: export SECRET_KEY=<your-secure-random-key>")
-    logging.critical("   可使用 python -c \"import secrets; print(secrets.token_hex(32))\" 生成强密钥")
+    logging.critical('   可使用 python -c "import secrets; print(secrets.token_hex(32))" 生成强密钥')
     sys.exit(1)
 app.config["SECRET_KEY"] = _secret_key
 
