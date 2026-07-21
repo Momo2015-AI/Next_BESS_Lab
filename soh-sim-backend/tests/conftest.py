@@ -20,7 +20,7 @@ from flask import g  # noqa: E402
 
 from app import app as _app  # noqa: E402
 from database import Tenant, User, db  # noqa: E402
-from routes.auth import generate_token  # noqa: E402
+from routes.auth import generate_token, limiter  # noqa: E402
 
 # ---------- Fixtures ----------
 
@@ -29,7 +29,7 @@ from routes.auth import generate_token  # noqa: E402
 def app():
     """Session-scoped Flask app — in-memory DB with schema created once."""
     # Disable rate limiting in test environment to avoid 429 in CI
-    _app.config["TESTING"] = True
+    limiter.enabled = False
     with _app.app_context():
         db.create_all()
     yield _app
