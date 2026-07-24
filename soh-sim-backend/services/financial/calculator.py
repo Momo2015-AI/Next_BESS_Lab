@@ -47,7 +47,8 @@ def _aggregate_boq_to_capex(boq_items):
 
 
 def _compute_irr(cash_flows, guess=0.1):
-    """Newton-Raphson IRR 求解，含收敛验证与溢出保护"""
+    """Newton-Raphson IRR 求解，含收敛验证与溢出保护
+    若 Newton 法失败则回退到二分法确保收敛"""
     rate = guess
     converged = False
     for i in range(100):
@@ -55,33 +56,58 @@ def _compute_irr(cash_flows, guess=0.1):
         dnpv = 0.0
         for t, cf in enumerate(cash_flows):
             denom = (1 + rate) ** t
-            # 防止分母爆炸（rate 趋近 -1 时）
             if denom == 0 or abs(denom) > 1e15:
-                return None
+                break
             npv += cf / denom
             if t > 0:
                 denom2 = (1 + rate) ** (t + 1)
                 if denom2 == 0 or abs(denom2) > 1e15:
-                    return None
+                    break
                 dnpv += -t * cf / denom2
         if abs(dnpv) < 1e-12:
             break
-        # 防止 Newton 步长发散
         delta = npv / dnpv
         if abs(delta) > 10:
-            # 步长过大，缩小步长防止跳入负值区域
             delta = 10 * (1 if delta > 0 else -1)
         new_rate = rate - delta
-        # 防止 rate 进入 ≤ -1 的危险区域
         if new_rate <= -0.99:
-            return None
+            new_rate = -0.98
         rate = new_rate
         if abs(npv) < 1e-6:
             converged = True
             break
     if not converged:
-        return None
+        return _bisect_irr(cash_flows)
     return rate
+
+
+def _bisect_irr(cash_flows, low=-0.98, high=5.0, tol=1e-6, max_iter=200):
+    """二分法 IRR 求解，作为 Newton 法的回退方案"""
+
+    def _npv(rate):
+        n = 0.0
+        for t, cf in enumerate(cash_flows):
+            d = (1 + rate) ** t
+            if d == 0 or abs(d) > 1e15:
+                return float("inf")
+            n += cf / d
+        return n
+
+    npv_low = _npv(low)
+    npv_high = _npv(high)
+    if npv_low * npv_high > 0:
+        return 0.0
+    for _ in range(max_iter):
+        mid = (low + high) / 2
+        npv_mid = _npv(mid)
+        if abs(npv_mid) < tol:
+            return mid
+        if npv_mid * npv_low > 0:
+            low = mid
+            npv_low = npv_mid
+        else:
+            high = mid
+    return (low + high) / 2
 
 
 def _calculate_revenue_arbitrage(params, year, total_ac_usable_for_year):

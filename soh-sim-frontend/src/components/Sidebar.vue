@@ -184,7 +184,7 @@ const coreToolItems = computed(() =>
       id: 'orchestrator',
       path: '/orchestrator',
       label: t('sidebar.orchestrator'),
-      iconName: 'zap',
+      iconName: 'lightning',
       perm: 'orchestrator'
     },
     {

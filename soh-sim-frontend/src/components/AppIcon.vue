@@ -345,6 +345,23 @@
       <path d="M7 7l5 5 5-5" />
       <path d="M7 17l5-5 5 5" />
     </template>
+
+    <!-- Package / Box -->
+    <template v-else-if="name === 'package'">
+      <path
+        d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
+      />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
+    </template>
+
+    <!-- Lightbulb -->
+    <template v-else-if="name === 'lightbulb'">
+      <path d="M9 18h6M10 22h4" />
+      <path
+        d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"
+      />
+    </template>
   </svg>
 </template>
 

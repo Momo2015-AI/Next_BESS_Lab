@@ -2239,7 +2239,15 @@ export default {
     noProject: 'No project',
     saveAsVersion: 'Save as Version',
     saving: 'Saving...',
-    goSimulation: 'Enter Simulation'
+    goSimulation: 'Enter Simulation',
+    strategyEconomic: 'Economic',
+    strategyDescEconomic: 'Economic priority scheme, lowest equipment cost.',
+    strategyBalanced: 'Balanced',
+    strategyDescBalanced: 'Balanced scheme, trade-off cost and performance.',
+    strategyFlexible: 'Flexible',
+    strategyDescFlexible: 'Flexible phased scheme for future expansion.',
+    strategyManufacturer: 'Manufacturer',
+    strategyDescManufacturer: 'Specific manufacturer scheme.'
   },
   design: {
     surveyInput: 'Survey Parameters',

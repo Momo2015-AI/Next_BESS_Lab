@@ -224,9 +224,9 @@ const loadProducts = async () => {
   try {
     // 尝试从API加载
     const [cellsData, containersData, pcsData] = await Promise.all([
-      api.get('/api/library/cells'),
-      api.get('/api/library/containers'),
-      api.get('/api/library/pcs')
+      api.get('/api/products/cells'),
+      api.get('/api/products/containers'),
+      api.get('/api/products/pcs')
     ])
 
     if (cellsData.success) availableCells.value = cellsData.data || []
