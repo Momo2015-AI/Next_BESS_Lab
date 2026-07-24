@@ -156,6 +156,8 @@ export function useProducts() {
             source.value = 'api'
             return
           }
+          loadFromLocalJson()
+          return
         } catch {
           loadFromLocalJson()
           return
