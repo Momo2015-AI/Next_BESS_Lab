@@ -801,7 +801,9 @@ export default {
     totalCapacity: '总装机容量',
     totalPower: '总装机功率',
     annualThroughput: '年吞吐量',
-    epRatio: 'E/P 配比'
+    epRatio: 'E/P 配比',
+    tDischarge: '放电时间 (h)',
+    tCharge: '充电时间 (h)'
   },
   dataInjection: {
     sohTitle: 'SOH 25年衰减序列 (逐行粘贴)',
@@ -1338,6 +1340,12 @@ export default {
     auxModeLabel: '辅耗计算模式',
     auxModeManual: '简化手动',
     auxModeThermal: '温度推导',
+    auxModePhase: '分相位',
+    phaseAuxDesc: '分相位非对称辅耗（充电≠放电），后台自动计算充放电时间',
+    phaseChgAux: '充电相位辅耗',
+    phaseDisAux: '放电相位辅耗',
+    phaseAsymmetry: '充/放不对称度',
+    phaseNote: 'duration 保持不变，实际充放电时间由后台根据辅耗非对称性自动推导',
     coolingTypeLabel: '冷却方式',
     ambientTempLabel: '环境温度',
     coolingPowerEstimate: '估算冷却功耗',

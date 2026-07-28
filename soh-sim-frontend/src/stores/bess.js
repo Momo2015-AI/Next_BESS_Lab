@@ -53,7 +53,12 @@ export const DEFAULT_SYSTEM_PARAMS = {
   bessAuxStandby: 3.5,
   pcsAuxRun: 6.5,
   pcsAuxStandby: 1.0,
-  auxPowerMode: 'manual', // 'manual' | 'thermal'
+  auxPowerMode: 'manual', // 'manual' | 'thermal' | 'phase'
+  phaseAux: {
+    pChgPerContainerKw: 32.5,
+    pDisPerContainerKw: 27.5,
+    acAuxPerSkidMw: 0.021
+  },
   coolingType: 'liquid', // 'forced-air' | 'liquid' | 'SiC-liquid'
   ambientTemp: 25, // 环境温度(℃) — thermal 模式使用
   // 退化/质保/投影年限组

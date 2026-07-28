@@ -23,6 +23,7 @@
         :rte="store.degradation.rte"
         :dod="store.degradation.dod"
         :aug-qty="store.degradation.augQty"
+        :aux-power-mode="store.systemParams.auxPowerMode"
         @update:param="(key, val) => (store.systemParams[key] = val)"
         @update:soh="store.degradation.soh = $event"
         @update:rte="store.degradation.rte = $event"

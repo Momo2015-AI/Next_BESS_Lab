@@ -58,6 +58,32 @@
           </div>
           <div class="text-[8px] text-muted">h</div>
         </div>
+        <div
+          v-if="auxPowerMode === 'phase'"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
+        >
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.tDischarge') }}</div>
+          <div class="text-sm font-bold font-mono mt-0.5 u-color-var-color-info">
+            {{ dashboardMetrics.tDischarge0 }}
+          </div>
+          <div class="text-[8px] text-muted">Yr0</div>
+        </div>
+        <div
+          v-if="auxPowerMode === 'phase'"
+          class="rounded-lg p-2 text-center u-background-color-var-color-card-border-1px-solid-var-color-border-border-top-2px-solid-var-color-info"
+        >
+          <div class="text-[9px] uppercase text-muted">{{ $t('matrixTable.tCharge') }}</div>
+          <div class="text-sm font-bold font-mono mt-0.5 u-color-var-color-info">
+            {{ dashboardMetrics.tCharge0 }}
+          </div>
+          <div class="text-[8px] text-muted">Yr0</div>
+        </div>
+      </div>
+      <div
+        v-if="auxPowerMode === 'phase' && dashboardMetrics.acRteFormula"
+        class="text-[9px] text-muted mt-1 px-1 font-mono"
+      >
+        GB/T 36549: AC-RTE = (M - P_dis * t_dis) / (N + E_cycle - P_dis * t_dis) = {{ dashboardMetrics.acRteFormula }}
       </div>
     </div>
 
@@ -148,7 +174,7 @@
             <th class="py-1.5 u-border-right-1px-solid-var-color-border-color-var-color-chart-pink" colspan="6">
               {{ $t('matrixTable.augStream') }}
             </th>
-            <th class="py-1.5 text-success" colspan="3">
+            <th class="py-1.5 text-success" :colspan="auxPowerMode === 'phase' ? 5 : 3">
               {{ $t('matrixTable.totalAccounting') }}
             </th>
           </tr>
@@ -208,6 +234,12 @@
             </th>
             <th class="p-1.5">
               {{ $t('matrixTable.reqThreshold') }}
+            </th>
+            <th v-if="auxPowerMode === 'phase'" class="p-1.5 text-info">
+              {{ $t('matrixTable.tDischarge') }}
+            </th>
+            <th v-if="auxPowerMode === 'phase'" class="p-1.5 text-info">
+              {{ $t('matrixTable.tCharge') }}
             </th>
           </tr>
         </thead>
@@ -311,6 +343,12 @@
             <td class="p-1 font-semibold text-warning">
               {{ params.requiredEnergy != null ? params.requiredEnergy.toFixed(2) : '--' }}
             </td>
+            <td v-if="auxPowerMode === 'phase'" class="p-1 text-info">
+              {{ results.tDischarge?.[i - 1] != null ? results.tDischarge[i - 1].toFixed(2) : '--' }}
+            </td>
+            <td v-if="auxPowerMode === 'phase'" class="p-1 text-info">
+              {{ results.tCharge?.[i - 1] != null ? results.tCharge[i - 1].toFixed(2) : '--' }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -322,7 +360,15 @@
 import { ref, computed } from 'vue'
 import { DEFAULT_SURVEY } from '../stores/bess.js'
 
-const props = defineProps({ params: Object, results: Object, soh: Array, rte: Array, dod: Array, augQty: Array })
+const props = defineProps({
+  params: Object,
+  results: Object,
+  soh: Array,
+  rte: Array,
+  dod: Array,
+  augQty: Array,
+  auxPowerMode: { type: String, default: 'manual' }
+})
 const emit = defineEmits(['update:soh', 'update:rte', 'update:dod', 'update:augQty', 'update:param', 'recalculate'])
 
 const isCalculating = ref(false)
@@ -350,13 +396,27 @@ const dashboardMetrics = computed(() => {
     res.acRteWithAux != null ? Number(res.acRteWithAux).toFixed(2) : (rte0 * acEff * (1 - auxRatio) * 100).toFixed(2)
   const epRatio = duration.toFixed(1)
 
+  // GB/T 36549 formula breakdown for phase mode
+  let acRteFormula = null
+  if (res.acRteWithAux != null && res.tDischarge?.[0] != null) {
+    const initGross0_val = res.initGross?.[0] || 0
+    const initAux0_val = res.initAux?.[0] || 0
+    const tDis0 = res.tDischarge[0]
+    const pDisSys = initAux0_val > 0 && tDis0 > 0 ? (initAux0_val / tDis0).toFixed(3) : '--'
+    const eCycle = initAux0_val > 0 ? initAux0_val.toFixed(2) : '--'
+    acRteFormula = `(${initGross0_val.toFixed(1)} - ${pDisSys}*${tDis0.toFixed(2)}) / (${initGross0_val.toFixed(1)} + ${eCycle} - ${pDisSys}*${tDis0.toFixed(2)})`
+  }
+
   return {
     acRteNoAux: acRteNoAux + '%',
     acRteWithAux: acRteWithAux + '%',
     totalCapacity: totalCapacity.toFixed(1),
     totalPower: totalPower.toFixed(1),
     annualThroughput: annualThroughput.toFixed(0),
-    epRatio: epRatio + 'h'
+    epRatio: epRatio + 'h',
+    tDischarge0: res.tDischarge?.[0] != null ? res.tDischarge[0].toFixed(2) + 'h' : '--',
+    tCharge0: res.tCharge?.[0] != null ? res.tCharge[0].toFixed(2) + 'h' : '--',
+    acRteFormula
   }
 })
 

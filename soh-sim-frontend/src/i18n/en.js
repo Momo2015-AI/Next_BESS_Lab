@@ -718,7 +718,9 @@ export default {
     totalCapacity: 'Total Capacity',
     totalPower: 'Total Power',
     annualThroughput: 'Annual Throughput',
-    epRatio: 'E/P Ratio'
+    epRatio: 'E/P Ratio',
+    tDischarge: 'Discharge Time (h)',
+    tCharge: 'Charge Time (h)'
   },
   dataInjection: {
     sohTitle: 'SOH 25-Year Degradation Sequence (Paste per row)',
@@ -1345,6 +1347,12 @@ export default {
     auxModeLabel: 'Aux Power Mode',
     auxModeManual: 'Manual',
     auxModeThermal: 'Thermal-Driven',
+    auxModePhase: 'Phase-Aware',
+    phaseAuxDesc: 'Phase-aware asymmetric aux power (charge ≠ discharge), charge/discharge time auto-calculated',
+    phaseChgAux: 'Charge Phase Aux',
+    phaseDisAux: 'Discharge Phase Aux',
+    phaseAsymmetry: 'Chg/Dis Asymmetry',
+    phaseNote: 'Duration is user input; actual charge/discharge times are derived from aux asymmetry',
     coolingTypeLabel: 'Cooling Type',
     ambientTempLabel: 'Ambient Temp',
     coolingPowerEstimate: 'Est. Cooling Power',

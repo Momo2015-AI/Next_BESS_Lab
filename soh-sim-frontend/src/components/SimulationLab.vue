@@ -276,6 +276,15 @@
               >
                 {{ $t('simLab.auxModeThermal') }}
               </button>
+              <button
+                :class="[
+                  'px-2 py-0.5 rounded transition-all',
+                  simParams.auxPowerMode === 'phase' ? 'bg-accent text-white' : 'text-muted hover:text-secondary'
+                ]"
+                @click="simParams.auxPowerMode = 'phase'"
+              >
+                {{ $t('simLab.auxModePhase') }}
+              </button>
             </div>
           </div>
 
@@ -330,7 +339,7 @@
             </div>
           </div>
 
-          <div v-else class="space-y-2">
+          <div v-else-if="simParams.auxPowerMode === 'thermal'" class="space-y-2">
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="text-[10px] block mb-1 text-muted">{{ $t('simLab.ambientTempLabel') }}</label>
@@ -391,6 +400,37 @@
                 />
               </div>
             </div>
+          </div>
+
+          <div v-else-if="simParams.auxPowerMode === 'phase'" class="space-y-2">
+            <div class="text-[10px] text-muted mb-1">{{ $t('simLab.phaseAuxDesc') }}</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded p-2 text-center u-background-color-var-color-card">
+                <div class="text-[9px] text-muted">{{ $t('simLab.phaseChgAux') }}</div>
+                <div class="text-sm font-bold font-mono text-accent">
+                  {{ simParams.phaseAux?.pChgPerContainerKw ?? 32.5 }} kW
+                </div>
+                <div class="text-[8px] text-muted">per container</div>
+              </div>
+              <div class="rounded p-2 text-center u-background-color-var-color-card">
+                <div class="text-[9px] text-muted">{{ $t('simLab.phaseDisAux') }}</div>
+                <div class="text-sm font-bold font-mono text-success">
+                  {{ simParams.phaseAux?.pDisPerContainerKw ?? 27.5 }} kW
+                </div>
+                <div class="text-[8px] text-muted">per container</div>
+              </div>
+            </div>
+            <div class="text-[9px] text-muted">
+              {{ $t('simLab.phaseAsymmetry') }}:
+              {{
+                simParams.phaseAux?.pChgPerContainerKw && simParams.phaseAux?.pDisPerContainerKw
+                  ? ((simParams.phaseAux.pChgPerContainerKw / simParams.phaseAux.pDisPerContainerKw - 1) * 100).toFixed(
+                      1
+                    ) + '%'
+                  : '—'
+              }}
+            </div>
+            <div class="text-[8px] text-muted italic">{{ $t('simLab.phaseNote') }}</div>
           </div>
         </div>
       </div>
@@ -729,6 +769,11 @@ const { state: simParams } = useDraft('sim-params', {
   pcsAuxRun: 6.5,
   pcsAuxStandby: 1.0,
   auxPowerMode: 'manual',
+  phaseAux: {
+    pChgPerContainerKw: 32.5,
+    pDisPerContainerKw: 27.5,
+    acAuxPerSkidMw: 0.021
+  },
   coolingType: 'liquid',
   ambientTemp: 25
 })
@@ -1128,7 +1173,8 @@ async function runBackendSimulation() {
         cRate: store.systemParams.cRate || 0.5,
         auxPowerMode: simParams.auxPowerMode || store.systemParams.auxPowerMode,
         ambientTemp: simParams.ambientTemp || store.systemParams.ambientTemp,
-        coolingType: simParams.coolingType || store.systemParams.coolingType
+        coolingType: simParams.coolingType || store.systemParams.coolingType,
+        phaseAux: simParams.phaseAux
       },
       degradation: {
         soh: [...store.degradation.soh],
