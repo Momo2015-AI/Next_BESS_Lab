@@ -12,7 +12,7 @@ import uuid
 import pytest
 
 # 必须在导入 app 前设置
-os.environ.setdefault("TEST_DATABASE_URI", "sqlite:///:memory:")
+os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 os.environ.setdefault("SECRET_KEY", "test-financial-params-2026")
 os.environ.setdefault("CORS_ORIGINS", "*")
 

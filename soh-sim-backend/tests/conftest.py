@@ -11,7 +11,7 @@ import os
 import uuid
 
 # Must be set BEFORE importing app so that app.py reads the in-memory DB URI
-os.environ.setdefault("TEST_DATABASE_URI", "sqlite:///:memory:")
+os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 os.environ.setdefault("SECRET_KEY", "test-secret-for-pytest-2026")
 os.environ.setdefault("CORS_ORIGINS", "*")
 

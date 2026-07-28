@@ -15,7 +15,7 @@ import uuid
 import pytest
 
 # 必须在导入 app 前设置环境变量
-os.environ.setdefault("TEST_DATABASE_URI", "sqlite:///:memory:")
+os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 os.environ.setdefault("SECRET_KEY", "test-deep-validation-secret")
 os.environ.setdefault("CORS_ORIGINS", "*")
 

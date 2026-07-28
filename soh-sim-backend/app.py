@@ -1,12 +1,14 @@
 import csv
 import io
+import logging
 import math
 import os
 import re
+import sys
 import tempfile
 
 import numpy as np
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from database import Project, Survey, db, init_db
@@ -43,22 +45,39 @@ CORS(
     supports_credentials=True,
 )
 
+# CSRF 保护 — 对 JSON API 关闭自动校验，仅对 cookie session 路由生效
+app.config["WTF_CSRF_CHECK_DEFAULT"] = False
+app.config["WTF_CSRF_ENABLED"] = True
+app.config["WTF_CSRF_TIME_LIMIT"] = 3600  # 1 小时
+
 # 数据库配置
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "TEST_DATABASE_URI",
+    "DATABASE_URL",
     "sqlite:///" + os.path.join(os.path.dirname(os.path.abspath(__file__)), "soh_sim.db"),
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# 日志配置
+_log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
+_log_file = os.environ.get("LOG_FILE", "")
+_log_handlers = [logging.StreamHandler(sys.stdout)]
+if _log_file:
+    from logging.handlers import RotatingFileHandler
+    _log_handlers.append(RotatingFileHandler(_log_file, maxBytes=10 * 1024 * 1024, backupCount=5))
+logging.basicConfig(
+    level=getattr(logging, _log_level, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=_log_handlers,
+)
+_logger = logging.getLogger(__name__)
+
 # JWT Secret Key — 生产环境必须设置环境变量，否则拒绝启动
 _secret_key = os.environ.get("SECRET_KEY")
 if not _secret_key:
-    import logging
-    import sys
-
-    logging.critical("❌ SECRET_KEY 环境变量未设置！生产环境拒绝启动。")
-    logging.critical("   请在环境变量中设置: export SECRET_KEY=<your-secure-random-key>")
-    logging.critical('   可使用 python -c "import secrets; print(secrets.token_hex(32))" 生成强密钥')
+    _logger.critical("SECRET_KEY 环境变量未设置！生产环境拒绝启动。")
+    _logger.critical("   请在环境变量中设置: export SECRET_KEY=<your-secure-random-key>")
+    _logger.critical('   可使用 python -c "import secrets; print(secrets.token_hex(32))" 生成强密钥')
     sys.exit(1)
 app.config["SECRET_KEY"] = _secret_key
 
@@ -131,9 +150,27 @@ def rate_limited(e):
 @app.errorhandler(500)
 def internal_error(e):
     import traceback
-
-    app.logger.error(f"服务器内部错误: {traceback.format_exc()}")
+    _logger.error("服务器内部错误:\n%s", traceback.format_exc())
+    # 生产环境不暴露堆栈信息给客户端
     return error_response("服务器内部错误", status_code=500)
+
+
+# ==================== 健康检查 ====================
+
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    """存活/就绪检查 — 供负载均衡、K8s 探针使用"""
+    try:
+        db.session.execute(db.text("SELECT 1"))
+        db_ok = True
+    except Exception:
+        db_ok = False
+    return jsonify({
+        "status": "ok" if db_ok else "degraded",
+        "database": "ok" if db_ok else "unreachable",
+        "version": "1.0.0",
+    }), (200 if db_ok else 503)
 
 
 # ==================== 种子数据 ====================
@@ -191,9 +228,7 @@ def seed_users():
         db.session.add(user)
 
     db.session.commit()
-    import logging
-
-    logging.info("种子用户已创建: admin / engineer")
+    _logger.info("种子用户已创建: admin / engineer")
 
 
 with app.app_context():

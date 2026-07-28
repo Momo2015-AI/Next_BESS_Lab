@@ -24,6 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Security audit (npm)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
       - name: Format code with Prettier
         run: npm run format
 
@@ -59,6 +63,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-ci.txt
 
+      - name: Security audit (pip)
+        run: pip install pip-audit && pip-audit --desc on
+        continue-on-error: true
+
       - name: Black check
         run: black --check .
 
@@ -73,7 +81,7 @@ jobs:
         continue-on-error: true
         env:
           SECRET_KEY: "ci-test-secret-key-2026"
-          TEST_DATABASE_URI: "sqlite:///:memory:"
+          DATABASE_URL: "sqlite:///:memory:"
 
   rules-consistency:
     runs-on: ubuntu-latest
