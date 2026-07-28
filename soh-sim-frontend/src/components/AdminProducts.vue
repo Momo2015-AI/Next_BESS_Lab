@@ -124,6 +124,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import defaultProducts from '../data/products.json'
 import api from '../services/api.js'
 
 const { t } = useI18n()
@@ -266,13 +267,22 @@ async function loadProducts() {
       api.get('/api/products/containers?page_size=200'),
       api.get('/api/products/pcs?page_size=200')
     ])
+    const cellsData = results[0]?.data || results[0]?.items || []
+    const containersData = results[1]?.data || results[1]?.items || []
+    const pcsData = results[2]?.data || results[2]?.items || []
+    const hasData = cellsData.length + containersData.length + pcsData.length > 0
     allProducts.value = {
-      cells: results[0]?.data || results[0]?.items || [],
-      containers: results[1]?.data || results[1]?.items || [],
-      pcs: results[2]?.data || results[2]?.items || []
+      cells: hasData ? cellsData : defaultProducts.cells || [],
+      containers: hasData ? containersData : defaultProducts.containers || [],
+      pcs: hasData ? pcsData : defaultProducts.pcs || []
     }
   } catch (e) {
-    console.error('Failed to load products:', e)
+    console.error('Failed to load products, using defaults:', e)
+    allProducts.value = {
+      cells: defaultProducts.cells || [],
+      containers: defaultProducts.containers || [],
+      pcs: defaultProducts.pcs || []
+    }
   } finally {
     loading.value = false
   }

@@ -117,7 +117,18 @@ class SimulationEngine(BaseEngine):
                 "ambientTemp", survey_params.get("tempAvg", design_output.get("ambientTemp", 25))
             ),
             "coolingType": survey_params.get("coolingType", design_output.get("coolingType", "liquid")),
-            "requiredEnergy": survey_params.get("requiredEnergy", 240),
+            "requiredEnergy": survey_params.get(
+                "requiredEnergy",
+                round(
+                    container.get("ratedEnergyMWh", survey_params.get("ratedEnergy", 5))
+                    * design_output.get("containerQty", 10)
+                    * survey_params.get("dod", 90)
+                    / 100
+                    * (eff.get("systemRTE", 97.03) / 100)
+                    * 0.78,
+                    2,
+                ),
+            ),
             "efficiencyFactors": survey_params.get("efficiencyFactors", FACTOR_DEFAULTS),
         }
 

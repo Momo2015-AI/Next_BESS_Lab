@@ -48,7 +48,7 @@ export function useChart(chartRef, options, dependencies = []) {
       chart.value.dispose()
     }
     chart.value = echarts.init(chartRef.value, themeObject.value)
-    chart.value.setOption(options.value)
+    chart.value.setOption({ ...options.value, animation: false })
   }
 
   const resize = () => {
@@ -57,7 +57,7 @@ export function useChart(chartRef, options, dependencies = []) {
 
   const update = (newOptions) => {
     if (chart.value) {
-      chart.value.setOption(newOptions, true)
+      chart.value.setOption({ ...newOptions, animation: false }, true)
     }
   }
 
@@ -78,7 +78,7 @@ export function useChart(chartRef, options, dependencies = []) {
     [options, ...dependencies],
     debounce(() => {
       if (chart.value && options.value) {
-        chart.value.setOption(options.value, true)
+        chart.value.setOption({ ...options.value, animation: false }, true)
       }
     }, 300),
     { deep: true }
@@ -103,7 +103,7 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
       })
     charts.value.forEach((chart, index) => {
       if (optionsList.value[index]) {
-        chart.setOption(optionsList.value[index])
+        chart.setOption({ ...optionsList.value[index], animation: false })
       }
     })
   }
@@ -115,7 +115,7 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
   const updateAll = (newOptionsList) => {
     charts.value.forEach((chart, index) => {
       if (chart && newOptionsList[index]) {
-        chart.setOption(newOptionsList[index], true)
+        chart.setOption({ ...newOptionsList[index], animation: false }, true)
       }
     })
   }
@@ -136,7 +136,7 @@ export function useMultiChart(chartRefs, optionsList, dependencies = []) {
     debounce(() => {
       charts.value.forEach((chart, index) => {
         if (chart && optionsList.value[index]) {
-          chart.setOption(optionsList.value[index], true)
+          chart.setOption({ ...optionsList.value[index], animation: false }, true)
         }
       })
     }, 300),

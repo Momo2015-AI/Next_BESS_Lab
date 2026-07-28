@@ -482,12 +482,12 @@
           <span class="text-white text-xs font-bold">BESS 辅助功耗计算器</span>
           <span class="text-white/70 text-[10px]">(点击展开/收起 -- 与辅耗计算页面实时同步)</span>
         </div>
-        <span
-          class="text-white/90 text-lg transition-transform"
+        <AppIcon
+          name="chevron-down"
+          :size="18"
+          class="text-white/90 transition-transform"
           :style="{ transform: showAuxPanel ? 'rotate(180deg)' : 'rotate(0deg)' }"
-        >
-          &#9660;
-        </span>
+        />
       </div>
 
       <div v-show="showAuxPanel" class="mt-2 rounded-lg p-3 space-y-3 border transition-all bg-card blue-border-glow">

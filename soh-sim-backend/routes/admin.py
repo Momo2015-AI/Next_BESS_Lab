@@ -14,9 +14,10 @@ from utils.api_response import error_response, paginated_response, success_respo
 admin_bp = Blueprint("admin_api", __name__)
 
 
-def _require_admin(user):
+def _require_admin():
     """仅 admin 角色可操作"""
-    if not user or user.role != "admin":
+    user = request.current_user
+    if not user or getattr(user, "role", None) != "admin":
         return False
     return True
 
@@ -26,9 +27,9 @@ def _require_admin(user):
 
 @admin_bp.route("/api/admin/design-templates", methods=["GET"])
 @token_required
-def list_templates(user):
+def list_templates():
     """列出方案模板"""
-    if not _require_admin(user):
+    if not _require_admin():
         return error_response("仅管理员可访问", status_code=403)
 
     page = request.args.get("page", 1, type=int)
@@ -52,9 +53,9 @@ def list_templates(user):
 
 @admin_bp.route("/api/admin/design-templates/<template_id>", methods=["GET"])
 @token_required
-def get_template(user, template_id):
+def get_template(template_id):
     """获取单个模板"""
-    if not _require_admin(user):
+    if not _require_admin():
         return error_response("仅管理员可访问", status_code=403)
 
     t = DesignTemplate.query.get(template_id)
@@ -65,9 +66,9 @@ def get_template(user, template_id):
 
 @admin_bp.route("/api/admin/design-templates", methods=["POST"])
 @token_required
-def create_template(user):
+def create_template():
     """创建方案模板"""
-    if not _require_admin(user):
+    if not _require_admin():
         return error_response("仅管理员可访问", status_code=403)
 
     data = request.get_json(silent=True) or {}
@@ -76,7 +77,7 @@ def create_template(user):
         return error_response("模板名称不能为空")
 
     t = DesignTemplate(
-        tenant_id=user.tenant_id,
+        tenant_id=request.current_user.tenant_id,
         name=name,
         name_en=data.get("nameEn", ""),
         strategy=data.get("strategy", "balanced"),
@@ -106,9 +107,9 @@ def create_template(user):
 
 @admin_bp.route("/api/admin/design-templates/<template_id>", methods=["PUT"])
 @token_required
-def update_template(user, template_id):
+def update_template(template_id):
     """更新方案模板"""
-    if not _require_admin(user):
+    if not _require_admin():
         return error_response("仅管理员可访问", status_code=403)
 
     t = DesignTemplate.query.get(template_id)
@@ -153,9 +154,9 @@ def update_template(user, template_id):
 
 @admin_bp.route("/api/admin/design-templates/<template_id>", methods=["DELETE"])
 @token_required
-def delete_template(user, template_id):
+def delete_template(template_id):
     """删除方案模板（软删除）"""
-    if not _require_admin(user):
+    if not _require_admin():
         return error_response("仅管理员可访问", status_code=403)
 
     t = DesignTemplate.query.get(template_id)
@@ -174,7 +175,7 @@ def delete_template(user, template_id):
 
 @admin_bp.route("/api/admin/design-strategies", methods=["GET"])
 @token_required
-def list_strategies(_user):
+def list_strategies():
     """返回可用设计策略"""
     strategies = [
         {"key": "economic", "label": "经济优先", "labelEn": "Economic", "desc": "大容量集装箱，最小化 BOP 成本"},

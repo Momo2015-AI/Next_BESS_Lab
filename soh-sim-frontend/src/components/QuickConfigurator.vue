@@ -3,6 +3,7 @@
     <!-- Hero Input Section -->
     <section class="qc-hero">
       <div class="qc-hero-header">
+        <AppIcon name="battery" :size="36" class="qc-hero-icon" />
         <h1 class="qc-title">{{ $t('quickConfig.title') }}</h1>
         <p class="qc-subtitle">{{ $t('quickConfig.subtitle') }}</p>
       </div>
@@ -104,7 +105,7 @@
 
         <button class="qc-btn-generate" :disabled="loading" @click="generate">
           <span v-if="loading" class="qc-spinner"></span>
-          <span v-else class="qc-btn-icon">&#9889;</span>
+          <AppIcon v-else name="lightning" :size="18" />
           {{ loading ? $t('quickConfig.generating') : $t('quickConfig.generateBtn') }}
         </button>
       </div>
@@ -149,7 +150,7 @@
         <!-- Container Config -->
         <div class="qc-card">
           <div class="qc-card-header">
-            <span class="qc-card-icon">&#128230;</span>
+            <AppIcon name="package" :size="20" class="qc-card-icon" />
             <h4>{{ $t('quickConfig.containerConfig') }}</h4>
           </div>
           <dl class="qc-dl">
@@ -187,7 +188,7 @@
         <!-- PCS Config -->
         <div class="qc-card">
           <div class="qc-card-header">
-            <span class="qc-card-icon">&#9881;</span>
+            <AppIcon name="settings" :size="20" class="qc-card-icon" />
             <h4>{{ $t('quickConfig.pcsConfig') }}</h4>
           </div>
           <dl class="qc-dl">
@@ -225,7 +226,7 @@
         <!-- Efficiency Chain -->
         <div class="qc-card">
           <div class="qc-card-header">
-            <span class="qc-card-icon">&#9889;</span>
+            <AppIcon name="lightning" :size="20" class="qc-card-icon" />
             <h4>{{ $t('quickConfig.efficiencyChain') }}</h4>
           </div>
           <dl class="qc-dl">
@@ -255,7 +256,7 @@
         <!-- CAPEX Estimate -->
         <div class="qc-card">
           <div class="qc-card-header">
-            <span class="qc-card-icon">&#128176;</span>
+            <AppIcon name="dollar" :size="20" class="qc-card-icon" />
             <h4>{{ $t('quickConfig.capexEstimate') }}</h4>
           </div>
           <template v-if="result.estimatedCapex">
@@ -293,7 +294,7 @@
 
     <!-- Empty State -->
     <div v-if="!result && !loading && !errorMsg" class="qc-empty section-card">
-      <div class="qc-empty-icon">&#128161;</div>
+      <AppIcon name="lightbulb" :size="48" class="qc-empty-icon" />
       <p>{{ $t('quickConfig.emptyHint') }}</p>
     </div>
   </div>
@@ -303,6 +304,7 @@
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { post } from '../services/api.js'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 
@@ -418,6 +420,16 @@ async function generate() {
   text-align: center;
   padding: 40px 0 32px;
 }
+.qc-hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.qc-hero-icon {
+  color: var(--color-accent);
+  margin-bottom: 4px;
+}
 .qc-title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -530,9 +542,6 @@ async function generate() {
   opacity: 0.6;
   cursor: not-allowed;
 }
-.qc-btn-icon {
-  font-size: 1.1rem;
-}
 .qc-spinner {
   width: 18px;
   height: 18px;
@@ -588,9 +597,6 @@ async function generate() {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary);
-}
-.qc-card-icon {
-  font-size: 1.2rem;
 }
 .qc-badge {
   font-size: 0.72rem;
@@ -700,7 +706,6 @@ async function generate() {
   margin-top: 32px;
 }
 .qc-empty-icon {
-  font-size: 3rem;
   margin-bottom: 12px;
 }
 .qc-empty p {

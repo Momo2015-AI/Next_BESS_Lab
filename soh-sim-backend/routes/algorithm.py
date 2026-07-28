@@ -21,6 +21,60 @@ def get_builtin_models_api():
     return success_response(data=models)
 
 
+@algorithm_bp.route("/api/algorithm/list", methods=["GET"])
+@token_required
+def list_user_algorithms_api():
+    """列出当前用户创建的自定义算法模型"""
+    algorithms = (
+        AlgorithmModel.query
+        .filter(
+            AlgorithmModel.created_by == request.current_user.id,
+            AlgorithmModel.is_builtin == False,
+        )
+        .order_by(AlgorithmModel.created_at.desc())
+        .all()
+    )
+    return success_response(data=[a.to_dict() for a in algorithms])
+
+
+@algorithm_bp.route("/api/algorithm/initialize", methods=["POST"])
+@token_required
+def initialize_algorithms_api():
+    """手动初始化内置算法到数据库"""
+    import json
+    import uuid
+
+    builtin = get_builtin_algorithms()
+    count = 0
+    for b in builtin:
+        existing = AlgorithmModel.query.filter_by(
+            name=b["name"], is_builtin=True
+        ).first()
+        if not existing:
+            db.session.add(
+                AlgorithmModel(
+                    id=str(uuid.uuid4()),
+                    name=b["name"],
+                    name_en=b.get("name_en", ""),
+                    model_type=b["model_type"],
+                    applicable_scenarios=json.dumps(b.get("applicable_scenarios", []), ensure_ascii=False),
+                    mathematical_form=b.get("mathematical_form", ""),
+                    formula_expression=b.get("formula_expression", ""),
+                    parameters=json.dumps(b.get("parameters", {}), ensure_ascii=False),
+                    accuracy_level=b.get("accuracy_level", "medium"),
+                    accuracy_desc=b.get("accuracy_desc", ""),
+                    category=b.get("category", "degradation"),
+                    is_builtin=True,
+                    is_active=True,
+                    description=b.get("description", ""),
+                    created_by=request.current_user.id,
+                )
+            )
+            count += 1
+    db.session.commit()
+    return success_response(data={"count": count}, message=f"成功初始化 {count} 个内置算法")
+
+
 @algorithm_bp.route("/api/algorithm/register", methods=["POST"])
 @token_required
 def register_algorithm_api():

@@ -29,7 +29,7 @@
     </div>
 
     <div v-if="filteredAlgorithms.length === 0" class="text-center py-16 text-slate-500">
-      <div class="text-4xl mb-3">&#9312;</div>
+      <div class="text-4xl mb-3 text-slate-400"><AppIcon name="flask" :size="48" /></div>
       <div>No algorithm models</div>
       <button class="mt-4 text-teal-400 hover:text-teal-300 text-sm underline" @click="initializeBuiltin">
         Initialize Built-in
@@ -66,7 +66,7 @@
               class="text-slate-500 hover:text-red-400 text-xs ml-2 shrink-0"
               @click="deleteAlgorithm(alg.id)"
             >
-              &#10005;
+              <AppIcon name="close" :size="14" />
             </button>
           </div>
 
@@ -130,7 +130,9 @@
       <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center p-4 border-b border-slate-700">
           <h3 class="font-bold text-teal-400">Add Algorithm Model</h3>
-          <button class="text-slate-500 hover:text-slate-300" @click="showAddModal = false">&#10005;</button>
+          <button class="text-slate-500 hover:text-slate-300" @click="showAddModal = false">
+            <AppIcon name="close" :size="18" />
+          </button>
         </div>
 
         <div class="p-4 space-y-4">
@@ -286,7 +288,9 @@
                   class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs w-16"
                   placeholder="Unit"
                 />
-                <button class="text-red-400 hover:text-red-300" @click="removeParameter(key)">&#10005;</button>
+                <button class="text-red-400 hover:text-red-300" @click="removeParameter(key)">
+                  <AppIcon name="close" :size="14" />
+                </button>
               </div>
             </div>
             <div v-else class="text-slate-500 text-xs text-center py-4">-- Click above to add parameters --</div>
@@ -333,6 +337,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import api from '../services/api.js'
+import AppIcon from '../components/AppIcon.vue'
 
 const algorithms = ref([])
 const showAddModal = ref(false)
@@ -791,7 +796,7 @@ async function fetchAlgorithms() {
   const allAlgorithms = []
 
   try {
-    const data = await api.get('/api/algorithms/public')
+    const data = await api.get('/api/algorithm/builtin_models')
     if (data.success && data.data && data.data.length > 0) {
       allAlgorithms.push(...data.data.map((a) => ({ ...a, is_builtin: true })))
     }
@@ -802,7 +807,7 @@ async function fetchAlgorithms() {
   const token = sessionStorage.getItem('auth_token')
   if (token) {
     try {
-      const data = await api.get('/api/algorithms')
+      const data = await api.get('/api/algorithm/list')
       if (data.success && data.data) {
         const builtinIds = new Set(allAlgorithms.map((a) => a.id))
         data.data.forEach((a) => {
@@ -831,7 +836,7 @@ async function createAlgorithm() {
   if (!token) return
 
   try {
-    const data = await api.post('/api/algorithms', newAlg)
+    const data = await api.post('/api/algorithm/register', newAlg)
     if (data.success) {
       showToast('算法模型创建成功')
       showAddModal.value = false
@@ -864,7 +869,7 @@ async function deleteAlgorithm(id) {
   if (!token) return
 
   try {
-    const data = await api.del(`/api/algorithms/${id}`)
+    const data = await api.del(`/api/algorithm/delete/${id}`)
     if (data.success) {
       showToast('删除成功')
       await fetchAlgorithms()
@@ -881,7 +886,7 @@ async function initializeBuiltin() {
   if (!token) return
 
   try {
-    const data = await api.post('/api/algorithms/initialize')
+    const data = await api.post('/api/algorithm/initialize')
     if (data.success) {
       showToast(`成功初始化${data.count}个内置算法`)
       await fetchAlgorithms()

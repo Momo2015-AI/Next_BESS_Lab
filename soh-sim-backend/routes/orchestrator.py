@@ -111,6 +111,13 @@ def what_if_analysis():
     base_design = data.get("base_design")
     if not base_design:
         return error_response("缺少 base_design 参数", 400)
+    if not isinstance(base_design, dict):
+        return error_response("base_design 必须是对象", 400)
+    # 若传入完整方案结果（含 design 包装），自动解包
+    if "design" in base_design and "simulation" in base_design:
+        base_design = base_design["design"]
+    if "container" not in base_design and "pcs" not in base_design:
+        return error_response("base_design 缺少 container 或 pcs 字段", 400)
 
     adjustments = data.get("adjustments", {})
     if not adjustments:

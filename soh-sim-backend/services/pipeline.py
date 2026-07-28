@@ -140,7 +140,7 @@ def calculate_energy_accounting(params, soh, rte, dod, aug_qty, efficiency_facto
         aug_aux[i] = total_aug_aux
         aug_ac_usable[i] = total_aug_ac
         total_ac_usable[i] = init_ac_usable[i] + total_aug_ac
-        meets_req[i] = total_ac_usable[i] >= required_energy
+        meets_req[i] = total_ac_usable[i] * cycles_per_day >= required_energy
 
     return {
         "initGross": init_gross,

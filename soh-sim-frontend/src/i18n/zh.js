@@ -2228,7 +2228,15 @@ export default {
     noProject: '不关联项目',
     saveAsVersion: '保存为方案版本',
     saving: '保存中...',
-    goSimulation: '进入仿真'
+    goSimulation: '进入仿真',
+    strategyEconomic: '经济优先',
+    strategyDescEconomic: '经济优先方案，优先降低设备投资成本。',
+    strategyBalanced: '均衡方案',
+    strategyDescBalanced: '均衡方案，设备成本与性能平衡。',
+    strategyFlexible: '灵活分期',
+    strategyDescFlexible: '灵活分期方案，便于后期扩容。',
+    strategyManufacturer: '指定厂家',
+    strategyDescManufacturer: '指定厂家方案，匹配特定电芯厂家。'
   },
   design: {
     surveyInput: '调研参数输入',

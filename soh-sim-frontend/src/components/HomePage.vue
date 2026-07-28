@@ -22,7 +22,6 @@
           <p class="lp-hero-note">{{ $t('home.heroNoCreditCard') }}</p>
           <div class="lp-pulse-bar" aria-hidden="true">
             <div class="lp-pulse-fill" />
-            <div class="lp-pulse-glow" />
           </div>
         </div>
       </section>
@@ -525,59 +524,9 @@ const irrDisplay = computed(() => {
 .lp-pulse-fill {
   position: absolute;
   inset: 0;
-  width: 40%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-accent),
-    var(--color-accent-secondary, #4a7bc4),
-    transparent
-  );
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary, #4a7bc4));
   border-radius: 2px;
-  animation: lp-pulse 3s ease-in-out infinite;
-}
-
-.lp-pulse-glow {
-  position: absolute;
-  top: -2px;
-  width: 120px;
-  height: 8px;
-  background: radial-gradient(ellipse, var(--color-accent-glow, rgba(0, 102, 204, 0.3)), transparent 70%);
-  filter: blur(4px);
-  animation: lp-glow 3s ease-in-out infinite;
-}
-
-@keyframes lp-pulse {
-  0%,
-  100% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(250%);
-  }
-}
-
-@keyframes lp-glow {
-  0%,
-  100% {
-    opacity: 0.3;
-    left: 10%;
-  }
-  50% {
-    opacity: 0.8;
-    left: 90%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lp-pulse-fill,
-  .lp-pulse-glow {
-    animation: none;
-  }
-  .lp-pulse-fill {
-    width: 60%;
-    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary, #4a7bc4));
-  }
 }
 
 /* ===== Section 通用 ===== */

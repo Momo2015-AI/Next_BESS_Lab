@@ -447,7 +447,7 @@
           <div
             class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl font-bold u-background-var-color-success-color-fff"
           >
-            &#10003;
+            <AppIcon name="check-circle" :size="32" class="text-green-400" />
           </div>
           <h3 class="text-xl font-semibold mb-2 text-default">{{ $t('surveyForm.successTitle') }}</h3>
           <p class="mb-4 text-secondary">{{ $t('surveyForm.successDesc') }}</p>
@@ -479,6 +479,7 @@ import { useCountryList } from '../composables/useCountryList'
 import api from '../services/api.js'
 import FormCardSection from './FormCardSection.vue'
 import ComboboxInput from './ComboboxInput.vue'
+import AppIcon from './AppIcon.vue'
 
 const { t } = useI18n()
 const emit = defineEmits(['error'])
